@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+    <TargetOS Condition="'$(TargetOS)' == ''">Linux</TargetOS>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SubmoduleDirectory>$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
+    <CoreClrDirectory>$(SubmoduleDirectory)coreclr/</CoreClrDirectory>
+    <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)bin/</BaseOutputPath>
+    <BaseIntermediatePath>$(MSBuildThisFileDirectory)obj/</BaseIntermediatePath>
+    <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
+    <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
+    <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CoreClrPackageOutputDirectory>$(CoreClrDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CoreClrPackageOutputDirectory>
+  </PropertyGroup>
+
+  <!--
+    When `dotnet msbuild` invokes MSBuild, it sets these variables
+    which we want to unset before invoking Exec's. We do this because
+    subprocesses may invoke msbuild but want different values for
+    things like CscToolExe and MSBuildExtensionsPath (since they are
+    on different versions of MSBuild. and if they are set in the
+    environment they may override values.
+  -->
+  <ItemGroup>
+    <EnvironmentVariablesToUnset Include="CscToolExe" />
+    <EnvironmentVariablesToUnset Include="DOTNET_CLI_TELEMETRY_SESSIONID" />
+    <EnvironmentVariablesToUnset Include="MSBuildExtensionsPath" />
+    <EnvironmentVariablesToUnset Include="MSBuildLoadMicrosoftTargetsReadOnly" />
+    <EnvironmentVariablesToUnset Include="_" />
+  </ItemGroup>
+
+  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreSetup">
+    <Message Importance="Normal" Text="Build Complete" />
+  </Target>
+
+  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreSetup">
+    <Message Importance="Normal" Text="Clean Complete" />
+  </Target>
+
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+  <Target Name="PrepareOutput">
+    <MakeDir Directories="$(OutputPath)" />
+    <MakeDir Directories="$(IntermediatePath)" />
+    <MakeDir Directories="$(SourceBuiltPackagesPath)" />
+  </Target>
+
+  <Target Name="CleanOutput">
+    <RemoveDir Directories="$(OutputPath)" />
+    <RemoveDir Directories="$(IntermediatePath)" />
+  </Target>
+
+  <!-- CoreCLR Targets -->
+  <Target Name="BuildCoreClr">
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreClrDirectory)build.sh $(Platform) $(Configuration) skiptests"
+          WorkingDirectory="$(CoreClrDirectory)" />
+
+    <ItemGroup>
+      <CoreClrPackages Include="$(CoreClrPackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreClrPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+  </Target>
+
+  <Target Name="CleanCoreClr">
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreClrDirectory)clean.sh --all"
+          WorkingDirectory="$(CoreClrDirectory)" />
+  </Target>
+
+  <!-- Core-Setup targets -->
+  <Target Name="BuildCoreSetup">
+    <Message Importance="Normal" Text="$(CoreSetupDirectory)build.sh" />
+  </Target>
+
+  <Target Name="CleanCoreSetup">
+    <Message Importance="Normal" Text="$(CoreSetupDirectory)clean.sh" />
+  </Target>
+
+</Project>
