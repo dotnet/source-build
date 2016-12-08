@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
@@ -72,6 +74,9 @@
 
     <Copy SourceFiles="@(CoreClrPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CoreClrPackages)"
+                       OutputPath="$(IntermediatePath)CoreClrVersions.txt" />
   </Target>
 
   <Target Name="CleanCoreClr">
