@@ -11,6 +11,7 @@
   <PropertyGroup>
     <SubmoduleDirectory>$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
     <CoreClrDirectory>$(SubmoduleDirectory)coreclr/</CoreClrDirectory>
+    <CoreFxDirectory>$(SubmoduleDirectory)corefx/</CoreFxDirectory>
     <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
   </PropertyGroup>
 
@@ -24,6 +25,7 @@
 
   <PropertyGroup>
     <CoreClrPackageOutputDirectory>$(CoreClrDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CoreClrPackageOutputDirectory>
+    <CoreFxPackageOutputDirectory>$(CoreFxDirectory)bin/packages/$(Configuration)/</CoreFxPackageOutputDirectory>
   </PropertyGroup>
 
   <!--
@@ -42,11 +44,11 @@
     <EnvironmentVariablesToUnset Include="_" />
   </ItemGroup>
 
-  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreSetup">
+  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreFx;BuildCoreSetup">
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreSetup">
+  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreFx;CleanCoreSetup">
     <Message Importance="Normal" Text="Clean Complete" />
   </Target>
 
@@ -82,6 +84,33 @@
   <Target Name="CleanCoreClr">
     <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreClrDirectory)clean.sh --all"
           WorkingDirectory="$(CoreClrDirectory)" />
+  </Target>
+
+  <!-- CoreFX Targets -->
+  <Target Name="BuildCoreFx">
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreFxDirectory)build-native.sh -$(Configuration) -buildArch=$(Platform)"
+          WorkingDirectory="$(CoreFxDirectory)" />
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreFxDirectory)build-managed.sh -$(Configuration) -buildArch=$(Platform) -BuildTests=false"
+          WorkingDirectory="$(CoreFxDirectory)" />
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreFxDirectory)build-packages.sh -$(Configuration) -DisableManagedPackage"
+          WorkingDirectory="$(CoreFxDirectory)" />
+
+    <ItemGroup>
+      <CoreFxPackages Include="$(CoreFxPackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreFxPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CoreFxPackages)"
+                       OutputPath="$(IntermediatePath)CoreFxVersions.txt" />
+  </Target>
+
+  <Target Name="CleanCoreFx">
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreFxDirectory)clean.sh --all"
+          WorkingDirectory="$(CoreFxDirectory)" />
   </Target>
 
   <!-- Core-Setup targets -->
