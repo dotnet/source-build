@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
 
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
@@ -115,7 +117,46 @@
 
   <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup">
-    <Message Importance="Normal" Text="$(CoreSetupDirectory)build.sh" />
+    <GetHostRid Condition="'$(TargetRid)' == ''">
+      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
+    <PropertyGroup>
+      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(TargetRid)/packages/</CoreSetupPackageOutputDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <VersionFile Include="$(IntermediatePath)CoreClrVersions.txt">
+        <Environment>CORECLR</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)CoreFxVersions.txt">
+        <Environment>COREFX</Environment>
+      </VersionFile>
+    </ItemGroup>
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; @(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.sh --targets UpdateFiles"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(CoreSetupDirectory)build.sh --configuration $(Configuration) --targets Init,Compile,Package"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <ItemGroup>
+      <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
+      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*.tar.gz" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreSetupPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CoreSetupPackages)"
+                       OutputPath="$(IntermediatePath)CoreSetupVersions.txt" />
+
+    <Copy SourceFiles="@(CoreSetupTarballs)"
+          DestinationFolder="$(OutputPath)" />
   </Target>
 
   <Target Name="CleanCoreSetup">
