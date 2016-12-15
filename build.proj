@@ -3,6 +3,7 @@
   <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
 
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
@@ -15,6 +16,7 @@
     <CoreClrDirectory>$(SubmoduleDirectory)coreclr/</CoreClrDirectory>
     <CoreFxDirectory>$(SubmoduleDirectory)corefx/</CoreFxDirectory>
     <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
+    <RoslynDirectory>$(SubmoduleDirectory)roslyn/</RoslynDirectory>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,6 +30,7 @@
   <PropertyGroup>
     <CoreClrPackageOutputDirectory>$(CoreClrDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CoreClrPackageOutputDirectory>
     <CoreFxPackageOutputDirectory>$(CoreFxDirectory)bin/packages/$(Configuration)/</CoreFxPackageOutputDirectory>
+    <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
   </PropertyGroup>
 
   <!--
@@ -46,11 +49,11 @@
     <EnvironmentVariablesToUnset Include="_" />
   </ItemGroup>
 
-  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreFx;BuildCoreSetup">
+  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreFx;BuildRoslyn;BuildCoreSetup">
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreFx;CleanCoreSetup">
+  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreFx;CleanRoslyn;CleanCoreSetup">
     <Message Importance="Normal" Text="Clean Complete" />
   </Target>
 
@@ -115,6 +118,41 @@
           WorkingDirectory="$(CoreFxDirectory)" />
   </Target>
 
+  <!-- Roslyn Targets -->
+  <Target Name="BuildRoslyn">
+    <GetHostRid Condition="'$(TargetRid)' == ''">
+      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
+    <ItemGroup>
+      <RoslynProjectJsonFiles Include="$(RoslynDirectory)/**/project.json" />
+    </ItemGroup>
+
+    <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
+                           ReplacementRuntimeId="$(TargetRid)"
+                           FilterRuntimeId="ubuntu.14.04-x64" />
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen"
+          WorkingDirectory="$(RoslynDirectory)" />
+
+    <Exec Command="@(EnvironmentVariablesToUnset->'unset %(Identity)', ' &amp;&amp; ') &amp;&amp; $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/corerun $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
+          WorkingDirectory="$(RoslynDirectory)" />
+
+    <ItemGroup>
+      <RoslynPackages Include="$(RoslynPackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(RoslynPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(RoslynPackages)"
+                       OutputPath="$(IntermediatePath)RoslynVersions.txt" />
+  </Target>
+
+  <Target Name="CleanRoslyn">
+    <RemoveDir Directories="$(RoslynDirectory)Binaries" />
+  </Target>
+
   <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup">
     <GetHostRid Condition="'$(TargetRid)' == ''">
@@ -131,6 +169,9 @@
       </VersionFile>
       <VersionFile Include="$(IntermediatePath)CoreFxVersions.txt">
         <Environment>COREFX</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
+        <Environment>ROSLYN</Environment>
       </VersionFile>
     </ItemGroup>
 
@@ -162,5 +203,4 @@
   <Target Name="CleanCoreSetup">
     <Message Importance="Normal" Text="$(CoreSetupDirectory)clean.sh" />
   </Target>
-
 </Project>
