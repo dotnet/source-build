@@ -12,6 +12,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
+    <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <SubmoduleDirectory>$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
     <CoreClrDirectory>$(SubmoduleDirectory)coreclr/</CoreClrDirectory>
     <CoreFxDirectory>$(SubmoduleDirectory)corefx/</CoreFxDirectory>
@@ -56,7 +61,7 @@
 
   <!-- CoreCLR Targets -->
   <Target Name="BuildCoreClr">
-    <Exec Command="$(CoreClrDirectory)build.sh $(Platform) $(Configuration) skiptests"
+    <Exec Command="$(CoreClrDirectory)build$(ShellExtension) $(Platform) $(Configuration) skiptests"
           WorkingDirectory="$(CoreClrDirectory)" />
 
     <ItemGroup>
@@ -71,19 +76,19 @@
   </Target>
 
   <Target Name="CleanCoreClr">
-    <Exec Command="$(CoreClrDirectory)clean.sh --all"
+    <Exec Command="$(CoreClrDirectory)clean$(ShellExtension) --all"
           WorkingDirectory="$(CoreClrDirectory)" />
   </Target>
 
   <!-- CoreFX Targets -->
   <Target Name="BuildCoreFx">
-    <Exec Command="$(CoreFxDirectory)build-native.sh -$(Configuration) -buildArch=$(Platform)"
+    <Exec Command="$(CoreFxDirectory)build-native$(ShellExtension) -$(Configuration) -buildArch=$(Platform)"
           WorkingDirectory="$(CoreFxDirectory)" />
 
-    <Exec Command="$(CoreFxDirectory)build-managed.sh -$(Configuration) -buildArch=$(Platform) -BuildTests=false"
+    <Exec Command="$(CoreFxDirectory)build-managed$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -BuildTests=false"
           WorkingDirectory="$(CoreFxDirectory)" />
 
-    <Exec Command="$(CoreFxDirectory)build-packages.sh -$(Configuration) -DisableManagedPackage"
+    <Exec Command="$(CoreFxDirectory)build-packages$(ShellExtension) -$(Configuration) -DisableManagedPackage"
           WorkingDirectory="$(CoreFxDirectory)" />
 
     <ItemGroup>
@@ -98,7 +103,7 @@
   </Target>
 
   <Target Name="CleanCoreFx">
-    <Exec Command="$(CoreFxDirectory)clean.sh --all"
+    <Exec Command="$(CoreFxDirectory)clean$(ShellExtension) --all"
           WorkingDirectory="$(CoreFxDirectory)" />
   </Target>
 
@@ -116,7 +121,7 @@
                            ReplacementRuntimeId="$(TargetRid)"
                            FilterRuntimeId="ubuntu.14.04-x64" />
 
-    <Exec Command="$(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen"
+    <Exec Command="$(RoslynDirectory)cibuild$(ShellExtension) --$(Configuration) --SkipTests --SkipCrossGen"
           WorkingDirectory="$(RoslynDirectory)" />
 
     <Exec Command="$(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/corerun $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
@@ -159,14 +164,14 @@
       </VersionFile>
     </ItemGroup>
 
-    <Exec Command="@(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.sh --targets UpdateFiles"
+    <Exec Command="@(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
 
-    <Exec Command="$(CoreSetupDirectory)build.sh --configuration $(Configuration) --targets Init,Compile,Package"
+    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
     <ItemGroup>
@@ -185,6 +190,6 @@
   </Target>
 
   <Target Name="CleanCoreSetup">
-    <Message Importance="Normal" Text="$(CoreSetupDirectory)clean.sh" />
+    <Message Importance="Normal" Text="$(CoreSetupDirectory)clean$(ShellExtension)" />
   </Target>
 </Project>
