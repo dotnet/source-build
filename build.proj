@@ -125,7 +125,7 @@
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
 
-    <Exec Command="$(RoslynDirectory)cibuild$(ShellExtension) --$(Configuration) --SkipTests --SkipCrossGen"
+    <Exec Command="$(RoslynDirectory)cibuild$(ShellExtension) --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting"
           WorkingDirectory="$(RoslynDirectory)" />
 
     <Exec Command="$(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/corerun $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
