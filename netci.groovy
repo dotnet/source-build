@@ -9,7 +9,7 @@ def branch = GithubBranchName
 
         def newJobName = InternalUtilities.getFullJobName(project, configuration, isPR)
 
-        def buildString = """build.sh /p:Configuration=${configuration}"""
+        def buildString = """./build.sh /p:Configuration=${configuration}"""
 
         def newJob = job(newJobName) {
             steps {
