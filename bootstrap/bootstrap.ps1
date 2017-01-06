@@ -19,9 +19,17 @@ if ($Force -and (Test-Path $bootstrapComplete))
 }
 
 # if the semaphore file exists and is identical to the specified version then exit
-if ((Test-Path $bootstrapComplete) -and !(Compare-Object (Get-Content $rootToolVersions) (Get-Content $bootstrapComplete)))
+if (Test-Path $bootstrapComplete)
 {
-    exit 0
+    if (((Get-Content $rootToolVersions) -eq $Null) -and ((Get-Content $bootstrapComplete) -eq $Null))
+    {
+        exit 0
+    }
+
+    if ((Compare-Object (Get-Content $rootToolVersions) (Get-Content $bootstrapComplete)) -eq 0)
+    {
+        exit 0
+    }
 }
 
 $initCliScript = "dotnet-install.ps1"

@@ -9,12 +9,15 @@
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
-    <TargetOS Condition="'$(TargetOS)' == ''">Linux</TargetOS>
+    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' == 'Windows_NT'">Windows_NT</TargetOS>
+    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' != 'Windows_NT'">Linux</TargetOS>
   </PropertyGroup>
 
   <PropertyGroup>
     <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
     <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
+    <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
+    <TarBallExtension Condition="'$(OS)' != 'Windows_NT'">.tar.gz</TarBallExtension>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -38,6 +41,10 @@
     <CoreFxPackageOutputDirectory>$(CoreFxDirectory)bin/packages/$(Configuration)/</CoreFxPackageOutputDirectory>
     <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
   </PropertyGroup>
+
+  <Target Name="Test">
+    <Message Importance="High" Text="$(Configuration) $(TargetOS) $(Platform)" />
+  </Target>
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreFx;BuildRoslyn;BuildCoreSetup">
     <Message Importance="Normal" Text="Build Complete" />
@@ -121,12 +128,18 @@
 
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
                            ReplacementRuntimeId="$(TargetRid)"
-                           FilterRuntimeId="ubuntu.14.04-x64" />
+                           FilterRuntimeId="ubuntu.14.04-x64"
+                           Condition="'$(OS)' != 'Windows_NT'" />
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
 
-    <Exec Command="$(RoslynDirectory)cibuild$(ShellExtension) --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting"
-          WorkingDirectory="$(RoslynDirectory)" />
+    <Exec Command="$(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting"
+          WorkingDirectory="$(RoslynDirectory)"
+          Condition="'$(OS)' != 'Windows_NT'" />
+
+    <Exec Command="$(RoslynDirectory)cibuild.cmd /$(Configuration) /SkipTests"
+          WorkingDirectory="$(RoslynDirectory)"
+          Condition="'$(OS)' == 'Windows_NT'" />
 
     <Exec Command="$(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/corerun $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
           WorkingDirectory="$(RoslynDirectory)" />
@@ -168,19 +181,29 @@
       </VersionFile>
     </ItemGroup>
 
+    <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) -Targets UpdateFiles"
+          Condition="'$(OS)' == 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
     <Exec Command="@(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles"
+          Condition="'$(OS)' != 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
 
+    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile,Package"
+          Condition="'$(OS)' == 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
     <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package"
+          Condition="'$(OS)' != 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
     <ItemGroup>
       <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
-      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*.tar.gz" />
+      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*$(TarBallExtension)" />
     </ItemGroup>
 
     <Copy SourceFiles="@(CoreSetupPackages)"
