@@ -75,6 +75,10 @@ while [[ $# -gt 0 ]]
       ;;
       -f|--corefx_repo_path)
       COREFXBINDIR="$2/bin/Linux.x64.Release/native"
+      #Older builds of corefx place binaries in "Native" instead of "native"
+      if [[ ! -d $COREFXBINDIR ]]; then
+        COREFXBINDIR="$2/bin/Linux.x64.Release/Native"
+      fi
       shift 2
       ;;
       -s|--coresetup_repo_path)
