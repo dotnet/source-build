@@ -35,8 +35,8 @@ done
 
 set -euo pipefail
 
-CLIPATH="./Tools/dotnetcli"
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
+CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
 
 
 if [[ ! "$CLIPAYLOAD" == "" ]] && [[ ! -d "$CLIPAYLOAD" ]]; then
@@ -63,14 +63,6 @@ if [[ ! "$CLIPAYLOAD" == "" ]]; then
   SDKVERSION="${SDKVERSIONS[0]}"
 fi
 
-SDKPATH="$CLIPATH/sdk/$SDKVERSION"
-echo "SDKPATH: $SDKPATH"
-
-if [[ ! -d $SDKPATH ]]; then
-  echo "Error: Unable to find CLI sdk at '$SDKPATH'."
-  exit 1
-fi
-
 IFS=$'\n\t'
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -80,6 +72,16 @@ if [[ "$CLIPAYLOAD" == "" ]]; then
   SDKVERSION="$(cat $SCRIPT_ROOT/.cliversion)"
   ./bootstrap/bootstrap.sh
 fi
+
+SDKPATH="$CLIPATH/sdk/$SDKVERSION"
+echo "SDKPATH: $SDKPATH"
+
+if [[ ! -d $SDKPATH ]]; then
+  echo "Error: Unable to find CLI sdk at '$SDKPATH'."
+  exit 1
+fi
+
+
 $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll build.proj $ADDITIONALARGS"
