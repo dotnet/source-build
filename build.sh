@@ -13,7 +13,7 @@ usage()
 CLIPAYLOAD=""
 SDKVERSION=""
 
-ADDITIONALARGS=""
+ADDITIONALARGS=()
 while [[ $# -gt 0 ]]
   do
     key="$1"
@@ -28,7 +28,7 @@ while [[ $# -gt 0 ]]
       exit 0
       ;;
       *)
-      ADDITIONALARGS="$ADDITIONALARGS \"$key\""
+      ADDITIONALARGS+=($key)
       shift
     esac
 done
@@ -84,8 +84,8 @@ fi
 
 $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
-echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj$ADDITIONALARGS"
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll \"$SCRIPT_ROOT/build.proj\"$ADDITIONALARGS
+echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "${ADDITIONALARGS[@]}"
 
 if [[ ! "$CLIPAYLOAD" == "" ]]; then
   echo "Patch CLI with built binaries"
