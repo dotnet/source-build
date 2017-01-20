@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <ItemGroup>
+    <CoreProject Include="coreclr;corefx" />
+  </ItemGroup>
+
+  <!-- CoreClr and CoreFx Targets -->
+  <Target Name="BuildCoreRepos"
+          Inputs="%(CoreProject.Identity)"
+          Outputs="fake">
+    <PropertyGroup>
+      <CoreProjectName>%(CoreProject.Identity)</CoreProjectName>
+      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(CoreProjectName)' == 'coreclr'">
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
+      <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(CoreProjectName)' == 'corefx'">
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
+      <CoreArguments>-$(Configuration) -buildArch=$(Platform) -BuildTests=false</CoreArguments>
+    </PropertyGroup>
+
+    <Exec Command="$(CoreProjectDirectory)build$(ShellExtension) $(CoreArguments)"
+          WorkingDirectory="$(CoreProjectDirectory)" />
+
+    <ItemGroup>
+      <CorePackages Include="$(CorePackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CorePackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CorePackages)"
+                       OutputPath="$(IntermediatePath)$(CoreProjectName)Versions.txt" />
+  </Target>
+
+  <Target Name="CleanCore"
+          Inputs="%(CoreProject.Identity)"
+          Outputs="fake">
+    <PropertyGroup>
+      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)</CoreProjectDirectory>
+    </PropertyGroup>
+    <Exec Command="$(CoreProjectDirectory)clean$(ShellExtension) --all"
+          WorkingDirectory="$(CoreProjectDirectory)" />
+  </Target>
+</Project>
