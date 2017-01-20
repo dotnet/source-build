@@ -12,6 +12,8 @@ usage()
 
 CLIPAYLOAD=""
 SDKVERSION=""
+
+ADDITIONALARGS=""
 while [[ $# -gt 0 ]]
   do
     key="$1"
@@ -26,9 +28,8 @@ while [[ $# -gt 0 ]]
       exit 0
       ;;
       *)
-      echo "Unknown argument specified '$key'."
-      usage
-      exit 1
+      ADDITIONALARGS="$ADDITIONALARGS $key"
+      shift
     esac
 done
 
@@ -81,8 +82,8 @@ if [[ "$CLIPAYLOAD" == "" ]]; then
 fi
 $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
-echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll build.proj $@"
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll build.proj "$@"
+echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll build.proj $ADDITIONALARGS"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll build.proj "$ADDITIONALARGS"
 
 if [[ ! "$CLIPAYLOAD" == "" ]]; then
   echo "Patch CLI with built binaries"
