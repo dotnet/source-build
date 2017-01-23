@@ -1,4 +1,6 @@
 #!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
 
 usage()
 {
@@ -12,8 +14,8 @@ usage()
 
 CLIPAYLOAD=""
 SDKVERSION=""
-
 ADDITIONALARGS=()
+
 while [[ $# -gt 0 ]]
   do
     key="$1"
@@ -32,8 +34,6 @@ while [[ $# -gt 0 ]]
       shift
     esac
 done
-
-set -euo pipefail
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
@@ -63,7 +63,6 @@ if [[ ! "$CLIPAYLOAD" == "" ]]; then
   SDKVERSION="${SDKVERSIONS[0]}"
 fi
 
-IFS=$'\n\t'
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
