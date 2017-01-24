@@ -3,7 +3,6 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
   <Target Name="BuildCoreClr">
-    <Message Text="Build CoreClr" Importance="High" />    
     <PropertyGroup>
       <CoreProjectName>coreclr</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
@@ -24,12 +23,11 @@
   </Target>
 
   <Target Name="BuildCoreFx">
-<Message Text="Build CoreFx" Importance="High" />
     <PropertyGroup>
       <CoreProjectName>corefx</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
-      <CoreBuildCommand>$(CoreProjectDirectory)build-native$(ShellExtension)</CoreBuildCommand>
+      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform) -BuildTests=false</CoreArguments>
     </PropertyGroup>
     <MSBuild 
@@ -45,7 +43,6 @@
   </Target>
 
   <Target Name="BuildCoreRepo">
-<Message Text="Building core - $(CoreProjectName)" Importance="High" />
     <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
           WorkingDirectory="$(CoreProjectDirectory)" />
 

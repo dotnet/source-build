@@ -60,7 +60,6 @@ usage()
     usage
     exit 1
   fi
-
   if [[ ! "$NETCORESDK" == "" ]] && [[ "$SHAREDFRAMEWORKPATH" == "" ]]; then
     echo "Error: Missing required parameter '--shared_framework_path'"
     usage
