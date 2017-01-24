@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
-  <ItemGroup>
-    <CoreProject Include="coreclr;corefx" />
-  </ItemGroup>
 
-  <Target Name="BuildCoreClr"
-          AfterTargets="BuildCoreRepo">
+  <Target Name="BuildCoreClr">
+    <Message Text="Build CoreClr" Importance="High" />    
     <PropertyGroup>
       <CoreProjectName>coreclr</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
@@ -14,10 +11,20 @@
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
     </PropertyGroup>
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+    />
   </Target>
 
-  <Target Name="BuildCoreFx"
-          AfterTargets="BuildCoreRepo">
+  <Target Name="BuildCoreFx">
+<Message Text="Build CoreFx" Importance="High" />
     <PropertyGroup>
       <CoreProjectName>corefx</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
@@ -25,9 +32,20 @@
       <CoreBuildCommand>$(CoreProjectDirectory)build-native$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform) -BuildTests=false</CoreArguments>
     </PropertyGroup>
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+    />
   </Target>
 
-  <Target Name="BuildCoreRepo" >
+  <Target Name="BuildCoreRepo">
+<Message Text="Building core - $(CoreProjectName)" Importance="High" />
     <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
           WorkingDirectory="$(CoreProjectDirectory)" />
 
@@ -44,12 +62,16 @@
 
   <Target Name="CleanCoreClr"
           AfterTargets="CleanCoreRepo">
-    <CoreProjectName>coreclr</CoreProjectName>
+    <PropertyGroup>  
+      <CoreProjectName>coreclr</CoreProjectName>
+    </PropertyGroup>
   </Target>
 
   <Target Name="CleanCoreFx"
           AfterTargets="CleanCoreRepo">
-    <CoreProjectName>corefx</CoreProjectName>
+    <PropertyGroup>
+      <CoreProjectName>corefx</CoreProjectName>
+    </PropertyGroup>
   </Target>
 
   <Target Name="CleanCoreRepo">

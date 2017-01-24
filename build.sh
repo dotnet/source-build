@@ -2,11 +2,12 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-ADDITIONALARGS=()
+ORIGINALARGS=$#
+declare -a ADDITIONALARGS
 SHAREDFRAMEWORKPATH=""
 NETCORESDK=""
 SDKVERSION=""
-BOOTSTRAPUNSUPPORTED=false
+BOOTSTRAPUNSUPPORTED="false"
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -25,8 +26,7 @@ usage()
     echo "A new version of the shared framework is available from https://dotnetcli.blob.core.windows.net/dotnet/master/Binaries/Latest/dotnet-ubuntu-x64.latest.tar.gz"
 }
 
-parse_args()
-{
+
   while [[ $# -gt 0 ]]
     do
       key="$1"
@@ -71,10 +71,11 @@ parse_args()
     usage
     exit 1
   fi
-  if [[ ! "$NETCORESDK" == ""]] && [[ ! "$SHAREDFRAMEWORKPATH" == "" ]]; then
-    BOOTSTRAPUNSUPPORTED=true
+  if [[ ! "$NETCORESDK" == "" ]] && [[ ! "$SHAREDFRAMEWORKPATH" == "" ]]; then
+    BOOTSTRAPUNSUPPORTED="true"
   fi
-}
+
+
 
 determine_sdk_version()
 {
@@ -99,15 +100,15 @@ determine_sdk_version()
 bootstrap()
 {
   # bootstrap the CLI if no local payload is specified
-  if [[ "$BOOTSTRAPUNSUPPORTED" == false ]]; then
+  if [[ ! "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
     SDKVERSION="$(cat $SCRIPT_ROOT/.cliversion)"
     ./bootstrap/bootstrap.sh
     CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
   fi
 
-  if [[ "$BOOTSTRAPUNSUPPORTED" == true ]]; then
+  if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
     CLIPATH=$NETCORESDK.patch
-    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -o $CLIPATH
+    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -o $CLIPATH
     determine_sdk_version
   fi
 
@@ -120,7 +121,7 @@ bootstrap()
 }
 
 # Parse command-line arguments
-parse_args
+# parse_args
 
 # Bootstrap supported or unsupported OS
 bootstrap
@@ -133,10 +134,16 @@ $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNe
 echo "$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 
-echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}"
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "${ADDITIONALARGS[@]}"
+ARGS=""
+ARGCOUNT=${ADDITIONALARGS[@]+"${ADDITIONALARGS[@]}"}
+if [[ $ARGCOUNT -gt 0 ]]; then
+  ARGS="${ADDITIONALARGS[*]}"
+fi
 
-if [[ "$BOOTSTRAPUNSUPPORTED" == true ]]; then
+echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj $ARGS"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "$ARGS"
+
+if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
   echo "Patch CLI with built binaries"
   #$SCRIPT_ROOT/buildscripts/patchpayload.sh --verbose --netcore_sdk_path "$NETCORESDK" --coreclr_repo_path $SCRIPT_ROOT/src/coreclr --corefx_repo_path $SCRIPT_ROOT/src/corefx --coresetup_repo_path $SCRIPT_ROOT/src/core-setup
 fi

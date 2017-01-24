@@ -8,9 +8,10 @@ usage()
     echo "build.sh [options]"
     echo ""
     echo "Options"
-    echo " -s|--netcore_sdk_path [.NET Core SDK Path]"
-    echo " -f|--netcore_sharedframework_path"
+    echo " -s|--netcore_sdk_path [.NET Core SDK path]"
+    echo " -f|--netcore_sharedframework_path [Shared framework path]"
     echo " -o|--output_folder [output folder]"
+    echo " -x|--corefx_repo_path [Core FX repo root path]"
     echo " -h|--help"
 }
 
@@ -20,6 +21,20 @@ create_output_folder() {
   fi
 
   cp -r $NETCORESDKPATH/* $OUTPUTFOLDER
+}
+
+build_corefx_native() {
+echo "CoreFx Repo Root: $COREFXREPOROOT"
+  COREFXBINDIR=$COREFXREPOROOT/bin/Linux.x64.Release/Native
+  
+
+  if [[ ! -d "$COREFXBINDIR" ]]; then
+    echo "Unable to find CoreFx bin directory, building corefx"
+    $COREFXREPOROOT/src/Native/build-native.sh x64 Release
+  fi
+
+  echo "Copy native CoreFx binaries into shared framework patch"
+  cp -fv $COREFXBINDIR/*.so $ROLLFORWARDNETCORESHAREDPATH
 }
 
 create_sdk_folder() {
@@ -68,13 +83,13 @@ seed_roll_forward_shared_framework_folder() {
   cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $ROLLFORWARDNETCORESHAREDPATH
 
   echo "Remove Shared Framework entries from SDK deps.json..."
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
-du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
+  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
 
   echo "Seeding completed."
 }
@@ -84,6 +99,7 @@ scriptRoot="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 NETCORESDKPATH=""
 SDKVERSION=""
+COREFXREPOROOT=""
 OUTPUTFOLDER=""
 ADDITIONALARGS=()
 
@@ -98,6 +114,10 @@ while [[ $# -gt 0 ]]
       ;;
       -f|--netcore_sharedframework_path)
       NETCORESHAREDFRAMEWORKPATH="$2"
+      shift 2
+      ;;
+      -x|--corefx_repo_path)
+      COREFXREPOROOT="$2"
       shift 2
       ;;
       -o|--output_folder)
@@ -121,5 +141,6 @@ NETCORESHAREDPATH=$NETCORESDKPATH/shared
 create_output_folder
 create_sdk_folder
 seed_roll_forward_shared_framework_folder
+build_corefx_native
 
 echo "Created NETCore Patch folder at $OUTPUTFOLDER"
