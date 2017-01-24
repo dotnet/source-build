@@ -46,7 +46,7 @@
           Condition="'$(OS)' == 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
-    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package"
+    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package --skip-deb-package-build"
           Condition="'$(OS)' != 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
