@@ -9,10 +9,12 @@ usage()
     echo ""
     echo "Options"
     echo " -s|--netcore_sdk_path [.NET Core SDK Path]"
+    echo " -f|--shared_framework_path [Shared Framework Path]"
     echo " -h|--help"
 }
 
 CLIPAYLOAD=""
+SHAREDFRAMEWORKPATH=""
 SDKVERSION=""
 ADDITIONALARGS=()
 
@@ -23,6 +25,10 @@ while [[ $# -gt 0 ]]
     case $key in
       -s|--netcore_sdk_path)
       CLIPAYLOAD="$2"
+      shift 2
+      ;;
+      -f|--shared_framework_path)
+      SHAREDFRAMEWORKPATH="$2"
       shift 2
       ;;
       -h|--help)
@@ -38,11 +44,20 @@ done
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
 
-
 if [[ ! "$CLIPAYLOAD" == "" ]] && [[ ! -d "$CLIPAYLOAD" ]]; then
   echo "--clipayload option specified, but cannot find directory '$CLIPAYLOAD'"
   exit 1
 fi
+if [[ ! "$SHAREDFRAMEWORKPATH" == "" ]] && [[ ! -d "$SHAREDFRAMEWORKPATH" ]]; then
+  echo "--shared_framework_path option specified, but cannot find directory '$SHAREDFRAMEWORKPATH'"
+  exit 1
+fi
+
+if [[ ! "$CLIPAYLOAD" == "" ]] && [[ "$SHAREDFRAMEWORKPATH" == "" ]]; then
+  echo "Missing required parameter '--shared_framework_path'"
+  exit 1
+fi
+
 if [[ ! "$CLIPAYLOAD" == "" ]]; then
   echo "Using specified payload from $CLIPAYLOAD"
   CLIPATH="$CLIPAYLOAD"
@@ -72,6 +87,11 @@ if [[ "$CLIPAYLOAD" == "" ]]; then
   ./bootstrap/bootstrap.sh
 fi
 
+if [[ ! "$CLIPAYLOAD" == "" ]]; then
+  ./bootstrap/bootstrap-unsupported.sh -s $CLIPAYLOAD -f $SHAREDFRAMEWORKPATH -o $CLIPAYLOAD.patch
+  CLIPATH=$CLIPAYLOAD.patch
+fi
+
 SDKPATH="$CLIPATH/sdk/$SDKVERSION"
 echo "SDKPATH: $SDKPATH"
 
@@ -88,6 +108,6 @@ $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "${ADDITIONALARGS[@
 
 if [[ ! "$CLIPAYLOAD" == "" ]]; then
   echo "Patch CLI with built binaries"
-  $SCRIPT_ROOT/buildscripts/patchpayload.sh --verbose --netcore_sdk_path "$CLIPAYLOAD" --coreclr_repo_path $SCRIPT_ROOT/src/coreclr --corefx_repo_path $SCRIPT_ROOT/src/corefx --coresetup_repo_path $SCRIPT_ROOT/src/core-setup
+#  $SCRIPT_ROOT/buildscripts/patchpayload.sh --verbose --netcore_sdk_path "$CLIPAYLOAD" --coreclr_repo_path $SCRIPT_ROOT/src/coreclr --corefx_repo_path $SCRIPT_ROOT/src/corefx --coresetup_repo_path $SCRIPT_ROOT/src/core-setup
 fi
 exit 0
