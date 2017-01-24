@@ -4,7 +4,7 @@ $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 $ScriptRoot = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $ScriptRoot ".cliversion")
 
-& "$ScriptRoot\bootstrap\bootstrap.ps1" -RepositoryRoot "$ScriptRoot"
+& "$ScriptRoot\bootstrap\bootstrap.ps1"
 & "$ScriptRoot\Tools\dotnetcli\dotnet" restore "$ScriptRoot\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj"
 & "$ScriptRoot\Tools\dotnetcli\dotnet" build "$ScriptRoot\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj"
 & "$ScriptRoot\Tools\dotnetcli\dotnet" "$ScriptRoot\Tools\dotnetcli\sdk\$SdkVersion\MSBuild.dll" "$ScriptRoot\build.proj" @args
