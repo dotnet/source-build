@@ -107,7 +107,7 @@ bootstrap()
 
   if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
     CLIPATH=$NETCORESDK.patch
-    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -o $CLIPATH
+    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -r $SCRIPT_ROOT/src/coreclr -o $CLIPATH
     determine_sdk_version
   fi
 
