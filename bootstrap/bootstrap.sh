@@ -72,7 +72,7 @@ download() {
 }
 
 verbose=false
-repoRoot=`pwd`
+repoRoot=$(cd "$(dirname "$0")/../" ; pwd -P)
 toolsLocalPath="<auto>"
 cliLocalPath="<auto>"
 symlinkPath="<auto>"

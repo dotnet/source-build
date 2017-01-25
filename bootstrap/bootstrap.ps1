@@ -1,6 +1,6 @@
 param
 (
-    [Parameter(Mandatory=$false)][string]$RepositoryRoot = $PSScriptRoot,
+    [Parameter(Mandatory=$false)][string]$RepositoryRoot = (Join-Path $PSScriptRoot ".."),
     [Parameter(Mandatory=$false)][string]$ToolsLocalPath = (Join-Path $RepositoryRoot "Tools"),
     [Parameter(Mandatory=$false)][string]$CliLocalPath = (Join-Path $ToolsLocalPath "dotnetcli"),
     [Parameter(Mandatory=$false)][string]$SharedFrameworkSymlinkPath = (Join-Path $ToolsLocalPath "dotnetcli\shared\Microsoft.NETCore.App\version"),
@@ -47,7 +47,7 @@ else
 }
 
 # download CLI boot-strapper script
-Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -OutFile $dotnetInstallPath
+Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -UseDefaultCredentials -OutFile $dotnetInstallPath
 
 # load the version of the CLI
 $rootCliVersion = Join-Path $RepositoryRoot ".cliversion"
