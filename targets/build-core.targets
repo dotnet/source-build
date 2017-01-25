@@ -28,7 +28,7 @@
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
-      <CoreArguments>-$(Configuration) -buildArch=$(Platform) -BuildTests=false</CoreArguments>
+      <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>
     </PropertyGroup>
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
