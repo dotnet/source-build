@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+
+  <PropertyGroup>
+    <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
+  </PropertyGroup>
+
+  <!-- Core-Setup targets -->
+  <Target Name="BuildCoreSetup">
+    <GetHostRid Condition="'$(TargetRid)' == ''">
+      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
+    <PropertyGroup>
+      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(TargetRid)/packages/</CoreSetupPackageOutputDirectory>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <VersionFile Include="$(IntermediatePath)coreclrVersions.txt">
+        <Environment>CORECLR</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)corefxVersions.txt">
+        <Environment>COREFX</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
+        <Environment>ROSLYN</Environment>
+      </VersionFile>
+    </ItemGroup>
+
+    <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; powershell.exe $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles"
+          Condition="'$(OS)' == 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <Exec Command="@(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles"
+          Condition="'$(OS)' != 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+
+    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile,Package"
+          Condition="'$(OS)' == 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package"
+          Condition="'$(OS)' != 'Windows_NT'"
+          WorkingDirectory="$(CoreSetupDirectory)" />
+
+    <ItemGroup>
+      <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
+      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*$(TarBallExtension)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreSetupPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CoreSetupPackages)"
+                       OutputPath="$(IntermediatePath)CoreSetupVersions.txt" />
+
+    <Copy SourceFiles="@(CoreSetupTarballs)"
+          DestinationFolder="$(OutputPath)" />
+  </Target>
+
+  <Target Name="CleanCoreSetup">
+    <Message Importance="Normal" Text="$(CoreSetupDirectory)clean$(ShellExtension)" />
+  </Target>
+</Project>

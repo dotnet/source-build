@@ -1,56 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
-  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
-  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
-  <UsingTask AssemblyFile="$(MSBuildThisfileDirectory)tasks/Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
+  <Import Project="dir.props" />
 
   <PropertyGroup>
-    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
-    <Platform Condition="'$(Platform)' == ''">x64</Platform>
-    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' == 'Windows_NT'">Windows_NT</TargetOS>
-    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' != 'Windows_NT'">Linux</TargetOS>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
-    <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
-    <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
-    <TarBallExtension Condition="'$(OS)' != 'Windows_NT'">.tar.gz</TarBallExtension>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <SubmoduleDirectory>$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
-    <CoreClrDirectory>$(SubmoduleDirectory)coreclr/</CoreClrDirectory>
-    <CoreFxDirectory>$(SubmoduleDirectory)corefx/</CoreFxDirectory>
-    <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
-    <RoslynDirectory>$(SubmoduleDirectory)roslyn/</RoslynDirectory>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <BaseOutputPath>$(MSBuildThisFileDirectory)bin/</BaseOutputPath>
-    <BaseIntermediatePath>$(MSBuildThisFileDirectory)obj/</BaseIntermediatePath>
-    <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
-    <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
-    <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <CoreClrPackageOutputDirectory>$(CoreClrDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CoreClrPackageOutputDirectory>
-    <CoreFxPackageOutputDirectory>$(CoreFxDirectory)bin/packages/$(Configuration)/</CoreFxPackageOutputDirectory>
-    <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
+    <BuildProjectTargets>
+      BuildCoreClr;
+      BuildCoreFx;
+      BuildRoslyn;
+      BuildCoreSetup;
+    </BuildProjectTargets>
+    <CleanProjectTargets>
+      CleanCoreClr;
+      CleanCoreFx;
+      CleanRoslyn;
+      CleanCoreSetup;
+    </CleanProjectTargets>
   </PropertyGroup>
 
   <Target Name="Test">
     <Message Importance="High" Text="$(Configuration) $(TargetOS) $(Platform)" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="PrepareOutput;BuildCoreClr;BuildCoreFx;BuildRoslyn;BuildCoreSetup">
+  <Target Name="Build" DependsOnTargets="PrepareOutput;$(BuildProjectTargets)">
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="CleanOutput;CleanCoreClr;CleanCoreFx;CleanRoslyn;CleanCoreSetup">
+  <Target Name="Clean" DependsOnTargets="CleanOutput;$(CleanCoreTargets)">
     <Message Importance="Normal" Text="Clean Complete" />
   </Target>
 
@@ -66,157 +41,8 @@
     <RemoveDir Directories="$(OutputPath)" />
     <RemoveDir Directories="$(IntermediatePath)" />
   </Target>
-
-  <!-- CoreCLR Targets -->
-  <Target Name="BuildCoreClr">
-    <Exec Command="$(CoreClrDirectory)build$(ShellExtension) $(Platform) $(Configuration) skiptests"
-          WorkingDirectory="$(CoreClrDirectory)" />
-
-    <ItemGroup>
-      <CoreClrPackages Include="$(CoreClrPackageOutputDirectory)*.nupkg" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CoreClrPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
-
-    <WriteVersionsFile NugetPackages="@(CoreClrPackages)"
-                       OutputPath="$(IntermediatePath)CoreClrVersions.txt" />
-  </Target>
-
-  <Target Name="CleanCoreClr">
-    <Exec Command="$(CoreClrDirectory)clean$(ShellExtension) --all"
-          WorkingDirectory="$(CoreClrDirectory)" />
-  </Target>
-
-  <!-- CoreFX Targets -->
-  <Target Name="BuildCoreFx">
-    <Exec Command="$(CoreFxDirectory)build-native$(ShellExtension) -$(Configuration) -buildArch=$(Platform)"
-          WorkingDirectory="$(CoreFxDirectory)" />
-
-    <Exec Command="$(CoreFxDirectory)build-managed$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -BuildTests=false"
-          WorkingDirectory="$(CoreFxDirectory)" />
-
-    <Exec Command="$(CoreFxDirectory)build-packages$(ShellExtension) -$(Configuration) -DisableManagedPackage"
-          WorkingDirectory="$(CoreFxDirectory)" />
-
-    <ItemGroup>
-      <CoreFxPackages Include="$(CoreFxPackageOutputDirectory)*.nupkg" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CoreFxPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
-
-    <WriteVersionsFile NugetPackages="@(CoreFxPackages)"
-                       OutputPath="$(IntermediatePath)CoreFxVersions.txt" />
-  </Target>
-
-  <Target Name="CleanCoreFx">
-    <Exec Command="$(CoreFxDirectory)clean$(ShellExtension) --all"
-          WorkingDirectory="$(CoreFxDirectory)" />
-  </Target>
-
-  <!-- Roslyn Targets -->
-  <Target Name="BuildRoslyn">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
-    </GetHostRid>
-
-    <ItemGroup>
-      <RoslynProjectJsonFiles Include="$(RoslynDirectory)/**/project.json" />
-      <NuSpecFiles Include="$(RoslynDirectory)/**/*.nuspec" />
-    </ItemGroup>
-
-    <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
-                           ReplacementRuntimeId="$(TargetRid)"
-                           FilterRuntimeId="ubuntu.14.04-x64"
-                           Condition="'$(OS)' != 'Windows_NT'" />
-
-    <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
-
-    <Exec Command="$(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting"
-          WorkingDirectory="$(RoslynDirectory)"
-          Condition="'$(OS)' != 'Windows_NT'" />
-
-    <Exec Command="$(RoslynDirectory)cibuild.cmd /$(Configuration) /SkipTests"
-          WorkingDirectory="$(RoslynDirectory)"
-          Condition="'$(OS)' == 'Windows_NT'" />
-
-    <Exec Command="$(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/corerun $(RoslynDirectory)Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
-          WorkingDirectory="$(RoslynDirectory)" />
-
-    <ItemGroup>
-      <RoslynPackages Include="$(RoslynPackageOutputDirectory)*.nupkg" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(RoslynPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
-
-    <WriteVersionsFile NugetPackages="@(RoslynPackages)"
-                       OutputPath="$(IntermediatePath)RoslynVersions.txt" />
-  </Target>
-
-  <Target Name="CleanRoslyn">
-    <RemoveDir Directories="$(RoslynDirectory)Binaries" />
-  </Target>
-
-  <!-- Core-Setup targets -->
-  <Target Name="BuildCoreSetup">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
-    </GetHostRid>
-
-    <PropertyGroup>
-      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(TargetRid)/packages/</CoreSetupPackageOutputDirectory>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <VersionFile Include="$(IntermediatePath)CoreClrVersions.txt">
-        <Environment>CORECLR</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)CoreFxVersions.txt">
-        <Environment>COREFX</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
-        <Environment>ROSLYN</Environment>
-      </VersionFile>
-    </ItemGroup>
-
-    <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) -Targets UpdateFiles"
-          Condition="'$(OS)' == 'Windows_NT'"
-          WorkingDirectory="$(CoreSetupDirectory)" />
-
-    <Exec Command="@(VersionFile->'%(Environment)_VERSION_URL=file://%(FullPath)', ' ') $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles"
-          Condition="'$(OS)' != 'Windows_NT'"
-          WorkingDirectory="$(CoreSetupDirectory)" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
-                            SourceName="source-built"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
-
-    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile,Package"
-          Condition="'$(OS)' == 'Windows_NT'"
-          WorkingDirectory="$(CoreSetupDirectory)" />
-
-    <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile,Package"
-          Condition="'$(OS)' != 'Windows_NT'"
-          WorkingDirectory="$(CoreSetupDirectory)" />
-
-    <ItemGroup>
-      <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
-      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*$(TarBallExtension)" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CoreSetupPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
-
-    <WriteVersionsFile NugetPackages="@(CoreSetupPackages)"
-                       OutputPath="$(IntermediatePath)CoreSetupVersions.txt" />
-
-    <Copy SourceFiles="@(CoreSetupTarballs)"
-          DestinationFolder="$(OutputPath)" />
-  </Target>
-
-  <Target Name="CleanCoreSetup">
-    <Message Importance="Normal" Text="$(CoreSetupDirectory)clean$(ShellExtension)" />
-  </Target>
+ 
+  <Import Project="$(MSBuildThisfileDirectory)targets/build-core.targets" />
+  <Import Project="$(MSBuildThisfileDirectory)targets/build-roslyn.targets" />
+  <Import Project="$(MSBuildThisfileDirectory)targets/build-core-setup.targets" />
 </Project>

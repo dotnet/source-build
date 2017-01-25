@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' == 'Windows_NT'">Windows_NT</TargetOS>
+    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' != 'Windows_NT'">Linux</TargetOS>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
+    <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
+    <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
+    <TarBallExtension Condition="'$(OS)' != 'Windows_NT'">.tar.gz</TarBallExtension>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)bin/</BaseOutputPath>
+    <TaskDirectory>$(MSBuildThisFileDirectory)tasks/</TaskDirectory>
+    <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
+    <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
+    <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
+    <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
+  </PropertyGroup>
+</Project>

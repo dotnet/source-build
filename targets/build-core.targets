@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+
+  <Target Name="BuildCoreClr">
+    <PropertyGroup>
+      <CoreProjectName>coreclr</CoreProjectName>
+      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
+      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
+      <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
+    </PropertyGroup>
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+    />
+  </Target>
+
+  <Target Name="BuildCoreFx">
+    <PropertyGroup>
+      <CoreProjectName>corefx</CoreProjectName>
+      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
+      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
+      <CoreArguments>-$(Configuration) -buildArch=$(Platform) -BuildTests=false</CoreArguments>
+    </PropertyGroup>
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+    />
+  </Target>
+
+  <Target Name="BuildCoreRepo">
+    <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
+          WorkingDirectory="$(CoreProjectDirectory)" />
+
+    <ItemGroup>
+      <CorePackages Include="$(CorePackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CorePackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(CorePackages)"
+                       OutputPath="$(IntermediatePath)$(CoreProjectName)Versions.txt" />
+  </Target>
+
+  <Target Name="CleanCoreClr"
+          AfterTargets="CleanCoreRepo">
+    <PropertyGroup>  
+      <CoreProjectName>coreclr</CoreProjectName>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CleanCoreFx"
+          AfterTargets="CleanCoreRepo">
+    <PropertyGroup>
+      <CoreProjectName>corefx</CoreProjectName>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="CleanCoreRepo">
+    <PropertyGroup>
+      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)</CoreProjectDirectory>
+    </PropertyGroup>
+    <Exec Command="$(CoreProjectDirectory)clean$(ShellExtension) --all"
+          WorkingDirectory="$(CoreProjectDirectory)" />
+  </Target>
+</Project>
