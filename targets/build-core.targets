@@ -8,8 +8,9 @@
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
-      <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
+      <CoreArguments>$(Platform) $(Configuration) skiptests msbuildonunsupportedplatform</CoreArguments>
     </PropertyGroup>
+    <!-- Build binaries -->
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
       Targets="BuildCoreRepo" 
@@ -18,7 +19,21 @@
        CoreProjectDirectory=$(CoreProjectDirectory);
        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
        CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments)"
+       CoreArguments=$(CoreArguments);
+       BuildTools_Dir=$(BuildTools_Dir);"
+    />
+    <!-- Build packages -->
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreProjectDirectory)build-packages$(ShellExtension);
+       CoreArguments=-BuildType=Release -BuildArch=x64;
+       BuildTools_Dir=$(BuildTools_Dir);
+       SkipInitTools=true"
     />
   </Target>
 
@@ -28,6 +43,7 @@
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
+      <CoreBuildCommand Condition="'$(ShellExtension)' == '.sh' and '$(DotNet_Tool_Dir)' != ''">$(CoreBuildCommand)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>
     </PropertyGroup>
     <MSBuild 
@@ -38,11 +54,30 @@
        CoreProjectDirectory=$(CoreProjectDirectory);
        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
        CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments)"
+       CoreArguments=$(CoreArguments);
+       BuildTools_Dir=$(BuildTools_Dir);"
     />
   </Target>
 
-  <Target Name="BuildCoreRepo">
+  <Target Name="InitCoreRepoTools"
+          Condition="'$(SkipInitTools)' != 'true'">
+    <RemoveDir Condition="'$(BuildTools_Dir)' != ''"
+               Directories="$(CoreProjectDirectory)/Tools" />
+    <ItemGroup>
+      <BuildToolsFiles Include="$(BuildTools_Dir)/**" />
+      <BuildToolsFiles Include="$(CoreProjectDirectory)Tools-Override/**" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BuildToolsFiles)"
+          DestinationFiles="@(BuildToolsFiles-> '$(CoreProjectDirectory)Tools/%(RecursiveDir)%(Filename)%(Extension)')" />
+      
+    <Copy SourceFiles="$(BuildTools_Dir)/BuildToolsVersion.txt"
+          DestinationFolder="$(CoreProjectDirectory)" />
+           
+  </Target>
+
+  <Target Name="BuildCoreRepo"
+          DependsOnTargets="InitCoreRepoTools">
     <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
           WorkingDirectory="$(CoreProjectDirectory)" />
 

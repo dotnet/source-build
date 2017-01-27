@@ -211,6 +211,58 @@ if [ ! -e $symlinkPath ]; then
     ln -s $junctionTarget $symlinkPath
 fi
 
+# create a project.json for the packages to restore
+projectJson="$toolsLocalPath/project.json"
+pjContent="{ \"dependencies\": {"
+while read v; do
+    IFS='=' read -r -a line <<< "$v"
+    pjContent="$pjContent \"${line[0]}\": \"${line[1]}\","
+done <$rootToolVersions
+pjContent="$pjContent }, \"frameworks\": { \"netcoreapp1.0\": { } } }"
+echo $pjContent > $projectJson
+
+# now restore the packages
+buildToolsSource="${BUILDTOOLS_SOURCE:-https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json}"
+nugetOrgSource="https://api.nuget.org/v3/index.json"
+
+packagesPath="$repoRoot/packages"
+dotNetExe="$cliLocalPath/dotnet"
+restoreArgs="restore $projectJson --packages $packagesPath --source $buildToolsSource --source $nugetOrgSource"
+say_verbose "Running $dotNetExe $restoreArgs"
+$dotNetExe $restoreArgs
+if [ $? != 0 ]; then
+    say_err "project.json restore failed with exit code $?"
+    exit $?
+fi
+
+# now stage the contents to tools directory and run any init scripts
+while read v; do
+    IFS='=' read -r -a line <<< "$v"
+    # verify that the version we expect is what was restored
+    pkgVerPath="$packagesPath/${line[0]}/${line[1]}"
+    if [ ! -d $pkgVerPath ]; then
+        say_err "Directory $pkgVerPath doesn't exist, ensure that the version restore matches the version specified."
+        exit 1
+    fi
+    # at present we have the following conventions when staging package content:
+    #   1.  if a package contains a "tools" directory then recursively copy its contents
+    #       to a directory named the package ID that's under $ToolsLocalPath.
+    #   2.  if a package contains a "libs" directory then recursively copy its contents
+    #       under the $ToolsLocalPath directory.
+    #   3.  if a package contains a file "lib\init-tools.cmd" execute it.
+    if [ -d "$pkgVerPath/tools" ]; then
+        destination="$toolsLocalPath/${line[0]}"
+        mkdir -p $destination
+        cp -r $pkgVerPath/* $destination
+    fi
+    if [ -d "$pkgVerPath/lib" ]; then
+        cp -r $pkgVerPath/lib/* $toolsLocalPath
+    fi
+    if [ -f "$pkgVerPath/lib/init-tools.sh" ]; then
+        "$pkgVerPath/lib/init-tools.sh" "$repoRoot" "$dotNetExe" "$toolsLocalPath" > "init-${line[0]}.log"
+    fi
+done <$rootToolVersions
+
 cp $rootToolVersions $bootstrapComplete
 
 say "Bootstrap finished successfully."

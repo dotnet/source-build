@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+NETCORESHAREDFRAMEWORKPATH=""
 usage()
 {
     echo "Build .NET Core product"
@@ -81,29 +82,38 @@ seed_roll_forward_shared_framework_folder() {
   # seed with assemblies from previous shared folder
   cp -rf $NETCORESHAREDPATH/* $ROLLFORWARDNETCORESHAREDPATH 
  
-  echo "Update Shared framework Assemblies..."
-  # update the shared framework assemblies
-  cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $ROLLFORWARDNETCORESHAREDPATH 
-  cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $ROLLFORWARDNETCORESHAREDPATH
+  if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
+    echo "Update Shared framework Assemblies..."
+    # update the shared framework assemblies
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $ROLLFORWARDNETCORESHAREDPATH
+    if [[ ! -d "$ROLLFORWARDNETCORESHAREDPATH/tmp" ]]; then
+      mkdir $ROLLFORWARDNETCORESHAREDPATH/tmp
+    fi
+    cp -f $ROLLFORWARDNETCORESHAREDPATH/Microsoft.CodeAnalysis*.dll $ROLLFORWARDNETCORESHAREDPATH/tmp
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $ROLLFORWARDNETCORESHAREDPATH
+    cp -f $ROLLFORWARDNETCORESHAREDPATH/tmp/* $ROLLFORWARDNETCORESHAREDPATH
+  fi
 
   echo "Replace Host files..."
   # replace host assemblies with older versions
   cp -f $NETCORESHAREDPATH/libhost*.so $ROLLFORWARDNETCORESHAREDPATH
 
-  # Hack until we have CLI running on 2.0 shared framework
-  echo "Update Microsoft.NETCore.App.deps.json for shared framework changes..."
-  cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $ROLLFORWARDNETCORESHAREDPATH
+  if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
+    echo "Update Shared framework Assemblies..."
+    # Hack until we have CLI running on 2.0 shared framework
+    echo "Update Microsoft.NETCore.App.deps.json for shared framework changes..."
+    cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $ROLLFORWARDNETCORESHAREDPATH
 
-  # Hack until we have CLI running on 2.0 shared framework
-  echo "Remove Shared Framework entries from SDK deps.json..."
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
-  du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
-
+    # Hack until we have CLI running on 2.0 shared framework
+    echo "Remove Shared Framework entries from SDK deps.json..."
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
+    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
+  fi
   echo "Seeding completed."
 }
 
