@@ -31,7 +31,7 @@
           WorkingDirectory="$(RoslynDirectory)"
           Condition="'$(OS)' != 'Windows_NT'" />
 
-    <Exec Command="$(RoslynDirectory)cibuild.cmd /$(Configuration)"
+    <Exec Command="$(RoslynDirectory)cibuild.cmd /$(Configuration) /skipTest /skipCommitPrinting"
           WorkingDirectory="$(RoslynDirectory)"
           Condition="'$(OS)' == 'Windows_NT'" />
 
