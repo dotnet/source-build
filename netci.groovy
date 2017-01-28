@@ -10,6 +10,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
       shell("git submodule init");
       shell("git submodule update");
       if (os == "Windows_NT") {
+        batchFile(".\build.cmd /p:Configuration=${configuration}")
         // batchFile(".\build.cmd /p:Configuration=${configuration}")
       }
       else {
