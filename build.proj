@@ -4,12 +4,14 @@
 
   <PropertyGroup>
     <BuildProjectTargets>
+      BuildStandard;
       BuildCoreClr;
       BuildCoreFx;
       BuildRoslyn;
       BuildCoreSetup;
     </BuildProjectTargets>
     <CleanProjectTargets>
+      CleanStandard;
       CleanCoreClr;
       CleanCoreFx;
       CleanRoslyn;
@@ -42,6 +44,7 @@
     <RemoveDir Directories="$(IntermediatePath)" />
   </Target>
 
+  <Import Project="$(MSBuildThisfileDirectory)targets/build-standard.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-core.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-roslyn.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-core-setup.targets" />
