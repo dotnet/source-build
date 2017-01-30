@@ -8,6 +8,7 @@
       BuildCoreClr;
       BuildCoreFx;
       BuildRoslyn;
+      BuildLibuv;
       BuildCoreSetup;
     </BuildProjectTargets>
     <CleanProjectTargets>
@@ -15,6 +16,7 @@
       CleanCoreClr;
       CleanCoreFx;
       CleanRoslyn;
+      CleanLibuv;
       CleanCoreSetup;
     </CleanProjectTargets>
   </PropertyGroup>
@@ -47,6 +49,7 @@
   <Import Project="$(MSBuildThisfileDirectory)targets/build-standard.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-core.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-roslyn.targets" />
+  <Import Project="$(MSBuildThisfileDirectory)targets/build-libuv.targets" />
   <Import Project="$(MSBuildThisfileDirectory)targets/build-core-setup.targets" />
 
 </Project>

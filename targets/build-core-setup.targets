@@ -31,6 +31,9 @@
       <VersionFile Include="$(IntermediatePath)StandardVersions.txt">
         <Environment>STANDARD</Environment>
       </VersionFile>
+      <VersionFile Include="$(IntermediatePath)LibuvVersions.txt">
+        <Environment>LIBUV</Environment>
+      </VersionFile>
     </ItemGroup>
 
     <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; powershell.exe $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles"
