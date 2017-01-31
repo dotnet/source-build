@@ -11,8 +11,13 @@
 
   <!-- Roslyn Targets -->
   <Target Name="BuildRoslyn">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    <PropertyGroup>
+      <_RoslynTargetRid>$(TargetRid)</_RoslynTargetRid>
+      <_RoslynTargetRid Condition="'$(_RoslynTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_RoslynTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_RoslynTargetRid)' == ''">
+      <Output PropertyName="_RoslynTargetRid" TaskParameter="Rid" />
     </GetHostRid>
 
     <ItemGroup>
@@ -21,7 +26,7 @@
     </ItemGroup>
 
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
-                           ReplacementRuntimeId="$(TargetRid)"
+                           ReplacementRuntimeId="$(_RoslynTargetRid)"
                            FilterRuntimeId="ubuntu.14.04-x64"
                            Condition="'$(OS)' != 'Windows_NT'" />
 

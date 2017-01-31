@@ -10,14 +10,19 @@
 
   <!-- Libuv Targets -->
   <Target Name="BuildLibuv">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    <PropertyGroup>
+      <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
+      <_LibuvTargetRid Condition="'$(_LibuvTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
+      <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
     </GetHostRid>
 
     <Exec Command="$(LibuvDirectory)build-native$(ShellExtension) --configuration $(Configuration)"
           WorkingDirectory="$(LibuvDirectory)"/>
 
-    <Exec Command="$(LibuvDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(TargetRid)"
+    <Exec Command="$(LibuvDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(_LibuvTargetRid)"
           WorkingDirectory="$(LibuvDirectory)"/>
 
     <ItemGroup>

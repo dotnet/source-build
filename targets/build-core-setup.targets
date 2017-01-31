@@ -10,12 +10,16 @@
 
   <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    <PropertyGroup>
+      <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_CoreSetupTargetRid)' == ''">
+      <Output PropertyName="_CoreSetupTargetRid" TaskParameter="Rid" />
     </GetHostRid>
 
     <PropertyGroup>
-      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(TargetRid)/packages/</CoreSetupPackageOutputDirectory>
+      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>
     </PropertyGroup>
 
     <ItemGroup>
