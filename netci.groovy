@@ -7,12 +7,14 @@ def branch = GithubBranchName;
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
     steps {
-      shell("git submodule init");
-      shell("git submodule update");
       if (os == "Windows_NT") {
+        batchFile("git submodule init");
+        batchFile("git submodule update");
         batchFile(".\\build.cmd /p:Configuration=${configuration}")
       }
       else {
+        shell("git submodule init");
+        shell("git submodule update");
         shell("./build.sh /p:Configuration=${configuration}")
       }
     };
