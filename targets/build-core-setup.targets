@@ -35,7 +35,7 @@
       <VersionFile Include="$(IntermediatePath)StandardVersions.txt">
         <Environment>STANDARD</Environment>
       </VersionFile>
-      <VersionFile Include="$(IntermediatePath)LibuvVersions.txt">
+      <VersionFile Include="$(IntermediatePath)LibuvVersions.txt" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
         <Environment>LIBUV</Environment>
       </VersionFile>
     </ItemGroup>

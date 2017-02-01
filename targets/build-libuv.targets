@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <!-- Libuv Targets -->
-  <Target Name="BuildLibuv">
+  <!-- *nix Jenkins workers do not have autotools installed so we can't build libuv there -->
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
     <PropertyGroup>
       <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
       <_LibuvTargetRid Condition="'$(_LibuvTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
