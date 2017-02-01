@@ -2,8 +2,7 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-ORIGINALARGS=$#
-declare -a ADDITIONALARGS
+ADDITIONALARGS=()
 SHAREDFRAMEWORKPATH=""
 NETCORESDK=""
 SDKVERSION=""
@@ -127,20 +126,9 @@ bootstrap
 echo "SDKPATH: $SDKPATH"
 
 # Main build loop
-echo "$CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
-$CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
-
-echo "$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
-$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
-
-ARGS=""
-ARGCOUNT=${ADDITIONALARGS[@]+"${ADDITIONALARGS[@]}"}
-if [[ $ARGCOUNT -gt 0 ]]; then
-  ARGS="${ADDITIONALARGS[*]}"
-fi
-
-echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj $ARGS"
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "$ARGS"
+(set -x ; $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj)
+(set -x ; $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj)
+(set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[*]})
 
 if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
   echo "Patch CLI with built binaries"
