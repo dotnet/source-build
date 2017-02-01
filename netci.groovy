@@ -10,12 +10,12 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
       if (os == "Windows_NT") {
         batchFile("git submodule init");
         batchFile("git submodule update");
-        batchFile(".\\build.cmd /p:Configuration=${configuration}")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
       }
       else {
         shell("git submodule init");
         shell("git submodule update");
-        shell("./build.sh /p:Configuration=${configuration}")
+        shell("./build.sh /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
       }
     };
   };
