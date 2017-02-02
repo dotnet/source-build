@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+
+  <PropertyGroup>
+    <LibuvDirectory>$(SubmoduleDirectory)libuv/</LibuvDirectory>
+    <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
+  </PropertyGroup>
+
+  <!-- Libuv Targets -->
+  <!-- *nix Jenkins workers do not have autotools installed so we can't build libuv there -->
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+    <PropertyGroup>
+      <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
+      <_LibuvTargetRid Condition="'$(_LibuvTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
+      <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
+    <Exec Command="$(LibuvDirectory)build-native$(ShellExtension) --configuration $(Configuration)"
+          WorkingDirectory="$(LibuvDirectory)"/>
+
+    <Exec Command="$(LibuvDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(_LibuvTargetRid)"
+          WorkingDirectory="$(LibuvDirectory)"/>
+
+    <ItemGroup>
+      <LibuvPackages Include="$(LibuvPackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(LibuvPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(LibuvPackages)"
+                       OutputPath="$(IntermediatePath)LibuvVersions.txt" />
+  </Target>
+
+  <!-- no-op right now as libuv doesn't have clean.sh -->
+  <Target Name="CleanLibuv" />
+</Project>

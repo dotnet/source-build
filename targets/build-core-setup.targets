@@ -10,12 +10,16 @@
 
   <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup">
-    <GetHostRid Condition="'$(TargetRid)' == ''">
-      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    <PropertyGroup>
+      <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_CoreSetupTargetRid)' == ''">
+      <Output PropertyName="_CoreSetupTargetRid" TaskParameter="Rid" />
     </GetHostRid>
 
     <PropertyGroup>
-      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(TargetRid)/packages/</CoreSetupPackageOutputDirectory>
+      <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,6 +31,12 @@
       </VersionFile>
       <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
         <Environment>ROSLYN</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)StandardVersions.txt">
+        <Environment>STANDARD</Environment>
+      </VersionFile>
+      <VersionFile Include="$(IntermediatePath)LibuvVersions.txt" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+        <Environment>LIBUV</Environment>
       </VersionFile>
     </ItemGroup>
 
