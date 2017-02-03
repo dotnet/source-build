@@ -23,7 +23,7 @@
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
                            ReplacementRuntimeId="$(_RoslynTargetRid)"
                            FilterRuntimeId="ubuntu.14.04-x64"
-                           Condition="'$(OS)' != 'Windows_NT'" />
+                           Condition="'$(TargetOS)' == 'Linux'" />
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
 
