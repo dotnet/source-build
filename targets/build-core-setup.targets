@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
 
   <PropertyGroup>
     <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
@@ -12,13 +11,6 @@
   <Target Name="BuildCoreSetup">
     <PropertyGroup>
       <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
-    </PropertyGroup>
-
-    <GetHostRid Condition="'$(_CoreSetupTargetRid)' == ''">
-      <Output PropertyName="_CoreSetupTargetRid" TaskParameter="Rid" />
-    </GetHostRid>
-
-    <PropertyGroup>
       <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>
     </PropertyGroup>
 

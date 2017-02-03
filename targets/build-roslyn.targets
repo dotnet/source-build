@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
 
@@ -15,10 +14,6 @@
       <_RoslynTargetRid>$(TargetRid)</_RoslynTargetRid>
       <_RoslynTargetRid Condition="'$(_RoslynTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_RoslynTargetRid>
     </PropertyGroup>
-
-    <GetHostRid Condition="'$(_RoslynTargetRid)' == ''">
-      <Output PropertyName="_RoslynTargetRid" TaskParameter="Rid" />
-    </GetHostRid>
 
     <ItemGroup>
       <RoslynProjectJsonFiles Include="$(RoslynDirectory)/**/project.json" />

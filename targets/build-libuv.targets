@@ -13,7 +13,7 @@
   <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
     <PropertyGroup>
       <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
-      <_LibuvTargetRid Condition="'$(_LibuvTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
+      <_LibuvTargetRid Condition="'$(OS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
     </PropertyGroup>
 
     <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
