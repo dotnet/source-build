@@ -3,9 +3,13 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
   <Target Name="BuildCoreClr">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="coreclr">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
     <PropertyGroup>
       <CoreProjectName>coreclr</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectDirectory>%(Metadata.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
@@ -23,9 +27,13 @@
   </Target>
 
   <Target Name="BuildCoreFx">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="corefx">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
     <PropertyGroup>
       <CoreProjectName>corefx</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectDirectory>%(Metadata.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>

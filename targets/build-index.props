@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<ItemGroup>
+    <Repository Include="coreclr">
+        <ProjectDirectory Condition="'$(USE_CORECLR_AT)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_CORECLR_AT)' != ''"></ProjectDirectory>
+        
+        <BuildTarget>BuildCoreClr</BuildTarget>
+        <CleanTarget>CleanCoreClr</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>
+
+    <Repository Include="corefx">
+        <ProjectDirectory Condition="'$(USE_COREFX_AT)' == ''">$(SubmoduleDirectory)corefx/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_COREFX_AT)' != ''"></ProjectDirectory>
+
+        <BuildTarget>BuildCoreFx</BuildTarget>
+        <CleanTarget>CleanCoreFx</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>
+
+    <Repository Include="core-setup">
+        <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' == ''">$(SubmoduleDirectory)core-setup/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' != ''"></ProjectDirectory>
+
+        <BuildTarget>BuildCoreSetup</BuildTarget>
+        <CleanTarget>CleanCoreFx</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>
+
+    <Repository Include="libuv">
+        <ProjectDirectory Condition="'$(USE_LIBUV_AT)' == ''">$(SubmoduleDirectory)libuv/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_LIBUV_AT)' != ''"></ProjectDirectory>
+
+        <BuildTarget>BuildLibUv</BuildTarget>
+        <CleanTarget>CleanLibUv</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>
+
+    <Repository Include="standard">
+        <ProjectDirectory Condition="'$(USE_STANDARD_AT)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_STANDARD_AT)' != ''"></ProjectDirectory>
+
+        <BuildTarget>BuildStandard</BuildTarget>
+        <CleanTarget>CleanStandard</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>
+
+    <Repository Include="roslyn">
+        <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' == ''">$(SubmoduleDirectory)roslyn/</ProjectDirectory>
+        <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' != ''"></ProjectDirectory>
+
+        <BuildTarget>BuildRoslyn</BuildTarget>
+        <CleanTarget>CleanRoslyn</CleanTarget>
+        <TestTarget></TestTarget>
+    </Repository>            
+
+</ItemGroup>
+
+</Project>

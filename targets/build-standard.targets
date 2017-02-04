@@ -2,13 +2,19 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
-  <PropertyGroup>
-    <StandardDirectory>$(SubmoduleDirectory)standard/</StandardDirectory>
-    <StandardPackageOutputDirectory>$(StandardDirectory)bin/packages/$(Configuration)/</StandardPackageOutputDirectory>
-  </PropertyGroup>
 
   <!-- Standard Targets -->
   <Target Name="BuildStandard">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="standard">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
+    <PropertyGroup>
+      <StandardDirectory>%(Metadata.ProjectDirectory)</StandardDirectory>
+      <StandardPackageOutputDirectory>$(StandardDirectory)bin/packages/$(Configuration)/</StandardPackageOutputDirectory>
+    </PropertyGroup>
+
+
     <Exec Command="$(StandardDirectory)build$(ShellExtension) -$(Configuration)"
           WorkingDirectory="$(StandardDirectory)" />
 

@@ -3,14 +3,20 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
 
-  <PropertyGroup>
-    <LibuvDirectory>$(SubmoduleDirectory)libuv/</LibuvDirectory>
-    <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
-  </PropertyGroup>
+
 
   <!-- Libuv Targets -->
   <!-- *nix Jenkins workers do not have autotools installed so we can't build libuv there -->
   <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="libuv">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
+    <PropertyGroup>
+      <LibuvDirectory>%(Metadata.ProjectDirectory)</LibuvDirectory>
+      <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
+    </PropertyGroup>
+
     <PropertyGroup>
       <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
       <_LibuvTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>

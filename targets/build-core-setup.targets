@@ -3,12 +3,17 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
 
-  <PropertyGroup>
-    <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
-  </PropertyGroup>
 
   <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="core-setup">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
+    <PropertyGroup>
+      <CoreSetupDirectory>%(Metadata.ProjectDirectory)</CoreSetupDirectory>
+    </PropertyGroup>
+
     <PropertyGroup>
       <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
       <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>

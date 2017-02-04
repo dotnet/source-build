@@ -3,13 +3,20 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
 
-  <PropertyGroup>
-    <RoslynDirectory>$(SubmoduleDirectory)roslyn/</RoslynDirectory>
-    <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
-  </PropertyGroup>
 
   <!-- Roslyn Targets -->
   <Target Name="BuildRoslyn">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="roslyn">
+      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+    </FindInList>
+
+
+    <PropertyGroup>
+      <RoslynDirectory>%(Metadata.ProjectDirectory)</RoslynDirectory>
+      <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
+    </PropertyGroup>
+
+
     <PropertyGroup>
       <_RoslynTargetRid>$(TargetRid)</_RoslynTargetRid>
       <_RoslynTargetRid Condition="'$(_RoslynTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_RoslynTargetRid>
