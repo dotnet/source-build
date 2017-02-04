@@ -3,17 +3,15 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
 
-
-
-  <!-- Libuv Targets -->
-  <!-- *nix Jenkins workers do not have autotools installed so we can't build libuv there -->
-  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+  <Target Name="_InitializeLibuv">
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="libuv">
-      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+      <Output TaskParameter="ItemFound" ItemName="Libuv" />
     </FindInList>
 
+    <Error Condition="'%(Libuv.ProjectDirectory)' == ''" Code="-1" HelpKeyword="libuv-build" Text="Specify a Libuv build directory, either with the USE_LIBUV_AT property, or in the build-index.props. Find the help keyword in the source-build git repository for more information." />
+
     <PropertyGroup>
-      <LibuvDirectory>%(Metadata.ProjectDirectory)</LibuvDirectory>
+      <LibuvDirectory>%(Libuv.ProjectDirectory)</LibuvDirectory>
       <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
     </PropertyGroup>
 
@@ -22,7 +20,9 @@
       <_LibuvTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
       <_LibuvTargetRid Condition="'$(TargetOS)' == 'OSX'">osx.10.10-x64</_LibuvTargetRid>
     </PropertyGroup>
+  </Target>
 
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv">
     <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
       <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
     </GetHostRid>

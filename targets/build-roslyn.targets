@@ -3,30 +3,28 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
 
-
-  <!-- Roslyn Targets -->
-  <Target Name="BuildRoslyn">
+  <Target Name="_InitializeRoslyn">
+    <!-- Fetch the repository metadata for the Roslyn repository -->
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="roslyn">
-      <Output TaskParameter="ItemFound" ItemName="Metadata" />
+      <Output TaskParameter="ItemFound" ItemName="Roslyn" />
     </FindInList>
 
+    <Error Condition="'%(Roslyn.ProjectDirectory)' == ''" Code="-1" HelpKeyword="roslyn-build" Text="Specify a Roslyn build directory, either with the USE_ROSLYN_AT property, or in the build-index.props. Find the help keyword in the source-build git repository for more information." />
 
     <PropertyGroup>
-      <RoslynDirectory>%(Metadata.ProjectDirectory)</RoslynDirectory>
+      <RoslynDirectory>%(Roslyn.ProjectDirectory)</RoslynDirectory>
       <RoslynPackageOutputDirectory>$(RoslynDirectory)Binaries/Packages/</RoslynPackageOutputDirectory>
-    </PropertyGroup>
-
-
-    <PropertyGroup>
       <_RoslynTargetRid>$(TargetRid)</_RoslynTargetRid>
       <_RoslynTargetRid Condition="'$(_RoslynTargetRid)' == '' and '$(OS)' == 'Windows_NT'">win7-x64</_RoslynTargetRid>
     </PropertyGroup>
-
+    
     <ItemGroup>
       <RoslynProjectJsonFiles Include="$(RoslynDirectory)/**/project.json" />
       <NuSpecFiles Include="$(RoslynDirectory)/**/*.nuspec" />
     </ItemGroup>
+  </Target>
 
+  <Target Name="BuildRoslyn" DependsOnTargets="_InitializeRoslyn" >
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
                            ReplacementRuntimeId="$(_RoslynTargetRid)"
                            FilterRuntimeId="ubuntu.14.04-x64"

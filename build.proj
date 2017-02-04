@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SelectBuildTargets" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
 
   <Import Project="dir.props" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-index.props" />
+  <Import Project="targets/targets.metadata" />
   
   <Target Name="PrepareEnvironment">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
@@ -19,17 +19,15 @@
   </Target>
 
   <Target Name="SelectRepositories">
-    <SelectBuildTargets RepositoryCollection="@(Repository)" SpecifiedRepositories="$(Only)">
-    	<Output ItemName="SelectedRepositories" TaskParameter="SelectedRepositories" />
-    </SelectBuildTargets>
+    <Select Collection="@(Repository)" Selection="$(Only)">
+    	<Output ItemName="SelectedRepositories" TaskParameter="Selected" />
+    </Select>
   </Target>
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;SelectRepositories">
     <Message Importance="Normal" Text="Invoking the following targets: %(SelectedRepositories.BuildTarget)" />
 
-    <!-- If RunEachTargetSeperately == true then we will 'continue' in the event of a failure. If it is false, then 
-    we will quit if any of the builds fail. -->
-    <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="false" /> 
+    <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="true" /> 
 
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
@@ -54,11 +52,5 @@
     <RemoveDir Directories="$(OutputPath)" />
     <RemoveDir Directories="$(IntermediatePath)" />
   </Target>
-
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-standard.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-core.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-roslyn.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-libuv.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-core-setup.targets" />
 
 </Project>
