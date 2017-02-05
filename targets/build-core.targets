@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
-
+  
+  <!-- CORECLR -->
   <Target Name="_InitializeCoreClr">
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="coreclr">
       <Output TaskParameter="ItemFound" ItemName="CoreClr" />
@@ -31,6 +32,21 @@
     />
   </Target>
 
+  <Target Name="CleanCoreClr" DependsOnTargets="_InitializeCoreClr">
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="CleanCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+      />
+  </Target>
+  <!-- END CORECLR -->
+
+  <!-- COREFX -->
   <Target Name="_InitializeCoreFx">
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="corefx">
       <Output TaskParameter="ItemFound" ItemName="CoreFx" />
@@ -57,10 +73,29 @@
        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
        CoreBuildCommand=$(CoreBuildCommand);
        CoreArguments=$(CoreArguments)"
+       
       />
   </Target>
 
+  <Target Name="CleanCoreFx" DependsOnTargets="_InitializeCoreFx">
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="CleanCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments)"
+      />
+  </Target>
+  <!-- END COREFX -->
+
+  <!-- CORE REPO -->
+  <!-- Should be applicable to ALL 'core repositories' -->
   <Target Name="BuildCoreRepo">
+    <Message Importance="High" Text="BUILDING '$(CoreProjectName)' CORE PACKAGES." />
+
     <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
           WorkingDirectory="$(CoreProjectDirectory)" />
 
@@ -68,32 +103,22 @@
       <CorePackages Include="$(CorePackageOutputDirectory)*.nupkg" />
     </ItemGroup>
 
+    <Message Importance="High" Text="BUILT CORE PACKAGES: @(CorePackages)" />
+    <Message Importance="High" Text="STAGING CORE PACKAGES IN : $(SourceBuiltPackagesPath)" />
+    
     <Copy SourceFiles="@(CorePackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />
-
+    
     <WriteVersionsFile NugetPackages="@(CorePackages)"
                        OutputPath="$(IntermediatePath)$(CoreProjectName)Versions.txt" />
-  </Target>
-
-  <Target Name="CleanCoreClr"
-          AfterTargets="CleanCoreRepo">
-    <PropertyGroup>  
-      <CoreProjectName>coreclr</CoreProjectName>
-    </PropertyGroup>
-  </Target>
-
-  <Target Name="CleanCoreFx"
-          AfterTargets="CleanCoreRepo">
-    <PropertyGroup>
-      <CoreProjectName>corefx</CoreProjectName>
-    </PropertyGroup>
+    <Message Importance="High" Text="placed version file in  $(IntermediatePath)$(CoreProjectName)Versions.txt" />
   </Target>
 
   <Target Name="CleanCoreRepo">
-    <PropertyGroup>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)</CoreProjectDirectory>
-    </PropertyGroup>
     <Exec Command="$(CoreProjectDirectory)clean$(ShellExtension) --all"
           WorkingDirectory="$(CoreProjectDirectory)" />
   </Target>
+
+<!-- END CORE REPO -->
+
 </Project>

@@ -32,7 +32,7 @@
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
 
-    <Exec Command="$(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting"
+    <Exec Command="$(RoslynDirectory)cibuild.sh --$(Configuration) --SkipTest --SkipCrossGen --SkipCommitPrinting"
           WorkingDirectory="$(RoslynDirectory)"
           Condition="'$(OS)' != 'Windows_NT'" />
 

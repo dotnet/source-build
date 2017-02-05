@@ -3,41 +3,49 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
 
+  <!-- Require that these exist -->
+  <ItemGroup>
+    <VersionFile Include="$(IntermediatePath)coreclrVersions.txt">
+      <Environment>CORECLR</Environment>
+    </VersionFile>
+    <VersionFile Include="$(IntermediatePath)corefxVersions.txt">
+      <Environment>COREFX</Environment>
+    </VersionFile>
+    <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
+      <Environment>ROSLYN</Environment>
+    </VersionFile>
+    <VersionFile Include="$(IntermediatePath)StandardVersions.txt">
+      <Environment>STANDARD</Environment>
+    </VersionFile>
+    <VersionFile Include="$(IntermediatePath)LibuvVersions.txt" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+      <Environment>LIBUV</Environment>
+    </VersionFile>
+  </ItemGroup>
+
   <Target Name="_InitializeCoreSetup">
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="core-setup">
       <Output TaskParameter="ItemFound" ItemName="CoreSetup" />
     </FindInList>
 
-    <Error Condition="'%(CoreSetup.ProjectDirectory)' == ''" Code="-1" HelpKeyword="core-setup-build" Text="Specify a CoreSetup build directory, either with the USE_CORESETUP_AT property, or in the build-index.props. Find the help keyword in the source-build git repository for more information." />
+    <Error Condition="'%(CoreSetup.ProjectDirectory)' == ''" Code="-1" HelpKeyword="core-setup-build" Text="Specify a CoreSetup git directory, either with the USE_CORESETUP_AT property, or in the targets.metadata." />
 
     <PropertyGroup>
       <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
       <CoreSetupDirectory>%(CoreSetup.ProjectDirectory)</CoreSetupDirectory>
       <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>
     </PropertyGroup>
+  </Target>
 
+  <Target Name="_CollectCoreSetupArtifacts">
     <ItemGroup>
-      <VersionFile Include="$(IntermediatePath)coreclrVersions.txt">
-        <Environment>CORECLR</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)corefxVersions.txt">
-        <Environment>COREFX</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)RoslynVersions.txt">
-        <Environment>ROSLYN</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)StandardVersions.txt">
-        <Environment>STANDARD</Environment>
-      </VersionFile>
-      <VersionFile Include="$(IntermediatePath)LibuvVersions.txt" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
-        <Environment>LIBUV</Environment>
-      </VersionFile>
+      <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
+      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*$(TarBallExtension)" />
     </ItemGroup>
   </Target>
 
-
-  <!-- Core-Setup targets -->
   <Target Name="BuildCoreSetup" DependsOnTargets="_InitializeCoreSetup">
+    <Message Text="Producing version files : @(VersionFile)" />
+
     <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; powershell.exe $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles"
           Condition="'$(OS)' == 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
@@ -49,7 +57,7 @@
     <AddSourceToNuGetConfig NuGetConfigFile="$(CoreSetupDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
-
+    
     <Exec Command="$(CoreSetupDirectory)build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile,Package"
           Condition="'$(OS)' == 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
@@ -58,19 +66,23 @@
           Condition="'$(OS)' != 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
 
-    <ItemGroup>
-      <CoreSetupPackages Include="$(CoreSetupPackageOutputDirectory)*.nupkg" />
-      <CoreSetupTarballs Include="$(CoreSetupPackageOutputDirectory)*$(TarBallExtension)" />
-    </ItemGroup>
+    <CallTarget Targets="_CollectCoreSetupArtifacts" />
 
+    <Message Importance="High" Text="generated core setup up packages: @(CoreSetupPackages)" />
+    <Message Importance="High" Text="generated core setup up tarballs: @(CoreSetupTarballs)" />
+    
     <Copy SourceFiles="@(CoreSetupPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <Message Importance="High" Text="@(CoreSetupPackages) copied to $(SourceBuiltPackagesPath)" />
 
     <WriteVersionsFile NugetPackages="@(CoreSetupPackages)"
                        OutputPath="$(IntermediatePath)CoreSetupVersions.txt" />
 
     <Copy SourceFiles="@(CoreSetupTarballs)"
           DestinationFolder="$(OutputPath)" />
+
+    <Message Importance="High" Text="@(CoreSetupTarballs) copied to $(OutputPath)" />
   </Target>
 
   <Target Name="CleanCoreSetup">

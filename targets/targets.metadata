@@ -12,6 +12,7 @@
             <ProjectDirectory Condition="'$(USE_CORECLR_AT)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_CORECLR_AT)' != ''">$(USE_CORECLR_AT)</ProjectDirectory>
             
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <BuildTarget>BuildCoreClr</BuildTarget>
             <CleanTarget>CleanCoreClr</CleanTarget>
             <TestTarget></TestTarget>
@@ -20,7 +21,8 @@
         <Repository Include="corefx">
             <ProjectDirectory Condition="'$(USE_COREFX_AT)' == ''">$(SubmoduleDirectory)corefx/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_COREFX_AT)' != ''">$(USE_COREFX_AT)</ProjectDirectory>
-
+            
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <BuildTarget>BuildCoreFx</BuildTarget>
             <CleanTarget>CleanCoreFx</CleanTarget>
             <TestTarget></TestTarget>
@@ -30,7 +32,8 @@
             <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' == ''">$(SubmoduleDirectory)core-setup/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' != ''">$(USE_CORESETUP_AT)</ProjectDirectory>
 
-            <BuildTarget>BuildCoreSetup</BuildTarget>
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <!-- Core-setup is special. We don't want it to build arbitrarily. It should always be last.-->
             <CleanTarget>CleanCoreFx</CleanTarget>
             <TestTarget></TestTarget>
         </Repository>
@@ -39,6 +42,7 @@
             <ProjectDirectory Condition="'$(USE_LIBUV_AT)' == ''">$(SubmoduleDirectory)libuv/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_LIBUV_AT)' != ''">$(USE_LIBUV_AT)</ProjectDirectory>
 
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <BuildTarget>BuildLibUv</BuildTarget>
             <CleanTarget>CleanLibUv</CleanTarget>
             <TestTarget></TestTarget>
@@ -48,6 +52,7 @@
             <ProjectDirectory Condition="'$(USE_STANDARD_AT)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_STANDARD_AT)' != ''">$(USE_STANDARD_AT)</ProjectDirectory>
 
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <BuildTarget>BuildStandard</BuildTarget>
             <CleanTarget>CleanStandard</CleanTarget>
             <TestTarget></TestTarget>
@@ -57,6 +62,7 @@
             <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' == ''">$(SubmoduleDirectory)roslyn/</ProjectDirectory>
             <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' != ''">$(USE_ROSLYN_AT)</ProjectDirectory>
 
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <BuildTarget>BuildRoslyn</BuildTarget>
             <CleanTarget>CleanRoslyn</CleanTarget>
             <TestTarget></TestTarget>
