@@ -23,7 +23,21 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv">
+  <!-- Construct a list of all the packages we built in the libuv repository -->
+  <Target Name="_FetchLibuvPackages" Returns="@(LibuvPackages)">
+    <ItemGroup>
+      <LibuvPackages Include="$(LibuvPackageOutputDirectory)*.nupkg" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="_GatherLibuvSource" Outputs="@(CorePackages)">
+    <ItemGroup>
+      <LibuvSource Include="$(LibuvDirectory)/src/**/*" />
+    </ItemGroup>
+  </Target>
+
+
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv;_GatherLibuvSource" Inputs="@(LibuvSource)" Outputs="%(Libuv.VersionFile)">
     <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
       <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
     </GetHostRid>
@@ -34,9 +48,9 @@
     <Exec Command="$(LibuvDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(_LibuvTargetRid)"
           WorkingDirectory="$(LibuvDirectory)"/>
 
-    <ItemGroup>
-      <LibuvPackages Include="$(LibuvPackageOutputDirectory)*.nupkg" />
-    </ItemGroup>
+    <CallTarget Targets="_FetchLibuvPackages">
+      <Output TaskParameter="TargetOutputs" ItemName="LibuvPackages" />
+    </CallTarget>
 
     <Copy SourceFiles="@(LibuvPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />

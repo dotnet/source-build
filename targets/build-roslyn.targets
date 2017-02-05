@@ -24,7 +24,13 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="BuildRoslyn" DependsOnTargets="_InitializeRoslyn" >
+  <Target Name="_GatherRoslynSource" Outputs="RoslynSource">
+    <ItemGroup>
+      <RoslynSource Include="$(RoslynDirectory)/src/**/*" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="BuildRoslyn" DependsOnTargets="_InitializeRoslyn;_GatherRoslynSource" Inputs="@(RoslynSource)" Outputs="%(Roslyn.VersionFile)">
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
                            ReplacementRuntimeId="$(_RoslynTargetRid)"
                            FilterRuntimeId="ubuntu.14.04-x64"

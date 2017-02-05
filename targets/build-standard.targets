@@ -15,9 +15,16 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="BuildStandard" DependsOnTargets="_InitializeStandard">
+  <Target Name="_GatherStandardSource" Returns="StandardSource">
+    <ItemGroup>
+      <StandardSource Include="$(StandardDirectory)/**/*" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="BuildStandard" DependsOnTargets="_InitializeStandard;_GatherStandardSource" Inputs="@(StandardSource)" Outputs="%(Standard.VersionFile)">
     <Exec Command="$(StandardDirectory)build$(ShellExtension) -$(Configuration)"
           WorkingDirectory="$(StandardDirectory)" />
+
     <ItemGroup>
       <StandardPackages Include="$(StandardPackageOutputDirectory)*.nupkg" />
     </ItemGroup>
@@ -26,7 +33,9 @@
           DestinationFolder="$(SourceBuiltPackagesPath)" />
 
     <WriteVersionsFile NugetPackages="@(StandardPackages)"
-                       OutputPath="$(IntermediatePath)StandardVersions.txt" />
+                       OutputPath="%(Standard.VersionFile)" />
+
+    <Message Importance="High" Text="Wrote %(Standard.Identity) VersionsFile: %(Standard.VersionsFile)" />
   </Target>
 
   <!-- no-op right now as dotnet/standard doesn't have clean.sh -->

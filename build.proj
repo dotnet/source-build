@@ -32,40 +32,41 @@
     <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="true" /> 
   </Target>
 
-  <Target Name="_ScheduleSelectedBuilds">
+  <!-- Set the "only" property to select repositories -->
+  <Target Name="CallOnlyCleanTarget" DependsOnTargets="PrepareOutput;_SelectRepositories">
+    <Error Condition="'$(Only)' == ''" Text="Property ONLY is required; e.g. /p:ONLY=coreclr;corefx " />
+
+    <!-- Note, this does not get parallelized by MSBuild -->
+    <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="true" /> 
+  </Target>
+
+  <Target Name="_ScheduleSelectedRepositories">
     <ItemGroup>
-      <ScheduledBuilds Include="%(SelectedRepositories.BuildProject)" KeepDuplicates="true" KeepMetadata="true">
+      <ScheduledProjects Include="%(SelectedRepositories.BuildProject)" KeepDuplicates="true" KeepMetadata="true">
         <AdditionalProperties>Only=%(SelectedRepositories.Identity)</AdditionalProperties>
-      </ScheduledBuilds>
+      </ScheduledProjects>
     </ItemGroup>
   </Target>
 
   <!-- This is where we schedule the repositories to be built in parallel. -->
-  <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories;_ScheduleSelectedBuilds">
-    <Message Importance="Normal" Condition="'%(SelectedRepositories.BuildTarget)' != ''" Text="Invoking the following targets: %(SelectedRepositories.BuildTarget)" />
+  <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories;_ScheduleSelectedRepositories">
+    <Message Importance="Normal" Condition="'%(ScheduledProjects.Identity)' != ''" Text="Building %(ScheduledProjects.Identity) [%(ScheduledProjects.AdditionalProperties)]" />
 
-    <Message Importance="High" Text="Scheduled @(ScheduledBuilds)" />
-    <MSBuild  
-        Projects="@(ScheduledBuilds)"  
-        Targets="CallOnlyBuildTarget"
-        BuildInParallel="true">
-
-        <Output  
-            TaskParameter="TargetOutputs"  
-            ItemName="AssembliesBuiltByChildProjects" />  
-    </MSBuild>  
-
-    <Message Importance="High" Text="@(AssembliesBuiltByChildProjects)"/>
+    <MSBuild  Projects="@(ScheduledProjects)"  
+              Targets="CallOnlyBuildTarget"
+              BuildInParallel="true" />
 
     <CallTarget Targets="BuildCoreSetup"  />
 
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">
-    <Message Importance="Normal" Text="Invoking the following targets: %(SelectedRepositories.CleanTarget)" />
+  <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories;_ScheduleSelectedRepositories">
+    <Message Importance="Normal" Condition="'%(ScheduledProjects.Identity)' != ''" Text="Cleaning %(ScheduledProjects.Identity) [%(ScheduledProjects.AdditionalProperties)]" />
 
-    <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="true" />
+    <MSBuild  Projects="@(ScheduledProjects)"  
+              Targets="CallOnlyCleanTarget"
+              BuildInParallel="true" />
 
     <Message Importance="Normal" Text="Clean Complete" />
   </Target>

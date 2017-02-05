@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-    <Import Project="build-standard.targets" />
-    <Import Project="build-core.targets" />
-    <Import Project="build-roslyn.targets" />
-    <Import Project="build-libuv.targets" />
-    <Import Project="build-core-setup.targets" />
-
     <ItemGroup>
         <Repository Include="coreclr">
             <ProjectDirectory Condition="'$(USE_CORECLR_AT)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
@@ -16,6 +9,7 @@
             <BuildTarget>BuildCoreClr</BuildTarget>
             <CleanTarget>CleanCoreClr</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)coreclrVersions.txt</VersionFile>
         </Repository>
 
         <Repository Include="corefx">
@@ -26,6 +20,7 @@
             <BuildTarget>BuildCoreFx</BuildTarget>
             <CleanTarget>CleanCoreFx</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile >$(IntermediatePath)corefxVersions.txt</VersionFile>
         </Repository>
 
         <Repository Include="core-setup">
@@ -34,8 +29,9 @@
 
             <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
             <!-- Core-setup is special. We don't want it to build arbitrarily. It should always be last.-->
-            <CleanTarget>CleanCoreFx</CleanTarget>
+            <CleanTarget>CleanCoreSetup</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
         </Repository>
 
         <Repository Include="libuv">
@@ -46,6 +42,7 @@
             <BuildTarget>BuildLibUv</BuildTarget>
             <CleanTarget>CleanLibUv</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">$(IntermediatePath)LibuvVersions.txt</VersionFile>
         </Repository>
 
         <Repository Include="standard">
@@ -56,6 +53,7 @@
             <BuildTarget>BuildStandard</BuildTarget>
             <CleanTarget>CleanStandard</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)standardVersions.txt</VersionFile>
         </Repository>
 
         <Repository Include="roslyn">
@@ -66,8 +64,15 @@
             <BuildTarget>BuildRoslyn</BuildTarget>
             <CleanTarget>CleanRoslyn</CleanTarget>
             <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)roslynVersions.txt</VersionFile>
         </Repository>            
 
     </ItemGroup>
 
+
+    <Import Project="build-standard.targets" />
+    <Import Project="build-core.targets" />
+    <Import Project="build-roslyn.targets" />
+    <Import Project="build-libuv.targets" />
+    <Import Project="build-core-setup.targets" />
 </Project>
