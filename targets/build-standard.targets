@@ -2,13 +2,27 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
-  <PropertyGroup>
-    <StandardDirectory>$(SubmoduleDirectory)standard/</StandardDirectory>
-    <StandardPackageOutputDirectory>$(StandardDirectory)bin/packages/$(Configuration)/</StandardPackageOutputDirectory>
-  </PropertyGroup>
+  <!--
+    =======================================================================================================
+                                         Standard Targets
+    =======================================================================================================
+    
+  -->
 
-  <!-- Standard Targets -->
-  <Target Name="BuildStandard">
+  <Target Name="_InitializeStandard">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="standard">
+      <Output TaskParameter="ItemFound" ItemName="Standard" />
+    </FindInList>
+
+    <Error Condition="'%(Standard.ProjectDirectory)' == ''" Text="You are missing Standard metadata, or you need to specify a Standard build directory, either with the /p:PathToStandard switch, or in the 'targets/target.metadata'" />
+
+    <PropertyGroup>
+      <StandardDirectory>%(Standard.ProjectDirectory)</StandardDirectory>
+      <StandardPackageOutputDirectory>$(StandardDirectory)bin/packages/$(Configuration)/</StandardPackageOutputDirectory>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildStandard" DependsOnTargets="_InitializeStandard">
     <Exec Command="$(StandardDirectory)build$(ShellExtension) -$(Configuration)"
           WorkingDirectory="$(StandardDirectory)" />
 
@@ -20,7 +34,9 @@
           DestinationFolder="$(SourceBuiltPackagesPath)" />
 
     <WriteVersionsFile NugetPackages="@(StandardPackages)"
-                       OutputPath="$(IntermediatePath)StandardVersions.txt" />
+                       OutputPath="%(Standard.VersionFile)" />
+
+    <Message Importance="Normal" Text="Wrote %(Standard.Identity) VersionsFile: %(Standard.VersionFile)" />
   </Target>
 
   <!-- no-op right now as dotnet/standard doesn't have clean.sh -->
