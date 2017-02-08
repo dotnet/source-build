@@ -125,6 +125,11 @@ bootstrap()
 bootstrap
 echo "SDKPATH: $SDKPATH"
 
+if [ -z "${HOME:-}" ]; then
+    mkdir -p $SCRIPT_ROOT/bin/obj/home
+    export HOME=$SCRIPT_ROOT/bin/obj/home
+fi
+
 # Main build loop
 (set -x ; $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj)
 (set -x ; $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj)
