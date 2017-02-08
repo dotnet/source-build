@@ -3,6 +3,7 @@
 set -euo pipefail
 
 NETCORESHAREDFRAMEWORKPATH=""
+HIGHESTSHAREDFRAMEWORK=""
 usage()
 {
     echo "Build .NET Core product"
@@ -34,7 +35,7 @@ build_corefx_native() {
   fi
 
   echo "Copy native CoreFx binaries into shared framework path"
-  cp -f $COREFXBINDIR/*.so $ROLLFORWARDNETCORESHAREDPATH
+  cp -f $COREFXBINDIR/*.so $NETCORESHAREDPATH
 }
 
 build_coreclr_native() {
@@ -46,73 +47,93 @@ build_coreclr_native() {
   fi
 
   echo "Copy native CoreClr binaries into shared framework path"
-  cp -f $CORECLRBINDIR/*.so $ROLLFORWARDNETCORESHAREDPATH
+  cp -f $CORECLRBINDIR/*.so $NETCORESHAREDPATH
 }
 
-create_sdk_folder() {
+get_shared_framework_version() {
+  SHAREDVERSIONS=($(ls $NETCORESHAREDPATHROOT))
+  SHAREDFRAMEWORKVERSION=""
+
+  if [[ "$SHAREDFRAMEWORKVERSION" == "" ]] && echo ${SHAREDVERSIONS[@]} | grep -q "2\.0\."; then
+    echo "2.0 shared framework detected"
+    for V in "${SHAREDVERSIONS[@]}"; do
+      if echo $V | grep -q "2\.0\."; then
+        SHAREDFRAMEWORKVERSION=$V
+      fi
+    done
+  fi
+  if [[ "$SHAREDFRAMEWORKVERSION" == "" ]] && echo ${SHAREDVERSIONS[@]} | grep -q "1\.0\."; then
+    echo "1.0 shared framework detected"
+    for V in "${SHAREDVERSIONS[@]}"; do
+      if echo $V | grep -q "1\.0\."; then
+        SHAREDFRAMEWORKVERSION=$V
+      fi
+    done
+  fi
+  if [[ "$SHAREDFRAMEWORKVERSION" == "" ]] && echo ${SHAREDVERSIONS[@]} | grep -q "1\.1\."; then
+    echo "1.1 shared framework detected"
+    for V in "${SHAREDVERSIONS[@]}"; do
+      if echo $V | grep -q "1\.1\."; then
+        SHAREDFRAMEWORKVERSION=$V
+      fi
+    done
+  fi
+  if [[ "$SHAREDFRAMEWORKVERSION" == "" ]]; then
+    echo "Unable to determine shared framework version to update from $NETCORESHAREDPATHROOT."
+    exit 1
+  fi
+}
+
+get_sdk_folder() {
   declare -a SHAREDVERSIONS=()
   declare -a VERSIONPARTS=()
 
   NETCORESHAREDPATHROOT=$OUTPUTFOLDER/shared/Microsoft.NETCore.App
-  SHAREDVERSIONS=($(ls $NETCORESHAREDPATHROOT))
-  SHAREDFRAMEWORKVERSION=${SHAREDVERSIONS[0]}
+
+  # determine shared framework version to update and store it in $SHAREDFRAMEWORKVERSION
+  get_shared_framework_version
 
   # original shared framework folder
   NETCORESHAREDPATH=$NETCORESHAREDPATHROOT/$SHAREDFRAMEWORKVERSION
-
-  IFS=. read -a VERSIONPARTS <<< "$SHAREDFRAMEWORKVERSION"
-  MAJOR=${VERSIONPARTS[0]}
-  MINOR=${VERSIONPARTS[1]}
-  REV=${VERSIONPARTS[2]}
-  REV=$((REV+1))
-
-  SHAREDFRAMEWORKVERSION="$MAJOR.$MINOR.$REV"
-
-  # roll forward shared framework folder
-  ROLLFORWARDNETCORESHAREDPATH=$NETCORESHAREDPATHROOT/$SHAREDFRAMEWORKVERSION
-  echo "Roll forward net core shared framework folder: $ROLLFORWARDNETCORESHAREDPATH"
 }
 
 seed_roll_forward_shared_framework_folder() {
   echo "Seeding..."
-  if [[ ! -d $ROLLFORWARDNETCORESHAREDPATH ]]; then
-    mkdir $ROLLFORWARDNETCORESHAREDPATH
-  fi
-  echo "Copy $NETCORESHAREDPATH..."
-  # seed with assemblies from previous shared folder
-  cp -rf $NETCORESHAREDPATH/* $ROLLFORWARDNETCORESHAREDPATH 
  
   if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
     echo "Update Shared framework Assemblies..."
-    # update the shared framework assemblies
-    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $ROLLFORWARDNETCORESHAREDPATH
-    if [[ ! -d "$ROLLFORWARDNETCORESHAREDPATH/tmp" ]]; then
-      mkdir $ROLLFORWARDNETCORESHAREDPATH/tmp
+    if [[ ! -d "$NETCORESHAREDPATH/tmp" ]]; then
+      mkdir $NETCORESHAREDPATH/tmp
     fi
-    cp -f $ROLLFORWARDNETCORESHAREDPATH/Microsoft.CodeAnalysis*.dll $ROLLFORWARDNETCORESHAREDPATH/tmp
-    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $ROLLFORWARDNETCORESHAREDPATH
-    cp -f $ROLLFORWARDNETCORESHAREDPATH/tmp/* $ROLLFORWARDNETCORESHAREDPATH
-  fi
+    # save some files we don't want to overwrite
+    cp -f $NETCORESHAREDPATH/Microsoft.CodeAnalysis*.dll $NETCORESHAREDPATH/tmp
+    cp -f $NETCORESHAREDPATH/libhost*.so $NETCORESHAREDPATH/tmp
 
-  echo "Replace Host files..."
-  # replace host assemblies with older versions
-  cp -f $NETCORESHAREDPATH/libhost*.so $ROLLFORWARDNETCORESHAREDPATH
+    # update the shared framework assemblies
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $NETCORESHAREDPATH
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $NETCORESHAREDPATH
+
+    #replace files we saved
+    cp -f $NETCORESHAREDPATH/tmp/* $NETCORESHAREDPATH
+  fi
 
   if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
     echo "Update Shared framework Assemblies..."
     # Hack until we have CLI running on 2.0 shared framework
     echo "Update Microsoft.NETCore.App.deps.json for shared framework changes..."
-    cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $ROLLFORWARDNETCORESHAREDPATH
+    if echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.0\." || echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.1\."; then
+      cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $NETCORESHAREDPATH
 
-    # Hack until we have CLI running on 2.0 shared framework
-    echo "Remove Shared Framework entries from SDK deps.json..."
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
-    du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
+      # Hack until we have CLI running on 2.0 shared framework
+      echo "Remove Shared Framework entries from SDK deps.json..."
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.NonGeneric\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Collections\.Specialized\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.EventBasedAsync\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.Primitives\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.ComponentModel\.TypeConverter\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Diagnostics\.Contracts\.dll.*//g' $file; done
+      du -a $OUTPUTFOLDER/sdk | awk '{print $2}' | grep '\.deps\.json$' | while IFS= read file; do sed -i.bak 's/.*System\.Resources\.Writer\.dll.*//g' $file; done
+    fi
   fi
   echo "Seeding completed."
 }
@@ -165,7 +186,7 @@ done
 NETCORESHAREDPATH=$NETCORESDKPATH/shared
 
 create_output_folder
-create_sdk_folder
+get_sdk_folder
 seed_roll_forward_shared_framework_folder
 build_coreclr_native
 build_corefx_native

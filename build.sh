@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 ORIGINALARGS=$#
-declare -a ADDITIONALARGS
+declare -a ADDITIONALARGS=()
 SHAREDFRAMEWORKPATH=""
 NETCORESDK=""
 NETCORESDK11=""
@@ -11,6 +11,7 @@ SDKVERSION=""
 __BUILD_TOOLS_PATH=""
 BUILDTOOLS_DIR=""
 BOOTSTRAPUNSUPPORTED="false"
+USEBUILTTOOLS="false"
 SKIPCORECLR11BUILD="false"
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -22,10 +23,14 @@ usage()
     echo "build.sh [options] [additional arguments]"
     echo ""
     echo "Options"
+    echo " For bootstrapping"
     echo " -s11|--netcore_sdk_11_path [.NET Core SDK Path]"
     echo " -s20|--netcore_sdk_20_path [.NET Core SDK Path]"
     echo " --skip_coreclr_11_rebuild"
     echo " -f|--shared_framework_path [Shared Framework Path]"
+    echo "Use built CLI / BuildTools"
+    echo " -c|--msbuild_cli [MSBuild based CLI Path]"
+    echo " -b|--projectjson_buildtools [Project Json based buildtools path]"
     echo " -h|--help"
     echo ""
     echo "For '--netcore_sdk_11_path', released versions of the .NET Core SDK are available from https://www.microsoft.com/net/download/linux"
@@ -91,12 +96,26 @@ while [[ $# -gt 0 ]]
       SKIPCORECLR11BUILD="true"
       shift 1
       ;;
+      -c|--msbuild_cli)
+      CLIPATH="$2"
+      USEBUILTTOOLS="true"
+      shift 2
+      ;;
+      -b|--projectjson_buildtools)
+      SUBMODULETOOLRUNTIMEDIR="$2"
+      USEBUILTTOOLS="true"
+      shift 2
+      ;;
       -h|--help)
       usage
       exit 0
       ;;
       *)
-      ADDITIONALARGS+=($key)
+      if [[ ${#ADDITIONALARGS[@]} -gt 0 ]]; then
+        ADDITIONALARGS=(${ADDITIONALARGS[@]} $key)
+      else
+        ADDITIONALARGS=($key)
+      fi
       shift
     esac
 done
@@ -141,6 +160,7 @@ bootstrap()
 
       echo "Creating BuildTools for submodules at $SUBMODULETOOLRUNTIMEDIR..."
       # Create buildtools for project.json based CLI submodules
+      echo "DOTNET_TOOL_DIR=$CLI11PATH __TOOLRUNTIME_DIR=$SUBMODULETOOLRUNTIMEDIR __PUBLISH_RID=ubuntu.14.04-x64 $SCRIPT_ROOT/bootstrap/init-tools.sh"
       DOTNET_TOOL_DIR=$CLI11PATH __TOOLRUNTIME_DIR=$SUBMODULETOOLRUNTIMEDIR __PUBLISH_RID=ubuntu.14.04-x64 $SCRIPT_ROOT/bootstrap/init-tools.sh
       # Overlay shared framework into buildtools
       cp -f $SHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $SUBMODULETOOLRUNTIMEDIR
@@ -192,7 +212,27 @@ bootstrap()
 # parse_args
 
 # Bootstrap supported or unsupported OS
-bootstrap
+if [[ "$USEBUILTTOOLS" == "false" ]]; then
+  bootstrap
+fi
+
+  if [[ -d "$CLIPATH" ]] && [[ -d "$SUBMODULETOOLRUNTIMEDIR" ]]; then
+    echo "Using prebuilt MSBuild CLI and BuildTools."
+    if [[ ${#ADDITIONALARGS[@]} -gt 0 ]]; then
+      ADDITIONALARGS=(${ADDITIONALARGS[@]} "/p:BuildTools_Dir=$SUBMODULETOOLRUNTIMEDIR")
+    else
+      ADDITIONALARGS=("/p:BuildTools_Dir=$SUBMODULETOOLRUNTIMEDIR")
+    fi
+    ADDITIONALARGS=(${ADDITIONALARGS[@]} "/p:Cli_Path=$CLIPATH")
+  else
+    echo "Error: CLI or BuildTools paths specified does not exist, rebuild without the --projectjson_buildtools and --msbuild_cli options."
+    exit 1
+  fi
+
+  NETCORESDK=$CLIPATH
+  determine_sdk_version
+  SDKPATH="$CLIPATH/sdk/$SDKVERSION"
+
 echo "SDKPATH: $SDKPATH"
 
 # Main build loop
@@ -202,14 +242,14 @@ $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNe
 echo "$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 
-ARGS=""
-ARGCOUNT=${ADDITIONALARGS[@]+"${ADDITIONALARGS[@]}"}
-if [[ $ARGCOUNT -gt 0 ]]; then
-  ARGS="${ADDITIONALARGS[*]}"
+if [[ ${#ADDITIONALARGS[@]} -gt 0 ]]; then
+  echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}"
+  $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}
+else
+  echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj"
+  $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj
 fi
 
-echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj $ARGS"
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /p:BuildTools_Dir=$SUBMODULETOOLRUNTIMEDIR "$ARGS" 
 
 if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
   echo "Patch CLI with built binaries"

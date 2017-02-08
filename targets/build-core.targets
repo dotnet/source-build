@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddRidToRuntimeJson" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateFrameworkDependencyVersions" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
   <Target Name="BuildCoreClr">
@@ -7,77 +10,98 @@
       <CoreProjectName>coreclr</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
-      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
-      <CoreArguments>$(Platform) $(Configuration) skiptests msbuildonunsupportedplatform</CoreArguments>
+
+      <BuildProperties>
+        CoreProjectName=$(CoreProjectName);
+        CoreProjectDirectory=$(CoreProjectDirectory);
+        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+        CoreBuildCommand=$(CoreProjectDirectory)build$(ShellExtension);
+        CoreArguments=$(Platform) $(Configuration) skiptests msbuildonunsupportedplatform
+      </BuildProperties>
+      <BuildProperties Condition="'$(BuildTools_Dir)' != ''">
+        $(BuildProperties);
+        BuildTools_Dir=$(BuildTools_Dir);
+      </BuildProperties>
     </PropertyGroup>
+    
     <!-- Build binaries -->
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
       Targets="BuildCoreRepo" 
-      Properties="
-       CoreProjectName=$(CoreProjectName);
-       CoreProjectDirectory=$(CoreProjectDirectory);
-       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
-       CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments);
-       BuildTools_Dir=$(BuildTools_Dir);"
-    />
-    <!-- Build packages -->
-    <MSBuild 
-      Projects="$(MSBuildThisFileDirectory)../build.proj"
-      Targets="BuildCoreRepo" 
-      Properties="
-       CoreProjectName=$(CoreProjectName);
-       CoreProjectDirectory=$(CoreProjectDirectory);
-       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
-       CoreBuildCommand=$(CoreProjectDirectory)build-packages$(ShellExtension);
-       CoreArguments=-BuildType=Release -BuildArch=x64;
-       BuildTools_Dir=$(BuildTools_Dir);
-       SkipInitTools=true"
+      Properties="$(BuildProperties)"
     />
   </Target>
 
   <Target Name="BuildCoreFx">
+    <GetHostRid Condition="'$(TargetRid)' == ''">
+      <Output PropertyName="TargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
     <PropertyGroup>
       <CoreProjectName>corefx</CoreProjectName>
       <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
-      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
-      <CoreBuildCommand Condition="'$(ShellExtension)' == '.sh' and '$(DotNet_Tool_Dir)' != ''">$(CoreBuildCommand)</CoreBuildCommand>
-      <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>
+      <RuntimeJsonFile>$(CoreProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>
+      <CoreClrTemplateFile>$(CoreProjectDirectory)external/coreclr/project.json.template</CoreClrTemplateFile>
+      <BuildProperties>
+        CoreProjectName=$(CoreProjectName);
+        CoreProjectDirectory=$(CoreProjectDirectory);
+        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+        CoreBuildCommand=$(CoreProjectDirectory)build$(ShellExtension);
+        CoreArguments=-$(Configuration) -buildArch=$(Platform) -- /p:OverridePackageSource=$(SourceBuiltPackagesPath);
+      </BuildProperties>
+      <BuildProperties Condition="'$(BuildTools_Dir)' != ''">
+        $(BuildProperties);
+        BuildTools_Dir=$(BuildTools_Dir);
+      </BuildProperties>
     </PropertyGroup>
+
+    <ItemGroup>
+      <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
+    <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
+                         Rid="$(TargetRid)-$(Platform)" />
+    <Message Importance="High" Text="Update framework dependency versions in $(CoreClrTemplateFile)" />
+    <UpdateFrameworkDependencyVersions ProjectJsonFile="$(CoreClrTemplateFile)"
+                                       NuGetPackages="@(SourceBuiltPackage)" />
+    
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
       Targets="BuildCoreRepo" 
-      Properties="
-       CoreProjectName=$(CoreProjectName);
-       CoreProjectDirectory=$(CoreProjectDirectory);
-       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
-       CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments);
-       BuildTools_Dir=$(BuildTools_Dir);"
+      Properties="$(BuildProperties)"
     />
   </Target>
 
-  <Target Name="InitCoreRepoTools"
-          Condition="'$(SkipInitTools)' != 'true'">
+  <Target Name="BootstrapBuildTools"
+          Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(BuildTools_Dir)' != ''">
     <RemoveDir Condition="'$(BuildTools_Dir)' != ''"
                Directories="$(CoreProjectDirectory)/Tools" />
-    <ItemGroup>
-      <BuildToolsFiles Include="$(BuildTools_Dir)/**" />
-      <BuildToolsFiles Include="$(CoreProjectDirectory)Tools-Override/**" />
-    </ItemGroup>
 
-    <Copy SourceFiles="@(BuildToolsFiles)"
-          DestinationFiles="@(BuildToolsFiles-> '$(CoreProjectDirectory)Tools/%(RecursiveDir)%(Filename)%(Extension)')" />
-      
+    <PropertyGroup Condition="'$(ShellExtension)' == '.sh'">
+      <CopyCommand>cp</CopyCommand>
+      <CopyArguments>-fR</CopyArguments>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ShellExtension)' == '.cmd'">
+      <CopyCommand>xcopy</CopyCommand>
+      <CopyArguments>/Y/e/s</CopyArguments>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(CoreProjectDirectory)Tools" />
+
+    <!-- The MSBuild Copy Task ouputs too much useless info (blank lines), so use system copies -->
+    <Exec Command="$(CopyCommand) $(CopyArguments) $(BuildTools_Dir)/* $(CoreProjectDirectory)Tools" />
+    <Exec Command="$(CopyCommand) $(CopyArguments) $(CoreProjectDirectory)Tools-Override/* $(CoreProjectDirectory)Tools" 
+          Condition="Exists('$(CoreProjectDirectory)Tools-Override')" />
+
     <Copy SourceFiles="$(BuildTools_Dir)/BuildToolsVersion.txt"
           DestinationFolder="$(CoreProjectDirectory)" />
            
   </Target>
 
   <Target Name="BuildCoreRepo"
-          DependsOnTargets="InitCoreRepoTools">
+          DependsOnTargets="BootstrapBuildTools">
     <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
           WorkingDirectory="$(CoreProjectDirectory)" />
 
