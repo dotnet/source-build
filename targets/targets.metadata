@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <ItemGroup>
+        <Repository Include="coreclr">
+            <ProjectDirectory Condition="'$(USE_CORECLR_AT)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_CORECLR_AT)' != ''">$(USE_CORECLR_AT)</ProjectDirectory>
+            
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildCoreClr</BuildTarget>
+            <CleanTarget>CleanCoreClr</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)coreclrVersions.txt</VersionFile>
+        </Repository>
+
+        <Repository Include="corefx">
+            <ProjectDirectory Condition="'$(USE_COREFX_AT)' == ''">$(SubmoduleDirectory)corefx/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_COREFX_AT)' != ''">$(USE_COREFX_AT)</ProjectDirectory>
+            
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildCoreFx</BuildTarget>
+            <CleanTarget>CleanCoreFx</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile >$(IntermediatePath)corefxVersions.txt</VersionFile>
+        </Repository>
+
+        <Repository Include="core-setup">
+            <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' == ''">$(SubmoduleDirectory)core-setup/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_CORESETUP_AT)' != ''">$(USE_CORESETUP_AT)</ProjectDirectory>
+
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <!-- Core-setup is special. We don't want it to build arbitrarily. It should always be last.-->
+            <CleanTarget>CleanCoreSetup</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
+        </Repository>
+
+        <Repository Include="libuv">
+            <ProjectDirectory Condition="'$(USE_LIBUV_AT)' == ''">$(SubmoduleDirectory)libuv/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_LIBUV_AT)' != ''">$(USE_LIBUV_AT)</ProjectDirectory>
+
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildLibUv</BuildTarget>
+            <CleanTarget>CleanLibUv</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">$(IntermediatePath)LibuvVersions.txt</VersionFile>
+        </Repository>
+
+        <Repository Include="standard">
+            <ProjectDirectory Condition="'$(USE_STANDARD_AT)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_STANDARD_AT)' != ''">$(USE_STANDARD_AT)</ProjectDirectory>
+
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildStandard</BuildTarget>
+            <CleanTarget>CleanStandard</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)standardVersions.txt</VersionFile>
+        </Repository>
+
+        <Repository Include="roslyn">
+            <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' == ''">$(SubmoduleDirectory)roslyn/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(USE_ROSLYN_AT)' != ''">$(USE_ROSLYN_AT)</ProjectDirectory>
+
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildRoslyn</BuildTarget>
+            <CleanTarget>CleanRoslyn</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)roslynVersions.txt</VersionFile>
+        </Repository>            
+
+    </ItemGroup>
+
+
+    <Import Project="build-standard.targets" />
+    <Import Project="build-core.targets" />
+    <Import Project="build-roslyn.targets" />
+    <Import Project="build-libuv.targets" />
+    <Import Project="build-core-setup.targets" />
+</Project>

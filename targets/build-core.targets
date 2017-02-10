@@ -1,81 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  
+  <!--
+    =======================================================================================================
+                                         CoreCLR Targets
+    =======================================================================================================
+    - These call in to the Core targets listed below.
 
-  <Target Name="BuildCoreClr">
+  -->
+  <Target Name="_InitializeCoreClr" >
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="coreclr">
+      <Output TaskParameter="ItemFound" ItemName="CoreClr" />
+    </FindInList>
+
+    <Error Condition="'%(CoreClr.ProjectDirectory)' == ''" Code="-1" HelpKeyword="coreclr-build" Text="Specify a CoreCLR git directory, either with the USE_CORECLR_AT property, or in the build-index.props. Find the help keyword in the 'source-build' git repository for more information." />
+
     <PropertyGroup>
-      <CoreProjectName>coreclr</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectName>%(CoreClr.Identity)</CoreProjectName>
+      <CoreProjectDirectory>%(CoreClr.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
+      <CoreVersionFile>%(CoreClr.VersionFile)</CoreVersionFile>      
     </PropertyGroup>
-    <MSBuild 
-      Projects="$(MSBuildThisFileDirectory)../build.proj"
-      Targets="BuildCoreRepo" 
-      Properties="
-       CoreProjectName=$(CoreProjectName);
-       CoreProjectDirectory=$(CoreProjectDirectory);
-       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
-       CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments)"
-    />
   </Target>
 
-  <Target Name="BuildCoreFx">
+  <Target Name="BuildCoreClr" DependsOnTargets="_InitializeCoreClr;_GatherCoreSource" Inputs="@(CoreSource)" Outputs="$(CoreVersionFile)">
+    <CallTarget Targets="BuildCoreRepo" />
+  </Target>
+
+  <Target Name="CleanCoreClr" DependsOnTargets="_InitializeCoreClr">
+    <CallTarget Targets="CleanCoreRepo" />
+  </Target>
+  <!-- END CORECLR Targets -->
+
+  <!--
+    =======================================================================================================
+                                         CoreFX Targets
+    =======================================================================================================
+    - These call in to the Core targets listed below.
+  -->  
+  
+  
+  <Target Name="_InitializeCoreFx">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="corefx">
+      <Output TaskParameter="ItemFound" ItemName="CoreFx" />
+    </FindInList>
+
+    <Error Condition="'%(CoreFx.ProjectDirectory)' == ''" Code="-42" Text="Specify a CoreFX git directory, either with the USE_COREFX_AT property, or in the 'targets.metadata' file." />
+
     <PropertyGroup>
-      <CoreProjectName>corefx</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectName>%(CoreFx.Identity)</CoreProjectName>
+      <CoreProjectDirectory>%(CoreFx.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>
+      <CoreVersionFile>%(CoreFx.VersionFile)</CoreVersionFile>
     </PropertyGroup>
-    <MSBuild 
-      Projects="$(MSBuildThisFileDirectory)../build.proj"
-      Targets="BuildCoreRepo" 
-      Properties="
-       CoreProjectName=$(CoreProjectName);
-       CoreProjectDirectory=$(CoreProjectDirectory);
-       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
-       CoreBuildCommand=$(CoreBuildCommand);
-       CoreArguments=$(CoreArguments)"
-    />
   </Target>
 
-  <Target Name="BuildCoreRepo">
-    <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
-          WorkingDirectory="$(CoreProjectDirectory)" />
+  <Target Name="BuildCoreFx" DependsOnTargets="_InitializeCoreFx;_GatherCoreSource" Inputs="@(CoreSource)" Outputs="$(CoreVersionFile)">
+    <CallTarget Targets="BuildCoreRepo" />
+  </Target>
 
+  <Target Name="CleanCoreFx" DependsOnTargets="_InitializeCoreFx">
+    <CallTarget Targets="CleanCoreRepo" />
+  </Target>
+  <!-- END COREFX Targets-->
+
+  <!--
+    =======================================================================================================
+                                         For all Core repositories
+    =======================================================================================================
+  --> 
+
+  <Target Name="_GatherCorePackages" Outputs="@(CorePackages)">
     <ItemGroup>
       <CorePackages Include="$(CorePackageOutputDirectory)*.nupkg" />
     </ItemGroup>
+  </Target>
 
+
+  <Target Name="_GatherCoreSource" Outputs="@(CorePackages)">
+    <ItemGroup>
+      <CoreSource Include="$(CoreProjectDirectory)/src/**/*" />
+    </ItemGroup>
+  </Target>
+  <!-- Should be applicable to ALL 'core repositories' -->
+  <!-- Inputs could/should probably be configured more carefully.-->
+  <!-- Using @(CoreSource) is a bad idea it seems (the way I have it configured). It is extremely slow. -->
+  <Target Name="BuildCoreRepo">
+    <Message Importance="High" Text="BUILDING '$(CoreProjectName)' CORE PACKAGES." />
+
+    <Exec Command="$(CoreBuildCommand) $(CoreArguments)"
+          WorkingDirectory="$(CoreProjectDirectory)" />
+
+    <CallTarget Targets="_GatherCorePackages" UseResultsCache="true">
+      <Output TaskParameter="TargetOutputs" ItemName="CorePackages"/>
+    </CallTarget>
+
+    <Message Importance="High" Text="Finished building '$(CoreProjectName)' packages: @(CorePackages)" />
+    <Message Importance="High" Text="Staging '$(CoreProjectName)' packages in: $(SourceBuiltPackagesPath)" />
+    
     <Copy SourceFiles="@(CorePackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />
-
+    
     <WriteVersionsFile NugetPackages="@(CorePackages)"
-                       OutputPath="$(IntermediatePath)$(CoreProjectName)Versions.txt" />
-  </Target>
-
-  <Target Name="CleanCoreClr"
-          AfterTargets="CleanCoreRepo">
-    <PropertyGroup>  
-      <CoreProjectName>coreclr</CoreProjectName>
-    </PropertyGroup>
-  </Target>
-
-  <Target Name="CleanCoreFx"
-          AfterTargets="CleanCoreRepo">
-    <PropertyGroup>
-      <CoreProjectName>corefx</CoreProjectName>
-    </PropertyGroup>
+                       OutputPath="$(CoreVersionFile)" />
+    <Message Importance="High" Text="wrote version file: '$(CoreVersionFile)'" />
   </Target>
 
   <Target Name="CleanCoreRepo">
-    <PropertyGroup>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)</CoreProjectDirectory>
-    </PropertyGroup>
     <Exec Command="$(CoreProjectDirectory)clean$(ShellExtension) --all"
           WorkingDirectory="$(CoreProjectDirectory)" />
   </Target>
+
+<!-- END CORE REPO Targets -->
+
 </Project>
