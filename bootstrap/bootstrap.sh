@@ -80,6 +80,7 @@ sharedFxVersion="<auto>"
 force=
 forcedCliLocalPath="<none>"
 architecture="<auto>"
+dotNetInstallBranch="rel/1.0.0"
 
 while [ $# -ne 0 ]
 do
@@ -104,6 +105,10 @@ do
         -a|--architecture|-[Aa]rchitecture)
             shift
             architecture="$1"
+            ;;
+        --dotNetInstallBranch|-[Dd]ot[Nn]et[Ii]nstall[Bb]ranch)
+            shift
+            dotNetInstallBranch="$1"
             ;;
         --sharedFrameworkSymlinkPath|--symlink|-[Ss]haredFrameworkSymlinkPath)
             shift
@@ -172,7 +177,7 @@ if [ $forcedCliLocalPath = "<none>" ]; then
     check_min_reqs
 
     # download CLI boot-strapper script
-    download "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh" "$dotnetInstallPath"
+    download "https://raw.githubusercontent.com/dotnet/cli/$dotNetInstallBranch/scripts/obtain/dotnet-install.sh" "$dotnetInstallPath"
     chmod u+x "$dotnetInstallPath"
 
     # load the version of the CLI
@@ -210,6 +215,75 @@ fi
 if [ ! -e $symlinkPath ]; then
     ln -s $junctionTarget $symlinkPath
 fi
+
+# create a project.json for the packages to restore
+projectJson="$toolsLocalPath/project.csproj"
+propsString=''
+targetsString=''
+pjContent=$'<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">\n'
+pjContent="$pjContent"$'  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />\n'
+pjContent="$pjContent  <PropertyGroup><TargetFramework>netstandard1.4</TargetFramework></PropertyGroup>"$'\n'
+pjContent="$pjContent  <ItemGroup>"$'\n'
+
+while read v; do
+    IFS='=' read -r -a line <<< "$v"
+    pjContent="$pjContent    <PackageReference Include=\"${line[0]}\"><Version>${line[1]}</Version></PackageReference>"$'\n'
+done <$rootToolVersions
+pjContent="$pjContent  </ItemGroup>"$'\n'
+pjContent="$pjContent"$'  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />\n'
+pjContent="$pjContent</Project>"
+echo "$pjContent" > "$projectJson"
+
+# now restore the packages
+buildToolsSource="${BUILDTOOLS_SOURCE:-https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json}"
+nugetOrgSource="https://api.nuget.org/v3/index.json"
+
+packagesPath="$repoRoot/packages"
+dotNetExe="$cliLocalPath/dotnet"
+restoreArgs="restore $projectJson --packages $packagesPath --source $buildToolsSource --source $nugetOrgSource"
+say_verbose "Running $dotNetExe $restoreArgs"
+$dotNetExe $restoreArgs
+if [ $? != 0 ]; then
+    say_err "project.json restore failed with exit code $?"
+    exit $?
+fi
+
+# now stage the contents to tools directory and run any init scripts
+while read v; do
+    IFS='=' read -r -a line <<< "$v"
+    id=$(echo "${line[0]}" | tr '[:upper:]' '[:lower:]')
+    version="${line[1]}"
+    # verify that the version we expect is what was restored
+    pkgVerPath="$packagesPath/$id/$version"
+    if [ ! -d $pkgVerPath ]; then
+        say_err "Directory $pkgVerPath doesn't exist, ensure that the version restore matches the version specified."
+        exit 1
+    fi
+    # at present we have the following conventions when staging package content:
+    #   1.  if a package contains a "tools" directory then recursively copy its contents
+    #       to a directory named the package ID that's under $ToolsLocalPath.
+    #   2.  if a package contains a "libs" directory then recursively copy its contents
+    #       under the $ToolsLocalPath directory.
+    #   3.  if a package contains a file "lib\init-tools.cmd" execute it.
+    if [ -d "$pkgVerPath/tools" ]; then
+        destination="$toolsLocalPath/$id"
+        mkdir -p $destination
+        cp -r $pkgVerPath/* $destination
+    fi
+    if [ -d "$pkgVerPath/lib" ]; then
+        cp -r $pkgVerPath/lib/* $toolsLocalPath
+    fi
+    if [ -f "$pkgVerPath/lib/init-tools.sh" ]; then
+        (
+            set +e
+            "$pkgVerPath/lib/init-tools.sh" "$repoRoot" "$dotNetExe" "$toolsLocalPath" > "init-$id.log"
+            if [ $? -ne 0 ]; then
+                say "$pkgVerPath/lib/init-tools.sh: non-zero exit code. Ignoring. CLI mismatch is likely."
+                exit 0
+            fi
+        )
+    fi
+done <$rootToolVersions
 
 cp $rootToolVersions $bootstrapComplete
 
