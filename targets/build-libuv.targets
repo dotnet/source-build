@@ -2,21 +2,35 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+  
+  <!--
+    =======================================================================================================
+                                         LibUV Targets
+    =======================================================================================================
 
-  <PropertyGroup>
-    <LibuvDirectory>$(SubmoduleDirectory)libuv/</LibuvDirectory>
-    <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
-  </PropertyGroup>
+  -->
 
-  <!-- Libuv Targets -->
-  <!-- *nix Jenkins workers do not have autotools installed so we can't build libuv there -->
-  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">
+  <!-- Initialize our data -->
+  <Target Name="_InitializeLibuv">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="libuv">
+      <Output TaskParameter="ItemFound" ItemName="Libuv" />
+    </FindInList>
+
+    <Error Condition="'%(Libuv.ProjectDirectory)' == ''" Text="You are missing Libuv metadata, or you need to specify a Libuv build directory, either with the /p:PathToLibuv switch, or in the 'targets/targets.props'" />
+
+    <PropertyGroup>
+      <LibuvDirectory>%(Libuv.ProjectDirectory)</LibuvDirectory>
+      <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
+    </PropertyGroup>
+
     <PropertyGroup>
       <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
       <_LibuvTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
       <_LibuvTargetRid Condition="'$(TargetOS)' == 'OSX'">osx.10.10-x64</_LibuvTargetRid>
     </PropertyGroup>
+  </Target>
 
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv">
     <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
       <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
     </GetHostRid>
@@ -35,7 +49,7 @@
           DestinationFolder="$(SourceBuiltPackagesPath)" />
 
     <WriteVersionsFile NugetPackages="@(LibuvPackages)"
-                       OutputPath="$(IntermediatePath)LibuvVersions.txt" />
+                       OutputPath="%(Libuv.VersionFile)" />
   </Target>
 
   <!-- no-op right now as libuv doesn't have clean.sh -->

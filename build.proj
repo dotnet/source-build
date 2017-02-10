@@ -1,33 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
 
   <Import Project="dir.props" />
+  <Import Project="targets/targets.props" />
 
-  <PropertyGroup>
-    <BuildProjectTargets>
-      BuildStandard;
-      BuildCoreClr;
-      BuildCoreFx;
-      BuildRoslyn;
-      BuildLibuv;
-      BuildCoreSetup;
-    </BuildProjectTargets>
-    <CleanProjectTargets>
-      CleanStandard;
-      CleanCoreClr;
-      CleanCoreFx;
-      CleanRoslyn;
-      CleanLibuv;
-      CleanCoreSetup;
-    </CleanProjectTargets>
-  </PropertyGroup>
-
-  <Target Name="Build" DependsOnTargets="PrepareOutput;$(BuildProjectTargets)">
-    <Message Importance="Normal" Text="Build Complete" />
+  <Target Name="_SelectRepositories">
+    <Select Collection="@(Repository)" Selection="$(Only)">
+    	<Output ItemName="SelectedRepositories" TaskParameter="Selected" />
+    </Select>
   </Target>
 
-  <Target Name="Clean" DependsOnTargets="CleanOutput;$(CleanCoreTargets)">
+  <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories">
+    <!-- False here indicates that the build should stop if one of the targets fails -->
+    <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="false" />
+
+    <Message Importance="Normal" Text="Build Complete" />
+  </Target>
+  <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">
+    <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="false" />
+  
     <Message Importance="Normal" Text="Clean Complete" />
   </Target>
 
@@ -55,11 +48,5 @@
 
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
   </Target>
-
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-standard.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-core.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-roslyn.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-libuv.targets" />
-  <Import Project="$(MSBuildThisfileDirectory)targets/build-core-setup.targets" />
 
 </Project>

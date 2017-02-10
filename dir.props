@@ -14,6 +14,7 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
+    <Only Condition="'$(Only)' == ''">standard;coreclr;corefx;roslyn;libuv;core-setup</Only>
   </PropertyGroup>
 
   <PropertyGroup>
