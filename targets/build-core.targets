@@ -2,14 +2,23 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
-  <Target Name="BuildCoreClr">
+  <Target Name="_InitializeCoreClr">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="coreclr">
+      <Output TaskParameter="ItemFound" ItemName="CoreClr" />
+    </FindInList>
+
+    <Error Condition="'%(CoreClr.ProjectDirectory)' == ''" Code="-1" HelpKeyword="coreclr-build" Text="Specify a CoreCLR git directory, either with the USE_CORECLR_AT property, or in the build-index.props. Find the help keyword in the 'source-build' git repository for more information." />
+
     <PropertyGroup>
-      <CoreProjectName>coreclr</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectName>%(CoreClr.Identity)</CoreProjectName>
+      <CoreProjectDirectory>%(CoreClr.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>$(Platform) $(Configuration) skiptests</CoreArguments>
     </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildCoreClr" DependsOnTargets="_InitializeCoreClr">
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
       Targets="BuildCoreRepo" 
@@ -22,14 +31,23 @@
     />
   </Target>
 
-  <Target Name="BuildCoreFx">
+  <Target Name="_InitializeCoreFx">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="corefx">
+      <Output TaskParameter="ItemFound" ItemName="CoreFx" />
+    </FindInList>
+
+    <Error Condition="'%(CoreFx.ProjectDirectory)' == ''" Code="-42" Text="Specify a CoreFX git directory, either with the USE_COREFX_AT property, or in the 'targets.metadata' file." />
+
     <PropertyGroup>
-      <CoreProjectName>corefx</CoreProjectName>
-      <CoreProjectDirectory>$(SubmoduleDirectory)$(CoreProjectName)/</CoreProjectDirectory>
+      <CoreProjectName>%(CoreFx.Identity)</CoreProjectName>
+      <CoreProjectDirectory>%(CoreFx.ProjectDirectory)</CoreProjectDirectory>
       <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform)</CoreArguments>
     </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildCoreFx" DependsOnTargets="_InitializeCoreFx">
     <MSBuild 
       Projects="$(MSBuildThisFileDirectory)../build.proj"
       Targets="BuildCoreRepo" 
@@ -39,7 +57,7 @@
        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
        CoreBuildCommand=$(CoreBuildCommand);
        CoreArguments=$(CoreArguments)"
-    />
+      />
   </Target>
 
   <Target Name="BuildCoreRepo">

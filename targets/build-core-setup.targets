@@ -3,14 +3,16 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
 
-  <PropertyGroup>
-    <CoreSetupDirectory>$(SubmoduleDirectory)core-setup/</CoreSetupDirectory>
-  </PropertyGroup>
+  <Target Name="_InitializeCoreSetup">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="core-setup">
+      <Output TaskParameter="ItemFound" ItemName="CoreSetup" />
+    </FindInList>
 
-  <!-- Core-Setup targets -->
-  <Target Name="BuildCoreSetup">
+    <Error Condition="'%(CoreSetup.ProjectDirectory)' == ''" Code="-1" HelpKeyword="core-setup-build" Text="Specify a CoreSetup build directory, either with the USE_CORESETUP_AT property, or in the build-index.props. Find the help keyword in the source-build git repository for more information." />
+
     <PropertyGroup>
       <_CoreSetupTargetRid>$(TargetRid)</_CoreSetupTargetRid>
+      <CoreSetupDirectory>%(CoreSetup.ProjectDirectory)</CoreSetupDirectory>
       <CoreSetupPackageOutputDirectory>$(CoreSetupDirectory)artifacts/$(_CoreSetupTargetRid)/packages/</CoreSetupPackageOutputDirectory>
     </PropertyGroup>
 
@@ -31,7 +33,11 @@
         <Environment>LIBUV</Environment>
       </VersionFile>
     </ItemGroup>
+  </Target>
 
+
+  <!-- Core-Setup targets -->
+  <Target Name="BuildCoreSetup" DependsOnTargets="_InitializeCoreSetup">
     <Exec Command="@(VersionFile->'(set %(Environment)_VERSION_URL=file://%(FullPath))', ' &amp; ') &amp; powershell.exe $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles"
           Condition="'$(OS)' == 'Windows_NT'"
           WorkingDirectory="$(CoreSetupDirectory)" />
