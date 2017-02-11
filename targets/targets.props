@@ -66,7 +66,17 @@
             <TestTarget></TestTarget>
             <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
         </Repository>       
+        
+        <Repository Include="msbuild">
+            <ProjectDirectory Condition="'$(PathToMSBuild)' == ''">$(SubmoduleDirectory)msbuild/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(PathToMSBuild)' != ''">$(PathToMSBuild)</ProjectDirectory>
 
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildMSBuild</BuildTarget>
+            <CleanTarget>CleanMSBuild</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)MSBuildVersions.txt</VersionFile>
+        </Repository>   
     </ItemGroup>
 
 
@@ -74,5 +84,7 @@
     <Import Project="build-core.targets" />
     <Import Project="build-roslyn.targets" />
     <Import Project="build-libuv.targets" />
+    <Import Project="build-msbuild.targets" />
     <Import Project="build-core-setup.targets" />
+
 </Project>
