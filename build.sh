@@ -121,14 +121,15 @@ bootstrap()
 # Parse command-line arguments
 # parse_args
 
-# Bootstrap supported or unsupported OS
-bootstrap
-echo "SDKPATH: $SDKPATH"
-
+# Create a fake HOME if none is set
 if [ -z "${HOME:-}" ]; then
     mkdir -p $SCRIPT_ROOT/bin/obj/home
     export HOME=$SCRIPT_ROOT/bin/obj/home
 fi
+
+# Bootstrap supported or unsupported OS
+bootstrap
+echo "SDKPATH: $SDKPATH"
 
 # Main build loop
 (set -x ; $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj)
