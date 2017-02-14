@@ -6,6 +6,7 @@ param
     [Parameter(Mandatory=$false)][string]$SharedFrameworkSymlinkPath = (Join-Path $ToolsLocalPath "dotnetcli\shared\Microsoft.NETCore.App\version"),
     [Parameter(Mandatory=$false)][string]$SharedFrameworkVersion = "<auto>",
     [Parameter(Mandatory=$false)][string]$Architecture = "<auto>",
+    [Parameter(Mandatory=$false)][string]$DotNetInstallBranch = "rel/1.0.0",
     [switch]$Force = $false
 )
 
@@ -26,7 +27,7 @@ if (Test-Path $bootstrapComplete)
         exit 0
     }
 
-    if ((Compare-Object (Get-Content $rootToolVersions) (Get-Content $bootstrapComplete)) -eq 0)
+    if (!(Compare-Object (Get-Content $rootToolVersions) (Get-Content $bootstrapComplete)))
     {
         exit 0
     }
@@ -47,7 +48,7 @@ else
 }
 
 # download CLI boot-strapper script
-Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.ps1" -UseDefaultCredentials -OutFile $dotnetInstallPath
+Invoke-WebRequest "https://raw.githubusercontent.com/dotnet/cli/$DotNetInstallBranch/scripts/obtain/dotnet-install.ps1" -UseDefaultCredentials -OutFile $dotnetInstallPath
 
 # load the version of the CLI
 $rootCliVersion = Join-Path $RepositoryRoot ".cliversion"
@@ -85,5 +86,94 @@ if (-Not (Test-Path $SharedFrameworkSymlinkPath))
     cmd.exe /c mklink /j $SharedFrameworkSymlinkPath $junctionTarget | Out-Null
 }
 
+# create a project.json for the packages to restore
+$projectJson = Join-Path $ToolsLocalPath "project.csproj"
+$propsString = '<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />'
+$targetsString = '<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />'
+$pjContent = @"
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  $propsString
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+"@
+
+$tools = Get-Content $rootToolVersions
+foreach ($tool in $tools)
+{
+    $name, $version = $tool.split("=")
+    $pjContent = $pjContent + @"
+    <PackageReference Include=`"$name`">
+      <Version>$version</Version>
+    </PackageReference>
+"@
+}
+$pjContent = $pjContent + @"
+  </ItemGroup>
+  $targetsString
+</Project>
+"@
+$pjContent | Out-File $projectJson
+
+# now restore the packages
+$buildToolsSource = "https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json"
+$nugetOrgSource = "https://api.nuget.org/v3/index.json"
+if ($env:buildtools_source -ne $null)
+{
+    $buildToolsSource = $env:buildtools_source
+}
+$packagesPath = Join-Path $RepositoryRoot "packages"
+$dotNetExe = Join-Path $cliLocalPath "dotnet.exe"
+$restoreArgs = "restore $projectJson --packages $packagesPath --source $buildToolsSource --source $nugetOrgSource"
+$process = Start-Process -Wait -NoNewWindow -FilePath $dotNetExe -ArgumentList $restoreArgs -PassThru
+if ($process.ExitCode -ne 0)
+{
+    exit $process.ExitCode
+}
+
+# now stage the contents to tools directory and run any init scripts
+foreach ($tool in $tools)
+{
+    $name, $version = $tool.split("=")
+
+    # verify that the version we expect is what was restored
+    $pkgVerPath = Join-Path $packagesPath "$name\$version"
+    if ((Test-Path $pkgVerPath) -eq 0)
+    {
+        Write-Output "Directory '$pkgVerPath' doesn't exist, ensure that the version restored matches the version specified."
+        exit 1
+    }
+
+    # at present we have the following conventions when staging package content:
+    #   1.  if a package contains a "tools" directory then recursively copy its contents
+    #       to a directory named the package ID that's under $ToolsLocalPath.
+    #   2.  if a package contains a "libs" directory then recursively copy its contents
+    #       under the $ToolsLocalPath directory.
+    #   3.  if a package contains a file "lib\init-tools.cmd" execute it.
+
+    if (Test-Path (Join-Path $pkgVerPath "tools"))
+    {
+        $destination = Join-Path $ToolsLocalPath $name
+        mkdir $destination | Out-Null
+        copy (Join-Path $pkgVerPath "tools\*") $destination -recurse
+    }
+    elseif (Test-Path (Join-Path $pkgVerPath "lib"))
+    {
+        copy (Join-Path $pkgVerPath "lib\*") $ToolsLocalPath -recurse
+    }
+
+    if (Test-Path (Join-Path $pkgVerPath "lib\init-tools.cmd"))
+    {
+        cmd.exe /c (Join-Path $pkgVerPath "lib\init-tools.cmd") $RepositoryRoot $dotNetExe $ToolsLocalPath | Out-File (Join-Path $RepositoryRoot "Init-$name.log")
+        if ($LastExitCode -ne 0)
+        {
+            Write-Output "$pkgVerPath/lib/init-tools.cmd: non-zero exit code. Ignoring. CLI mismatch is likely."
+        }
+    }
+}
+
 # write semaphore file
 copy $rootToolVersions $bootstrapComplete
+
+Write-Output "Bootstrap finished successfully."

@@ -13,11 +13,11 @@
   </Target>
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories">
-    <!-- False here indicates that the build should stop if one of the targets fails -->
     <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="false" />
 
     <Message Importance="Normal" Text="Build Complete" />
   </Target>
+
   <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">
     <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="false" />
   
@@ -49,4 +49,7 @@
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
   </Target>
 
+  <Import Project="$(MSBuildThisfileDirectory)scripts/auto-update/update-submodules.targets" />
+
 </Project>
+

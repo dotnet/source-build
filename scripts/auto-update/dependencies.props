@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Source of truth for dependency tooling: the commit hash of the dotnet/versions master branch as of the last auto-upgrade. -->
+  <PropertyGroup>
+    <CoreFxCurrentRef>8c02c8b91856b5b8f6e5d7f1707f6b2f0de67644</CoreFxCurrentRef>
+  </PropertyGroup>
+
+  <!-- Package dependency verification/auto-upgrade configuration. -->
+  <PropertyGroup>
+    <BaseDotNetBuildInfo>build-info/dotnet/</BaseDotNetBuildInfo>
+    <DependencyBranch>master</DependencyBranch>
+    <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
+    <DotNetCoreV2BaseUrl>https://dotnet.myget.org/F/dotnet-core/api/v2</DotNetCoreV2BaseUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RemoteDependencyBuildInfo Include="CoreFx">
+      <BuildInfoPath>$(BaseDotNetBuildInfo)corefx/$(DependencyBranch)</BuildInfoPath>
+      <CurrentRef>$(CoreFxCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+
+    <DependencyBuildInfo Include="@(RemoteDependencyBuildInfo)">
+      <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
+    </DependencyBuildInfo>
+  </ItemGroup>
+
+  <!-- Set up submodule updaters. -->
+  <ItemGroup>
+    <UpdateStep Include="CoreFX">
+      <UpdaterType>Submodule from package</UpdaterType>
+      <Path>$(SubmoduleDirectory)corefx</Path>
+      <IndicatorPackage>Microsoft.NETCore.Platforms</IndicatorPackage>
+      <PackageDownloadBaseUrl>$(DotNetCoreV2BaseUrl)</PackageDownloadBaseUrl>
+    </UpdateStep>
+
+    <UpdateStep Include="Core-Setup">
+      <UpdaterType>Submodule from latest</UpdaterType>
+      <Path>$(SubmoduleDirectory)core-setup</Path>
+      <Repository>origin</Repository>
+      <Ref>master</Ref>
+    </UpdateStep>
+    <UpdateStep Include="CoreCLR">
+      <UpdaterType>Submodule from latest</UpdaterType>
+      <Path>$(SubmoduleDirectory)coreclr</Path>
+      <Repository>origin</Repository>
+      <Ref>master</Ref>
+    </UpdateStep>
+    <UpdateStep Include="libuv">
+      <UpdaterType>Submodule from latest</UpdaterType>
+      <Path>$(SubmoduleDirectory)libuv</Path>
+      <Repository>origin</Repository>
+      <Ref>master</Ref>
+    </UpdateStep>
+    <UpdateStep Include="Roslyn">
+      <UpdaterType>Submodule from latest</UpdaterType>
+      <Path>$(SubmoduleDirectory)roslyn</Path>
+      <Repository>origin</Repository>
+      <Ref>master</Ref>
+    </UpdateStep>
+    <UpdateStep Include="Standard">
+      <UpdaterType>Submodule from latest</UpdaterType>
+      <Path>$(SubmoduleDirectory)standard</Path>
+      <Repository>origin</Repository>
+      <Ref>master</Ref>
+    </UpdateStep>
+  </ItemGroup>
+</Project>

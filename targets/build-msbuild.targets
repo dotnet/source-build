@@ -36,9 +36,25 @@
     </GetHostRid>
 
     <Message Importance="High" Text="DEBUG: Building MSBuild for $(_MSBuildTargetRid)" />
-    <!-- Calling in to Rebuild because it is hopefully idempotent, and it doesn't invoke tests. -->
-    <Exec Command="$(MSBuildRepositoryDirectory)cibuild$(ShellExtension) --scope Compile --target All"
-          WorkingDirectory="$(MSBuildRepositoryDirectory)"/>
+    
+    <Exec Command='call "$(VS140COMNTOOLS)\VsDevCmd.bat" &amp; $(MSBuildRepositoryDirectory)cibuild$(ShellExtension) --target All --build-only --scope Compile'
+          WorkingDirectory="$(MSBuildRepositoryDirectory)"
+	  Condition="'$(OS)' == 'Windows_NT'"/>
+
+    <Exec
+Command="$(MSBuildRepositoryDirectory)cibuild$(ShellExtension)
+--target CoreCLR --scope Compile"
+WorkingDirectory="$(MSBuildRepositoryDirectory)" Condition="'$(OS)' !=
+'$(Windows_NT)'" />
+
+    <ItemGroup>
+      <CoreFiles Include="$(MSBuildRepositoryDirectory)bin\Debug-NetCore\Output\*" Exclude="_._"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreFiles)"
+          DestinationFolder="$(MSBuildRepositoryDirectory)bin\x86\Windows_NT\Debug-NetCore\Output" />
+
+    <MSBuild Projects="$(MSBuildRepositoryDirectory)build\NuGetPackages\CreateNuGetPackages.proj" />
 
     <ItemGroup>
       <MSBuildPackages Include="$(MSBuildPackageOutputDirectory)**/*.nupkg" />
