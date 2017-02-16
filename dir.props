@@ -3,8 +3,10 @@
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
-    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' == 'Windows_NT'">Windows_NT</TargetOS>
-    <TargetOS Condition="'$(TargetOS)' == '' and '$(OS)' != 'Windows_NT'">Linux</TargetOS>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,12 +17,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(MSBuildThisFileDirectory)src/</SubmoduleDirectory>
+    <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
+    <Only Condition="'$(Only)' == ''">standard;coreclr;corefx;roslyn;libuv;core-setup</Only>
   </PropertyGroup>
 
   <PropertyGroup>
-    <BaseOutputPath>$(MSBuildThisFileDirectory)bin/</BaseOutputPath>
-    <TaskDirectory>$(MSBuildThisFileDirectory)tasks/</TaskDirectory>
+    <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
+    <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
+    <TaskDirectory>$(ProjectDir)tasks/</TaskDirectory>
+    <BuildTaskDirectory>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</BuildTaskDirectory>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>

@@ -5,20 +5,18 @@ def project = GithubProject;
 def branch = GithubBranchName;
 
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
-  def buildString = "";
-
-  if (os == "Windows_NT") {
-    buildString = ".\build.cmd /p:Configuration=${configuration}";
-  }
-  else {
-    buildString = "./build.sh /p:Configuration=${configuration}";
-  }
-
   job.with {
     steps {
-      shell("git submodule init");
-      shell("git submodule update");
-      shell(buildString);
+      if (os == "Windows_NT") {
+        batchFile("git submodule init");
+        batchFile("git submodule update");
+        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+      }
+      else {
+        shell("git submodule init");
+        shell("git submodule update");
+        shell("./build.sh /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+      }
     };
   };
 
@@ -50,13 +48,13 @@ def addPushJob(String project, String branch, String os, String configuration)
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["Ubuntu14.04", "RHEL7.2", "Windows_NT"].each { os ->
+["Ubuntu14.04", "RHEL7.2", "Windows_NT", "OSX"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };
 
 // Per push, run all the jobs
-["Ubuntu14.04", "RHEL7.2", "Windows_NT"].each { os ->
+["Ubuntu14.04", "RHEL7.2", "Windows_NT", "OSX"].each { os ->
   ["Release", "Debug"].each { configuration ->
     addPushJob(project, branch, os, configuration);
   };

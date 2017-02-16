@@ -211,6 +211,12 @@ bootstrap()
 # Parse command-line arguments
 # parse_args
 
+# Create a fake HOME if none is set
+if [ -z "${HOME:-}" ]; then
+    mkdir -p $SCRIPT_ROOT/bin/obj/home
+    export HOME=$SCRIPT_ROOT/bin/obj/home
+fi
+
 # Bootstrap supported or unsupported OS
 if [[ "$USEBUILTTOOLS" == "false" ]]; then
   bootstrap
@@ -237,19 +243,18 @@ echo "SDKPATH: $SDKPATH"
 
 # Main build loop
 echo "$CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
-$CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
+set -x ; $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 
 echo "$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"
-$CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
+set -x ; $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 
 if [[ ${#ADDITIONALARGS[@]} -gt 0 ]]; then
   echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}"
-  $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}
+  set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}
 else
   echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj"
-  $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj
+  set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj
 fi
-
 
 if [[ "$BOOTSTRAPUNSUPPORTED" == "true" ]]; then
   echo "Patch CLI with built binaries"
