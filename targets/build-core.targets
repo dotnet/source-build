@@ -2,13 +2,67 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
-  <!--
-    =======================================================================================================
-                                         CoreCLR Targets
-    =======================================================================================================
-    - These call in to the Core targets listed below.
+<!--
+  =======================================================================================================
+                                        F# + .NET Core SDK Targets
+  =======================================================================================================
+  - These call in to the Core targets listed below.
 
-  -->
+-->
+
+  <Target Name="_InitializeNetCoreCLIFSC" >
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="NetCoreCLIFSC">
+      <Output TaskParameter="ItemFound" ItemName="NetCoreCLIFSC" />
+    </FindInList>
+
+    <Error Condition="'%(NetCoreCLIFSC.ProjectDirectory)' == ''" Text="You are missing NetCoreCLI FSC metadata, or you need to specify a NetCoreCLI FSC git directory, either with the /p:PathToNetCoreCLIFSC switch, or in the 'targets/targets.props'" />
+
+    <PropertyGroup>
+      <CoreProjectName>%(NetCoreCLIFSC.Identity)</CoreProjectName>
+      <CoreProjectDirectory>%(NetCoreCLIFSC.ProjectDirectory)</CoreProjectDirectory>
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)/artifacts/nupkgs/</CorePackageOutputDirectory>
+      <CoreBuildCommand>$(CoreProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
+      <CoreArguments>/t:Package</CoreArguments>
+      <CoreVersionFile>%(NetCoreCLIFSC.VersionFile)</CoreVersionFile>      
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildNetCoreCLIFSC" DependsOnTargets="_InitializeNetCoreCLIFSC">
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="BuildCoreRepo" 
+      Properties="
+       CoreProjectName=$(CoreProjectName);
+       CoreProjectDirectory=$(CoreProjectDirectory);
+       CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+       CoreBuildCommand=$(CoreBuildCommand);
+       CoreArguments=$(CoreArguments);
+       CoreVersionFile=$(CoreVersionFile);"
+    />
+  </Target>
+
+  <Target Name="CleanNetCoreCLIFSC" DependsOnTargets="_InitializeNetCoreCLIFSC">
+    <MSBuild 
+      Projects="$(MSBuildThisFileDirectory)../build.proj"
+      Targets="CleanCoreRepo" 
+      Properties="
+        CoreProjectName=$(CoreProjectName);
+        CoreProjectDirectory=$(CoreProjectDirectory);
+        CorePackageOutputDirectory=$(CorePackageOutputDirectory);
+        CoreBuildCommand=$(CoreBuildCommand);
+        CoreArguments=$(CoreArguments);
+        CoreVersionFile=$(CoreVersionFile);"
+    />
+  </Target>
+
+
+<!--
+  =======================================================================================================
+                                        CoreCLR Targets
+  =======================================================================================================
+  - These call in to the Core targets listed below.
+
+-->
 
   <Target Name="_InitializeCoreClr" >
     <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="coreclr">
@@ -56,12 +110,12 @@
     />
   </Target>
 
- <!--
-    =======================================================================================================
-                                         CoreFX Targets
-    =======================================================================================================
-    - These call in to the Core targets listed below.
-  -->  
+<!--
+  =======================================================================================================
+                                        CoreFX Targets
+  =======================================================================================================
+  - These call in to the Core targets listed below.
+-->  
   
   
   <Target Name="_InitializeCoreFx">

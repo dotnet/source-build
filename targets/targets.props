@@ -1,78 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <ItemGroup>
-        <Repository Include="standard">
-            <ProjectDirectory Condition="'$(PathToStandard)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToStandard)' != ''">$(PathToStandard)</ProjectDirectory>
+<ItemGroup>
+  <Repository Include="standard">
+    <ProjectDirectory Condition="'$(PathToStandard)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToStandard)' != ''">$(PathToStandard)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildStandard</BuildTarget>
+    <CleanTarget>CleanStandard</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)standardVersions.txt</VersionFile>
+  </Repository>
+  
+  <Repository Include="coreclr">
+    <ProjectDirectory Condition="'$(PathToCoreClr)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToCoreClr)' != ''">$(PathToCoreClr)</ProjectDirectory>    
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildCoreClr</BuildTarget>
+    <CleanTarget>CleanCoreClr</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)coreclrVersions.txt</VersionFile>
+  </Repository>
 
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildStandard</BuildTarget>
-            <CleanTarget>CleanStandard</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile>$(IntermediatePath)standardVersions.txt</VersionFile>
-        </Repository>
-
-        <Repository Include="coreclr">
-            <ProjectDirectory Condition="'$(PathToCoreClr)' == ''">$(SubmoduleDirectory)coreclr/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToCoreClr)' != ''">$(PathToCoreClr)</ProjectDirectory>
-            
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildCoreClr</BuildTarget>
-            <CleanTarget>CleanCoreClr</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile>$(IntermediatePath)coreclrVersions.txt</VersionFile>
-        </Repository>
-
-        <Repository Include="corefx">
-            <ProjectDirectory Condition="'$(PathToCorefx)' == ''">$(SubmoduleDirectory)corefx/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToCorefx)' != ''">$(PathToCorefx)</ProjectDirectory>
-            
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildCoreFx</BuildTarget>
-            <CleanTarget>CleanCoreFx</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile >$(IntermediatePath)corefxVersions.txt</VersionFile>
-        </Repository>
-
-        <Repository Include="roslyn">
-            <ProjectDirectory Condition="'$(PathToRoslyn)' == ''">$(SubmoduleDirectory)roslyn/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToRoslyn)' != ''">$(PathToRoslyn)</ProjectDirectory>
-
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildRoslyn</BuildTarget>
-            <CleanTarget>CleanRoslyn</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile>$(IntermediatePath)roslynVersions.txt</VersionFile>
-        </Repository>     
-
-        <Repository Include="libuv">
-            <ProjectDirectory Condition="'$(PathToLibuv)' == ''">$(SubmoduleDirectory)libuv/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToLibuv)' != ''">$(PathToLibuv)</ProjectDirectory>
-
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildLibUv</BuildTarget>
-            <CleanTarget>CleanLibUv</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">$(IntermediatePath)LibuvVersions.txt</VersionFile>
-        </Repository>
-
-        <Repository Include="core-setup">
-            <ProjectDirectory Condition="'$(PathToCoreSetup)' == ''">$(SubmoduleDirectory)core-setup/</ProjectDirectory>
-            <ProjectDirectory Condition="'$(PathToCoreSetup)' != ''">$(PathToCoreSetup)</ProjectDirectory>
-
-            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-            <BuildTarget>BuildCoreSetup</BuildTarget>
-            <CleanTarget>CleanCoreSetup</CleanTarget>
-            <TestTarget></TestTarget>
-            <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
-        </Repository>       
-
-    </ItemGroup>
+  <Repository Include="corefx">
+    <ProjectDirectory Condition="'$(PathToCorefx)' == ''">$(SubmoduleDirectory)corefx/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToCorefx)' != ''">$(PathToCorefx)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildCoreFx</BuildTarget>
+    <CleanTarget>CleanCoreFx</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile >$(IntermediatePath)corefxVersions.txt</VersionFile>
+  </Repository>
+  
+  <Repository Include="roslyn">
+    <ProjectDirectory Condition="'$(PathToRoslyn)' == ''">$(SubmoduleDirectory)roslyn/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToRoslyn)' != ''">$(PathToRoslyn)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildRoslyn</BuildTarget>
+    <CleanTarget>CleanRoslyn</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)roslynVersions.txt</VersionFile>
+  </Repository>     
+  
+  <Repository Include="libuv">
+    <ProjectDirectory Condition="'$(PathToLibuv)' == ''">$(SubmoduleDirectory)libuv/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToLibuv)' != ''">$(PathToLibuv)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildLibUv</BuildTarget>
+    <CleanTarget>CleanLibUv</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'">$(IntermediatePath)LibuvVersions.txt</VersionFile>
+  </Repository>
+  
+  <Repository Include="core-setup">
+    <ProjectDirectory Condition="'$(PathToCoreSetup)' == ''">$(SubmoduleDirectory)core-setup/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToCoreSetup)' != ''">$(PathToCoreSetup)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildCoreSetup</BuildTarget>
+    <CleanTarget>CleanCoreSetup</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
+  </Repository>       
+  
+  <Repository Include="netcoreclifsc">
+    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' == ''">$(SubmoduleDirectory)netcorecli-fsc/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' != ''">$(PathToNetCoreCLIFSC)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildNetCoreCLIFSC</BuildTarget>
+    <CleanTarget>CleanNetCoreCLIFSC</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)NetCoreCLIFSCVersions.txt</VersionFile>
+  </Repository>       
+</ItemGroup>
 
 
-    <Import Project="build-standard.targets" />
-    <Import Project="build-core.targets" />
-    <Import Project="build-roslyn.targets" />
-    <Import Project="build-libuv.targets" />
-    <Import Project="build-core-setup.targets" />
+  <Import Project="build-standard.targets" />
+  <Import Project="build-core.targets" />
+  <Import Project="build-roslyn.targets" />
+  <Import Project="build-libuv.targets" />
+  <Import Project="build-core-setup.targets" />
 </Project>
