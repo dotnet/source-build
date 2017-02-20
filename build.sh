@@ -49,6 +49,10 @@ unsupported_arg_check()
     echo "Error: Missing required parameter '--shared_framework_path'"
     ARGERROR="true"
   fi
+  if [[ "$MANAGEDCORECLRPATH" == "" ]]; then
+    echo "Error: Missing required parameter '--managed_coreclr_path'"
+    ARGERROR="true"
+  fi
   if [[ "$NETCORESDK" == "" ]]; then
     echo "Error: Missing required parameter '--netcore_sdk_20_path'"
     ARGERROR="true"
