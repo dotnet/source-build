@@ -4,6 +4,7 @@ set -euo pipefail
 
 NETCORESHAREDFRAMEWORKPATH=""
 HIGHESTSHAREDFRAMEWORK=""
+MANAGEDCORECLRPATH=""
 usage()
 {
     echo "Build .NET Core product"
@@ -15,6 +16,7 @@ usage()
     echo " -o|--output_folder [output folder]"
     echo " -x|--corefx_repo_path [Core FX repo root path]"
     echo " -r|--coreclr_repo_path [Core CLR repo root path]"
+    echo " -m|--managed_coreclr_path [Core CLR managed binaries path]"
     echo " -h|--help"
 }
 
@@ -35,7 +37,7 @@ build_corefx_native() {
   fi
 
   echo "Copy native CoreFx binaries into shared framework path"
-  cp -f $COREFXBINDIR/*.so $NETCORESHAREDPATH
+  cp -f $COREFXBINDIR/*.so $OUTPUTNETCORESHAREDPATH
 }
 
 build_coreclr_native() {
@@ -47,11 +49,23 @@ build_coreclr_native() {
   fi
 
   echo "Copy native CoreClr binaries into shared framework path"
-  cp -f $CORECLRBINDIR/*.so $NETCORESHAREDPATH
+  cp -f $CORECLRBINDIR/*.so $OUTPUTNETCORESHAREDPATH
+
+  # copy over managed mscorlib and system.private.corelib which match native coreclr binaries
+  # crossgen the binaries
+  if [[ -d "$MANAGEDCORECLRPATH" ]]; then
+    pushd $OUTPUTNETCORESHAREDPATH
+    cp -f $CORECLRBINDIR/crossgen $OUTPUTNETCORESHAREDPATH
+    cp -f $MANAGEDCORECLRPATH/mscorlib.dll $OUTPUTNETCORESHAREDPATH
+    cp -f $MANAGEDCORECLRPATH/System.Private.CoreLib.dll $OUTPUTNETCORESHAREDPATH
+    $OUTPUTNETCORESHAREDPATH/crossgen mscorlib.dll
+    $OUTPUTNETCORESHAREDPATH/crossgen System.Private.CoreLib.dll
+    popd
+  fi
 }
 
 get_shared_framework_version() {
-  SHAREDVERSIONS=($(ls $NETCORESHAREDPATHROOT))
+  SHAREDVERSIONS=($(ls $OUTPUTNETCORESHAREDPATHROOT))
   SHAREDFRAMEWORKVERSION=""
 
   if [[ "$SHAREDFRAMEWORKVERSION" == "" ]] && echo ${SHAREDVERSIONS[@]} | grep -q "2\.0\."; then
@@ -79,7 +93,7 @@ get_shared_framework_version() {
     done
   fi
   if [[ "$SHAREDFRAMEWORKVERSION" == "" ]]; then
-    echo "Unable to determine shared framework version to update from $NETCORESHAREDPATHROOT."
+    echo "Unable to determine shared framework version to update from $OUTPUTNETCORESHAREDPATHROOT."
     exit 1
   fi
 }
@@ -88,13 +102,13 @@ get_sdk_folder() {
   declare -a SHAREDVERSIONS=()
   declare -a VERSIONPARTS=()
 
-  NETCORESHAREDPATHROOT=$OUTPUTFOLDER/shared/Microsoft.NETCore.App
+  OUTPUTNETCORESHAREDPATHROOT=$OUTPUTFOLDER/shared/Microsoft.NETCore.App
 
   # determine shared framework version to update and store it in $SHAREDFRAMEWORKVERSION
   get_shared_framework_version
 
   # original shared framework folder
-  NETCORESHAREDPATH=$NETCORESHAREDPATHROOT/$SHAREDFRAMEWORKVERSION
+  OUTPUTNETCORESHAREDPATH=$OUTPUTNETCORESHAREDPATHROOT/$SHAREDFRAMEWORKVERSION
 }
 
 seed_roll_forward_shared_framework_folder() {
@@ -102,19 +116,19 @@ seed_roll_forward_shared_framework_folder() {
  
   if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
     echo "Update Shared framework Assemblies..."
-    if [[ ! -d "$NETCORESHAREDPATH/tmp" ]]; then
-      mkdir $NETCORESHAREDPATH/tmp
+    if [[ ! -d "$OUTPUTNETCORESHAREDPATH/tmp" ]]; then
+      mkdir $OUTPUTNETCORESHAREDPATH/tmp
     fi
     # save some files we don't want to overwrite
-    cp -f $NETCORESHAREDPATH/Microsoft.CodeAnalysis*.dll $NETCORESHAREDPATH/tmp
-    cp -f $NETCORESHAREDPATH/libhost*.so $NETCORESHAREDPATH/tmp
+    cp -f $OUTPUTNETCORESHAREDPATH/Microsoft.CodeAnalysis*.dll $OUTPUTNETCORESHAREDPATH/tmp
+    cp -f $OUTPUTNETCORESHAREDPATH/libhost*.so $OUTPUTNETCORESHAREDPATH/tmp
 
     # update the shared framework assemblies
-    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $NETCORESHAREDPATH
-    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $NETCORESHAREDPATH
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.so $OUTPUTNETCORESHAREDPATH
+    cp -f $NETCORESHAREDFRAMEWORKPATH/shared/Microsoft.NETCore.App/*/*.dll $OUTPUTNETCORESHAREDPATH
 
     #replace files we saved
-    cp -f $NETCORESHAREDPATH/tmp/* $NETCORESHAREDPATH
+    cp -f $OUTPUTNETCORESHAREDPATH/tmp/* $OUTPUTNETCORESHAREDPATH
   fi
 
   if [[ ! "$NETCORESHAREDFRAMEWORKPATH" == "" ]]; then
@@ -122,7 +136,7 @@ seed_roll_forward_shared_framework_folder() {
     # Hack until we have CLI running on 2.0 shared framework
     echo "Update Microsoft.NETCore.App.deps.json for shared framework changes..."
     if echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.0\." || echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.1\."; then
-      cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $NETCORESHAREDPATH
+      cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $OUTPUTNETCORESHAREDPATH
 
       # Hack until we have CLI running on 2.0 shared framework
       echo "Remove Shared Framework entries from SDK deps.json..."
@@ -171,6 +185,10 @@ while [[ $# -gt 0 ]]
       OUTPUTFOLDER="$2"
       shift 2
       ;;
+      -m|--managed_coreclr_path)
+      MANAGEDCORECLRPATH="$2"
+      shift 2
+      ;;
       -h|--help)
       usage
       exit 0
@@ -183,7 +201,7 @@ while [[ $# -gt 0 ]]
     esac
 done
 
-NETCORESHAREDPATH=$NETCORESDKPATH/shared
+OUTPUTNETCORESHAREDPATH=$NETCORESDKPATH/shared
 
 create_output_folder
 get_sdk_folder

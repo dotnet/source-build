@@ -5,6 +5,7 @@ IFS=$'\n\t'
 ORIGINALARGS=$#
 declare -a ADDITIONALARGS=()
 SHAREDFRAMEWORKPATH=""
+MANAGEDCORECLRPATH="none"
 NETCORESDK=""
 NETCORESDK11=""
 SDKVERSION=""
@@ -28,6 +29,7 @@ usage()
     echo " -s20|--netcore_sdk_20_path [.NET Core SDK Path]"
     echo " --skip_coreclr_11_rebuild"
     echo " -f|--shared_framework_path [Shared Framework Path]"
+    echo " -m|--managed_coreclr_path [Managed CoreClr Path]"
     echo "Use built CLI / BuildTools"
     echo " -c|--msbuild_cli [MSBuild based CLI Path]"
     echo " -b|--projectjson_buildtools [Project Json based buildtools path]"
@@ -36,6 +38,7 @@ usage()
     echo "For '--netcore_sdk_11_path', released versions of the .NET Core SDK are available from https://www.microsoft.com/net/download/linux"
     echo "For '--netcore_sdk_20_path', a new version of .NET Core SDK is available from https://dotnetcli.blob.core.windows.net/dotnet/Sdk/rel-1.0.0/dotnet-dev-ubuntu-x64.latest.tar.gz"
     echo "For '--shared_framework_path', a new version of the shared framework is available from https://dotnetcli.blob.core.windows.net/dotnet/master/Binaries/Latest/dotnet-ubuntu-x64.latest.tar.gz"
+    echo "For '--managed_coreclr_path', we require mscorlib.dll and System.Private.CoreLib.dll matching the coreclr native binaries.  You can produce these by building coreclr with 'linuxbuild' on Windows."
 }
 
 unsupported_arg_check()
@@ -106,6 +109,10 @@ while [[ $# -gt 0 ]]
       USEBUILTTOOLS="true"
       shift 2
       ;;
+      -m|--managed_coreclr_path)
+      MANAGEDCORECLRPATH="$2"
+      shift 2
+      ;;
       -h|--help)
       usage
       exit 0
@@ -156,7 +163,7 @@ bootstrap()
     if [[ "$SKIPCORECLR11BUILD" == "false" ]]; then
       # CLI 11 is currently required for repo builds
       echo "Bootstrapping 1.1 CLI to $CLI11PATH..."
-      $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK11 -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -r $SCRIPT_ROOT/src/coreclr -o $CLI11PATH
+      $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK11 -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -r $SCRIPT_ROOT/src/coreclr -o $CLI11PATH -m $MANAGEDCORECLRPATH
 
       echo "Creating BuildTools for submodules at $SUBMODULETOOLRUNTIMEDIR..."
       # Create buildtools for project.json based CLI submodules
@@ -181,7 +188,7 @@ bootstrap()
 
     CLIPATH=$NETCORESDK.patch
     echo "Bootstrapping 2.0 CLI to $CLIPATH..."
-    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -r $SCRIPT_ROOT/src/coreclr -o $CLIPATH
+    $SCRIPT_ROOT/bootstrap/bootstrap-unsupported.sh -s $NETCORESDK -f $SHAREDFRAMEWORKPATH -x $SCRIPT_ROOT/src/corefx -r $SCRIPT_ROOT/src/coreclr -o $CLIPATH -m $MANAGEDCORECLRPATH
     
     determine_sdk_version
     _BOOTSTRAPARGS=("--repositoryRoot" "$SCRIPT_ROOT" "--useLocalCli" "$CLIPATH" "--verbose")

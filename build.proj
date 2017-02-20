@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildThisFileDirectory)dir.props" />
+  <Import Condition="'$(ImportedRootDirProps)' == ''" Project="$(MSBuildThisFileDirectory)dir.props" />
   
   <UsingTask AssemblyFile="$(BuildTaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(BuildTaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
