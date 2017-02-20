@@ -172,8 +172,10 @@
                        OutputPath="$(CoreVersionFile)" />
   </Target>
 
+  <!-- We should move this target into a common location, but i'm leaving it here for now because I'm 
+       expecting some refactoring work will change things and this will move after that completes. -->
   <Target Name="BootstrapBuildTools"
-          Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(BuildTools_Dir)' != ''">
+          Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'">
     <RemoveDir Condition="'$(BuildTools_Dir)' != ''"
                Directories="$(ProjectDirectory)/Tools" />
 

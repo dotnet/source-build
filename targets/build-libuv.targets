@@ -21,8 +21,8 @@
     <Error Condition="'%(Libuv.ProjectDirectory)' == ''" Text="You are missing Libuv metadata, or you need to specify a Libuv build directory, either with the /p:PathToLibuv switch, or in the 'targets/targets.props'" />
 
     <PropertyGroup>
-      <LibuvDirectory>%(Libuv.ProjectDirectory)</LibuvDirectory>
-      <LibuvPackageOutputDirectory>$(LibuvDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
+      <ProjectDirectory>%(Libuv.ProjectDirectory)</ProjectDirectory>
+      <LibuvPackageOutputDirectory>$(ProjectDirectory)bin/packages/$(Configuration)/</LibuvPackageOutputDirectory>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -32,16 +32,16 @@
     </PropertyGroup>
   </Target>
 
-  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv">
+  <Target Name="BuildLibuv" Condition="'$(OS)' == 'Windows_NT' or '$(IsJenkinsBuild)' != 'true'" DependsOnTargets="_InitializeLibuv;;BootstrapBuildTools">
     <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
       <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
     </GetHostRid>
 
-    <Exec Command="$(LibuvDirectory)build-native$(ShellExtension) --configuration $(Configuration)"
-          WorkingDirectory="$(LibuvDirectory)"/>
+    <Exec Command="$(ProjectDirectory)build-native$(ShellExtension) --configuration $(Configuration)"
+          WorkingDirectory="$(ProjectDirectory)"/>
 
-    <Exec Command="$(LibuvDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(_LibuvTargetRid)"
-          WorkingDirectory="$(LibuvDirectory)"/>
+    <Exec Command="$(ProjectDirectory)build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(_LibuvTargetRid)"
+          WorkingDirectory="$(ProjectDirectory)"/>
 
     <ItemGroup>
       <LibuvPackages Include="$(LibuvPackageOutputDirectory)*.nupkg" />

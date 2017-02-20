@@ -4,6 +4,9 @@
     <ImportedRootDirProps>true</ImportedRootDirProps>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
+
+    <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
+    <_IsBootstrapping Condition="'$(BuildTools_Dir)' != ''">true</_IsBootstrapping>
   </PropertyGroup>
 
   <PropertyGroup>

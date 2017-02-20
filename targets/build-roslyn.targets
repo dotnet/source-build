@@ -52,7 +52,8 @@
       <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
     </ItemGroup>
     <UpdateMsBuildFrameworkDependencyVersions ProjectPath="$(ProjectDirectory)/build/MSBuildToolset_msbuild/MSBuildToolset.csproj"
-                                              NuGetPackages="@(SourceBuiltPackage)" />
+                                              NuGetPackages="@(SourceBuiltPackage)" 
+                                              Condition="'$(_IsBootstrapping)' == 'true'" />
 
     <PropertyGroup>
       <RoslynBuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting</RoslynBuildCommand>
@@ -67,7 +68,8 @@
     <PropertyGroup>
       <CsiCoreBaseDirectory>$(ProjectDirectory)Binaries/$(Configuration)/Exes/</CsiCoreBaseDirectory>
       <CsiCoreSourceDirectory>$(CsiCoreBaseDirectory)CsiCore/</CsiCoreSourceDirectory>
-      <CsiCoreWorkingDirectory>$(CsiCoreBaseDirectory)CsiCore_working/</CsiCoreWorkingDirectory>
+      <CsiCoreWorkingDirectory>$(CsiCoreSourceDirectory)</CsiCoreWorkingDirectory>
+      <CsiCoreWorkingDirectory Condition="'$(_IsBootstrapping)' == 'true'">$(CsiCoreBaseDirectory)CsiCore_working/</CsiCoreWorkingDirectory>
       <RoslynToolsetDirectory>$(ProjectDirectory)Binaries/toolset/</RoslynToolsetDirectory>
     </PropertyGroup>
     
@@ -77,12 +79,13 @@
     </ItemGroup>
     <!-- Create a working directory where we can copy in the CsiCore and toolset binaries for producing packages -->
     <MakeDir Directories="$(CsiCoreWorkingDirectory)"
-             Condition="!Exists('$(CsiCoreWorkingDirectory)')" />
+             Condition="'$(_IsBootstrapping)' == 'true' and !Exists('$(CsiCoreWorkingDirectory)')" />
     
     <Copy SourceFiles="@(CsiCoreCopyFile)"
           DestinationFolder="$(CsiCoreWorkingDirectory)" 
           OverwriteReadOnlyFiles="true"
-          SkipUnchangedFiles="true" />
+          SkipUnchangedFiles="true" 
+          Condition="'$(_IsBootstrapping)' == 'true'" />
     <Exec Command="$(CsiCoreWorkingDirectory)corerun $(CsiCoreWorkingDirectory)csi.exe src/NuGet/BuildNuGets.csx Binaries/$(Configuration) 42-localbuild $(RoslynPackageOutputDirectory)"
           WorkingDirectory="$(ProjectDirectory)" />
 
