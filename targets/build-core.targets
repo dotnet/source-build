@@ -90,7 +90,7 @@
       <ProjectDirectory>%(CoreFx.ProjectDirectory)</ProjectDirectory>
       <CorePackageOutputDirectory>$(ProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
       <CoreBuildCommand>$(ProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
-      <CoreArguments>-$(Configuration) -buildArch=$(Platform) -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</CoreArguments>
+      <CoreArguments>-$(Configuration) -buildArch=$(Platform) -stripSymbols -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</CoreArguments>
       <CoreVersionFile>%(CoreFx.VersionFile)</CoreVersionFile>
     </PropertyGroup>
   </Target>
