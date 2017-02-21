@@ -2,22 +2,37 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
-
+  
   <Import Project="dir.props" />
-  <Import Project="targets/targets.props" />
+  <Import Project="buildorder.props" />
 
   <Target Name="_SelectRepositories">
     <Select Collection="@(Repository)" Selection="$(Only)">
-    	<Output ItemName="SelectedRepositories" TaskParameter="Selected" />
+    <Output ItemName="SelectedRepositories" TaskParameter="Selected" />
     </Select>
   </Target>
 
-  <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories">
-    <!-- False here indicates that the build should stop if one of the targets fails -->
-    <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="false" />
+  <PropertyGroup>
+    <Counter>0</Counter>
+    <Increment>1</Increment>
+  </PropertyGroup>
 
-    <Message Importance="Normal" Text="Build Complete" />
+  <Target Name="Build">
+    <Message Importance="High" Text="KARTHIKDEBUG: '$(Counter)' " />
+    <ItemGroup>
+      <ReposToBuild Include="%(Project.Identity)" Condition="'%(Project.BuildPhase)'=='$(Counter)'" />
+    </ItemGroup>
+    <Message Importance="High" Text="KARTHIKDEBUG: '@(ReposToBuild)' " />
+    <MSBuild Projects="$(TargetsDir)repository.proj" Targets="Update;Build;Package" Properties="RepositoryName=%(ReposToBuild.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(ReposToBuild.Identity)"/>
+
+    <Message Importance="Normal" Text="Build Phase: $(Counter) Complete" />
+    <!-- Increment and move on to the next build -->
+    <PropertyGroup>
+      <Counter>$([MSBuild]::Add($(Counter), $(Increment)))</Counter>
+    </PropertyGroup>
+    <MSBuild Targets="Build" Projects="$(MSBuildProjectFile)" Properties="Counter=$(Counter)" Condition="!$(Counter.Contains('3'))" />
   </Target>
+
   <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">
     <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="false" />
   

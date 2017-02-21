@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+
+  <Target Name="GetHostRidLibuv" BeforeTargets="Build" >
+    <PropertyGroup>
+      <_LibuvTargetRid>$(TargetRid)</_LibuvTargetRid>
+      <_LibuvTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win7-x64</_LibuvTargetRid>
+      <_LibuvTargetRid Condition="'$(TargetOS)' == 'OSX'">osx.10.10-x64</_LibuvTargetRid>
+    </PropertyGroup>
+
+    <GetHostRid Condition="'$(_LibuvTargetRid)' == ''">
+      <Output PropertyName="_LibuvTargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+  </Target>
+</Project>

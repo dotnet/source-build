@@ -7,6 +7,7 @@
 
   <PropertyGroup>
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
+    <TargetsDir>$(ProjectDir)/targets/</TargetsDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,5 +30,11 @@
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <VersionFileType>Versions.txt</VersionFileType>
+    <VersionFileFolder>$(IntermediatePath)</VersionFileFolder>
+    <VersionFileLocation>$(VersionFileFolder)/$(RepositoryName)$(VersionFileType)</VersionFileLocation>
   </PropertyGroup>
 </Project>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
+
+  <Target Name="SetVersionsForCoreSetup" BeforeTargets="Update">
+    <ItemGroup>
+      <RepoVersionFiles Include="%(Repository.Identity)">
+        <VersionFile>$(VersionFileFolder)/%(Repository.Identity)$(VersionFileType)</VersionFile>
+      </RepoVersionFiles>
+    </ItemGroup>
+    <Message Text="Producing version files : @(VersionFile)" />
+    <SetVersionsEnvironment OS="$(OS)" Repositories="@(RepoVersionFiles)">
+      <Output PropertyName="SetVersionFilesCmd" TaskParameter="Command" />
+    </SetVersionsEnvironment>
+    <Exec Command="$(SetVersionFilesCmd)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="UpdateNugetConfig" BeforeTargets="Build">
+    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
+</Project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectDirectory Condition="'$(PathToCoreSetup)' != ''">$(PathToCoreSetup)</ProjectDirectory>
+    <BuildCommand>build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
+    <BuildPackagesCommand>build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
+    <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build</BuildPackagesCommand>
+    <PackagesOutput>artifacts/$(TargetRid)/packages/</PackagesOutput>
+    <UpdateCommand>powershell.exe $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
+    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(CoreSetupDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
+  </PropertyGroup>
+</Project>
