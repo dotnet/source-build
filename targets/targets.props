@@ -65,7 +65,18 @@
             <CleanTarget>CleanCoreSetup</CleanTarget>
             <TestTarget></TestTarget>
             <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
-        </Repository>       
+        </Repository>     
+
+        <Repository Include="xunit">
+            <ProjectDirectory Condition="'$(PathToXUnit)' == ''">$(SubmoduleDirectory)xunit/</ProjectDirectory>
+            <ProjectDirectory Condition="'$(PathToXUnit)' != ''">$(PathToXUnit)</ProjectDirectory>
+
+            <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+            <BuildTarget>BuildXUnit</BuildTarget>
+            <CleanTarget>CleanXUnit</CleanTarget>
+            <TestTarget></TestTarget>
+            <VersionFile>$(IntermediatePath)xunitVersions.txt</VersionFile>
+        </Repository>  
 
     </ItemGroup>
 
@@ -73,6 +84,7 @@
     <Import Project="build-standard.targets" />
     <Import Project="build-core.targets" />
     <Import Project="build-roslyn.targets" />
+    <Import Project="build-xunit.targets" />
     <Import Project="build-libuv.targets" />
     <Import Project="build-core-setup.targets" />
 </Project>
