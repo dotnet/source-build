@@ -29,6 +29,10 @@
       <CoreBuildCommand>$(ProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>$(Platform) $(Configuration) skiptests msbuildonunsupportedplatform</CoreArguments>
       <CoreVersionFile>%(CoreClr.VersionFile)</CoreVersionFile>      
+
+      <!-- Ideally a repo would tell us this info via repo apis -->
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</CorePackageOutputDirectory>
+      <CoreSymbolsPackageDirectory>$(CoreProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/symbolpkg/</CoreSymbolsPackageDirectory>
     </PropertyGroup>
   </Target>
 
@@ -92,6 +96,9 @@
       <CoreBuildCommand>$(ProjectDirectory)build$(ShellExtension)</CoreBuildCommand>
       <CoreArguments>-$(Configuration) -buildArch=$(Platform) -stripSymbols -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</CoreArguments>
       <CoreVersionFile>%(CoreFx.VersionFile)</CoreVersionFile>
+
+      <CorePackageOutputDirectory>$(CoreProjectDirectory)bin/packages/$(Configuration)/</CorePackageOutputDirectory>
+      <CoreSymbolsPackageDirectory>$(CorePackageOutputDirectory)symbols/</CoreSymbolsPackageDirectory>
     </PropertyGroup>
   </Target>
 
@@ -163,10 +170,14 @@
 
     <ItemGroup>
       <CorePackages Include="$(CorePackageOutputDirectory)*.nupkg" />
+      <CoreSymbolsPackages Include="$(CoreSymbolsPackageDirectory)*.symbols.nupkg" />
     </ItemGroup>
 
     <Copy SourceFiles="@(CorePackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <Copy SourceFiles="@(CoreSymbolsPackages)"
+          DestinationFolder="$(SourceBuiltSymbolsPackagesPath)" />
 
     <WriteVersionsFile NugetPackages="@(CorePackages)"
                        OutputPath="$(CoreVersionFile)" />
