@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 <ItemGroup>
+  <Repository Include="netcoreclifsc">
+    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' == ''">$(SubmoduleDirectory)netcorecli-fsc/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' != ''">$(PathToNetCoreCLIFSC)</ProjectDirectory>
+    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
+    <BuildTarget>BuildNetCoreCLIFSC</BuildTarget>
+    <CleanTarget>CleanNetCoreCLIFSC</CleanTarget>
+    <TestTarget></TestTarget>
+    <VersionFile>$(IntermediatePath)NetCoreCLIFSCVersions.txt</VersionFile>
+  </Repository>   
+
   <Repository Include="standard">
     <ProjectDirectory Condition="'$(PathToStandard)' == ''">$(SubmoduleDirectory)standard/</ProjectDirectory>
     <ProjectDirectory Condition="'$(PathToStandard)' != ''">$(PathToStandard)</ProjectDirectory>
@@ -61,15 +71,7 @@
     <VersionFile>$(IntermediatePath)CoreSetupVersions.txt</VersionFile>
   </Repository>       
   
-  <Repository Include="netcoreclifsc">
-    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' == ''">$(SubmoduleDirectory)netcorecli-fsc/</ProjectDirectory>
-    <ProjectDirectory Condition="'$(PathToNetCoreCLIFSC)' != ''">$(PathToNetCoreCLIFSC)</ProjectDirectory>
-    <BuildProject>$(MSBuildProjectFullPath)</BuildProject>
-    <BuildTarget>BuildNetCoreCLIFSC</BuildTarget>
-    <CleanTarget>CleanNetCoreCLIFSC</CleanTarget>
-    <TestTarget></TestTarget>
-    <VersionFile>$(IntermediatePath)NetCoreCLIFSCVersions.txt</VersionFile>
-  </Repository>       
+    
 </ItemGroup>
 
 
