@@ -3,7 +3,8 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build-native$(ShellExtension) --configuration $(Configuration)</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(TargetRid)</BuildPackagesCommand>
+    <BuildCommand Condition="'$(IsJenkinsBuild)'=='true' AND '$(ShellExtension)'=='.sh'">echo "Skipping till dependencies are installed"</BuildCommand>
+    <BuildPackagesCommand Condition="'$(IsJenkinsBuild)'!='true' AND '$(ShellExtension)'!='.sh'">$(ProjectDirectory)/build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(TargetRid)</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)/</PackagesOutput>
   </PropertyGroup>
 </Project>

@@ -5,7 +5,9 @@
   <Import Project="..\dir.props" />
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
-
+  
+  <!-- Temporary disabling of libuv dependencies on non Windows -->
+  <Target Name="Build" >
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
@@ -22,14 +24,17 @@
       <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" />
     </ItemGroup>
     <Copy SourceFiles="@(_BuiltPackages)" 
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
+          DestinationFolder="$(SourceBuiltPackagesPath)" 
+          Condition="'@(_BuiltPackages)'!=''" />
   </Target>
   
   <Target Name="WriteVersions" 
           Inputs="_BuiltPackages"
           Outputs="Version file written."
           AfterTargets="CopyPackage" >          
-    <WriteVersionsFile NugetPackages="@(_BuiltPackages)" OutputPath="$(VersionFileLocation)" />
+    <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
+                       OutputPath="$(VersionFileLocation)"
+                       Condition="'@(_BuiltPackages)'!=''" />
   </Target>
   
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
