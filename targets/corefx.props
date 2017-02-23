@@ -2,9 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToCorefx)' != ''">$(PathToCorefx)</ProjectDirectory>
-    <BuildCommand>build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -- /p:BuildPackages==false</BuildCommand>
-    <BuildPackagesCommand>build-packages$(ShellExtension) -$(Configuration) -buildArch=$(Platform)</BuildPackagesCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -- /p:BuildPackages==false</BuildCommand>
+    <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) -$(Configuration) -buildArch=$(Platform)</BuildPackagesCommand>
     <PackagesOutput>bin/packages/$(Configuration)</PackagesOutput>
-    <CleanCommand>clean$(ShellExtension)</CleanCommand>
+    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
 </Project>

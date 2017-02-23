@@ -4,7 +4,7 @@
   <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
   
   <Import Project="dir.props" />
-  <Import Project="buildorder.props" />
+  <Import Project="build.props" />
 
   <Target Name="_SelectRepositories">
     <Select Collection="@(Repository)" Selection="$(Only)">
@@ -12,25 +12,17 @@
     </Select>
   </Target>
 
-  <PropertyGroup>
-    <Counter>0</Counter>
-    <Increment>1</Increment>
-  </PropertyGroup>
-
-  <Target Name="Build">
-    <Message Importance="High" Text="KARTHIKDEBUG: '$(Counter)' " />
-    <ItemGroup>
-      <ReposToBuild Include="%(Project.Identity)" Condition="'%(Project.BuildPhase)'=='$(Counter)'" />
-    </ItemGroup>
-    <Message Importance="High" Text="KARTHIKDEBUG: '@(ReposToBuild)' " />
-    <MSBuild Projects="$(TargetsDir)repository.proj" Targets="Update;Build;Package" Properties="RepositoryName=%(ReposToBuild.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(ReposToBuild.Identity)"/>
-
-    <Message Importance="Normal" Text="Build Phase: $(Counter) Complete" />
-    <!-- Increment and move on to the next build -->
+  <Target Name="Build"
+          Inputs="%(Phases.Identity)"
+          Outputs="Build complete." >
     <PropertyGroup>
-      <Counter>$([MSBuild]::Add($(Counter), $(Increment)))</Counter>
+      <CurrentPhase>%(Phases.Identity)</CurrentPhase>
     </PropertyGroup>
-    <MSBuild Targets="Build" Projects="$(MSBuildProjectFile)" Properties="Counter=$(Counter)" Condition="!$(Counter.Contains('3'))" />
+    <ItemGroup>
+      <ReposToBuild Include="%(Repository.Identity)" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'" />
+    </ItemGroup>
+    <MSBuild Projects="$(TargetsDir)repository.proj" Targets="Update;Build;Package" Properties="RepositoryName=%(ReposToBuild.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(ReposToBuild.Identity)/"/>
+    <Message Importance="Normal" Text="Build Phase: %(Phases.Identity) Complete" />
   </Target>
 
   <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">

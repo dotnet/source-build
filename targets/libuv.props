@@ -2,8 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToLibuv)' != ''">$(PathToLibuv)</ProjectDirectory>
-    <BuildCommand>build-native$(ShellExtension)</BuildCommand>
-    <BuildPackagesCommand>build-packages$(ShellExtension)</BuildPackagesCommand>
+    <BuildCommand>$(ProjectDirectory)/build-native$(ShellExtension) --configuration $(Configuration)</BuildCommand>
+    <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(TargetRid)</BuildPackagesCommand>
     <PackagesOutput>bin/packages/$(Configuration)/</PackagesOutput>
   </PropertyGroup>
 </Project>
