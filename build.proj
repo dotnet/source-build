@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
   
   <Import Project="dir.props" />
   <Import Project="build.props" />
@@ -19,10 +19,12 @@
       <CurrentPhase>%(Phases.Identity)</CurrentPhase>
     </PropertyGroup>
     <ItemGroup>
-      <ReposToBuild Include="%(Repository.Identity)" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'" />
+      <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
+        <Properties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/</Properties>
+      </ProjectsToBuild>
     </ItemGroup>
-    <MSBuild Projects="$(TargetsDir)repository.proj" Targets="Update;Build;Package" Properties="RepositoryName=%(ReposToBuild.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(ReposToBuild.Identity)/"/>
-    <Message Importance="Normal" Text="Build Phase: %(Phases.Identity) Complete" />
+    <MSBuild Projects="@(ProjectsToBuild)" Targets="Package" BuildInParallel="$(BuildInParallel)" />
+    <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
   </Target>
 
   <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">

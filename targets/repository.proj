@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   
   <Import Project="..\dir.props" />
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
-  <Target Name="Build" >
+  <Target Name="Build" BeforeTargets="Package">
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="Package" >
-    <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" Condition="Exists('$(BuildPackagesCommand)')"/>
+  <Target Name="Package" Condition="Exists('$(BuildPackagesCommand)')">
+    <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
   <Target Name="CopyPackage" 
@@ -33,12 +33,12 @@
     <WriteVersionsFile NugetPackages="@(Packages)" OutputPath="$(VersionFileLocation)" />
   </Target>
   
-  <Target Name="Clean" >
-    <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" Condition="Exists('$(CleanCommand)')"/>
+  <Target Name="Clean" Condition="Exists('$(CleanCommand)')" >
+    <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="Update" >
-    <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" Condition="Exists('$(UpdateCommand)')"/>
+  <Target Name="Update" BeforeTargets="Build" Condition="Exists('$(UpdateCommand)')" >
+    <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
   <!--Repo targets -->
