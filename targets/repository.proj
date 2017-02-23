@@ -6,11 +6,11 @@
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
-  <Target Name="Build" BeforeTargets="Package">
+  <Target Name="Build" >
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="Package" Condition="Exists('$(BuildPackagesCommand)')">
+  <Target Name="Package" AfterTargets="Build" Condition="Exists('$(BuildPackagesCommand)')">
     <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   

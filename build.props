@@ -6,21 +6,27 @@
   <ItemGroup>
     <Repository Include="standard" >
       <BuildPhase>0</BuildPhase>
+      <PathToRepo>$(PathToStandard)</PathToRepo>
     </Repository>
     <Repository Include="corefx" >
       <BuildPhase>1</BuildPhase>
+      <PathToRepo>$(PathToCorefx)</PathToRepo>
     </Repository>
     <Repository Include="coreclr" >
       <BuildPhase>1</BuildPhase>
+      <PathToRepo>$(PathToCoreclr)</PathToRepo>
     </Repository>
     <Repository Include="roslyn" >
       <BuildPhase>1</BuildPhase>
+      <PathToRepo>$(PathToRoslyn)</PathToRepo>
     </Repository>
     <Repository Include="libuv" >
       <BuildPhase>1</BuildPhase>
+      <PathToRepo>$(PathToLibuv)</PathToRepo>
     </Repository>
     <Repository Include="core-setup" >
       <BuildPhase>2</BuildPhase>
+      <PathToRepo>$(PathToCoreSetup)</PathToRepo>
     </Repository>
   </ItemGroup>
 </Project>

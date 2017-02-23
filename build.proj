@@ -20,10 +20,10 @@
     </PropertyGroup>
     <ItemGroup>
       <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
-        <Properties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/</Properties>
+        <Properties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo)</Properties>
       </ProjectsToBuild>
     </ItemGroup>
-    <MSBuild Projects="@(ProjectsToBuild)" Targets="Package" BuildInParallel="$(BuildInParallel)" />
+    <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
     <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
   </Target>
 

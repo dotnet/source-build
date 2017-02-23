@@ -3,8 +3,8 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
 
-  <Import Project="build.props" />
-  
+  <Import Project="../build.props" />
+
   <Target Name="SetVersionsForCoreSetup" BeforeTargets="Update">
     <ItemGroup>
       <RepoVersionFiles Include="%(Repository.Identity)">
