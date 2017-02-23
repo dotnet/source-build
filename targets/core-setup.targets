@@ -11,7 +11,7 @@
         <VersionFile>$(VersionFileFolder)/%(Repository.Identity)$(VersionFileType)</VersionFile>
       </RepoVersionFiles>
     </ItemGroup>
-    <Message Text="Producing version files : @(VersionFile)" />
+    <Message Text="Setting environment with version files..." />
     <SetVersionsEnvironment OS="$(OS)" Repositories="@(RepoVersionFiles)">
       <Output PropertyName="SetVersionFilesCmd" TaskParameter="Command" />
     </SetVersionsEnvironment>

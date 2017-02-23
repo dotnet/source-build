@@ -10,34 +10,34 @@
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="Package" AfterTargets="Build" Condition="Exists('$(BuildPackagesCommand)')">
+  <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
     <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
   <Target Name="CopyPackage" 
-          Returns="@(_Packages)"
-          DependsOnTargets="Package" >
-          
-    <Copy SourceFiles="$(ProjectDirectory)/$(PackagesOutput)/*.nupkg" 
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
-          
+          Outputs="@(_BuiltPackages)"
+          AfterTargets="Package" >
     <ItemGroup>
-      <!-- All repos output a package, core-setup also outputs a tarball -->
-      <_Packages Include="$(PackagesOutput)/*.*" />
+      <_BuiltPackages Remove="*.*" />
+      <!-- Filter out packages for WriteVersions -->
+      <_BuiltPackages Include="$(ProjectDirectory)/$(PackagesOutput)/*.nupkg" />
     </ItemGroup>
+    <Copy SourceFiles="@(_BuiltPackages)" 
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
   </Target>
   
   <Target Name="WriteVersions" 
-          Inputs="Packages"
-          DependsOnTargets="CopyPackage" >
-    <WriteVersionsFile NugetPackages="@(Packages)" OutputPath="$(VersionFileLocation)" />
+          Inputs="_BuiltPackages"
+          Outputs="Version file written."
+          AfterTargets="CopyPackage" >          
+    <WriteVersionsFile NugetPackages="@(_BuiltPackages)" OutputPath="$(VersionFileLocation)" />
   </Target>
   
-  <Target Name="Clean" Condition="Exists('$(CleanCommand)')" >
+  <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
     <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="Update" BeforeTargets="Build" Condition="Exists('$(UpdateCommand)')" >
+  <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   

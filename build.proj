@@ -14,16 +14,18 @@
 
   <Target Name="Build"
           Inputs="%(Phases.Identity)"
-          Outputs="Build complete." >
+          Outputs="Build complete." 
+          DependsOnTargets="PrepareOutput;_SelectRepositories" >
     <PropertyGroup>
       <CurrentPhase>%(Phases.Identity)</CurrentPhase>
     </PropertyGroup>
     <ItemGroup>
       <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
-        <Properties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo)</Properties>
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo);VersionFileLocation=$(VersionFileFolder)/%(Repository.Identity)$(VersionFileType)</AdditionalProperties>
       </ProjectsToBuild>
+      <!-- TO DO: Filter based on _SelectRepositories -->
     </ItemGroup>
-    <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+    <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
     <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
   </Target>
 
