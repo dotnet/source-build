@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostRid" />
+  
+  <!--
+    =======================================================================================================
+                                         MSBuild Targets
+    =======================================================================================================
+
+  -->
+
+  <!-- Initialize our data -->
+  <Target Name="_InitializeMSBuild">
+    <FindInList CaseSensitive="false" List="@(Repository)" ItemSpecToFind="msbuild">
+      <Output TaskParameter="ItemFound" ItemName="MSBuild" />
+    </FindInList>
+
+    <Error Condition="'%(MSBuild.ProjectDirectory)' == ''" Text="You are missing MSBuild metadata, or you need to specify a MSBuild build directory, either with the /p:PathToMSBuild switch, or in the 'targets/targets.props'" />
+
+    <PropertyGroup>
+      <MSBuildRepositoryDirectory>%(MSBuild.ProjectDirectory)</MSBuildRepositoryDirectory>
+      <MSBuildPackageOutputDirectory>$(MSBuildRepositoryDirectory)bin/</MSBuildPackageOutputDirectory>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <_MSBuildTargetRid>$(TargetRid)</_MSBuildTargetRid>
+      <_MSBuildTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win7-x64</_MSBuildTargetRid>
+      <_MSBuildTargetRid Condition="'$(TargetOS)' == 'OSX'">osx.10.10-x64</_MSBuildTargetRid>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="BuildMSBuild" DependsOnTargets="_InitializeMSBuild">
+    <GetHostRid Condition="'$(_MSBuildTargetRid)' == ''">
+      <Output PropertyName="_MSBuildTargetRid" TaskParameter="Rid" />
+    </GetHostRid>
+
+    <Message Importance="High" Text="DEBUG: Building MSBuild for $(_MSBuildTargetRid)" />
+    
+    <Exec Command='call "$(VS140COMNTOOLS)\VsDevCmd.bat" &amp; $(MSBuildRepositoryDirectory)cibuild$(ShellExtension) --target All --build-only --scope Compile'
+          WorkingDirectory="$(MSBuildRepositoryDirectory)"
+	  Condition="'$(OS)' == 'Windows_NT'"/>
+
+    <Exec
+Command="$(MSBuildRepositoryDirectory)cibuild$(ShellExtension)
+--target CoreCLR --scope Compile"
+WorkingDirectory="$(MSBuildRepositoryDirectory)" Condition="'$(OS)' !=
+'$(Windows_NT)'" />
+
+    <ItemGroup>
+      <CoreFiles Include="$(MSBuildRepositoryDirectory)bin\Debug-NetCore\Output\*" Exclude="_._"/>
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CoreFiles)"
+          DestinationFolder="$(MSBuildRepositoryDirectory)bin\x86\Windows_NT\Debug-NetCore\Output" />
+
+    <MSBuild Projects="$(MSBuildRepositoryDirectory)build\NuGetPackages\CreateNuGetPackages.proj" />
+
+    <ItemGroup>
+      <MSBuildPackages Include="$(MSBuildPackageOutputDirectory)**/*.nupkg" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="DEBUG: Collected packages from the path: $(MSBuildPackageOutputDirectory) [@(MSBuildPackages)]" />
+
+    <Copy SourceFiles="@(MSBuildPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)" />
+
+    <WriteVersionsFile NugetPackages="@(MSBuildPackages)"
+                       OutputPath="%(MSBuild.VersionFile)" />
+  </Target>
+
+  <!-- no-op right now as MSBuild doesn't have clean.sh -->
+  <Target Name="CleanMSBuild">
+
+  </Target>
+</Project>
