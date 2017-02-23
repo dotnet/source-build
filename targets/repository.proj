@@ -6,7 +6,6 @@
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
-  <Target Name="Build" >
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
@@ -20,7 +19,7 @@
     <ItemGroup>
       <_BuiltPackages Remove="*.*" />
       <!-- Filter out packages for WriteVersions -->
-      <_BuiltPackages Include="$(ProjectDirectory)/$(PackagesOutput)/*.nupkg" />
+      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" />
     </ItemGroup>
     <Copy SourceFiles="@(_BuiltPackages)" 
           DestinationFolder="$(SourceBuiltPackagesPath)" />

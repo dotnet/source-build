@@ -4,7 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests skipbuildpackages</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) -BuildArch=$(Platform) -BuildType=$(Configuration)</BuildPackagesCommand>
-    <PackagesOutput>bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
 </Project>

@@ -4,6 +4,6 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build-native$(ShellExtension) --configuration $(Configuration)</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) --configuration $(Configuration) --runtime-id $(TargetRid)</BuildPackagesCommand>
-    <PackagesOutput>bin/packages/$(Configuration)/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)/</PackagesOutput>
   </PropertyGroup>
 </Project>

@@ -4,7 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -- /p:BuildPackages==false</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) -$(Configuration) -buildArch=$(Platform)</BuildPackagesCommand>
-    <PackagesOutput>bin/packages/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
 </Project>

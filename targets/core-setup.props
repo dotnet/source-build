@@ -6,7 +6,7 @@
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
     <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build</BuildPackagesCommand>
-    <PackagesOutput>artifacts/$(TargetRid)/packages/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/packages/</PackagesOutput>
     <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
   </PropertyGroup>
