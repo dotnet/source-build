@@ -1,24 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Condition="'$(ImportedRootDirProps)' == ''" Project="$(MSBuildThisFileDirectory)dir.props" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
   
-  <UsingTask AssemblyFile="$(BuildTaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-  <UsingTask AssemblyFile="$(BuildTaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="Select" />
-
-  <Import Project="targets/targets.props" />
+  <Import Project="dir.props" />
+  <Import Project="phases.props" />
 
   <Target Name="_SelectRepositories">
     <Select Collection="@(Repository)" Selection="$(Only)">
-    	<Output ItemName="SelectedRepositories" TaskParameter="Selected" />
+    <Output ItemName="SelectedRepositories" TaskParameter="Selected" />
     </Select>
   </Target>
 
-  <Target Name="Build" DependsOnTargets="PrepareOutput;_SelectRepositories">
-    <!-- False here indicates that the build should stop if one of the targets fails -->
-    <CallTarget Targets="%(SelectedRepositories.BuildTarget)" RunEachTargetSeparately="false" />
-
-    <Message Importance="Normal" Text="Build Complete" />
+  <Target Name="Build"
+          Inputs="%(Phases.Identity)"
+          Outputs="Build complete." 
+          DependsOnTargets="PrepareOutput;_SelectRepositories" >
+    <PropertyGroup>
+      <CurrentPhase>%(Phases.Identity)</CurrentPhase>
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo);VersionFileLocation=$(VersionFileDirectory)/%(Repository.Identity)$(VersionFilename)</AdditionalProperties>
+      </ProjectsToBuild>
+      <!-- TO DO: Filter based on _SelectRepositories -->
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
+    <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
   </Target>
+
   <Target Name="Clean" DependsOnTargets="CleanOutput;_SelectRepositories">
     <CallTarget Targets="%(SelectedRepositories.CleanTarget)" RunEachTargetSeparately="false" />
   

@@ -39,19 +39,13 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
                 else
                 {
-                    cmdList.Add($"{item.GetMetadata("Identity").ToUpper()}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
+                    cmdList.Add($"export {item.GetMetadata("Identity").ToUpper()}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
                 }
             
             }
             
-            if(UseWindowsConvention)
-            {
-                Command = String.Join(" & ", cmdList);
-            }
-            else
-            {
-                Command = String.Join(" ", cmdList);
-            }
+            Command = String.Join(" & ", cmdList);
+            
 
             return true;
         }

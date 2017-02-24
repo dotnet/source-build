@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <BuildCommand>$(ProjectDirectory)/cibuild.cmd /$(Configuration) /skipTest /skipCommitPrinting</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting</BuildCommand>
+    <BuildPackagesCommand>$(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/corerun $(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx $(ProjectDirectory)/Binaries/$(Configuration) 42-localbuild $(ProjectDirectory)/Binaries/packages</BuildPackagesCommand>
+    <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RoslynBuildCommand Condition="'$(BootstrapBuildToolsDir)' != ''">$(RoslynBuildCommand) --bootstrap_cli_path $(BootstrapBuildToolsDir)</RoslynBuildCommand>
+    <RoslynBuildCommand Conditon="'$(BootstrapMsbuildCliDir)' != ''">$(RoslynBuildCommand) -- bootstrap_msbuild_cli_path $(BootstrapMsbuildCliDir)</RoslynBuildCommand>
+  </PropertyGroup>
+</Project>
