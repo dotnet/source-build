@@ -5,8 +5,7 @@
   <Import Project="..\dir.props" />
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
-  
-  <!-- Temporary disabling of libuv dependencies on non Windows -->
+
   <Target Name="Build" >
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>

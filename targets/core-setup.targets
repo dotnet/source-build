@@ -8,7 +8,7 @@
   <Target Name="SetVersionsForCoreSetup" BeforeTargets="Update">
     <ItemGroup>
       <RepoVersionFiles Include="%(Repository.Identity)">
-        <VersionFile>$(VersionFileFolder)/%(Repository.Identity)$(VersionFileType)</VersionFile>
+        <VersionFile>$(VersionFileDirectory)/%(Repository.Identity)$(VersionFilename)</VersionFile>
       </RepoVersionFiles>
     </ItemGroup>
     <Message Text="Setting environment with version files..." />
