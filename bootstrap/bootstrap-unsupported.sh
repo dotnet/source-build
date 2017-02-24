@@ -135,7 +135,7 @@ seed_roll_forward_shared_framework_folder() {
     # Hack until we have CLI running on 2.0 shared framework
     echo "Update Microsoft.NETCore.App.deps.json for shared framework changes..."
     if echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.0\." || echo "$SHAREDFRAMEWORKVERSION" | grep -q "1\.1\."; then
-      cp -f $scriptRoot/../targets/Microsoft.NETCore.App.deps.json $OUTPUTNETCORESHAREDPATH
+      cp -f $scriptRoot/Microsoft.NETCore.App.deps.json $OUTPUTNETCORESHAREDPATH
 
       # Hack until we have CLI running on 2.0 shared framework
       echo "Remove Shared Framework entries from SDK deps.json..."

@@ -5,7 +5,7 @@ IFS=$'\n\t'
 DOCKER_FILE=""
 DOCKER_IMAGE=""
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-REPO_ROOT="$(cd -P "$SCRIPT_ROOT/../" && pwd)"
+REPO_ROOT="$(cd -P "$SCRIPT_ROOT/../../" && pwd)"
 
 case $(echo $1 | awk '{print tolower($0)}') in
     -d | --dockerfile)

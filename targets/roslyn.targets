@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateMsBuildFrameworkDependencyVersions" />
+
+  <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
+    <ItemGroup>
+      <RoslynProjectJsonFiles Include="$(ProjectDirectory)/**/project.json" />
+      <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
+    </ItemGroup>
+    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config" 
+                            SourceName="Source-Build"  
+                            SourcePath="$(SourceBuiltPackagesPath)" />     
+    <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
+                           ReplacementRuntimeId="$(TargetRid)"
+                           FilterRuntimeId="ubuntu.14.04-x64"
+                           Condition="'$(TargetOS)' == 'Linux'" />
+
+    <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
+
+    <UpdateMsBuildFrameworkDependencyVersions ProjectPath="$(ProjectDirectory)/build/MSBuildToolset_msbuild/MSBuildToolset.csproj" 
+                                              NuGetPackages="@(SourceBuiltPackage)"  
+                                              Condition="'$(_IsBootstrapping)' == 'true'" /> 
+  </Target>
+
+   <Target Name="BootstrapPackages" 
+          BeforeTargets="Packages"
+          Condition="'$(_IsBootstrapping)' == 'true'">
+    <PropertyGroup> 
+      <CsiCoreBaseDirectory>$(ProjectDirectory)Binaries/$(Configuration)/Exes/</CsiCoreBaseDirectory> 
+      <CsiCoreWorkingDirectory>$(CsiCoreBaseDirectory)CsiCore_working/</CsiCoreWorkingDirectory> 
+      <RoslynToolsetDirectory>$(ProjectDirectory)Binaries/toolset/</RoslynToolsetDirectory> 
+    </PropertyGroup> 
+     
+    <ItemGroup> 
+      <CsiCoreCopyFile Include="$(RoslynToolsetDirectory)*" /> 
+      <CsiCoreCopyFile Include="$(CsiCoreSourceDirectory)*" /> 
+    </ItemGroup> 
+
+    <!-- Create a working directory where we can copy in the CsiCore and toolset binaries for producing packages --> 
+    <MakeDir Directories="$(CsiCoreWorkingDirectory)" 
+             Condition="'$(_IsBootstrapping)' == 'true' and !Exists('$(CsiCoreWorkingDirectory)')" /> 
+
+    <Copy SourceFiles="@(CsiCoreCopyFile)" 
+          DestinationFolder="$(CsiCoreWorkingDirectory)"  
+          OverwriteReadOnlyFiles="true" 
+          SkipUnchangedFiles="true"  
+          Condition="'$(_IsBootstrapping)' == 'true'" />     
+  </Target>
+</Project>
