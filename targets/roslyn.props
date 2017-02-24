@@ -4,7 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/cibuild.cmd /$(Configuration) /skipTest /skipCommitPrinting</BuildCommand>
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/corerun $(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/csi.exe $(ProjectDirectory)/src/NuGet/BuildNuGets.csx $(ProjectDirectory)/Binaries/$(Configuration) 42-localbuild $(ProjectDirectory)/Binaries/packages</BuildPackagesCommand>
+    <BuildPackagesCommand>$(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/corerun $(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx $(ProjectDirectory)/Binaries/$(Configuration) 42-localbuild $(ProjectDirectory)/Binaries/packages</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 </Project>
