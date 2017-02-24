@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Phases Include="0;1;2;3;4" />
+  </ItemGroup>
+  <ItemGroup>
+    <Repository Include="standard" >
+      <BuildPhase>0</BuildPhase>
+      <PathToRepo>$(PathToStandard)</PathToRepo>
+    </Repository>
+    <Repository Include="libuv" >
+      <BuildPhase>0</BuildPhase>
+      <PathToRepo>$(PathToLibuv)</PathToRepo>
+      <IsJenkinsBuild>true</IsJenkinsBuild>
+    </Repository>
+    <Repository Include="coreclr" >
+      <BuildPhase>1</BuildPhase>
+      <PathToRepo>$(PathToCoreclr)</PathToRepo>
+    </Repository>
+    <Repository Include="corefx" >
+      <BuildPhase>2</BuildPhase>
+      <PathToRepo>$(PathToCorefx)</PathToRepo>
+    </Repository>
+    <Repository Include="roslyn" >
+      <BuildPhase>3</BuildPhase>
+      <PathToRepo>$(PathToRoslyn)</PathToRepo>
+    </Repository>
+    <Repository Include="core-setup" >
+      <BuildPhase>4</BuildPhase>
+      <PathToRepo>$(PathToCoreSetup)</PathToRepo>
+    </Repository>
+    <Repository Include="netcoreclifsc" >
+      <BuildPhase>5</BuildPhase>
+      <PathToRepo>$(PathToNetCoreCliFsc)</PathToRepo>
+    </Repository>
+  </ItemGroup>
+</Project>

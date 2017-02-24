@@ -7,6 +7,11 @@
 
   <PropertyGroup>
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
+    <TargetsDir>$(ProjectDir)/targets/</TargetsDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <BuildInParallel Condition="'$(BuildInParallel)'==''">true</BuildInParallel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -25,9 +30,15 @@
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <TaskDirectory>$(ProjectDir)tasks/</TaskDirectory>
+    <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.4/</TasksBinDir>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <VersionFilename>Versions.txt</VersionFilename>
+    <VersionFileDirectory>$(IntermediatePath)</VersionFileDirectory>
   </PropertyGroup>
 </Project>

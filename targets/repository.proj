@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  
+  <Import Project="..\dir.props" />
+  <!--Repo specific properties -->
+  <Import Project="$(RepositoryName).props" />
+
+  <Target Name="Build" >
+    <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
+    <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="CopyPackage" 
+          Outputs="@(_BuiltPackages)"
+          AfterTargets="Package" >
+    <ItemGroup>
+      <_BuiltPackages Remove="*.*" />
+      <!-- Filter out packages for WriteVersions -->
+      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_BuiltPackages)" 
+          DestinationFolder="$(SourceBuiltPackagesPath)" 
+          Condition="'@(_BuiltPackages)'!=''" />
+  </Target>
+  
+  <Target Name="WriteVersions" 
+          Inputs="_BuiltPackages"
+          Outputs="Version file written."
+          AfterTargets="CopyPackage" >          
+    <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
+                       OutputPath="$(VersionFileLocation)"
+                       Condition="'@(_BuiltPackages)'!=''" />
+  </Target>
+  
+  <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
+    <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
+    <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <!--Repo targets -->
+  <Import Project="$(RepositoryName).targets" Condition="Exists('$(RepositoryName).targets')"/>
+</Project>
