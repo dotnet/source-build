@@ -56,8 +56,7 @@ build_coreclr_native() {
   if [[ -d "$MANAGEDCORECLRPATH" ]]; then
     pushd $OUTPUTNETCORESHAREDPATH
     cp -f $CORECLRBINDIR/crossgen $OUTPUTNETCORESHAREDPATH
-    cp -f $MANAGEDCORECLRPATH/mscorlib.dll $OUTPUTNETCORESHAREDPATH
-    cp -f $MANAGEDCORECLRPATH/System.Private.CoreLib.dll $OUTPUTNETCORESHAREDPATH
+    cp -f $MANAGEDCORECLRPATH/* $OUTPUTNETCORESHAREDPATH
     $OUTPUTNETCORESHAREDPATH/crossgen mscorlib.dll
     $OUTPUTNETCORESHAREDPATH/crossgen System.Private.CoreLib.dll
     popd
