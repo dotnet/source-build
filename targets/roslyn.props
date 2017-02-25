@@ -4,11 +4,15 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/cibuild.cmd /$(Configuration) /skipTest /skipCommitPrinting</BuildCommand>
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/cibuild.sh --$(Configuration) --SkipTests --SkipCrossGen --SkipCommitPrinting</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/corerun $(ProjectDirectory)/Binaries/$(Configuration)/Exes/CsiCore/csi.exe src/NuGet/BuildNuGets.csx $(ProjectDirectory)/Binaries/$(Configuration) 42-localbuild $(ProjectDirectory)/Binaries/packages</BuildPackagesCommand>
+
+    <CsiCoreBaseDirectory>$(ProjectDirectory)Binaries/$(Configuration)/Exes/</CsiCoreBaseDirectory> 
+    <CsiCoreWorkingDirectory>$(CsiCoreBaseDirectory)CsiCore/</CsiCoreWorkingDirectory> 
+    <CsiCoreWorkingDirectory Condition="'$(_IsBootstrapping)' == 'true'">$(CsiCoreBaseDirectory)CsiCore_working/</CsiCoreWorkingDirectory> 
+    <BuildPackagesCommand>$(CsiCoreWorkingDirectory)corerun $(CsiCoreWorkingDirectory)csi.exe src/NuGet/BuildNuGets.csx $(ProjectDirectory)/Binaries/$(Configuration) 42-localbuild $(ProjectDirectory)/Binaries/packages</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
   <PropertyGroup>
-    <RoslynBuildCommand Condition="'$(BootstrapBuildToolsDir)' != ''">$(RoslynBuildCommand) --bootstrap_cli_path $(BootstrapBuildToolsDir)</RoslynBuildCommand>
-    <RoslynBuildCommand Conditon="'$(BootstrapMsbuildCliDir)' != ''">$(RoslynBuildCommand) -- bootstrap_msbuild_cli_path $(BootstrapMsbuildCliDir)</RoslynBuildCommand>
+    <BuildCommand Condition="'$(BootstrapBuildToolsDir)' != ''">$(BuildCommand) --bootstrap_cli_path $(BootstrapBuildToolsDir)/dotnetcli/</BuildCommand>
+    <BuildCommand Condition="'$(BootstrapMsbuildCliDir)' != ''">$(BuildCommand) --bootstrap_msbuild_cli_path $(BootstrapMsbuildCliDir)</BuildCommand>
   </PropertyGroup>
 </Project>

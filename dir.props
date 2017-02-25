@@ -6,7 +6,7 @@
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
-    <_IsBootstrapping Condition="'$(BuildTools_Dir)' != ''">true</_IsBootstrapping>
+    <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -27,6 +27,7 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)/$(RepositoryName)/</ProjectDirectory>
     <Only Condition="'$(Only)' == ''">netcoreclifsc;standard;coreclr;corefx;roslyn;libuv;core-setup</Only>
   </PropertyGroup>
 
@@ -45,5 +46,10 @@
   <PropertyGroup>
     <VersionFilename>Versions.txt</VersionFilename>
     <VersionFileDirectory>$(IntermediatePath)</VersionFileDirectory>
+    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryName)$(VersionFileName)</VersionFileLocation>
   </PropertyGroup>
+
+  <ItemGroup>
+    <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
+  </ItemGroup>
 </Project>

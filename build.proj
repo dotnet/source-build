@@ -18,10 +18,12 @@
           DependsOnTargets="PrepareOutput;_SelectRepositories" >
     <PropertyGroup>
       <CurrentPhase>%(Phases.Identity)</CurrentPhase>
+      <_BootstrapProperties Condition="'$(BootstrapBuildToolsDir)' != ''">BootstrapBuildToolsDir=$(BootstrapBuildToolsDir)</_BootstrapProperties>
+      <_BootstrapProperties Condition="'$(BootstrapMsbuildCliDir)' != ''">$(_BootstrapProperties);BootstrapMsbuildCliDir=$(BootstrapMsbuildCliDir);</_BootstrapProperties>
     </PropertyGroup>
     <ItemGroup>
       <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
-        <AdditionalProperties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo);VersionFileLocation=$(VersionFileDirectory)/%(Repository.Identity)$(VersionFilename)</AdditionalProperties>
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);$(_BootstrapProperties)</AdditionalProperties>
       </ProjectsToBuild>
       <!-- TO DO: Filter based on _SelectRepositories -->
     </ItemGroup>

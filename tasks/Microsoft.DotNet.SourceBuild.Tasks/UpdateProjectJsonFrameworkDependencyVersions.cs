@@ -19,21 +19,23 @@ namespace Microsoft.DotNet.Build.Tasks
         public ITaskItem[] NuGetPackages { get; set; }
 
         [Required]
-        public string ProjectJsonFile { get; set; }
+        public ITaskItem[] ProjectJsonFiles { get; set; }
 
         public override bool Execute()
         {
-            JObject projectRoot = ReadProject(ProjectJsonFile);
-            string [] frameworks = projectRoot.SelectTokens("frameworks").SelectMany(f => f.Children().Select(c => ((JProperty)c).Name)).ToArray();
-
-            foreach(string framework in frameworks)
+            foreach(string projectJsonFile in ProjectJsonFiles.Select(p => p.ItemSpec))
             {
-                JObject dependencies = GenerateDependencies(projectRoot, NuGetPackages, framework);
-                projectRoot = UpdateDependenciesProperty(projectRoot, dependencies, framework);
+                JObject projectRoot = ReadProject(projectJsonFile);
+                string [] frameworks = projectRoot.SelectTokens("frameworks").SelectMany(f => f.Children().Select(c => ((JProperty)c).Name)).ToArray();
+
+                foreach(string framework in frameworks)
+                {
+                    JObject dependencies = GenerateDependencies(projectRoot, NuGetPackages, framework, projectJsonFile);
+                    projectRoot = UpdateDependenciesProperty(projectRoot, dependencies, framework);
+                }
+
+                WriteProject(projectRoot, projectJsonFile);
             }
-
-            WriteProject(projectRoot, ProjectJsonFile);
-
             return true;
         }
 
@@ -58,7 +60,7 @@ namespace Microsoft.DotNet.Build.Tasks
             }
        }
 
-        private JObject GenerateDependencies(JObject projectJsonRoot, ITaskItem [] nugetPackages, string framework)
+        private JObject GenerateDependencies(JObject projectJsonRoot, ITaskItem [] nugetPackages, string framework, string projectJsonFile)
         {
             var originalDependenciesList = new List<JToken>();
             JObject frameworkDependencies = GetFrameworkDependenciesSection(projectJsonRoot, framework);
@@ -88,7 +90,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 {
                     if (packageVersions.ContainsKey(property.Name))
                     {
-                        Console.WriteLine($"Updating dependency in {ProjectJsonFile}: {property.Name}, {frameworkDependencies[property.Name].ToString()} --> {packageVersions[property.Name].ToString()}");
+                        Console.WriteLine($"Updating dependency in {projectJsonFile}: {property.Name}, {frameworkDependencies[property.Name].ToString()} --> {packageVersions[property.Name].ToString()}");
                         frameworkDependencies[property.Name] = packageVersions[property.Name].ToString();
                     }
                 }

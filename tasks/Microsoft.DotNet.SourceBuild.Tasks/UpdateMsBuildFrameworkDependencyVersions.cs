@@ -7,53 +7,56 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Construction;
 
-namespace Microsoft.DotNet.SourceBuild.Tasks
+namespace Microsoft.DotNet.Build.Tasks
 {
     public class UpdateMsBuildFrameworkDependencyVersions : Task
     {
         [Required]
-        public string ProjectPath { get; set; }
+        public ITaskItem[] Projects { get; set; }
         [Required]
         public ITaskItem[] NuGetPackages { get; set; }
 
         public override bool Execute()
         {
-            var projectRoot = ProjectRootElement.Open(ProjectPath);
-
-            var packageIdentities = GetPackageIdentityCollection(NuGetPackages);
-
-            Dictionary<ProjectItemElement, string> updatedItems = new Dictionary<ProjectItemElement, string>();
-            ProjectElementContainer parent = null;
-            foreach(var item in projectRoot.Items)
+            foreach(string projectPath in Projects.Select(p => p.ItemSpec))
             {
-                if (item.ItemType == "PackageReference")
+                var projectRoot = ProjectRootElement.Open(projectPath);
+
+                var packageIdentities = GetPackageIdentityCollection(NuGetPackages);
+
+                Dictionary<ProjectItemElement, string> updatedItems = new Dictionary<ProjectItemElement, string>();
+                ProjectElementContainer parent = null;
+                foreach(var item in projectRoot.Items)
                 {
-                    PackageIdentity identity = packageIdentities.FirstOrDefault(p => p.Id == item.Include);
-
-                    if (identity != null)
+                    if (item.ItemType == "PackageReference")
                     {
-                        // Save the PackageReference parent ItemGroup so we can append to it
-                        if (parent == null)
+                        PackageIdentity identity = packageIdentities.FirstOrDefault(p => p.Id == item.Include);
+
+                        if (identity != null)
                         {
-                            parent = item.Parent;
+                            // Save the PackageReference parent ItemGroup so we can append to it
+                            if (parent == null)
+                            {
+                                parent = item.Parent;
+                            }
+
+                            parent.RemoveChild(item);
+
+                            ProjectItemElement newItem = projectRoot.CreateItemElement("PackageReference", identity.Id);
+                            updatedItems.Add(newItem, identity.Version.ToNormalizedString());
                         }
-
-                        parent.RemoveChild(item);
-
-                        ProjectItemElement newItem = projectRoot.CreateItemElement("PackageReference", identity.Id);
-                        updatedItems.Add(newItem, identity.Version.ToNormalizedString());
                     }
                 }
-            }
-            foreach(var item in updatedItems)
-            {
-                var appendItem = item.Key;
-                // we must "root" an item to a parent before we can update its metadata.
-                parent.AppendChild(appendItem);
-                appendItem.AddMetadata("Version", item.Value, true);
-            }
+                foreach(var item in updatedItems)
+                {
+                    var appendItem = item.Key;
+                    // we must "root" an item to a parent before we can update its metadata.
+                    parent.AppendChild(appendItem);
+                    appendItem.AddMetadata("Version", item.Value, true);
+                }
 
-            projectRoot.Save();
+                projectRoot.Save();
+            }
             return !Log.HasLoggedErrors;
         }
 

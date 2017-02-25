@@ -7,7 +7,7 @@
 
   <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
     <ItemGroup>
-      <RoslynProjectJsonFiles Include="$(ProjectDirectory)/**/project.json" />
+      <RoslynProjectJsonFiles Include="$(ProjectDirectory)/build/**/project.json" />
       <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
     </ItemGroup>
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config" 
@@ -20,17 +20,16 @@
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
 
-    <UpdateMsBuildFrameworkDependencyVersions ProjectPath="$(ProjectDirectory)/build/MSBuildToolset_msbuild/MSBuildToolset.csproj" 
+    <UpdateMsBuildFrameworkDependencyVersions Projects="$(ProjectDirectory)/build/MSBuildToolset_msbuild/MSBuildToolset.csproj" 
                                               NuGetPackages="@(SourceBuiltPackage)"  
                                               Condition="'$(_IsBootstrapping)' == 'true'" /> 
   </Target>
 
    <Target Name="BootstrapPackages" 
-          BeforeTargets="Packages"
+          BeforeTargets="Package"
           Condition="'$(_IsBootstrapping)' == 'true'">
     <PropertyGroup> 
-      <CsiCoreBaseDirectory>$(ProjectDirectory)Binaries/$(Configuration)/Exes/</CsiCoreBaseDirectory> 
-      <CsiCoreWorkingDirectory>$(CsiCoreBaseDirectory)CsiCore_working/</CsiCoreWorkingDirectory> 
+      <CsiCoreSourceDirectory>$(CsiCoreBaseDirectory)CsiCore/</CsiCoreSourceDirectory> 
       <RoslynToolsetDirectory>$(ProjectDirectory)Binaries/toolset/</RoslynToolsetDirectory> 
     </PropertyGroup> 
      

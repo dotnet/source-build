@@ -7,6 +7,7 @@
   <Import Project="$(RepositoryName).props" />
 
   <Target Name="Build" >
+    <Message Importance="High" Text="Executing $(ProjectDirectory)> $(BuildCommand)" />
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
@@ -44,23 +45,22 @@
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
- <Target Name="BootstrapBuildTools" 
+ <Target Name="BootstrapBuildTools" BeforeTargets="Build"
          Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'"> 
    <PropertyGroup>
-     <ProjectToolsDir>$(ProjectDirectory)Tools</ProjectToolsDir>
+     <ProjectToolsDir>$(ProjectDirectory)Tools/</ProjectToolsDir>
    </PropertyGroup>
-   <RemoveDir Condition="'$(BuildTools_Dir)' != ''" 
-              Directories="$(ProjectToolsDir)" /> 
+   <RemoveDir Directories="$(ProjectToolsDir)" /> 
    <MakeDir Directories="$(ProjectToolsDir)" /> 
    <ItemGroup>
-     <BuildToolsFile Include="$(BuildTools_Dir)/**" />
+     <BuildToolsFile Include="$(BootstrapBuildToolsDir)/**" />
      <BuildToolsFile Include="$(ProjectDirectory)Tools-Override/**" />
    </ItemGroup>
 
    <Copy SourceFiles="@(BuildToolsFile)"
-         DestinationFile="@(BuildToolsFile->'$(ProjectToolsDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+         DestinationFiles="@(BuildToolsFile->'$(ProjectToolsDir)%(RecursiveDir)%(Filename)%(Extension)')" />
 
-   <Copy SourceFiles="$(BuildTools_Dir)/BuildToolsVersion.txt" 
+   <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt" 
          DestinationFolder="$(ProjectDirectory)" /> 
   </Target> 
 
