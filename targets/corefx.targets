@@ -17,7 +17,9 @@
                                                   NuGetPackages="@(SourceBuiltPackage)" />
   </Target>
 
-  <Target Name="UpdateRuntimeGraph" BeforeTargets="Build">
+  <Target Name="UpdateRuntimeGraph" 
+          BeforeTargets="Build"
+          Condition="'$(_IsBootstrapping)' == 'true'">
     <PropertyGroup>
       <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>    
     </PropertyGroup>
