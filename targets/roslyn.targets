@@ -7,7 +7,8 @@
 
   <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
     <ItemGroup>
-      <RoslynProjectJsonFiles Include="$(ProjectDirectory)/build/**/project.json" />
+      <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' == 'true'" Include="$(ProjectDirectory)/build/**/project.json" />
+      <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' != 'true'" Include="$(ProjectDirectory)/**/project.json" />
       <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
     </ItemGroup>
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config" 
