@@ -7,6 +7,9 @@
 
   <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
     <ItemGroup>
+      <!-- If we're bootstrapping on an unsupported distro, we won't be able to restore most of these packages,  after
+           roslyn moves to buliding against the 2.0 shared framework, we should be able to remove this condition and
+           update all project.json files because we will be building them in the source-build -->
       <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' == 'true'" Include="$(ProjectDirectory)/build/**/project.json" />
       <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' != 'true'" Include="$(ProjectDirectory)/**/project.json" />
       <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
