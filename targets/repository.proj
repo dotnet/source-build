@@ -18,9 +18,8 @@
           Outputs="@(_BuiltPackages)"
           AfterTargets="Package" >
     <ItemGroup>
-      <_BuiltPackages Remove="*.*" />
       <!-- Filter out packages for WriteVersions -->
-      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" />
+      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
     </ItemGroup>
     <Copy SourceFiles="@(_BuiltPackages)" 
           DestinationFolder="$(SourceBuiltPackagesPath)" 

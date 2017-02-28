@@ -21,7 +21,7 @@
     </PropertyGroup>
     <ItemGroup>
       <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
-        <AdditionalProperties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)/%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo);VersionFileLocation=$(VersionFileDirectory)/%(Repository.Identity)$(VersionFilename)</AdditionalProperties>
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);ProjectDirectory=$(SubmoduleDirectory)%(Repository.Identity)/;PathToRepo=%(Repository.PathToRepo);VersionFileLocation=$(VersionFileDirectory)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</AdditionalProperties>
       </ProjectsToBuild>
       <!-- TO DO: Filter based on _SelectRepositories -->
     </ItemGroup>
@@ -41,6 +41,7 @@
     <MakeDir Directories="$(OutputPath)" />
     <MakeDir Directories="$(IntermediatePath)" />
     <MakeDir Directories="$(SourceBuiltPackagesPath)" />
+    <MakeDir Directories="$(LocalBlobStorageRoot)" />
   </Target>
 
   <Target Name="CleanOutput">

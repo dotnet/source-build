@@ -23,7 +23,7 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
-    <Only Condition="'$(Only)' == ''">netcoreclifsc;standard;coreclr;corefx;roslyn;libuv;core-setup</Only>
+    <Only Condition="'$(Only)' == ''">standard;coreclr;corefx;roslyn;libuv;core-setup;netcoreclifsc;cli</Only>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -34,11 +34,13 @@
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
+    <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
+    <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
   </PropertyGroup>
   
   <PropertyGroup>
-    <VersionFilename>Versions.txt</VersionFilename>
-    <VersionFileDirectory>$(IntermediatePath)</VersionFileDirectory>
+    <VersionFilename>Latest_Packages.txt</VersionFilename>
+    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
   </PropertyGroup>
 </Project>

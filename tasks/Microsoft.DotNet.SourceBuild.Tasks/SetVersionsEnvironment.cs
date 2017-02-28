@@ -14,14 +14,14 @@ namespace Microsoft.DotNet.Build.Tasks
 
         [Required]
         public string OS { get; set; }
-        
+
         [Output]
         public string Command { get; set; }
 
         public override bool Execute()
         {
             bool UseWindowsConvention = (OS == "Windows_NT");
-  
+
             var cmdList = new List<string>();
 
             foreach (ITaskItem item in Repositories)
@@ -33,17 +33,20 @@ namespace Microsoft.DotNet.Build.Tasks
                     continue;
                 }
 
+
+                string repositoryNameForEnvironmentVariable = item.GetMetadata("Identity").ToUpper().Replace("-", "");
+
                 if(UseWindowsConvention)
                 {
-                    cmdList.Add($"set {item.GetMetadata("Identity").ToUpper()}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
+                    cmdList.Add($"set {repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
                 }
                 else
                 {
-                    cmdList.Add($"export {item.GetMetadata("Identity").ToUpper()}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
+                    cmdList.Add($"export {repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
                 }
-            
+
             }
-            
+
             Command = String.Join(" & ", cmdList);
             
 
