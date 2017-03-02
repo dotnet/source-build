@@ -27,7 +27,7 @@
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
     <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)/$(RepositoryName)/</ProjectDirectory>
-    <Only Condition="'$(Only)' == ''">netcoreclifsc;standard;coreclr;corefx;roslyn;libuv;core-setup</Only>
+    <Only Condition="'$(Only)' == ''">standard;coreclr;corefx;roslyn;libuv;core-setup;netcoreclifsc;cli</Only>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -38,14 +38,19 @@
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
+    <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
+    <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
     <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
+
+    <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
   </PropertyGroup>
   
   <PropertyGroup>
-    <VersionFilename>Versions.txt</VersionFilename>
-    <VersionFileDirectory>$(IntermediatePath)</VersionFileDirectory>
-    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryName)$(VersionFileName)</VersionFileLocation>
+    <VersionFilename>Latest_Packages.txt</VersionFilename>
+    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
+    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
   </PropertyGroup>
 
   <ItemGroup>

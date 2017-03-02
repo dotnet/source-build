@@ -18,6 +18,8 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
+            Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
+
             using (Stream outStream = File.Open(OutputPath, FileMode.Create))
             {
                 using (StreamWriter sw = new StreamWriter(outStream, new UTF8Encoding(false)))

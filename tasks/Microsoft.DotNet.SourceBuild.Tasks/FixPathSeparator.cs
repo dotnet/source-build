@@ -23,8 +23,6 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 string pathToNuSpec = item.GetMetadata("FullPath");
 
-                Log.LogMessage(MessageImportance.High, $"Fixing: {pathToNuSpec}");
-
                 XDocument doc = XDocument.Load(pathToNuSpec);
 
                 XElement contentFilesElement = doc.ElementIgnoringNamespace("package").ElementIgnoringNamespace("metadata").ElementIgnoringNamespace("contentFiles");

@@ -3,37 +3,57 @@
   <!-- This file is intended to define build phases.  It is not intended to pass build specific
        information to repos -->
   <ItemGroup>
-    <Phases Include="0;1;2;3;4" />
+    <Phases Include="0;1;2;3;4;5;6" />
   </ItemGroup>
   <ItemGroup>
     <Repository Include="standard" >
       <BuildPhase>0</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToStandard)</PathToRepo>
     </Repository>
     <Repository Include="libuv" >
       <BuildPhase>0</BuildPhase>
+      <Organization>ellismg</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToLibuv)</PathToRepo>
       <IsJenkinsBuild>true</IsJenkinsBuild>
     </Repository>
     <Repository Include="coreclr" >
       <BuildPhase>1</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToCoreclr)</PathToRepo>
     </Repository>
     <Repository Include="corefx" >
       <BuildPhase>2</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToCorefx)</PathToRepo>
     </Repository>
     <Repository Include="roslyn" >
       <BuildPhase>3</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>netcore1.0</Branch>
       <PathToRepo>$(PathToRoslyn)</PathToRepo>
     </Repository>
     <Repository Include="core-setup" >
       <BuildPhase>4</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToCoreSetup)</PathToRepo>
     </Repository>
-    <Repository Include="netcoreclifsc" >
+    <Repository Include="netcorecli-fsc" >
       <BuildPhase>5</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
       <PathToRepo>$(PathToNetCoreCliFsc)</PathToRepo>
+    </Repository>
+    <Repository Include="cli" >
+      <BuildPhase>6</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
+      <PathToRepo>$(PathToCli)</PathToRepo>
     </Repository>
   </ItemGroup>
 </Project>

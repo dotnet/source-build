@@ -2,13 +2,14 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
   <Import Project="../phases.props" />
 
   <Target Name="SetVersionsForCoreSetup" BeforeTargets="Update">
     <ItemGroup>
-      <RepoVersionFiles Include="%(Repository.Identity)">
-        <VersionFile>$(VersionFileDirectory)/%(Repository.Identity)$(VersionFilename)</VersionFile>
+      <RepoVersionFiles Include="%(Repository.Identity)" Exclude="core-setup" >
+        <VersionFile>$(VersionFileDirectory)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</VersionFile>
       </RepoVersionFiles>
     </ItemGroup>
     <Message Text="Setting environment with version files..." />
@@ -17,10 +18,18 @@
     </SetVersionsEnvironment>
     <Exec Command="$(SetVersionFilesCmd)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
-  
+
   <Target Name="UpdateNugetConfig" BeforeTargets="Build">
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
+
+  <Target Name="PublishBinaries" AfterTargets="Package">
+    <ItemGroup>
+      <CoreSetupTarballs Include="$(BinariesOutput)*$(TarBallExtension)" />
+    </ItemGroup>
+    <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
+                              DestinationFolderTemplate="$(LocalBlobStorageRoot)master/Binaries/{version}/" />
   </Target>
 </Project>
