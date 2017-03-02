@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/build-packages$(ShellExtension) -BuildArch=$(Platform) -BuildType=$(Configuration)</BuildPackagesCommand>
+    <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>

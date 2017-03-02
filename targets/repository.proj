@@ -7,6 +7,7 @@
   <Import Project="$(RepositoryName).props" />
 
   <Target Name="Build" >
+    <Message Importance="High" Text="Executing $(ProjectDirectory)> $(BuildCommand)" />
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
@@ -42,7 +43,26 @@
   <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
-  
+
+ <Target Name="BootstrapBuildTools" BeforeTargets="Build"
+         Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'"> 
+   <PropertyGroup>
+     <ProjectToolsDir>$(ProjectDirectory)Tools/</ProjectToolsDir>
+   </PropertyGroup>
+   <RemoveDir Directories="$(ProjectToolsDir)" /> 
+   <MakeDir Directories="$(ProjectToolsDir)" /> 
+   <ItemGroup>
+     <BuildToolsFile Include="$(BootstrapBuildToolsDir)/**" />
+     <BuildToolsFile Include="$(ProjectDirectory)Tools-Override/**" />
+   </ItemGroup>
+
+   <Copy SourceFiles="@(BuildToolsFile)"
+         DestinationFiles="@(BuildToolsFile->'$(ProjectToolsDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+
+   <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt" 
+         DestinationFolder="$(ProjectDirectory)" /> 
+  </Target> 
+
   <!--Repo targets -->
   <Import Project="$(RepositoryName).targets" Condition="Exists('$(RepositoryName).targets')"/>
 </Project>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddRidToRuntimeJson" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateProjectJsonFrameworkDependencyVersions"  />
+
+  <Target Name="UpdateExternalDependencies" BeforeTargets="Build">
+    <PropertyGroup>
+      <CoreClrTemplateFile>$(ProjectDirectory)external/runtime/project.json.template</CoreClrTemplateFile>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Update framework dependency versions in $(CoreClrTemplateFile)" />
+    <Message Importance="High" Text="Packages: @(SourceBuiltPackage)" />
+    <UpdateProjectJsonFrameworkDependencyVersions ProjectJsonFiles="$(CoreClrTemplateFile)"
+                                                  NuGetPackages="@(SourceBuiltPackage)" />
+  </Target>
+
+  <Target Name="UpdateRuntimeGraph" 
+          BeforeTargets="Build"
+          Condition="'$(_IsBootstrapping)' == 'true'">
+    <PropertyGroup>
+      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>    
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
+    <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
+                         Rid="$(TargetRid)-$(Platform)" />
+  </Target>  
+</Project>
