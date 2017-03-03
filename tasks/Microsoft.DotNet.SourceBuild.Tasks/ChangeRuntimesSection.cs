@@ -32,7 +32,7 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 string pathToProjectJson = item.GetMetadata("FullPath");
 
-                JObject root = ReadProject(pathToProjectJson);
+                JObject root = ProjectJsonUtils.ReadProject(pathToProjectJson);
                 JProperty runtimeSection = root.Descendants().OfType<JProperty>().Where(property => property.Name == "runtimes").FirstOrDefault();
 
                 if (runtimeSection == null)
@@ -52,28 +52,10 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 runtimeSection.Value = JObject.FromObject(obj);
 
-                WriteProject(root, pathToProjectJson);
+                ProjectJsonUtils.WriteProject(root, pathToProjectJson);
             }
 
             return true;
-        }
-
-        private static JObject ReadProject(string projectJsonPath)
-        {
-            using (TextReader projectFileReader = File.OpenText(projectJsonPath))
-            {
-                JsonTextReader projectJsonReader = new JsonTextReader(projectFileReader);
-                JsonSerializer serializer = new JsonSerializer();
-
-                return serializer.Deserialize<JObject>(projectJsonReader);
-            }
-        }
-
-        private static void WriteProject(JObject projectRoot, string projectJsonPath)
-        {
-            string projectJson = JsonConvert.SerializeObject(projectRoot, Formatting.Indented);
-
-            File.WriteAllText(projectJsonPath, projectJson + Environment.NewLine);
         }
     }
 }
