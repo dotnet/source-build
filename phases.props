@@ -3,7 +3,7 @@
   <!-- This file is intended to define build phases.  It is not intended to pass build specific
        information to repos -->
   <ItemGroup>
-    <Phases Include="0;1;2;3;4;5;6;7;8" />
+    <Phases Include="0;1;2;3;4;5;6;7;8;9" />
   </ItemGroup>
   <ItemGroup>
     <Repository Include="standard" >
@@ -61,8 +61,14 @@
       <Branch>release-4.1.0-netstandard2.0</Branch>
       <PathToRepo>$(PathToNuGetClient)</PathToRepo>
     </Repository>
-    <Repository Include="cli" >
+    <Repository Include="templating" >
       <BuildPhase>8</BuildPhase>
+      <Organization>karajas</Organization>
+      <Branch>master</Branch>
+      <PathToRepo>$(PathToTemplating)</PathToRepo>
+    </Repository>
+    <Repository Include="cli" >
+      <BuildPhase>9</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCli)</PathToRepo>
