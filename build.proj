@@ -8,25 +8,25 @@
 
   <Target Name="_SelectRepositories">
     <Select Collection="@(Repository)" Selection="$(Only)">
-    <Output ItemName="SelectedRepositories" TaskParameter="Selected" />
+      <Output ItemName="SelectedRepositories" TaskParameter="Selected" />
     </Select>
   </Target>
 
   <Target Name="Build"
-          Inputs="%(Phases.Identity)"
-          Outputs="Build complete." 
           DependsOnTargets="PrepareOutput;_SelectRepositories" >
+
     <PropertyGroup>
       <CurrentPhase>%(Phases.Identity)</CurrentPhase>
       <_BootstrapProperties Condition="'$(BootstrapBuildToolsDir)' != ''">BootstrapBuildToolsDir=$(BootstrapBuildToolsDir)</_BootstrapProperties>
       <_BootstrapProperties Condition="'$(BootstrapMsbuildCliDir)' != ''">$(_BootstrapProperties);BootstrapMsbuildCliDir=$(BootstrapMsbuildCliDir);</_BootstrapProperties>
     </PropertyGroup>
+
     <ItemGroup>
       <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
         <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
       </ProjectsToBuild>
-      <!-- TO DO: Filter based on _SelectRepositories -->
     </ItemGroup>
+
     <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
     <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
   </Target>

@@ -3,7 +3,7 @@
   <!-- This file is intended to define build phases.  It is not intended to pass build specific
        information to repos -->
   <ItemGroup>
-    <Phases Include="0;1;2;3;4;5;6;7;8;9;10;11" />
+    <Phases Include="0;1;2;3;4;5;6;7;8;9;10;11;12" />
   </ItemGroup>
   <ItemGroup>
     <Repository Include="standard" >
@@ -84,6 +84,12 @@
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCli)</PathToRepo>
+    </Repository>
+    <Repository Include="msbuild" >
+      <BuildPhase>12</BuildPhase>
+      <Organization>Microsoft</Organization>
+      <Branch>_packaging</Branch>
+      <PathToRepo>$(PathToMSBuild)</PathToRepo>
     </Repository>
   </ItemGroup>
 </Project>
