@@ -11,4 +11,20 @@
     <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/src/**/*.*" />
+  </ItemGroup>  
+
+  <ItemGroup>  
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=corefx</AdditionalProperties>
+    </RepositoryReference>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=libuv</AdditionalProperties>
+    </RepositoryReference>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=standard</AdditionalProperties>
+    </RepositoryReference>    
+  </ItemGroup>
 </Project>

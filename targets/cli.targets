@@ -2,9 +2,22 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
 
-  <Target Name="UpdateNugetConfig" BeforeTargets="Build">
+  <Target Name="UpdateNugetConfig" BeforeTargets="Build" Inputs="$(ProjectDirectory)/src/**/*.*" Outputs="@(PackageFiles)">
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
+
+  <ItemGroup>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=corefx</AdditionalProperties>
+    </RepositoryReference>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=coreclr</AdditionalProperties>
+    </RepositoryReference>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=libuv</AdditionalProperties>
+    </RepositoryReference>
+  </ItemGroup>
+
 </Project>

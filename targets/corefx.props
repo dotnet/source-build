@@ -6,4 +6,14 @@
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="repository.proj">
+      <AdditionalProperties>RepositoryName=coreclr</AdditionalProperties>
+    </RepositoryReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/src/**/*.*" />
+  </ItemGroup>  
 </Project>

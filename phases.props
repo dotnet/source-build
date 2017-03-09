@@ -2,73 +2,60 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- This file is intended to define build phases.  It is not intended to pass build specific
        information to repos -->
-  <ItemGroup>
-    <Phases Include="0;1;2;3;4;5;6;7;8;9" />
-  </ItemGroup>
+
   <ItemGroup>
     <Repository Include="standard" >
-      <BuildPhase>0</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToStandard)</PathToRepo>
     </Repository>
     <Repository Include="libuv" >
-      <BuildPhase>0</BuildPhase>
       <Organization>ellismg</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToLibuv)</PathToRepo>
       <IsJenkinsBuild>true</IsJenkinsBuild>
     </Repository>
     <Repository Include="coreclr" >
-      <BuildPhase>1</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCoreclr)</PathToRepo>
     </Repository>
     <Repository Include="corefx" >
-      <BuildPhase>2</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCorefx)</PathToRepo>
     </Repository>
     <Repository Include="roslyn" >
-      <BuildPhase>3</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>netcore1.0</Branch>
       <PathToRepo>$(PathToRoslyn)</PathToRepo>
     </Repository>
     <Repository Include="core-setup" >
-      <BuildPhase>4</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCoreSetup)</PathToRepo>
     </Repository>
     <Repository Include="netcorecli-fsc" >
-      <BuildPhase>5</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToNetCoreCliFsc)</PathToRepo>
     </Repository>
     <Repository Include="sdk" >
-      <BuildPhase>6</BuildPhase>
       <Organization>karajas</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToSdk)</PathToRepo>
     </Repository>
     <Repository Include="nuget-client" >
-      <BuildPhase>7</BuildPhase>
       <Organization>nuget</Organization>
       <Branch>release-4.1.0-netstandard2.0</Branch>
       <PathToRepo>$(PathToNuGetClient)</PathToRepo>
     </Repository>
     <Repository Include="templating" >
-      <BuildPhase>8</BuildPhase>
       <Organization>karajas</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToTemplating)</PathToRepo>
     </Repository>
     <Repository Include="cli" >
-      <BuildPhase>9</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToCli)</PathToRepo>
