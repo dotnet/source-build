@@ -24,7 +24,7 @@
     </ItemGroup>
     
     <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
-    <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
+    <Message Importance="Normal" Text="Build '$(Only)' Complete" />
   </Target>
 
   <Target Name="Clean" DependsOnTargets="CleanOutput">

@@ -8,12 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="repository.proj">
-      <AdditionalProperties>RepositoryName=coreclr</AdditionalProperties>
-    </RepositoryReference>
+    <RepositoryReference Include="coreclr" />
   </ItemGroup>
 
   <ItemGroup>
-    <Source Include="$(ProjectDirectory)/src/**/*.*" />
+    <Source Include="$(ProjectDirectory)/**/*.*" />
   </ItemGroup>  
 </Project>

@@ -13,18 +13,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Source Include="$(ProjectDirectory)/src/**/*.*" />
+    <Source Include="$(ProjectDirectory)/**/*.*" />
   </ItemGroup>  
 
   <ItemGroup>  
-    <RepositoryReference Include="repository.proj">
-      <AdditionalProperties>RepositoryName=corefx</AdditionalProperties>
-    </RepositoryReference>
-    <RepositoryReference Include="repository.proj">
-      <AdditionalProperties>RepositoryName=libuv</AdditionalProperties>
-    </RepositoryReference>
-    <RepositoryReference Include="repository.proj">
-      <AdditionalProperties>RepositoryName=standard</AdditionalProperties>
-    </RepositoryReference>    
+    <RepositoryReference Include="corefx" />
+    <RepositoryReference Include="libuv" />
+    <RepositoryReference Include="standard" />
   </ItemGroup>
 </Project>

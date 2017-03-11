@@ -2,14 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) /t:Package</BuildCommand>
-    <BuildPackagesCommand></BuildPackagesCommand>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/nupkgs/</PackagesOutput>
-    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
     <Source Include="$(ProjectDirectory)/**/*.*" />
   </ItemGroup>   
 </Project>
-

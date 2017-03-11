@@ -9,4 +9,16 @@
     <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="templating" />
+    <RepositoryReference Include="cli" />
+    <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="templating" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup>   
 </Project>

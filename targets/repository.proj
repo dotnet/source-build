@@ -3,17 +3,19 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   
   <Import Project="..\dir.props" />
+  
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
   <!-- NOTE: If @(Source) is empty; then we skip the target because 'it has no inputs.' -->
   <Target Name="Build" Inputs="@(Source)" Outputs="$(VersionFileLocation)">
     <Message Importance="High" Text="BUILD REPOSITORY :: $(RepositoryName)" />
-    <Message Importance="High" Condition="'@(RepositoryReference -> Count())' &gt; 0" Text="Building repository references: %(RepositoryReference.AdditionalProperties)" />
+    <Message Importance="High" Condition="'@(RepositoryReference -> Count())' &gt; 0" Text="Building repository references: %(RepositoryReference.Identity)" />
 
-    <MSBuild Condition="'@(RepositoryReference -> Count())' &gt; 0" Projects="@(RepositoryReference)" BuildInParallel="true" />
+    <MSBuild Condition="'@(RepositoryReference -> Count())' &gt; 0" Projects="@(RepositoryReference -> 'repository.proj')" Properties="RepositoryName=%(RepositoryReference.Identity)" BuildInParallel="true" />
 
     <Message Importance="High" Text="Executing $(ProjectDirectory) -- $(BuildCommand)" />
+
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
