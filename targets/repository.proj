@@ -29,7 +29,9 @@
           Condition="'@(_BuiltPackages)'!=''" />
   </Target>
   
-  <Target Name="WriteVersions" 
+  <Target Name="WriteVersions"
+          Inputs="@(_BuiltPackages)"
+          Outputs="$(VersionFileLocation)"
           AfterTargets="CopyPackage" >          
     <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
                        OutputPath="$(VersionFileLocation)"

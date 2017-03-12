@@ -3,10 +3,10 @@
   <!-- This file is intended to define build phases.  It is not intended to pass build specific
        information to repos -->
   <ItemGroup>
-    <Phases Include="0;1;2;3;4;5;6;7;8;9;10;11;12" />
+    <Phases Include="0;1;2;3;4;5;6;7;8;9;10;11" />
   </ItemGroup>
   <ItemGroup>
-    <Repository Include="standard" >
+  <Repository Include="standard" >
       <BuildPhase>0</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
@@ -37,59 +37,59 @@
       <Branch>netcore1.0</Branch>
       <PathToRepo>$(PathToRoslyn)</PathToRepo>
     </Repository>
-    <Repository Include="core-setup" >
-      <BuildPhase>4</BuildPhase>
-      <Organization>dotnet</Organization>
-      <Branch>master</Branch>
-      <PathToRepo>$(PathToCoreSetup)</PathToRepo>
-    </Repository>
     <Repository Include="netcorecli-fsc" >
-      <BuildPhase>5</BuildPhase>
+      <BuildPhase>4</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToNetCoreCliFsc)</PathToRepo>
     </Repository>
     <Repository Include="sdk" >
-      <BuildPhase>6</BuildPhase>
+      <BuildPhase>5</BuildPhase>
       <Organization>karajas</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToSdk)</PathToRepo>
     </Repository>
     <Repository Include="nuget-client" >
-      <BuildPhase>7</BuildPhase>
+      <BuildPhase>6</BuildPhase>
       <Organization>nuget</Organization>
       <Branch>release-4.1.0-netstandard2.0</Branch>
       <PathToRepo>$(PathToNuGetClient)</PathToRepo>
     </Repository>
     <Repository Include="templating" >
-      <BuildPhase>8</BuildPhase>
+      <BuildPhase>7</BuildPhase>
       <Organization>karajas</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToTemplating)</PathToRepo>
     </Repository>
     <Repository Include="vstest" >
-      <BuildPhase>9</BuildPhase>
+      <BuildPhase>8</BuildPhase>
       <Organization>karajas</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToVstest)</PathToRepo>
     </Repository>
     <Repository Include="newtonsoft-json" >
-      <BuildPhase>10</BuildPhase>
+      <BuildPhase>9</BuildPhase>
       <Organization>JamesNK</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToNewtonsoftJson)</PathToRepo>
     </Repository>
-    <Repository Include="cli" >
-      <BuildPhase>11</BuildPhase>
+    <Repository Include="core-setup" >
+      <BuildPhase>10</BuildPhase>
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
-      <PathToRepo>$(PathToCli)</PathToRepo>
+      <PathToRepo>$(PathToCoreSetup)</PathToRepo>
     </Repository>
     <Repository Include="msbuild" >
-      <BuildPhase>12</BuildPhase>
+      <BuildPhase>11</BuildPhase>
       <Organization>Microsoft</Organization>
       <Branch>_packaging</Branch>
       <PathToRepo>$(PathToMSBuild)</PathToRepo>
     </Repository>
+    <Repository Include="cli" >
+      <BuildPhase>12</BuildPhase>
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
+      <PathToRepo>$(PathToCli)</PathToRepo>
+    </Repository>    
   </ItemGroup>
 </Project>
