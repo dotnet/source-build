@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <BuildCommand>$(ProjectDirectory)/cibuild$(ShellExtension) --scope Compile --target CoreCLR --host CoreCLR --build-only</BuildCommand>
+    <DotNetTool>$(ToolsDir)/dotnetcli/dotnet</DotNetTool>
+    <BuildPackagesCommand>$(DotNetTool) restore $(ProjectDirectory)\build\core-packager\packager.csproj $(CommandSeparator) $(DotNetTool) build /t:PackAll $(ProjectDirectory)\build\core-packager\packager.csproj</BuildPackagesCommand>
+    <PackagesOutput>$(ProjectDirectory)\build\core-packager\bin\$(Configuration)\</PackagesOutput>
+  </PropertyGroup>
+</Project>
