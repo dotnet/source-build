@@ -6,4 +6,8 @@
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --skip-tests</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup>   
 </Project>

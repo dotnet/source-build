@@ -5,4 +5,8 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup>   
 </Project>

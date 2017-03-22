@@ -13,4 +13,8 @@
     <CleanCommand>$(DotNetCommand) clean $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</CleanCommand>
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup> 
 </Project>

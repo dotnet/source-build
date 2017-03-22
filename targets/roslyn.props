@@ -15,4 +15,9 @@
     <BuildCommand Condition="'$(BootstrapBuildToolsDir)' != ''">$(BuildCommand) --bootstrap_cli_path $(BootstrapBuildToolsDir)/dotnetcli/</BuildCommand>
     <BuildCommand Condition="'$(BootstrapMsbuildCliDir)' != ''">$(BuildCommand) --bootstrap_msbuild_cli_path $(BootstrapMsbuildCliDir)</BuildCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup>
+
 </Project>

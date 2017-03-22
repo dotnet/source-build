@@ -6,4 +6,8 @@
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Source Include="$(ProjectDirectory)/**/*.*" />
+  </ItemGroup>   
 </Project>
