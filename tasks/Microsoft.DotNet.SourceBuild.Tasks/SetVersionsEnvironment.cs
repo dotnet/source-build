@@ -38,17 +38,21 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 if(UseWindowsConvention)
                 {
-                    cmdList.Add($"set {repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
+                    cmdList.Add($"(set {repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")})");
                 }
                 else
                 {
-                    cmdList.Add($"export {repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
+                    cmdList.Add($"{repositoryNameForEnvironmentVariable}_VERSION_URL=file://{item.GetMetadata("VersionFile")}");
                 }
 
             }
 
-            Command = String.Join(" & ", cmdList);
-            
+            Command = String.Join(UseWindowsConvention ? " & " : " ", cmdList);
+
+            if (Command != string.Empty && UseWindowsConvention)
+            {
+                Command = Command + " & ";
+            }
 
             return true;
         }
