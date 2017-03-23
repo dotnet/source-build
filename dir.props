@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildInParallel Condition="'$(BuildInParallel)'==''">true</BuildInParallel>
+    <BuildInParallel Condition="'$(BuildInParallel)'==''">false</BuildInParallel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,7 +54,13 @@
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefaultRepository>cli</DefaultRepository>
+  </PropertyGroup>
+
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
   </ItemGroup>
+
+  <Import Project="repositories.props" />
 </Project>

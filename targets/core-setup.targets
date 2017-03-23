@@ -4,8 +4,6 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
-  <Import Project="../phases.props" />
-
   <Target Name="Update" BeforeTargets="Build">
     <ItemGroup>
       <RepoVersionFiles Include="%(Repository.Identity)" Exclude="core-setup" >

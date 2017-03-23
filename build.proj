@@ -3,24 +3,15 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
 
   <Import Project="dir.props" />
-  <Import Project="phases.props" />
 
-  <Target Name="Build"
-          Inputs="%(Phases.Identity)"
-          Outputs="Build complete."
-          DependsOnTargets="PrepareOutput" >
-    <PropertyGroup>
-      <CurrentPhase>%(Phases.Identity)</CurrentPhase>
-      <_BootstrapProperties Condition="'$(BootstrapBuildToolsDir)' != ''">BootstrapBuildToolsDir=$(BootstrapBuildToolsDir)</_BootstrapProperties>
-      <_BootstrapProperties Condition="'$(BootstrapMsbuildCliDir)' != ''">$(_BootstrapProperties);BootstrapMsbuildCliDir=$(BootstrapMsbuildCliDir);</_BootstrapProperties>
-    </PropertyGroup>
+  <Target Name="Build" DependsOnTargets="PrepareOutput">
     <ItemGroup>
-      <ProjectsToBuild Include="$(TargetsDir)repository.proj" Condition="'%(Repository.BuildPhase)'=='$(CurrentPhase)'">
+      <_RootProject Include="$(ProjectDir)targets/repository.proj" Condition="'%(Repository.Identity)' == '$(DefaultRepository)'">
         <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
-      </ProjectsToBuild>
+      </_RootProject>
     </ItemGroup>
-    <MSBuild Projects="@(ProjectsToBuild)" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
-    <Message Importance="Normal" Text="Build Phase: $(CurrentPhase) Complete" />
+
+    <MSBuild Projects="@(_RootProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="PrepareOutput">
