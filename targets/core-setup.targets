@@ -6,17 +6,18 @@
 
   <Import Project="../phases.props" />
 
-  <Target Name="SetVersionsForCoreSetup" BeforeTargets="Update">
+  <Target Name="Update" BeforeTargets="Build">
     <ItemGroup>
       <RepoVersionFiles Include="%(Repository.Identity)" Exclude="core-setup" >
         <VersionFile>$(VersionFileDirectory)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</VersionFile>
       </RepoVersionFiles>
     </ItemGroup>
-    <Message Text="Setting environment with version files..." />
+
     <SetVersionsEnvironment OS="$(OS)" Repositories="@(RepoVersionFiles)">
       <Output PropertyName="SetVersionFilesCmd" TaskParameter="Command" />
     </SetVersionsEnvironment>
-    <Exec Command="$(SetVersionFilesCmd)" WorkingDirectory="$(ProjectDirectory)" />
+
+    <Exec Command="$(SetVersionFilesCmd) $(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
   <Target Name="UpdateNugetConfig" BeforeTargets="Build">
