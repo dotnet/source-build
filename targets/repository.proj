@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
 
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
-  <Target Name="BuildRepositoryReferences" Condition="'@(RepositoryReference->Count())' &gt; 0">
+  <Target Name="BuildRepositoryReferences" Condition="'@(RepositoryReference)' != ''">
     <ItemGroup>
       <_UnreferencedRepository Include="@(Repository)" Exclude="@(RepositoryReference)" />
       <_DependentRepository Include="@(Repository)" Exclude="@(_UnreferencedRepository)" />
@@ -32,9 +32,7 @@
     <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
-  <Target Name="CopyPackage"
-          Outputs="@(_BuiltPackages)"
-          AfterTargets="Package" >
+  <Target Name="CopyPackage" AfterTargets="Package" >
     <ItemGroup>
       <!-- Filter out packages for WriteVersions -->
       <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
@@ -44,10 +42,7 @@
           Condition="'@(_BuiltPackages)'!=''" />
   </Target>
 
-  <Target Name="WriteVersions"
-          Inputs="_BuiltPackages"
-          Outputs="Version file written."
-          AfterTargets="CopyPackage" >
+  <Target Name="WriteVersions" AfterTargets="CopyPackage" >
     <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
                        OutputPath="$(VersionFileLocation)"
                        Condition="'@(_BuiltPackages)'!=''" />

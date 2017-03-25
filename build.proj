@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" InitialTargets="PrepareEnvironment" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-
+<Project ToolsVersion="15.0" InitialTargets="PrepareOutput" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="dir.props" />
 
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+
   <Target Name="Build" DependsOnTargets="PrepareOutput">
+    <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
+
     <ItemGroup>
       <_RootProject Include="$(ProjectDir)targets/repository.proj" Condition="'%(Repository.Identity)' == '$(DefaultRepository)'">
         <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
@@ -26,7 +28,7 @@
     <RemoveDir Directories="$(IntermediatePath)" />
   </Target>
 
-  <Target Name="PrepareEnvironment">
+  <Target Name="WriteDynamicPropsToStaticPropsFiles">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
       <Output PropertyName="TargetRid" TaskParameter="Rid" />
     </GetHostInformation>
@@ -35,7 +37,16 @@
       <Output PropertyName="TargetOS" TaskParameter="OSName" />
     </GetHostInformation>
 
-    <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
+    <PropertyGroup>
+      <TargetInfoPropsContent>&lt;Project ToolsVersion=&quot;15.0&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetRid&gt;$(TargetRid)&lt;/TargetRid&gt;
+    &lt;TargetOS&gt;$(TargetOS)&lt;/TargetOS&gt;
+  &lt;/PropertyGroup&gt;
+&lt;/Project&gt;</TargetInfoPropsContent>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
   </Target>
 
   <Import Project="$(MSBuildThisfileDirectory)scripts/auto-update/update-submodules.targets" />

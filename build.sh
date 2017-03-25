@@ -263,9 +263,11 @@ set -x ; $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsof
 
 if [[ ${#ADDITIONALARGS[@]} -gt 0 ]]; then
   echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}"
+  set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]} /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true
   set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj ${ADDITIONALARGS[@]}
 else
   echo "$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj"
+  set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true
   set -x ; $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj
 fi
 
