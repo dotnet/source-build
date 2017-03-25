@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BuildInParallel Condition="'$(BuildInParallel)'==''">true</BuildInParallel>
+    <BuildInParallel Condition="'$(BuildInParallel)'==''">false</BuildInParallel>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -43,10 +43,12 @@
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
     <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
-
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
+    <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
   </PropertyGroup>
+
+  <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
 
   <PropertyGroup>
     <VersionFilename>Latest_Packages.txt</VersionFilename>
@@ -54,7 +56,13 @@
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DefaultRepository>core-setup</DefaultRepository>
+  </PropertyGroup>
+
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
   </ItemGroup>
+
+  <Import Project="repositories.props" />
 </Project>

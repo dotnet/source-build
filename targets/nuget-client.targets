@@ -3,7 +3,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="DiscoverProjectsForTFMs" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPublicSignToProjectJson" />
 
-  <Target Name="Build" DependsOnTargets="InstallTools;InitSubmodules">
+  <Target Name="Build" DependsOnTargets="PrintBuildMessage;InstallTools;InitSubmodules">
     <DiscoverProjectsForTFMs RootDirectory="$(NuGetCoreSourceDirectory)"
                              TFMs="@(BuildTFMs)">
       <Output TaskParameter="DiscoveredProjects"
@@ -20,6 +20,10 @@
              Properties="BuildTFM=%(BuildTFMs.Identity)" />
 
     <Exec Command="$(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(Projects.Identity) --version-suffix $(NuGetClientVersionSuffix)" />
+  </Target>
+
+  <Target Name="PrintBuildMessage">
+    <Message Text="Building '$(RepositoryName)'" Importance="High" />
   </Target>
 
   <Target Name="BuildProjectsForTFM">
