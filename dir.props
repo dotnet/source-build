@@ -20,6 +20,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <CommandSeparator Condition="'$(OS)' == 'Windows_NT'">&amp;</CommandSeparator>
+    <CommandSeparator Condition="'$(OS)' != 'Windows_NT'">%3B</CommandSeparator>
     <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
     <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
     <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
@@ -57,7 +59,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefaultRepository>core-setup</DefaultRepository>
+    <DefaultRepository>cli</DefaultRepository>
   </PropertyGroup>
 
   <ItemGroup>
