@@ -48,6 +48,7 @@
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
+    <WrapperProjectsDirectory>$(TargetsDir)wrapper-projects/</WrapperProjectsDirectory>
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
