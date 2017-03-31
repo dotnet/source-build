@@ -75,6 +75,7 @@
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
 
   <PropertyGroup>
+    <TarballName>dotnet-source-build</TarballName>
     <VersionFilename>Latest_Packages.txt</VersionFilename>
     <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>

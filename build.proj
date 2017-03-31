@@ -107,13 +107,14 @@
   </Target>
   
   <Target Name="GenerateSourceTarball">
-    <Message Text="Creating source tarball " />
-
     <PropertyGroup>
-       <CreateTarballCommand>tar -cvzf ${OUTPUT_DIR}/${PACKAGE_NAME}_${PACKAGE_VERSION}.orig.tar.gz -C $PACKAGE_SOURCE_DIR .</CreateTarballCommand>
+       <Timestamp>$([System.DateTime]::Now.ToString(MMddyyyy-mmss))</Timestamp>
+       <TarFile> $(OutputPath)/$(TarballName)_$(Timestamp).tar.gz</TarFile>
+       <CreateTarballCommand>tar -cvzf $(TarFile) $(ProjectDir) --exclude .git --exclude "*.log"</CreateTarballCommand>
     </PropertyGroup>
 
-    <Exec WorkingDirectory="$(ProjectDirectory)" Command="$(CreateTarballCommand)" />
+    <Message Importance="High" Text="Creating source tarball at $(TarFile)..." />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="$(CreateTarballCommand)" />
   </Target>
 
   <Target Name="PrepareOutput">
