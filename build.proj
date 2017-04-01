@@ -4,15 +4,6 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
 
-  
-  	<!-- Given a version of BT, do I need to download a new one or can I reuse the old one
-		 Copy it locally to each one and check for an override directory
-	-->
-    
-  <ItemGroup>
-    <RepositoryFiles Include="$(ProjectDir)/targets/*.props"/>  
-    <Repository Include="@(RepositoryFiles -> '%(Filename)')"/>  
-  </ItemGroup>
   <Target Name="CreateEmptyVersions" >
     <ItemGroup>
 	  <BuildToolsVersionCollections Remove="*" />
@@ -48,7 +39,7 @@
     </ItemGroup>
   </Target>
   
-  <Target Name="RestoreBuildToolsVersions" DependsOnTargets="CheckForSimilarVersions" Condition="!Exists('$(BaseIntermediatePath)BuildTools.sem')" >
+  <Target Name="RestoreBuildToolsVersions" DependsOnTargets="CheckForSimilarVersions" >
 	<PropertyGroup>
       <LinesForProjectGroup>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;%0a&lt;PropertyGroup&gt;%0a&lt;OutputType&gt;Exe&lt;/OutputType&gt;%0a&lt;TargetFramework&gt;netcoreapp1.0&lt;/TargetFramework&gt;%0a&lt;/PropertyGroup&gt;%0a&lt;ItemGroup&gt;&lt;PackageReference Include=&quot;Microsoft.Dotnet.BuildTools&quot; Version=&quot;</LinesForProjectGroup>
 	  <EndLinesForProject>&quot;/&gt;%0a&lt;/ItemGroup&gt;%0a&lt;/Project&gt;</EndLinesForProject>
@@ -64,9 +55,6 @@
     <!-- Can't restore multiple versions without using nuget install -->
     <Message importance="high" text="Running $(DotNetCliToolDir)dotnet restore --packages $(PackagesDir) $(BaseIntermediatePath)BuildTools-%(FilteredItems.Identity).csproj" />
     <Exec Command="$(DotNetCliToolDir)dotnet restore --packages $(PackagesDir) $(BaseIntermediatePath)BuildTools-%(FilteredItems.Identity).csproj" />
-    <WriteLinesToFile File="$(BaseIntermediatePath)BuildTools.sem"
-                      Lines="sync done"
-                      Overwrite="true" />
   </Target>
   
   <Target Name="CreatePrebuiltRepoFolders" >
