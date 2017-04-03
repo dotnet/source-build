@@ -10,4 +10,11 @@
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- TODO: Remove when corefx@addef97 is included. -->
+    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json" />
+    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\optional.json" />
+    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json.template" />
+  </ItemGroup>
 </Project>

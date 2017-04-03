@@ -7,4 +7,17 @@
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjectJsonFileBaseDir>$(ProjectDirectory)/tests/</ProjectJsonFileBaseDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      TODO: Make ProjectJsonFiles more accessible in CoreCLR to avoid duplication here.
+      Copied from tests/build.proj and rerooted. From coreclr@cb01aa8
+    -->
+    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)src\**\project.json" />
+    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)scripts\**\project.json" />
+  </ItemGroup>
 </Project>
