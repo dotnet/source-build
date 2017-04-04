@@ -2,5 +2,23 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="dir.props" />
 
+  <Target Name="CreateLatestCommitUpdateSteps"
+          BeforeTargets="VerifyDependencies;
+                         UpdateDependencies;
+                         UpdateDependenciesAndSubmitPullRequest">
+    <ItemGroup>
+      <RepositoriesNotUpdating Include="@(Repository)"
+                               Exclude="@(LatestCommitUpdateStep)" />
+      <UpdateStep Include="@(Repository)"
+                  Exclude="@(RepositoriesNotUpdating)"
+                  KeepMetadata="Branch">
+        <UpdaterType>Submodule from latest</UpdaterType>
+        <Path>$(SubmoduleDirectory)%(Identity)</Path>
+        <Repository>origin</Repository>
+        <Ref>%(Branch)</Ref>
+      </UpdateStep>
+    </ItemGroup>
+  </Target>
+
   <Import Project="$(ToolsDir)VersionTools.targets" />
 </Project>
