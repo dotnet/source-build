@@ -3,10 +3,10 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
-    <SyncCommand>$(PackagesOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; copy &quot;$(ProjectDirectory)/Tools-Override&quot; &quot;$(PreBuiltSourcesDir)$(RepositoryName)&quot; /Y</SyncCommand>
+    <SyncCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(ProjectDirectory)/init-tools$(ShellExtension)</SyncCommand>
     <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'" >$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/init-tools$(ShellExtension)</SyncCommand>
-    <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
-    <BuildCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -- $(BuildPropertyOverrides)</BuildCommand>
+    <BuildPropertyOverrides>/p:RestoreDuringBuild=false /p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
+    <BuildCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -packages -- $(BuildPropertyOverrides)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>

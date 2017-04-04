@@ -7,12 +7,12 @@
     <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
     <SyncCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; $(ProjectDirectory)Tools\msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
     <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension); $(OverridesForCommands) $(ProjectDirectory)Tools/msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
-    <BuildCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests -- $(BuildPropertyOverrides)</BuildCommand>
+    <BuildCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests skiprestoreoptdata -skiprestore -- $(BuildPropertyOverrides)</BuildCommand>
     <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
-
+  
   <PropertyGroup>
     <ProjectJsonFileBaseDir>$(ProjectDirectory)/tests/</ProjectJsonFileBaseDir>
   </PropertyGroup>

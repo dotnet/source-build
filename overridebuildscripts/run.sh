@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 working_tree_root="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-set Platform=
-toolRuntime=$TOOLRUNTIME_DIR
+toolRuntime=$working_tree_root/Tools
+[ -n $TOOLRUNTIME_DIR ] || toolRuntime=$TOOLRUNTIME_DIR
 dotnet=$toolRuntime/dotnetcli/dotnet
 echo "Running: $dotnet $toolRuntime / run.exe $working_tree_root / config.json $*"
 $dotnet $toolRuntime/run.exe $working_tree_root/config.json $*

@@ -8,6 +8,9 @@
 
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
+  
+    <Import Project="$(ProjectDirectory)dependencies.props"
+          Condition="Exists('$(ProjectDirectory)dependencies.props')" />
 
   <Import Project="$(ProjectDirectory)dependencies.props"
           Condition="Exists('$(ProjectDirectory)dependencies.props')" />
@@ -31,12 +34,6 @@
     <Copy SourceFiles="@(RepoSpecificOverrideBuildScripts)"
           DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
   </Target>
-  
-  <!-- <Target Name="ConfigureRunTool" BeforeTargets="Build" Condition="Exists('$(ProjectDirectory)/config.json')"> -->
-    <!-- <ChangeRunToolPath ConfigJson="$(ProjectDirectory)/config.json" -->
-                       <!-- ToolPath="$(PreBuiltSourcesDir)$(RepositoryName)" -->
-                       <!-- CurrentProjectPath="$(ProjectDirectory)" /> -->
-  <!-- </Target> -->
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
@@ -112,6 +109,38 @@
   <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
+  <!--
+    Update a repository that uses the BuildTools auto-update flow.
+  -->
+  <Target Name="UpdateUsingBuildTools"
+          DependsOnTargets="UpdateDependencies"
+          BeforeTargets="Build;Update"
+          Condition="'@(DependencyBuildInfo)' != ''" />
+
+  <!--
+    Mutate the UpdateDependencies items to use only local build-infos.
+  -->
+  <Target Name="AdjustUpdateDependencyItems"
+          BeforeTargets="UpdateDependencies">
+    <ItemGroup>
+      <LocalDependencyBuildInfo Include="@(DependencyBuildInfo)"
+                                KeepMetadata="BuildInfoPath"
+                                Condition="Exists('$(IntermediatePath)%(DependencyBuildInfo.BuildInfoPath)\Latest_Packages.txt')">
+        <VersionsRepoDir>$(IntermediatePath)</VersionsRepoDir>
+      </LocalDependencyBuildInfo>
+
+      <!--
+        TODO: Strengthen association between DependencyBuildInfo and UpdateStep.
+        As of writing, it is only an unenforced convention for the ItemSpec of
+        an UpdateStep to be the name of the build-info that it uses.
+      -->
+      <UpdateStepWithoutLocalBuildInfo Include="@(UpdateStep)" Exclude="@(LocalDependencyBuildInfo)" />
+      <UpdateStep Remove="@(UpdateStepWithoutLocalBuildInfo)" />
+
+      <DependencyBuildInfo Remove="@(DependencyBuildInfo)" />
+      <DependencyBuildInfo Include="@(LocalDependencyBuildInfo)" />
+    </ItemGroup>
+  </Target>
 
   <!--
     Update a repository that uses the BuildTools auto-update flow.
@@ -164,6 +193,8 @@
    <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
          DestinationFolder="$(ProjectDirectory)" />
   </Target>
+  
+   <Import Project="$(ToolsDir)VersionTools.targets" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />
 
