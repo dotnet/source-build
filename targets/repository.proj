@@ -7,6 +7,9 @@
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
+  <Import Project="$(ProjectDirectory)dependencies.props"
+          Condition="Exists('$(ProjectDirectory)dependencies.props')" />
+
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
   <Target Name="BuildRepositoryReferences" Condition="'@(RepositoryReference)' != ''">
@@ -56,7 +59,40 @@
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
- <Target Name="BootstrapBuildTools" BeforeTargets="Build"
+  <!--
+    Update a repository that uses the BuildTools auto-update flow.
+  -->
+  <Target Name="UpdateUsingBuildTools"
+          DependsOnTargets="UpdateDependencies"
+          BeforeTargets="Build;Update"
+          Condition="'@(DependencyBuildInfo)' != ''" />
+
+  <!--
+    Mutate the UpdateDependencies items to use only local build-infos.
+  -->
+  <Target Name="AdjustUpdateDependencyItems"
+          BeforeTargets="UpdateDependencies">
+    <ItemGroup>
+      <LocalDependencyBuildInfo Include="@(DependencyBuildInfo)"
+                                KeepMetadata="BuildInfoPath"
+                                Condition="Exists('$(IntermediatePath)%(DependencyBuildInfo.BuildInfoPath)\Latest_Packages.txt')">
+        <VersionsRepoDir>$(IntermediatePath)</VersionsRepoDir>
+      </LocalDependencyBuildInfo>
+
+      <!--
+        TODO: Strengthen association between DependencyBuildInfo and UpdateStep.
+        As of writing, it is only an unenforced convention for the ItemSpec of
+        an UpdateStep to be the name of the build-info that it uses.
+      -->
+      <UpdateStepWithoutLocalBuildInfo Include="@(UpdateStep)" Exclude="@(LocalDependencyBuildInfo)" />
+      <UpdateStep Remove="@(UpdateStepWithoutLocalBuildInfo)" />
+
+      <DependencyBuildInfo Remove="@(DependencyBuildInfo)" />
+      <DependencyBuildInfo Include="@(LocalDependencyBuildInfo)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="BootstrapBuildTools" BeforeTargets="Build"
          Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'">
    <PropertyGroup>
      <ProjectToolsDir>$(ProjectDirectory)Tools/</ProjectToolsDir>
@@ -74,6 +110,8 @@
    <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
          DestinationFolder="$(ProjectDirectory)" />
   </Target>
+
+  <Import Project="$(ToolsDir)VersionTools.targets" />
 
   <!--Repo targets -->
   <Import Project="$(RepositoryName).targets" Condition="Exists('$(RepositoryName).targets')"/>
