@@ -6,7 +6,7 @@
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride)</OverridesForCommands>
     <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir) </BuildPropertyOverrides>
     <SyncCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; copy &quot;$(ProjectDirectory)/Tools-Override&quot; &quot;$(PreBuiltSourcesDir)$(RepositoryName)&quot; /Y &amp; $(PreBuiltSourcesDir)$(RepositoryName)\msbuild$(ShellExtension) /t:Sync $(BuildPropertyOverrides)</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension);$(OverridesForCommands) $(ProjectDirectory)Tools\msbuild$(ShellExtension) /t:Sync /p:Configuration=$(Configuration) $(BuildPropertyOverrides)</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension);$(OverridesForCommands) $(ProjectDirectory)Tools\msbuild$(ShellExtension) /t:Sync /p:ConfigurationGroup=$(Configuration) $(BuildPropertyOverrides)</SyncCommand>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations -- /p:SkipRestoreCoreFxTools=true /p:OverridePackageSource=$(SourceBuiltPackagesPath) /p:RestorePackages=false $(BuildPropertyOverrides)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
