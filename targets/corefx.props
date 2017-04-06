@@ -2,6 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride)</OverridesForCommands>
+    <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
+    <SyncCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; copy &quot;$(ProjectDirectory)/Tools-Override&quot; &quot;$(PreBuiltSourcesDir)$(RepositoryName)&quot; /Y &amp; $(PreBuiltSourcesDir)$(RepositoryName)\msbuild$(ShellExtension) /t:Sync $(BuildPropertyOverrides)</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension);$(OverridesForCommands) $(ProjectDirectory)Tools\msbuild$(ShellExtension) /t:Sync $(BuildPropertyOverrides)</SyncCommand>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>

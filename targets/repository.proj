@@ -3,12 +3,49 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRunToolPath" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GenerateBuildScripts" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPathToNuGetConfig" />
 
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
 
   <Import Project="$(ProjectDirectory)dependencies.props"
           Condition="Exists('$(ProjectDirectory)dependencies.props')" />
+
+  <Target Name="AddPathToNuGetConfig" BeforeTargets="Sync" >
+    <AddPathToNuGetConfig NugetConfigFile="$(ProjectDirectory)/Nuget.Config"
+                            RepositoryPath="$(PackagesDir)" />
+  </Target>
+
+  <Target Name="CopyOverrideBuildScripts" BeforeTargets="Sync" >
+    <Message Importance="High" Text="Copying up build scripts for $(RepositoryName)" />
+    <ItemGroup>
+	  <RepoSpecificOverrideBuildScripts Include="$(OverrideBuildScriptsDir)$(RepositoryName)/**/*.*" />
+      <OverrideBuildScripts Include="$(OverrideBuildScriptsDir)/*.*" />
+    </ItemGroup>
+	<PropertyGroup>
+	  <ExcludeDirPattern>$([System.String]::Copy($(OverrideBuildScriptsDir)$(RepositoryName)).Replace('/', '\'))</ExcludeDirPattern>
+	</PropertyGroup>
+    <Copy SourceFiles="@(OverrideBuildScripts)"
+      DestinationFiles="@(OverrideBuildScripts -> '$(ProjectDirectory)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(RepoSpecificOverrideBuildScripts)"
+          DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
+
+  
+    <Target Name="UpdateBuildScripts" BeforeTargets="Sync" >
+    <!-- TODO: Update init-tools -->
+    <GenerateBuildScripts PathToScript="$(ProjectDirectory)/run$(ShellExtension)"
+                          ShellExtension="$(ShellExtension)" />
+  </Target>
+
+  <Target Name="ConfigureRunTool" BeforeTargets="Build" Condition="Exists('$(ProjectDirectory)/config.json')">
+    <ChangeRunToolPath ConfigJson="$(ProjectDirectory)/config.json"
+                       ToolPath="$(PreBuiltSourcesDir)$(RepositoryName)"
+                       CurrentProjectPath="$(ProjectDirectory)" />
+  </Target>
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
@@ -29,6 +66,24 @@
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+
+  <Target Name="Sync" DependsOnTargets="CopyNugetConfig;ControlPackagesSources" >
+    <Message Importance="High" Text="Executing $(ProjectDirectory)> $(SyncCommand)" />
+    <Exec Command="$(SyncCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="ControlPackagesSources">
+   <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)Nuget.config"
+                           SourceName="source-built"
+                           SourcePath="$(SourceBuiltPackagesPath)"
+                           IsOnlySource="true" 
+                           Condition="'$(IsOnlineBuild)' != 'true'" />
+  </Target>
+  
+  <Target Name="CopyNugetConfig" Condition="!Exists('$(ProjectDirectory)Nuget.config')" >
+    <Copy SourceFiles="$(BaseIntermediatePath)Nuget.config"
+          DestinationFolder="$(ProjectDirectory)" />
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">

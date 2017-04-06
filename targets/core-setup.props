@@ -2,6 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
+    <SyncCommand>$(ToolsDirOverride) $(PackagesOverride) (set DOTNET_INSTALL_DIR=$(ToolsDir)) &amp; $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build_projects/dotnet-host-build/build.sh --build-driver-only</SyncCommand>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>

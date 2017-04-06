@@ -75,12 +75,15 @@ verbose=false
 repoRoot=$(cd "$(dirname "$0")/../" ; pwd -P)
 toolsLocalPath="<auto>"
 cliLocalPath="<auto>"
+pjCliLocalPath="<auto>"
 symlinkPath="<auto>"
 sharedFxVersion="<auto>"
 force=
 forcedCliLocalPath="<none>"
+forcedPjCliLocalPath="<none>"
 architecture="<auto>"
 dotNetInstallBranch="rel/1.0.0"
+pjDotNetInstallBranch="rel/1.0.0-preview2.1"
 
 while [ $# -ne 0 ]
 do
@@ -144,6 +147,14 @@ if [ $cliLocalPath = "<auto>" ]; then
     fi
 fi
 
+if [ $pjCliLocalPath = "<auto>" ]; then
+    if [ $forcedPjCliLocalPath = "<none>" ]; then
+        pjCliLocalPath="$toolsLocalPath/pjdotnetcli"
+    else
+        pjCliLocalPath=$forcedPjCliLocalPath
+    fi
+fi
+
 if [ $symlinkPath = "<auto>" ]; then
     symlinkPath="$toolsLocalPath/dotnetcli/shared/Microsoft.NETCore.App/version"
 fi
@@ -164,6 +175,7 @@ fi
 
 initCliScript="dotnet-install.sh"
 dotnetInstallPath="$toolsLocalPath/$initCliScript"
+pjDotnetInstallPath="$toolsLocalPath/pj$initCliScript"
 
 # blow away the tools directory so we can start from a known state
 if [ -d $toolsLocalPath ]; then
@@ -191,6 +203,30 @@ if [ $forcedCliLocalPath = "<none>" ]; then
     # now execute the script
     say_verbose "installing CLI: $dotnetInstallPath --version \"$dotNetCliVersion\" --install-dir $cliLocalPath --architecture \"$architecture\""
     $dotnetInstallPath --version "$dotNetCliVersion" --install-dir $cliLocalPath --architecture "$architecture"
+    if [ $? != 0 ]; then
+        say_err "The .NET CLI installation failed with exit code $?"
+        exit $?
+    fi
+fi
+
+if [ $forcedPjCliLocalPath = "<none>" ]; then
+    check_min_reqs
+
+    # download CLI boot-strapper script
+    download "https://raw.githubusercontent.com/dotnet/cli/$pjDotNetInstallBranch/scripts/obtain/dotnet-install.sh" "$pjDotnetInstallPath"
+    chmod u+x "$pjDotnetInstallPath"
+
+    # load the version of the CLI
+    rootCliVersion="$repoRoot/.cliversion"
+    dotNetCliVersion=`cat $rootCliVersion`
+
+    if [ ! -e $pjCliLocalPath ]; then
+        mkdir -p "$pjCliLocalPath"
+    fi
+
+    # now execute the script
+    say_verbose "installing CLI: $pjDotnetInstallPath --install-dir $pjCliLocalPath --architecture \"$architecture\""
+    $pjDotnetInstallPath --install-dir $pjCliLocalPath --architecture "$architecture"
     if [ $? != 0 ]; then
         say_err "The .NET CLI installation failed with exit code $?"
         exit $?
@@ -286,6 +322,7 @@ while read v; do
 done <$rootToolVersions
 
 cp $rootToolVersions $bootstrapComplete
+DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 say "Bootstrap finished successfully."
 

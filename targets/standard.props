@@ -2,8 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration)</BuildCommand>
-    <BuildPackagesCommand></BuildPackagesCommand>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <SyncCommand>$(PackagesOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; copy &quot;$(ProjectDirectory)/Tools-Override&quot; &quot;$(PreBuiltSourcesDir)$(RepositoryName)&quot; /Y</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'" >$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/init-tools$(ShellExtension)</SyncCommand>
+    <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
+    <BuildCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -- $(BuildPropertyOverrides)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>

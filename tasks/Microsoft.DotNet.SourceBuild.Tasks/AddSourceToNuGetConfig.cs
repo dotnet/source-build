@@ -13,7 +13,7 @@ namespace Microsoft.DotNet.Build.Tasks
      * the path of the source is changed. Otherwise, the source is added as the first source in the list, after any clear
      * elements (if present).
      */
-    public class AddSourceToNuGetConfig : Task
+    public class AddSourceToNugetConfig : Task
     {
         [Required]
         public string NuGetConfigFile { get; set; }
@@ -24,10 +24,17 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string SourcePath { get; set; }
 
+        public bool IsOnlySource { get; set; }
+
         public override bool Execute()
         {
             XDocument d = XDocument.Load(NuGetConfigFile);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
+            if (IsOnlySource)
+            {
+                packageSourcesElement.RemoveAll();
+            }
+
             XElement toAdd = new XElement("add", new XAttribute("key", SourceName), new XAttribute("value", SourcePath));
 
             XElement exisitingSourceBuildElement = packageSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute(XName.Get("key")).Value == SourceName);
