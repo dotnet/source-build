@@ -23,6 +23,8 @@ namespace Microsoft.DotNet.Build.Tasks
 
         [Required]
         public string SourcePath { get; set; }
+        
+        public bool SetClearFlag { get; set; }
 
         public bool IsOnlySource { get; set; }
 
@@ -33,6 +35,10 @@ namespace Microsoft.DotNet.Build.Tasks
             if (IsOnlySource)
             {
                 packageSourcesElement.RemoveAll();
+            }
+            if(SetClearFlag)
+            {
+                packageSourcesElement.AddFirst(new XElement("clear"));
             }
 
             XElement toAdd = new XElement("add", new XAttribute("key", SourceName), new XAttribute("value", SourcePath));

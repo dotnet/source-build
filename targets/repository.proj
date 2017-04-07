@@ -4,8 +4,6 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRunToolPath" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GenerateBuildScripts" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPathToNuGetConfig" />
 
   <!--Repo specific properties -->
@@ -33,19 +31,12 @@
     <Copy SourceFiles="@(RepoSpecificOverrideBuildScripts)"
           DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
   </Target>
-
   
-    <Target Name="UpdateBuildScripts" BeforeTargets="Sync" >
-    <!-- TODO: Update init-tools -->
-    <GenerateBuildScripts PathToScript="$(ProjectDirectory)/run$(ShellExtension)"
-                          ShellExtension="$(ShellExtension)" />
-  </Target>
-
-  <Target Name="ConfigureRunTool" BeforeTargets="Build" Condition="Exists('$(ProjectDirectory)/config.json')">
-    <ChangeRunToolPath ConfigJson="$(ProjectDirectory)/config.json"
-                       ToolPath="$(PreBuiltSourcesDir)$(RepositoryName)"
-                       CurrentProjectPath="$(ProjectDirectory)" />
-  </Target>
+  <!-- <Target Name="ConfigureRunTool" BeforeTargets="Build" Condition="Exists('$(ProjectDirectory)/config.json')"> -->
+    <!-- <ChangeRunToolPath ConfigJson="$(ProjectDirectory)/config.json" -->
+                       <!-- ToolPath="$(PreBuiltSourcesDir)$(RepositoryName)" -->
+                       <!-- CurrentProjectPath="$(ProjectDirectory)" /> -->
+  <!-- </Target> -->
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
@@ -73,12 +64,20 @@
     <Exec Command="$(SyncCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
   
-  <Target Name="ControlPackagesSources">
-   <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)Nuget.config"
-                           SourceName="source-built"
-                           SourcePath="$(SourceBuiltPackagesPath)"
-                           IsOnlySource="true" 
-                           Condition="'$(IsOnlineBuild)' != 'true'" />
+  <Target Name="ControlPackagesSources" BeforeTargets="Build" >
+    <PropertyGroup>
+      <!-- casing scenarios -->
+      <NugetConfig Condition="Exists('$(ProjectDirectory)Nuget.config')">$(ProjectDirectory)Nuget.config</NugetConfig>
+      <NugetConfig Condition="Exists('$(ProjectDirectory)NuGet.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)NuGet.config</NugetConfig>
+      <NugetConfig Condition="Exists('$(ProjectDirectory)nuget.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)nuget.config</NugetConfig>
+    </PropertyGroup>
+    <Message importance="high" text="CONTROLDEBUG '$(NugetConfig)'" />
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NugetConfig)"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)"
+                            IsOnlySource="true" 
+                            SetClearFlag="true" 
+                            Condition="'$(IsOnlineBuild)' != 'true'" />
   </Target>
   
   <Target Name="CopyNugetConfig" Condition="!Exists('$(ProjectDirectory)Nuget.config')" >

@@ -13,13 +13,13 @@
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/corehost/</PackagesOutput>
     <BinariesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/packages/</BinariesOutput>
     <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
-    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
+    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(OverridesForCommands) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
   </PropertyGroup>
 
-  <ItemGroup>
-    <RepositoryReference Include="coreclr" />
-    <RepositoryReference Include="corefx" />
-    <RepositoryReference Include="roslyn" />
-    <RepositoryReference Include="standard" />
-  </ItemGroup>
+  <!-- <ItemGroup> -->
+    <!-- <RepositoryReference Include="coreclr" /> -->
+    <!-- <RepositoryReference Include="corefx" /> -->
+    <!-- <RepositoryReference Include="roslyn" /> -->
+    <!-- <RepositoryReference Include="standard" /> -->
+  <!-- </ItemGroup> -->
 </Project>

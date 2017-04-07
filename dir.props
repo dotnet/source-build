@@ -25,7 +25,7 @@
     <ToolsDirOverride>(set TOOLRUNTIME_DIR=$(PreBuiltSourcesDir)$(RepositoryName)) &amp; </ToolsDirOverride>
     <PackagesOverride>(set NUGET_PACKAGES=$(PackagesDir)) &amp; (set PACKAGES_DIR=$(PackagesDir)) &amp; </PackagesOverride>
     <DotnetInstallOverride>(set DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir)) &amp; </DotnetInstallOverride>
-    <PackagesOverride Condition="'$(TargetOS)' != 'Windows_NT'">NUGET_PACKAGES=$(PackagesDir) PACKAGES_DIR=$(PackagesDir)</PackagesOverride>
+    <PackagesOverride Condition="'$(TargetOS)' != 'Windows_NT'">PACKAGES_DIR=$(PackagesDir) NUGET_PACKAGES=$(PackagesDir)</PackagesOverride>
     <DotnetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetInstallOverride>
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
     <BuildToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">BUILD_TOOLS_TOOLSET_DIR=$(PackagesDir)/microsoft.dotnet.buildtools </BuildToolsetInstallOverride >
