@@ -4,6 +4,24 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
+  <Target Name="CopyDotnetStage0" BeforeTargets="Sync"> 
+    <ItemGroup>  
+      <DotnetStage0Files Include="$(PreBuiltPJDotnetCliDir)/**/*.*" />
+    </ItemGroup>
+    <Exec Command="uname" ConsoleToMSBuild="true" Condition="'$(OS)' != 'Windows_NT'">
+      <Output TaskParameter="ConsoleOutput" PropertyName="DotnetStage0RidLinux" />
+    </Exec>
+    <PropertyGroup>
+      <ExcludeDirPattern>$([System.String]::Copy($(PreBuiltPJDotnetCliDir)).Replace('/', '\'))</ExcludeDirPattern>
+      <BaseDotnetStage0>$(ProjectDirectory)/.dotnet_stage0/</BaseDotnetStage0>
+      <DotnetStage0RidFolder Condition="'$(OS)' != 'Windows_NT'" >$(BaseDotnetStage0)$(DotnetStage0RidLinux)</DotnetStage0RidFolder>
+      <DotnetStage0RidFolder Condition="'$(OS)' == 'Windows_NT'" >$(BaseDotnetStage0)Windows/$(Platform)</DotnetStage0RidFolder>
+    </PropertyGroup>
+    <MakeDir Directories="" Condition="!Exists('$(ProjectDirectory)/.')" />
+    <Copy SourceFiles="@(DotnetStage0Files)"
+          DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
+
   <Target Name="Update" BeforeTargets="Build">
     <ItemGroup>
       <RepoVersionFiles Include="%(Repository.Identity)" Exclude="core-setup" >
