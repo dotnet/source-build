@@ -130,49 +130,55 @@ args=($temp)
 
 # Also create an install directory for a post-PJnistic CLI 
 [ -z "$DOTNET_INSTALL_DIR" ] && export DOTNET_INSTALL_DIR=$REPOROOT/.dotnet_stage0/$ARCHITECTURE
-[ -d "$DOTNET_INSTALL_DIR" ] || mkdir -p $DOTNET_INSTALL_DIR
-sdkInstallPath = "$DOTNET_INSTALL_DIR/sdk-$sdkVersion"
+if [ -d "$DOTNET_INSTALL_DIR" ];then
+    echo "Dotnet already installed."
+else
+    mkdir -p $DOTNET_INSTALL_DIR
+    sdkInstallPath = "$DOTNET_INSTALL_DIR/sdk-$sdkVersion"
 
-# During xplat bootstrapping, disable HTTP parallelism to avoid fatal restore timeouts.
-export __INIT_TOOLS_RESTORE_ARGS="$__INIT_TOOLS_RESTORE_ARGS --disable-parallel"
+    # During xplat bootstrapping, disable HTTP parallelism to avoid fatal restore timeouts.
+    export __INIT_TOOLS_RESTORE_ARGS="$__INIT_TOOLS_RESTORE_ARGS --disable-parallel"
 
-# Enable verbose VS Test Console logging
-export VSTEST_BUILD_TRACE=1
-export VSTEST_TRACE_BUILD=1
+    # Enable verbose VS Test Console logging
+    export VSTEST_BUILD_TRACE=1
+    export VSTEST_TRACE_BUILD=1
 
-DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+    DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-if [ ! -f $sdkInstallPath/dotnet ]; then 
-    sdkInstallScriptUrl=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh
-    sdkInstallScriptPath=$REPOROOT/.dotnetsdk/dotnet_cli_install.sh
+    if [ ! -f $sdkInstallPath/dotnet ]; then 
+        sdkInstallScriptUrl=https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh
+        sdkInstallScriptPath=$REPOROOT/.dotnetsdk/dotnet_cli_install.sh
 
-    download $sdkInstallScriptUrl $sdkInstallScriptPath
-    chmod u+x $sdkInstallScriptPath
+        download $sdkInstallScriptUrl $sdkInstallScriptPath
+        chmod u+x $sdkInstallScriptPath
 
-    # now execute the script
-    echo "installing CLI: $sdkInstallScriptPath --version \"$sdkVersion\" --install-dir $DOTNET_INSTALL_DIR --architecture \"$ARCHITECTURE\""
-    $sdkInstallScriptPath --version "$sdkVersion" --install-dir $sdkInstallPath --architecture "$ARCHITECTURE"
-    if [ $? != 0 ]; then
-        echo "run-build: Error: Boot-strapping post-PJ stage0 with exit code $?." >&2
-        exit $?
+        # now execute the script
+        echo "installing CLI: $sdkInstallScriptPath --version \"$sdkVersion\" --install-dir $DOTNET_INSTALL_DIR --architecture \"$ARCHITECTURE\""
+        $sdkInstallScriptPath --version "$sdkVersion" --install-dir $sdkInstallPath --architecture "$ARCHITECTURE"
+        if [ $? != 0 ]; then
+            echo "run-build: Error: Boot-strapping post-PJ stage0 with exit code $?." >&2
+            exit $?
+        fi
     fi
-
-    # Put stage 0 on the PATH (for this shell only)
-    export PATH="$DOTNET_INSTALL_DIR:$PATH"
-
-    # Increases the file descriptors limit for this bash. It prevents an issue we were hitting during restore
-    FILE_DESCRIPTOR_LIMIT=$( ulimit -n )
-    if [ $FILE_DESCRIPTOR_LIMIT -lt 1024 ]
-    then
-        echo "Increasing file description limit to 1024"
-        ulimit -n 1024
-    fi
-
-    # Disable first run since we want to control all package sources
-    export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 fi
 
+# Put stage 0 on the PATH (for this shell only)
+export PATH="$DOTNET_INSTALL_DIR:$PATH"
+
+# Increases the file descriptors limit for this bash. It prevents an issue we were hitting during restore
+FILE_DESCRIPTOR_LIMIT=$( ulimit -n )
+if [ $FILE_DESCRIPTOR_LIMIT -lt 1024 ]
+then
+    echo "Increasing file description limit to 1024"
+    ulimit -n 1024
+fi
+
+# Disable first run since we want to control all package sources
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
 echo "${args[@]}"
+
+dotnet msbuild build.proj /m /v:diag /p:Architecture=$ARCHITECTURE /t:RestoreSrcPackages /p:NuGetPackageRoot=$NUGET_PACKAGES
 
 if [[ "$BUILD" = "0" ]]; then
   exit 0

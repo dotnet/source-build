@@ -60,7 +60,6 @@ while [[ $# > 0 ]]; do
             ;;
 	    --skip-build)
             export SKIP_BUILD=true
-            shift
             ;;
         --help)
             echo "Usage: $0 [--configuration <CONFIGURATION>] [--help]"

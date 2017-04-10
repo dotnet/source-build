@@ -8,6 +8,11 @@
   	<!-- Given a version of BT, do I need to download a new one or can I reuse the old one
 		 Copy it locally to each one and check for an override directory
 	-->
+    
+  <ItemGroup>
+    <RepositoryFiles Include="$(ProjectDir)/targets/*.props"/>  
+    <Repository Include="@(RepositoryFiles -> '%(Filename)')"/>  
+  </ItemGroup>
   <Target Name="CreateEmptyVersions" >
     <ItemGroup>
 	  <BuildToolsVersionCollections Remove="*" />
@@ -70,10 +75,15 @@
   
   <Target Name="PreparePreBuiltFolder" DependsOnTargets="RestoreBuildToolsVersions;CreatePrebuiltRepoFolders" />
   
-  <Target Name="Sync" 
+  <Target Name="Sync"  
+          Inputs="%(Repository.Identity)"
+          Outputs="test this" 
           DependsOnTargets="GenerateNugetConfig;PreparePreBuiltFolder" >
+    <PropertyGroup>
+      <CurrentRepository>%(Repository.Identity)</CurrentRepository>
+	</PropertyGroup>
     <ItemGroup>
-      <ProjectsToSync Include="$(TargetsDir)repository.proj" Condition="'%(Repository.Identity)'=='$(DefaultRepository)'">
+      <ProjectsToSync Include="$(TargetsDir)repository.proj" Condition="'%(Repository.Identity)'=='$(CurrentRepository)'">
         <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
       </ProjectsToSync>
     </ItemGroup>
@@ -94,6 +104,16 @@
     </ItemGroup>
 
     <MSBuild Projects="@(_RootProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+  
+  <Target Name="GenerateSourceTarball">
+    <Message Text="Creating source tarball " />
+
+    <PropertyGroup>
+       <CreateTarballCommand>tar -cvzf ${OUTPUT_DIR}/${PACKAGE_NAME}_${PACKAGE_VERSION}.orig.tar.gz -C $PACKAGE_SOURCE_DIR .</CreateTarballCommand>
+    </PropertyGroup>
+
+    <Exec WorkingDirectory="$(ProjectDirectory)" Command="$(CreateTarballCommand)" />
   </Target>
 
   <Target Name="PrepareOutput">

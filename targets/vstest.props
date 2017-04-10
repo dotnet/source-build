@@ -5,7 +5,7 @@
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
     <OverridesForCommands Condition="'$(TargetOS)' != 'Windows_NT'">$(PackagesOverride) TP_PACKAGES_DIR_VALUE=$(PackagesDir) $(DotnetToolsetInstallOverride) DOTNET_PATH=$(PreBuiltDotnetCliDir)/dotnet</OverridesForCommands>
     <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) (set TP_TOOLS_DIR=$(PreBuiltDotnetCliDir)) &amp; (set TP_PACKAGES_DIR=$(PackagesDir)) &amp; $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skip-build</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skipbuild</SyncCommand>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>

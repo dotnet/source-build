@@ -4,6 +4,12 @@
     <CLITargetsArgument Condition="'$(OS)' == 'Windows_NT'">'/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</CLITargetsArgument>
     <CLITargetsArgument Condition="'$(OS)' != 'Windows_NT'">'/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</CLITargetsArgument>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride>DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) </OverridesForCommands>
+    
+    <DotnetToolsetInstallOverride>DOTNET_TOOLSET_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) </OverridesForCommands>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'" >$(OverridesForCommands) $(PreBuiltDotnetCliDir)/dotnet msbuild $(ProjectDirectory)/build.proj /p:DotnetStage0=$(PreBuiltDotnetCliDir)/dotnet /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles /t:RestoreDotnetCliBuildFramework</SyncCommand>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/$(TargetRid)/packages/</PackagesOutput>
     <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>

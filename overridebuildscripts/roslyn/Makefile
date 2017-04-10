@@ -65,6 +65,11 @@ $(RESTORE_SEMAPHORE_PATH): $(TOOLSET_PATH)
 
 nuget: $(NUGET_EXE)
 
+$(NUGET_EXE): 
+    ifneq ("$(wildcard $(NUGET_EXE))","")
+    else
+        curl https://dist.nuget.org/win-x86-commandline/v$(NUGET_VERSION)/NuGet.exe -o $(NUGET_EXE) --create-dirs 
+    endif
 clean:
 	@rm -rf Binaries
 

@@ -11,6 +11,7 @@ function usage()
     echo " -loc <DISABLE_LOCALIZED_BUILD> Disable Localized builds (true,false)"
     echo " -ci <CI_BUILD>                 Declares if this is a CI_BUILD or not"
     echo " -p <PROJECT_NAME_PATTERNS>     Pattern to build specific projects"
+    echo " --skipbuild                    Skip product build"
 }
 
 CONFIGURATION="Debug"
@@ -22,14 +23,15 @@ SYNC_XLF=false
 DISABLE_LOCALIZED_BUILD=false
 CI_BUILD=false
 PROJECT_NAME_PATTERNS=
+SKIP_BUILD=false
 
 while [ $# > 0 ]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
         -h | --help)
-                    usage
-                    exit
-                    ;;
+            usage
+            exit
+            ;;
         -c)
             CONFIGURATION=$2
             ;;
@@ -51,6 +53,9 @@ while [ $# > 0 ]; do
         -p)
             PROJECT_NAME_PATTERNS=$2
             ;;
+        --skipbuild)
+            SKIP_BUILD=true
+            ;;
         *)
             break
             ;;
@@ -64,6 +69,7 @@ echo "Setup environment variables."
 TP_ROOT_DIR=$(cd "$(dirname "$0")"; pwd -P)
 TP_TOOLS_DIR="$TP_ROOT_DIR/tools"
 TP_PACKAGES_DIR="$TP_ROOT_DIR/packages"
+[[ -z $TP_PACKAGES_DIR_VALUE ]] || TP_PACKAGES_DIR=$TP_PACKAGES_DIR_VALUE
 TP_OUT_DIR="$TP_ROOT_DIR/artifacts"
 TP_PACKAGE_PROJ_DIR="$TP_ROOT_DIR/src/package/package"
 TP_PACKAGE_NUSPEC_DIR="$TP_ROOT_DIR/src/package/nuspec"
@@ -76,7 +82,6 @@ TP_SRC_DIR="$TP_ROOT_DIR/src"
 echo "Setup dotnet configuration."
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 # Dotnet build doesnt support --packages yet. See https://github.com/dotnet/cli/issues/2712
-[[ -z "$TP_PACKAGES_DIR_VALUE" ]] && export TP_PACKAGES_DIR=$TP_PACKAGES_DIR_VALUE
 export NUGET_PACKAGES=$TP_PACKAGES_DIR
 
 DOTNET_CLI_VERSION="latest"
@@ -121,7 +126,7 @@ function setdotnetpath()
 
 function restorepackage()
 {
-    echo "Restore-Package: Start restoring packages to $env:TP_PACKAGES_DIR."
+    echo "Restore-Package: Start restoring packages to $TP_PACKAGES_DIR."
     start=$SECONDS
 
     echo ".. .. Restore-Package: Source: $TPB_Solution" \
@@ -295,6 +300,10 @@ compgen -A variable | grep "TPB_"
 installdotnetcli
 setdotnetpath
 restorepackage
+if [ $SKIP_BUILD ];then
+   echo "Skipping product build..."
+   exit 0
+fi
 invokebuild
 publishpackage
 createnugetpackages

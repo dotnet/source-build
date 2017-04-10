@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride>DOTNET_TOOLSET_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) </OverridesForCommands>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'" >$(OverridesForCommands)  $(ProjectDirectory)/init-tools$(ShellExtension); $(PreBuiltDotnetCliDir)/dotnet $(ProjectDirectory)/Tools/MSBuild.exe /m /t:BulkRestoreNugetPackages /p:ToolPackagesDir=$(PackagesDir)</SyncCommand>
     <BuildCommand>$(ProjectDirectory)/cibuild$(ShellExtension) --scope Compile --target CoreCLR --host CoreCLR --build-only</BuildCommand>
     <DotNetTool>$(ToolsDir)/dotnetcli/dotnet</DotNetTool>
     <BuildPackagesCommand>$(DotNetTool) restore $(ProjectDirectory)\build\core-packager\packager.csproj $(CommandSeparator) $(DotNetTool) build /t:PackAll $(ProjectDirectory)\build\core-packager\packager.csproj</BuildPackagesCommand>

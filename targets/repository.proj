@@ -59,7 +59,7 @@
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
-  <Target Name="Sync" DependsOnTargets="CopyNugetConfig;ControlPackagesSources" >
+  <Target Name="Sync" DependsOnTargets="CopyNugetConfig;ControlPackagesSources" Condition="'$(SyncCommand)' != ''" >
     <Message Importance="High" Text="Executing $(ProjectDirectory)> $(SyncCommand)" />
     <Exec Command="$(SyncCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
