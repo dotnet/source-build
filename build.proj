@@ -20,8 +20,14 @@
 		  DependsOnTargets="CreateEmptyVersions" >
     <PropertyGroup>
 	  <CurrentRepository>%(Repository.Identity)</CurrentRepository>
-      <BuildtoolsVersionFile>$(ProjectDirectory)$(CurrentRepository)/BuildToolsVersion.txt</BuildtoolsVersionFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <BuildtoolsVersionFileSearch Include="$(ProjectDirectory)$(CurrentRepository)/**/BuildToolsVersion.txt" />
+    </ItemGroup>
+    <PropertyGroup>
+      <BuildToolsVersionFile>@(BuildtoolsVersionFileSearch)</BuildToolsVersionFile>
 	</PropertyGroup>
+    <Message importance="high" text="KARTHIKDEBUGBT '@(BuildtoolsVersionFileSearch)' '$(BuildToolsVersionFile)' " />
 	<ReadLinesFromFile File="$(BuildToolsVersionFile)" Condition="Exists('$(BuildToolsVersionFile)')" >
       <Output TaskParameter="Lines"
               ItemName="BuildToolsVersions"/>
@@ -29,6 +35,7 @@
 	<PropertyGroup>
 	  <BTVersion>@(BuildToolsVersions)</BTVersion>
 	</PropertyGroup>
+    <Message importance="high" text="KARTHIKDEBUGBTVersions '@(BuildToolsVersions)' '$(BTVersion)' " />
 	<ItemGroup>
       <BuildToolsVersionCollections Include="$(BTVersion)">
 	    <Repository>$(CurrentRepository)</Repository>
