@@ -8,3 +8,9 @@
 5. Tools/dotnetcli/dotnet Tools/dotnetcli/sdk/1.0.0/MSBuild.dll /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true
 6. Tools/dotnetcli/dotnet Tools/dotnetcli/sdk/1.0.0/MSBuild.dll /t:Sync
 7. Tools/dotnetcli/dotnet Tools/dotnetcli/sdk/1.0.0/MSBuild.dll /t:GenerateSourceTarball
+
+## Running on docker offline
+Add --net=none to docker run
+
+TO DO:
+In case sync fails for a repo, need to enable a way to reset Nuget.config

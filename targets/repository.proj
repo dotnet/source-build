@@ -68,7 +68,7 @@
       <NugetConfig Condition="Exists('$(ProjectDirectory)NuGet.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)NuGet.config</NugetConfig>
       <NugetConfig Condition="Exists('$(ProjectDirectory)nuget.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)nuget.config</NugetConfig>
     </PropertyGroup>
-    <Message importance="high" text="CONTROLDEBUG '$(NugetConfig)'" />
+    <Message importance="high" text="Updating '$(NugetConfig)' to point to only source-built packages..." />
     <AddSourceToNuGetConfig NuGetConfigFile="$(NugetConfig)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)"

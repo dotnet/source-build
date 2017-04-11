@@ -23,7 +23,6 @@
     <PropertyGroup>
       <BuildToolsVersionFile>@(BuildtoolsVersionFileSearch)</BuildToolsVersionFile>
 	</PropertyGroup>
-    <Message importance="high" text="KARTHIKDEBUGBT '@(BuildtoolsVersionFileSearch)' '$(BuildToolsVersionFile)' " />
 	<ReadLinesFromFile File="$(BuildToolsVersionFile)" Condition="Exists('$(BuildToolsVersionFile)')" >
       <Output TaskParameter="Lines"
               ItemName="BuildToolsVersions"/>
@@ -31,7 +30,6 @@
 	<PropertyGroup>
 	  <BTVersion>@(BuildToolsVersions)</BTVersion>
 	</PropertyGroup>
-    <Message importance="high" text="KARTHIKDEBUGBTVersions '@(BuildToolsVersions)' '$(BTVersion)' " />
 	<ItemGroup>
       <BuildToolsVersionCollections Include="$(BTVersion)">
 	    <Repository>$(CurrentRepository)</Repository>
@@ -39,7 +37,7 @@
     </ItemGroup>
   </Target>
   
-  <Target Name="RestoreBuildToolsVersions" DependsOnTargets="CheckForSimilarVersions" >
+  <Target Name="RestoreBuildToolsVersions" DependsOnTargets="CheckForSimilarVersions" Condition="'$(SkipBuildToolsRestore)'!='true'" >
 	<PropertyGroup>
       <LinesForProjectGroup>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;%0a&lt;PropertyGroup&gt;%0a&lt;OutputType&gt;Exe&lt;/OutputType&gt;%0a&lt;TargetFramework&gt;netcoreapp1.0&lt;/TargetFramework&gt;%0a&lt;/PropertyGroup&gt;%0a&lt;ItemGroup&gt;&lt;PackageReference Include=&quot;Microsoft.Dotnet.BuildTools&quot; Version=&quot;</LinesForProjectGroup>
 	  <EndLinesForProject>&quot;/&gt;%0a&lt;/ItemGroup&gt;%0a&lt;/Project&gt;</EndLinesForProject>
@@ -71,7 +69,7 @@
       <CurrentRepository>%(Repository.Identity)</CurrentRepository>
 	</PropertyGroup>
     <ItemGroup>
-      <ProjectsToSync Include="$(TargetsDir)repository.proj" Condition="'%(Repository.Identity)'=='$(CurrentRepository)'">
+      <ProjectsToSync Include="$(TargetsDir)repository.proj" Condition="'%(Repository.Identity)'=='$(DefaultRepository)'">
         <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
       </ProjectsToSync>
     </ItemGroup>

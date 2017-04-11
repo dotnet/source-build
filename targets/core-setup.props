@@ -2,10 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) DOTNET_PATH=$(ProjectDirectory)pkg/Tools/dotnetcli </DotnetToolsetInstallOverride>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <DotnetPathInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_PATH=$(ProjectDirectory)pkg/Tools/dotnetcli </DotnetPathInstallOverride>
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) </OverridesForCommands>
     <SyncCommand>$(ToolsDirOverride) $(PackagesOverride) (set DOTNET_INSTALL_DIR=$(ToolsDir)) &amp; $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build_projects/dotnet-host-build/build.sh --build-driver-only; $(OverridesForCommands) $(ProjectDirectory)/.dotnet_stage0/Linux/dotnet restore --infer-runtimes --disable-parallel $(ProjectDirectory)/pkg/deps; $(OverridesForCommands) "$(ProjectDirectory)/init-tools.sh"; $(OverridesForCommands) $(BuildToolsetInstallOverride) "$(ProjectDirectory)pkg/init-tools.sh" </SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(DotnetToolsetInstallOverride) $(ProjectDirectory)/build_projects/dotnet-host-build/build.sh --build-driver-only; $(OverridesForCommands) $(ProjectDirectory)/.dotnet_stage0/Linux/dotnet restore --infer-runtimes --disable-parallel $(ProjectDirectory)/pkg/deps; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) "$(ProjectDirectory)/init-tools.sh"; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) $(BuildToolsetInstallOverride) "$(ProjectDirectory)pkg/init-tools.sh" </SyncCommand>
     <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build --skiptests $(BuildPropertyOverrides)</BuildCommand>
@@ -17,10 +18,10 @@
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
   </PropertyGroup>
 
-  <!-- <ItemGroup> -->
-    <!-- <RepositoryReference Include="coreclr" /> -->
-    <!-- <RepositoryReference Include="corefx" /> -->
-    <!-- <RepositoryReference Include="roslyn" /> -->
-    <!-- <RepositoryReference Include="standard" /> -->
-  <!-- </ItemGroup> -->
+  <ItemGroup>
+    <RepositoryReference Include="coreclr" />
+    <RepositoryReference Include="corefx" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="standard" />
+  </ItemGroup>
 </Project>

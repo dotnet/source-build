@@ -6,8 +6,7 @@
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
     <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) $(ProjectDirectory)build$(ShellExtension) -SkipBuild</SyncCommand>
     <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) --nobuild</SyncCommand>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) /t:Package</BuildCommand>
-    <BuildPackagesCommand></BuildPackagesCommand>
+    <BuildCommand>$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) /t:Package</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/nupkgs/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
