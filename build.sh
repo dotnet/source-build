@@ -254,7 +254,7 @@ SDKPATH="$CLIPATH/sdk/$SDKVERSION"
 
 echo "SDKPATH: $SDKPATH"
 
-[ -z "$NUGET_PACKAGES" ] && export NUGET_PACKAGES="$SCRIPT_ROOT/prebuilt/packages"
+export NUGET_PACKAGES="$SCRIPT_ROOT/prebuilt/packages"
 
 # Main build loop
 echo "$CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj"

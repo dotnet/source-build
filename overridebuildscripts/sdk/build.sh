@@ -100,6 +100,9 @@ fi
 # Put stage 0 on the PATH
 export PATH="$DOTNET_INSTALL_DIR:$PATH"
 
+#restore
+dotnet msbuild $REPOROOT/build/build.proj /t:RestorePackages /m:1 /nologo /p:Configuration=$CONFIGURATION /p:Platform="$PLATFORM" "${args[@]}"
+
 if [[ "$SKIP_BUILD" = true ]]; then
   exit 0
 fi

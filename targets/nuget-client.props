@@ -2,14 +2,16 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltPjDotnetCliDir) </DotnetToolsetInstallOverride>
-    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
-    <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) (set NUGET_EXE=$(PreBuiltSourcesDir)$(RepositoryName)/nuget.exe) &amp; powershell $(ProjectDirectory)/configure.ps1 -v</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skip-build</SyncCommand>
+    <DotnetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltPjDotnetCliDir) </DotnetInstallOverride>
+    <DotnetTestInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">TEST_DOTNET_INSTALL_DIR=$(PreBuiltPjDotnetCliDir) </DotnetTestInstallOverride>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPjDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetInstallOverride) $(DotnetTestInstallOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
+    <SyncCommand>$(OverridesForCommands) (set NUGET_EXE=$(PreBuiltSourcesDir)$(RepositoryName)/nuget.exe) &amp; powershell $(ProjectDirectory)/configure.ps1 -v</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skip-build; $(OverridesForCommands) $(PreBuiltPjDotnetCliDir)/dotnet restore </SyncCommand>
     <PackagesOutput>$(ProjectDirectory)Nupkgs/</PackagesOutput>
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
-    <DotNetCommand>$(ToolsDirectory)dotnet</DotNetCommand>
+    <DotNetCommand>$(PreBuiltPjDotnetCliDir)/dotnet</DotNetCommand>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
     <NuGetClientVersionSuffix>beta-2321</NuGetClientVersionSuffix>
   </PropertyGroup>

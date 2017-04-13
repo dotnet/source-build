@@ -5,9 +5,10 @@
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
     <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) $(ProjectDirectory)build$(ShellExtension) -SkipBuild</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) --skip-build</SyncCommand>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -SkipTests</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --skip-tests</BuildCommand>
+    <BuildArgs>/p:NuGet_Packages=$(PackagesDir)</BuildArgs>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) --skip-build $(BuildArgs)</SyncCommand>
+    <BuildCommand>$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -SkipTests</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --skip-tests $(BuildArgs)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>
 </Project>
