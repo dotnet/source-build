@@ -6,26 +6,24 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateProjectJsonFrameworkDependencyVersions"  />
 
-  <Target Name="UpdateExternalDependencies" BeforeTargets="Build">
-    <PropertyGroup>
-      <CoreClrTemplateFile>$(ProjectDirectory)external/runtime/project.json.template</CoreClrTemplateFile>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Update framework dependency versions in $(CoreClrTemplateFile)" />
-    <Message Importance="High" Text="Packages: @(SourceBuiltPackage)" />
-    <UpdateProjectJsonFrameworkDependencyVersions ProjectJsonFiles="$(CoreClrTemplateFile)"
-                                                  NuGetPackages="@(SourceBuiltPackage)" />
-  </Target>
-
-  <Target Name="UpdateRuntimeGraph" 
+  <Target Name="UpdateRuntimeGraph"
           BeforeTargets="Build"
           Condition="'$(_IsBootstrapping)' == 'true'">
     <PropertyGroup>
-      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>    
+      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>
     </PropertyGroup>
 
     <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
                          Rid="$(TargetRid)-$(Platform)" />
-  </Target>  
+  </Target>
+
+  <Target Name="PatchSources"
+          BeforeTargets="Build">
+
+    <Exec Command="git apply $(PatchesDir)corefx/crossgen-ni-fix.patch"
+          WorkingDirectory="$(ProjectDirectory)"
+          IgnoreExitCode="true"
+          IgnoreStandardErrorWarningFormat="true" />
+  </Target>
 </Project>

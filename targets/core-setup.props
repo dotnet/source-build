@@ -13,6 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="roslyn" />

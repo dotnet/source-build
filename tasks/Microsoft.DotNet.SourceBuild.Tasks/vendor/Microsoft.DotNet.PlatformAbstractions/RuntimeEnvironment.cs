@@ -78,10 +78,10 @@ namespace Microsoft.DotNet.PlatformAbstractions
                     return "81";
                 }
             }
-            else if (ver.Major == 10 && ver.Minor == 0)
+            else if (ver.Major >= 10)
             {
-                // Not sure if there will be  10.x (where x > 0) or even 11, so let's be defensive.
-                return "10";
+                // Return the major version for use in RID computation without applying any cap.
+                return ver.Major.ToString();
             }
             return string.Empty; // Unknown version
         }

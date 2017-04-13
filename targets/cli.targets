@@ -7,4 +7,14 @@
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
+
+  <Target Name="CopyTarBall" AfterTargets="CopyPackage">
+    <ItemGroup>
+      <CliTarBalls Include="$(TarBallOutput)*$(TarBallExtension)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CliTarBalls)"
+          DestinationFolder="$(SourceBuiltTarBallPath)"
+          Condition="'@(CliTarBalls)'!=''" />
+  </Target>
 </Project>

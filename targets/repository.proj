@@ -28,11 +28,11 @@
 
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
-    <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
+    <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
-    <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" />
+    <Exec Command="$(BuildPackagesCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="CopyPackage" AfterTargets="Package" >
@@ -52,11 +52,11 @@
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
-    <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" />
+    <Exec Command="$(CleanCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
-    <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
+    <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <!--
