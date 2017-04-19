@@ -59,7 +59,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 packageSourcesElement.AddFirst(toAdd);
             }
 
-            using (FileStream fs = new FileStream(NuGetConfigFile, FileMode.Create, FileAccess.ReadWrite))
+            using (FileStream fs = new FileStream(NuGetConfigFile, FileMode.Create, FileAccess.Write))
             {
                 d.Save(fs);
             }

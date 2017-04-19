@@ -17,6 +17,7 @@ OLDPATH="$PATH"
 
 REPOROOT="$DIR/../.."
 source "$REPOROOT/scripts/common/_prettyprint.sh"
+SKIP_RESTORE=false
 
 __BuildDriverOnly=0
 
@@ -102,6 +103,9 @@ while [[ $# > 0 ]]; do
         --verbose)
             export DOTNET_BUILD_VERBOSE=1
             ;;
+        --skip-restore)
+            export SKIP_RESTORE=true
+            ;;
         --help)
             echo "Usage: $0 [--configuration <CONFIGURATION>] [--skip-prereqs] [--nopackage] [--docker <IMAGENAME>] [--help] [--targets <TARGETS...>]"
             echo ""
@@ -159,16 +163,20 @@ fi
 # Disable first run since we want to control all package sources
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-# Restore the build scripts
-echo "Restoring Build Script projects..."
-(
-    cd "$DIR/.."
-    dotnet restore --infer-runtimes --disable-parallel
-)
+if [ ! -e $DIR/bin/dotnet-host-build ];then 
+    if [ ! "$SKIP_RESTORE"==true ];then 
+        # Restore the build scripts
+        echo "Restoring Build Script projects..."
+        (
+            cd "$DIR/.."
+            dotnet restore --infer-runtimes --disable-parallel
+        )
+    fi
 
-# Build the builder
-echo "Compiling Build Scripts..."
-dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.0
+    # Build the builder
+    echo "Compiling Build Scripts..."
+    dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.1
+fi
 
 if [ $__BuildDriverOnly == 1 ]; then
     echo "Skipping invoking build scripts."

@@ -25,6 +25,7 @@ __project_dir="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 __packages_dir=$__project_dir/packages
 __dotnet_path="$__project_dir/Tools/dotnetcli/"
 __distro_rid=
+SKIP_RESTORE=false
 
 while [ "$1" != "" ]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
@@ -36,6 +37,9 @@ while [ "$1" != "" ]; do
         --rid)
             shift
             __distro_rid=$1
+            ;;
+        --skiprestore)
+            SKIP_RESTORE=true
             ;;
         --skiptests)
             SKIP_TESTS=true
@@ -53,8 +57,10 @@ done
 # setup msbuild
 "$__project_dir/init-tools.sh"
 
-# acquire dependencies
-$__dotnet_path/dotnet restore "$__project_dir/deps" --configfile "$__project_dir/../NuGet.Config" --disable-parallel --packages "$__packages_dir"
+if [ "$SKIP_RESTORE"!=true ];then 
+    # acquire dependencies
+    $__dotnet_path/dotnet restore "$__project_dir/deps" --configfile "$__project_dir/../NuGet.Config" --disable-parallel --packages "$__packages_dir"
+fi
 
 # cleanup existing packages
 rm -rf $__project_dir/bin
@@ -75,8 +81,8 @@ fi
 
 __common_parameters="/p:$__targets_param /p:DistroRid=$__distro_rid /verbosity:minimal"
 
-if [ SKIP_TESTS ]; then __common_parameters+=" /t:Build"; fi
-if [ -n NUGET_PACKAGES ]; then __common_parameters+=" /p:PackagesDir=$NUGET_PACKAGES"; fi
+if [ $SKIP_TESTS ]; then __common_parameters+=" /t:Build"; fi
+if [ ! -z $NUGET_PACKAGES ]; then __common_parameters+=" /p:PackagesDir=$NUGET_PACKAGES"; fi
 
 $__msbuild $__project_dir/tasks/core-setup.tasks.builds $__common_parameters || exit 1
 

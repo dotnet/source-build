@@ -62,11 +62,12 @@
   </Target>
   
   <Target Name="ControlPackagesSources" BeforeTargets="Build" >
+    <ItemGroup>
+      <ProjectDirectoryFiles Include="$(ProjectDirectory)/*.*" />
+      <PotentialConfigFiles Include="%(ProjectDirectoryFiles.Identity)" Condition="$([System.String]::Copy('%(ProjectDirectoryFiles.Identity)').ToLower().Contains('nuget.config'))" />
+    </ItemGroup>
     <PropertyGroup>
-      <!-- casing scenarios -->
-      <NugetConfig Condition="Exists('$(ProjectDirectory)Nuget.config')">$(ProjectDirectory)Nuget.config</NugetConfig>
-      <NugetConfig Condition="Exists('$(ProjectDirectory)NuGet.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)NuGet.config</NugetConfig>
-      <NugetConfig Condition="Exists('$(ProjectDirectory)nuget.config') AND '$(NugetConfig)'==''">$(ProjectDirectory)nuget.config</NugetConfig>
+      <NugetConfig Condition="'@(PotentialConfigFiles)'!=''">@(PotentialConfigFiles)</NugetConfig>
     </PropertyGroup>
     <Message importance="high" text="Updating '$(NugetConfig)' to point to only source-built packages..." />
     <AddSourceToNuGetConfig NuGetConfigFile="$(NugetConfig)"

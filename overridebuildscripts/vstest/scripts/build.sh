@@ -12,6 +12,7 @@ function usage()
     echo " -ci <CI_BUILD>                 Declares if this is a CI_BUILD or not"
     echo " -p <PROJECT_NAME_PATTERNS>     Pattern to build specific projects"
     echo " --skipbuild                    Skip product build"
+    echo " --skiprestore                    Skip product restore"
 }
 
 CONFIGURATION="Debug"
@@ -24,6 +25,7 @@ DISABLE_LOCALIZED_BUILD=false
 CI_BUILD=false
 PROJECT_NAME_PATTERNS=
 SKIP_BUILD=false
+SKIP_RESTORE=false
 
 while [ $# > 0 ]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
@@ -34,27 +36,38 @@ while [ $# > 0 ]; do
             ;;
         -c)
             CONFIGURATION=$2
+            echo INSIE
+            shift
             ;;
         -r)
             TARGET_RUNTIME=$2
+            shift
             ;;
         -v)
             VERSION=$2
+            shift
             ;;
         -vs)
             VERSION_SUFFIX=$2
+            shift
             ;;
         -loc)
             DISABLE_LOCALIZED_BUILD=$2
+            shift
             ;;
         -ci)
             CI_BUILD=$2
+            shift
             ;;
         -p)
             PROJECT_NAME_PATTERNS=$2
+            shift
             ;;
-        --skipbuild)
+        -sb | --skipbuild)
             SKIP_BUILD=true
+            ;;
+        -sr | --skiprestore)
+            SKIP_RESTORE=true
             ;;
         *)
             break
@@ -62,6 +75,7 @@ while [ $# > 0 ]; do
    esac
    shift
 done
+
 #
 # Variables
 #
@@ -256,11 +270,6 @@ function createnugetpackages()
     packageOutputDir="$TP_OUT_DIR/$TPB_Configuration/packages"
     mkdir -p $packageOutputDir
 
-    DOTNET_PATH="$TP_TOOLS_DIR/dotnet/dotnet"
-    if [[ ! -e $DOTNET_PATH ]]; then
-        echo "dotnet not found at $DOTNET_PATH. Did the dotnet cli installation succeed?"
-    fi
-
     nuspecFiles=("TestPlatform.TranslationLayer.nuspec" "TestPlatform.ObjectModel.nuspec" "TestPlatform.TestHost.nuspec" "TestPlatform.nuspec" "TestPlatform.CLI.nuspec" "TestPlatform.Build.nuspec" "Microsoft.NET.Test.Sdk.nuspec")
     projectFiles=("Microsoft.TestPlatform.CLI.csproj" "Microsoft.TestPlatform.Build.csproj")
     binDir="$TP_ROOT_DIR/bin/packages"
@@ -298,9 +307,13 @@ echo "Test platform build variables: "
 compgen -A variable | grep "TPB_"
 
 installdotnetcli
-setdotnetpath
-restorepackage
-if [ $SKIP_BUILD ];then
+setdotnetpath 
+if [ "$SKIP_RESTORE" = true ];then
+  echo "Restore already complete..."
+else
+  restorepackage
+fi
+if [ "$SKIP_BUILD" = true ];then
    echo "Skipping product build..."
    exit 0
 fi

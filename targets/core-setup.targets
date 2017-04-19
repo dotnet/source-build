@@ -3,6 +3,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
 
   <Target Name="CopyDotnetStage0" BeforeTargets="Sync"> 
     <ItemGroup>  
@@ -20,6 +21,16 @@
     <MakeDir Directories="" Condition="!Exists('$(ProjectDirectory)/.')" />
     <Copy SourceFiles="@(DotnetStage0Files)"
           DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
+
+  <Target Name="GetRuntimeDependencies" BeforeTargets="Sync" >
+   <ItemGroup>
+      <CoreSetupProjectJson Include="$(ProjectDirectory)/project.json" />
+   </ItemGroup>
+   <Message Importance="high" text="CHANGING RUNTIME '@(CoreSetupProjectJson)' '$(TargetRid)'"/>
+        <ChangeRuntimesSection ProjectJsonFiles="@(CoreSetupProjectJson)"
+                           ReplacementRuntimeId="$(TargetRid)"
+                           Condition="'$(TargetOS)' == 'Linux'" />
   </Target>
 
   <Target Name="Update" BeforeTargets="Build">

@@ -71,17 +71,21 @@ fi
 # Disable first run since we want to control all package sources
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
-# Restore the build scripts
-echo "Restoring Build Script projects..."
-(
-    pushd "$DIR/.."
-    dotnet restore --infer-runtimes --disable-parallel
-    popd
-)
+if [ ! -e $DIR/bin/update-dependencies ]; then
+    # Restore the build scripts
+    # echo "Restoring Build Script projects..."
+    # (
+        # pushd "$DIR/.."
+        # echo dotnet restore --infer-runtimes --disable-parallel
+        # dotnet restore --infer-runtimes --disable-parallel
+        # popd
+    # )
 
-# Build the builder
-echo "Compiling Build Scripts..."
-dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.0
+    # Build the builder
+    echo "Compiling Build Scripts..."
+    echo dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.0
+    dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.0
+fi
 
 export PATH="$OLDPATH"
 # Run the builder

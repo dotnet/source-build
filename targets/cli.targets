@@ -7,4 +7,10 @@
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
+  
+  <Target Name="Update">
+    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
 </Project>

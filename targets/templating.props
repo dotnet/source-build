@@ -6,8 +6,8 @@
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
     <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
     <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skip-build</SyncCommand>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Runtime $(TargetRid)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
+    <BuildCommand>$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Runtime $(TargetRid)</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
   </PropertyGroup>
 </Project>
