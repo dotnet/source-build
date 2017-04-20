@@ -57,7 +57,7 @@ done
 # setup msbuild
 "$__project_dir/init-tools.sh"
 
-if [ "$SKIP_RESTORE"!=true ];then 
+if [ ! "$SKIP_RESTORE"==true ];then 
     # acquire dependencies
     $__dotnet_path/dotnet restore "$__project_dir/deps" --configfile "$__project_dir/../NuGet.Config" --disable-parallel --packages "$__packages_dir"
 fi

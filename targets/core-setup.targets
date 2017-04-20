@@ -4,6 +4,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveDependencies" />
 
   <Target Name="CopyDotnetStage0" BeforeTargets="Sync"> 
     <ItemGroup>  
@@ -26,11 +27,24 @@
   <Target Name="GetRuntimeDependencies" BeforeTargets="Sync" >
    <ItemGroup>
       <CoreSetupProjectJson Include="$(ProjectDirectory)/project.json" />
+      <CoreSetupProjectJson Include="$(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/project.json" />
    </ItemGroup>
    <Message Importance="high" text="CHANGING RUNTIME '@(CoreSetupProjectJson)' '$(TargetRid)'"/>
         <ChangeRuntimesSection ProjectJsonFiles="@(CoreSetupProjectJson)"
                            ReplacementRuntimeId="$(TargetRid)"
                            Condition="'$(TargetOS)' == 'Linux'" />
+  </Target>
+  
+  <Target Name="RemoveDependenciesThatDontRestore" BeforeTargets="Build">
+    <ItemGroup>
+      <DependenciesToRemove Include="Microsoft.DiaSymReader.Native" />
+    </ItemGroup>
+    <PropertyGroup>
+      <ProjectJsonToModify>$(ProjectDirectory)/pkg/projects/Microsoft.NETCore.App/project.json.template</ProjectJsonToModify>
+    </PropertyGroup>
+    <RemoveDependencies DependenciesToRemove="@(DependenciesToRemove)"
+                        ProjectJsonFile="$(ProjectJsonToModify)" 
+                        Condition="'$(TargetOS)' == 'Linux'" />
   </Target>
 
   <Target Name="Update" BeforeTargets="Build">
