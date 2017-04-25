@@ -12,7 +12,7 @@
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
-  <Target Name="BuildRepositoryReferences" Condition="'@(RepositoryReference)' != ''">
+  <Target Name="BuildRepositoryReferences" Condition="'@(RepositoryReference)' != '' and '$(BuildDependentRepositories)' != 'false'">
     <ItemGroup>
       <_UnreferencedRepository Include="@(Repository)" Exclude="@(RepositoryReference)" />
       <_DependentRepository Include="@(Repository)" Exclude="@(_UnreferencedRepository)" />
