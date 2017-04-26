@@ -14,17 +14,17 @@
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) SOURCE_BUILT_NUGET_PACKAGES=$(SourceBuiltPackagesPath) DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
   </PropertyGroup>
 
-  <!-- <ItemGroup> -->
-    <!-- <RepositoryReference Include="application-insights" /> -->
-    <!-- <RepositoryReference Include="core-setup" /> -->
-    <!-- <RepositoryReference Include="msbuild" /> -->
-    <!-- <RepositoryReference Include="netcorecli-fsc" /> -->
-    <!-- <RepositoryReference Include="newtonsoft-json" /> -->
-    <!-- <RepositoryReference Include="nuget-client" /> -->
-    <!-- <RepositoryReference Include="roslyn" /> -->
-    <!-- <RepositoryReference Include="sdk" /> -->
-    <!-- <RepositoryReference Include="templating" /> -->
-    <!-- <RepositoryReference Include="vstest" /> -->
-    <!-- <RepositoryReference Include="websdk" /> -->
-  <!-- </ItemGroup> -->
+  <ItemGroup>
+    <RepositoryReference Include="application-insights" />
+    <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="msbuild" />
+    <RepositoryReference Include="netcorecli-fsc" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="sdk" />
+    <RepositoryReference Include="templating" />
+    <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="websdk" />
+  </ItemGroup>
 </Project>

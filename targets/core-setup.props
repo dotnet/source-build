@@ -2,26 +2,31 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride>(set DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir)) &amp; </DotnetToolsetInstallOverride>
+    <DotnetPathInstallOverride>(DOTNET_PATH=$(ProjectDirectory)pkg/Tools/dotnetcli) &amp; </DotnetPathInstallOverride>
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
     <DotnetPathInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_PATH=$(ProjectDirectory)pkg/Tools/dotnetcli </DotnetPathInstallOverride>
-    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) PKG_NUGET_PACKAGES=$(PackagesDir)</OverridesForCommands>
-    <SyncCommand>$(ToolsDirOverride) $(PackagesOverride) (set DOTNET_INSTALL_DIR=$(ToolsDir)) &amp; $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
-    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(DotnetToolsetInstallOverride) $(ProjectDirectory)/build_projects/dotnet-host-build/build.sh --build-driver-only; $(OverridesForCommands) $(ProjectDirectory)/.dotnet_stage0/Linux/dotnet restore --infer-runtimes --disable-parallel $(ProjectDirectory)/pkg/deps; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) "$(ProjectDirectory)/init-tools.sh"; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) $(BuildToolsetInstallOverride) "$(ProjectDirectory)pkg/init-tools.sh" ; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --infer-runtimes "$(ProjectDirectory)/build_projects/"; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --infer-runtimes "$(ProjectDirectory)/setuptools/";  $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --infer-runtimes "$(ProjectDirectory)/pkg/deps/"; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --disable-parallel $(ProjectDirectory)/setuptools/dotnet-deb-tool/; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --disable-parallel $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --disable-parallel $(ProjectDirectory)/pkg/tasks/; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --disable-parallel $(ProjectDirectory)/project.json; $(OverridesForCommands) $(PreBuiltPJDotnetCliDir)/dotnet restore --disable-parallel $(ProjectDirectory)/src/Microsoft.Extensions.DependencyModel/project.json</SyncCommand>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) (set PKG_NUGET_PACKAGES=$(PackagesDir)) &amp; </OverridesForCommands>
+    <OverridesForCommands Condition="'$(TargetOS)' != 'Windows_NT'">$(PackagesOverride) $(DotnetToolsetInstallOverride) PKG_NUGET_PACKAGES=$(PackagesDir)</OverridesForCommands>
+    <DotnetCommand>$(ProjectDirectory)/.dotnet_stage0/Windows/dotnet.exe</DotnetCommand>
+    <DotnetCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(ProjectDirectory)/.dotnet_stage0/Linux/dotnet</DotnetCommand>
+    <SyncCommand>$(OverridesForCommands) $(DotnetToolsetInstallOverride) powershell.exe $(ProjectDirectory)/build_projects/dotnet-host-build/build.ps1 -SkipBuild &amp; $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes --disable-parallel $(ProjectDirectory)/pkg/deps &amp; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) "$(ProjectDirectory)/init-tools.cmd" &amp; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) $(BuildToolsetInstallOverride) "$(ProjectDirectory)pkg/init-tools.cmd" &amp; $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/build_projects/" &amp; $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/setuptools/" &amp;  $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/pkg/deps/" &amp; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/setuptools/dotnet-deb-tool/ &amp; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/ &amp; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/pkg/tasks/ &amp; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/project.json &amp; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/src/Microsoft.Extensions.DependencyModel/project.json</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(DotnetToolsetInstallOverride) $(ProjectDirectory)/build_projects/dotnet-host-build/build.sh --build-driver-only; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) "$(ProjectDirectory)/init-tools.sh"; $(OverridesForCommands) $(DotnetToolsetInstallOverride) $(DotnetPathInstallOverride) $(BuildToolsetInstallOverride) "$(ProjectDirectory)pkg/init-tools.sh" ; $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/build_projects/"; $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/setuptools/";  $(OverridesForCommands) $(DotnetCommand) restore --infer-runtimes "$(ProjectDirectory)/pkg/deps/"; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/setuptools/dotnet-deb-tool/; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/pkg/tasks/; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/project.json; $(OverridesForCommands) $(DotnetCommand) restore --disable-parallel $(ProjectDirectory)/src/Microsoft.Extensions.DependencyModel/project.json</SyncCommand>
     <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
     <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) SKIP_RESTORE=true SKIP_TEST=true $(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build --skip-restore --skiptests $(BuildPropertyOverrides)</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
+    <BuildPackagesCommand>$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
     <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) SKIP_RESTORE=true $(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build --skip-restore</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/corehost/</PackagesOutput>
     <BinariesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/packages/</BinariesOutput>
-    <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
+    <UpdateCommand>$(OverridesForCommands) powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles --skip-restore</UpdateCommand>
   </PropertyGroup>
 
-  <!-- <ItemGroup> -->
-    <!-- <RepositoryReference Include="coreclr" /> -->
-    <!-- <RepositoryReference Include="corefx" /> -->
-    <!-- <RepositoryReference Include="roslyn" /> -->
-    <!-- <RepositoryReference Include="standard" /> -->
-  <!-- </ItemGroup> -->
+  <ItemGroup>
+    <RepositoryReference Include="coreclr" />
+    <RepositoryReference Include="corefx" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="standard" />
+  </ItemGroup>
 </Project>

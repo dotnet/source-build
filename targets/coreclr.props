@@ -2,10 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
+    <DotnetToolsetInstallOverride>(set DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir)) &amp; </DotnetToolsetInstallOverride>
     <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
     <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride)</OverridesForCommands>
     <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
-    <SyncCommand>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; $(ProjectDirectory)Tools\msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
+    <SyncCommand>$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; $(ProjectDirectory)Tools\msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
     <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension); $(OverridesForCommands) $(ProjectDirectory)Tools/msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
     <BuildCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests skiprestoreoptdata -skiprestore -- $(BuildPropertyOverrides)</BuildCommand>
     <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
