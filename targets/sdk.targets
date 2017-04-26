@@ -10,38 +10,38 @@
     <Dependencies Include="nuget-client" />
   </ItemGroup>
   
-  <Target Name="UpdateExternalDependencies" BeforeTargets="Build" Inputs="%(Dependencies.Identity)" Outputs="Updated dependencies." >
-    <PropertyGroup >
-      <NugetVersionString>NuGetVersion</NugetVersionString>
-      <DependencyFile>$(ProjectDirectory)/build/DependencyVersions.props</DependencyFile>
-      <CurrentDependency>%(Dependencies.Identity)</CurrentDependency>
-      <LatestPackages Condition="'%(Repository.Identity)'=='$(CurrentDependency)'" >$(LocalBuildInfoRoot)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</LatestPackages>
-    </PropertyGroup>
-    <ReadLinesFromFile File="$(LatestPackages)" Condition="Exists('$(LatestPackages)')" >
-      <Output TaskParameter="Lines"
-              ItemName="UpdatedNugetVersionLines"/>
-    </ReadLinesFromFile>
-    <PropertyGroup>
-      <UpdatedNugetVersionLinesString>@(UpdatedNugetVersionLines)</UpdatedNugetVersionLinesString>
-	  <UpdatedNugetVersion>$([System.String]::Copy('$(UpdatedNugetVersionLinesString)').Split(';')[0].Split(' ')[1])</UpdatedNugetVersion>
-	</PropertyGroup>
-    <Message Importance="High" Text="Updating sdk dependency versions in $(DependencyFile)" />
-    <ReadLinesFromFile File="$(DependencyFile)" Condition="Exists('$(DependencyFile)')" >
-      <Output TaskParameter="Lines"
-              ItemName="DependenciesLines"/>
-    </ReadLinesFromFile>
-    <ItemGroup>
-      <NugetVersionLine Include="%(DependenciesLines.Identity)" Condition="$([System.String]::Copy('%(DependenciesLines.Identity)').Contains($(NugetVersionString)))" />
-    </ItemGroup>
-    <PropertyGroup>
-      <DependenciesLinesString>@(DependenciesLines)</DependenciesLinesString>
-      <CurrentNugetVersionLine>@(NugetVersionLine)</CurrentNugetVersionLine>
-      <UpdatedNugetVersionLine>&lt;$(NugetVersionString)&gt;$(UpdatedNugetVersion)&lt;/$(NugetVersionString)&gt;</UpdatedNugetVersionLine>
-      <NewDependenciesLines>$(DependenciesLinesString.Replace($(CurrentNugetVersionLine), $(UpdatedNugetVersionLine)).Replace('>;','>%0A'))</NewDependenciesLines>
-    </PropertyGroup>
-    <WriteLinesToFile  
-        File="$(DependencyFile)"  
-        Lines="$(NewDependenciesLines)"  
-        Overwrite="true" />  
-  </Target>
+  <!-- <Target Name="UpdateExternalDependencies" BeforeTargets="Build" Inputs="%(Dependencies.Identity)" Outputs="Updated dependencies." > -->
+    <!-- <PropertyGroup > -->
+      <!-- <NugetVersionString>NuGetVersion</NugetVersionString> -->
+      <!-- <DependencyFile>$(ProjectDirectory)/build/DependencyVersions.props</DependencyFile> -->
+      <!-- <CurrentDependency>%(Dependencies.Identity)</CurrentDependency> -->
+      <!-- <LatestPackages Condition="'%(Repository.Identity)'=='$(CurrentDependency)'" >$(LocalBuildInfoRoot)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</LatestPackages> -->
+    <!-- </PropertyGroup> -->
+    <!-- <ReadLinesFromFile File="$(LatestPackages)" Condition="Exists('$(LatestPackages)')" > -->
+      <!-- <Output TaskParameter="Lines" -->
+              <!-- ItemName="UpdatedNugetVersionLines"/> -->
+    <!-- </ReadLinesFromFile> -->
+    <!-- <PropertyGroup> -->
+      <!-- <UpdatedNugetVersionLinesString>@(UpdatedNugetVersionLines)</UpdatedNugetVersionLinesString> -->
+	  <!-- <UpdatedNugetVersion>$([System.String]::Copy('$(UpdatedNugetVersionLinesString)').Split(';')[0].Split(' ')[1])</UpdatedNugetVersion> -->
+	<!-- </PropertyGroup> -->
+    <!-- <Message Importance="High" Text="Updating sdk dependency versions in $(DependencyFile)" /> -->
+    <!-- <ReadLinesFromFile File="$(DependencyFile)" Condition="Exists('$(DependencyFile)')" > -->
+      <!-- <Output TaskParameter="Lines" -->
+              <!-- ItemName="DependenciesLines"/> -->
+    <!-- </ReadLinesFromFile> -->
+    <!-- <ItemGroup> -->
+      <!-- <NugetVersionLine Include="%(DependenciesLines.Identity)" Condition="$([System.String]::Copy('%(DependenciesLines.Identity)').Contains($(NugetVersionString)))" /> -->
+    <!-- </ItemGroup> -->
+    <!-- <PropertyGroup> -->
+      <!-- <DependenciesLinesString>@(DependenciesLines)</DependenciesLinesString> -->
+      <!-- <CurrentNugetVersionLine>@(NugetVersionLine)</CurrentNugetVersionLine> -->
+      <!-- <UpdatedNugetVersionLine>&lt;$(NugetVersionString)&gt;$(UpdatedNugetVersion)&lt;/$(NugetVersionString)&gt;</UpdatedNugetVersionLine> -->
+      <!-- <NewDependenciesLines>$(DependenciesLinesString.Replace($(CurrentNugetVersionLine), $(UpdatedNugetVersionLine)).Replace('>;','>%0A'))</NewDependenciesLines> -->
+    <!-- </PropertyGroup> -->
+    <!-- <WriteLinesToFile   -->
+        <!-- File="$(DependencyFile)"   -->
+        <!-- Lines="$(NewDependenciesLines)"   -->
+        <!-- Overwrite="true" />   -->
+  <!-- </Target> -->
 </Project>

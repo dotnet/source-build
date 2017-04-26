@@ -164,7 +164,7 @@ fi
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 if [ ! -e $DIR/bin/dotnet-host-build ];then 
-    if [ ! "$SKIP_RESTORE"==true ];then 
+    if [ "$SKIP_RESTORE" != true ];then 
         # Restore the build scripts
         echo "Restoring Build Script projects..."
         (

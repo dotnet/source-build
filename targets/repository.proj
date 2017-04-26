@@ -16,8 +16,17 @@
           Condition="Exists('$(ProjectDirectory)dependencies.props')" />
 
   <Target Name="AddPathToNuGetConfig" BeforeTargets="Sync" >
-    <AddPathToNuGetConfig NugetConfigFile="$(ProjectDirectory)/Nuget.Config"
-                            RepositoryPath="$(PackagesDir)" />
+    <ItemGroup>
+      <ProjectDirectoryFiles Include="$(ProjectDirectory)/*.*" />
+      <PotentialConfigFiles Include="%(ProjectDirectoryFiles.Identity)" Condition="$([System.String]::Copy('%(ProjectDirectoryFiles.Identity)').ToLower().Contains('nuget.config'))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <PotentialConfigFilesString>@(PotentialConfigFiles)</PotentialConfigFilesString>
+      <NugetConfig>$([System.String]::Copy('$(PotentialConfigFilesString)').Split(';')[0])</NugetConfig>
+    </PropertyGroup>
+    <AddPathToNuGetConfig NugetConfigFile="$(NugetConfig)"
+                          RepositoryPath="$(PackagesDir)"
+                          Condition="Exists('$(NugetConfig)')" />
   </Target>
 
   <Target Name="CopyOverrideBuildScripts" BeforeTargets="Sync" >
@@ -26,6 +35,9 @@
 	  <RepoSpecificOverrideBuildScripts Include="$(OverrideBuildScriptsDir)$(RepositoryName)/**/*.*" />
       <OverrideBuildScripts Include="$(OverrideBuildScriptsDir)/*.*" />
     </ItemGroup>
+    <Exec Command="chmod -R +x $(OverrideBuildScriptsDir)" ConsoleToMSBuild="true" Condition="'$(OS)' != 'Windows_NT'">
+      <Output TaskParameter="ConsoleOutput" PropertyName="DotnetStage0RidLinux" />
+    </Exec>
 	<PropertyGroup>
 	  <ExcludeDirPattern>$([System.String]::Copy($(OverrideBuildScriptsDir)$(RepositoryName)).Replace('/', '\'))</ExcludeDirPattern>
 	</PropertyGroup>
@@ -56,7 +68,7 @@
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
-  <Target Name="Sync" DependsOnTargets="CopyNugetConfig;ControlPackagesSources" Condition="'$(SyncCommand)' != ''" >
+  <Target Name="Sync" DependsOnTargets="CopyNugetConfig" Condition="'$(SyncCommand)' != ''" >
     <Message Importance="High" Text="Executing $(ProjectDirectory)> $(SyncCommand)" />
     <Exec Command="$(SyncCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
@@ -78,9 +90,10 @@
                             Condition="'$(IsOnlineBuild)' != 'true'" />
   </Target>
   
-  <Target Name="CopyNugetConfig" Condition="!Exists('$(ProjectDirectory)Nuget.config')" >
+  <Target Name="CopyNugetConfig" >
     <Copy SourceFiles="$(BaseIntermediatePath)Nuget.config"
-          DestinationFolder="$(ProjectDirectory)" />
+          DestinationFolder="$(ProjectDirectory)"
+          Condition="!Exists('$(ProjectDirectory)Nuget.config')" />
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
