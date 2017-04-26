@@ -17,6 +17,8 @@ PACKAGESDIR="$REPOROOT/artifacts/packages"
 DDIR="$REPOROOT/dev"
 CONFIGURATION="Debug"
 SKIP_BUILD=false
+SKIP_RESTORE=false
+SKIP_TESTS=false
 
 PROJECTSTOPACK=( \
     Microsoft.TemplateEngine.Utils \
@@ -46,7 +48,7 @@ TESTPROJECTS=( \
 TESTFRAMEWORK="netcoreapp1.1"
 
 source "$REPOROOT/scripts/common/_prettyprint.sh"
-
+echo Before $SKIP_BUILD $SKIP_RESTORE
 while [[ $# > 0 ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
@@ -58,8 +60,14 @@ while [[ $# > 0 ]]; do
             export RID=$2
             shift
             ;;
+	    --skip-restore)
+            export SKIP_RESTORE=true
+            ;;
 	    --skip-build)
             export SKIP_BUILD=true
+            ;;
+	    --skip-tests)
+            export SKIP_TESTS=true
             ;;
         --help)
             echo "Usage: $0 [--configuration <CONFIGURATION>] [--help]"
@@ -76,7 +84,7 @@ while [[ $# > 0 ]]; do
 
     shift
 done
-
+echo After $SKIP_BUILD $SKIP_RESTORE
 rm -rf $REPOROOT/artifacts
 
 # Use a repo-local install directory (but not the artifacts directory because that gets cleaned a lot
@@ -102,20 +110,24 @@ then
     ulimit -n 1024
 fi
 
+if [ "$SKIP_RESTORE" == true ]; then
+   echo "Skipping restore..."
+else
 # Restore
-echo "Restoring all src projects..."
-for projectToTest in ${PROJECTSTOPACK[@]}
-do
-    $DOTNET_INSTALL_DIR/dotnet restore "$REPOROOT/src/$projectToTest/$projectToTest.csproj"
-done
+    echo "Restoring all src projects..."
+    for projectToTest in ${PROJECTSTOPACK[@]}
+    do
+        $DOTNET_INSTALL_DIR/dotnet restore "$REPOROOT/src/$projectToTest/$projectToTest.csproj"
+    done
 
-echo "Restoring all test projects..."
-for projectToTest in ${TESTPROJECTS[@]}
-do
-    dotnet restore "$REPOROOT/test/$projectToTest/$projectToTest.csproj"
-done
+    echo "Restoring all test projects..."
+    for projectToTest in ${TESTPROJECTS[@]}
+    do
+        dotnet restore "$REPOROOT/test/$projectToTest/$projectToTest.csproj"
+    done
+fi
 
-if [ $SKIP_BUILD ]; then
+if [ "$SKIP_BUILD" == true ]; then
     echo "Skipping product build..."
     exit 0
 fi 
@@ -143,10 +155,14 @@ dotnet msbuild "$REPOROOT/src/dotnet-new3/dotnet-new3.csproj" /t:Restore /p:Runt
 dotnet publish "$REPOROOT/src/dotnet-new3/dotnet-new3.csproj" -c $CONFIGURATION -f netcoreapp1.1 -o "$DDIR" -r $RID
 cd $THISDIR
 
-echo "Running tests..."
-length=${#TESTPROJECTS[@]}
-for (( i=0; i<${length} ; i++ ));
-do
-    projectToPack=${TESTPROJECTS[$i]}
-    dotnet test "$REPOROOT/test/$projectToTest/$projectToTest.csproj" /p:"Configuration=$CONFIGURATION;TargetFramework=$TESTFRAMEWORK"
-done
+if [ "$SKIP_TESTS" == true ]; then
+    echo "Skipping tests..."
+else
+    echo "Running tests..."
+    length=${#TESTPROJECTS[@]}
+    for (( i=0; i<${length} ; i++ ));
+    do
+        projectToPack=${TESTPROJECTS[$i]}
+        dotnet test "$REPOROOT/test/$projectToTest/$projectToTest.csproj" /p:"Configuration=$CONFIGURATION;TargetFramework=$TESTFRAMEWORK"
+    done
+fi
