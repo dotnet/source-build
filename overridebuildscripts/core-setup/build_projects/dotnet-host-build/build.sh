@@ -175,7 +175,7 @@ if [ ! -e $DIR/bin/dotnet-host-build ];then
 
     # Build the builder
     echo "Compiling Build Scripts..."
-    dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.1
+    dotnet publish "$DIR" -o "$DIR/bin" --framework netcoreapp1.1 --runtime $TARGET_RID
 fi
 
 if [ $__BuildDriverOnly == 1 ]; then
