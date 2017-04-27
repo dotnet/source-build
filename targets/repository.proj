@@ -30,7 +30,7 @@
   </Target>
 
   <Target Name="CopyOverrideBuildScripts" BeforeTargets="Sync" >
-    <Message Importance="High" Text="Copying up build scripts for $(RepositoryName)" />
+    <Message Importance="High" Text="Copying over build scripts for $(RepositoryName)" />
     <ItemGroup>
 	  <RepoSpecificOverrideBuildScripts Include="$(OverrideBuildScriptsDir)$(RepositoryName)/**/*.*" />
       <OverrideBuildScripts Include="$(OverrideBuildScriptsDir)/*.*" />
