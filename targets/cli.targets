@@ -8,8 +8,23 @@
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
   
-  <Target Name="RestoreDeps" AfterTargets="Sync">
+  <Target Name="Sync" >
+    <!-- <ItemGroup>   -->
+      <!-- <DotnetStage0Files Include="$(PreBuiltMSBuildDotnetCliDir)/**/*.*" Exclude="$(PreBuiltMSBuildDotnetCliDir)/shared/Microsoft.NETCore.App/version" /> -->
+    <!-- </ItemGroup> -->
+    <!-- <PropertyGroup> -->
+      <!-- <ExcludeDirPattern>$([System.String]::Copy($(PreBuiltMSBuildDotnetCliDir)).Replace('/', '\'))</ExcludeDirPattern> -->
+      <!-- <BaseDotnetStage0>$(ProjectDirectory)/.dotnet_stage0/</BaseDotnetStage0> -->
+      <!-- <DotnetStage0RidFolder>$(ProjectDirectory)/.dotnet_stage0/x64</DotnetStage0RidFolder> -->
+    <!-- </PropertyGroup> -->
+    <!-- <MakeDir Directories="" Condition="!Exists('$(ProjectDirectory)/.')" /> -->
+    <!-- <Copy SourceFiles="@(DotnetStage0Files)" -->
+          <!-- DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" /> -->
+  <Exec WorkingDirectory="$(ProjectDirectory)"
+        Command="DOTNET_INSTALL_DIR=$(ProjectDirectory).dotnet_stage0/x64 $(ProjectDirectory)scripts/obtain/dotnet-install.sh -Version 2.0.0-preview1-005724 -Architecture x64; $(OverridesForCommands) $(ProjectDirectory).dotnet_stage0/x64/dotnet msbuild $(ProjectDirectory)/build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:Architecture=$(Platform) /p:GeneratePropsFile=true"
+        Condition="'$(TargetOS)' != 'Windows_NT'" />
     <ItemGroup>
+      <FilesToRestore Include="$(ProjectDirectory)build_projects/update-dependencies/update-dependencies.csproj" />
       <FilesToRestore Include="$(ProjectDirectory)src/**/*.csproj" />
       <FilesToRestore Include="$(ProjectDirectory)build/sdks/sdks.csproj" />
       <FilesToRestore Include="$(ProjectDirectory)deps.csproj" />
