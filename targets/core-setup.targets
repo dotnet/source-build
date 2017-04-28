@@ -35,6 +35,11 @@
                            Condition="'$(TargetOS)' == 'Linux'" />
   </Target>
   
+  <Target Name="GetRuntimeDependencies" AfterTargets="Sync" >
+    <Exec Condition="'$(TargetOS)' != 'Windows_NT'" WorkingDirectory="$(ProjectDirectory)"
+          Command="$(OverridesForCommands) $(DotnetCommand) publish --output $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator -r $(TargetRid) $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator" />
+  </Target>
+  
   <Target Name="RemoveDependenciesThatDontRestore" BeforeTargets="Build">
     <ItemGroup>
       <DependenciesToRemove Include="Microsoft.DiaSymReader.Native" />
