@@ -30,12 +30,13 @@
       <CoreSetupProjectJson Include="$(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/project.json" />
    </ItemGroup>
    <Message Importance="high" text="CHANGING RUNTIME '@(CoreSetupProjectJson)' '$(TargetRid)'"/>
-        <ChangeRuntimesSection ProjectJsonFiles="@(CoreSetupProjectJson)"
-                           ReplacementRuntimeId="$(TargetRid)"
-                           Condition="'$(TargetOS)' == 'Linux'" />
+   <ChangeRuntimesSection ProjectJsonFiles="@(CoreSetupProjectJson)"
+                       ReplacementRuntimeId="$(TargetRid)"
+                       Condition="'$(TargetOS)' != 'Windows_NT'" />
   </Target>
   
-  <Target Name="GetRuntimeDependencies" AfterTargets="Sync" >
+  <Target Name="Publish " AfterTargets="Sync" >
+    <Message Importance="high" text="Publishing RuntimeGraphGenerator for '$(TargetRid)'"/>
     <Exec Condition="'$(TargetOS)' != 'Windows_NT'" WorkingDirectory="$(ProjectDirectory)"
           Command="$(OverridesForCommands) $(DotnetCommand) publish --output $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator -r $(TargetRid) $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator" />
   </Target>

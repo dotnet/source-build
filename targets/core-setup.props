@@ -23,10 +23,10 @@
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles --skip-restore</UpdateCommand>
   </PropertyGroup>
 
-  <!-- <ItemGroup> -->
-    <!-- <RepositoryReference Include="coreclr" /> -->
-    <!-- <RepositoryReference Include="corefx" /> -->
-    <!-- <RepositoryReference Include="roslyn" /> -->
-    <!-- <RepositoryReference Include="standard" /> -->
-  <!-- </ItemGroup> -->
+  <ItemGroup>
+    <RepositoryReference Include="coreclr" />
+    <RepositoryReference Include="corefx" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="standard" />
+  </ItemGroup>
 </Project>
