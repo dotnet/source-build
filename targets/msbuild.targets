@@ -20,4 +20,15 @@
           DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
   </Target>
   
+  <Target Name="UpdateRuntimeIds" BeforeTargets="Sync" >
+   <ItemGroup>
+      <MSBuildProjectJson Include="$(ProjectDirectory)targets/roslyn/project.json" />
+      <MSBuildProjectJson Include="$(ProjectDirectory)targets/runtimeDependencies/project.json" />
+   </ItemGroup>
+   <Message Importance="high" text="CHANGING RUNTIME '@(MSBuildProjectJson)' '$(TargetRid)'"/>
+   <ChangeRuntimesSection ProjectJsonFiles="@(MSBuildProjectJson)"
+                       ReplacementRuntimeId="$(TargetRid)"
+                       Condition="'$(TargetOS)' != 'Windows_NT'" />
+  </Target>
+  
 </Project>
