@@ -4,6 +4,82 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
 
+  <Target Name="CreateEmptyVersions" >
+    <ItemGroup>
+	  <BuildToolsVersionCollections Remove="*" />
+	</ItemGroup>
+  </Target>
+  
+  <Target Name="CheckForSimilarVersions" 
+          Inputs="%(Repository.Identity)"
+          Outputs="test this" 
+		  DependsOnTargets="CreateEmptyVersions" >
+    <PropertyGroup>
+	  <CurrentRepository>%(Repository.Identity)</CurrentRepository>
+    </PropertyGroup>
+    <ItemGroup>
+      <BuildtoolsVersionFileSearch Include="$(ProjectDirectory)$(CurrentRepository)/**/BuildToolsVersion.txt" />
+    </ItemGroup>
+    <PropertyGroup>
+      <BuildToolsVersionFile>@(BuildtoolsVersionFileSearch)</BuildToolsVersionFile>
+	</PropertyGroup>
+	<ReadLinesFromFile File="$(BuildToolsVersionFile)" Condition="Exists('$(BuildToolsVersionFile)')" >
+      <Output TaskParameter="Lines"
+              ItemName="BuildToolsVersions"/>
+    </ReadLinesFromFile>
+	<PropertyGroup>
+	  <BTVersion>@(BuildToolsVersions)</BTVersion>
+	</PropertyGroup>
+	<ItemGroup>
+      <BuildToolsVersionCollections Include="$(BTVersion)">
+	    <Repository>$(CurrentRepository)</Repository>
+	  </BuildToolsVersionCollections>
+    </ItemGroup>
+  </Target>
+  
+  <Target Name="RestoreBuildToolsVersions" DependsOnTargets="CheckForSimilarVersions;GenerateNugetConfig" Condition="'$(SkipBuildToolsRestore)'!='true'" >
+	<PropertyGroup>
+      <LinesForProjectGroup>&lt;Project Sdk="Microsoft.NET.Sdk"&gt;%0a&lt;PropertyGroup&gt;%0a&lt;OutputType&gt;Exe&lt;/OutputType&gt;%0a&lt;/PropertyGroup&gt;%0a&lt;ItemGroup&gt;&lt;PackageReference Include=&quot;Microsoft.Dotnet.BuildTools&quot; Version=&quot;</LinesForProjectGroup>
+	  <EndLinesForProject>&quot;/&gt;%0a&lt;/ItemGroup&gt;%0a&lt;/Project&gt;</EndLinesForProject>
+	</PropertyGroup>
+	<RemoveDuplicates Inputs="@(BuildToolsVersionCollections)">  
+      <Output TaskParameter="Filtered"  
+              ItemName="FilteredItems" /> 
+    </RemoveDuplicates>
+	<MakeDir Directories="$(BaseIntermediatePath)" />
+	<WriteLinesToFile File="$(BaseIntermediatePath)BuildTools-%(FilteredItems.Identity).csproj"
+                      Lines="$(LinesForProjectGroup)%(FilteredItems.Identity)$(EndLinesForProject)"
+                      Overwrite="true" />
+    <!-- Can't restore multiple versions without using nuget install -->
+    <Message importance="high" text="Running $(DotNetCliToolDir)dotnet restore --configfile $(BaseIntermediatePath)Nuget.config --packages $(PackagesDir) $(BaseIntermediatePath)BuildTools-%(FilteredItems.Identity).csproj" />
+    <Exec Command="$(DotNetCliToolDir)dotnet restore --configfile $(BaseIntermediatePath)Nuget.config --packages $(PackagesDir) $(BaseIntermediatePath)BuildTools-%(FilteredItems.Identity).csproj" />
+  </Target>
+  
+  <Target Name="CreatePrebuiltRepoFolders" >
+    <MakeDir Directories="$(PreBuiltSourcesDir)%(Repository.Identity)" />
+  </Target>
+  
+  <Target Name="PreparePreBuiltFolder" DependsOnTargets="RestoreBuildToolsVersions;CreatePrebuiltRepoFolders" />
+  
+  <Target Name="Sync"  
+          Inputs="%(Repository.Identity)"
+          Outputs="test this" 
+          DependsOnTargets="GenerateNugetConfig;PreparePreBuiltFolder" >
+    <PropertyGroup>
+      <CurrentRepository>%(Repository.Identity)</CurrentRepository>
+	</PropertyGroup>
+    <ItemGroup>
+      <ProjectsToSync Include="$(TargetsDir)repository.proj" Condition="'%(Repository.Identity)'=='$(CurrentRepository)'">
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
+      </ProjectsToSync>
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectsToSync)" Targets="Sync" BuildInParallel="$(BuildInParallel)" Properties="Platform=$(Platform);Configuration=$(Configuration);TargetOS=$(TargetOS);TargetRid=$(TargetRid)" />
+    <!-- generate semaphore -->
+    <WriteLinesToFile File="$(BaseIntermediatePath)$(RepositoryName)synccomplete.sem"
+                      Lines="$([System.DateTime]::Now.ToString(yyyyMMdd-mmss))"  
+                      Overwrite="true" /> 
+  </Target>
+  
   <Target Name="Build" DependsOnTargets="PrepareOutput">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
@@ -14,6 +90,17 @@
     </ItemGroup>
 
     <MSBuild Projects="@(_RootProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+  
+  <Target Name="GenerateSourceTarball">
+    <PropertyGroup>
+       <Timestamp>$([System.DateTime]::Now.ToString(MMddyyyy-mmss))</Timestamp>
+       <TarFile> $(OutputPath)/$(TarballName)_$(Timestamp).tar.gz</TarFile>
+       <CreateTarballCommand>tar -cvzf $(TarFile) $(ProjectDir) --exclude .git --exclude "*.log"</CreateTarballCommand>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Creating source tarball at $(TarFile)..." />
+    <Exec WorkingDirectory="$(ProjectDir)" Command="$(CreateTarballCommand)" />
   </Target>
 
   <Target Name="PrepareOutput">
@@ -47,6 +134,21 @@
     </PropertyGroup>
 
     <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
+  </Target>
+  
+  <Target Name="GenerateNugetConfig" >
+    <ReadLinesFromFile File="$(NugetConfigFile)" >
+      <Output TaskParameter="Lines"
+              ItemName="NugetConfigLines"/>
+    </ReadLinesFromFile>
+    <ItemGroup>
+      <UpdatedNugetConfigLines Include="$([System.String]::Copy('%(NugetConfigLines.Identity)').Replace('$PACKAGESDIR$', '$(PackagesDir)').Replace('$ONLINEFLAG$', '$(IsOnlineBuild)'))" />
+    </ItemGroup>
+    <MakeDir Directories="$(BaseIntermediatePath)" Condition="!Exists('$(BaseIntermediatePath)')" />  
+    <WriteLinesToFile File="$(BaseIntermediatePath)Nuget.config"
+                      Lines="@(UpdatedNugetConfigLines)"  
+                      Overwrite="true" /> 
+     
   </Target>
 
   <Import Project="$(MSBuildThisfileDirectory)scripts/auto-update/update-submodules.targets" />

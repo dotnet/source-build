@@ -4,6 +4,12 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateMsBuildFrameworkDependencyVersions" />
+  
+  <Target Name="RemoveExternalSources" AfterTargets="Build">
+  <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config" 
+                          SourceName="Source-Build"  
+                          SourcePath="$(SourceBuiltPackagesPath)" />     
+  </Target>
 
   <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
     <ItemGroup>
@@ -14,12 +20,8 @@
       <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' != 'true'" Include="$(ProjectDirectory)/**/project.json" />
       <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
     </ItemGroup>
-    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config" 
-                            SourceName="Source-Build"  
-                            SourcePath="$(SourceBuiltPackagesPath)" />     
     <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
                            ReplacementRuntimeId="$(TargetRid)"
-                           FilterRuntimeId="ubuntu.14.04-x64"
                            Condition="'$(TargetOS)' == 'Linux'" />
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />

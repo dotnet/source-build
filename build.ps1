@@ -8,5 +8,6 @@ $SdkVersion = Get-Content (Join-Path $ScriptRoot ".cliversion")
 & "$ScriptRoot\Tools\dotnetcli\dotnet" restore "$ScriptRoot\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj"
 & "$ScriptRoot\Tools\dotnetcli\dotnet" build "$ScriptRoot\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj"
 & "$ScriptRoot\Tools\dotnetcli\dotnet" "$ScriptRoot\Tools\dotnetcli\sdk\$SdkVersion\MSBuild.dll" "$ScriptRoot\build.proj" @args /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true
-& "$ScriptRoot\Tools\dotnetcli\dotnet" "$ScriptRoot\Tools\dotnetcli\sdk\$SdkVersion\MSBuild.dll" "$ScriptRoot\build.proj" @args
+& "$ScriptRoot\Tools\dotnetcli\dotnet" "$ScriptRoot\Tools\dotnetcli\sdk\$SdkVersion\MSBuild.dll" "$ScriptRoot\build.proj" @args /t:Sync
+& "$ScriptRoot\Tools\dotnetcli\dotnet" "$ScriptRoot\Tools\dotnetcli\sdk\$SdkVersion\MSBuild.dll" "$ScriptRoot\build.proj" @args /t:Build
 

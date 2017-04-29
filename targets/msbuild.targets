@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
+  
+  <Target Name="UpdateNugetConfig" BeforeTargets="Build">
+    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
+  
+  <Target Name="CopyRuntimeConfigurations" BeforeTargets="Build" >
+    <Message Importance="High" Text="Copying over runtime configurations for $(RepositoryName)" />
+    <ItemGroup>
+	  <RepoSpecificOverrideBuildScripts Include="$(OverrideBuildScriptsDir)$(RepositoryName)/Tools/*.*" />
+    </ItemGroup>
+	<PropertyGroup>
+	  <ExcludeDirPattern>$([System.String]::Copy($(OverrideBuildScriptsDir)$(RepositoryName)).Replace('/', '\'))</ExcludeDirPattern>
+	</PropertyGroup>
+    <Copy SourceFiles="@(RepoSpecificOverrideBuildScripts)"
+          DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
+  
+  <Target Name="UpdateRuntimeIds" BeforeTargets="Sync" >
+   <ItemGroup>
+      <MSBuildProjectJson Include="$(ProjectDirectory)targets/roslyn/project.json" />
+      <MSBuildProjectJson Include="$(ProjectDirectory)targets/runtimeDependencies/project.json" />
+   </ItemGroup>
+   <Message Importance="high" text="CHANGING RUNTIME '@(MSBuildProjectJson)' '$(TargetRid)'"/>
+   <ChangeRuntimesSection ProjectJsonFiles="@(MSBuildProjectJson)"
+                       ReplacementRuntimeId="$(TargetRid)"
+                       Condition="'$(TargetOS)' != 'Windows_NT'" />
+  </Target>
+  
+</Project>

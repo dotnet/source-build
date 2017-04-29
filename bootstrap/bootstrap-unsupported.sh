@@ -97,9 +97,6 @@ get_shared_framework_version() {
 }
 
 get_sdk_folder() {
-  declare -a SHAREDVERSIONS=()
-  declare -a VERSIONPARTS=()
-
   OUTPUTNETCORESHAREDPATHROOT=$OUTPUTFOLDER/shared/Microsoft.NETCore.App
 
   # determine shared framework version to update and store it in $SHAREDFRAMEWORKVERSION

@@ -3,27 +3,35 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="DiscoverProjectsForTFMs" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPublicSignToProjectJson" />
 
-  <Target Name="Build" DependsOnTargets="PrintBuildMessage;InstallTools;InitSubmodules">
+  <Target Name="UpdateProjectJsons" BeforeTargets="Sync">
     <DiscoverProjectsForTFMs RootDirectory="$(NuGetCoreSourceDirectory)"
                              TFMs="@(BuildTFMs)">
       <Output TaskParameter="DiscoveredProjects"
-              ItemName="Projects" />
+              ItemName="NugetClientProjects" />
     </DiscoverProjectsForTFMs>
 
-    <AddPublicSignToProjectJson ProjectJsonFiles="@(Projects)"
+    <AddPublicSignToProjectJson ProjectJsonFiles="@(NugetClientProjects)"
                                 KeyFilePath="$(NuGetKeyFilePath)" />
-
-    <Exec Command="$(DotNetCommand) restore %(Projects.Identity)" />
-
+    <PropertyGroup>
+       <SupportedProjects>@(NugetClientProjects)</SupportedProjects>
+       <SyncCommand>$(SyncCommand) $(SupportedProjects.Replace(';', ' '))</SyncCommand>
+    </PropertyGroup>
+  </Target>
+  
+  <Target Name="Build">
     <MSBuild Projects="$(MSBuildProjectFullPath)"
              Targets="BuildProjectsForTFM"
              Properties="BuildTFM=%(BuildTFMs.Identity)" />
+             
+    <DiscoverProjectsForTFMs RootDirectory="$(NuGetCoreSourceDirectory)"
+                             TFMs="@(BuildTFMs)">
+      <Output TaskParameter="DiscoveredProjects"
+              ItemName="NugetClientProjects" />
+    </DiscoverProjectsForTFMs>
 
-    <Exec Command="$(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(Projects.Identity) --version-suffix $(NuGetClientVersionSuffix)" />
-  </Target>
-
-  <Target Name="PrintBuildMessage">
-    <Message Text="Building '$(RepositoryName)'" Importance="High" />
+    <Exec Command="$(OverridesForCommands) $(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(NugetClientProjects.Identity) --version-suffix $(NuGetClientVersionSuffix)" />
+    <!-- Ensure this missing dependency gets built on linux -->
+    <Exec Condition="'$(TargetOS)'!='Windows_NT'" Command="$(OverridesForCommands) $(ToolsDir)/dotnetcli/dotnet pack --no-build -c $(Configuration) -o $(PackagesOutput) -s $(ProjectDirectory)/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.csproj /p:VersionSuffix=$(NuGetClientVersionSuffix)" />
   </Target>
 
   <Target Name="BuildProjectsForTFM">
@@ -35,33 +43,7 @@
               ItemName="Projects" />
     </DiscoverProjectsForTFMs>
 
-    <Exec Command="$(DotNetCommand) build %(Projects.Identity) -c $(Configuration) -f $(BuildTFM)" Condition="'@(Projects)' != ''"/>
+    <Exec Command="$(OverridesForCommands) $(DotNetCommand) build %(Projects.Identity) -c $(Configuration) -f $(BuildTFM)" Condition="'@(Projects)' != ''"/>
   </Target>
 
-  <Target Name="InstallTools">
-    <MakeDir Directories="$(ToolsDirectory)" />
-    <CallTarget Targets="InstallToolsWindows" Condition="'$(OS)' == 'Windows_NT'" />
-    <CallTarget Targets="InstallToolsUnix" Condition="'$(OS)' != 'Windows_NT'" />
-  </Target>
-
-  <Target Name="InstallToolsWindows">
-    <Exec Command="powershell.exe -Command &quot;. $(ProjectDirectory)build/common.ps1 ; Install-DotnetCLI&quot;"
-          WorkingDirectory="$(ProjectDirectory)" />
-  </Target>
-
-  <Target Name="InstallToolsUnix">
-    <Exec Command="curl -o $(ToolsDirectory)/dotnet-install.sh https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <Exec Command="chmod +x $(ToolsDirectory)/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <Exec Command="bash $(ToolsDirectory)/dotnet-install.sh -i cli -c preview -v 1.0.0-preview2-003121"
-          WorkingDirectory="$(ProjectDirectory)" />
-  </Target>
-
-  <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
-    <Exec Command="git submodule init"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <Exec Command="git submodule update"
-          WorkingDirectory="$(ProjectDirectory)" />
-  </Target>
 </Project>

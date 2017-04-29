@@ -2,22 +2,28 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests</BuildCommand>
+    <DotnetToolsetInstallOverride>(set DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir)) &amp; </DotnetToolsetInstallOverride>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride)</OverridesForCommands>
+    <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir)\ </BuildPropertyOverrides>
+    <SyncCommand>$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; $(ProjectDirectory)Tools\msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension); $(OverridesForCommands) $(ProjectDirectory)Tools/msbuild$(ShellExtension) $(ProjectDirectory)build.proj /p:RestoreDuringBuild=true /t:RestoreNETCorePlatforms $(BuildPropertyOverrides)</SyncCommand>
+    <BuildCommand>$(ToolsDirOverride) $(PackagesOverride) $(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests skiprestoreoptdata -skiprestore -- $(BuildPropertyOverrides)</BuildCommand>
     <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <ProjectJsonFileBaseDir>$(ProjectDirectory)/tests/</ProjectJsonFileBaseDir>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <!--
-      TODO: Make ProjectJsonFiles more accessible in CoreCLR to avoid duplication here.
-      Copied from tests/build.proj and rerooted. From coreclr@cb01aa8
-    -->
-    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)src\**\project.json" />
-    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)scripts\**\project.json" />
-  </ItemGroup>
+  
+   <PropertyGroup>
+     <ProjectJsonFileBaseDir>$(ProjectDirectory)/tests/</ProjectJsonFileBaseDir>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <!--
+       TODO: Make ProjectJsonFiles more accessible in CoreCLR to avoid duplication here.
+       Copied from tests/build.proj and rerooted. From coreclr@cb01aa8
+     -->
+     <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)src\**\project.json" />
+     <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)scripts\**\project.json" />
+   </ItemGroup>
 </Project>

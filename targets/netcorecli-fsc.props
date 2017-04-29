@@ -2,8 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) /t:Package</BuildCommand>
-    <BuildPackagesCommand></BuildPackagesCommand>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
+    <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) $(ProjectDirectory)build$(ShellExtension) -SkipBuild</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) --nobuild</SyncCommand>
+    <BuildCommand>$(OverridesForCommands) $(ProjectDirectory)build$(ShellExtension) /t:Package</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/nupkgs/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>

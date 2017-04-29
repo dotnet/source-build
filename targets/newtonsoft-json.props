@@ -8,7 +8,12 @@
     <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
     <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Roslyn.csproj</NewtonsoftJsonProjectPath>
     <DotNetCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotNetCommandArguments>
-    <BuildCommand>$(DotNetCommand) build $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildCommand>
+    
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
+    <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) (set NUGET_EXE_PATH=$(PreBuiltDotnetCliDir)) &amp; powershell $(ProjectDirectory)/Tools/Dotnet/dotnet-install.ps1 -Version 1.0.0 -InstallDir $(PreBuiltDotnetCliDir) &amp; $(PreBuiltDotnetCliDir)\dotnet.exe restore $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(PreBuiltDotnetCliDir)/dotnet restore $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</SyncCommand>
+    <BuildCommand>$(OverridesForCommands) $(DotNetCommand) build $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildCommand>
     <BuildPackagesCommand>$(DotNetCommand) pack $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildPackagesCommand>
     <CleanCommand>$(DotNetCommand) clean $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</CleanCommand>
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>

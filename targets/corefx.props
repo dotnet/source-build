@@ -2,14 +2,27 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</BuildCommand>
+    <DotnetToolsetInstallOverride>(set DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir)) &amp; </DotnetToolsetInstallOverride>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltPJDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride) $(BuildToolsetInstallOverride)</OverridesForCommands>
+    <BuildPropertyOverrides>/p:PackagesDir=$(PackagesDir) </BuildPropertyOverrides>
+    <SyncCommand>$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension) &amp; $(OverridesForCommands) $(ProjectDirectory)Tools\msbuild$(ShellExtension) /t:Sync /p:ConfigurationGroup=$(Configuration) $(BuildPropertyOverrides)</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/init-tools$(ShellExtension);$(OverridesForCommands) $(ProjectDirectory)Tools\msbuild$(ShellExtension) /t:Sync /p:ConfigurationGroup=$(Configuration) $(BuildPropertyOverrides)</SyncCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations -- /p:SkipRestoreCoreFxTools=true /p:OverridePackageSource=$(SourceBuiltPackagesPath) /p:RestorePackages=false $(BuildPropertyOverrides)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
 
-  <ItemGroup>
-    <RepositoryReference Include="coreclr" />
-  </ItemGroup>
+   <ItemGroup>
+     <!-- TODO: Remove when corefx@addef97 is included. -->
+     <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json" />
+     <ProjectJsonFiles Include="$(ProjectDirectory)external\**\optional.json" />
+     <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json.template" />
+   </ItemGroup>
+
+  <!-- <ItemGroup> -->
+    <!-- <RepositoryReference Include="coreclr" /> -->
+  <!-- </ItemGroup> -->
 
   <ItemGroup>
     <!-- TODO: Remove when corefx@addef97 is included. -->

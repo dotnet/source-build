@@ -13,6 +13,27 @@
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
+    <PreBuiltSourcesDir>$(ProjectDir)prebuilt/</PreBuiltSourcesDir>
+	<PreBuiltMsBuildDotnetCliDir>$(MSBuildThisFileDirectory)/Tools/dotnetcli/</PreBuiltMsBuildDotnetCliDir>
+	<PreBuiltPJDotnetCliDir>$(MSBuildThisFileDirectory)/Tools/pjdotnetcli/</PreBuiltPJDotnetCliDir>
+    <PreBuiltDotnetCliDir>$(PreBuiltMsBuildDotnetCliDir)</PreBuiltDotnetCliDir>
+    <PackagesDir>$(PreBuiltSourcesDir)packages/</PackagesDir>
+    <OverrideBuildScriptsDir>$(ProjectDir)overridebuildscripts/</OverrideBuildScriptsDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ToolsDirOverride>(set TOOLRUNTIME_DIR=$(PreBuiltSourcesDir)$(RepositoryName)) &amp; </ToolsDirOverride>
+    <PackagesOverride>(set NUGET_PACKAGES=$(PackagesDir)) &amp; (set PACKAGES_DIR=$(PackagesDir)) &amp; </PackagesOverride>
+    <DotnetInstallOverride>(set DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir)) &amp; </DotnetInstallOverride>
+    <PackagesOverride Condition="'$(TargetOS)' != 'Windows_NT'">PACKAGES_DIR=$(PackagesDir) NUGET_PACKAGES=$(PackagesDir)</PackagesOverride>
+    <DotnetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetInstallOverride>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_TOOLSET_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <BuildToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">BUILD_TOOLS_TOOLSET_DIR=$(PackagesDir)/microsoft.dotnet.buildtools </BuildToolsetInstallOverride >
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NugetConfigFile>$(ProjectDir)Nuget.config.template</NugetConfigFile>
+    <IsOnlineBuild>true</IsOnlineBuild>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,6 +75,7 @@
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
 
   <PropertyGroup>
+    <TarballName>dotnet-source-build</TarballName>
     <VersionFilename>Latest_Packages.txt</VersionFilename>
     <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>

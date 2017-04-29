@@ -2,8 +2,12 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Runtime $(TargetRid)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
+    <DotnetToolsetInstallOverride Condition="'$(TargetOS)' != 'Windows_NT'">DOTNET_INSTALL_DIR=$(PreBuiltDotnetCliDir) </DotnetToolsetInstallOverride>
+    <OverridesForCommands>$(PackagesOverride) $(DotnetToolsetInstallOverride)</OverridesForCommands>
+    <SyncCommand>$(PackagesOverride) $(DotnetInstallOverride) $(ProjectDirectory)/build$(ShellExtension) -SkipBuild</SyncCommand>
+    <SyncCommand Condition="'$(TargetOS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) --skip-build</SyncCommand>
+    <BuildCommand>$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Runtime $(TargetRid)</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(OverridesForCommands) $(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid) --skip-restore --skip-tests</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
   </PropertyGroup>
 </Project>

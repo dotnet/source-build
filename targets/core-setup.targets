@@ -3,6 +3,63 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveDependencies" />
+
+  <Target Name="CopyDotnetStage0" BeforeTargets="Sync"> 
+    <ItemGroup>  
+      <DotnetStage0Files Include="$(PreBuiltPJDotnetCliDir)/**/*.*" />
+    </ItemGroup>
+    <Exec Command="uname" ConsoleToMSBuild="true" Condition="'$(OS)' != 'Windows_NT'">
+      <Output TaskParameter="ConsoleOutput" PropertyName="DotnetStage0RidLinux" />
+    </Exec>
+    <PropertyGroup>
+      <ExcludeDirPattern>$([System.String]::Copy($(PreBuiltPJDotnetCliDir)).Replace('/', '\'))</ExcludeDirPattern>
+      <BaseDotnetStage0>$(ProjectDirectory)/.dotnet_stage0/</BaseDotnetStage0>
+      <DotnetStage0RidFolder Condition="'$(OS)' != 'Windows_NT'" >$(BaseDotnetStage0)$(DotnetStage0RidLinux)</DotnetStage0RidFolder>
+      <DotnetStage0RidFolder Condition="'$(OS)' == 'Windows_NT'" >$(BaseDotnetStage0)Windows/$(Platform)</DotnetStage0RidFolder>
+    </PropertyGroup>
+    <MakeDir Directories="" Condition="!Exists('$(ProjectDirectory)/.')" />
+    <Copy SourceFiles="@(DotnetStage0Files)"
+          DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
+
+  
+  <Target Name="WriteNugetPackagesForCore-Setup" BeforeTargets="CopyDotnetStage0"> 
+    <WriteLinesToFile  
+            File="$(ProjectDirectory)/nugetpackages.txt"  
+            Lines="$(PackagesDir)"  
+            Overwrite="true" />
+  </Target>
+  
+  <Target Name="GetRuntimeDependencies" BeforeTargets="Sync" >
+   <ItemGroup>
+      <CoreSetupProjectJson Include="$(ProjectDirectory)/project.json" />
+      <CoreSetupProjectJson Include="$(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator/project.json" />
+   </ItemGroup>
+   <Message Importance="high" text="CHANGING RUNTIME '@(CoreSetupProjectJson)' '$(TargetRid)'"/>
+   <ChangeRuntimesSection ProjectJsonFiles="@(CoreSetupProjectJson)"
+                       ReplacementRuntimeId="$(TargetRid)"
+                       Condition="'$(TargetOS)' != 'Windows_NT'" />
+  </Target>
+  
+  <Target Name="PublishRuntimeGraph" AfterTargets="Sync" >
+    <Message Importance="high" text="Publishing RuntimeGraphGenerator for '$(TargetRid)'"/>
+    <Exec Condition="'$(TargetOS)' != 'Windows_NT'" WorkingDirectory="$(ProjectDirectory)"
+          Command="NUGET_PACKAGES=$(PackagesDir) $(DotnetCommand) publish --output $(ProjectDirectory)artifacts/$(TargetRid)/setuptools/independent/RuntimeGraphGenerator -r $(TargetRid) $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator" />
+  </Target>
+  
+  <Target Name="RemoveDependenciesThatDontRestore" BeforeTargets="Build">
+    <ItemGroup>
+      <DependenciesToRemove Include="Microsoft.DiaSymReader.Native" />
+    </ItemGroup>
+    <PropertyGroup>
+      <ProjectJsonToModify>$(ProjectDirectory)/pkg/projects/Microsoft.NETCore.App/project.json.template</ProjectJsonToModify>
+    </PropertyGroup>
+    <RemoveDependencies DependenciesToRemove="@(DependenciesToRemove)"
+                        ProjectJsonFile="$(ProjectJsonToModify)" 
+                        Condition="'$(TargetOS)' == 'Linux'" />
+  </Target>
 
   <Target Name="Update" BeforeTargets="Build">
     <ItemGroup>

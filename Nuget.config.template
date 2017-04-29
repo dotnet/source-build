@@ -1,0 +1,14 @@
+    <?xml version="1.0" encoding="utf-8"?>
+    <configuration>
+      <config>
+        <add key="repositoryPath" value="$PACKAGESDIR$" />
+      </config>
+      <packageRestore>
+        <!-- Allow NuGet to download missing packages -->
+        <add key="enabled" value="$ONLINEFLAG$" />
+      </packageRestore>
+      <packageSources>
+        <clear />
+        <add key="buildtools" value="https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json" protocolVersion="3" />
+      </packageSources>
+    </configuration>

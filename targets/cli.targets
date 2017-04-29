@@ -1,10 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-
+  
   <Target Name="UpdateNugetConfig" BeforeTargets="Build">
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
+  
+  <Target Name="Sync" >
+    <!-- <ItemGroup>   -->
+      <!-- <DotnetStage0Files Include="$(PreBuiltMSBuildDotnetCliDir)/**/*.*" Exclude="$(PreBuiltMSBuildDotnetCliDir)/shared/Microsoft.NETCore.App/version" /> -->
+    <!-- </ItemGroup> -->
+    <!-- <PropertyGroup> -->
+      <!-- <ExcludeDirPattern>$([System.String]::Copy($(PreBuiltMSBuildDotnetCliDir)).Replace('/', '\'))</ExcludeDirPattern> -->
+      <!-- <BaseDotnetStage0>$(ProjectDirectory)/.dotnet_stage0/</BaseDotnetStage0> -->
+      <!-- <DotnetStage0RidFolder>$(ProjectDirectory)/.dotnet_stage0/x64</DotnetStage0RidFolder> -->
+    <!-- </PropertyGroup> -->
+    <!-- <MakeDir Directories="" Condition="!Exists('$(ProjectDirectory)/.')" /> -->
+    <!-- <Copy SourceFiles="@(DotnetStage0Files)" -->
+          <!-- DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" /> -->
+  <Exec WorkingDirectory="$(ProjectDirectory)"
+        Command="DOTNET_INSTALL_DIR=$(ProjectDirectory).dotnet_stage0/x64 $(ProjectDirectory)scripts/obtain/dotnet-install.sh -Version 2.0.0-preview1-005724 -Architecture x64; $(OverridesForCommands) $(ProjectDirectory).dotnet_stage0/x64/dotnet msbuild $(ProjectDirectory)/build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:Architecture=$(Platform) /p:GeneratePropsFile=true"
+        Condition="'$(TargetOS)' != 'Windows_NT'" />
+    <ItemGroup>
+      <FilesToRestore Include="$(ProjectDirectory)build_projects/update-dependencies/update-dependencies.csproj" />
+      <FilesToRestore Include="$(ProjectDirectory)src/**/*.csproj" />
+      <FilesToRestore Include="$(ProjectDirectory)build/sdks/sdks.csproj" />
+      <FilesToRestore Include="$(ProjectDirectory)deps.csproj" />
+    </ItemGroup>
+    <PropertyGroup>
+      <RestoreCommandsPrefix>$(OverridesForCommands) $(ProjectDirectory).dotnet_stage0/x64/dotnet restore --packages $(PackagesDir)</RestoreCommandsPrefix>
+    </PropertyGroup>
+    <Exec WorkingDirectory="$(ProjectDirectory)" Command="$(RestoreCommandsPrefix) %(FilesToRestore.Identity)" />
+  </Target>
+
+  <!-- <ItemGroup> -->
+    <!-- <Dependencies Include="roslyn" > -->
+      <!-- <SearchString>CLI_Roslyn_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="msbuild" > -->
+      <!-- <SearchString>CLI_MSBuild_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="sdk" > -->
+      <!-- <SearchString>CLI_NETSDK_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="core-setup" > -->
+      <!-- <SearchString>CLI_SharedFrameworkVersion</SearchString> -->
+      <!-- <SearchIndex>1</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="websdk" > -->
+      <!-- <SearchString>CLI_WEBSDK_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="netcorecli-fsc" > -->
+      <!-- <SearchString>CLI_FSC_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="newtonsoft-json" > -->
+      <!-- <SearchString>CLI_Newtonsoft_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="vstest" > -->
+      <!-- <SearchString>CLI_TestPlatform_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="templating" > -->
+      <!-- <SearchString>TemplateEngineVersion</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+    <!-- <Dependencies Include="nuget-client" > -->
+      <!-- <SearchString>CLI_NuGet_Version</SearchString> -->
+      <!-- <SearchIndex>0</SearchIndex> -->
+    <!-- </Dependencies> -->
+  <!-- </ItemGroup> -->
+    
+  <!-- <Target Name="UpdateExternalDependencies" BeforeTargets="Update" Inputs="%(Dependencies.Identity)" Outputs="Updated dependencies." > -->
+    <!-- <PropertyGroup> -->
+      <!-- <DependencyFile>$(ProjectDirectory)/build/DependencyVersions.props</DependencyFile> -->
+      <!-- <CurrentDependency>%(Dependencies.Identity)</CurrentDependency> -->
+      <!-- <CurrentDependencySearchString>%(Dependencies.SearchString)</CurrentDependencySearchString> -->
+      <!-- <CurrentDependencySearchIndex>%(Dependencies.SearchIndex)</CurrentDependencySearchIndex> -->
+      <!-- <LatestPackages Condition="'%(Repository.Identity)'=='$(CurrentDependency)'" >$(LocalBuildInfoRoot)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</LatestPackages> -->
+    <!-- </PropertyGroup> -->
+    <!-- <ReadLinesFromFile File="$(LatestPackages)" Condition="Exists('$(LatestPackages)')" > -->
+      <!-- <Output TaskParameter="Lines" -->
+              <!-- ItemName="UpdatedLines"/> -->
+    <!-- </ReadLinesFromFile> -->
+    <!-- <PropertyGroup> -->
+      <!-- <UpdatedLinesString>@(UpdatedLines)</UpdatedLinesString> -->
+	  <!-- <UpdatedVersion>$([System.String]::Copy('$(UpdatedLinesString)').Split(';')[$(CurrentDependencySearchIndex)].Split(' ')[1])</UpdatedVersion> -->
+	<!-- </PropertyGroup> -->
+    <!-- <Message Importance="High" Text="Updating $(CurrentDependency) dependency versions in $(DependencyFile)" /> -->
+    <!-- <ReadLinesFromFile File="$(DependencyFile)" Condition="Exists('$(DependencyFile)')" > -->
+      <!-- <Output TaskParameter="Lines" -->
+              <!-- ItemName="DependenciesLines"/> -->
+    <!-- </ReadLinesFromFile> -->
+    <!-- <ItemGroup> -->
+      <!-- <VersionLine Include="%(DependenciesLines.Identity)" Condition="$([System.String]::Copy('%(DependenciesLines.Identity)').Contains($(CurrentDependencySearchString)))" /> -->
+    <!-- </ItemGroup> -->
+    <!-- <PropertyGroup> -->
+      <!-- <DependenciesLinesString>@(DependenciesLines)</DependenciesLinesString> -->
+      <!-- <CurrentVersionLine>@(VersionLine)</CurrentVersionLine> -->
+      <!-- <FirstItemInVersionLine>$([System.String]::Copy('$(CurrentVersionLine)').Split(';')[0])</FirstItemInVersionLine> -->
+      <!-- <UpdatedVersionLine>&lt;$(CurrentDependencySearchString)&gt;$(UpdatedVersion)&lt;/$(CurrentDependencySearchString)&gt;</UpdatedVersionLine> -->
+      <!-- <NewDependenciesLines>$(DependenciesLinesString.Replace($(FirstItemInVersionLine), $(UpdatedVersionLine)).Replace('>;','>%0A'))</NewDependenciesLines> -->
+    <!-- </PropertyGroup> -->
+    <!-- <WriteLinesToFile   -->
+        <!-- File="$(DependencyFile)"   -->
+        <!-- Lines="$(NewDependenciesLines)"   -->
+        <!-- Overwrite="true" /> -->
+  <!-- </Target> -->
 </Project>

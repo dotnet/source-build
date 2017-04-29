@@ -3,12 +3,49 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPathToNuGetConfig" />
 
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
+  
+    <Import Project="$(ProjectDirectory)dependencies.props"
+          Condition="Exists('$(ProjectDirectory)dependencies.props')" />
 
   <Import Project="$(ProjectDirectory)dependencies.props"
           Condition="Exists('$(ProjectDirectory)dependencies.props')" />
+
+  <Target Name="AddPathToNuGetConfig" BeforeTargets="Sync" >
+    <ItemGroup>
+      <ProjectDirectoryFiles Include="$(ProjectDirectory)/*.*" />
+      <PotentialConfigFiles Include="%(ProjectDirectoryFiles.Identity)" Condition="$([System.String]::Copy('%(ProjectDirectoryFiles.Identity)').ToLower().Contains('nuget.config'))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <PotentialConfigFilesString>@(PotentialConfigFiles)</PotentialConfigFilesString>
+      <NugetConfig>$([System.String]::Copy('$(PotentialConfigFilesString)').Split(';')[0])</NugetConfig>
+    </PropertyGroup>
+    <AddPathToNuGetConfig NugetConfigFile="$(NugetConfig)"
+                          RepositoryPath="$(PackagesDir)"
+                          Condition="Exists('$(NugetConfig)')" />
+  </Target>
+
+  <Target Name="CopyOverrideBuildScripts" BeforeTargets="Sync" >
+    <Message Importance="High" Text="Copying over build scripts for $(RepositoryName)" />
+    <ItemGroup>
+	  <RepoSpecificOverrideBuildScripts Include="$(OverrideBuildScriptsDir)$(RepositoryName)/**/*.*" />
+      <OverrideBuildScripts Include="$(OverrideBuildScriptsDir)/*.*" />
+    </ItemGroup>
+    <Exec Command="chmod -R +x $(OverrideBuildScriptsDir)" ConsoleToMSBuild="true" Condition="'$(OS)' != 'Windows_NT'">
+      <Output TaskParameter="ConsoleOutput" PropertyName="DotnetStage0RidLinux" />
+    </Exec>
+	<PropertyGroup>
+	  <ExcludeDirPattern>$([System.String]::Copy($(OverrideBuildScriptsDir)$(RepositoryName)).Replace('/', '\'))</ExcludeDirPattern>
+	</PropertyGroup>
+    <Copy SourceFiles="@(OverrideBuildScripts)"
+      DestinationFiles="@(OverrideBuildScripts -> '$(ProjectDirectory)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(RepoSpecificOverrideBuildScripts)"
+          DestinationFiles="$([System.String]::Copy('$(ProjectDirectory)%(RepoSpecificOverrideBuildScripts.RootDir)%(RepoSpecificOverrideBuildScripts.Directory)%(RepoSpecificOverrideBuildScripts.Filename)%(RepoSpecificOverrideBuildScripts.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
+  </Target>
 
   <Target Name="BuildRepositoryAndDependencies" DependsOnTargets="BuildRepositoryReferences;Build" />
 
@@ -29,6 +66,34 @@
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+
+  <Target Name="Sync" DependsOnTargets="CopyNugetConfig" Condition="'$(SyncCommand)' != ''" >
+    <Message Importance="High" Text="Executing $(ProjectDirectory)> $(SyncCommand)" />
+    <Exec Command="$(SyncCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  
+  <Target Name="ControlPackagesSources" BeforeTargets="Build" >
+    <ItemGroup>
+      <ProjectDirectoryFiles Include="$(ProjectDirectory)/*.*" />
+      <PotentialConfigFiles Include="%(ProjectDirectoryFiles.Identity)" Condition="$([System.String]::Copy('%(ProjectDirectoryFiles.Identity)').ToLower().Contains('nuget.config'))" />
+    </ItemGroup>
+    <PropertyGroup>
+      <NugetConfig Condition="'@(PotentialConfigFiles)'!=''">@(PotentialConfigFiles)</NugetConfig>
+    </PropertyGroup>
+    <Message importance="high" text="Updating '$(NugetConfig)' to point to only source-built packages..." />
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NugetConfig)"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)"
+                            IsOnlySource="true" 
+                            SetClearFlag="true" 
+                            Condition="'$(IsOnlineBuild)' != 'true'" />
+  </Target>
+  
+  <Target Name="CopyNugetConfig" >
+    <Copy SourceFiles="$(BaseIntermediatePath)Nuget.config"
+          DestinationFolder="$(ProjectDirectory)"
+          Condition="!Exists('$(ProjectDirectory)Nuget.config')" />
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
@@ -57,6 +122,38 @@
 
   <Target Name="Update" BeforeTargets="Build" Condition="'$(UpdateCommand)' != ''" >
     <Exec Command="$(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+  <!--
+    Update a repository that uses the BuildTools auto-update flow.
+  -->
+  <Target Name="UpdateUsingBuildTools"
+          DependsOnTargets="UpdateDependencies"
+          BeforeTargets="Build;Update"
+          Condition="'@(DependencyBuildInfo)' != ''" />
+
+  <!--
+    Mutate the UpdateDependencies items to use only local build-infos.
+  -->
+  <Target Name="AdjustUpdateDependencyItems"
+          BeforeTargets="UpdateDependencies">
+    <ItemGroup>
+      <LocalDependencyBuildInfo Include="@(DependencyBuildInfo)"
+                                KeepMetadata="BuildInfoPath"
+                                Condition="Exists('$(IntermediatePath)%(DependencyBuildInfo.BuildInfoPath)\Latest_Packages.txt')">
+        <VersionsRepoDir>$(IntermediatePath)</VersionsRepoDir>
+      </LocalDependencyBuildInfo>
+
+      <!--
+        TODO: Strengthen association between DependencyBuildInfo and UpdateStep.
+        As of writing, it is only an unenforced convention for the ItemSpec of
+        an UpdateStep to be the name of the build-info that it uses.
+      -->
+      <UpdateStepWithoutLocalBuildInfo Include="@(UpdateStep)" Exclude="@(LocalDependencyBuildInfo)" />
+      <UpdateStep Remove="@(UpdateStepWithoutLocalBuildInfo)" />
+
+      <DependencyBuildInfo Remove="@(DependencyBuildInfo)" />
+      <DependencyBuildInfo Include="@(LocalDependencyBuildInfo)" />
+    </ItemGroup>
   </Target>
 
   <!--
@@ -110,6 +207,8 @@
    <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
          DestinationFolder="$(ProjectDirectory)" />
   </Target>
+  
+   <Import Project="$(ToolsDir)VersionTools.targets" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />
 
