@@ -223,14 +223,6 @@ namespace Microsoft.DotNet.Cli.Build
                 var runtimeGraphGeneratorProject = Path.Combine(Dirs.RepoRoot, "setuptools", "independent", runtimeGraphGeneratorName);
                 var runtimeGraphGeneratorOutput = Path.Combine(Dirs.Output, "setuptools", "independent", runtimeGraphGeneratorName);
 
-                string value = Environment.GetEnvironmentVariable("NUGET_PACKAGES");
-                
-                dotnetCli.Publish(
-                    "--output", runtimeGraphGeneratorOutput,
-                    "-r", _sharedFrameworkRid,
-                    runtimeGraphGeneratorProject)
-                    .EnvironmentVariable("NUGET_PACKAGES", $"{value}")
-                    .Execute().EnsureSuccessful();
                 var runtimeGraphGeneratorExe = Path.Combine(runtimeGraphGeneratorOutput, $"{runtimeGraphGeneratorName}{Constants.ExeSuffix}");
 
                 Cmd(runtimeGraphGeneratorExe, "--project", _sharedFrameworkSourceRoot, "--deps", destinationDeps, runtimeGraphGeneratorRuntime)

@@ -24,6 +24,14 @@
           DestinationFiles="$([System.String]::Copy('$(DotnetStage0RidFolder)/%(DotnetStage0Files.RootDir)%(DotnetStage0Files.Directory)%(DotnetStage0Files.Filename)%(DotnetStage0Files.Extension)').Replace('$(ExcludeDirPattern)', ''))" />
   </Target>
 
+  
+  <Target Name="WriteNugetPackagesForCore-Setup" BeforeTargets="CopyDotnetStage0"> 
+    <WriteLinesToFile  
+            File="$(ProjectDirectory)/nugetpackages.txt"  
+            Lines="$(PackagesDir)"  
+            Overwrite="true" />
+  </Target>
+  
   <Target Name="GetRuntimeDependencies" BeforeTargets="Sync" >
    <ItemGroup>
       <CoreSetupProjectJson Include="$(ProjectDirectory)/project.json" />
@@ -38,7 +46,7 @@
   <Target Name="PublishRuntimeGraph" AfterTargets="Sync" >
     <Message Importance="high" text="Publishing RuntimeGraphGenerator for '$(TargetRid)'"/>
     <Exec Condition="'$(TargetOS)' != 'Windows_NT'" WorkingDirectory="$(ProjectDirectory)"
-          Command="$(OverridesForCommands) $(DotnetCommand) publish --output $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator -r $(TargetRid) $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator" />
+          Command="NUGET_PACKAGES=$(PackagesDir) $(DotnetCommand) publish --output $(ProjectDirectory)artifacts/$(TargetRid)/setuptools/independent/RuntimeGraphGenerator -r $(TargetRid) $(ProjectDirectory)/setuptools/independent/RuntimeGraphGenerator" />
   </Target>
   
   <Target Name="RemoveDependenciesThatDontRestore" BeforeTargets="Build">
