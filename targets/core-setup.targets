@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="SetVersionsEnvironment" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
-
-  <Target Name="Update" BeforeTargets="Build">
-    <ItemGroup>
-      <RepoVersionFiles Include="%(Repository.Identity)" Exclude="core-setup" >
-        <VersionFile>$(VersionFileDirectory)%(Repository.Organization)/%(Repository.Identity)/%(Repository.Branch)/$(VersionFilename)</VersionFile>
-      </RepoVersionFiles>
-    </ItemGroup>
-
-    <SetVersionsEnvironment OS="$(OS)" Repositories="@(RepoVersionFiles)">
-      <Output PropertyName="SetVersionFilesCmd" TaskParameter="Command" />
-    </SetVersionsEnvironment>
-
-    <Exec Command="$(SetVersionFilesCmd) $(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
-  </Target>
-
-  <Target Name="UpdateNugetConfig" BeforeTargets="Build">
-    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
-                            SourceName="source-built"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
-  </Target>
 
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>

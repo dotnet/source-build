@@ -17,13 +17,4 @@
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
                          Rid="$(TargetRid)-$(Platform)" />
   </Target>
-
-  <Target Name="PatchSources"
-          BeforeTargets="Build">
-
-    <Exec Command="git apply $(PatchesDir)corefx/crossgen-ni-fix.patch"
-          WorkingDirectory="$(ProjectDirectory)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true" />
-  </Target>
 </Project>
