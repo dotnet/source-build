@@ -6,56 +6,10 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateMsBuildFrameworkDependencyVersions" />
 
   <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
-    <ItemGroup>
-      <!-- If we're bootstrapping on an unsupported distro, we won't be able to restore most of these packages,  after
-           roslyn moves to buliding against the 2.0 shared framework, we should be able to remove this condition and
-           update all project.json files because we will be building them in the source-build -->
-      <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' == 'true'" Include="$(ProjectDirectory)/build/**/project.json" />
-      <RoslynProjectJsonFiles Condition="'$(_IsBootstrapping)' != 'true'" Include="$(ProjectDirectory)/**/project.json" />
-      <NuSpecFiles Include="$(ProjectDirectory)/**/*.nuspec" />
-    </ItemGroup>
-
-    <Exec Command="git apply $(PatchesDir)roslyn/makefile-dotnet-runtime-id-support.patch"
-          WorkingDirectory="$(ProjectDirectory)"
-          IgnoreExitCode="true"
-          IgnoreStandardErrorWarningFormat="true" />
-
     <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
                             SourceName="Source-Build"
                             SourcePath="$(SourceBuiltPackagesPath)" />
-    <ChangeRuntimesSection ProjectJsonFiles="@(RoslynProjectJsonFiles)"
-                           ReplacementRuntimeId="$(TargetRid)"
-                           FilterRuntimeId="ubuntu.14.04-x64"
-                           Condition="'$(TargetOS)' == 'Linux'" />
 
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
-
-    <UpdateMsBuildFrameworkDependencyVersions Projects="$(ProjectDirectory)/build/MSBuildToolset_msbuild/MSBuildToolset.csproj"
-                                              NuGetPackages="@(SourceBuiltPackage)"
-                                              Condition="'$(_IsBootstrapping)' == 'true'" />
-  </Target>
-
-   <Target Name="BootstrapPackages"
-          BeforeTargets="Package"
-          Condition="'$(_IsBootstrapping)' == 'true'">
-    <PropertyGroup>
-      <CsiCoreSourceDirectory>$(CsiCoreBaseDirectory)CsiCore/</CsiCoreSourceDirectory>
-      <RoslynToolsetDirectory>$(ProjectDirectory)Binaries/toolset/</RoslynToolsetDirectory>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <CsiCoreCopyFile Include="$(RoslynToolsetDirectory)*" />
-      <CsiCoreCopyFile Include="$(CsiCoreSourceDirectory)*" />
-    </ItemGroup>
-
-    <!-- Create a working directory where we can copy in the CsiCore and toolset binaries for producing packages -->
-    <MakeDir Directories="$(CsiCoreWorkingDirectory)"
-             Condition="'$(_IsBootstrapping)' == 'true' and !Exists('$(CsiCoreWorkingDirectory)')" />
-
-    <Copy SourceFiles="@(CsiCoreCopyFile)"
-          DestinationFolder="$(CsiCoreWorkingDirectory)"
-          OverwriteReadOnlyFiles="true"
-          SkipUnchangedFiles="true"
-          Condition="'$(_IsBootstrapping)' == 'true'" />
   </Target>
 </Project>
