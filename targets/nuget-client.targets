@@ -13,13 +13,15 @@
     <AddPublicSignToProjectJson ProjectJsonFiles="@(Projects)"
                                 KeyFilePath="$(NuGetKeyFilePath)" />
 
-    <Exec Command="$(DotNetCommand) restore %(Projects.Identity)" />
+    <Exec Command="$(DotNetCommand) restore %(Projects.Identity)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
 
     <MSBuild Projects="$(MSBuildProjectFullPath)"
              Targets="BuildProjectsForTFM"
              Properties="BuildTFM=%(BuildTFMs.Identity)" />
 
-    <Exec Command="$(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(Projects.Identity) --version-suffix $(NuGetClientVersionSuffix)" />
+    <Exec Command="$(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(Projects.Identity) --version-suffix $(NuGetClientVersionSuffix)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="PrintBuildMessage">
@@ -35,7 +37,8 @@
               ItemName="Projects" />
     </DiscoverProjectsForTFMs>
 
-    <Exec Command="$(DotNetCommand) build %(Projects.Identity) -c $(Configuration) -f $(BuildTFM)" Condition="'@(Projects)' != ''"/>
+    <Exec Command="$(DotNetCommand) build %(Projects.Identity) -c $(Configuration) -f $(BuildTFM)" Condition="'@(Projects)' != ''"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="InstallTools">
@@ -46,22 +49,28 @@
 
   <Target Name="InstallToolsWindows">
     <Exec Command="powershell.exe -Command &quot;. $(ProjectDirectory)build/common.ps1 ; Install-DotnetCLI&quot;"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="InstallToolsUnix">
     <Exec Command="curl -o $(ToolsDirectory)/dotnet-install.sh https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="chmod +x $(ToolsDirectory)/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="bash $(ToolsDirectory)/dotnet-install.sh -i cli -c preview -v 1.0.0-preview2-003121"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
     <Exec Command="git submodule init"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="git submodule update"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
