@@ -26,6 +26,19 @@
     <MSBuild Projects="@(_DependentProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
+  <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)')"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
+    </ItemGroup>
+
+    <Exec Command="git apply --whitespace=nowarn %(PatchesToApply.Identity)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true"
+          IgnoreExitCode="true" />
+  </Target>
+
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
