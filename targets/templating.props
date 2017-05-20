@@ -2,8 +2,20 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Runtime $(TargetRid)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
+    <CommitHash>b0aa335d9960ad99b2035f9cfbaaaf6a94dc0ac6</CommitHash>
+    <BuildNumber>222</BuildNumber>
+    <PackageDateTime>20170505</PackageDateTime>
+    <PackageBuildQuality>beta2</PackageBuildQuality>
   </PropertyGroup>
+
+  <ItemGroup>
+    <MSBuildProperties Include="Configuration=$(Configuration)" />
+    <MSBuildProperties Include="COMMIT_HASH=$(CommitHash)" />
+    <MSBuildProperties Include="COMMIT_COUNT=$(BuildNumber)" />
+    <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
+    <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
+    <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
+  </ItemGroup>
 </Project>
