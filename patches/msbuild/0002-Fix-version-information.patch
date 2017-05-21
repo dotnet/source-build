@@ -1,0 +1,39 @@
+From 5fa67ee86b8ece93292ad08348ac1d4542f16830 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Sat, 20 May 2017 17:41:08 -0700
+Subject: [PATCH 2/2] Fix version information
+
+---
+ build/NetCore.props     | 2 +-
+ src/Shared/Constants.cs | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/NetCore.props b/build/NetCore.props
+index e0777f09..ff37b7cc 100644
+--- a/build/NetCore.props
++++ b/build/NetCore.props
+@@ -7,7 +7,7 @@
+     <SignAssembly>true</SignAssembly>
+     <PublicSign>true</PublicSign>
+     <VersionPrefix>15.3.0</VersionPrefix>
+-    <VersionSuffix>preview-000234-01</VersionSuffix>
++    <VersionSuffix>preview-000246-05</VersionSuffix>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+diff --git a/src/Shared/Constants.cs b/src/Shared/Constants.cs
+index b58b0d44..658eeb57 100644
+--- a/src/Shared/Constants.cs
++++ b/src/Shared/Constants.cs
+@@ -78,7 +78,7 @@ namespace Microsoft.Build.Shared
+         internal const string CurrentAssemblyVersion = Microsoft.VisualStudio.Internal.BrandNames.VSGeneralAssemblyVersion;
+ #endif
+ 
+-        internal const string CurrentAssemblyFileVersion = "15.3.0.0";
++        internal const string CurrentAssemblyFileVersion = "15.3.246.41955";
+ 
+         /// <summary>
+         /// Current version of this MSBuild Engine assembly in the form, e.g, "12.0"
+-- 
+2.11.0
+
