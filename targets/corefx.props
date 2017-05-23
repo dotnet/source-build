@@ -4,7 +4,6 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildArguments>-$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</BuildCommand>
-    <ArmEnvironmentVariables>ROOTFS_DIR=/crossrootfs/arm<ArmEnvironmentVariables>
     <BuildCommand Condition="'$(Platform)' == 'arm'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>

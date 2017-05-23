@@ -3,7 +3,11 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
+    <BuildArguments Condition="'$(Platform)' != 'arm'">--configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildArguments>
+    <!-- Need to bump core-setup submodule -->
+    <BuildArguments Condition="'$(Platform)' == 'arm'">-TargetArchitecture=arm -DistroRid=linux-arm -DisableCrossgen=true -PortableBuild=true -SkipTests=true -CrossBuild=true</BuildArguments>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <BuildCommand Condition="'$(Platform)' == 'arm'">$(ArmEnvironmentVariables) $(BuildCommand) @(ArmArguments)</BuildCommand>
     <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
     <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build</BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/corehost/</PackagesOutput>
