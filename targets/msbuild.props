@@ -2,9 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <DotNetTool>$(ToolsDir)/dotnetcli/dotnet</DotNetTool>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <SolutionToBuild>$(ProjectDirectory)/NetCore.sln</SolutionToBuild>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
-    <BuildCommand>$(DotNetTool) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
+    <BuildCommand>$(DotNetCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
   </PropertyGroup>
 </Project>

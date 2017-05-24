@@ -1,0 +1,32 @@
+From b8b3c277bc714a3d145a81f17d8cf69aa48f8f8a Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 15 May 2017 15:24:45 -0700
+Subject: [PATCH 1/2] Respect NUGET_PACKAGES if it is set
+
+---
+ scripts/build.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/build.sh b/scripts/build.sh
+index ce6e1ad..64cc123 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -63,7 +63,7 @@ done
+ echo "Setup environment variables."
+ TP_ROOT_DIR=$(cd "$(dirname "$0")"; pwd -P)
+ TP_TOOLS_DIR="$TP_ROOT_DIR/tools"
+-TP_PACKAGES_DIR="$TP_ROOT_DIR/packages"
++TP_PACKAGES_DIR="${NUGET_PACKAGES:-${TP_ROOT_DIR}/packages}"
+ TP_OUT_DIR="$TP_ROOT_DIR/artifacts"
+ TP_PACKAGE_PROJ_DIR="$TP_ROOT_DIR/src/package/package"
+ TP_PACKAGE_NUSPEC_DIR="$TP_ROOT_DIR/src/package/nuspec"
+@@ -307,4 +307,4 @@ echo "Build complete. $(( SECONDS - start ))"
+ 
+ if [[ $? -ne 0 ]]; then
+     exit 1
+-fi
+\ No newline at end of file
++fi
+-- 
+2.11.0
+

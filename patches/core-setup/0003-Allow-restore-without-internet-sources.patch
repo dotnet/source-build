@@ -1,0 +1,33 @@
+From a9d6617ce7586dddde8cb6418ba3bdb92daeed67 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 22 May 2017 16:32:13 -0700
+Subject: [PATCH 3/3] Allow restore without internet sources
+
+---
+ dir.props | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/dir.props b/dir.props
+index cbb2519f..3bb80355 100644
+--- a/dir.props
++++ b/dir.props
+@@ -118,10 +118,14 @@
+     <HostPolicyVersion Condition="'$(UseShippedHostPolicyPackage)' == 'true'">2.0.0</HostPolicyVersion>
+   </PropertyGroup>
+ 
+-  <!-- list of nuget package sources passed to dnu -->
+   <ItemGroup>
+-    <!-- Need to escape double forward slash (%2F) or MSBuild will normalize to one slash on Unix. -->
+     <DotnetSourceList Include="$(OverridePackageSource)" />
++    <DotnetSourceList Include="$(OverridePackageSourceEx)" />
++  </ItemGroup>
++
++  <!-- list of nuget package sources passed to dnu -->
++  <ItemGroup Condition="'$(ExcludeInternetFeeds)' != 'true'">
++    <!-- Need to escape double forward slash (%2F) or MSBuild will normalize to one slash on Unix. -->
+     <DotnetSourceList Include="https:%2F%2Fdotnet.myget.org/F/dotnet-core/api/v3/index.json" />
+     <DotnetSourceList Include="https:%2F%2Fdotnet.myget.org/F/cli-deps/api/v3/index.json" />
+     <DotnetSourceList Include="https:%2F%2Fdotnet.myget.org/F/dotnet-buildtools/api/v3/index.json" />
+-- 
+2.11.0
+

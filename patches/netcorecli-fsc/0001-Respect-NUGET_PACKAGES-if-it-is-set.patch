@@ -1,0 +1,25 @@
+From 3ac0571ccda8dfa229e04a119f30ca75c5c325d1 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 15 May 2017 18:44:40 -0700
+Subject: [PATCH] Respect NUGET_PACKAGES if it is set
+
+---
+ run-build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/run-build.sh b/run-build.sh
+index 1048ffa..a87417d 100755
+--- a/run-build.sh
++++ b/run-build.sh
+@@ -56,7 +56,7 @@ source "$REPOROOT/scripts/common/_prettyprint.sh"
+ BUILD=1
+ 
+ # Set nuget package cache under the repo
+-export NUGET_PACKAGES="$REPOROOT/.nuget/packages"
++export NUGET_PACKAGES="${NUGET_PACKAGES:-${REPOROOT}/.nuget/packages}"
+ 
+ args=( "$@" )
+ 
+-- 
+2.11.0
+

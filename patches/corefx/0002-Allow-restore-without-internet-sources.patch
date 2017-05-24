@@ -1,0 +1,35 @@
+From 4ece6b5d4b7f25db6397909ea28effd5d899eded Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 22 May 2017 16:32:30 -0700
+Subject: [PATCH 2/2] Allow restore without internet sources
+
+---
+ dir.props | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/dir.props b/dir.props
+index 0abb0ea6a5..4cd8ca6824 100644
+--- a/dir.props
++++ b/dir.props
+@@ -56,12 +56,16 @@
+   <!-- Provides package dependency version properties and verification/auto-upgrade configuration -->
+   <Import Project="$(MSBuildThisFileDirectory)dependencies.props" />
+ 
+-  <!-- list of nuget package sources passed to nuget restore -->
+-  <ItemGroup Condition="'$(ExcludeInternetFeeds)' != 'true'">
++  <ItemGroup>
+     <!-- Example to consume local CoreCLR package:
+          /p:OverridePackageSource=C:\coreclr\bin\Product\Windows_NT.x64.Debug\.nuget\pkg
+     -->
+     <DotnetSourceList Include="$(OverridePackageSource)" />
++    <DotnetSourceList Include="$(OverridePackageSourceEx)" />
++  </ItemGroup>
++
++  <!-- list of nuget package sources passed to nuget restore -->
++  <ItemGroup Condition="'$(ExcludeInternetFeeds)' != 'true'">
+     <!-- Need to escape double forward slash (%2F) or MSBuild will normalize to one slash on Unix. -->
+     <!-- Including buildtools to pull in TestSuite packages and repackaged xunit dependencies-->
+     <DotnetSourceList Include="https:%2F%2Fdotnet.myget.org/F/dotnet-buildtools/api/v3/index.json" />
+-- 
+2.11.0
+

@@ -3,9 +3,18 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
 
   <!--Repo specific properties -->
   <Import Project="$(RepositoryName).props" />
+
+  <PropertyGroup>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.config')">$(ProjectDirectory)NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.Config')">$(ProjectDirectory)NuGet.Config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)src\NuGet.config')">$(ProjectDirectory)src\NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)src\NuGet.Config')">$(ProjectDirectory)src\NuGet.Config</NuGetConfigFile>
+  </PropertyGroup>
 
   <Import Project="$(ProjectDirectory)dependencies.props"
           Condition="Exists('$(ProjectDirectory)dependencies.props')" />
@@ -37,6 +46,22 @@
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true"
           IgnoreExitCode="true" />
+  </Target>
+
+  <Target Name="UpdateNuGetConfig"
+          BeforeTargets="Build"
+          Condition="'$(NuGetConfigFile)' != ''">
+    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                                          Condition="'$(OfflineBuild)' != ''" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                            SourceName="prebuilt"
+                            SourcePath="$(PrebuiltPackagesPath)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
 
   <Target Name="Build">

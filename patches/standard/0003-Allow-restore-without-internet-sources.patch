@@ -1,0 +1,28 @@
+From 6341e60f57abdacb8f0590479f673e7f5110110e Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 22 May 2017 16:32:22 -0700
+Subject: [PATCH 3/3] Allow restore without internet sources
+
+---
+ dir.props | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/dir.props b/dir.props
+index 968eaaa..54a08f4 100644
+--- a/dir.props
++++ b/dir.props
+@@ -27,6 +27,11 @@
+   <!-- Import packaging props -->
+   <Import Project="$(MSBuildThisFileDirectory)Packaging.props"/>
+ 
++  <ItemGroup>
++    <DotnetSourceList Include="$(OverridePackageSource)" />
++    <DotnetSourceList Include="$(OverridePackageSourceEx)" />
++  </ItemGroup>
++
+   <!-- list of nuget package sources passed to dotnet -->
+   <ItemGroup Condition="'$(ExcludeInternetFeeds)' != 'true'">
+     <DotnetSourceList Include="https:%2F%2Fdotnet.myget.org/F/dotnet-core/api/v3/index.json" />
+-- 
+2.11.0
+

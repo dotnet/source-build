@@ -1,0 +1,243 @@
+From 10785445379ec7f5503dd17d52fd01a58b50f72c Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Fri, 12 May 2017 17:35:24 -0700
+Subject: [PATCH 4/5] Support Building on RedHat
+
+---
+ Makefile                                                            | 6 +++++-
+ build/scripts/restore.sh                                            | 6 ++++--
+ src/Compilers/CSharp/CscCore/CscCore.csproj                         | 2 +-
+ src/Compilers/Server/PortableServer/PortableServer.csproj           | 2 +-
+ src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj               | 2 +-
+ src/Compilers/VisualBasic/VbcCore/VbcCore.csproj                    | 2 +-
+ src/Interactive/CsiCore/CsiCore.csproj                              | 2 +-
+ src/Interactive/VbiCore/VbiCore.vbproj                              | 2 +-
+ src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj   | 2 +-
+ .../DeployCompilerGeneratorToolsRuntime.csproj                      | 2 +-
+ .../Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj    | 2 +-
+ .../CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj      | 2 +-
+ .../Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj       | 2 +-
+ .../VisualBasicErrorFactsGenerator.vbproj                           | 2 +-
+ .../VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj    | 2 +-
+ 15 files changed, 22 insertions(+), 16 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c00e72729f..7cad416e51 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,11 +12,15 @@ TARGET_FX = netcoreapp1.1
+ 
+ MSBUILD_ADDITIONALARGS := /v:m /fl /fileloggerparameters:Verbosity=normal /p:Configuration=$(BUILD_CONFIGURATION)
+ 
++RUNTIME_ID := $(DOTNET_RUNTIME_ID)
++
++ifeq ($(RUNTIME_ID),)
+ ifeq ($(OS_NAME),Linux)
+ 	RUNTIME_ID := $(shell . /etc/os-release && echo $$ID.$$VERSION_ID)-x64
+ else ifeq ($(OS_NAME),Darwin)
+ 	RUNTIME_ID := osx.10.12-x64
+ endif
++endif
+ 
+ ifneq ($(BUILD_LOG_PATH),)
+ 	MSBUILD_ADDITIONALARGS := $(MSBUILD_ADDITIONALARGS) /fileloggerparameters:LogFile=$(BUILD_LOG_PATH)
+@@ -55,7 +59,7 @@ test:
+ 
+ restore: $(DOTNET)
+ 	export PATH="$(BINARIES_PATH)/dotnet-cli:$(PATH)" ; \
+-	./build/scripts/restore.sh
++	./build/scripts/restore.sh $(RUNTIME_ID)
+ 
+ $(DOTNET):
+ 	mkdir -p $(BINARIES_PATH) ; \
+diff --git a/build/scripts/restore.sh b/build/scripts/restore.sh
+index d9ee45a7c5..7a577ff768 100755
+--- a/build/scripts/restore.sh
++++ b/build/scripts/restore.sh
+@@ -3,10 +3,12 @@
+ # Workaround, see https://github.com/dotnet/roslyn/issues/10210
+ export HOME=$(cd ~ && pwd)
+ 
++UNIX_RID_TO_RESTORE=${1:-ubuntu.14.04-x64}
++
+ echo "Restoring toolset packages"
+ 
+-dotnet restore -v Minimal --disable-parallel $(pwd)/build/ToolsetPackages/BaseToolset.csproj
++dotnet restore -v Minimal --disable-parallel $(pwd)/build/ToolsetPackages/BaseToolset.csproj /p:UnixRuntimeIdentifier=$UNIX_RID_TO_RESTORE
+ 
+ echo "Restore CrossPlatform.sln"
+ 
+-dotnet restore $(pwd)/CrossPlatform.sln
++dotnet restore $(pwd)/CrossPlatform.sln /p:UnixRuntimeIdentifier=$UNIX_RID_TO_RESTORE
+diff --git a/src/Compilers/CSharp/CscCore/CscCore.csproj b/src/Compilers/CSharp/CscCore/CscCore.csproj
+index aa531184bf..ea440b5c43 100644
+--- a/src/Compilers/CSharp/CscCore/CscCore.csproj
++++ b/src/Compilers/CSharp/CscCore/CscCore.csproj
+@@ -16,7 +16,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+   </PropertyGroup>
+diff --git a/src/Compilers/Server/PortableServer/PortableServer.csproj b/src/Compilers/Server/PortableServer/PortableServer.csproj
+index 90cf76414e..8321ab92e4 100644
+--- a/src/Compilers/Server/PortableServer/PortableServer.csproj
++++ b/src/Compilers/Server/PortableServer/PortableServer.csproj
+@@ -17,7 +17,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.10-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+     <RoslynProjectType>ExeNonDeployment</RoslynProjectType>
+diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+index 8d87945b41..7ca14fafaa 100644
+--- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
++++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+@@ -13,7 +13,7 @@
+     <AssemblyName>VBCSCompiler</AssemblyName>
+     <LargeAddressAware>true</LargeAddressAware>
+     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+-    <RuntimeIdentifiers>win7;ubuntu.14.04;osx.10.10</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <UseVSHostingProcess>false</UseVSHostingProcess>
+     <Prefer32Bit>false</Prefer32Bit>
+   </PropertyGroup>
+diff --git a/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj b/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
+index 6859461a54..8f0c522d6f 100644
+--- a/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
++++ b/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
+@@ -17,7 +17,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+   </PropertyGroup>
+diff --git a/src/Interactive/CsiCore/CsiCore.csproj b/src/Interactive/CsiCore/CsiCore.csproj
+index f5ee930ed0..5f2361530e 100644
+--- a/src/Interactive/CsiCore/CsiCore.csproj
++++ b/src/Interactive/CsiCore/CsiCore.csproj
+@@ -14,7 +14,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+   </PropertyGroup>
+diff --git a/src/Interactive/VbiCore/VbiCore.vbproj b/src/Interactive/VbiCore/VbiCore.vbproj
+index 24da7ac09a..fb18a05c85 100644
+--- a/src/Interactive/VbiCore/VbiCore.vbproj
++++ b/src/Interactive/VbiCore/VbiCore.vbproj
+@@ -13,7 +13,7 @@
+     <Prefer32Bit>false</Prefer32Bit>
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+     <NoWarn>$(NoWarn);40057</NoWarn>
+diff --git a/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj b/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
+index 4fa1f2ccca..81e8ac3b73 100644
+--- a/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
++++ b/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
+@@ -12,7 +12,7 @@
+     <LargeAddressAware>true</LargeAddressAware>
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+     <PackageTargetFallback>portable-net452;dotnet;netstandard1.6</PackageTargetFallback>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <RuntimeIdentifier>$(RoslynRuntimeIdentifier)</RuntimeIdentifier>
+     <SelfContained Condition="'$(RoslynRuntimeIdentifier)' != ''" >true</SelfContained>
+   </PropertyGroup>
+diff --git a/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj b/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
+index a7cfaf5197..416e27b82c 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
++++ b/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
+@@ -15,7 +15,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <PackageTargetFallback>portable-net452</PackageTargetFallback>
+     <NoStdLib>true</NoStdLib>
+     <NonShipping>true</NonShipping>
+diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
+index 4211db95c8..25ddc04cd0 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
++++ b/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
+@@ -14,7 +14,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <NonShipping>true</NonShipping>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
+diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
+index 17fbabdc69..1d4cd6f25a 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
++++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
+@@ -14,7 +14,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <NonShipping>true</NonShipping>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
+diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
+index 8f8c7a2918..31c7df7e59 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
++++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
+@@ -14,7 +14,7 @@
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <NonShipping>true</NonShipping>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
+diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
+index bf95092468..7fd53f85c2 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
++++ b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
+@@ -14,7 +14,7 @@
+     <AssemblyName>VBErrorFactsGenerator</AssemblyName>
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <NonShipping>true</NonShipping>
+     <NoWarn>$(NoWarn);40057</NoWarn>
+   </PropertyGroup>
+diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
+index 9aa9b9d896..380cbdb07f 100644
+--- a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
++++ b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
+@@ -15,7 +15,7 @@
+     <OptionStrict>Off</OptionStrict>
+     <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+     <TargetFramework>netcoreapp1.1</TargetFramework>
+-    <RuntimeIdentifiers>win7-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;osx.10.12-x64</RuntimeIdentifiers>
++    <RuntimeIdentifiers>win7-x64;$(UnixRuntimeIdentifier)</RuntimeIdentifiers>
+     <NonShipping>true</NonShipping>
+     <NoWarn>$(NoWarn);40057</NoWarn>
+   </PropertyGroup>
+-- 
+2.11.0
+

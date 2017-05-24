@@ -1,0 +1,28 @@
+From 1b0d6a0a3aea315abfd2ee8595e64f9a75355f32 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 22 May 2017 14:07:59 -0700
+Subject: [PATCH 5/5] Copy prebuilt dotnet from known location
+
+---
+ Makefile | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7cad416e51..bbab296eb6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -64,10 +64,7 @@ restore: $(DOTNET)
+ $(DOTNET):
+ 	mkdir -p $(BINARIES_PATH) ; \
+ 	pushd $(BINARIES_PATH) ; \
+-	curl -O https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh && \
+-	chmod +x dotnet-install.sh && \
+-	./dotnet-install.sh --version "$(DOTNET_VERSION)" --install-dir "$(BINARIES_PATH)/dotnet-cli"
+-
++	cp -r $(DOTNET_TOOL_DIR_1_0) $(BINARIES_PATH)/dotnet-cli
+ 
+ clean:
+ 	@rm -rf Binaries
+-- 
+2.11.0
+

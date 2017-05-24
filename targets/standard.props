@@ -7,4 +7,10 @@
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
+    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" />
+    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
+  </ItemGroup>
 </Project>

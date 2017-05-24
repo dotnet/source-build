@@ -21,8 +21,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CommandSeparator Condition="'$(OS)' == 'Windows_NT'">&amp;</CommandSeparator>
-    <CommandSeparator Condition="'$(OS)' != 'Windows_NT'">%3B</CommandSeparator>
     <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
     <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
     <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
@@ -45,6 +43,7 @@
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
+    <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
     <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(SourceBuiltPackagesPath)</SourceBuiltTarBallPath>
     <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
@@ -68,6 +67,13 @@
 
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR_1_0=$(ProjectDir)prebuilt/toolset/cli-1.0.0" />
+    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
+    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)prebuilt/toolset/buildtools" />
   </ItemGroup>
 
   <Import Project="repositories.props" />

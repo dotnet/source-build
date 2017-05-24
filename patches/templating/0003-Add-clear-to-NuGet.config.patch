@@ -1,0 +1,28 @@
+From 40c558d0cbb659fcabd759944ee5b0e94fccb378 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 23 May 2017 16:46:47 -0700
+Subject: [PATCH] Add <clear /> to NuGet.config
+
+---
+ NuGet.Config | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/NuGet.Config b/NuGet.Config
+index 1bde00b..eeef0ce 100644
+--- a/NuGet.Config
++++ b/NuGet.Config
+@@ -1,9 +1,7 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <configuration>
+   <packageSources>
+-    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
+-    <!--<add key="LocalFeed" value="feed" />
+-    <add key="LocalTemplateFeed" value="template_feed" />-->
++    <clear />
+     <add key="cli-deps" value="https://dotnet.myget.org/F/cli-deps/api/v3/index.json" />
+   </packageSources>
+   <packageRestore>
+-- 
+2.11.0
+

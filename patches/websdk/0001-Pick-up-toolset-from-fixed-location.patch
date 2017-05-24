@@ -1,0 +1,26 @@
+From 8d5f14b38d59a5355a6bcc99c050612009ffa7b2 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 23 May 2017 12:41:54 -0700
+Subject: [PATCH 1/2] Pick up toolset from fixed location
+
+---
+ build-core.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build-core.sh b/build-core.sh
+index 4aaec8c..20105c1 100755
+--- a/build-core.sh
++++ b/build-core.sh
+@@ -6,7 +6,8 @@ IFS=$'\n\t'
+ SCRIPT_ROOT="$(dirname "${BASH_SOURCE[0]}")"
+ DOTNET_TOOL_ROOT="$SCRIPT_ROOT/obj/tools/dotnet"
+ 
+-curl -L https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh | bash -s -- --version 1.0.0 --install-dir "$DOTNET_TOOL_ROOT"
++mkdir -p $DOTNET_TOOL_ROOT
++cp -r $DOTNET_TOOL_DIR_1_0/* $DOTNET_TOOL_ROOT
+ 
+ export PATH=$DOTNET_TOOL_ROOT:$PATH
+ 
+-- 
+2.11.0
+

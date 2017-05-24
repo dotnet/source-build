@@ -1,0 +1,30 @@
+From 8f20c2d25ed2d56843802e5cbae2924b1ca34372 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Fri, 12 May 2017 16:22:58 -0700
+Subject: [PATCH 1/5] Pass build configuration when publishing bootstrap
+ compiler
+
+Without this, we always end up publishing the debug version of the
+compiler.
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c407143699..c00e72729f 100644
+--- a/Makefile
++++ b/Makefile
+@@ -43,8 +43,8 @@ bootstrap: restore
+ 	$(BUILD_CMD) src/Compilers/CSharp/CscCore && \
+ 	$(BUILD_CMD) src/Compilers/VisualBasic/VbcCore && \
+ 	mkdir -p $(BOOTSTRAP_PATH)/csc && mkdir -p $(BOOTSTRAP_PATH)/vbc && \
+-	dotnet publish -r $(RUNTIME_ID) src/Compilers/CSharp/CscCore -o $(BOOTSTRAP_PATH)/csc && \
+-	dotnet publish -r $(RUNTIME_ID) src/Compilers/VisualBasic/VbcCore -o $(BOOTSTRAP_PATH)/vbc
++	dotnet publish -c $(BUILD_CONFIGURATION) -r $(RUNTIME_ID) src/Compilers/CSharp/CscCore -o $(BOOTSTRAP_PATH)/csc && \
++	dotnet publish -c $(BUILD_CONFIGURATION) -r $(RUNTIME_ID) src/Compilers/VisualBasic/VbcCore -o $(BOOTSTRAP_PATH)/vbc
+ 	rm -rf Binaries/$(BUILD_CONFIGURATION)
+ 
+ test:
+-- 
+2.11.0
+

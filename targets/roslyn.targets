@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ChangeRuntimesSection" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateMsBuildFrameworkDependencyVersions" />
 
-  <Target Name="UpdateRuntimeSection" BeforeTargets="Build">
-    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
-                            SourceName="Source-Build"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
-
+  <Target Name="FixNuSpecFilePathSeparators" BeforeTargets="Build">
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
   </Target>
 </Project>
