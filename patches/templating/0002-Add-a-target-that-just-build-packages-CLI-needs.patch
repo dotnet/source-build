@@ -1,7 +1,7 @@
-From 361eee604fd279bc18edd0ff6aabe8c1be4abf10 Mon Sep 17 00:00:00 2001
+From 95e897b62f3901be5fbc2c7f9505547acc92ce01 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Sat, 20 May 2017 13:40:41 -0700
-Subject: [PATCH 2/2] Add a target that just build packages CLI needs
+Subject: [PATCH 2/3] Add a target that just build packages CLI needs
 
 This cuts down on build time and also reduces the set of dependencies
 we need to pull in (since we aren't building code we arne't going to
@@ -58,5 +58,5 @@ index 405a636..306dcfd 100644
  
      <MakeDir Directories="$(ArtifactsDir);$(PackageOutputPath);$(TemplatesOutputPath);$(DevPath)" />
 -- 
-2.11.0
+1.8.3.1
 

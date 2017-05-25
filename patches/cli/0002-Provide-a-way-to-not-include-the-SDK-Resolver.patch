@@ -1,7 +1,7 @@
-From e80f1cc3a32931b8a3f7870c33010b45417309e6 Mon Sep 17 00:00:00 2001
+From a07b9f7028de94c3512f4e41bf9d37667b4e95eb Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 11 May 2017 17:58:28 -0700
-Subject: [PATCH 2/3] Provide a way to not include the SDK Resolver
+Subject: [PATCH 2/5] Provide a way to not include the SDK Resolver
 
 When building the entire stack for a non windows target, the windows
 resolver packages will not be present (and in the case of a windows
@@ -16,7 +16,7 @@ doesn't need to worry about.
  3 files changed, 6 insertions(+), 3 deletions(-)
 
 diff --git a/build/BuildDefaults.props b/build/BuildDefaults.props
-index 268a02e4e..a4d56ba14 100644
+index 268a02e..a4d56ba 100644
 --- a/build/BuildDefaults.props
 +++ b/build/BuildDefaults.props
 @@ -5,6 +5,7 @@
@@ -28,7 +28,7 @@ index 268a02e4e..a4d56ba14 100644
      <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
      <HighEntropyVA>true</HighEntropyVA>
 diff --git a/build/Compile.targets b/build/Compile.targets
-index d2a3747aa..044c10303 100644
+index d2a3747..044c103 100644
 --- a/build/Compile.targets
 +++ b/build/Compile.targets
 @@ -14,11 +14,12 @@
@@ -47,7 +47,7 @@ index d2a3747aa..044c10303 100644
               Targets="Publish" />
    </Target>
 diff --git a/build/Prepare.targets b/build/Prepare.targets
-index 214b1f78d..5bd07246a 100644
+index 214b1f7..5bd0724 100644
 --- a/build/Prepare.targets
 +++ b/build/Prepare.targets
 @@ -68,7 +68,8 @@
@@ -61,5 +61,5 @@ index 214b1f78d..5bd07246a 100644
    </Target>
  
 -- 
-2.11.0
+1.8.3.1
 

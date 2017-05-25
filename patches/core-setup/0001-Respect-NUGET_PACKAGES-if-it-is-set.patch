@@ -1,7 +1,7 @@
-From f115103448c7a7119fad694cf9928d8102a3eb92 Mon Sep 17 00:00:00 2001
+From 28ae99a09651e924e7373c8e4d7e3b96ad4fb568 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 15 May 2017 18:45:21 -0700
-Subject: [PATCH 1/3] Respect NUGET_PACKAGES if it is set
+Subject: [PATCH 1/4] Respect NUGET_PACKAGES if it is set
 
 ---
  dir.props           | 1 +
@@ -9,7 +9,7 @@ Subject: [PATCH 1/3] Respect NUGET_PACKAGES if it is set
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/dir.props b/dir.props
-index 3a79abc7..cbb2519f 100644
+index 3a79abc..cbb2519 100644
 --- a/dir.props
 +++ b/dir.props
 @@ -42,6 +42,7 @@
@@ -21,7 +21,7 @@ index 3a79abc7..cbb2519f 100644
      <ToolRuntimePath Condition="'$(ToolRuntimePath)'==''">$(ProjectDir)Tools/</ToolRuntimePath>
      <LocalToolRuntimePath Condition="'$(LocalToolRuntimePath)' == ''">$(ToolRuntimePath)local/</LocalToolRuntimePath>
 diff --git a/src/pkg/dir.targets b/src/pkg/dir.targets
-index b785ba53..85ed8815 100644
+index b785ba5..85ed881 100644
 --- a/src/pkg/dir.targets
 +++ b/src/pkg/dir.targets
 @@ -2,6 +2,6 @@
@@ -33,5 +33,5 @@ index b785ba53..85ed8815 100644
      </PropertyGroup>
  </Project>
 -- 
-2.11.0
+1.8.3.1
 

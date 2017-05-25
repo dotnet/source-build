@@ -1,17 +1,17 @@
-From 40c558d0cbb659fcabd759944ee5b0e94fccb378 Mon Sep 17 00:00:00 2001
+From 99f7860a8650334b6467f2a93eac57eec001d115 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Tue, 23 May 2017 16:46:47 -0700
-Subject: [PATCH] Add <clear /> to NuGet.config
+Subject: [PATCH 3/3] Add <clear /> to NuGet.config
 
 ---
- NuGet.Config | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ NuGet.Config | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/NuGet.Config b/NuGet.Config
-index 1bde00b..eeef0ce 100644
+index 1bde00b..5dc2010 100644
 --- a/NuGet.Config
 +++ b/NuGet.Config
-@@ -1,9 +1,7 @@
+@@ -1,10 +1,9 @@
 -﻿<?xml version="1.0" encoding="utf-8"?>
 +<?xml version="1.0" encoding="utf-8"?>
  <configuration>
@@ -21,8 +21,10 @@ index 1bde00b..eeef0ce 100644
 -    <add key="LocalTemplateFeed" value="template_feed" />-->
 +    <clear />
      <add key="cli-deps" value="https://dotnet.myget.org/F/cli-deps/api/v3/index.json" />
++    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
    </packageSources>
    <packageRestore>
+     <add key="enabled" value="True" />
 -- 
-2.11.0
+1.8.3.1
 

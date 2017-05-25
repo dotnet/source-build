@@ -1,7 +1,7 @@
-From be6224913a48f12b364e2146a412c6347cae062f Mon Sep 17 00:00:00 2001
+From 86773f7bdd17a43fba680fe61bf9848311801c76 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Sat, 20 May 2017 14:41:43 -0700
-Subject: [PATCH 1/2] Respect COMMIT_COUNT when set
+Subject: [PATCH 1/3] Respect COMMIT_COUNT when set
 
 This allows setting the commit count even when git is not
 installed (or the repository is partial checkout or not even a git
@@ -11,7 +11,7 @@ repository at all).
  1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/build.proj b/build.proj
-index c4717c4f..a7916bcc 100644
+index c4717c4..a7916bc 100644
 --- a/build.proj
 +++ b/build.proj
 @@ -21,8 +21,14 @@
@@ -32,5 +32,5 @@ index c4717c4f..a7916bcc 100644
      </Exec>
  
 -- 
-2.11.0
+1.8.3.1
 

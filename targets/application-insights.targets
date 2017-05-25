@@ -2,6 +2,10 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
+
+    <Copy SourceFiles="$(ProjectDirectory)/NuGet.config"
+          DestinationFiles="$(ApplicationInsightsWrapperDirectory)/NuGet.config" />
+
     <Exec Command="$(DotNetCommand) restore $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 

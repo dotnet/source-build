@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
-    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" />
+    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
   </ItemGroup>
 </Project>
