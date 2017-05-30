@@ -1,4 +1,4 @@
-From 0a3fa72bbe9a43b23d312f999ef8f717d72d25d6 Mon Sep 17 00:00:00 2001
+From ab6c2a350581c08a8461e0c598fe8a371bab4985 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 18 May 2017 18:35:17 -0700
 Subject: [PATCH 1/2] Add projects using the new dotnet sdk
@@ -12,16 +12,14 @@ building using just dotnet easier (no more project.json's to worry
 about, for example).
 ---
  NetCore.sln                                        |  95 ++++
- build/MSFT.snk                                     | Bin 0 -> 160 bytes
  build/NetCore.props                                |  21 +
  src/Build/Microsoft.Build.NetCore.csproj           | 490 +++++++++++++++++++++
  .../Microsoft.Build.Framework.NetCore.csproj       |  86 ++++
  src/MSBuild/MSBuild.NetCore.csproj                 | 181 ++++++++
  .../Microsoft.Build.Tasks.Core.NetCore.csproj      | 293 ++++++++++++
  .../Microsoft.Build.Utilities.Core.NetCore.csproj  | 144 ++++++
- 8 files changed, 1310 insertions(+)
+ 7 files changed, 1310 insertions(+)
  create mode 100644 NetCore.sln
- create mode 100644 build/MSFT.snk
  create mode 100644 build/NetCore.props
  create mode 100644 src/Build/Microsoft.Build.NetCore.csproj
  create mode 100644 src/Framework/Microsoft.Build.Framework.NetCore.csproj
@@ -31,7 +29,7 @@ about, for example).
 
 diff --git a/NetCore.sln b/NetCore.sln
 new file mode 100644
-index 00000000..8da57549
+index 0000000..8da5754
 --- /dev/null
 +++ b/NetCore.sln
 @@ -0,0 +1,95 @@
@@ -130,22 +128,9 @@ index 00000000..8da57549
 +		{EDC05A6F-80B4-40E4-9B6F-2114726ACD0E} = {4EB318F1-78D9-4C1F-BDF8-502D1F7E4619}
 +	EndGlobalSection
 +EndGlobal
-diff --git a/build/MSFT.snk b/build/MSFT.snk
-new file mode 100644
-index 0000000000000000000000000000000000000000..110b59c7b0d27388353dcf4116f721595f473e58
-GIT binary patch
-literal 160
-zcmV;R0AK$ABme*efB*oL000060ssI2Bme+XQ$aBR1ONa500968(fU`!uG#RTE`+KN
-zuKf+^=>2N!kB9pMc5H)8nUWr|JLj6&)!f0|n$k8CAp(#Kay<Efm4C$HcMy-p2X{{?
-z=rRtH>ILlN=pn$R@96PlTucm;!K;}lU1BV%Wh@=~);)AxZ!P8VeqOH+#FjlK9EuV{
-OWf&lBz>_phTGEsG5JRQ_
-
-literal 0
-HcmV?d00001
-
 diff --git a/build/NetCore.props b/build/NetCore.props
 new file mode 100644
-index 00000000..e0777f09
+index 0000000..e0777f0
 --- /dev/null
 +++ b/build/NetCore.props
 @@ -0,0 +1,21 @@
@@ -172,7 +157,7 @@ index 00000000..e0777f09
 +</Project>
 diff --git a/src/Build/Microsoft.Build.NetCore.csproj b/src/Build/Microsoft.Build.NetCore.csproj
 new file mode 100644
-index 00000000..f6e6608a
+index 0000000..f6e6608
 --- /dev/null
 +++ b/src/Build/Microsoft.Build.NetCore.csproj
 @@ -0,0 +1,490 @@
@@ -668,7 +653,7 @@ index 00000000..f6e6608a
 +</Project>
 diff --git a/src/Framework/Microsoft.Build.Framework.NetCore.csproj b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 new file mode 100644
-index 00000000..b617cdcd
+index 0000000..b617cdc
 --- /dev/null
 +++ b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 @@ -0,0 +1,86 @@
@@ -760,7 +745,7 @@ index 00000000..b617cdcd
 +</Project>
 diff --git a/src/MSBuild/MSBuild.NetCore.csproj b/src/MSBuild/MSBuild.NetCore.csproj
 new file mode 100644
-index 00000000..abf02146
+index 0000000..abf0214
 --- /dev/null
 +++ b/src/MSBuild/MSBuild.NetCore.csproj
 @@ -0,0 +1,181 @@
@@ -947,7 +932,7 @@ index 00000000..abf02146
 +</Project>
 diff --git a/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
 new file mode 100644
-index 00000000..a5819c09
+index 0000000..a5819c0
 --- /dev/null
 +++ b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
 @@ -0,0 +1,293 @@
@@ -1246,7 +1231,7 @@ index 00000000..a5819c09
 +</Project>
 diff --git a/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
 new file mode 100644
-index 00000000..3ae308fc
+index 0000000..3ae308f
 --- /dev/null
 +++ b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
 @@ -0,0 +1,144 @@
@@ -1395,5 +1380,5 @@ index 00000000..3ae308fc
 +  </ItemGroup>
 +</Project>
 -- 
-2.11.0
+1.8.3.1
 

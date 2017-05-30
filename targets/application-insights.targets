@@ -3,16 +3,13 @@
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
 
-    <Copy SourceFiles="$(ProjectDirectory)/NuGet.config"
-          DestinationFiles="$(ApplicationInsightsWrapperDirectory)/NuGet.config" />
-
-    <Exec Command="$(DotNetCommand) restore $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)"
+    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) build $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)"
+    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) pack $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)"
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

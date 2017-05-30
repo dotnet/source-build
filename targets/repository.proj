@@ -41,7 +41,7 @@
       <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
     </ItemGroup>
 
-    <Exec Command="git apply --ignore-whitespace --whitespace=nowarn %(PatchesToApply.Identity)"
+    <Exec Command="patch -p1 --ignore-whitespace --binary -i %(PatchesToApply.Identity)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true"

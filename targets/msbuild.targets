@@ -6,4 +6,13 @@
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
+
+
+  <!-- patch(1) doesn't understand binary diffs so we have to copy
+       the file ourselves -->
+  <Target Name="CopyStrongNameKey"
+          BeforeTargets="Build">
+    <Copy SourceFiles="$(ToolsDir)MSFT.snk"
+          DestinationFiles="$(ProjectDirectory)/build/MSFT.snk" />
+  </Target>
 </Project>
