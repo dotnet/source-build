@@ -1,7 +1,7 @@
-From 10785445379ec7f5503dd17d52fd01a58b50f72c Mon Sep 17 00:00:00 2001
+From e2f52e41b80f1b958e0e05eec2252138a4dc8f67 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Fri, 12 May 2017 17:35:24 -0700
-Subject: [PATCH 4/5] Support Building on RedHat
+Subject: [PATCH 3/5] Support Building on RedHat
 
 ---
  Makefile                                                            | 6 +++++-
@@ -22,7 +22,7 @@ Subject: [PATCH 4/5] Support Building on RedHat
  15 files changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index c00e72729f..7cad416e51 100644
+index c00e727..7cad416 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -12,11 +12,15 @@ TARGET_FX = netcoreapp1.1
@@ -51,7 +51,7 @@ index c00e72729f..7cad416e51 100644
  $(DOTNET):
  	mkdir -p $(BINARIES_PATH) ; \
 diff --git a/build/scripts/restore.sh b/build/scripts/restore.sh
-index d9ee45a7c5..7a577ff768 100755
+index d9ee45a..7a577ff 100755
 --- a/build/scripts/restore.sh
 +++ b/build/scripts/restore.sh
 @@ -3,10 +3,12 @@
@@ -70,7 +70,7 @@ index d9ee45a7c5..7a577ff768 100755
 -dotnet restore $(pwd)/CrossPlatform.sln
 +dotnet restore $(pwd)/CrossPlatform.sln /p:UnixRuntimeIdentifier=$UNIX_RID_TO_RESTORE
 diff --git a/src/Compilers/CSharp/CscCore/CscCore.csproj b/src/Compilers/CSharp/CscCore/CscCore.csproj
-index aa531184bf..ea440b5c43 100644
+index aa53118..ea440b5 100644
 --- a/src/Compilers/CSharp/CscCore/CscCore.csproj
 +++ b/src/Compilers/CSharp/CscCore/CscCore.csproj
 @@ -16,7 +16,7 @@
@@ -83,7 +83,7 @@ index aa531184bf..ea440b5c43 100644
      <NoStdLib>true</NoStdLib>
    </PropertyGroup>
 diff --git a/src/Compilers/Server/PortableServer/PortableServer.csproj b/src/Compilers/Server/PortableServer/PortableServer.csproj
-index 90cf76414e..8321ab92e4 100644
+index 90cf764..8321ab9 100644
 --- a/src/Compilers/Server/PortableServer/PortableServer.csproj
 +++ b/src/Compilers/Server/PortableServer/PortableServer.csproj
 @@ -17,7 +17,7 @@
@@ -96,7 +96,7 @@ index 90cf76414e..8321ab92e4 100644
      <NoStdLib>true</NoStdLib>
      <RoslynProjectType>ExeNonDeployment</RoslynProjectType>
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-index 8d87945b41..7ca14fafaa 100644
+index 8d87945..7ca14fa 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 @@ -13,7 +13,7 @@
@@ -109,7 +109,7 @@ index 8d87945b41..7ca14fafaa 100644
      <Prefer32Bit>false</Prefer32Bit>
    </PropertyGroup>
 diff --git a/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj b/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
-index 6859461a54..8f0c522d6f 100644
+index 6859461..8f0c522 100644
 --- a/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
 +++ b/src/Compilers/VisualBasic/VbcCore/VbcCore.csproj
 @@ -17,7 +17,7 @@
@@ -122,7 +122,7 @@ index 6859461a54..8f0c522d6f 100644
      <NoStdLib>true</NoStdLib>
    </PropertyGroup>
 diff --git a/src/Interactive/CsiCore/CsiCore.csproj b/src/Interactive/CsiCore/CsiCore.csproj
-index f5ee930ed0..5f2361530e 100644
+index f5ee930..5f23615 100644
 --- a/src/Interactive/CsiCore/CsiCore.csproj
 +++ b/src/Interactive/CsiCore/CsiCore.csproj
 @@ -14,7 +14,7 @@
@@ -135,7 +135,7 @@ index f5ee930ed0..5f2361530e 100644
      <NoStdLib>true</NoStdLib>
    </PropertyGroup>
 diff --git a/src/Interactive/VbiCore/VbiCore.vbproj b/src/Interactive/VbiCore/VbiCore.vbproj
-index 24da7ac09a..fb18a05c85 100644
+index 24da7ac..fb18a05 100644
 --- a/src/Interactive/VbiCore/VbiCore.vbproj
 +++ b/src/Interactive/VbiCore/VbiCore.vbproj
 @@ -13,7 +13,7 @@
@@ -148,7 +148,7 @@ index 24da7ac09a..fb18a05c85 100644
      <NoStdLib>true</NoStdLib>
      <NoWarn>$(NoWarn);40057</NoWarn>
 diff --git a/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj b/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
-index 4fa1f2ccca..81e8ac3b73 100644
+index 4fa1f2c..81e8ac3 100644
 --- a/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
 +++ b/src/Test/DeployCoreClrTestRuntime/DeployCoreClrTestRuntime.csproj
 @@ -12,7 +12,7 @@
@@ -161,7 +161,7 @@ index 4fa1f2ccca..81e8ac3b73 100644
      <SelfContained Condition="'$(RoslynRuntimeIdentifier)' != ''" >true</SelfContained>
    </PropertyGroup>
 diff --git a/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj b/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
-index a7cfaf5197..416e27b82c 100644
+index a7cfaf5..416e27b 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/DeployCompilerGeneratorToolsRuntime/DeployCompilerGeneratorToolsRuntime.csproj
 @@ -15,7 +15,7 @@
@@ -174,7 +174,7 @@ index a7cfaf5197..416e27b82c 100644
      <NoStdLib>true</NoStdLib>
      <NonShipping>true</NonShipping>
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
-index 4211db95c8..25ddc04cd0 100644
+index 4211db9..25ddc04 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/BoundTreeGenerator/CompilersBoundTreeGenerator.csproj
 @@ -14,7 +14,7 @@
@@ -187,7 +187,7 @@ index 4211db95c8..25ddc04cd0 100644
    </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
-index 17fbabdc69..1d4cd6f25a 100644
+index 17fbabd..1d4cd6f 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpErrorFactsGenerator/CSharpErrorFactsGenerator.csproj
 @@ -14,7 +14,7 @@
@@ -200,7 +200,7 @@ index 17fbabdc69..1d4cd6f25a 100644
    </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
-index 8f8c7a2918..31c7df7e59 100644
+index 8f8c7a2..31c7df7 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/CSharpSyntaxGenerator/CSharpSyntaxGenerator.csproj
 @@ -14,7 +14,7 @@
@@ -213,7 +213,7 @@ index 8f8c7a2918..31c7df7e59 100644
    </PropertyGroup>
    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" />
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
-index bf95092468..7fd53f85c2 100644
+index bf95092..7fd53f8 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicErrorFactsGenerator/VisualBasicErrorFactsGenerator.vbproj
 @@ -14,7 +14,7 @@
@@ -226,7 +226,7 @@ index bf95092468..7fd53f85c2 100644
      <NoWarn>$(NoWarn);40057</NoWarn>
    </PropertyGroup>
 diff --git a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
-index 9aa9b9d896..380cbdb07f 100644
+index 9aa9b9d..380cbdb 100644
 --- a/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
 +++ b/src/Tools/Source/CompilerGeneratorTools/Source/VisualBasicSyntaxGenerator/VisualBasicSyntaxGenerator.vbproj
 @@ -15,7 +15,7 @@
@@ -239,5 +239,5 @@ index 9aa9b9d896..380cbdb07f 100644
      <NoWarn>$(NoWarn);40057</NoWarn>
    </PropertyGroup>
 -- 
-2.11.0
+1.8.3.1
 

@@ -2,18 +2,13 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/cibuild.cmd /$(Configuration) /skipTest /skipCommitPrinting</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/cibuild.sh --$(Configuration) --SkipTests --SkipCommitPrinting</BuildCommand>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
+    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <RepositoryReference Include="coreclr" />
-    <RepositoryReference Include="corefx" />
   </ItemGroup>
 
 </Project>
