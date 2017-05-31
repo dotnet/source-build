@@ -44,9 +44,6 @@ cp -r $SCRIPT_ROOT/tasks $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-mkdir -p $TARBALL_ROOT/prebuilt/cli-1.0.0
-
-curl https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh | bash -s -- --version 1.0.0 --install-dir $TARBALL_ROOT/prebuilt/cli-1.0.0
 
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
