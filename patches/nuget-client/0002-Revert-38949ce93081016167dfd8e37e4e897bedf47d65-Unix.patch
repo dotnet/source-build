@@ -1,0 +1,73 @@
+From 20f49c33c57c1360c8137a734287a50cc2cb1bee Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 30 May 2017 18:31:03 -0700
+Subject: [PATCH 2/5] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (Unix
+ line endings)
+
+---
+ .../NuGet.Build.Tasks.Pack.nuspec                  |  6 ++---
+ .../MsbuilldIntegrationTestFixture.cs              | 26 +++++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 5 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+index e3f43ff..bee38e9 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+@@ -8,10 +8,8 @@
+     <description>NuGet 3 pack for dotnet CLI</description>
+   </metadata>
+   <files>
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\ilmerge\NuGet.Build.Tasks.Pack.dll" target="Desktop\" />
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\ilmerge\NuGet.Build.Tasks.Pack.xml" target="Desktop\" />
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\ilmerge\NuGet.Build.Tasks.Pack.dll" target="CoreCLR\" />
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\ilmerge\NuGet.Build.Tasks.Pack.xml" target="CoreCLR\" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\*.dll" target="Desktop\" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\*.dll" target="CoreCLR\" />
+     <file src="Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
+     <file src="Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
+   </files>
+diff --git a/test/NuGet.Core.FuncTests/Dotnet.Integration.Test/MsbuilldIntegrationTestFixture.cs b/test/NuGet.Core.FuncTests/Dotnet.Integration.Test/MsbuilldIntegrationTestFixture.cs
+index 61fd1ba..1a4e0e4 100644
+--- a/test/NuGet.Core.FuncTests/Dotnet.Integration.Test/MsbuilldIntegrationTestFixture.cs
++++ b/test/NuGet.Core.FuncTests/Dotnet.Integration.Test/MsbuilldIntegrationTestFixture.cs
+@@ -161,6 +161,30 @@ private void UpdateCliWithLatestNuGetAssemblies(string cliDirectory)
+ 
+                 DeleteFiles(pathToPackSdk);
+                 CopyNupkgFilesToTarget(nupkg, pathToPackSdk, files);
++
++                foreach (var coreClrDll in Directory.GetFiles(Path.Combine(pathToPackSdk, "CoreCLR")))
++                {
++                    var fileName = Path.GetFileName(coreClrDll);
++                    if (fileName != "NuGet.Build.Tasks.Pack.dll")
++                    {
++                        File.Copy(coreClrDll, Path.Combine(pathToSdkInCli, fileName), true);
++                    }
++                }
++            }
++
++            using (var nupkg = new PackageArchiveReader(pathToRestoreNupkg))
++            {
++                var files = nupkg.GetFiles()
++                    .Where(fileName => fileName.StartsWith("lib/netstandard1.3")
++                                       || fileName.StartsWith("runtimes"));
++                File.Delete(Path.Combine(pathToSdkInCli, "NuGet.Build.Tasks.dll"));
++                File.Delete(Path.Combine(pathToSdkInCli, "NuGet.Build.Tasks.xml"));
++                File.Delete(Path.Combine(pathToSdkInCli, "NuGet.targets"));
++                foreach (var file in files)
++                {
++                    var stream = nupkg.GetStream(file);
++                    stream.CopyToFile(Path.Combine(pathToSdkInCli, Path.GetFileName(file)));
++                }
+             }
+         }
+ 
+@@ -194,4 +218,4 @@ public void Dispose()
+             Directory.Delete(Path.GetDirectoryName(TestDotnetCli), true);
+         }
+     }
+-}
+\ No newline at end of file
++}
+-- 
+1.8.3.1
+
