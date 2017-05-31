@@ -52,7 +52,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=/crossrootfs/arm<ArmEnvironmentVariables>
+    <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />

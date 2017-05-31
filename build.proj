@@ -28,6 +28,11 @@
     <RemoveDir Directories="$(IntermediatePath)" />
   </Target>
 
+  <Target Name="GenerateRootFs">
+   <Exec Condition="'$(Platform)' == 'arm'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh" />
+  </Target>
+
+
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
       <Output PropertyName="TargetRid" TaskParameter="Rid" />
