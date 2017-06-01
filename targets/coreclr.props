@@ -3,11 +3,10 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
-    <BuildArguments Condition="'$(Platform)' == 'arm'">skipnuget cross -skiprestore stripSymbols</BuildArguments>
+    <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore stripSymbols</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
-    <ArmEnvironmentVariables>ROOTFS_DIR=/crossrootfs/arm</ArmEnvironmentVariables>
-    <BuildCommand Condition="'$(Platform)' == 'arm'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
