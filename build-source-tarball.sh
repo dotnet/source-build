@@ -45,5 +45,9 @@ cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
 
+curl https://raw.githubusercontent.com/dotnet/cli/release/2.0.0/scripts/obtain/dotnet-install.sh | bash -s -- --version 2.0.0-preview2-006195 --install-dir $TARBALL_ROOT/prebuilt/cli/2.0.0-preview2-006195/
+
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
+
+cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh

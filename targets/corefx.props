@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(ToolsDir)dotnetcli" />
     <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
     <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />

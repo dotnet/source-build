@@ -248,6 +248,10 @@ if [[ -d "$CLIPATH" ]] && [[ -d "$SUBMODULETOOLRUNTIMEDIR" ]]; then
   ADDITIONALARGS=(${ADDITIONALARGS[@]} "/p:BootstrapMsbuildCliDir=$CLIPATH")
 fi
 
+curl https://raw.githubusercontent.com/dotnet/cli/release/2.0.0/scripts/obtain/dotnet-install.sh | bash -s -- --version 2.0.0-preview2-006195 --install-dir ./prebuilt/cli/2.0.0-preview2-006195/
+
+CLIPATH="$SCRIPT_ROOT/prebuilt/cli/2.0.0-preview2-006195/"
+
 NETCORESDK=$CLIPATH
 determine_sdk_version
 SDKPATH="$CLIPATH/sdk/$SDKVERSION"
