@@ -65,6 +65,7 @@
 
   <PropertyGroup>
     <DefaultRepository>cli</DefaultRepository>
+    <DefaultRepository Condition="$(Platform.Contains('arm'))">core-setup</DefaultRepository>
   </PropertyGroup>
 
   <ItemGroup>
@@ -73,3 +74,4 @@
 
   <Import Project="repositories.props" />
 </Project>
+
