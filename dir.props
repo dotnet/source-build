@@ -70,8 +70,8 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
     <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)prebuilt/toolset/buildtools" />
+    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" Condition="'$(OfflineBuild)' == 'true'" />
   </ItemGroup>
 
   <Import Project="repositories.props" />

@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -ConfigurationGroup=$(Configuration) -SkipTests=true -- /p:BuildDebPackage=false</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -ConfigurationGroup=$(Configuration) -PortableBuild=false -SkipTests=true -- /p:BuildDebPackage=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
     <BinariesOutput>$(PackagesOutput)</BinariesOutput>
   </PropertyGroup>

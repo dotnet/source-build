@@ -19,10 +19,13 @@ namespace Microsoft.DotNet.Build.Tasks
         public override bool Execute()
         {
             // This regular expression is crafted to extract the semver component from the artifacts
-            // that Core-Setup produces. They have filenames like this:
-            //   dotnet-hostfxr-ubuntu-x64.2.0.0-beta-001545-00.tar.gz
+            // that Core-Setup produces. They have filenames like this (note the two formats!)
+            //   dotnet-runtime-rhel.7-x64.2.0.0-preview2-25401-9.tar.gz
+            //   dotnet-runtime-2.0.0-preview2-25401-9-rhel.7-x64.tar.gz
             // the "semver" capture would be 2.0.0-beta-001545-00 in this case.
-            const string VersionMatchRegex = @"\.(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9\-]+)?)";
+            const string VersionMatchRegex = @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+-[0-9]+-[0-9]+)?)";
+
+            bool anyErrors = false;
 
             foreach (ITaskItem binary in Binaries)
             {
@@ -30,13 +33,20 @@ namespace Microsoft.DotNet.Build.Tasks
                 string binaryFileName = Path.GetFileName(binaryFullPath);
                 string version = Regex.Match(binaryFileName, VersionMatchRegex).Groups["semver"].Value;
 
+                if (version == "")
+                {
+                    Log.LogError($"Could not extract version information from {binaryFileName}");
+                    anyErrors = true;
+                    continue;
+                }
+
                 string destinationFolder = DestinationFolderTemplate.Replace("{version}", version);
 
                 Directory.CreateDirectory(destinationFolder);
                 File.Copy(binaryFullPath, Path.Combine(destinationFolder, binaryFileName), overwrite: true);
             }
 
-            return true;
+            return !anyErrors;
         }
     }
 }
