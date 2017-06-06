@@ -29,7 +29,8 @@
   </Target>
 
   <Target Name="GenerateRootFs">
-   <Exec Condition="'$(Platform)' == 'arm'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh" />
+    <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh" />
+    <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) ./cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
 
@@ -50,7 +51,8 @@
   &lt;/PropertyGroup&gt;
 &lt;/Project&gt;</TargetInfoPropsContent>
     </PropertyGroup>
-
+    <Message importance="high" text="actually hitting this code path" />
+    <MakeDir Directories="$(IntermediatePath)" Condition="!Exists('$(IntermediatePath)')" />
     <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
   </Target>
 
