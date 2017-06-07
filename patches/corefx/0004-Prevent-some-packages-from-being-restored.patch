@@ -1,0 +1,29 @@
+From 4f40261116bc31609d90c3accd78bcc2c3ee51e9 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Wed, 7 Jun 2017 11:35:28 -0700
+Subject: [PATCH 4/4] Prevent some packages from being restored
+
+---
+ external/dir.proj | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/external/dir.proj b/external/dir.proj
+index aefe376..05ceb43 100644
+--- a/external/dir.proj
++++ b/external/dir.proj
+@@ -10,12 +10,10 @@
+     <Project Include="netstandard/netstandard.depproj" />
+     <Project Include="netfx/netfx.depproj" />
+     <Project Include="runtime/runtime.depproj" />
+-    <Project Include="test-runtime/XUnit.Runtime.depproj" />
+     <Project Include="harvestPackages/harvestPackages.netstandard1.6.depproj" />
+     <Project Include="harvestPackages/harvestPackages.uap10.0.depproj" />
+     <Project Include="portable\portable.depproj" />
+     <Project Include="ilasm/ilasm.depproj" />
+-    <Project Include="docs/docs.depproj" />
+     <Project Condition="'$(ILLinkTrimAssembly)' != 'false'" Include="ILLink/ILLink.depproj" />
+   </ItemGroup>
+ 
+-- 
+1.8.3.1
+

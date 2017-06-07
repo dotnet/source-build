@@ -20,6 +20,6 @@ fi
 
 $(rm $PATCHES_DIR/*.patch || true)
 
-git format-patch -o $PATCHES_DIR $BASE_SHA
+git format-patch -N -o $PATCHES_DIR $BASE_SHA
 
 git reset --hard $BASE_SHA
