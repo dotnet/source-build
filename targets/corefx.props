@@ -2,15 +2,13 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
-    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(ToolsDir)dotnetcli" />
     <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
     <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />

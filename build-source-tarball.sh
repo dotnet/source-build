@@ -3,8 +3,14 @@ set -euo pipefail
 IFS=$'\n\t'
 
 if [ -z "${1:-}" ]; then
-    echo "usage: $0 <path-to-tarball-root>"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build]"
     exit 1
+fi
+
+SKIP_BUILD=0
+
+if [ "${2:-}" == "--skip-build" ]; then
+    SKIP_BUILD=1
 fi
 
 TARBALL_ROOT=$1
@@ -15,21 +21,24 @@ fi
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
-if [ -e "$SCRIPT_ROOT/bin" ]; then
-    rm -rf "$SCRIPT_ROOT/bin"
+if [ $SKIP_BUILD -ne 1 ]; then
+
+    if [ -e "$SCRIPT_ROOT/bin" ]; then
+        rm -rf "$SCRIPT_ROOT/bin"
+    fi
+
+    $SCRIPT_ROOT/clean-submodules.sh
+    $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true /flp:v=detailed
 fi
 
 $SCRIPT_ROOT/clean-submodules.sh
 
-$SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true /flp:v=detailed
-
 mkdir -p "$TARBALL_ROOT"
 
-# Hack, copy BuildTools from CoreFX before blowing everything away.
-mkdir -p $TARBALL_ROOT/prebuilt/toolset/buildtools
-cp -rf $SCRIPT_ROOT/src/corefx/Tools/* $TARBALL_ROOT/prebuilt/toolset/buildtools/
+mkdir -p $TARBALL_ROOT/Tools
+cp -rf $SCRIPT_ROOT/Tools/* $TARBALL_ROOT/Tools/
 
-$SCRIPT_ROOT/clean-submodules.sh
+rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
 
 cp -r $SCRIPT_ROOT/build.proj $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/dir.props $TARBALL_ROOT/
@@ -44,8 +53,6 @@ cp -r $SCRIPT_ROOT/tasks $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-
-curl https://raw.githubusercontent.com/dotnet/cli/release/2.0.0/scripts/obtain/dotnet-install.sh | bash -s -- --version 2.0.0-preview2-006195 --install-dir $TARBALL_ROOT/prebuilt/cli/2.0.0-preview2-006195/
 
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
