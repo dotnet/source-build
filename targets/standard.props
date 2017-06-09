@@ -6,9 +6,15 @@
     <BuildPackagesCommand></BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <LatestCommit>81ffa9f5381f510c2afa17a113e4c4d77144b84e</LatestCommit>
+    <VersionSeedDate>2017-06-01</VersionSeedDate>
+    <OfficialBuildId>20170601-01</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
     <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
     <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />

@@ -9,7 +9,7 @@ using NuGet.Packaging.Core;
 
 namespace Microsoft.DotNet.Build.Tasks
 {
-    public class WriteVersionsFile : Task
+    public class BuildDummyPackages : Task
     {
         [Required]
         public ITaskItem[] Packages { get; set; }
@@ -42,7 +42,7 @@ namespace Microsoft.DotNet.Build.Tasks
                     builder.Save(pkg);
                 }
 
-                Log.LogMessage("Created empty package '{destination}'");
+                Log.LogMessage($"Created empty package '{destination}'");
             }
 
             return !Log.HasLoggedErrors;

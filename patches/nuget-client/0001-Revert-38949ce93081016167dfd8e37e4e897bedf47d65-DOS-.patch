@@ -1,7 +1,7 @@
-From 59cb0fac9de6dc0b62c909a0483b08435376d29c Mon Sep 17 00:00:00 2001
+From 7a9cc5671eb8491ac814d435eb7d9dd18971c01b Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Tue, 30 May 2017 18:30:18 -0700
-Subject: [PATCH 1/5] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (DOS line
+Subject: [PATCH] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (DOS line
  endings)
 
 ---
@@ -10,7 +10,7 @@ Subject: [PATCH 1/5] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (DOS line
  2 files changed, 3 insertions(+), 28 deletions(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
-index f568709..200e18f 100644
+index 25ae4f0..727bbf4 100644
 --- a/build/common.project.props
 +++ b/build/common.project.props
 @@ -1,4 +1,4 @@
@@ -28,7 +28,7 @@ index f568709..200e18f 100644
      <SharedDirectory>$(BuildCommonDirectory)Shared</SharedDirectory>
      <NuGetCoreSrcDirectory>$(RepositoryRootDirectory)src\NuGet.Core\</NuGetCoreSrcDirectory>
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
-index fc0b7bf..ea444ab 100644
+index 82252de..80cae27 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 @@ -5,13 +5,11 @@
@@ -47,7 +47,7 @@ index fc0b7bf..ea444ab 100644
    </PropertyGroup>
  
    <ItemGroup>
-@@ -50,28 +48,6 @@
+@@ -51,28 +49,6 @@
      </EmbeddedResource>
    </ItemGroup>
  
@@ -74,7 +74,7 @@ index fc0b7bf..ea444ab 100644
 -  </Target>
 -
    <Import Project="$(BuildCommonDirectory)common.targets" />
- 
+   
    <PropertyGroup>
 -- 
 1.8.3.1

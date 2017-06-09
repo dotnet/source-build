@@ -1,7 +1,7 @@
-From 3c3ab247ad9346d186db16204b9cfceeb6fba2e2 Mon Sep 17 00:00:00 2001
+From e64d3568864ef0e07588898a3446c0535faf4eae Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Tue, 30 May 2017 18:35:03 -0700
-Subject: [PATCH 4/5] Only build netstandard and netcoreapp assets on *NIX
+Subject: [PATCH] Only build netstandard and netcoreapp assets on *NIX
 
 ---
  .../NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj | 1 +
@@ -21,7 +21,7 @@ Subject: [PATCH 4/5] Only build netstandard and netcoreapp assets on *NIX
  14 files changed, 14 insertions(+)
 
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
-index ea444ab..4604567 100644
+index 80cae27..303002a 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 @@ -3,6 +3,7 @@
@@ -33,7 +33,7 @@ index ea444ab..4604567 100644
      <AssemblyName>NuGet.Build.Tasks.Pack</AssemblyName>
  	<RootNamespace>$(AssemblyName)</RootNamespace>
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
-index 4489080..9738803 100644
+index 649e788..c915374 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
 @@ -3,6 +3,7 @@
@@ -41,11 +41,11 @@ index 4489080..9738803 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework/>
      <Shipping>true</Shipping>
-     <PackProject>true</PackProject>
-     <Description>NuGet restore for dotnet CLI</Description>    
+     <IncludeInVSIX>true</IncludeInVSIX>
 diff --git a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
-index 6a2dd92..5d487ed 100644
+index 53a7cd7..82e7578 100644
 --- a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
 +++ b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
 @@ -4,6 +4,7 @@
@@ -57,7 +57,7 @@ index 6a2dd92..5d487ed 100644
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <OutputType>Exe</OutputType>
 diff --git a/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj b/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
-index 801036e..1e1ef96 100644
+index ccb584e..65f1d43 100644
 --- a/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
 +++ b/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
 @@ -4,6 +4,7 @@
@@ -65,11 +65,11 @@ index 801036e..1e1ef96 100644
      <Description>Complete commands common to command-line and GUI NuGet clients</Description>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573;CS1584;CS1658</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj b/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
-index 3ea1395..65867c5 100644
+index 3706879..ebe1959 100644
 --- a/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
 +++ b/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
 @@ -3,6 +3,7 @@
@@ -77,23 +77,23 @@ index 3ea1395..65867c5 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
-index 6d779f4..0ea85db 100644
+index 00b2170..6b2a19a 100644
 --- a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
 +++ b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
-@@ -4,6 +4,7 @@
-   <PropertyGroup>
+@@ -5,6 +5,7 @@
      <Description>NuGet's client configuration settings implementation.</Description>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
-     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <TargetFramework />
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj b/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
-index 518f1c8..a23b0ab 100644
+index dd71f8e..899cac8 100644
 --- a/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
 +++ b/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
 @@ -3,6 +3,7 @@
@@ -101,23 +101,23 @@ index 518f1c8..a23b0ab 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
-index aeee641..a1f97f5 100644
+index 5b31803..04e3870 100644
 --- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 +++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 @@ -4,6 +4,7 @@
    <PropertyGroup>
      <Description>The understanding of target frameworks for NuGet.Packaging</Description>
-     <TargetFrameworks>netstandard1.3;net40;net45</TargetFrameworks>
+     <TargetFrameworks>netstandard1.3;net45;net40</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
      <LangVersion>5</LangVersion>
-     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
 diff --git a/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj b/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
-index 9974f4a..e8382c6 100644
+index 7e7e463..b0bcf71 100644
 --- a/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
 +++ b/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
 @@ -3,6 +3,7 @@
@@ -125,11 +125,11 @@ index 9974f4a..e8382c6 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj b/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
-index 11037a1..36250f2 100644
+index 67f63e8..445c9b6 100644
 --- a/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
 +++ b/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
 @@ -4,6 +4,7 @@
@@ -137,11 +137,11 @@ index 11037a1..36250f2 100644
      <Description>The core data structures for NuGet.Packaging</Description>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj b/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
-index e9408a9..2f33006 100644
+index 6c080fb..738c1e0 100644
 --- a/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
 +++ b/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
 @@ -4,6 +4,7 @@
@@ -149,11 +149,11 @@ index e9408a9..2f33006 100644
      <Description>NuGet's implementation for reading nupkg package and nuspec package specification files.</Description>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573;CS1572</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj b/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
-index d455028..81ef9d6 100644
+index cd02d8f..afb5eb1 100644
 --- a/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
 +++ b/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
 @@ -3,6 +3,7 @@
@@ -161,11 +161,11 @@ index d455028..81ef9d6 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
      <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
-     <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj b/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
-index b7e544d..4edccf6 100644
+index 06d0071..73bc456 100644
 --- a/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
 +++ b/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
 @@ -3,6 +3,7 @@
@@ -173,11 +173,11 @@ index b7e544d..4edccf6 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
+     <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1573;CS0012</NoWarn>
      <PackageTags>nuget protocol</PackageTags>
-     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.3' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
 diff --git a/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj b/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
-index e24ac83..ba1207d 100644
+index fa06e72..cec4839 100644
 --- a/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
 +++ b/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
 @@ -3,6 +3,7 @@
@@ -185,9 +185,9 @@ index e24ac83..ba1207d 100644
    <PropertyGroup>
      <TargetFrameworks>netstandard1.0;net45</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.0</TargetFrameworks>
+     <TargetFramework />
      <Description>NuGet's implementation of Semantic Versioning.</Description>
      <PackageTags>semver;semantic versioning</PackageTags>
-     <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard1.0' ">$(NetStandardPackageVersion)</NetStandardImplicitPackageVersion>
 -- 
 1.8.3.1
 

@@ -1,0 +1,36 @@
+From d769b4768e04ad6190716ba5ac792cf61d0b16d6 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 8 Jun 2017 17:30:30 -0700
+Subject: [PATCH] Fix signing
+
+- Public Sign on *nix
+- Consider *nix path separators
+---
+ build/sign.targets | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/build/sign.targets b/build/sign.targets
+index 32feeb0..0dcd01b 100644
+--- a/build/sign.targets
++++ b/build/sign.targets
+@@ -7,14 +7,15 @@
+   </PropertyGroup>
+ 
+   <!-- Use MSFT SNK for all NuGet.Core test and source projects and since we do not own MSFT SNK we can only delay sign the assemblies. -->
+-  <PropertyGroup Condition = " $(MSBuildProjectFullPath.Contains('src\NuGet.Core')) == 'true' or $(MSBuildProjectFullPath.Contains('test\NuGet.Core')) == 'true' ">
++  <PropertyGroup Condition = "  $(MSBuildProjectFullPath.Contains('src\NuGet.Core')) == 'true' or $(MSBuildProjectFullPath.Contains('src/NuGet.Core')) == 'true' or $(MSBuildProjectFullPath.Contains('test\NuGet.Core')) == 'true' or $(MSBuildProjectFullPath.Contains('test/NuGet.Core')) == 'true'  ">
+     <StrongNameKey>$(MS_PFX_PATH)</StrongNameKey>
+     <DefaultStrongNameCert>MsSharedLib72</DefaultStrongNameCert>
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition = " Exists($(StrongNameKey)) ">
+     <SignAssembly>true</SignAssembly>
+-    <DelaySign>true</DelaySign>
++    <DelaySign Condition="'$(OS)' == 'Windows_NT'">true</DelaySign>
++    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+     <AssemblyOriginatorKeyFile Condition = " '$(AssemblyOriginatorKeyFile)' == '' ">$(StrongNameKey)</AssemblyOriginatorKeyFile>
+     <StrongNameCert Condition="'$(StrongNameCert)' == ''">$(DefaultStrongNameCert)</StrongNameCert>
+     <DefineConstants>$(DefineConstants);SIGNED_BUILD</DefineConstants>
+-- 
+1.8.3.1
+

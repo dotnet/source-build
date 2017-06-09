@@ -5,10 +5,19 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests -PortableBuild=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <LatestCommit>9679ded412d1421f3d54ee3082e8b5f900217a4a</LatestCommit>
+    <VersionSeedDate>2017-06-07</VersionSeedDate>
+    <OfficialBuildId>20170607-01</OfficialBuildId>
   </PropertyGroup>
 
   <PropertyGroup>
     <ProjectJsonFileBaseDir>$(ProjectDirectory)/tests/</ProjectJsonFileBaseDir>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+  </ItemGroup>
 
 </Project>

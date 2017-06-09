@@ -1,7 +1,7 @@
-From 95e897b62f3901be5fbc2c7f9505547acc92ce01 Mon Sep 17 00:00:00 2001
+From 4f1cacfe080eb898f3fe33e9f161449c054cc023 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Sat, 20 May 2017 13:40:41 -0700
-Subject: [PATCH 2/3] Add a target that just build packages CLI needs
+Subject: [PATCH] Add a target that just build packages CLI needs
 
 This cuts down on build time and also reduces the set of dependencies
 we need to pull in (since we aren't building code we arne't going to
@@ -11,10 +11,10 @@ use or running tests).
  1 file changed, 36 insertions(+)
 
 diff --git a/build.proj b/build.proj
-index 405a636..306dcfd 100644
+index 11da4cf..3c589d8 100644
 --- a/build.proj
 +++ b/build.proj
-@@ -61,6 +61,42 @@
+@@ -63,6 +63,42 @@
      </TestProjects>
    </PropertyGroup>
  

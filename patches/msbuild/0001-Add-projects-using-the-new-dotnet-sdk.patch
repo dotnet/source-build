@@ -1,7 +1,7 @@
-From ab6c2a350581c08a8461e0c598fe8a371bab4985 Mon Sep 17 00:00:00 2001
+From b2e9740f928ae5f390bd8d691ef609c154d00586 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 18 May 2017 18:35:17 -0700
-Subject: [PATCH 1/2] Add projects using the new dotnet sdk
+Subject: [PATCH] Add projects using the new dotnet sdk
 
 These projects are built using the dotnet tooling instead of the
 current system MSBuild has. Long term, MSBuild wants to start using
@@ -13,12 +13,12 @@ about, for example).
 ---
  NetCore.sln                                        |  95 ++++
  build/NetCore.props                                |  21 +
- src/Build/Microsoft.Build.NetCore.csproj           | 490 +++++++++++++++++++++
- .../Microsoft.Build.Framework.NetCore.csproj       |  86 ++++
- src/MSBuild/MSBuild.NetCore.csproj                 | 181 ++++++++
+ src/Build/Microsoft.Build.NetCore.csproj           | 493 +++++++++++++++++++++
+ .../Microsoft.Build.Framework.NetCore.csproj       |  89 ++++
+ src/MSBuild/MSBuild.NetCore.csproj                 | 182 ++++++++
  .../Microsoft.Build.Tasks.Core.NetCore.csproj      | 293 ++++++++++++
  .../Microsoft.Build.Utilities.Core.NetCore.csproj  | 144 ++++++
- 7 files changed, 1310 insertions(+)
+ 7 files changed, 1317 insertions(+)
  create mode 100644 NetCore.sln
  create mode 100644 build/NetCore.props
  create mode 100644 src/Build/Microsoft.Build.NetCore.csproj
@@ -157,10 +157,10 @@ index 0000000..e0777f0
 +</Project>
 diff --git a/src/Build/Microsoft.Build.NetCore.csproj b/src/Build/Microsoft.Build.NetCore.csproj
 new file mode 100644
-index 0000000..f6e6608
+index 0000000..dd5ad4d
 --- /dev/null
 +++ b/src/Build/Microsoft.Build.NetCore.csproj
-@@ -0,0 +1,490 @@
+@@ -0,0 +1,493 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -300,7 +300,9 @@ index 0000000..f6e6608
 +    <Compile Include="BackEnd\Components\Caching\IRegisteredTaskObjectCache.cs" />
 +    <Compile Include="..\Shared\RegisteredTaskObjectCacheBase.cs" />
 +    <Compile Include="BackEnd\Components\Caching\RegisteredTaskObjectCache.cs" />
-+    <Compile Include="BackEnd\Components\Logging\BaseLoggingContext.cs" />
++    <Compile Include="BackEnd\Components\Logging\EvaluationLoggingContext.cs" />
++    <Compile Include="BackEnd\Components\Logging\BuildLoggingContext.cs" />
++    <Compile Include="BackEnd\Components\Logging\LoggingContext.cs" />
 +    <Compile Include="BackEnd\Components\Logging\BuildEventArgTransportSink.cs" />
 +    <Compile Include="BackEnd\Components\Logging\CentralForwardingLogger.cs" />
 +    <Compile Include="BackEnd\Components\Logging\EventRedirectorToSink.cs" />
@@ -583,6 +585,7 @@ index 0000000..f6e6608
 +    <Compile Include="Logging\BinaryLogger\BuildEventArgsFields.cs" />
 +    <Compile Include="Logging\BinaryLogger\BuildEventArgsReader.cs" />
 +    <Compile Include="Logging\BinaryLogger\BuildEventArgsWriter.cs" />
++    <Compile Include="Logging\BinaryLogger\ProjectImportsCollector.cs" />
 +    <Compile Include="Logging\ConsoleLogger.cs" />
 +    <Compile Include="Logging\DistributedLoggers\DistributedFileLogger.cs" />
 +    <Compile Include="Logging\DistributedLoggers\ConfigurableForwardingLogger.cs" />
@@ -653,10 +656,10 @@ index 0000000..f6e6608
 +</Project>
 diff --git a/src/Framework/Microsoft.Build.Framework.NetCore.csproj b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 new file mode 100644
-index 0000000..b617cdc
+index 0000000..e0b61a3
 --- /dev/null
 +++ b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
-@@ -0,0 +1,86 @@
+@@ -0,0 +1,89 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -722,6 +725,9 @@ index 0000000..b617cdc
 +    <Compile Include="LoggerException.cs" />
 +    <Compile Include="BuildEventContext.cs" />
 +    <Compile Include="OutputAttribute.cs" />
++    <Compile Include="ProjectEvaluationFinishedEventArgs.cs" />
++    <Compile Include="ProjectEvaluationStartedEventArgs.cs" />
++    <Compile Include="ProjectImportedEventArgs.cs" />
 +    <Compile Include="ProjectFinishedEventArgs.cs" />
 +    <Compile Include="ProjectStartedEventArgs.cs" />
 +    <Compile Include="Sdk\SdkReference.cs" />
@@ -745,10 +751,10 @@ index 0000000..b617cdc
 +</Project>
 diff --git a/src/MSBuild/MSBuild.NetCore.csproj b/src/MSBuild/MSBuild.NetCore.csproj
 new file mode 100644
-index 0000000..abf0214
+index 0000000..6ac2683
 --- /dev/null
 +++ b/src/MSBuild/MSBuild.NetCore.csproj
-@@ -0,0 +1,181 @@
+@@ -0,0 +1,182 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -765,6 +771,7 @@ index 0000000..abf0214
 +
 +  <ItemGroup>
 +    <PackageReference Include="NETStandard.Library" Version="1.6.1" PrivateAssets="All" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.3.0" />
 +  </ItemGroup>
 +
 +  <ItemGroup>

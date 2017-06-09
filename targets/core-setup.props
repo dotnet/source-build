@@ -5,9 +5,15 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -ConfigurationGroup=$(Configuration) -PortableBuild=false -SkipTests=true -- /p:BuildDebPackage=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
     <BinariesOutput>$(PackagesOutput)</BinariesOutput>
+    <LatestCommit>40c565230930ead58a50719c0ec799df77bddee9</LatestCommit>
+    <OfficialBuildId>20170607-01</OfficialBuildId>
+    <VersionSeedDate>2017-06-07</VersionSeedDate>
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
     <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
     <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />

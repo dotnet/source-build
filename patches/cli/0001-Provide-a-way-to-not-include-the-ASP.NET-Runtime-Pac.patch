@@ -1,7 +1,7 @@
-From 73d7e1bf478c7b121ebe022ff36485b56799a73a Mon Sep 17 00:00:00 2001
+From e230c35773f0682fe8c76db480ae63b785578b16 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 11 May 2017 17:56:24 -0700
-Subject: [PATCH 1/6] Provide a way to not include the ASP.NET Runtime Packages
+Subject: [PATCH] Provide a way to not include the ASP.NET Runtime Packages
 
 ---
  build/BuildDefaults.props   | 1 +
@@ -21,10 +21,10 @@ index 64eddcf..268a02e 100644
      <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
      <HighEntropyVA>true</HighEntropyVA>
 diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
-index 9d925e2..54319d1 100644
+index 4484c7d..eff030c 100644
 --- a/build/BundledRuntimes.props
 +++ b/build/BundledRuntimes.props
-@@ -76,14 +76,14 @@
+@@ -77,14 +77,14 @@
      </_DownloadAndExtractItem>
  
    <_DownloadAndExtractItem Include="AspNetCoreRuntimeInstallerWixLibFile"

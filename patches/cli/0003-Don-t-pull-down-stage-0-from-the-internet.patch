@@ -1,7 +1,7 @@
-From 20319a3474300f089801eb1697e9b7c5c6834aaf Mon Sep 17 00:00:00 2001
+From 4fe4a08d9c6c55cdb7577e728309e5b48f192422 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 22 May 2017 11:37:59 -0700
-Subject: [PATCH 3/6] Don't pull down stage 0 from the internet
+Subject: [PATCH] Don't pull down stage 0 from the internet
 
 The composed build will set `PREBUILT_DOTNET_TOOL_DIR` to a location
 where the dotnet tool can be copied from.
@@ -10,9 +10,9 @@ Long term we should get rid of the copy in favor of just using one
 from a common location, but some of the Stage0 logic in the CLI build
 system will need to change, I think.
 ---
- build_projects/update-dependencies/update-dependencies.sh | 11 ++++-------
- run-build.sh                                              | 15 +--------------
- 2 files changed, 5 insertions(+), 21 deletions(-)
+ .../update-dependencies/update-dependencies.sh           | 11 ++++-------
+ run-build.sh                                             | 16 +---------------
+ 2 files changed, 5 insertions(+), 22 deletions(-)
 
 diff --git a/build_projects/update-dependencies/update-dependencies.sh b/build_projects/update-dependencies/update-dependencies.sh
 index 4781c84..8a0d7f9 100755
@@ -39,14 +39,15 @@ index 4781c84..8a0d7f9 100755
  export PATH=$DOTNET_INSTALL_DIR:$PATH
  
 diff --git a/run-build.sh b/run-build.sh
-index a7ce1da..3faab1f 100755
+index 2bb5b7b..3faab1f 100755
 --- a/run-build.sh
 +++ b/run-build.sh
-@@ -155,20 +155,7 @@ export VSTEST_TRACE_BUILD=1
+@@ -155,21 +155,7 @@ export VSTEST_TRACE_BUILD=1
  DOTNET_MULTILEVEL_LOOKUP=0
  
  # Install a stage 0
--(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "release/2.0.0" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+-(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "release/2.0.0" --version "2.0.0-preview2-006349" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+-
 -EXIT_CODE=$?
 -if [ $EXIT_CODE != 0 ]; then
 -    echo "run-build: Error: installing stage0 with exit code $EXIT_CODE." >&2

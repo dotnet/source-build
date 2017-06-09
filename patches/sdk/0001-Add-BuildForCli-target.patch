@@ -1,39 +1,39 @@
-From 7c407b8d2918215329eb5a30798fdc80b4c3de9a Mon Sep 17 00:00:00 2001
+From 92f12a7edd4658d7cf602fa32f66eae637d06620 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Sat, 20 May 2017 16:11:18 -0700
 Subject: [PATCH] Add BuildForCli target
 
 ---
- build/build.proj | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ build/build.proj | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
 diff --git a/build/build.proj b/build/build.proj
-index 8cb3bf5..b4d2bc1 100644
+index 12377f5..0803709 100644
 --- a/build/build.proj
 +++ b/build/build.proj
-@@ -113,6 +113,22 @@
+@@ -76,7 +76,22 @@
+              Targets="Pack"
+              Properties="$(CommonMSBuildGlobalProperties);NoBuild=true"
               />
-   </Target>
- 
++  </Target>
++
 +  <Target Name="BuildForCli">
 +    <MSBuild Projects="$(RepositoryRootDirectory)src\Tasks\Microsoft.NET.Build.Tasks\Microsoft.NET.Build.Tasks.csproj"
 +             Targets="Restore"
 +             Properties="$(CommonMSBuildGlobalProperties)" />
-+
+ 
 +    <MSBuild Projects="$(RepositoryRootDirectory)src\Tasks\Microsoft.NET.Build.Tasks\Microsoft.NET.Build.Tasks.csproj"
 +             Targets="Build"
 +             Properties="$(CommonMSBuildGlobalProperties)" />
 +
 +    <MSBuild BuildInParallel="true"
 +             Projects="@(NuGetProjectFile)"
-+             Targets="Build"
-+             Properties="$(CommonMSBuildGlobalProperties)"
++             Targets="Pack"
++             Properties="$(CommonMSBuildGlobalProperties);NoBuild=true"
 +             />
-+  </Target>
-+
-   <!-- Restore Sdks -->
-   <Target Name="DeployMSBuildSdks" AfterTargets="BuildNuGetPackages;RebuildNuGetPackages">
-     <ReadLinesFromFile File="$(RepositoryRootDirectory)TestAssets\buildVersion.txt">
+   </Target>
+   
+   <Target Name="CleanNuGetPackages">
 -- 
-2.11.0
+1.8.3.1
 

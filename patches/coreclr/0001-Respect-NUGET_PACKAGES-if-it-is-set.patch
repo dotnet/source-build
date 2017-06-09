@@ -1,7 +1,7 @@
-From d4dc161e716e5113413b099b04cafc09f069d91e Mon Sep 17 00:00:00 2001
+From cb63d3f2d22d8bea26de0367d3cbc39540a2d9c7 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 15 May 2017 17:04:05 -0700
-Subject: [PATCH 1/3] Respect NUGET_PACKAGES if it is set
+Subject: [PATCH] Respect NUGET_PACKAGES if it is set
 
 ---
  build.sh  | 2 +-
@@ -22,7 +22,7 @@ index 55b4ba3..a76c84b 100755
  __UnprocessedBuildArgs=
  __RunArgs=
 diff --git a/dir.props b/dir.props
-index 4f62d0e..11a042d 100644
+index 9668768..a6c13b6 100644
 --- a/dir.props
 +++ b/dir.props
 @@ -56,8 +56,9 @@
