@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- temporary hack to workaround the build issues -->
-  <Target Name="Build" >
-   <Message Importance="High" Text="Skipping build..." />
+  <Target Name="CsprojGeneration" >
+    <PropertyGroup>
+<CsprojContent>&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+  &lt;PropertyGroup&gt;
+    &lt;TargetFramework&gt;netstandard1.3&lt;/TargetFramework&gt;
+    &lt;DefineConstants&gt;$(DefineConstants);CORE_PCL&lt;/DefineConstants&gt;
+    &lt;Version&gt;2.0.0&lt;/Version&gt;
+    &lt;FileVersion&gt;2.0.0.30671&lt;/FileVersion&gt;
+    &lt;GenerateAssemblyCompanyAttribute&gt;false&lt;/GenerateAssemblyCompanyAttribute&gt;
+    &lt;EnableDefaultItems&gt;false&lt;/EnableDefaultItems&gt;
+    &lt;AssemblyOriginatorKeyFile&gt;35MSSharedLib1024.snk&lt;/AssemblyOriginatorKeyFile&gt;
+    &lt;SignAssembly&gt;true&lt;/SignAssembly&gt;
+    &lt;PublicSign&gt;true&lt;/PublicSign&gt;
+  &lt;/PropertyGroup&gt;
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;System.Net.Requests&quot; Version=&quot;4.0.11&quot; /&gt;
+    &lt;PackageReference Include=&quot;System.Diagnostics.Tracing&quot; Version=&quot;4.3.0&quot; /&gt;
+    &lt;PackageReference Include=&quot;System.Runtime.Serialization.Primitives&quot; Version=&quot;4.1.1&quot; /&gt;
+    &lt;Compile Include=&quot;src\Core\Managed\Net40\Extensibility\Implementation\TelemetryConfigurationFactory.cs&quot; /&gt;
+    &lt;Compile Include=&quot;src\Core\Managed\PCL\Extensibility\Implementation\Platform\PlatformImplementation.cs&quot; /&gt;
+    &lt;Compile Include=&quot;src\Core\Managed\PCL\TimeSpanEx.cs&quot; /&gt;
+  &lt;/ItemGroup&gt;
+  &lt;Import Project=&quot;src\Core\Managed\Shared\Shared.projitems&quot; /&gt;
+&lt;/Project&gt;</CsprojContent>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(ProjectDirectory)/Microsoft.ApplicationInsights.csproj" Lines="$(CsprojContent)" Overwrite="True" />
+  </Target>
+  <Target Name="Build" DependsOnTargets="CsprojGeneration" >
+    <Message Importance="High" Text="Building '$(RepositoryName)'" Condition="'$(Platform)' != 'arm'" />
+    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)" Condition="'$(Platform)' != 'arm'" />
+    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)" Condition="'$(Platform)' != 'arm'" />
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)" Condition="'$(Platform)' != 'arm'" />
   </Target>
 </Project>
-
