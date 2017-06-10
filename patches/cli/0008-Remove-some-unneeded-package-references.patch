@@ -1,0 +1,48 @@
+From 9073572138a6ce64da19985db7f770eddb3732a8 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Fri, 9 Jun 2017 16:53:50 -0700
+Subject: [PATCH] Remove some unneeded package references
+
+---
+ build_projects/dotnet-cli-build/dotnet-cli-build.csproj            | 7 -------
+ .../shared-build-targets-utils/shared-build-targets-utils.csproj   | 2 --
+ 2 files changed, 9 deletions(-)
+
+diff --git a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+index abace8f..69a5596 100644
+--- a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
++++ b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+@@ -16,17 +16,10 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build" Version="$(CLI_MSBuild_Version)" />
+-    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+-    <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.1-beta-24410-02" />
+     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+     <PackageReference Include="System.Xml.XmlSerializer" Version="4.0.11" />
+-    <PackageReference Include="WindowsAzure.Storage" Version="7.2.1" />
+-    <PackageReference Include="NuGet.CommandLine.XPlat" Version="$(CLI_NuGet_Version)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(CLI_MSBuild_Version)" />
+-    <!-- This dependency was added due to an issue in restore where a lower version of this package coming from nuget.commandline.xplat
+-    led to an error. This is tracked as NuGet issue : https://github.com/NuGet/Home/issues/4213 -->
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(CLI_MSBuild_Version)" />
+     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(PlatformAbstractionsVersion)" />
+     <PackageReference Include="Microsoft.DotNet.VersionTools" Version="$(VersionToolsVersion)" />
+  </ItemGroup>
+diff --git a/build_projects/shared-build-targets-utils/shared-build-targets-utils.csproj b/build_projects/shared-build-targets-utils/shared-build-targets-utils.csproj
+index b7af21b..7249c86 100644
+--- a/build_projects/shared-build-targets-utils/shared-build-targets-utils.csproj
++++ b/build_projects/shared-build-targets-utils/shared-build-targets-utils.csproj
+@@ -14,8 +14,6 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NETStandard.Library" Version="1.6.0" />
+-    <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+-    <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.1-beta-24410-02" />
+     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+     <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
+-- 
+1.8.3.1
+
