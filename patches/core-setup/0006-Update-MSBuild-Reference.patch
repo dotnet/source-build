@@ -1,0 +1,83 @@
+From 80c01e62ec09ea2be435d04ec1c534dcaba68b17 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Sat, 10 Jun 2017 21:08:52 -0700
+Subject: [PATCH] Update MSBuild Reference
+
+---
+ .../Microsoft.DotNet.Build.Tasks.Local.csproj              | 14 +++++---------
+ tools-local/tasks/core-setup.tasks.csproj                  | 14 +++++---------
+ 2 files changed, 10 insertions(+), 18 deletions(-)
+
+diff --git a/tools-local/Microsoft.DotNet.Build.Tasks.Local/Microsoft.DotNet.Build.Tasks.Local.csproj b/tools-local/Microsoft.DotNet.Build.Tasks.Local/Microsoft.DotNet.Build.Tasks.Local.csproj
+index 7981e64..9e914a8 100644
+--- a/tools-local/Microsoft.DotNet.Build.Tasks.Local/Microsoft.DotNet.Build.Tasks.Local.csproj
++++ b/tools-local/Microsoft.DotNet.Build.Tasks.Local/Microsoft.DotNet.Build.Tasks.Local.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+   <PropertyGroup>
+@@ -51,20 +51,16 @@
+   </ItemGroup>
+   <ItemGroup Condition="'$(TargetGroup)' == 'netstandard1.5'">
+     <PackageReference Include="Microsoft.Build">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Framework">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Tasks.Core">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Utilities.Core">
+-      <Version>0.1.0-preview-00022</Version>
+-    </PackageReference>
+-    <PackageReference Include="Microsoft.Tpl.Dataflow">
+-      <Version>4.5.24</Version>
+-      <IncludeAssets>None</IncludeAssets>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="NETStandard.Library">
+       <Version>1.6.0</Version>
+diff --git a/tools-local/tasks/core-setup.tasks.csproj b/tools-local/tasks/core-setup.tasks.csproj
+index b296cb4..5459921 100644
+--- a/tools-local/tasks/core-setup.tasks.csproj
++++ b/tools-local/tasks/core-setup.tasks.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+   <PropertyGroup>
+@@ -35,20 +35,16 @@
+   <ItemGroup Condition="'$(TargetGroup)' != 'net45'">
+     <Compile Include="netstandard/FileUtilities.netstandard.cs" />
+     <PackageReference Include="Microsoft.Build">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Framework">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Tasks.Core">
+-      <Version>0.1.0-preview-00022</Version>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Build.Utilities.Core">
+-      <Version>0.1.0-preview-00022</Version>
+-    </PackageReference>
+-    <PackageReference Include="Microsoft.Tpl.Dataflow">
+-      <Version>4.5.24</Version>
+-      <IncludeAssets>None</IncludeAssets>
++      <Version>15.1.1012</Version>
+     </PackageReference>
+     <PackageReference Include="NETStandard.Library">
+       <Version>1.6.0</Version>
+-- 
+1.8.3.1
+
