@@ -1,4 +1,4 @@
-From 05819df9fc3090957791d1bae1be66afc7a1dec3 Mon Sep 17 00:00:00 2001
+From 73bf953819cecf421846b0cb2a531a55b1accf54 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 22 May 2017 11:37:59 -0700
 Subject: [PATCH] Don't pull down stage 0 from the internet
@@ -39,7 +39,7 @@ index 4781c84..8a0d7f9 100755
  export PATH=$DOTNET_INSTALL_DIR:$PATH
  
 diff --git a/run-build.sh b/run-build.sh
-index 2bb5b7b..3faab1f 100755
+index 2bb5b7b..1a7bb9f 100755
 --- a/run-build.sh
 +++ b/run-build.sh
 @@ -155,21 +155,7 @@ export VSTEST_TRACE_BUILD=1
@@ -61,7 +61,7 @@ index 2bb5b7b..3faab1f 100755
 -    echo "run-build: Error: installing project-json based cli failed with exit code $EXIT_CODE." >&2
 -    exit $EXIT_CODE
 -fi
-+cp -r "$DOTNET_TOOL_DIR" "$DOTNET_INSTALL_DIR"
++cp -r $DOTNET_TOOL_DIR/* $DOTNET_INSTALL_DIR/
  
  # Put stage 0 on the PATH (for this shell only)
  PATH="$DOTNET_INSTALL_DIR:$PATH"

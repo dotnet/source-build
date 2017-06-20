@@ -8,4 +8,9 @@
     <CommitHash>275430b3ee34f7a62cce891e3cb5c70830432a75</CommitHash>
     <BuildCommand>$(DotNetCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="msbuild" />
+  </ItemGroup>
 </Project>
