@@ -18,12 +18,6 @@
     <Exec Command="$(SetVersionFilesCmd) $(UpdateCommand)" WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
-  <Target Name="UpdateNugetConfig" BeforeTargets="Build">
-    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDirectory)/NuGet.Config"
-                            SourceName="source-built"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
-  </Target>
-
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
       <CoreSetupTarballs Include="$(BinariesOutput)*$(TarBallExtension)" />

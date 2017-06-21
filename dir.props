@@ -51,7 +51,12 @@
     <WrapperProjectsDirectory>$(TargetsDir)wrapper-projects/</WrapperProjectsDirectory>
   </PropertyGroup>
 
-  <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
+  <PropertyGroup>
+    <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
+    <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
+  </PropertyGroup>
+
+  <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
     <VersionFilename>Latest_Packages.txt</VersionFilename>
@@ -61,6 +66,7 @@
 
   <PropertyGroup>
     <DefaultRepository>cli</DefaultRepository>
+    <DefaultRepository Condition="$(Platform.Contains('arm'))">core-setup</DefaultRepository>
   </PropertyGroup>
 
   <ItemGroup>
@@ -69,3 +75,4 @@
 
   <Import Project="repositories.props" />
 </Project>
+

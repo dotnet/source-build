@@ -2,20 +2,22 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
-    <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build</BuildPackagesCommand>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/corehost/</PackagesOutput>
-    <BinariesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/packages/</BinariesOutput>
-    <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
-    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
+    <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=true -strip-symbols</BuildArguments>
+    <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=arm -DistroRid=linux-arm -DisableCrossgen=true -SkipTests=true -CrossBuild=true</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
+    <PortableRid Condition="$(TargetRid.Contains('win'))">win-$(Platform)</PortableRid>
+    <PortableRid Condition="$(TargetRid.Contains('osx'))">osx-$(Platform)</PortableRid>
+    <PortableRid Condition="'$(PortableRid)' == ''">linux-$(Platform)</PortableRid>
+    <PackagesOutput Condition="!Exists('$(PackagesOutput)')">$(ProjectDirectory)/Bin/$(PortableRid).$(Configuration)/packages/</PackagesOutput>
+    <BinariesOutput>$(PackagesOutput)</BinariesOutput>
+    <UpdateCommand> $(ProjectDirectory)Tools/msbuild$(ShellExtension) $(ProjectDirectory)build.proj /t:UpdateDependencies /p:BuildInfoCacheDir=$(VersionFileDirectory)</UpdateCommand>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
-    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
   </ItemGroup>
 </Project>
