@@ -1,0 +1,26 @@
+From 3700c3ff520d9eb007da559150c1fa731f6f784b Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 23 May 2017 16:44:46 -0700
+Subject: [PATCH] Add <clear /> to NuGet.config
+
+---
+ NuGet.config | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/NuGet.config b/NuGet.config
+index 93eddfc..b6720f8 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -1,7 +1,9 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <configuration>
+   <packageSources>
++    <clear />
+     <add key="dotnet-core" value="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json" />
+     <add key="cli-deps" value="https://dotnet.myget.org/F/cli-deps/api/v3/index.json" />
++    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+   </packageSources>
+ </configuration>
+-- 
+1.8.3.1
+

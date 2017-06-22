@@ -2,19 +2,22 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -stripSymbols -BuildAllConfigurations -- /p:OverridePackageSource=$(SourceBuiltPackagesPath)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false -- /p:ILLinkTrimAssembly=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <LatestCommit>029cf57733b7ec6c1dd8a13857e800b9a8d97192</LatestCommit>
+    <VersionSeedDate>2017-06-05</VersionSeedDate>
+    <OfficialBuildId>20170605-01</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <!-- TODO: Remove when corefx@addef97 is included. -->
-    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json" />
-    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\optional.json" />
-    <ProjectJsonFiles Include="$(ProjectDirectory)external\**\project.json.template" />
+    <RepositoryReference Include="standard" />
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
+    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
   </ItemGroup>
 </Project>

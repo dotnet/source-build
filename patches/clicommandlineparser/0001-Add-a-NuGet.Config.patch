@@ -1,0 +1,27 @@
+From a361af3c9f28a6163b2cf2974ed569e47e9d2eed Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 22 May 2017 19:41:03 -0700
+Subject: [PATCH] Add a NuGet.Config
+
+---
+ NuGet.Config | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 NuGet.Config
+
+diff --git a/NuGet.Config b/NuGet.Config
+new file mode 100644
+index 0000000..5db080c
+--- /dev/null
++++ b/NuGet.Config
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<configuration>
++  <packageSources>
++    <!--To inherit the global NuGet package sources remove the <clear/> line below -->
++    <clear />
++    <add key="api.nuget.org" value="https://api.nuget.org/v3/index.json" />
++  </packageSources>
++</configuration>
+-- 
+1.8.3.1
+

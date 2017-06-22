@@ -1,67 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="DiscoverProjectsForTFMs" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddPublicSignToProjectJson" />
 
-  <Target Name="Build" DependsOnTargets="PrintBuildMessage;InstallTools;InitSubmodules">
-    <DiscoverProjectsForTFMs RootDirectory="$(NuGetCoreSourceDirectory)"
-                             TFMs="@(BuildTFMs)">
-      <Output TaskParameter="DiscoveredProjects"
-              ItemName="Projects" />
-    </DiscoverProjectsForTFMs>
-
-    <AddPublicSignToProjectJson ProjectJsonFiles="@(Projects)"
-                                KeyFilePath="$(NuGetKeyFilePath)" />
-
-    <Exec Command="$(DotNetCommand) restore %(Projects.Identity)" />
-
-    <MSBuild Projects="$(MSBuildProjectFullPath)"
-             Targets="BuildProjectsForTFM"
-             Properties="BuildTFM=%(BuildTFMs.Identity)" />
-
-    <Exec Command="$(DotNetCommand) pack --no-build -c $(Configuration) -o $(PackagesOutput) -s %(Projects.Identity) --version-suffix $(NuGetClientVersionSuffix)" />
-  </Target>
-
-  <Target Name="PrintBuildMessage">
+  <Target Name="Build"
+          DependsOnTargets="InitSubmodules">
     <Message Text="Building '$(RepositoryName)'" Importance="High" />
-  </Target>
 
-  <Target Name="BuildProjectsForTFM">
-    <Message Text="Building projects for $(BuildTFM)" />
+    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
+          EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <DiscoverProjectsForTFMs RootDirectory="$(NuGetCoreSourceDirectory)"
-                             TFMs="$(BuildTFM)">
-      <Output TaskParameter="DiscoveredProjects"
-              ItemName="Projects" />
-    </DiscoverProjectsForTFMs>
-
-    <Exec Command="$(DotNetCommand) build %(Projects.Identity) -c $(Configuration) -f $(BuildTFM)" Condition="'@(Projects)' != ''"/>
-  </Target>
-
-  <Target Name="InstallTools">
-    <MakeDir Directories="$(ToolsDirectory)" />
-    <CallTarget Targets="InstallToolsWindows" Condition="'$(OS)' == 'Windows_NT'" />
-    <CallTarget Targets="InstallToolsUnix" Condition="'$(OS)' != 'Windows_NT'" />
-  </Target>
-
-  <Target Name="InstallToolsWindows">
-    <Exec Command="powershell.exe -Command &quot;. $(ProjectDirectory)build/common.ps1 ; Install-DotnetCLI&quot;"
-          WorkingDirectory="$(ProjectDirectory)" />
-  </Target>
-
-  <Target Name="InstallToolsUnix">
-    <Exec Command="curl -o $(ToolsDirectory)/dotnet-install.sh https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0-preview2/scripts/obtain/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <Exec Command="chmod +x $(ToolsDirectory)/dotnet-install.sh"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <Exec Command="bash $(ToolsDirectory)/dotnet-install.sh -i cli -c preview -v 1.0.0-preview2-003121"
-          WorkingDirectory="$(ProjectDirectory)" />
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/CLI.sln /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:ReleaseLabel=$(NuGetClientReleaseLabel) /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
   <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
     <Exec Command="git submodule init"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="git submodule update"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

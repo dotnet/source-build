@@ -4,9 +4,12 @@
     <WebSdkVersion>1.0.0-alpha-20170130-3-281</WebSdkVersion>
     <CoreSdkVersion>1.1.0-alpha-20170228-1</CoreSdkVersion>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <EnvironmentSetPrefix Condition="'$(OS)' == 'Windows_NT'">(set WebSdkVersion=$(WebSdkVersion)) &amp; (set CoreSdkVersion=$(CoreSdkVersion)) &amp;</EnvironmentSetPrefix>
-    <EnvironmentSetPrefix Condition="'$(OS)' != 'Windows_NT'">WebSdkVersion=$(WebSdkVersion) CoreSdkVersion=$(CoreSdkVersion)</EnvironmentSetPrefix>
-    <BuildCommand>$(EnvironmentSetPrefix) $(ProjectDirectory)/build-core$(ShellExtension)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build-core$(ShellExtension)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Release/NuGet/</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="WebSdkVersion=$(WebSdkVersion)" />
+    <EnvironmentVariables Include="CoreSdkVersion=$(CoreSdkVersion)" />
+  </ItemGroup>
 </Project>

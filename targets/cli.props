@@ -4,14 +4,19 @@
     <CLITargetsArgument Condition="'$(OS)' == 'Windows_NT'">'/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</CLITargetsArgument>
     <CLITargetsArgument Condition="'$(OS)' != 'Windows_NT'">'/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</CLITargetsArgument>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/$(TargetRid)/packages/</PackagesOutput>
+    <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="application-insights" />
+    <RepositoryReference Include="cli-migrate" />
+    <!--
+        <RepositoryReference Include="clicommandlineparser" />
+    -->
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="netcorecli-fsc" />
@@ -22,5 +27,10 @@
     <RepositoryReference Include="templating" />
     <RepositoryReference Include="vstest" />
     <RepositoryReference Include="websdk" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="GitInfoCommitCount=6372" />
+    <EnvironmentVariables Include="GitInfoCommitHash=a3d6c2a5515cb24d8ed3efc55bf746e1c0ce9f6d" />
   </ItemGroup>
 </Project>

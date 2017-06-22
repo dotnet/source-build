@@ -2,10 +2,12 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests</BuildCommand>
-    <BuildCommand Condition="'$(_IsBootstrapping)' == 'true'">$(BuildCommand) msbuildonunsupportedplatform</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(Platform) $(Configuration) skiptests -PortableBuild=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <LatestCommit>9679ded412d1421f3d54ee3082e8b5f900217a4a</LatestCommit>
+    <VersionSeedDate>2017-06-07</VersionSeedDate>
+    <OfficialBuildId>20170607-01</OfficialBuildId>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -13,11 +15,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--
-      TODO: Make ProjectJsonFiles more accessible in CoreCLR to avoid duplication here.
-      Copied from tests/build.proj and rerooted. From coreclr@cb01aa8
-    -->
-    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)src\**\project.json" />
-    <ProjectJsonFiles Include="$(ProjectJsonFileBaseDir)scripts\**\project.json" />
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
   </ItemGroup>
+
 </Project>

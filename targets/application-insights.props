@@ -3,7 +3,6 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <ApplicationInsightsWrapperDirectory>$(WrapperProjectsDirectory)Microsoft.ApplicationInsights/</ApplicationInsightsWrapperDirectory>
-    <PackagesOutput>$(ApplicationInsightsWrapperDirectory)bin/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
   </PropertyGroup>
 </Project>

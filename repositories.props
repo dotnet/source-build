@@ -3,17 +3,17 @@
   <ItemGroup>
     <Repository Include="standard" >
       <Organization>dotnet</Organization>
-      <Branch>master</Branch>
+      <Branch>release/2.0.0</Branch>
       <PathToRepo>$(PathToStandard)</PathToRepo>
     </Repository>
     <Repository Include="coreclr" >
       <Organization>dotnet</Organization>
-      <Branch>master</Branch>
+      <Branch>release/2.0.0</Branch>
       <PathToRepo>$(PathToCoreclr)</PathToRepo>
     </Repository>
     <Repository Include="corefx" >
       <Organization>dotnet</Organization>
-      <Branch>master</Branch>
+      <Branch>release/2.0.0</Branch>
       <PathToRepo>$(PathToCorefx)</PathToRepo>
     </Repository>
     <Repository Include="roslyn" >
@@ -23,26 +23,28 @@
     </Repository>
     <Repository Include="core-setup" >
       <Organization>dotnet</Organization>
-      <Branch>master</Branch>
+      <Branch>release/2.0.0</Branch>
       <PathToRepo>$(PathToCoreSetup)</PathToRepo>
     </Repository>
+    <!--
     <Repository Include="netcorecli-fsc" >
       <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToNetCoreCliFsc)</PathToRepo>
     </Repository>
+    -->
     <Repository Include="sdk" >
-      <Organization>karajas</Organization>
+      <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToSdk)</PathToRepo>
     </Repository>
     <Repository Include="nuget-client" >
       <Organization>nuget</Organization>
-      <Branch>release-4.1.0-netstandard2.0</Branch>
+      <Branch>dev</Branch>
       <PathToRepo>$(PathToNuGetClient)</PathToRepo>
     </Repository>
     <Repository Include="templating" >
-      <Organization>karajas</Organization>
+      <Organization>dotnet</Organization>
       <Branch>master</Branch>
       <PathToRepo>$(PathToTemplating)</PathToRepo>
     </Repository>
@@ -73,8 +75,18 @@
     </Repository>
     <Repository Include="cli" >
       <Organization>dotnet</Organization>
-      <Branch>master</Branch>
+      <Branch>release/2.0.0</Branch>
       <PathToRepo>$(PathToCli)</PathToRepo>
+    </Repository>
+    <Repository Include="clicommandlineparser" >
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
+      <PathToRepo>$(PathToCliCommandLineParser)</PathToRepo>
+    </Repository>
+    <Repository Include="cli-migrate" >
+      <Organization>dotnet</Organization>
+      <Branch>master</Branch>
+      <PathToRepo>$(PathToCliMigrate)</PathToRepo>
     </Repository>
   </ItemGroup>
 </Project>

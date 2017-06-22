@@ -2,8 +2,14 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
-    <Exec Command="$(DotNetCommand) restore $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)" />
-    <Exec Command="$(DotNetCommand) build $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)" />
-    <Exec Command="$(DotNetCommand) pack $(ApplicationInsightsWrapperDirectory)Microsoft.ApplicationInsights.csproj /p:ProjectDirectory=$(ProjectDirectory) /p:Configuration=$(Configuration)" />
+
+    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

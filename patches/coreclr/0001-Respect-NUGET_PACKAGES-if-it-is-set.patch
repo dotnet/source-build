@@ -1,0 +1,42 @@
+From cb63d3f2d22d8bea26de0367d3cbc39540a2d9c7 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 15 May 2017 17:04:05 -0700
+Subject: [PATCH] Respect NUGET_PACKAGES if it is set
+
+---
+ build.sh  | 2 +-
+ dir.props | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/build.sh b/build.sh
+index 55b4ba3..a76c84b 100755
+--- a/build.sh
++++ b/build.sh
+@@ -601,7 +601,7 @@ __IncludeTests=Include_Tests
+ # Set the various build properties here so that CMake and MSBuild can pick them up
+ __ProjectDir="$__ProjectRoot"
+ __SourceDir="$__ProjectDir/src"
+-__PackagesDir="$__ProjectDir/packages"
++__PackagesDir="${NUGET_PACKAGES:-${__ProjectDir}/packages}"
+ __RootBinDir="$__ProjectDir/bin"
+ __UnprocessedBuildArgs=
+ __RunArgs=
+diff --git a/dir.props b/dir.props
+index 9668768..a6c13b6 100644
+--- a/dir.props
++++ b/dir.props
+@@ -56,8 +56,9 @@
+     <SourceDir>$(__SourceDir)\</SourceDir>
+     <SourceDir Condition="'$(__SourceDir)'==''">$(ProjectDir)src\</SourceDir>
+ 
+-    <PackagesDir>$(__PackagesDir)\</PackagesDir>
+-    <PackagesDir Condition="'$(__PackagesDir)'==''">$(ProjectDir)packages\</PackagesDir>
++    <PackagesDir Condition="'$(PackagesDir)'=='' and '$(NUGET_PACKAGES)' != ''">$(NUGET_PACKAGES)\</PackagesDir>
++    <PackagesDir Condition="'$(PackagesDir)'=='' and '$(__PackagesDir)' != ''">$(__PackagesDir)\</PackagesDir>
++    <PackagesDir Condition="'$(PackagesDir)'==''">$(ProjectDir)packages\</PackagesDir>
+ 
+     <RootBinDir>$(__RootBinDir)\</RootBinDir>
+     <RootBinDir Condition="'$(__RootBinDir)'==''">$(ProjectDir)bin\</RootBinDir>
+-- 
+1.8.3.1
+

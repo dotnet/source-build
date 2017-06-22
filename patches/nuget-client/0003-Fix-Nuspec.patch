@@ -1,0 +1,31 @@
+From ed626d3fbc8aaa38468b26b715be26ad71aee2a8 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 30 May 2017 18:32:39 -0700
+Subject: [PATCH] Fix Nuspec
+
+Since we don't currently ILMerge, we need to fix the nuspec so that we
+don't expect to pick up an ILMerged version of NuGet
+---
+ .../NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec   | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+index 5fce2fb..4a8bf1d 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+@@ -8,9 +8,8 @@
+     <description>NuGet pack for dotnet CLI</description>
+   </metadata>
+   <files>
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\*.dll" target="Desktop\" />
+-    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\*.dll" target="CoreCLR\" />
+-    <file src="Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
+-    <file src="Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
++    <file src="netstandard1.3\*.dll" target="CoreCLR\" />
++    <file src="netstandard1.3\Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
++    <file src="netstandard1.3\Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
+   </files>
+ </package>
+-- 
+1.8.3.1
+

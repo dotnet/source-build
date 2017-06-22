@@ -1,0 +1,40 @@
+From 00d9f004509739a4262b79e698bddf2bd6cee84a Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 23 May 2017 21:32:12 -0700
+Subject: [PATCH] Skip Building UWP Project
+
+---
+ src/pkg/packages.builds | 1 +
+ src/src.builds          | 3 ++-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/pkg/packages.builds b/src/pkg/packages.builds
+index c9b666d..e9f88fe 100644
+--- a/src/pkg/packages.builds
++++ b/src/pkg/packages.builds
+@@ -10,6 +10,7 @@
+ 
+   <ItemGroup>
+     <ProjectExclusions Include="$(MSBuildThisFileDirectory)\projects\*\Microsoft.NETCore.UniversalWindowsPlatform.builds" Condition="'$(OSEnvironment)' != 'Windows_NT' or '$(Platform)' == 'arm64'" />
++    <ProjectExclusions Include="$(MSBuildThisFileDirectory)\projects\*\Microsoft.Net.UWPCoreRuntimeSdk.builds" Condition="'$(OSEnvironment)' != 'Windows_NT' or '$(Platform)' == 'arm64'" />
+     <Project Include="$(MSBuildThisFileDirectory)\projects\*\*.builds" Exclude="@(ProjectExclusions)">
+       <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
+     </Project>
+diff --git a/src/src.builds b/src/src.builds
+index f1a5bd9..7c68b85 100644
+--- a/src/src.builds
++++ b/src/src.builds
+@@ -11,7 +11,8 @@
+     <Project Include="$(MSBuildThisFileDirectory)corehost/build.proj" />
+     <Project Include="$(MSBuildThisFileDirectory)managed/dir.proj" />
+     <Project Include="$(MSBuildThisFileDirectory)pkg/**/src/*.builds" />
++    <Project Remove="$(MSBuildThisFileDirectory)pkg/projects/Microsoft.NETCore.UniversalWindowsPlatform/src/Microsoft.NETCore.UniversalWindowsPlatform.builds" />
+   </ItemGroup>
+ 
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.traversal.targets))\dir.traversal.targets" />
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+

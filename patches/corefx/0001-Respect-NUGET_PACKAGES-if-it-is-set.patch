@@ -1,0 +1,30 @@
+From 3dd67d26c835cfff95431304e94b0a591734f93f Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 15 May 2017 15:30:07 -0700
+Subject: [PATCH] Respect NUGET_PACKAGES if it is set
+
+---
+ dir.props | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/dir.props b/dir.props
+index ba2b702..f055114 100644
+--- a/dir.props
++++ b/dir.props
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Condition="Exists('..\dir.props')" Project="..\dir.props" />
+ 
+@@ -31,6 +31,7 @@
+     <PackageOutputRoot Condition="'$(PackageOutputRoot)'==''">$(BinDir)packages/</PackageOutputRoot>
+ 
+     <!-- Input Directories -->
++    <PackagesDir>$(NUGET_PACKAGES)</PackagesDir>
+     <PackagesDir Condition="'$(PackagesDir)'==''">$(ProjectDir)packages/</PackagesDir>
+     <ToolsDir Condition="'$(ToolsDir)'==''">$(ProjectDir)Tools/</ToolsDir>
+     <IlasmToolPath>$(ToolsDir)ilasm/ilasm</IlasmToolPath>
+-- 
+1.8.3.1
+

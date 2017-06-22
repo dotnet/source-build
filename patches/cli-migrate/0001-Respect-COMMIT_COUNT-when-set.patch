@@ -1,0 +1,36 @@
+From 0b5ef5222043ce78c2b5d7e20f8cdd88622b24b7 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Sat, 20 May 2017 14:41:43 -0700
+Subject: [PATCH] Respect COMMIT_COUNT when set
+
+This allows setting the commit count even when git is not
+installed (or the repository is partial checkout or not even a git
+repository at all).
+---
+ build.proj | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/build.proj b/build.proj
+index c4717c4..a7916bc 100644
+--- a/build.proj
++++ b/build.proj
+@@ -21,8 +21,14 @@
+   <Target Name="MakeVersionProps">
+     <MakeDir Condition="!Exists('obj')"
+              Directories="obj" />
+-    <Exec Command="git rev-list --count HEAD" 
+-          ConsoleToMSBuild="true">
++
++    <PropertyGroup>
++      <GitInfoCommitCount Condition="'$(COMMIT_COUNT)' != ''">$(COMMIT_COUNT)</GitInfoCommitCount>
++    </PropertyGroup>
++
++    <Exec Command="git rev-list --count HEAD"
++          ConsoleToMSBuild="true"
++          Condition="'$(GitInfoCommitCount)' == ''">
+       <Output TaskParameter="ConsoleOutput" PropertyName="GitInfoCommitCount" />
+     </Exec>
+ 
+-- 
+1.8.3.1
+

@@ -1,0 +1,35 @@
+From c63ac76b442bbe601dd9dc7cd24581b4afb2d2fd Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Sat, 20 May 2017 14:59:34 -0700
+Subject: [PATCH] Add BuildForCli target
+
+---
+ build.proj | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/build.proj b/build.proj
+index a7916bc..1c304ef 100644
+--- a/build.proj
++++ b/build.proj
+@@ -18,6 +18,18 @@
+     <MSBuild Projects="cli-migrate.sln" Targets="build" />
+   </Target>
+ 
++  <Target Name="BuildForCli">
++    <CallTarget Targets="MakeVersionProps" />
++
++    <ItemGroup>
++      <ProjectsForCli Include="src/Microsoft.DotNet.Tools.MigrateCommand/Microsoft.DotNet.Tools.MigrateCommand.csproj" />
++      <ProjectsForCli Include="src/Microsoft.DotNet.ProjectJsonMigration/Microsoft.DotNet.ProjectJsonMigration.csproj" />
++    </ItemGroup>
++
++    <MSBuild Projects="@(ProjectsForCli)" Targets="Restore" />
++    <MSBuild Projects="@(ProjectsForCli)" Targets="Pack" Properties="IncludeSymbols=true;IncludeSource=true;PackageOutputPath=$(MSBuildThisFileDirectory)artifacts/packages/" />
++  </Target>
++
+   <Target Name="MakeVersionProps">
+     <MakeDir Condition="!Exists('obj')"
+              Directories="obj" />
+-- 
+1.8.3.1
+

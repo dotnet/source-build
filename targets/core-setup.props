@@ -2,20 +2,26 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Init,Compile</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Init,Compile --skip-deb-package-build</BuildCommand>
-    <BuildPackagesCommand>$(ProjectDirectory)/build$(ShellExtension) -Configuration $(Configuration) -Targets Package</BuildPackagesCommand>
-    <BuildPackagesCommand Condition="'$(OS)' != 'Windows_NT'">$(ProjectDirectory)/build$(ShellExtension) --configuration $(Configuration) --targets Package --skip-deb-package-build</BuildPackagesCommand>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/corehost/</PackagesOutput>
-    <BinariesOutput>$(ProjectDirectory)/artifacts/$(TargetRid)/packages/</BinariesOutput>
-    <UpdateCommand>powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Targets UpdateFiles</UpdateCommand>
-    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'"> $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --targets UpdateFiles</UpdateCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -ConfigurationGroup=$(Configuration) -PortableBuild=false -SkipTests=true -- /p:BuildDebPackage=false</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
+    <BinariesOutput>$(PackagesOutput)</BinariesOutput>
+    <LatestCommit>40c565230930ead58a50719c0ec799df77bddee9</LatestCommit>
+    <OfficialBuildId>20170607-01</OfficialBuildId>
+    <VersionSeedDate>2017-06-07</VersionSeedDate>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
+    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
-    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
   </ItemGroup>
 </Project>

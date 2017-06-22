@@ -5,19 +5,14 @@
     <PackagesOutput>$(ProjectDirectory)Nupkgs/</PackagesOutput>
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
-    <DotNetCommand>$(ToolsDirectory)dotnet</DotNetCommand>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientVersionSuffix>beta-2321</NuGetClientVersionSuffix>
+    <NuGetClientReleaseLabel>preview3</NuGetClientReleaseLabel>
+    <NuGetClientBuildNumber>4146</NuGetClientBuildNumber>
   </PropertyGroup>
 
   <ItemGroup>
-    <BuildTFMs Include="netstandard1.0" />
-    <BuildTFMs Include="netstandard1.1" />
-    <BuildTFMs Include="netstandard1.2" />
-    <BuildTFMs Include="netstandard1.3" />
-    <BuildTFMs Include="netstandard1.4" />
-    <BuildTFMs Include="netstandard1.5" />
-    <BuildTFMs Include="netstandard1.6" />
-    <BuildTFMs Include="netcoreapp1.0" />
+    <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
   </ItemGroup>
+
 </Project>

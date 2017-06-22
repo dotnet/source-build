@@ -13,6 +13,7 @@
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
+    <PatchesDir>$(ProjectDir)patches/</PatchesDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -20,8 +21,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <CommandSeparator Condition="'$(OS)' == 'Windows_NT'">&amp;</CommandSeparator>
-    <CommandSeparator Condition="'$(OS)' != 'Windows_NT'">%3B</CommandSeparator>
     <ShellExtension Condition="'$(OS)' == 'Windows_NT'">.cmd</ShellExtension>
     <ShellExtension Condition="'$(OS)' != 'Windows_NT'">.sh</ShellExtension>
     <TarBallExtension Condition="'$(OS)' == 'Windows_NT'">.zip</TarBallExtension>
@@ -43,12 +42,14 @@
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
-    <SourceBuiltPackagesPath>$(OutputPath)packages/source-built/</SourceBuiltPackagesPath>
+    <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
+    <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
+    <SourceBuiltPackagesPath>$(IntermediatePath)source-built/</SourceBuiltPackagesPath>
+    <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
     <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
-    <WrapperProjectsDirectory>$(TargetsDir)wrapper-projects/</WrapperProjectsDirectory>
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true'" />
@@ -65,6 +66,13 @@
 
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
+    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
   </ItemGroup>
 
   <Import Project="repositories.props" />
