@@ -1,4 +1,4 @@
-From 2f0f2f9a5f9210ef6386eb194e31d10b1bd2f3f5 Mon Sep 17 00:00:00 2001
+From b033d5c8430ffba50ff1b4197e9b3c83e8a54fa8 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Sat, 20 May 2017 16:11:18 -0700
 Subject: [PATCH] Add BuildForCli target
@@ -8,21 +8,21 @@ Subject: [PATCH] Add BuildForCli target
  1 file changed, 15 insertions(+)
 
 diff --git a/build/build.proj b/build/build.proj
-index 12377f5..0803709 100644
+index 7794fe0..27eadec 100644
 --- a/build/build.proj
 +++ b/build/build.proj
-@@ -76,7 +76,22 @@
+@@ -78,7 +78,22 @@
               Targets="Pack"
               Properties="$(CommonMSBuildGlobalProperties);NoBuild=true"
               />
 +  </Target>
 +
 +  <Target Name="BuildForCli">
-+    <MSBuild Projects="$(RepositoryRootDirectory)src\Tasks\Microsoft.NET.Build.Tasks\Microsoft.NET.Build.Tasks.csproj"
++    <MSBuild Projects="@(NuGetProjectFile)"
 +             Targets="Restore"
 +             Properties="$(CommonMSBuildGlobalProperties)" />
  
-+    <MSBuild Projects="$(RepositoryRootDirectory)src\Tasks\Microsoft.NET.Build.Tasks\Microsoft.NET.Build.Tasks.csproj"
++    <MSBuild Projects="@(NuGetProjectFile)"
 +             Targets="Build"
 +             Properties="$(CommonMSBuildGlobalProperties)" />
 +

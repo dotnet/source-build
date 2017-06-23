@@ -1,37 +1,35 @@
-From f0adff1c0814d594f1c16568309d5224fad6b2ff Mon Sep 17 00:00:00 2001
+From 202342afb373a598353a1239c98a8514fa203974 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Wed, 31 May 2017 13:47:07 -0700
-Subject: [PATCH 3/3] Fix packing with newest CLI
+Subject: [PATCH] Fix packing with newest CLI
 
 ---
- src/package/nuspec/Microsoft.TestPlatform.Build.csproj | 3 +++
- src/package/nuspec/Microsoft.TestPlatform.CLI.csproj   | 3 +++
- 2 files changed, 6 insertions(+)
+ src/package/nuspec/Microsoft.TestPlatform.Build.csproj | 2 ++
+ src/package/nuspec/Microsoft.TestPlatform.CLI.csproj   | 2 ++
+ 2 files changed, 4 insertions(+)
 
 diff --git a/src/package/nuspec/Microsoft.TestPlatform.Build.csproj b/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
-index 8b0dd8d..1fa905e 100644
+index 717062c..fdc693f 100644
 --- a/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
 +++ b/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
-@@ -4,5 +4,8 @@
-     <TargetFramework>netcoreapp1.0</TargetFramework>
-     <NuspecFile>TestPlatform.Build.nuspec</NuspecFile>
-     <NuspecProperties>version=$(Version)</NuspecProperties>
+@@ -8,5 +8,7 @@
+     <!-- Don't include the output.dll and output.runtimeconfig.json files in nuget package -->
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 +    <NoPackageAnalysis>true</NoPackageAnalysis>
 +    <NoBuild>true</NoBuild>
-+    <IncludeBuildOutput>false</IncludeBuildOutput>
    </PropertyGroup>
  </Project>
 diff --git a/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj b/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
-index 79026d3..cc45423 100644
+index 23c79f1..b668cb3 100644
 --- a/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
 +++ b/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
-@@ -4,5 +4,8 @@
-     <TargetFramework>netcoreapp1.0</TargetFramework>
-     <NuspecFile>TestPlatform.CLI.nuspec</NuspecFile>
-     <NuspecProperties>version=$(Version)</NuspecProperties>
+@@ -8,5 +8,7 @@
+     <!-- Don't include the output.dll and output.runtimeconfig.json files in nuget package -->
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
 +    <NoPackageAnalysis>true</NoPackageAnalysis>
 +    <NoBuild>true</NoBuild>
-+    <IncludeBuildOutput>false</IncludeBuildOutput>
    </PropertyGroup>
  </Project>
 -- 

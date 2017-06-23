@@ -1,40 +1,53 @@
-From b5fad267b52f54e76a5b297cac11d540a8733c43 Mon Sep 17 00:00:00 2001
+From fd450de8e3b3e80a914bd353331ea778db8f7a35 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 22 May 2017 14:10:45 -0700
-Subject: [PATCH 2/3] Copy prebuilt dotnet from known location
+Subject: [PATCH] Copy prebuilt dotnet from known location
 
 ---
- scripts/build.sh | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ scripts/build.sh | 26 +++++---------------------
+ 1 file changed, 5 insertions(+), 21 deletions(-)
 
 diff --git a/scripts/build.sh b/scripts/build.sh
-index 64cc123..d7150ee 100755
+index 458d980..52fbe28 100755
 --- a/scripts/build.sh
 +++ b/scripts/build.sh
-@@ -72,7 +72,7 @@ TP_SRC_DIR="$TP_ROOT_DIR/src"
+@@ -137,31 +137,15 @@ function usage()
  #
- # Dotnet configuration
- #
--# Disable first run since we want to control all package sources 
-+# Disable first run since we want to control all package sources
- echo "Setup dotnet configuration."
- export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
- # Dotnet build doesnt support --packages yet. See https://github.com/dotnet/cli/issues/2712
-@@ -100,13 +100,7 @@ function installdotnetcli()
-     [[ -z "$DOTNET_INSTALL_DIR" ]] && export DOTNET_INSTALL_DIR="$TP_TOOLS_DIR/dotnet"
-     [[ -d "$DOTNET_INSTALL_DIR" ]] || mkdir -p $DOTNET_INSTALL_DIR
- 
--    DOTNET_INSTALL_PATH="$TP_TOOLS_DIR/dotnet/dotnet"
--    if [[ ! -e $DOTNET_INSTALL_PATH ]]; then
+ function install_cli()
+ {
+-    local failed=false
+-    local install_script="$TP_TOOLS_DIR/dotnet-install.sh"
+-    local remote_path="https://raw.githubusercontent.com/dotnet/cli/master/scripts/obtain/dotnet-install.sh"
 -
--        # Install a stage 0
--        DOTNET_INSTALL_SCRIPT_URL="https://raw.githubusercontent.com/dotnet/cli/rel/1.0.0/scripts/obtain/dotnet-install.sh"
--        curl -sSL "$DOTNET_INSTALL_SCRIPT_URL" | bash /dev/stdin  --version $DOTNET_CLI_VERSION --verbose
--    fi
-+    cp -r $DOTNET_TOOL_DIR/* $DOTNET_INSTALL_DIR
+     log "Installing dotnet cli..."
+     local start=$SECONDS
  
-     echo "installdotnetcli: Complete. Elapsed $(( SECONDS - start ))"
- }
+-    # Install the latest version of dotnet-cli
+-    curl --retry 10 -sSL --create-dirs -o $install_script $remote_path || failed=true
+-    if [ "$failed" = true ]; then
+-        error "Failed to download dotnet-install.sh script."
+-        return 1
++    if [ ! -e "$TP_TOOLS_DIR/dotnet" ];
++    then
++        mkdir -p "$TP_TOOLS_DIR/dotnet"
+     fi
+-    chmod u+x $install_script
+-
+-    log "install_cli: Get the latest dotnet cli toolset..."
+-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "master" --version $DOTNET_CLI_VERSION
+-
+-    # Get netcoreapp1.1 shared components
+-    log "install_cli: Get the shared netcoreapp1.0 runtime..."
+-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "preview" --version "1.0.5" --shared-runtime
+-    log "install_cli: Get the shared netcoreapp1.1 runtime..."
+-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "release/1.1.0" --version "1.1.2" --shared-runtime
+-    log "install_cli: Get shared components which is compatible with dotnet cli version $DOTNET_CLI_VERSION..."
+-    $install_script --install-dir "$TP_TOOLS_DIR/dotnet" --no-path --channel "master" --version $DOTNET_RUNTIME_VERSION --shared-runtime
++    cp -r $DOTNET_TOOL_DIR/* "$TP_TOOLS_DIR/dotnet/"
++
+ 
+     log "install_cli: Complete. Elapsed $(( SECONDS - start ))s."
+     return 0
 -- 
 1.8.3.1
 

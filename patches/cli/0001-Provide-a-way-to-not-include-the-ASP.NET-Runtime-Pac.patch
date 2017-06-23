@@ -1,12 +1,12 @@
-From fd6318f4e064e9b00f89fa470d2fcafb6aaa1459 Mon Sep 17 00:00:00 2001
+From a127fbf13fe6297ed05828efe7fc7ec2fec02e9b Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 11 May 2017 17:56:24 -0700
 Subject: [PATCH] Provide a way to not include the ASP.NET Runtime Packages
 
 ---
  build/BuildDefaults.props   | 1 +
- build/BundledRuntimes.props | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ build/BundledRuntimes.props | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/build/BuildDefaults.props b/build/BuildDefaults.props
 index 64eddcf..268a02e 100644
@@ -21,10 +21,10 @@ index 64eddcf..268a02e 100644
      <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
      <HighEntropyVA>true</HighEntropyVA>
 diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
-index 4484c7d..eff030c 100644
+index 685df52..1d99cde 100644
 --- a/build/BundledRuntimes.props
 +++ b/build/BundledRuntimes.props
-@@ -77,14 +77,14 @@
+@@ -79,21 +79,21 @@
      </_DownloadAndExtractItem>
  
    <_DownloadAndExtractItem Include="AspNetCoreRuntimeInstallerWixLibFile"
@@ -41,6 +41,14 @@ index 4484c7d..eff030c 100644
        <Url>$(AspNetCoreRuntimeInstallerBlobRootUrl)/$(AspNetCoreRuntimeInstallerArchiveFileName)</Url>
        <DownloadFileName>$(AspNetCoreRuntimeInstallerArchiveFile)</DownloadFileName>
        <ExtractDestination>$(AspNetRuntimePackageStorePublishDirectory)</ExtractDestination>
+   </_DownloadAndExtractItem>
+ 
+   <_DownloadAndExtractItem Include="AspNetCoreSharedRuntimeVersionFile"
+-                           Condition="!Exists('$(AspNetCoreSharedRuntimeVersionFile)')">
++                           Condition="'$(IncludeAspNetCoreRuntime)' == 'true' And !Exists('$(AspNetCoreSharedRuntimeVersionFile)')">
+       <Url>$(AspNetCoreRuntimeInstallerBlobRootUrl)/$(AspNetCoreSharedRuntimeVersionFileName)</Url>
+       <DownloadFileName>$(AspNetCoreSharedRuntimeVersionFile)</DownloadFileName>
+       <ExtractDestination></ExtractDestination>
 -- 
 1.8.3.1
 

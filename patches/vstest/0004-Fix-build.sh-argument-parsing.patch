@@ -1,0 +1,48 @@
+From d1c7b5e9b11664939b9edf94c39c9ab467317252 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 22 Jun 2017 17:46:07 -0700
+Subject: [PATCH] Fix build.sh argument parsing
+
+---
+ scripts/build.sh | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/scripts/build.sh b/scripts/build.sh
+index 52fbe28..85b89f0 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -33,24 +33,31 @@ while [ $# -gt 0 ]; do
+             ;;
+         -c)
+             CONFIGURATION=$2
++            shift
+             ;;
+         -r)
+             TARGET_RUNTIME=$2
++            shift
+             ;;
+         -v)
+             VERSION=$2
++            shift
+             ;;
+         -vs)
+             VERSION_SUFFIX=$2
++            shift
+             ;;
+         -noloc)
+             DISABLE_LOCALIZED_BUILD=$2
++            shift
+             ;;
+         -ci)
+             CI_BUILD=$2
++            shift
+             ;;
+         -p)
+             PROJECT_NAME_PATTERNS=$2
++            shift
+             ;;
+         -verbose)
+             VERBOSE=true
+-- 
+1.8.3.1
+

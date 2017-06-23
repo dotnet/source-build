@@ -3,12 +3,13 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration)</BuildCommand>
+    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber:20170614.9</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+    <EnvironmentVariables Include="COMMIT_SHA=b7f611db1cbcad10c8fbb00d078c11bc4dc6d197" />
   </ItemGroup>
 
 </Project>

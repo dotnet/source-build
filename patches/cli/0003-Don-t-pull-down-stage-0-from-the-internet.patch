@@ -1,4 +1,4 @@
-From 73bf953819cecf421846b0cb2a531a55b1accf54 Mon Sep 17 00:00:00 2001
+From 2fba3531204e31a18f4a4711295ec66273fda653 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 22 May 2017 11:37:59 -0700
 Subject: [PATCH] Don't pull down stage 0 from the internet
@@ -39,14 +39,14 @@ index 4781c84..8a0d7f9 100755
  export PATH=$DOTNET_INSTALL_DIR:$PATH
  
 diff --git a/run-build.sh b/run-build.sh
-index 2bb5b7b..1a7bb9f 100755
+index 8f2f407..1a7bb9f 100755
 --- a/run-build.sh
 +++ b/run-build.sh
 @@ -155,21 +155,7 @@ export VSTEST_TRACE_BUILD=1
  DOTNET_MULTILEVEL_LOOKUP=0
  
  # Install a stage 0
--(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "release/2.0.0" --version "2.0.0-preview2-006349" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS)
+-(set -x ; "$REPOROOT/scripts/obtain/dotnet-install.sh" --channel "release/2.0.0" --install-dir "$DOTNET_INSTALL_DIR" --architecture "$ARCHITECTURE" $LINUX_PORTABLE_INSTALL_ARGS --version "2.0.0-preview2-006470")
 -
 -EXIT_CODE=$?
 -if [ $EXIT_CODE != 0 ]; then
