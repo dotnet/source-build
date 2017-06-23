@@ -64,7 +64,7 @@ do
 done
 
 rm -rf $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/sdk/2.0.0-preview2-006195/nuGetPackagesArchive.lzma
+rm -rf $TARBALL_ROOT/Tools/dotnetcli/sdk/2.0.0-preview2-006497/nuGetPackagesArchive.lzma
 rm -rf $TARBALL_ROOT/Tools/dotnetcli/store
 rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
 
