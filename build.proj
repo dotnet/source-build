@@ -30,7 +30,6 @@
   </Target>
 
   <Target Name="GenerateRootFs">
-     <Message Importance="high" text="in this code path" />
      <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh" />
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) ./cross/armel/tizen-build-rootfs.sh" />
   </Target>
