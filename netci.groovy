@@ -59,3 +59,46 @@ def addPushJob(String project, String branch, String os, String configuration)
     addPushJob(project, branch, os, configuration);
   };
 };
+
+[true, false].each { isPR ->
+  ["Linux ARM", "Tizen"].each { os->
+    ["Release", "Debug"].each { configuration ->
+      
+      def shortJobName = "${os}_${configuration}";
+      def contextString = "${os} ${configuration}";
+      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+      
+      def newJob = job(InternalUtilities.getFullJobName(project, shortJobName, isPR)){
+        steps{
+            shell("git submodule init");
+            shell("git submodule update");
+            shell("./init-tools.sh")
+            if(os == "Linux ARM"){
+              shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+            }
+            if(os == "Tizen"){
+              shell("./arm-ci.sh armel ./build.sh /p:Platform=armel /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+            }
+        }
+      }
+
+      Utilities.setMachineAffinity(newJob, 'Ubuntu', 'arm-cross-latest');
+
+      InternalUtilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+      if(isPR){
+        //We run Tizen Release and Ubuntu ARM Release 
+        if(configuration == "Release"){
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        }
+        else{
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+        }
+      }
+      else{
+        Utilities.addGithubPushTrigger(newJob);
+      }
+
+    }
+  }
+}
+
