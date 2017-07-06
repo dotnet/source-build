@@ -33,29 +33,9 @@
       <PackageDownloadBaseUrl>$(DotNetCoreV2BaseUrl)</PackageDownloadBaseUrl>
     </UpdateStep>
 
-    <UpdateStep Include="Core-Setup">
-      <UpdaterType>Submodule from latest</UpdaterType>
-      <Path>$(SubmoduleDirectory)core-setup</Path>
-      <Repository>origin</Repository>
-      <Ref>master</Ref>
-    </UpdateStep>
-    <UpdateStep Include="CoreCLR">
-      <UpdaterType>Submodule from latest</UpdaterType>
-      <Path>$(SubmoduleDirectory)coreclr</Path>
-      <Repository>origin</Repository>
-      <Ref>master</Ref>
-    </UpdateStep>
-    <UpdateStep Include="Roslyn">
-      <UpdaterType>Submodule from latest</UpdaterType>
-      <Path>$(SubmoduleDirectory)roslyn</Path>
-      <Repository>origin</Repository>
-      <Ref>master</Ref>
-    </UpdateStep>
-    <UpdateStep Include="Standard">
-      <UpdaterType>Submodule from latest</UpdaterType>
-      <Path>$(SubmoduleDirectory)standard</Path>
-      <Repository>origin</Repository>
-      <Ref>master</Ref>
-    </UpdateStep>
+    <LatestCommitUpdateStep Include="core-setup;
+                                     coreclr;
+                                     roslyn;
+                                     standard" />
   </ItemGroup>
 </Project>
