@@ -1,0 +1,32 @@
+From a498d64a86c0d0c9b55d46af27c7d11b250a6f48 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 11 Jul 2017 23:06:06 +0000
+Subject: [PATCH] Build only source project
+
+---
+ build/build.proj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/build.proj b/build/build.proj
+index fb1c221..e17c5cf 100644
+--- a/build/build.proj
++++ b/build/build.proj
+@@ -14,7 +14,7 @@
+   </Target>
+   
+   <Target Name="Build">
+-    <MSBuild Projects="@(SolutionFile)" Targets="Build" />
++    <MSBuild Projects="@(PackProject)" Targets="Build" />
+   </Target>
+ 
+   <Target Name="Test">
+@@ -24,4 +24,4 @@
+   <Target Name="Pack">
+     <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.9.1
+
