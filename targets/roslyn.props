@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber:20170614.9</BuildCommand>
+    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=20170614.9</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 

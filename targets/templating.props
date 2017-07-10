@@ -4,9 +4,9 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
-    <CommitHash>ed6b00ed96a15a15a69220bcab586ef9f4971b7a</CommitHash>
-    <BuildNumber>264</BuildNumber>
-    <PackageDateTime>20170619</PackageDateTime>
+    <CommitHash>d1bdda419dbab34ea321113181f7c54d299c8eea</CommitHash>
+    <BuildNumber>266</BuildNumber>
+    <PackageDateTime>20170620</PackageDateTime>
     <PackageBuildQuality>beta2</PackageBuildQuality>
   </PropertyGroup>
 
@@ -17,5 +17,9 @@
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
     <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="clicommandlineparser" />
   </ItemGroup>
 </Project>
