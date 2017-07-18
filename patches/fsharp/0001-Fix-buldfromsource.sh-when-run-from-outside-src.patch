@@ -1,0 +1,25 @@
+From 0da8f57e710b04b83927509daf3b8166a4016997 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 10 Jul 2017 11:50:18 -0700
+Subject: [PATCH] Fix buldfromsource.sh when run from outside src
+
+---
+ src/buildfromsource.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/buildfromsource.sh b/src/buildfromsource.sh
+index 64f0a11..ab698e0 100755
+--- a/src/buildfromsource.sh
++++ b/src/buildfromsource.sh
+@@ -15,7 +15,7 @@ dotnet restore $__scriptpath/fsharp/FSharp.Build/FSharp.Build.BuildFromSource.fs
+ dotnet publish $__scriptpath/fsharp/FSharp.Build/FSharp.Build.BuildFromSource.fsproj
+ 
+ dotnet restore $__scriptpath/fsharp/fsi/Fsi.BuildFromSource.fsproj
+-dotnet publish fsharp/fsi/Fsi.BuildFromSource.fsproj
++dotnet publish $__scriptpath/fsharp/fsi/Fsi.BuildFromSource.fsproj
+ 
+ dotnet restore $__scriptpath/fsharp/Fsc/Fsc.BuildFromSource.fsproj
+ dotnet publish $__scriptpath/fsharp/Fsc/Fsc.BuildFromSource.fsproj
+-- 
+1.8.3.1
+

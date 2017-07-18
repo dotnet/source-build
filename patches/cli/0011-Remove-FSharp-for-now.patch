@@ -1,0 +1,52 @@
+From d16b0064ae1f8d95fe02f66ca5eef83185f27db2 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 22 Jun 2017 22:55:05 -0700
+Subject: [PATCH] Remove FSharp for now
+
+---
+ build/Prepare.targets    | 1 +
+ src/redist/redist.csproj | 9 ---------
+ 2 files changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/build/Prepare.targets b/build/Prepare.targets
+index 5bd0724..2012e12 100644
+--- a/build/Prepare.targets
++++ b/build/Prepare.targets
+@@ -70,6 +70,7 @@
+     <ItemGroup>
+       <RestoreSrcPackagesInput Include="$(RepoRoot)/src/**/*.csproj" Exclude="$(RepoRoot)/src/**/%24projectName%24.csproj" />
+       <RestoreSrcPackagesInput Remove="$(RepoRoot)/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj" Condition="'$(IncludeMSBuildSdkResolver)' == 'false'" />
++      <RestoreSrcPackagesInput Remove="$(RepoRoot)/src/tool_fsharp/tool_fsc.csproj" />
+     </ItemGroup>
+   </Target>
+ 
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index 367a0f5..d34855a 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -83,14 +83,6 @@
+                    ProjectPath="$(SrcDirectory)/tool_roslyn/tool_roslyn.csproj" />
+   </Target>
+ 
+-  <Target Name="PublishFSharp"
+-          BeforeTargets="Publish">
+-          
+-    <DotNetPublish ToolPath="$(Stage0Directory)"
+-                   Configuration="$(Configuration)"
+-                   ProjectPath="$(SrcDirectory)/tool_fsharp/tool_fsc.csproj" />
+-  </Target>
+-
+   <Target Name="GenerateCliRuntimeConfigurationFiles"
+           AfterTargets="Publish">
+     <RemoveAssetFromDepsPackages DepsFile="$(PublishDir)/$(TargetName).deps.json"
+@@ -241,7 +233,6 @@
+     <Exec Command="find $(SdkOutputDirectory) -type f -exec chmod 644 {} \;" />
+     <Chmod Mode="755" Glob="$(SdkOutputDirectory)/Roslyn/RunCsc.sh" />
+     <Chmod Mode="755" Glob="$(SdkOutputDirectory)/Roslyn/RunVbc.sh" />
+-    <Chmod Mode="755" Glob="$(SdkOutputDirectory)/FSharp/RunFsc.sh" />
+   </Target>
+ 
+   <Target Name="CreateSymbolsDirectory"
+-- 
+1.8.3.1
+

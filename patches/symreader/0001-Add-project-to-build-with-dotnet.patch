@@ -1,0 +1,38 @@
+From 7d5d0268f22c2ba77aed88ddc65dfa50e85da364 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 10 Jul 2017 19:05:47 -0700
+Subject: [PATCH] Add project to build with dotnet
+
+---
+ .../NetCore/Microsoft.DiaSymReader.csproj             | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 src/Microsoft.DiaSymReader/NetCore/Microsoft.DiaSymReader.csproj
+
+diff --git a/src/Microsoft.DiaSymReader/NetCore/Microsoft.DiaSymReader.csproj b/src/Microsoft.DiaSymReader/NetCore/Microsoft.DiaSymReader.csproj
+new file mode 100644
+index 0000000..70c49ae
+--- /dev/null
++++ b/src/Microsoft.DiaSymReader/NetCore/Microsoft.DiaSymReader.csproj
+@@ -0,0 +1,19 @@
++<Project Sdk="Microsoft.NET.Sdk">
++
++  <PropertyGroup>
++    <Version>1.1.0</Version>
++    <FileVersion>1.1.0.61320</FileVersion>
++    <InformationalVersion>$(FileVersion)</InformationalVersion>
++    <TargetFramework>netstandard1.1</TargetFramework>
++    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
++    <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)../../../build/Signing/35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
++    <PublicSign>true</PublicSign>
++    <SignAssembly>true</SignAssembly>
++  </PropertyGroup>
++
++  <ItemGroup>
++    <Compile Include="$(MSBuildThisFileDirectory)../Portable/**/*.cs" />
++    <Compile Include="$(MSBuildThisFileDirectory)../Shared/**/*.cs" />
++  </ItemGroup>
++
++</Project>
+-- 
+1.8.3.1
+
