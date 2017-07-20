@@ -15,6 +15,9 @@ __INIT_TOOLS_RESTORE_PROJECT=$__scriptpath/init-tools.msbuild
 __INIT_TOOLS_DONE_MARKER_DIR=$__TOOLRUNTIME_DIR/$__BUILD_TOOLS_PACKAGE_VERSION
 __INIT_TOOLS_DONE_MARKER=$__INIT_TOOLS_DONE_MARKER_DIR/done
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
 if [ -z "$__DOTNET_PKG" ]; then
     if [ "$(uname -m | grep "i[3456]86")" = "i686" ]; then
         echo "Warning: build not supported on 32 bit Unix"
@@ -23,19 +26,19 @@ OSName=$(uname -s)
     case $OSName in
         Darwin)
             OS=OSX
-            __DOTNET_PKG=dotnet-dev-osx-x64
+            __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-osx-x64
             ulimit -n 2048
             ;;
 
         Linux)
-            __DOTNET_PKG=dotnet-dev-linux-x64
+            __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-linux-x64
             OS=Linux
             ;;
 
         *)
             echo "Unsupported OS '$OSName' detected. Downloading linux-x64 tools."
             OS=Linux
-            __DOTNET_PKG=dotnet-dev-linux-x64
+            __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-linux-x64
             ;;
   esac
 fi
@@ -58,7 +61,7 @@ if [ ! -e $__INIT_TOOLS_DONE_MARKER ]; then
             cp -r $DOTNET_TOOL_DIR/* $__DOTNET_PATH
         else
             echo "Installing dotnet cli..."
-            __DOTNET_LOCATION="https://dotnetcli.azureedge.net/dotnet/Sdk/${__DOTNET_TOOLS_VERSION}/${__DOTNET_PKG}.${__DOTNET_TOOLS_VERSION}.tar.gz"
+            __DOTNET_LOCATION="https://dotnetcli.azureedge.net/dotnet/Sdk/${__DOTNET_TOOLS_VERSION}/${__DOTNET_PKG}.tar.gz"
             # curl has HTTPS CA trust-issues less often than wget, so lets try that first.
             echo "Installing '${__DOTNET_LOCATION}' to '$__DOTNET_PATH/dotnet.tar'" >> $__init_tools_log
             which curl > /dev/null 2> /dev/null
@@ -90,6 +93,8 @@ if [ ! -e $__INIT_TOOLS_DONE_MARKER ]; then
             $__DOTNET_CMD restore "$__INIT_TOOLS_RESTORE_PROJECT" --no-cache --packages $__PACKAGES_DIR --source $__BUILDTOOLS_SOURCE /p:BuildToolsPackageVersion=$__BUILD_TOOLS_PACKAGE_VERSION >> $__init_tools_log
             if [ ! -e "$__BUILD_TOOLS_PATH/init-tools.sh" ]; then echo "ERROR: Could not restore build tools correctly. See '$__init_tools_log' for more details."1>&2; fi
         fi
+
+        sed -i '/.*<PackageTargetFallback.*/d' "$__BUILD_TOOLS_PATH/tool-runtime/project.csproj"
 
         echo "Initializing BuildTools..."
         echo "Running: $__BUILD_TOOLS_PATH/init-tools.sh $__scriptpath $__DOTNET_CMD $__TOOLRUNTIME_DIR" >> $__init_tools_log

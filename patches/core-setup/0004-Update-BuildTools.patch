@@ -1,4 +1,4 @@
-From 0d3659777c481d9fc905e0b8536957f7b5fbc1d7 Mon Sep 17 00:00:00 2001
+From b6002225c4062b2bd434c7e008ead4bfc6281b70 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Fri, 2 Jun 2017 22:39:06 -0700
 Subject: [PATCH] Update BuildTools
@@ -6,8 +6,8 @@ Subject: [PATCH] Update BuildTools
 ---
  BuildToolsVersion.txt        | 2 +-
  src/pkg/_.pdb                | 0
- src/pkg/projects/dir.targets | 4 ++--
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ src/pkg/projects/dir.targets | 6 +++---
+ 3 files changed, 4 insertions(+), 4 deletions(-)
  create mode 100644 src/pkg/_.pdb
 
 diff --git a/BuildToolsVersion.txt b/BuildToolsVersion.txt
@@ -21,10 +21,10 @@ diff --git a/src/pkg/_.pdb b/src/pkg/_.pdb
 new file mode 100644
 index 0000000..e69de29
 diff --git a/src/pkg/projects/dir.targets b/src/pkg/projects/dir.targets
-index 868e4b5..37241a5 100644
+index 8889edc..977e5c9 100644
 --- a/src/pkg/projects/dir.targets
 +++ b/src/pkg/projects/dir.targets
-@@ -35,7 +35,7 @@
+@@ -43,7 +43,7 @@
      </PropertyGroup>
  
      <ItemGroup>
@@ -33,12 +33,14 @@ index 868e4b5..37241a5 100644
              Condition="'$(NeedsPlaceholderPdb)' == 'true' AND '$(PackageTargetRuntime)' != ''">
          <TargetPath>runtimes/$(PackageTargetRuntime)/native</TargetPath>
          <IsSymbolFile>true</IsSymbolFile>
-@@ -108,4 +108,4 @@
+@@ -115,5 +115,5 @@
+               ItemName="Dependency" />
      </MSBuild>
    </Target>
-   
+-
 -</Project>
 \ No newline at end of file
++  
 +</Project>
 -- 
 1.8.3.1
