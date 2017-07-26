@@ -1,4 +1,4 @@
-From 07ab13b35c0b034665c791a7ae997eeac5aa9e12 Mon Sep 17 00:00:00 2001
+From 65823b7d1a04a4d73a2e38e397e99422abc85cff Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 22 Jun 2017 22:31:19 -0700
 Subject: [PATCH] Use nuspec to package Microsoft.Build.Runtime
@@ -6,25 +6,27 @@ Subject: [PATCH] Use nuspec to package Microsoft.Build.Runtime
 Using the csproj was causing issues where content files were being
 added to the build which is not what we want.
 ---
- src/MSBuild/MSBuild.NetCore.csproj         | 68 +-----------------------------
- src/MSBuild/Microsoft.Build.Runtime.nuspec | 48 +++++++++++++++++++++
- 2 files changed, 50 insertions(+), 66 deletions(-)
+ src/MSBuild/MSBuild.NetCore.csproj         | 70 ++----------------------------
+ src/MSBuild/Microsoft.Build.Runtime.nuspec | 48 ++++++++++++++++++++
+ 2 files changed, 52 insertions(+), 66 deletions(-)
  create mode 100644 src/MSBuild/Microsoft.Build.Runtime.nuspec
 
 diff --git a/src/MSBuild/MSBuild.NetCore.csproj b/src/MSBuild/MSBuild.NetCore.csproj
-index 2f93b25..3edf0af 100644
+index 2f93b25..fe63f36 100644
 --- a/src/MSBuild/MSBuild.NetCore.csproj
 +++ b/src/MSBuild/MSBuild.NetCore.csproj
-@@ -12,6 +12,8 @@
+@@ -12,6 +12,10 @@
      <TargetMSBuildToolsVersion>15.0</TargetMSBuildToolsVersion>
      <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
      <PackageId>Microsoft.Build.Runtime</PackageId>
-+    <NuspecProperties>id=$(PackageId);version=$(VersionPrefix)-$(VersionSuffix);outputPathNetCore=$(MSBuildThisFileDirectory)bin/$(Configuration)/netcoreapp1.0/;targetMSBuildToolsVersion=$(TargetMSBuildToolsVersion)</NuspecProperties>
++    <NuGetVersion>$(VersionPrefix)</NuGetVersion>
++    <NuGetVersion Condition="'$(VersionSuffix)' != ''">$(NuGetVersion)-$(VersionSuffix)</NuGetVersion>
++    <NuspecProperties>id=$(PackageId);version=$(NuGetVersion);outputPathNetCore=$(MSBuildThisFileDirectory)bin/$(Configuration)/netcoreapp1.0/;targetMSBuildToolsVersion=$(TargetMSBuildToolsVersion)</NuspecProperties>
 +    <NuspecFile>Microsoft.Build.Runtime.nuspec</NuspecFile>
    </PropertyGroup>
  
    <ItemGroup>
-@@ -125,71 +127,5 @@
+@@ -125,71 +129,5 @@
        <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
        <SubType>Designer</SubType>
      </EmbeddedResource>

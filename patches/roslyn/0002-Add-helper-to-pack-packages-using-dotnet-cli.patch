@@ -1,21 +1,21 @@
-From 292e24432a8b06a1807cd932eaa575ae456d90b4 Mon Sep 17 00:00:00 2001
+From b7b13a88fe1186204dbbbd45cc3149536bc4076c Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 22 Jun 2017 13:39:39 -0700
 Subject: [PATCH] Add helper to pack packages using dotnet cli
 
 ---
- src/NuGet/PackHelper.csproj | 259 ++++++++++++++++++++++++++++++++++++++++++++
+ src/NuGet/PackHelper.csproj | 260 ++++++++++++++++++++++++++++++++++++++++++++
  src/NuGet/_._               |   0
- 2 files changed, 259 insertions(+)
+ 2 files changed, 260 insertions(+)
  create mode 100644 src/NuGet/PackHelper.csproj
  create mode 100644 src/NuGet/_._
 
 diff --git a/src/NuGet/PackHelper.csproj b/src/NuGet/PackHelper.csproj
 new file mode 100644
-index 0000000..8a59b87
+index 0000000..9b977ff
 --- /dev/null
 +++ b/src/NuGet/PackHelper.csproj
-@@ -0,0 +1,259 @@
+@@ -0,0 +1,260 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <PropertyGroup>
 +    <TargetFramework>netstandard1.0</TargetFramework>
@@ -26,12 +26,13 @@ index 0000000..8a59b87
 +
 +  <PropertyGroup>
 +    <NuspecProperties>licenseUrl=http://go.microsoft.com/fwlink/?LinkId=529443</NuspecProperties>
-+    <NuspecProperties>$(NuspecProperties);version=2.3.0-beta3-61814-09</NuspecProperties>
++    <NuspecProperties>$(NuspecProperties);version=$(NUGET_PACKAGE_VERSION)</NuspecProperties>
 +    <NuspecProperties>$(NuspecProperties);authors=Microsoft</NuspecProperties>
 +    <NuspecProperties>$(NuspecProperties);projectURL=http://msdn.com/roslyn</NuspecProperties>
 +    <NuspecProperties>$(NuspecProperties);tags=Roslyn CodeAnalysis Compiler CSharp VB VisualBasic Parser Scanner Lexer Emit CodeGeneration Metadata IL Compilation Scripting Syntax Semantics</NuspecProperties>
 +    <NuspecProperties>$(NuspecProperties);emptyDirPath=$(MSBuildThisFileDirectory)../NuGet</NuspecProperties>
 +    <NuspecProperties>$(NuspecProperties);additionalFilesPath=$(MSBuildThisFileDirectory)../../build/NuGetAdditionalFiles</NuspecProperties>
++    <NuspecProperties>$(NuspecProperties);commitPathMessage=Commit $(COMMIT_SHA)</NuspecProperties>
 +  </PropertyGroup>
 +
 +  <PropertyGroup>

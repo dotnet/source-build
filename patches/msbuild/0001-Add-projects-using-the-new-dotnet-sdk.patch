@@ -1,4 +1,4 @@
-From 6e7f4f6a6a8aed173fdacbba471b966f0b83cf33 Mon Sep 17 00:00:00 2001
+From e588a99f965cda3c7eb0f34d3804f9fe888b8cf8 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 18 May 2017 18:35:17 -0700
 Subject: [PATCH] Add projects using the new dotnet sdk
@@ -13,12 +13,12 @@ about, for example).
 ---
  NetCore.sln                                        |  95 +++++
  build/NetCore.props                                |  21 +
- src/Build/Microsoft.Build.NetCore.csproj           | 465 +++++++++++++++++++++
- .../Microsoft.Build.Framework.NetCore.csproj       |  79 ++++
+ src/Build/Microsoft.Build.NetCore.csproj           | 466 +++++++++++++++++++++
+ .../Microsoft.Build.Framework.NetCore.csproj       |  80 ++++
  src/MSBuild/MSBuild.NetCore.csproj                 | 195 +++++++++
- .../Microsoft.Build.Tasks.Core.NetCore.csproj      | 261 ++++++++++++
- .../Microsoft.Build.Utilities.Core.NetCore.csproj  | 114 +++++
- 7 files changed, 1230 insertions(+)
+ .../Microsoft.Build.Tasks.Core.NetCore.csproj      | 262 ++++++++++++
+ .../Microsoft.Build.Utilities.Core.NetCore.csproj  | 115 +++++
+ 7 files changed, 1234 insertions(+)
  create mode 100644 NetCore.sln
  create mode 100644 build/NetCore.props
  create mode 100644 src/Build/Microsoft.Build.NetCore.csproj
@@ -157,10 +157,10 @@ index 0000000..e0777f0
 +</Project>
 diff --git a/src/Build/Microsoft.Build.NetCore.csproj b/src/Build/Microsoft.Build.NetCore.csproj
 new file mode 100644
-index 0000000..bd87ac0
+index 0000000..c750992
 --- /dev/null
 +++ b/src/Build/Microsoft.Build.NetCore.csproj
-@@ -0,0 +1,465 @@
+@@ -0,0 +1,466 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -190,6 +190,7 @@ index 0000000..bd87ac0
 +    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
 +    <PackageReference Include="System.Runtime.Loader" Version="4.0.0" />
 +    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
 +    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.6.0.0" />
 +    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
 +    <PackageReference Include="System.Threading.ThreadPool" Version="4.0.10" />
@@ -628,10 +629,10 @@ index 0000000..bd87ac0
 +</Project>
 diff --git a/src/Framework/Microsoft.Build.Framework.NetCore.csproj b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 new file mode 100644
-index 0000000..08b0ae0
+index 0000000..92f7aea
 --- /dev/null
 +++ b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
-@@ -0,0 +1,79 @@
+@@ -0,0 +1,80 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -644,6 +645,7 @@ index 0000000..08b0ae0
 +  <ItemGroup>
 +    <PackageReference Include="NETStandard.Library" Version="1.6.0" />
 +    <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
 +    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
 +  </ItemGroup>
 +
@@ -914,10 +916,10 @@ index 0000000..2f93b25
 +</Project>
 diff --git a/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
 new file mode 100644
-index 0000000..d8b3438
+index 0000000..ae65493
 --- /dev/null
 +++ b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
-@@ -0,0 +1,261 @@
+@@ -0,0 +1,262 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -943,6 +945,7 @@ index 0000000..d8b3438
 +    <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.1.1" />
 +    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
 +    <PackageReference Include="System.Security.Cryptography.Algorithms" Version="4.2.0" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
 +    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
 +    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
 +    <PackageReference Include="System.Xml.XPath" Version="4.0.1" />
@@ -1181,10 +1184,10 @@ index 0000000..d8b3438
 +</Project>
 diff --git a/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
 new file mode 100644
-index 0000000..02461e9
+index 0000000..9a9c5ec
 --- /dev/null
 +++ b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
-@@ -0,0 +1,114 @@
+@@ -0,0 +1,115 @@
 +<Project Sdk="Microsoft.NET.Sdk">
 +  <Import Project="../../build/NetCore.props" />
 +
@@ -1204,6 +1207,7 @@ index 0000000..02461e9
 +    <PackageReference Include="System.Runtime.Serialization.Xml" Version="4.1.1" />
 +    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
 +    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.1.0" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.0.1" />
 +    <PackageReference Include="System.Threading.Thread" Version="4.0.0" />
 +    <PackageReference Include="System.Xml.XmlDocument" Version="4.0.1" />
 +  </ItemGroup>

@@ -1,4 +1,4 @@
-From 1a22ce900519abd700d83d79579e75b6645bb73f Mon Sep 17 00:00:00 2001
+From 0cde60c80f70e668b537e56584c81b2aea428509 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Tue, 30 May 2017 18:32:39 -0700
 Subject: [PATCH] Fix Nuspec
@@ -6,13 +6,13 @@ Subject: [PATCH] Fix Nuspec
 Since we don't currently ILMerge, we need to fix the nuspec so that we
 don't expect to pick up an ILMerged version of NuGet
 ---
- .../NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec   | 7 +++----
+ .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec           | 7 +++----
  1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
 index 5fce2fb..4a8bf1d 100644
---- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
-+++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
 @@ -8,9 +8,8 @@
      <description>NuGet pack for dotnet CLI</description>
    </metadata>

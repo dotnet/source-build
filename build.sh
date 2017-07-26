@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-SDK_VERSION="2.0.0-preview2-006497"
+SDK_VERSION="2.0.0-preview3-006845"
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"

@@ -3,13 +3,17 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=20170614.9</BuildCommand>
+    <NuGetPackageVersion>2.3.0-beta4-61830-03</NuGetPackageVersion>
+    <BuildNumber>20170630.3</BuildNumber>
+    <CommitHash>502449ff661c24df0c99883c1baa8d8fe45994f1</CommitHash>
+    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
-    <EnvironmentVariables Include="COMMIT_SHA=b7f611db1cbcad10c8fbb00d078c11bc4dc6d197" />
+    <EnvironmentVariables Include="COMMIT_SHA=$(CommitHash)" />
+    <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
   </ItemGroup>
 
 </Project>

@@ -4,12 +4,13 @@
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/Packages</PackagesOutput>
-    <BuildNumber>20170615-7</BuildNumber>
-    <CommitHash>c87604a5f66de91c8ee2e9f58ff77f57e83df1aa</CommitHash>
+    <BuildNumber>20170721-7</BuildNumber>
+    <CommitHash>6dd6dc6a8863be7299b5a8f59a2b778097270c49</CommitHash>
     <BuildCommand>$(DotNetCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
   </PropertyGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="nuget-client" />

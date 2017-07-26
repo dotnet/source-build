@@ -1,4 +1,4 @@
-From 10b3aef877ba4f1cbb4a04734c02e2b86288ddd6 Mon Sep 17 00:00:00 2001
+From 55766c5320a021584cab712c840d5ef711fd010b Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 11 May 2017 17:56:24 -0700
 Subject: [PATCH] Provide a way to not include the ASP.NET Runtime Packages
@@ -21,7 +21,7 @@ index 64eddcf..268a02e 100644
      <IncludeSharedFrameworksForBackwardsCompatibilityTests Condition=" $(IncludeSharedFrameworksForBackwardsCompatibilityTests) == '' AND '$(Rid)' != 'linux-x64' ">true</IncludeSharedFrameworksForBackwardsCompatibilityTests>
      <HighEntropyVA>true</HighEntropyVA>
 diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
-index 685df52..1d99cde 100644
+index 396c9f2..7e3adae 100644
 --- a/build/BundledRuntimes.props
 +++ b/build/BundledRuntimes.props
 @@ -79,21 +79,21 @@
