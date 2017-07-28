@@ -7,6 +7,8 @@
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/linux-x64/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
+    <GitCommitCount>6873</GitCommitCount>
+    <GitCommitHash>2f822391814ec7f1aee0bed4d610b8791637946f</GitCommitHash>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitInfoCommitCount=6497" />
-    <EnvironmentVariables Include="GitInfoCommitHash=06a20933355acfd28d44468641d32414c894537b" />
+    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
   </ItemGroup>
 </Project>

@@ -7,12 +7,13 @@
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientBuildNumber>4315</NuGetClientBuildNumber>
+    <NuGetClientBuildNumber>4324</NuGetClientBuildNumber>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="common" />
   </ItemGroup>
 
 </Project>

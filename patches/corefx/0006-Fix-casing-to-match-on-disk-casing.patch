@@ -1,0 +1,66 @@
+From 5c979e6d8658dcf55e221c52f09aece6aa217cf6 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Sun, 23 Jul 2017 15:37:23 -0700
+Subject: [PATCH] Fix casing to match on disk casing
+
+---
+ .../src/System.DirectoryServices.AccountManagement.csproj           | 6 +++---
+ .../src/System.DirectoryServices.Protocols.csproj                   | 2 +-
+ src/System.DirectoryServices/src/System.DirectoryServices.csproj    | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/System.DirectoryServices.AccountManagement/src/System.DirectoryServices.AccountManagement.csproj b/src/System.DirectoryServices.AccountManagement/src/System.DirectoryServices.AccountManagement.csproj
+index fe6128b..a743f96 100644
+--- a/src/System.DirectoryServices.AccountManagement/src/System.DirectoryServices.AccountManagement.csproj
++++ b/src/System.DirectoryServices.AccountManagement/src/System.DirectoryServices.AccountManagement.csproj
+@@ -15,10 +15,10 @@
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Debug|AnyCPU'" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Release|AnyCPU'" />
+   <ItemGroup>
+-    <Compile Include="System\DirectoryServices\AccountManagement\externdll.cs" />
++    <Compile Include="System\DirectoryServices\AccountManagement\ExternDll.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\interopt.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\PrincipalSearcher.cs" />
+-    <Compile Include="System\DirectoryServices\AccountManagement\utils.cs" />
++    <Compile Include="System\DirectoryServices\AccountManagement\Utils.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\constants.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\Context.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\Resources.cs" />
+@@ -66,7 +66,7 @@
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\QBEMatchType.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\SidList.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\ADDNConstraintLinkedAttrSet.cs" />
+-    <Compile Include="System\DirectoryServices\AccountManagement\AD\dspropertycollection.cs" />
++    <Compile Include="System\DirectoryServices\AccountManagement\AD\DSPropertyCollection.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\ADStoreCtx.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\ADStoreCtx_Query.cs" />
+     <Compile Include="System\DirectoryServices\AccountManagement\AD\ADStoreCtx_LoadStore.cs" />
+diff --git a/src/System.DirectoryServices.Protocols/src/System.DirectoryServices.Protocols.csproj b/src/System.DirectoryServices.Protocols/src/System.DirectoryServices.Protocols.csproj
+index abd9e17..7569354 100644
+--- a/src/System.DirectoryServices.Protocols/src/System.DirectoryServices.Protocols.csproj
++++ b/src/System.DirectoryServices.Protocols/src/System.DirectoryServices.Protocols.csproj
+@@ -14,7 +14,7 @@
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Debug|AnyCPU'" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Release|AnyCPU'" />
+   <ItemGroup>
+-    <Compile Include="System\DirectoryServices\Protocols\externdll.cs" />
++    <Compile Include="System\DirectoryServices\Protocols\ExternDll.cs" />
+     <Compile Include="System\DirectoryServices\Protocols\common\AuthTypes.cs" />
+     <Compile Include="System\DirectoryServices\Protocols\common\BerConverter.cs" />
+     <Compile Include="System\DirectoryServices\Protocols\common\DereferenceAlias.cs" />
+diff --git a/src/System.DirectoryServices/src/System.DirectoryServices.csproj b/src/System.DirectoryServices/src/System.DirectoryServices.csproj
+index 6714394..256386e 100644
+--- a/src/System.DirectoryServices/src/System.DirectoryServices.csproj
++++ b/src/System.DirectoryServices/src/System.DirectoryServices.csproj
+@@ -12,7 +12,7 @@
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Debug|AnyCPU'" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'netstandard-Windows_NT-Release|AnyCPU'" />
+   <ItemGroup>
+-    <Compile Include="System\DirectoryServices\externdll.cs" />
++    <Compile Include="System\DirectoryServices\ExternDll.cs" />
+     <Compile Include="System\DirectoryServices\PrivilegedConfigurationManager.cs" />
+     <Compile Include="System\DirectoryServices\ActiveDirectorySecurity.cs" />
+     <Compile Include="System\DirectoryServices\AdsVLV.cs" />
+-- 
+1.8.3.1
+
