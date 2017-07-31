@@ -7,8 +7,8 @@
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/linux-x64/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
-    <GitCommitCount>6873</GitCommitCount>
-    <GitCommitHash>2f822391814ec7f1aee0bed4d610b8791637946f</GitCommitHash>
+    <GitCommitCount>6889</GitCommitCount>
+    <GitCommitHash>fc218cda8fa235dddbe550326fbeb42d23f9d8c5</GitCommitHash>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +17,9 @@
     <RepositoryReference Include="clicommandlineparser" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="fsharp" />
+    <RepositoryReference Include="javascriptservices" />
     <RepositoryReference Include="msbuild" />
+    <RepositoryReference Include="netcorecli-fsc" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="roslyn" />

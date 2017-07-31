@@ -3,9 +3,7 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
-    <BuildCommand>$(DotNetCommand) msbuild $(ProjectDirectory)/build.proj /t:Package</BuildCommand>
-    <BuildPackagesCommand></BuildPackagesCommand>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/nupkgs/</PackagesOutput>
-    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
+    <BuildCommand>$(DotNetCommand) pack -c $(Configuration) --no-build FSharp.NET.Sdk.csproj /p:NuspecFile=FSharp.NET.Sdk.nuspec</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/</PackagesOutput>
   </PropertyGroup>
 </Project>

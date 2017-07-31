@@ -4,8 +4,8 @@
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/Packages</PackagesOutput>
-    <BuildNumber>20170726-3</BuildNumber>
-    <CommitHash>417b675b7a3b83cae1dd0deb3aeb1c84b2197614</CommitHash>
+    <BuildNumber>20170728-1</BuildNumber>
+    <CommitHash>e27eeed9161ec9249b329181ab8de036e1ebf106</CommitHash>
     <BuildCommand>$(DotNetCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
   </PropertyGroup>
 
