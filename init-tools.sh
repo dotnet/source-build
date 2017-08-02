@@ -106,6 +106,8 @@ if [ ! -e $__INIT_TOOLS_DONE_MARKER ]; then
             echo "ERROR: An error occured when trying to initialize the tools. Please check '$__init_tools_log' for more details."1>&2
             exit 1
         fi
+
+        sed -i -e "s/2.0.0-preview1-001913-00/2.0.0/g" "$__TOOLRUNTIME_DIR/MSBuild.runtimeconfig.json"
     fi
 
     echo "Making all .sh files executable under Tools."

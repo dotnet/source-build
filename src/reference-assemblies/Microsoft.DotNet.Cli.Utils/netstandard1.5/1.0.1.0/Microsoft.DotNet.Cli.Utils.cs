@@ -260,6 +260,12 @@ namespace Microsoft.DotNet.Cli.Utils
         public string GetEnvironmentVariable(string name) { throw null; }
         public bool GetEnvironmentVariableAsBool(string name, bool defaultValue) { throw null; }
     }
+    internal static partial class ExceptionExtensions
+    {
+        public static TException DisplayAsError<TException>(this TException exception) where TException : System.Exception { throw null; }
+        public static void ReportAsWarning(this System.Exception e) { throw null; }
+        public static bool ShouldBeDisplayedAsError(this System.Exception e) { throw null; }
+    }
     public static partial class FileAccessRetrier
     {
         public static System.Threading.Tasks.Task<T> RetryOnFileAccessFailure<T>(System.Func<T> func, int maxRetries=3000, System.TimeSpan sleepDuration=default(System.TimeSpan)) { throw null; }

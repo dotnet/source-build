@@ -8,3 +8,4 @@ git submodule foreach --recursive git reset --hard
 
 git clean -dxf "$SCRIPT_ROOT/src/javascriptservices/"
 git clean -dxf "$SCRIPT_ROOT/src/netcorecli-fsc/"
+git clean -dxf "$SCRIPT_ROOT/src/reference-assemblies/"
