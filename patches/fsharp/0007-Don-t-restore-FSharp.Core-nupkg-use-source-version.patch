@@ -1,0 +1,65 @@
+From ebdd3fedd1ccfe97f893fa336343933fa9db207f Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 1 Aug 2017 22:04:12 -0700
+Subject: [PATCH] Don't restore FSharp.Core nupkg, use source version
+
+---
+ src/buildtools/fslex/fslex.fsproj     | 2 ++
+ src/buildtools/fssrgen/fssrgen.fsproj | 2 ++
+ src/buildtools/fsyacc/fsyacc.fsproj   | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/src/buildtools/fslex/fslex.fsproj b/src/buildtools/fslex/fslex.fsproj
+index 9fba6aa..5305563 100644
+--- a/src/buildtools/fslex/fslex.fsproj
++++ b/src/buildtools/fslex/fslex.fsproj
+@@ -3,10 +3,12 @@
+   <PropertyGroup>
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstant)</DefineConstants>
++    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <Compile Include="fslex.fsx" />
++    <ProjectReference Include="../../fsharp/FSharp.Core/FSharp.Core.BuildFromSource.fsproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/buildtools/fssrgen/fssrgen.fsproj b/src/buildtools/fssrgen/fssrgen.fsproj
+index d6d06d5..03f1843 100644
+--- a/src/buildtools/fssrgen/fssrgen.fsproj
++++ b/src/buildtools/fssrgen/fssrgen.fsproj
+@@ -3,10 +3,12 @@
+   <PropertyGroup>
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+     <DefineConstants>COMPILED;$(DefineConstant)</DefineConstants>
++    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <Compile Include="fssrgen.fsx" />
++    <ProjectReference Include="../../fsharp/FSharp.Core/FSharp.Core.BuildFromSource.fsproj" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/buildtools/fsyacc/fsyacc.fsproj b/src/buildtools/fsyacc/fsyacc.fsproj
+index 32a1d6f..8090b9e 100644
+--- a/src/buildtools/fsyacc/fsyacc.fsproj
++++ b/src/buildtools/fsyacc/fsyacc.fsproj
+@@ -3,10 +3,12 @@
+   <PropertyGroup>
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstant)</DefineConstants>
++    <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+     <Compile Include="fsyacc.fsx" />
++    <ProjectReference Include="../../fsharp/FSharp.Core/FSharp.Core.BuildFromSource.fsproj" />
+   </ItemGroup>
+ 
+ </Project>
+-- 
+1.8.3.1
+

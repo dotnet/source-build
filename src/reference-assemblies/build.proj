@@ -1,0 +1,15 @@
+<Project>
+  <ItemGroup>
+    <AllProjects Include="**/*.csproj" />
+    <AllProjects Remove="nuspecs/pack.csproj" />
+  </ItemGroup>
+
+  <Target Name="Restore" />
+  <Target Name="Build">
+    <MSBuild Projects="@(AllProjects)" Targets="Build" BuildInParallel="true" />
+  </Target>
+
+  <Target Name="Pack">
+    <MSBuild Projects="nuspecs/pack.csproj" Targets="Pack" Properties="NuspecFile=%(AllNuSpecs.Identity)" />
+  </Target>
+</Project>
