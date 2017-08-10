@@ -1,0 +1,35 @@
+From ed9993eb652340acec0343a5b3091d44f0c3b9b3 Mon Sep 17 00:00:00 2001
+From: Sergio Schvezov <sergio.schvezov@canonical.com>
+Date: Thu, 10 Aug 2017 21:05:21 +0000
+Subject: [PATCH] Use clang 3.9 by default for Ubuntu 16.04
+
+clang 3.5 produces
+
+    error: Could not read profile: Unsupported format version
+
+as PGO data is not compatible between different versions of compilers.
+
+Signed-off-by: Sergio Schvezov <sergio.schvezov@canonical.com>
+---
+ build.sh | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/build.sh b/build.sh
+index 55b4ba3..c24fc6d 100755
+--- a/build.sh
++++ b/build.sh
+@@ -847,6 +847,11 @@ if [[ $__ClangMajorVersion == 0 && $__ClangMinorVersion == 0 ]]; then
+             __PortableBuild=0
+         fi
+ 
++    elif [[ "$__HostOS" == "Linux" && \
++            "$(lsb_release --id --short)" == "Ubuntu" && \
++            "$(lsb_release --release --short)" == "16.04" ]]; then
++        __ClangMajorVersion=3
++        __ClangMinorVersion=9
+     else
+         __ClangMajorVersion=3
+         __ClangMinorVersion=5
+-- 
+2.7.4
+
