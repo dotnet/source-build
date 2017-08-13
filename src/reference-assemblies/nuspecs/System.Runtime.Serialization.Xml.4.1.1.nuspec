@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>System.Runtime.Serialization.Xml</id>
+    <version>4.1.1</version>
+    <description>Support package for source building containing only refs for System.Runtime.Serialization.Xml.4.1.1</description>
+    <authors>dotnet</authors>
+    <dependencies>
+      <group targetFramework="netstandard1.0">
+        <dependency id="System.IO" version="4.1.0" />
+        <dependency id="System.Runtime" version="4.1.0" />
+        <dependency id="System.Text.Encoding" version="4.0.11" />
+        <dependency id="System.Xml.ReaderWriter" version="4.0.11" />
+      </group>
+      <group targetFramework="netstandard1.3">
+        <dependency id="System.IO" version="4.1.0" />
+        <dependency id="System.Private.DataContractSerialization" version="4.1.1" exclude="Compile" />
+        <dependency id="System.Runtime" version="4.1.0" />
+        <dependency id="System.Runtime.Serialization.Primitives" version="4.1.1" />
+        <dependency id="System.Text.Encoding" version="4.0.11" />
+        <dependency id="System.Xml.ReaderWriter" version="4.0.11" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="_._" target="lib/netstandard1.3/_._" />
+    <file src="System.Runtime.Serialization.Xml/netstandard1.0/4.0.0.0/bin/$configuration$/System.Runtime.Serialization.Xml.dll" target="ref/netstandard1.0/System.Runtime.Serialization.Xml.dll" />
+    <file src="System.Runtime.Serialization.Xml/netstandard1.3/4.1.1.0/bin/$configuration$/System.Runtime.Serialization.Xml.dll" target="ref/netstandard1.3/System.Runtime.Serialization.Xml.dll" />
+  </files>
+</package>

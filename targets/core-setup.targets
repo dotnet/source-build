@@ -2,6 +2,17 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
+  <!-- We don't build the UAP Package so we need to remove it from the list of
+       packages we try to update from, since it will not be in our Packages.txt
+       file -->
+  <Target Name="RemoveUAPFromUpdateSteps" BeforeTargets="UpdateDependencies">
+    <ItemGroup>
+      <FilteredUpdateStep Include="@(UpdateStep)" Condition="'%(PackageId)' != 'Microsoft.Private.CoreFx.UAP'" />
+      <UpdateStep Remove="@(UpdateStep)" />
+      <UpdateStep Include="@(FilteredUpdateStep)" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
       <CoreSetupTarballs Include="$(BinariesOutput)*$(TarBallExtension)" />

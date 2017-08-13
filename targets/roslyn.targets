@@ -2,6 +2,15 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
 
+  <ItemGroup>
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.CSharp.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Common.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Build.Tasks.nuspec" />
+  </ItemGroup>
+  
   <Target Name="Restore" BeforeTargets="Build">
     <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
           WorkingDirectory="$(ProjectDirectory)"
@@ -10,5 +19,11 @@
 
   <Target Name="FixNuSpecFilePathSeparators" BeforeTargets="Build">
     <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
+  </Target>
+
+  <Target Name="Package" AfterTargets="Build">
+    <Exec Command="$(DotNetCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj /p:NuspecBasePath=/home/matell/git/source-build/src/roslyn/Binaries/Release /p:Configuration=$(Configuration) /p:NuspecFile=%(NuSpecFiles.Identity) /p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) /p:PackageOutputPath=$(PackagesOutput)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

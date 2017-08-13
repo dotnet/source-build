@@ -13,4 +13,11 @@
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
                          Rid="$(TargetRid)-$(Platform)" />
   </Target>
+
+  <Target Name="BuildNetStandardLibraryNetFramework"
+          BeforeTargets="Package">
+    <Exec Command="$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
 </Project>

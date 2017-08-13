@@ -6,7 +6,7 @@
     <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NewtonsoftJsonKeyFilePath>$(KeysDir)Newtonsoft.Json.snk</NewtonsoftJsonKeyFilePath>
     <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
-    <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Roslyn.csproj</NewtonsoftJsonProjectPath>
+    <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Dotnet.csproj</NewtonsoftJsonProjectPath>
     <DotNetCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotNetCommandArguments>
     <BuildCommand>$(DotNetCommand) build $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildCommand>
     <BuildPackagesCommand>$(DotNetCommand) pack $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildPackagesCommand>

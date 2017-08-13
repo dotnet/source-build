@@ -1,0 +1,41 @@
+From b1e50df333bc4bdce6dadc71f4b7501096cb27ec Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 10 Jul 2017 19:23:30 -0700
+Subject: [PATCH] Use versions of SymReader we are building
+
+---
+ .../FSharp.Compiler.Private.BuildFromSource.fsproj                    | 2 +-
+ src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.BuildFromSource.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.BuildFromSource.fsproj
+index eba37e1..2acf5d8 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.BuildFromSource.fsproj
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.BuildFromSource.fsproj
+@@ -640,7 +640,7 @@
+     <PackageReference Include="System.Threading.Tasks.Parallel" Version="4.3.0"></PackageReference>
+     <PackageReference Include="System.Threading.Thread" Version="4.3.0"></PackageReference>
+     <PackageReference Include="System.Threading.ThreadPool" Version="4.3.0"></PackageReference>
+-    <PackageReference Include="Microsoft.DiaSymReader.PortablePdb" Version="1.1.0"></PackageReference>
++    <PackageReference Include="Microsoft.DiaSymReader.PortablePdb" Version="1.2.0"></PackageReference>
+     <PackageReference Include="Microsoft.DiaSymReader" Version="1.1.0"></PackageReference>
+     <PackageReference Include="System.ValueTuple" Version="4.3.1"></PackageReference>
+   </ItemGroup>
+diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
+index f75b323..bb40553 100644
+--- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
++++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
+@@ -33,8 +33,8 @@
+                 <dependency id="System.Threading.Thread" version="4.0.0" />
+                 <dependency id="System.Threading.ThreadPool" version="4.0.10" />
+                 <dependency id="System.ValueTuple" version="4.3.1" />
+-                <dependency id="Microsoft.DiaSymReader.PortablePdb" version="1.1.0" />
+-                <dependency id="Microsoft.DiaSymReader" version="1.0.8" />
++                <dependency id="Microsoft.DiaSymReader.PortablePdb" version="1.2.0" />
++                <dependency id="Microsoft.DiaSymReader" version="1.1.0" />
+             </group>
+         </dependencies>
+         <contentFiles>
+-- 
+1.8.3.1
+

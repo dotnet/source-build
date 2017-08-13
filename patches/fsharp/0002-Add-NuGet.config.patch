@@ -1,0 +1,27 @@
+From 5a741b7613a1ee2035084ad7fe213c3148aeb834 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 10 Jul 2017 11:51:08 -0700
+Subject: [PATCH] Add NuGet.config
+
+---
+ NuGet.Config | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 NuGet.Config
+
+diff --git a/NuGet.Config b/NuGet.Config
+new file mode 100644
+index 0000000..6fd4b18
+--- /dev/null
++++ b/NuGet.Config
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<configuration>
++  <packageSources>
++    <clear />
++    <add key="api.nuget.org" value="https://api.nuget.org/v3/index.json" />
++    <add key="dotnet-core" value="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json" />
++  </packageSources>
++</configuration>
+-- 
+1.8.3.1
+

@@ -1,0 +1,35 @@
+From ff0f569ad46814c78e31cb79bcd48696c4fc50d6 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Tue, 20 Jun 2017 17:43:30 -0700
+Subject: [PATCH] Fixup result of migration
+
+---
+ Src/Newtonsoft.Json/Newtonsoft.Json.Dotnet.csproj | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.Dotnet.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.Dotnet.csproj
+index 797f637..3bc9a78 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.Dotnet.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.Dotnet.csproj
+@@ -6,6 +6,8 @@
+     <NeutralLanguage>en-US</NeutralLanguage>
+     <Authors>James Newton-King</Authors>
+     <TargetFrameworks>net45;net40;net35;net20;portable45-net45+win8+wp8+wpa81;portable40-net40+sl5+win8+wp8+wpa81;netstandard1.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotnetOnly)' == 'true'">netstandard1.0</TargetFrameworks>
++    <Version>9.0.1</Version>
+     <AssemblyName>Newtonsoft.Json</AssemblyName>
+     <PackageId>Newtonsoft.Json</PackageId>
+     <PackageTags>json</PackageTags>
+@@ -106,7 +108,8 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+-    <DefineConstants>$(DefineConstants);NETSTANDARD10</DefineConstants>
++    <DefineConstants>$(DefineConstants);PORTABLE;NETSTANDARD10;$(AdditionalConstants)</DefineConstants>
++    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+   </PropertyGroup>
+ 
+   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
+-- 
+1.8.3.1
+

@@ -51,10 +51,17 @@ cp -r $SCRIPT_ROOT/targets $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tasks $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 
-mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
+
+rm -rf $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
+rm -rf $TARBALL_ROOT/Tools/dotnetcli/sdk/2.0.0-preview3-006845/nuGetPackagesArchive.lzma
+rm -rf $TARBALL_ROOT/Tools/dotnetcli/store
+rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
+
+cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
+
+mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
+find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/source-built -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
@@ -63,9 +70,3 @@ do
     fi
 done
 
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/sdk/2.0.0-preview2-006195/nuGetPackagesArchive.lzma
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/store
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
-
-cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh

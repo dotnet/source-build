@@ -2,7 +2,12 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid) -v 15.3.0 -vs preview-20170628-02</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="newtonsoft-json" />
+  </ItemGroup>
 </Project>

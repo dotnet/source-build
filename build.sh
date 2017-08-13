@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-SDK_VERSION="2.0.0-preview2-006195"
+SDK_VERSION="2.0.0-preview3-006845"
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"
@@ -23,6 +23,9 @@ set -x
 
 $CLIPATH/dotnet restore tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
 $CLIPATH/dotnet build tasks/Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
+
+rm -rf "$NUGET_PACKAGES/*"
+
 $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "$@" /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true
 $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj "$@" /t:GenerateRootFs
 $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /flp:v=detailed /clp:v=detailed "$@"

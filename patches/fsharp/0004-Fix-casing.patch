@@ -1,0 +1,22 @@
+From cc82d58b67a521860b1e9d99537f643b4dab8dfe Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Mon, 10 Jul 2017 14:38:01 -0700
+Subject: [PATCH] Fix casing
+
+---
+ src/buildfromsource.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/buildfromsource.sh b/src/buildfromsource.sh
+index ab698e0..2226baa 100755
+--- a/src/buildfromsource.sh
++++ b/src/buildfromsource.sh
+@@ -22,4 +22,4 @@ dotnet publish $__scriptpath/fsharp/Fsc/Fsc.BuildFromSource.fsproj
+ 
+ # build and pack tools
+ dotnet restore $__scriptpath/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj
+-dotnet pack $__scriptpath/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj -c release
++dotnet pack $__scriptpath/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj -c Release
+-- 
+1.8.3.1
+

@@ -8,9 +8,9 @@
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
     <BinariesOutput>$(PackagesOutput)</BinariesOutput>
-    <LatestCommit>40c565230930ead58a50719c0ec799df77bddee9</LatestCommit>
-    <OfficialBuildId>20170607-01</OfficialBuildId>
-    <VersionSeedDate>2017-06-07</VersionSeedDate>
+    <LatestCommit>82b22fa44e46d624ebeddf156f33e9cfb317bd57</LatestCommit>
+    <VersionSeedDate>2017-07-20</VersionSeedDate>
+    <OfficialBuildId>20170720-05</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +25,7 @@
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
+    <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="standard" />
   </ItemGroup>
 </Project>

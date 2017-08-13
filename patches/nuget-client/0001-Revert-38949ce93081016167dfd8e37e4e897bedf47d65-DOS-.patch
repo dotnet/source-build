@@ -1,24 +1,18 @@
-From 7a9cc5671eb8491ac814d435eb7d9dd18971c01b Mon Sep 17 00:00:00 2001
+From 27b3a04665150d8a0b6ec0d29e0bd2343c9cb12c Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Tue, 30 May 2017 18:30:18 -0700
 Subject: [PATCH] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (DOS line
  endings)
 
 ---
- build/common.project.props                         |  3 +--
- .../NuGet.Build.Tasks.Pack.Library.csproj          | 28 ++--------------------
- 2 files changed, 3 insertions(+), 28 deletions(-)
+ build/common.project.props                         |  1 -
+ .../NuGet.Build.Tasks.Pack.csproj                  | 28 ++--------------------
+ 2 files changed, 2 insertions(+), 27 deletions(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
-index 25ae4f0..727bbf4 100644
+index f31678a..46fd7c1 100644
 --- a/build/common.project.props
 +++ b/build/common.project.props
-@@ -1,4 +1,4 @@
--﻿<?xml version="1.0" encoding="utf-8"?>
-+<?xml version="1.0" encoding="utf-8"?>
- <Project ToolsVersion="15.0">
-   <!-- Helper properties -->
-   <PropertyGroup>
 @@ -14,7 +14,6 @@
      <ArtifactsDirectory>$(RepositoryRootDirectory)artifacts\</ArtifactsDirectory>
      <DotnetExePath>$(RepositoryRootDirectory)cli\dotnet.exe</DotnetExePath>
@@ -27,10 +21,10 @@ index 25ae4f0..727bbf4 100644
      <NuGetExePath>$(RepositoryRootDirectory).nuget\nuget.exe</NuGetExePath>
      <SharedDirectory>$(BuildCommonDirectory)Shared</SharedDirectory>
      <NuGetCoreSrcDirectory>$(RepositoryRootDirectory)src\NuGet.Core\</NuGetCoreSrcDirectory>
-diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
 index 82252de..80cae27 100644
---- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
-+++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
 @@ -5,13 +5,11 @@
      <TargetFrameworks>netstandard1.3;net45</TargetFrameworks>
      <NoWarn>$(NoWarn);CS1591</NoWarn>

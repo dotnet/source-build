@@ -1,0 +1,49 @@
+From 1436c51bc1cd99b646088ef4d17a2afe904b571f Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 22 Jun 2017 17:46:34 -0700
+Subject: [PATCH] Fix restore with newest CLI
+
+---
+ src/datacollector/datacollector.csproj   | 3 +--
+ src/vstest.console/vstest.console.csproj | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/datacollector/datacollector.csproj b/src/datacollector/datacollector.csproj
+index 7d1f0b2..78e75de 100644
+--- a/src/datacollector/datacollector.csproj
++++ b/src/datacollector/datacollector.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TestPlatformRoot Condition="$(TestPlatformRoot) == ''">..\..\</TestPlatformRoot>
+@@ -11,7 +11,6 @@
+     <AssemblyName>datacollector</AssemblyName>
+     <TargetFrameworks>netcoreapp1.0;netcoreapp2.0;net46</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+-    <PackageTargetFallback Condition=" '$(TargetFramework)' != 'net46' ">$(PackageTargetFallback);dnxcore50;netstandardapp1.0;portable-net45+win8;portable-net45+wp80+win8+wpa81+dnxcore50</PackageTargetFallback>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net46'">AnyCPU</PlatformTarget>
+     <OutputType>Exe</OutputType>
+   </PropertyGroup>
+diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
+index ad2f63c..e69cf5f 100644
+--- a/src/vstest.console/vstest.console.csproj
++++ b/src/vstest.console/vstest.console.csproj
+@@ -1,4 +1,4 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
++<?xml version="1.0" encoding="utf-8"?>
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TestPlatformRoot Condition="$(TestPlatformRoot) == ''">..\..\</TestPlatformRoot>
+@@ -9,7 +9,6 @@
+     <TargetFrameworks>netcoreapp1.0;netcoreapp2.0;net46</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <OutputType>Exe</OutputType>
+-    <PackageTargetFallback Condition=" '$(TargetFramework)' != 'net46' ">$(PackageTargetFallback);dnxcore50;netstandardapp1.0;portable-net45+win8;portable-net45+wp80+win8+wpa81+dnxcore50</PackageTargetFallback>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net46'">AnyCPU</PlatformTarget>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(TargetFramework)' != 'netcoreapp2.0'">
+-- 
+1.8.3.1
+

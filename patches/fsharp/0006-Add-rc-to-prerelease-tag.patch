@@ -1,0 +1,25 @@
+From a2dbf91b0b7dbea0c711824b9f1e0f4a5bed66f7 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 20 Jul 2017 21:48:08 -0700
+Subject: [PATCH] Add 'rc' to prerelease tag
+
+---
+ .../FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj b/src/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj
+index cd707e1..35cd973 100644
+--- a/src/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj
++++ b/src/fsharp/FSharp.Compiler.nuget/FSharp.Compiler.nuget.BuildFromSource.fsproj
+@@ -20,7 +20,7 @@
+     <PackageProjectUrl Condition="'$(PackageProjectUrl)' == ''">https://github.com/Microsoft/visualfsharp</PackageProjectUrl>
+     <PackageAuthors    Condition="'$(PackageAuthors)' == ''"   >Microsoft and F# Software Foundation</PackageAuthors> 
+     <PackageTags       Condition="'$(PackageTags)' == ''"      >Visual F# Compiler FSharp functional programming</PackageTags> 
+-    <PreReleaseSuffix  Condition="'$(PreRelease)' != 'false'">-$(BuildRevision.Trim())-0</PreReleaseSuffix>
++    <PreReleaseSuffix  Condition="'$(PreRelease)' != 'false'">-rc-$(BuildRevision.Trim())-0</PreReleaseSuffix>
+     <PackageVersion>4.2.0$(PreReleaseSuffix)</PackageVersion>
+     <PackageProperties>-prop "licenseUrl=$(PackageLicenceUrl)" -prop "version=$(PackageVersion)" -prop "authors=$(PackageAuthors)" -prop "projectUrl=$(PackageProjectUrl)" -prop "tags=$(PackageTags)"</PackageProperties>
+   </PropertyGroup>
+-- 
+1.8.3.1
+

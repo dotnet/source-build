@@ -1,0 +1,78 @@
+From 11024995d080378aadf1bf216ac25020d446d4a5 Mon Sep 17 00:00:00 2001
+From: Matt Ellis <matell@microsoft.com>
+Date: Thu, 8 Jun 2017 19:02:06 -0700
+Subject: [PATCH] Build Identity Packages
+
+---
+ pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.builds    | 4 ++--
+ pkg/Microsoft.NETCore.Targets/Microsoft.NETCore.Targets.builds        | 4 ++--
+ .../NETStandard.Library.NETFramework.builds                           | 4 ++--
+ pkg/dir.traversal.targets                                             | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.builds b/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.builds
+index a2a9330..eb17cb0 100644
+--- a/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.builds
++++ b/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.builds
+@@ -1,8 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+-  <ItemGroup Condition="'$(OfficialBuildId)' == '' Or '$(BuildAllConfigurations)' == 'true'">
++  <ItemGroup>
+     <Project Include="Microsoft.NETCore.Platforms.pkgproj" />
+   </ItemGroup>
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.traversal.targets))\dir.traversal.targets" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/pkg/Microsoft.NETCore.Targets/Microsoft.NETCore.Targets.builds b/pkg/Microsoft.NETCore.Targets/Microsoft.NETCore.Targets.builds
+index b903833..20d5675 100644
+--- a/pkg/Microsoft.NETCore.Targets/Microsoft.NETCore.Targets.builds
++++ b/pkg/Microsoft.NETCore.Targets/Microsoft.NETCore.Targets.builds
+@@ -1,8 +1,8 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+-  <ItemGroup Condition="'$(OfficialBuildId)' == '' Or '$(BuildAllConfigurations)' == 'true'">
++  <ItemGroup>
+     <Project Include="Microsoft.NETCore.Targets.pkgproj"/>
+   </ItemGroup>
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.traversal.targets))\dir.traversal.targets" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/pkg/NETStandard.Library.NETFramework/NETStandard.Library.NETFramework.builds b/pkg/NETStandard.Library.NETFramework/NETStandard.Library.NETFramework.builds
+index 17bb6bf..5780ce6 100644
+--- a/pkg/NETStandard.Library.NETFramework/NETStandard.Library.NETFramework.builds
++++ b/pkg/NETStandard.Library.NETFramework/NETStandard.Library.NETFramework.builds
+@@ -3,10 +3,10 @@
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
+ 
+   <!-- for official builds, only build during the AllConfigurations leg -->
+-  <ItemGroup Condition="'$(OfficialBuildId)' == '' Or '$(BuildAllConfigurations)' == 'true'">
++  <ItemGroup>
+     <Project Include="$(MSBuildProjectName).pkgproj" />
+   </ItemGroup>
+ 
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.traversal.targets))\dir.traversal.targets" />
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/pkg/dir.traversal.targets b/pkg/dir.traversal.targets
+index 049c854..70a58bf 100644
+--- a/pkg/dir.traversal.targets
++++ b/pkg/dir.traversal.targets
+@@ -5,7 +5,7 @@
+   
+   <PropertyGroup Condition="'$(OfficialBuildId)' != ''">
+     <!-- During an official build, only build identity packages in the AllConfigurations build -->
+-    <SkipBuildIdentityPackage Condition="'$(BuildAllConfigurations)' != 'true'">true</SkipBuildIdentityPackage>
++    <SkipBuildIdentityPackage Condition="'$(BuildAllConfigurations)' != 'true'">false</SkipBuildIdentityPackage>
+ 
+     <!-- During an official build, skip building runtime packages on AllConfigurations build -->
+     <SkipBuildRuntimePackage Condition="'$(BuildAllConfigurations)' == 'true'">true</SkipBuildRuntimePackage>
+-- 
+1.8.3.1
+
