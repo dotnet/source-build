@@ -69,6 +69,9 @@
 
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
+    <ItemGroup>
+      <EnvironmentVariables Condition="'$(NUGET_PACKAGES)'!=''" Include="NUGET_PACKAGES=$(NUGET_PACKAGES)" />
+    </ItemGroup>
     <Exec Command="$(BuildCommand)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
