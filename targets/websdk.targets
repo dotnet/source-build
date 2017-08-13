@@ -7,5 +7,9 @@
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           Condition="'$(OS)' == 'Unix'" />
+    <Exec Command="chmod +x $(ProjectDirectory)/build-core.sh"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          Condition="'$(OS)' == 'Unix'" />
   </Target>
 </Project>
