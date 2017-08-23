@@ -8,7 +8,7 @@ You can use these scripts to build the .NET Core product for Windows, macOS or L
 
 The scripts are currently support only Linux at the moment. Windows and OSX are in the pipeline.
 
-If you are building on Windows or OSX, building is possible via Docker. (https://hub.docker.com/r/microsoft/dotnet/)[https://hub.docker.com/r/microsoft/dotnet/]
+If you are building on Windows or OSX, building is possible via Docker. (https://hub.docker.com/r/microsoft/dotnet/)
 
 ### Build on Linux
 
