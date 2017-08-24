@@ -17,6 +17,18 @@
     <MSBuild Projects="@(_RootProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
+  <Target Name="ApplyPatches">
+    <Message Text="Applying patches only" />
+
+    <ItemGroup>
+      <_RootProject Include="$(ProjectDir)targets/repository.proj">
+        <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
+      </_RootProject>
+    </ItemGroup>
+
+    <MSBuild Projects="@(_RootProject)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+
   <Target Name="PrepareOutput">
     <MakeDir Directories="$(OutputPath)" />
     <MakeDir Directories="$(IntermediatePath)" />
