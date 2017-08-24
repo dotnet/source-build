@@ -30,8 +30,8 @@
   </Target>
 
   <Target Name="GenerateRootFs">
-     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) sh -c 'if [ ! -d &quot;$ROOTFS_DIR&quot; ]; then ./cross/build-rootfs.sh; fi'" />
-     <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) sh -c 'if [ ! -d &quot;$ROOTFS_DIR&quot; ]; then ./cross/armel/tizen-build-rootfs.sh; fi'" />
+     <Exec Condition="!Exists($(CrossRootFsDir)) AND $(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh;" />
+     <Exec Condition="!Exists($(CrossRootFsDir)) AND '$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) ./cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
   <Target Name="BuildDummyPackages">
