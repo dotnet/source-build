@@ -1,5 +1,4 @@
 import jobs.generation.Utilities;
-import jobs.generation.InternalUtilities;
 
 def project = GithubProject;
 def branch = GithubBranchName;
@@ -25,14 +24,14 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
 
 def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
 {
-  def newJobName = InternalUtilities.getFullJobName(project, "${os}_${configuration}", true);
+  def newJobName = Utilities.getFullJobName(project, "${os}_${configuration}", true);
   def contextString = "${os} ${configuration}";
   def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
   def newJob = job(newJobName);
 
   addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
-  InternalUtilities.standardJobSetup(newJob, project, true, "*/${branch}");
+  Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
@@ -40,11 +39,11 @@ def addPushJob(String project, String branch, String os, String configuration)
 {
     def shortJobName = "${os}_${configuration}";
 
-    def newJobName = InternalUtilities.getFullJobName(project, shortJobName, false);
+    def newJobName = Utilities.getFullJobName(project, shortJobName, false);
     def newJob = job(newJobName);
 
     addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
-    InternalUtilities.standardJobSetup(newJob, project, false, "*/${branch}");
+    Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.addGithubPushTrigger(newJob);
 }
 
@@ -68,7 +67,7 @@ def addPushJob(String project, String branch, String os, String configuration)
       def contextString = "${os} ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
       
-      def newJob = job(InternalUtilities.getFullJobName(project, shortJobName, isPR)){
+      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
             shell("git submodule init");
             shell("git submodule update");
@@ -84,7 +83,7 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       Utilities.setMachineAffinity(newJob, 'Ubuntu', 'arm-cross-latest');
 
-      InternalUtilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
       if(isPR){
         //We run Tizen Release and Ubuntu ARM Release 
         if(configuration == "Release"){
