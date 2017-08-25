@@ -4,7 +4,7 @@ Date: Tue, 30 May 2017 18:35:03 -0700
 Subject: [PATCH] Only build netstandard and netcoreapp assets on *NIX
 
 ---
- src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj      | 1 +
+ src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj      | 1 +
  src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj                | 1 +
  src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj    | 1 +
  src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj                      | 1 +
@@ -20,10 +20,10 @@ Subject: [PATCH] Only build netstandard and netcoreapp assets on *NIX
  src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj                  | 1 +
  14 files changed, 14 insertions(+)
 
-diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 index 80cae27..303002a 100644
---- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
-+++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.Library.csproj
 @@ -3,6 +3,7 @@
  
    <PropertyGroup>
