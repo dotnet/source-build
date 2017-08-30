@@ -47,7 +47,7 @@ def addPushJob(String project, String branch, String os, String configuration)
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["Ubuntu14.04", "RHEL7.2", "Windows_NT", "OSX10.12"].each { os ->
+["RHEL7.2"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };
@@ -59,7 +59,7 @@ def addPushJob(String project, String branch, String os, String configuration)
   };
 };
 
-[true, false].each { isPR ->
+[false].each { isPR ->
   ["Linux ARM", "Tizen"].each { os->
     ["Release", "Debug"].each { configuration ->
       
