@@ -8,7 +8,7 @@ Subject: [PATCH] Build only source project
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/build/build.proj b/build/build.proj
-index fb1c221..e17c5cf 100644
+index fb1c221..32abffb 100644
 --- a/build/build.proj
 +++ b/build/build.proj
 @@ -14,7 +14,7 @@
@@ -20,9 +20,12 @@ index fb1c221..e17c5cf 100644
    </Target>
  
    <Target Name="Test">
-@@ -24,4 +24,4 @@
+@@ -22,6 +22,6 @@
+   </Target>
+ 
    <Target Name="Pack">
-     <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
+-    <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
++    <MSBuild Projects="@(PackProject)" Targets="Pack" />
    </Target>
 -</Project>
 \ No newline at end of file
