@@ -9,10 +9,10 @@ Subject: [PATCH] Revert 38949ce93081016167dfd8e37e4e897bedf47d65 (Unix line
  .../MsbuilldIntegrationTestFixture.cs              | 26 +++++++++++++++++++++-
  2 files changed, 30 insertions(+), 8 deletions(-)
 
-diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
 index a629f5a..5fce2fb 100644
---- a/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
-+++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack.Library/NuGet.Build.Tasks.Pack.nuspec
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.nuspec
 @@ -1,4 +1,4 @@
 -﻿<?xml version="1.0"?>
 +<?xml version="1.0"?>
@@ -29,8 +29,8 @@ index a629f5a..5fce2fb 100644
 -    <file src="netstandard1.3\ilmerge\NuGet.Build.Tasks.Pack.xml" target="CoreCLR\" />
 -    <file src="net45\Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
 -    <file src="net45\Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
-+    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\net45\*.dll" target="Desktop\" />
-+    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack.Library\15.0\bin\$configuration$\netstandard1.3\*.dll" target="CoreCLR\" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack\15.0\bin\$configuration$\net45\*.dll" target="Desktop\" />
++    <file src="..\..\..\artifacts\NuGet.Build.Tasks.Pack\15.0\bin\$configuration$\netstandard1.3\*.dll" target="CoreCLR\" />
 +    <file src="Pack.targets" target="buildCrossTargeting\NuGet.Build.Tasks.Pack.targets" />
 +    <file src="Pack.targets" target="build\NuGet.Build.Tasks.Pack.targets" />
    </files>
