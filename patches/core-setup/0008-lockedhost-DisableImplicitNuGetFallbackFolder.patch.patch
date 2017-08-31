@@ -1,0 +1,25 @@
+From bf3a1201b0c8b7d198043d1e99d7acd487dbfde3 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Mon, 28 Aug 2017 17:44:16 +0200
+Subject: [PATCH] lockedhost: DisableImplicitNuGetFallbackFolder
+
+---
+ src/sharedFramework/sharedFramework.proj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/sharedFramework/sharedFramework.proj b/src/sharedFramework/sharedFramework.proj
+index d287053..9e6a973 100644
+--- a/src/sharedFramework/sharedFramework.proj
++++ b/src/sharedFramework/sharedFramework.proj
+@@ -133,7 +133,7 @@
+   <Target Name="RestoreLockedCoreHost">
+     <PropertyGroup>
+       <LockedHostSourceRoot>$(MSBuildThisFileDirectory)lockedhost</LockedHostSourceRoot>
+-      <CommonLockedHostArgs>/p:TargetFramework=$(Framework) /p:RuntimeIdentifier=$(PackageTargetRid) /p:HostResolverVersion=$(HostResolverVersion) /p:HostVersion=$(HostVersion)</CommonLockedHostArgs>
++      <CommonLockedHostArgs>/p:DisableImplicitNuGetFallbackFolder=true /p:TargetFramework=$(Framework) /p:RuntimeIdentifier=$(PackageTargetRid) /p:HostResolverVersion=$(HostResolverVersion) /p:HostVersion=$(HostVersion)</CommonLockedHostArgs>
+     </PropertyGroup>
+ 
+     <RemoveDir Directories="$(CoreHostLockedDir)" />
+-- 
+2.9.4
+
