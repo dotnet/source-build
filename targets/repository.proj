@@ -42,8 +42,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-      <PatchCommand Condition="'$(IsJenkinsBuild)' == 'true'">git apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
-      <PatchCommand Condition="'$(IsJenkinsBuild)' != 'true'">patch -p1 --ignore-whitespace -i</PatchCommand>
+      <PatchCommand>git apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
     </PropertyGroup>
 
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
