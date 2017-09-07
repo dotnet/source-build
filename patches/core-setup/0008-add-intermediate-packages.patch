@@ -1,0 +1,106 @@
+From fdf6d172cb103288b16f8bfcd5fc1df69783e907 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Tue, 5 Sep 2017 17:36:32 -0400
+Subject: [PATCH] Add core-setup patch to allow intermediate package cache to pick up source built packages 
+
+---
+ dir.props                                        |  3 ++-
+ src/sharedFramework/framework/framework.csproj   |  4 ++++
+ src/sharedFramework/lockedhost/lockedhost.csproj |  3 +++
+ src/sharedFramework/sharedFramework.proj         | 16 ++++++++--------
+ 4 files changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/dir.props b/dir.props
+index 2909110..5ae64a9 100644
+--- a/dir.props
++++ b/dir.props
+@@ -276,6 +276,7 @@
+ 
+     <SharedFrameworkPublishDir>$(IntermediateOutputRootPath)sharedFrameworkPublish\</SharedFrameworkPublishDir>
+     <SharedFrameworkPublishSymbolsDir>$(IntermediateOutputRootPath)sharedFrameworkPublish.symbols\</SharedFrameworkPublishSymbolsDir>
++    <SharedFrameworkIntermediatePackagesDir>$(IntermediateOutputRootPath)sharedFrameworkPublish\packages\</SharedFrameworkIntermediatePackagesDir>
+     <SharedFrameworkNameAndVersionRoot>$(SharedFrameworkPublishDir)shared\$(SharedFrameworkName)\$(SharedFrameworkNugetVersion)</SharedFrameworkNameAndVersionRoot>
+   </PropertyGroup>
+ 
+@@ -429,4 +430,4 @@
+   <!-- Use Roslyn Compilers to build -->
+   <Import Project="$(RoslynPropsFile)" Condition="'$(OsEnvironment)'!='Windows_NT' and Exists('$(RoslynPropsFile)') and '$(UseRoslynCompilers)'!='false'" />
+   <Import Project="$(RoslynPropsFile)" Condition="'$(OsEnvironment)'=='Windows_NT' and Exists('$(RoslynPropsFile)')" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/sharedFramework/framework/framework.csproj b/src/sharedFramework/framework/framework.csproj
+index 52e6553..d4bcf1d 100644
+--- a/src/sharedFramework/framework/framework.csproj
++++ b/src/sharedFramework/framework/framework.csproj
+@@ -4,4 +4,8 @@
+     <OutputType>Exe</OutputType>
+   </PropertyGroup>
+ 
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETCore.Platforms" Version="2.0.0" />
++  </ItemGroup>
++
+ </Project>
+diff --git a/src/sharedFramework/lockedhost/lockedhost.csproj b/src/sharedFramework/lockedhost/lockedhost.csproj
+index aaf2c49..8080dd0 100644
+--- a/src/sharedFramework/lockedhost/lockedhost.csproj
++++ b/src/sharedFramework/lockedhost/lockedhost.csproj
+@@ -3,6 +3,9 @@
+   <PropertyGroup>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
++    <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
++    <CopyOutputSymbolsToPublishDirectory>false</CopyOutputSymbolsToPublishDirectory>
++    <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/sharedFramework/sharedFramework.proj b/src/sharedFramework/sharedFramework.proj
+index d287053..e07a8a8 100644
+--- a/src/sharedFramework/sharedFramework.proj
++++ b/src/sharedFramework/sharedFramework.proj
+@@ -28,13 +28,13 @@
+ 
+     <RemoveDir Directories="$(SharedFrameworkNameAndVersionRoot)" />
+ 
+-    <Exec Command="$(DotnetRestoreCommand) --source $(PackagesOutDir) $(CommonSharedFrameworkArgs)"
++    <Exec Command="$(DotnetToolCommand) restore --packages $(SharedFrameworkIntermediatePackagesDir) --source $(PackagesOutDir) --source $(PackagesDir) $(CommonSharedFrameworkArgs)"
+           WorkingDirectory="$(SharedFrameworkSourceRoot)" />
+ 
+     <!-- We publish to a sub folder of the PublishRoot so tools like heat and zip can generate folder structures easier. -->
+-    <Exec Command="$(DotnetToolCommand) publish --output $(SharedFrameworkNameAndVersionRoot) $(CommonSharedFrameworkArgs)"
++    <Exec Command="$(DotnetToolCommand) publish --output $(SharedFrameworkNameAndVersionRoot) $(CommonSharedFrameworkArgs) /p:PackagesDir=$(SharedFrameworkIntermediatePackagesDir)"
+           WorkingDirectory="$(SharedFrameworkSourceRoot)"
+-          EnvironmentVariables="NUGET_PACKAGES=$(PackagesDir)" />
++          EnvironmentVariables="NUGET_PACKAGES=$(SharedFrameworkIntermediatePackagesDir)" />
+ 
+     <!-- Clean deps.json -->
+     <ChangeEntryPointLibraryName DepsFile="$(SharedFrameworkNameAndVersionRoot)/framework.deps.json" />
+@@ -134,17 +134,17 @@
+     <PropertyGroup>
+       <LockedHostSourceRoot>$(MSBuildThisFileDirectory)lockedhost</LockedHostSourceRoot>
+       <CommonLockedHostArgs>/p:TargetFramework=$(Framework) /p:RuntimeIdentifier=$(PackageTargetRid) /p:HostResolverVersion=$(HostResolverVersion) /p:HostVersion=$(HostVersion)</CommonLockedHostArgs>
++      <LockedCoreHostRestoreCommand>$(DotnetToolCommand) restore --packages $(SharedFrameworkIntermediatePackagesDir) --source $(PackagesOutDir) $(CommonLockedHostArgs)</LockedCoreHostRestoreCommand>
+     </PropertyGroup>
+ 
+     <RemoveDir Directories="$(CoreHostLockedDir)" />
+ 
+-    <Exec Command="$(DotnetRestoreCommand) --source $(PackagesOutDir) $(CommonLockedHostArgs)"
+-          WorkingDirectory="$(LockedHostSourceRoot)" />
++    <Exec Command="$(LockedCoreHostRestoreCommand)" WorkingDirectory="$(LockedHostSourceRoot)" />
+ 
+ 
+-    <Exec Command="$(DotnetToolCommand) publish --output $(CoreHostLockedDir) $(CommonLockedHostArgs)"
++    <Exec Command="$(DotnetToolCommand) publish --output $(CoreHostLockedDir) $(CommonLockedHostArgs) /p:PackagesDir=$(SharedFrameworkIntermediatePackagesDir)"
+           WorkingDirectory="$(LockedHostSourceRoot)"
+-          EnvironmentVariables="NUGET_PACKAGES=$(PackagesDir)" />
++          EnvironmentVariables="NUGET_PACKAGES=$(SharedFrameworkIntermediatePackagesDir)" />
+   </Target>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+

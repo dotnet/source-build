@@ -1,14 +1,14 @@
-From a498d64a86c0d0c9b55d46af27c7d11b250a6f48 Mon Sep 17 00:00:00 2001
+From 47b4458cb15d7c9fb74a5c73cf52b9179033a799 Mon Sep 17 00:00:00 2001
 From: karajas <karajas@microsoft.com>
-Date: Tue, 11 Jul 2017 23:06:06 +0000
-Subject: [PATCH] Build only source project
+Date: Tue, 5 Sep 2017 17:52:05 -0400
+Subject: [PATCH] Build pack project
 
 ---
- build/build.proj | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ build/build.proj | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/build/build.proj b/build/build.proj
-index fb1c221..e17c5cf 100644
+index fb1c221..32abffb 100644
 --- a/build/build.proj
 +++ b/build/build.proj
 @@ -14,7 +14,7 @@
@@ -20,13 +20,16 @@ index fb1c221..e17c5cf 100644
    </Target>
  
    <Target Name="Test">
-@@ -24,4 +24,4 @@
+@@ -22,6 +22,6 @@
+   </Target>
+ 
    <Target Name="Pack">
-     <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
+-    <MSBuild Projects="@(PackProject)" Targets="Pack" Properties="NoBuild=true" />
++    <MSBuild Projects="@(PackProject)" Targets="Pack" />
    </Target>
 -</Project>
 \ No newline at end of file
 +</Project>
 -- 
-1.9.1
+1.8.3.1
 
