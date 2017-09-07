@@ -13,4 +13,5 @@ elif [ "$__buildArch" == "armel" ]; then
     __dockerEnvironmentVariables+=" -e ROOTFS_DIR=/crossrootfs/armel.tizen.build"
 fi
 __dockerCmd="sudo docker run ${__dockerEnvironmentVariables} --privileged -i --rm -v $__currentWorkingDirectory:/opt/code -w /opt/code $__dockerImage"
+echo "Running docker: $__dockerCmd"
 $__dockerCmd "$@"
