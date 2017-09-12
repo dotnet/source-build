@@ -7,13 +7,11 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
   job.with {
     steps {
       if (os == "Windows_NT") {
-        batchFile("git submodule init");
-        batchFile("git submodule update");
+        batchFile("git submodule update --init --recursive");
         batchFile(".\\build.cmd /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
       }
       else {
-        shell("git submodule init");
-        shell("git submodule update");
+        shell("git submodule update --init --recursive");
         shell("./build.sh /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
       }
     };
@@ -59,8 +57,8 @@ def addPushJob(String project, String branch, String os, String configuration)
   };
 };
 
-[false].each { isPR ->
-  ["Linux ARM", "Tizen"].each { os->
+[true, false].each { isPR ->
+  ["Linux_ARM", "Tizen"].each { os->
     ["Release", "Debug"].each { configuration ->
       
       def shortJobName = "${os}_${configuration}";
@@ -69,10 +67,9 @@ def addPushJob(String project, String branch, String os, String configuration)
       
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
-            shell("git submodule init");
-            shell("git submodule update");
+            shell("git submodule update --init --recursive");
             shell("./init-tools.sh")
-            if(os == "Linux ARM"){
+            if(os == "Linux_ARM"){
               shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
             }
             if(os == "Tizen"){
