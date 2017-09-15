@@ -1,0 +1,41 @@
+From ad9db12008d9d07bc6137c69234670112d5899fb Mon Sep 17 00:00:00 2001
+From: Eric Erhardt <eric.erhardt@microsoft.com>
+Date: Fri, 15 Sep 2017 20:08:48 -0500
+Subject: [PATCH] Allow cli-deps-satellites to skip signing on Windows during
+ source-build since we don't have the RoslynTools package
+
+---
+ src/Directory.Build.props   | 3 ++-
+ src/Directory.Build.targets | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 042f2ab..191b194 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -33,7 +33,8 @@
+     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\build\$(StrongNameKey).snk</AssemblyOriginatorKeyFile>
+     <SignToolConfig>$(MSBuildThisFileDirectory)..\build\$(StrongNameKey).json</SignToolConfig>
+     <SignAssembly>true</SignAssembly>
+-    
++    <SkipSignSatellites Condition="'$(SkipSignSatellites)' == '' and '$(DotNetBuildType)' == 'Source'">true</SkipSignSatellites>
++
+     <!-- Use delay signing instead of public signing on full msbuild to workaround https://github.com/Microsoft/msbuild/issues/1490 -->
+     <PublicSign Condition="'$(SignType)' != 'real' and '$(MSBuildRuntimeType)' == 'Core'">true</PublicSign>
+     <DelaySign Condition="'$(PublicSign)' != 'true'">true</DelaySign>
+diff --git a/src/Directory.Build.targets b/src/Directory.Build.targets
+index 8e76325..0f87c86 100644
+--- a/src/Directory.Build.targets
++++ b/src/Directory.Build.targets
+@@ -21,7 +21,7 @@
+ 
+   <Target Name="SignSatellites"
+           BeforeTargets="PackSatellites"
+-          Condition="$(IsPackage) and '$(OS)' == 'Windows_NT'">
++          Condition="$(IsPackage) and '$(OS)' == 'Windows_NT' and '$(SkipSignSatellites)' != 'true'">
+     <ItemGroup>
+       <SignToolArg Include="-nugetPackagesPath $(NuGetPackageRoot)" />
+       <SignToolArg Include="-intermediateOutputPath $(IntermediateOutputPath)" />
+-- 
+2.11.0 (Apple Git-81)
+
