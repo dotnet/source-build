@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-SDK_VERSION="2.0.0-preview3-006845"
+SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"
@@ -12,6 +12,7 @@ fi
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
 "$SCRIPT_ROOT/init-tools.sh"
