@@ -56,6 +56,11 @@ if NOT exist "%BUILD_TOOLS_PATH%init-tools.cmd" (
 
 :afterbuildtoolsrestore
 
+:: Temporarily fix up BuildTools to work with the current CLI version
+set BUILDTOOLS_PROJECT=%BUILD_TOOLS_PATH%tool-runtime\project.csproj
+echo Fixing up %BUILDTOOLS_PROJECT%
+powershell -NoProfile -ExecutionPolicy unrestricted -Command "$newFileContent = Get-Content '%BUILDTOOLS_PROJECT%'; $newFileContent = $newFileContent -replace \".*^<PackageTargetFallback.*\", \"^<NoWarn^>NU1605^</NoWarn^>\"; $newFileContent | Out-File '%BUILDTOOLS_PROJECT%'"
+
 echo Initializing BuildTools...
 echo Running: "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" >> "%INIT_TOOLS_LOG%"
 call "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" >> "%INIT_TOOLS_LOG%"
