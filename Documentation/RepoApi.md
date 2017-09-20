@@ -23,6 +23,9 @@ source-build will invoke these scripts on each repo passing in:
 1. An action to perform
 1. A set of parameters
 
+Individual repos are free to implement more features in these build scripts than what is required by source-build. For
+example, a repo may want to provide a default action. These extra behaviors are not defined by source-build.
+
 ### Actions
 
 To start, there are a number of actions source-build will need the repos to implement.  The actions are:
@@ -34,26 +37,31 @@ To start, there are a number of actions source-build will need the repos to impl
 
 This list of actions can be added to in the future as more scenarios are implemented.
 
+source-build formats arguments using a style that is compatible with MSBuild. The reasoning for this is that the
+majority of repos have an MSBuild based build system. Using this format will allow for arguments to easily be passed
+through to MSBuild. Similarly, both action and parameter arguments are case-insensitive, just like MSBuild default
+behavior.
+
+Actions will take the form of `-t:ActionName`, just like MSBuild targets are passed to `msbuild.exe`.
+
 ### Parameters
 
 Each action above will take a set of parameters used to pass information into the action and control its behavior.
-source-build formats the parameters using a style that is compatible with MSBuild. The reasoning for this is that the
-majority of repos have an MSBuild based build system. Using this format will allow for parameters to easily be passed
-through to MSBuild.
 
 Parameters will take the form of `-p:ParameterName=ParameterValue`, just like MSBuild properties are passed to `msbuild.exe`.
 One slight variation here is the usage of `-p` instead of `/p`.  MSBuild supports both forms, but source-build chooses `-p` because
-it meets [POSIX recommendations](https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html) for command line parameters.
+it meets [POSIX recommendations](https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html) for command line parameters
+and avoids any confusion with file paths on Unix machines.
 
 In order to avoid conflicts between existing MSBuild properties used by the repos and the properties passed in by source-build,
-source-build will append a prefix to every property it passes in: `DotNet_`.
+source-build will append a prefix to every property it passes in: `DotNet`.
 
 #### Detecting build from source
 
 The first parameter used by source-build will be a value indicating whether the build is being performed in "source only" mode. This
 means repos cannot use tools/packages/references that haven't already been built by the current build.
 
-`-p:DotNet_BuildFromSource=true`
+`-p:DotNetBuildFromSource=true`
 
 Some repos build more projects than is necessary to build the .NET Core stack. For example, the `dotnet/roslyn` repo builds
 the C# compiler, which is needed, but it also builds Visual Studio extensions, which aren't needed. These VS extensions
@@ -76,7 +84,7 @@ To solve this, source-build will have a set of common tools available that it wi
 First, a [.NET Core SDK](https://www.microsoft.com/net/download/core#/sdk) will be available for repos to be able to invoke
 MSBuild, NuGet, etc. The path to the folder containing the `dotnet` executable will be available using the
 
-`-p:DotNet_Tool_Dir`
+`-p:DotNetToolDir`
 
 property. This can be used to call `dotnet restore`, `dotnet build`, `dotnet publish`, `dotnet msbuild`, or any other CLI
 verb on the repo's projects.
@@ -84,7 +92,7 @@ verb on the repo's projects.
 Second, a common set of tools used by the `dotnet` org repos is [BuildTools](https://github.com/dotnet/buildtools). This will
 be available using the
 
-`-p:DotNet_Build_Tools_Dir`
+`-p:DotNetBuildToolsDir`
 
 property. This can be used to invoke any current or future tool that is part of BuildTools. It is not required that each repo
 use BuildTools, but if the repo wants to, it can get the tools from this property.
@@ -94,12 +102,12 @@ use BuildTools, but if the repo wants to, it can get the tools from this propert
 Here is an example of the list of calls source-build will make on the `dotnet/corefx` repo:
 
 ```
-/path/to/corefx/build.sh Restore -p:DotNet_BuildFromSource=true -p:DotNet_Tool_Dir=/path/to/dotnet -p:DotNet_Build_Tools_Dir=/path/to/buildtools
-/path/to/corefx/build.sh Build -p:DotNet_BuildFromSource=true -p:DotNet_Tool_Dir=/path/to/dotnet -p:DotNet_Build_Tools_Dir=/path/to/buildtools
-/path/to/corefx/build.sh Publish -p:DotNet_BuildFromSource=true -p:DotNet_Tool_Dir=/path/to/dotnet -p:DotNet_Build_Tools_Dir=/path/to/buildtools
+/path/to/corefx/build.sh -t:Restore -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
+/path/to/corefx/build.sh -t:Build -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
+/path/to/corefx/build.sh -t:Publish -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
 ```
 
-> **Note:** Not all properties have been specified above. As each action gets designed in detail, more `DotNet_` properties will be
+> **Note:** Not all properties have been specified above. As each action gets designed in detail, more `DotNet` properties will be
 specified. For example, the `Publish` action above isn't getting told where to publish the assets to.
 
 ### .rsp files
@@ -116,10 +124,10 @@ text file is passed into the `build` with a `@` character preceeding the file na
 Where `currentBuildParameters.rsp` contains
 
 ```
-Build
--p:DotNet_BuildFromSource=true
--p:DotNet_Tool_Dir=/path/to/dotnet
--p:DotNet_Build_Tools_Dir=/path/to/buildtools
+-t:Build
+-p:DotNetBuildFromSource=true
+-p:DotNetToolDir=/path/to/dotnet
+-p:DotNetBuildToolsDir=/path/to/buildtools
 ```
 
 ## Future Work
