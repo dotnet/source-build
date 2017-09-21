@@ -52,7 +52,7 @@ index 53a7cd7..82e7578 100644
    <PropertyGroup>
      <Description>NuGet wrapper for dotnet.exe</Description>
      <TargetFrameworks>netcoreapp1.0;net46</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp1.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT' or '$(DotNet_BuildFromSource)' == 'true'">netcoreapp1.0</TargetFrameworks>
      <RuntimeIdentifier Condition=" '$(TargetFramework)' == 'net46' ">win7-x86</RuntimeIdentifier>
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <OutputType>Exe</OutputType>
