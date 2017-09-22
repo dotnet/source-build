@@ -18,7 +18,7 @@ index 042f2ab..191b194 100644
      <SignToolConfig>$(MSBuildThisFileDirectory)..\build\$(StrongNameKey).json</SignToolConfig>
      <SignAssembly>true</SignAssembly>
 -    
-+    <SkipSignSatellites Condition="'$(SkipSignSatellites)' == '' and '$(DotNet_BuildFromSource)' == 'true'">true</SkipSignSatellites>
++    <SkipSignSatellites Condition="'$(SkipSignSatellites)' == '' and '$(DotNetBuildFromSource)' == 'true'">true</SkipSignSatellites>
 +
      <!-- Use delay signing instead of public signing on full msbuild to workaround https://github.com/Microsoft/msbuild/issues/1490 -->
      <PublicSign Condition="'$(SignType)' != 'real' and '$(MSBuildRuntimeType)' == 'Core'">true</PublicSign>
