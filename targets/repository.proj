@@ -35,8 +35,7 @@
     <MSBuild Projects="@(_DependentProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
-  <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'"
-          BeforeTargets="Build">
+  <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'">
     <ItemGroup>
       <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
     </ItemGroup>
@@ -46,8 +45,7 @@
     </PropertyGroup>
 
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"
