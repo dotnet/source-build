@@ -8,16 +8,15 @@ Subject: [PATCH] Prevent some packages from being restored
  1 file changed, 2 deletions(-)
 
 diff --git a/external/dir.proj b/external/dir.proj
-index aefe376..05ceb43 100644
+index d3d7fd8769..3c9d28f1ba 100644
 --- a/external/dir.proj
 +++ b/external/dir.proj
-@@ -10,12 +10,10 @@
+@@ -10,11 +10,9 @@
      <Project Include="netstandard/netstandard.depproj" />
      <Project Include="netfx/netfx.depproj" />
      <Project Include="runtime/runtime.depproj" />
 -    <Project Include="test-runtime/XUnit.Runtime.depproj" />
-     <Project Include="harvestPackages/harvestPackages.netstandard1.6.depproj" />
-     <Project Include="harvestPackages/harvestPackages.uap10.0.depproj" />
+     <Project Include="harvestPackages/harvestPackages.depproj" />
      <Project Include="portable\portable.depproj" />
      <Project Include="ilasm/ilasm.depproj" />
 -    <Project Include="docs/docs.depproj" />
@@ -25,5 +24,5 @@ index aefe376..05ceb43 100644
    </ItemGroup>
  
 -- 
-1.8.3.1
+2.14.1.windows.1
 
