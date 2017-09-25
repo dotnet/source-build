@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <Target Name="Build"
-    Inputs="$(MSBuildThisFile)"
+    Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
     <CallTarget Targets="BuildTasks;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;BuildDummyPackages;BuildReferenceAssemblies" />
