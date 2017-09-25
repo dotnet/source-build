@@ -36,10 +36,4 @@ $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
 $captured_args = $args
 
-Exec-Block { & "$CLIPATH\dotnet" restore "$SCRIPT_ROOT\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj" } | Out-Host
-Exec-Block { & "$CLIPATH\dotnet" build "$SCRIPT_ROOT\tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj" } | Out-Host
-
-Remove-Item -Recurse -Force "$env:NUGET_PACKAGES"
-
-Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" $captured_args /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true } | Out-Host
 Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=detailed /clp:v=detailed $captured_args } | Out-Host
