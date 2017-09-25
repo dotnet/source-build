@@ -46,7 +46,7 @@ Import `DotNetRestoreSourcePropsPath` as an MSBuild props file, and use properti
 
 ```xml
 <Project>
-  <Import Project="'$(DotNetRestoreSourcePropsPath)'"
+  <Import Project="$(DotNetRestoreSourcePropsPath)"
           Condition="'$(DotNetRestoreSourcePropsPath)' != ''"/>
 
   <PropertyGroup>
