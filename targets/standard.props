@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -- /p:DotNetBuildFromSource=true</BuildCommand>
     <BuildPackagesCommand></BuildPackagesCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
@@ -15,8 +15,6 @@
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
-    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
-    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" />
   </ItemGroup>
 </Project>

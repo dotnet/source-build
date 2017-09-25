@@ -79,7 +79,10 @@
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
     <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
+    <!-- New env-var names to replace the ones above over time -->
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
   </ItemGroup>
 
   <Import Project="repositories.props" />
