@@ -50,6 +50,29 @@ Store all defaults in a centralized `.props` file, and import `DotNetPackageVers
 </Project>
 ```
 
+## `/p:DotNetSourceBuildTargetFrameworkPropsPath=<path>`
+**NOTE: This API may be simplified to use an argument instead of a file if only one TFM (target framework moniker) is required.** See [source-build#184](https://github.com/dotnet/source-build/issues/184).
+
+Directs the repo to use the "source build target framework props" file at `path`. The repo must use the version of each TFM listed in the file instead of any default.
+
+The TFMs must be used when source build wouldn't work with the repo's default values. If a product build is being orchestrated, for example, other TFMs are permitted and this property is not passed.
+
+### File format: restore target framework props
+Each TFM being built has a property specifying the name of that TFM as built in the current source build. Example:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DotNetNETCoreAppTargetFramework>netcoreapp2.1</DotNetNETCoreAppTargetFramework>
+    <DotNetNETStandardTargetFramework>netstandard2.1</DotNetNETStandardTargetFramework>
+  </PropertyGroup>
+</Project>
+```
+
+### Recommended implementation
+Import the "restore target framework props" file in a high-level MSBuild file in the repository, and set up an overridable property for each TFM the project uses. Use those properties in project files instead of hard-coded values.
+
 
 # Source override arguments
 

@@ -84,5 +84,7 @@ For product builds, we want to allow the repos continue to depend on the oldest 
 
 For source builds, upgrading TFMs allows the repos to avoid depending on old package versions. They would also need to be built from source.
 
+The [`p:DotNetSourceBuildTargetFrameworkPropsPath`](api.md#pdotnetsourcebuildtargetframeworkpropspathpath) API is used during source builds to pass the TFM being built.
+
 ## Upgrading all tooling dependencies we build to the latest
 This is *required* for build from source to satisfy bootstrapping requirements, and *desired* (mildly) for product builds in order to dogfood.
