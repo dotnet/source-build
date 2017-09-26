@@ -62,10 +62,10 @@ The narrative represents the ideal flow, and some parts won't be available in ou
  * The orchestrator might not have any finalization steps. Instead, they happen during the repo builds. 
 
 ## Blob feed
-The orchestrator indicates a directory on the build machine to place output files using [`/p:DotNetOutputBlobFeedDir`](api.md#pdotnetoutputblobfeeddirtarget-directory). The orchestrator makes the contents available to subsequent repo builds using [`/p:DotNetRestoreSourcePropsPath`](api.md#pdotnetrestoresourcepropspathpath) and [`/p:DotNetAssetRootUrl`](api.md#pdotnetassetrooturlurl).
+The orchestrator indicates a directory on the build machine to place output files using [`-p:DotNetOutputBlobFeedDir`](api.md#pdotnetoutputblobfeeddirtarget-directory). The orchestrator makes the contents available to subsequent repo builds using [`-p:DotNetRestoreSourcePropsPath`](api.md#pdotnetrestoresourcepropspathpath) and [`-p:DotNetAssetRootUrl`](api.md#pdotnetassetrooturlurl).
 
 ## Passing dependency versions
-To pass the upstream NuGet package versions to use, the orchestrator creates a "package version props" file based on the current blob feed contents and passes it with [`/p:DotNetPackageVersionPropsPath=<path>`](api.md#pdotnetpackageversionpropspathpath).
+To pass the upstream NuGet package versions to use, the orchestrator creates a "package version props" file based on the current blob feed contents and passes it with [`-p:DotNetPackageVersionPropsPath=<path>`](api.md#pdotnetpackageversionpropspathpath).
 
 Additional API surface area for dependency passing may be added in the future, based on need. For example:
 
@@ -84,7 +84,7 @@ For product builds, we want to allow the repos continue to depend on the oldest 
 
 For source builds, upgrading TFMs allows the repos to avoid depending on old package versions. They would also need to be built from source.
 
-The [`p:DotNetSourceBuildTargetFrameworkPropsPath`](api.md#pdotnetsourcebuildtargetframeworkpropspathpath) API is used during source builds to pass the TFM being built.
+The [`-p:DotNetSourceBuildTargetFrameworkPropsPath`](api.md#pdotnetsourcebuildtargetframeworkpropspathpath) API is used during source builds to pass the TFM being built.
 
 ## Upgrading all tooling dependencies we build to the latest
 This is *required* for build from source to satisfy bootstrapping requirements, and *desired* (mildly) for product builds in order to dogfood.
