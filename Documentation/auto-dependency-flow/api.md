@@ -6,7 +6,25 @@ Repos must implement these arguments to participate in the orchestrated dependen
 # Dependency version input arguments
 
 ## `/p:DotNetPackageVersionPropsPath=<path>`
-Directs the repo build to use a [package version props](contracts.md#package-version-props) file at `path`. The versions in the file must be used instead of any defaults the repo would ordinarily depend on.
+Directs the repo build to use a "package version props" file at `path`. The versions in the file must be used instead of any defaults the repo would ordinarily depend on.
+
+`path` is outside of the repository directory.
+
+### File format: package version props
+The file specifies one property for each package. The name is the package identity after being suffixed with `PackageVersion`, chars uppercased to get to PascalCase, and non-alphanumeric characters (assumed to be delimiters) removed. The property value is the full version of the package. Example with a few CoreCLR packages:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion>2.1.0-preview2-25701-02</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+    <RuntimeOsxX64MicrosoftNETCoreRuntimeCoreCLRPackageVersion>2.1.0-preview2-25701-02</RuntimeOsxX64MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+    <TransportMicrosoftNETCoreRuntimeCoreCLRPackageVersion>2.1.0-preview2-25701-02</TransportMicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+  </PropertyGroup>
+</Project>
+```
+
+To collect package identities and versions for the package version props, the orchestrator reads the `nuspec` of every package on the blob feed in `packages/*.nupkg`. The file is placed in a directory on the build machine outside of the repo's git repository.
 
 ### Recommended implementation
 Use the build dependency props format for all `PackageReference`s that may be satisfied by another repo that is being orchestrated:
@@ -39,7 +57,24 @@ Store all defaults in a centralized `.props` file, and import `DotNetPackageVers
 Directs the repo to skip online sources if `bool` is `true`.
 
 ## `/p:DotNetRestoreSourcePropsPath=<path>`
-Directs the repo to use the semicolon-delimited sources in the `DotNetRestoreSources` property specified by the [restore source props](contracts.md#restore-source-props) file at `path`. The sources should be the highest priority NuGet package sources. Unless otherwise specified by `DotNetBuildOffline`, the repo may also use its default sources.
+Directs the repo to use the semicolon-delimited sources in the `DotNetRestoreSources` property specified by the "restore source props" file at `path`. The sources should be the repo's highest priority NuGet package sources.
+
+Unless otherwise specified by `DotNetBuildOffline`, the repo may also use its default sources.
+
+### File format: restore source props
+An MSBuild file defining a single property `DotNetRestoreSources`. This file is necessary to avoid issues with escaping: there are various issues trying to pass `;` on the command line to delimit sources. Example:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DotNetRestoreSources>
+      /git/source-build/bin/obj/x64/Release/blob-feed/packages/;
+      /git/source-build/bin/prebuilt/nuget-packages/;
+    </DotNetRestoreSources>
+  </PropertyGroup>
+</Project>
+```
 
 ### Recommended implementation
 Import `DotNetRestoreSourcePropsPath` as an MSBuild props file, and use properties similar to the following to define restore sources:

@@ -35,7 +35,7 @@ TL;DR: the orchestrator derives package version props from the blob feed after e
 ## Vision: product build end-to-end
 This narrative describes an end-to-end Core-Setup (Runtime) product build using CoreFX, CoreCLR, and Standard. More repos will be involved in real product builds.
 
-The orchestrator starts by calculating a repo dependency graph. Edges are determined by comparing each repo's *repo output manifest* and *repo input manifest*. The graph is a DAG, so it's buildable. In this case, we have:
+The orchestrator starts by calculating a repo dependency graph. Edges are determined using repo-to-repo dependency metadata stored and maintained in the source-build repository. The graph is a DAG, so it's buildable. In this case, we have:
 
  * Core-Setup
    * CoreFX
@@ -53,12 +53,11 @@ CoreFX is the next leaf, so it will be built next. The orchestrator [creates the
 
 The process repeats for the next leaf, Core-Setup: the orchestrator creates the build output props and passes it into a Core-Setup repo build. The Core-Setup build finishes, outputting to the blob feed, and the Core-Setup leaf is removed.
 
-There are no more nodes: the repo builds are complete! The blob feed contains all the product outputs. The orchestrator performs finalization steps (signing, testing, publishing) and then the product build is complete.
+There are no more nodes: the repo builds are complete! The blob feed contains all the product outputs. The orchestrator performs finalization steps (testing, publishing) and then the product build is complete.
 
 ### Incremental steps toward the vision
 The narrative represents the ideal flow, and some parts won't be available in our first steps:
 
- * The repo dependency graph is unlikely to change often enough to warrant automating its construction in the initial effort. Instead, repo dependencies will be hard-coded in the source-build repository.
  * The CoreCLR and Standard builds may not be run in parallel.
  * The orchestrator might not have any finalization steps. Instead, they happen during the repo builds. 
 
@@ -66,15 +65,12 @@ The narrative represents the ideal flow, and some parts won't be available in ou
 The orchestrator indicates a directory on the build machine to place output files using [`/p:DotNetOutputBlobFeedDir`](api.md#pdotnetoutputblobfeeddirtarget-directory). The orchestrator makes the contents available to subsequent repo builds using [`/p:DotNetRestoreSourcePropsPath`](api.md#pdotnetrestoresourcepropspathpath) and [`/p:DotNetAssetRootUrl`](api.md#pdotnetassetrooturlurl).
 
 ## Passing dependency versions
-To control the package versions a repo build uses, the orchestrator [creates](contracts.md#creation-based-on-blob-feed) and provides an easily consumable MSBuild props file. The file is placed in a directory on the build machine outside of the target repo's git repository:
+To pass the upstream NuGet package versions to use, the orchestrator creates a "package version props" file based on the current blob feed contents and passes it with [`/p:DotNetPackageVersionPropsPath=<path>`](api.md#pdotnetpackageversionpropspathpath).
 
- * `<outside dir>/PackageVersions.props`: the [package version props](contracts.md#package-version-props) file.
- * Additional files may be added/passed in the future, based on need. For example:
+Additional API surface area for dependency passing may be added in the future, based on need. For example:
+
    * Native-only repo builds may require a simpler format to reasonably parse.
-   * The more general [build output manifest](contracts.md#build-output-manifest) may be useful for advanced builds that don't use MSBuild in the same way (or at all).
    * Additional MSBuild props files may be added to flow non-package dependencies.
-
-The orchestrator then [passes `/p:DotNetPackageVersionPropsPath=<outside dir>/PackageVersions.props`](api.md#pdotnetpackageversionpropspathpath) to every command it runs during the repo build.
 
 
 # Source build vs. product build dependency flow
