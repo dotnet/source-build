@@ -81,6 +81,7 @@
     <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
     <!-- New env-var names to replace the ones above over time -->
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
+    <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
   </ItemGroup>
