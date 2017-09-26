@@ -15,8 +15,7 @@
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
-    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
-    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
   </ItemGroup>
 </Project>
