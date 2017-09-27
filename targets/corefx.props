@@ -14,14 +14,13 @@
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
-    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" />
-    <EnvironmentVariables Include="ExcludeInternetFeeds=true" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" />
   </ItemGroup>
 </Project>
