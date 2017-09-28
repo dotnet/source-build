@@ -24,14 +24,9 @@ Individual repos are free to implement more features in these build scripts than
 
 ### Actions
 
-To start, there are a number of actions source-build will need the repos to implement.  The actions are:
+There will be a number of actions source-build will need the repos to implement. As more scenarios are designed and implemented, more commands will specified. The first action necessary is the `Build` action:
 
-1. `Restore` - Sync any external dependencies/tools necessary to build the repo.
 1. `Build` - Assemble the product from the current source contained in the repo.
-1. `Publish` - Put the assembled product in the specified location.
-1. `Test` - Ensure the assembled product works/acts correctly.
-
-This list of actions can be added to in the future as more scenarios are implemented.
 
 source-build formats arguments using a style that is compatible with MSBuild. The reasoning for this is that the majority of repos have an MSBuild based build system. Using this format will allow for arguments to easily be passed through to MSBuild. Similarly, both action and parameter arguments are case-insensitive, just like MSBuild default behavior.
 
@@ -47,11 +42,11 @@ In order to avoid conflicts between existing MSBuild properties used by the repo
 
 #### Detecting build from source
 
-The first parameter used by source-build will be a value indicating whether the build is being performed in "source only" mode. This means repos cannot use tools/packages/references that haven't already been built by the current build.
+Some repos build more projects than are necessary to build the .NET Core stack. For example, the `dotnet/roslyn` repo builds the C# compiler, which is needed, but it also builds Visual Studio extensions, which aren't needed. These VS extensions cannot be built without using an external dependency on tooling that isn't available when building from source.
+
+In order to tell repos that these projects shouldn't be built, source-build will pass the following parameter
 
 `-p:DotNetBuildFromSource=true`
-
-Some repos build more projects than is necessary to build the .NET Core stack. For example, the `dotnet/roslyn` repo builds the C# compiler, which is needed, but it also builds Visual Studio extensions, which aren't needed. These VS extensions cannot be built without using an external dependency on tooling that isn't available when building from source.
 
 #### Available tools
 
@@ -61,12 +56,14 @@ However, there are a couple problems with each repo downloading its own toolset.
 
 1. Different versions can cause inconsistencies
 1. It takes a non-trivial amount of time to download the toolset, if every repo does it during the complete .NET Core build, it will add a lot of overhead to the build.
+1. The version downloaded from a the official location may not work on a new architecture or platform or even a different version of a linux distribution. Using one version supplied by source-build (which might be hand-fixed to work) will address this.
+1. Many Linux distributions only carry (will carry) one or two versions of tools, not 8 or 10 different versions. For .NET Core to work there, we will want to fix all repos to use one set of tools.
 
 To solve this, source-build will have a set of common tools available that it will pass into each repos build.
 
 First, a [.NET Core SDK](https://www.microsoft.com/net/download/core#/sdk) will be available for repos to be able to invoke MSBuild, NuGet, etc. The path to the folder containing the `dotnet` executable will be available using the
 
-`-p:DotNetToolDir`
+`-p:DotNetCoreSdkDir`
 
 property. This can be used to call `dotnet restore`, `dotnet build`, `dotnet publish`, `dotnet msbuild`, or any other CLI verb on the repo's projects.
 
@@ -75,6 +72,8 @@ Second, a common set of tools used by the `dotnet` org repos is [BuildTools](htt
 `-p:DotNetBuildToolsDir`
 
 property. This can be used to invoke any current or future tool that is part of BuildTools. It is not required that each repo use BuildTools, but if the repo wants to, it can get the tools from this property.
+
+As more toolsets are identified, source-build can and will make more toolsets available when necessary.
 
 ### Example
 
