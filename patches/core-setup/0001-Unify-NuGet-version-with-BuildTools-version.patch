@@ -1,0 +1,49 @@
+From d2bac5310ae69406b93763a7708877c4f15d0dcf Mon Sep 17 00:00:00 2001
+From: Eric Erhardt <eric.erhardt@microsoft.com>
+Date: Wed, 27 Sep 2017 12:12:15 -0500
+Subject: [PATCH] Unify NuGet version with BuildTools version
+
+---
+ build.proj                                | 3 ---
+ tools-local/tasks/core-setup.tasks.csproj | 5 ++++-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/build.proj b/build.proj
+index 0cadd7b6..825412c0 100644
+--- a/build.proj
++++ b/build.proj
+@@ -42,15 +42,12 @@
+     <PropertyGroup>
+       <DependencyModelTFM>netstandard1.3</DependencyModelTFM>
+       <DependencyModelTFM Condition="'$(MSBuildRuntimeType)' != 'Core'">net451</DependencyModelTFM>
+-      <NugetModelTFM>netstandard1.3</NugetModelTFM>
+-      <NugetModelTFM Condition="'$(MSBuildRuntimeType)' != 'Core'">net45</NugetModelTFM>
+     </PropertyGroup>
+ 
+       <ItemGroup>
+         <CustomTaskDependencies Include="$(BuildToolsTaskDir)Newtonsoft.Json.dll" />
+         <CustomTaskDependencies Include="$(BuildToolsTaskDir)Microsoft.DotNet.PlatformAbstractions.dll" />
+         <CustomTaskDependencies Include="$(PackagesDir)microsoft.extensions.dependencymodel\1.1.1\lib\$(DependencyModelTFM)\Microsoft.Extensions.DependencyModel.dll" />
+-        <CustomTaskDependencies Include="$(PackagesDir)nuget.runtimemodel\3.5.0\lib\$(NugetModelTFM)\NuGet.RuntimeModel.dll" />
+       </ItemGroup>
+       <Copy SourceFiles="@(CustomTaskDependencies)"
+             DestinationFolder="$(LocalBuildToolsTaskDir)"
+diff --git a/tools-local/tasks/core-setup.tasks.csproj b/tools-local/tasks/core-setup.tasks.csproj
+index 54599215..5c537e23 100644
+--- a/tools-local/tasks/core-setup.tasks.csproj
++++ b/tools-local/tasks/core-setup.tasks.csproj
+@@ -26,7 +26,10 @@
+   </ItemGroup>
+   <ItemGroup>
+     <PackageReference Include="NuGet.ProjectModel">
+-      <Version>3.5.0</Version>
++      <!-- This is close to the BuildTools version, but not exactly the same.
++           We build and restore DummyPackages for the NuGet version BuildTools uses, which causes build errors.
++      -->
++      <Version>4.3.0-preview2-4094</Version>
+     </PackageReference>
+     <PackageReference Include="Microsoft.Extensions.DependencyModel">
+       <Version>1.1.1</Version>
+-- 
+2.14.1.windows.1
+

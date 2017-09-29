@@ -1,0 +1,26 @@
+From 07b69a092b71e6c6e5c921a7d668ad8430a78ebc Mon Sep 17 00:00:00 2001
+From: Eric Erhardt <eric.erhardt@microsoft.com>
+Date: Thu, 28 Sep 2017 07:47:04 -0500
+Subject: [PATCH] Use fixed RTM build of PlatformAbstractions from build
+ project.  Port of
+ https://github.com/dotnet/cli/pull/7530/commits/0a1be24e2f5a2fd9f40c6be4bfa753684d464ecc
+
+---
+ build_projects/dotnet-cli-build/dotnet-cli-build.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+index 2bc689d82..ae31339cd 100644
+--- a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
++++ b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+@@ -20,6 +20,6 @@
+     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+     <PackageReference Include="System.Xml.XmlSerializer" Version="4.0.11" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(CLI_MSBuild_Version)" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(PlatformAbstractionsVersion)" />
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" />
+  </ItemGroup>
+ </Project>
+-- 
+2.14.1.windows.1
+
