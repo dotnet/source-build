@@ -45,13 +45,13 @@ def addPushJob(String project, String branch, String os, String configuration)
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["RHEL7.2", "Windows_NT"].each { os ->
+["RHEL7.2", "Windows_NT", "CentOS7.1"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };
 
 // Per push, run all the jobs
-["Ubuntu14.04", "RHEL7.2", "Windows_NT", "OSX10.12"].each { os ->
+["Ubuntu14.04", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
     addPushJob(project, branch, os, configuration);
   };
