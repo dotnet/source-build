@@ -14,18 +14,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
-    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="OverridePackageSource=$(SourceBuiltPackagesPath)" />
-    <EnvironmentVariables Include="OverridePackageSourceEx=$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
-    <EnvironmentVariables Include="ExcludeInternetFeeds=true" Condition="'$(OfflineBuild)' == 'true'" />
-  </ItemGroup>
-
-  <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="standard" />
+    <EnvironmentVariables Include="DotNetRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="DotNetRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" />
   </ItemGroup>
 </Project>
