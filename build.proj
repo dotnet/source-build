@@ -17,7 +17,9 @@
   <Target Name="PrepareOutput">
     <MakeDir Directories="$(OutputPath)" />
     <MakeDir Directories="$(IntermediatePath)" />
+    <MakeDir Directories="$(SourceBuiltBlobFeedDir)" />
     <MakeDir Directories="$(SourceBuiltPackagesPath)" />
+    <MakeDir Directories="$(SourceBuiltAssetsDir)" />
     <MakeDir Directories="$(LocalBlobStorageRoot)" />
   </Target>
 

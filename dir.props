@@ -44,13 +44,18 @@
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
+    <SourceBuiltBlobFeedDir>$(IntermediatePath)blob-feed/</SourceBuiltBlobFeedDir>
+    <SourceBuiltPackagesPath>$(SourceBuiltBlobFeedDir)packages/</SourceBuiltPackagesPath>
+    <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
     <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
-    <SourceBuiltPackagesPath>$(IntermediatePath)source-built/</SourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
-    <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
+    <SourceBuiltSymbolsPackagesPath>$(SourceBuiltAssetsDir)</SourceBuiltSymbolsPackagesPath>
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
+    <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
+    <BuildDependencyBaseDir>$(IntermediatePath)build-dependency/</BuildDependencyBaseDir>
+    <PackageVersionPropsPath>$(BuildDependencyBaseDir)PackageVersions.props</PackageVersionPropsPath>
   </PropertyGroup>
 
   <PropertyGroup>

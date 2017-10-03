@@ -2,9 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) --</BuildCommand>
     <BuildPackagesCommand></BuildPackagesCommand>
-    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <LatestCommit>d318b764a689cfe285d8484bda918646905664e7</LatestCommit>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
@@ -15,7 +14,5 @@
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
-    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@
 
   <Target Name="BuildNetStandardLibraryNetFramework"
           BeforeTargets="Package">
-    <Exec Command="$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false"
+    <Exec Command="$(FrameworkBuildCommand) $(RepoApiArgs)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
