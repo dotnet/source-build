@@ -18,9 +18,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" />
   </ItemGroup>
 
 </Project>
