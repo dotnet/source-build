@@ -12,7 +12,11 @@
   </ItemGroup>
   
   <Target Name="Restore" BeforeTargets="Build">
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln"
+    <PropertyGroup>
+      <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotNetCommand) restore $(RestoreArgs) $(ProjectDirectory)/CLI.sln"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
