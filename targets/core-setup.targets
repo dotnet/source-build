@@ -20,4 +20,11 @@
     <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" />
   </Target>
+
+  <!--
+    temporarily skip updating dependencies by overriding the target because it fails for Microsoft.NETCore.Platforms
+    which we don't build in the release branch. This should be removed once the auto-dependencies work is done.
+  -->
+  <Target Name="UpdateDependencies" />
+
 </Project>
