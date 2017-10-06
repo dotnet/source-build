@@ -44,8 +44,8 @@
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
-     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) ./cross/build-rootfs.sh" />
-     <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) ./cross/armel/tizen-build-rootfs.sh" />
+     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
+     <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
   <Target Name="BuildDummyPackages" Condition="'$(BuildOffline)' == 'true'">
@@ -113,6 +113,8 @@
       <DummyPackage Include="Microsoft.TemplateEngine.Cli.Localization" Version="1.0.0-beta2-20170727-301" />
       <DummyPackage Include="Microsoft.VSSDK.BuildTools" Version="15.0.26201" />
       <DummyPackage Include="Microsoft.VisualStudio.Sdk.BuildTasks.14.0" Version="14.0.12-pre" />
+      <DummyPackage Include="Microsoft.xunit.netcore.extensions" Version="1.0.1-servicing-02026-06" />
+      <DummyPackage Include="Microsoft.xunit.netcore.extensions" Version="1.0.1-prerelease-01616-05" />
       <DummyPackage Include="Moq" Version="4.6.38-alpha" />
       <DummyPackage Include="NUnit" Version="2.6.4" />
       <DummyPackage Include="NUnitTestAdapter" Version="2.0.0" />
@@ -276,6 +278,7 @@
       <DummyPackage Include="xunit" Version="2.2.0" />
       <DummyPackage Include="xunit.abstractions" Version="2.0.1" />
       <DummyPackage Include="xunit.assert" Version="2.2.0" />
+      <DummyPackage Include="xunit.console.netcore" Version="1.0.3-prerelease-00921-01" />
       <DummyPackage Include="xunit.core" Version="2.2.0" />
       <DummyPackage Include="xunit.extensibility.core" Version="2.2.0" />
       <DummyPackage Include="xunit.extensibility.execution" Version="2.2.0" />
