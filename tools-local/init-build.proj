@@ -27,8 +27,6 @@
 
   <Target Name="BuildTasks">
     <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj" />
-    <!-- Delete the packages directory to avoid polluting the repo builds -->
-    <RemoveDir Directories="$(PackagesDir)" />
   </Target>
 
   <Target Name="ApplyPatches">
