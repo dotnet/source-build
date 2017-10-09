@@ -3,9 +3,7 @@
   <Target Name="Build">
     <Message Importance="High" Text="Building '$(RepositoryName)'" />
 
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj" />
-
-    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)build\build.proj /t:Pack /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log"
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
