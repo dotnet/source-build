@@ -26,7 +26,7 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build">
-    <Exec Command="$(DotNetCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj /p:NuspecBasePath=/home/matell/git/source-build/src/roslyn/Binaries/Release /p:Configuration=$(Configuration) /p:NuspecFile=%(NuSpecFiles.Identity) /p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) /p:PackageOutputPath=$(PackagesOutput)"
+    <Exec Command="$(DotNetCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
