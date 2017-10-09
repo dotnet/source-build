@@ -1,4 +1,4 @@
-From 85b3e05abf1e49401536be7e0879e5c712be8290 Mon Sep 17 00:00:00 2001
+From ff90a86f408877d7eb72f4ff9f31fc85b7fca33c Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Mon, 22 May 2017 11:37:59 -0700
 Subject: [PATCH] Don't pull down stage 0 from the internet
@@ -10,12 +10,29 @@ Long term we should get rid of the copy in favor of just using one
 from a common location, but some of the Stage0 logic in the CLI build
 system will need to change, I think.
 ---
- .../update-dependencies/update-dependencies.sh           | 11 ++++-------
- run-build.sh                                             | 16 +---------------
- 2 files changed, 5 insertions(+), 22 deletions(-)
+ .../update-dependencies/update-dependencies.ps1        |  4 +---
+ .../update-dependencies/update-dependencies.sh         | 11 ++++-------
+ run-build.ps1                                          | 18 +-----------------
+ run-build.sh                                           | 16 +---------------
+ 4 files changed, 7 insertions(+), 42 deletions(-)
 
+diff --git a/build_projects/update-dependencies/update-dependencies.ps1 b/build_projects/update-dependencies/update-dependencies.ps1
+index b76d10bc1..e6422b1b2 100644
+--- a/build_projects/update-dependencies/update-dependencies.ps1
++++ b/build_projects/update-dependencies/update-dependencies.ps1
+@@ -35,9 +35,7 @@ if (!$env:DOTNET_INSTALL_DIR)
+ }
+ 
+ # Install a stage 0
+-Write-Output "Installing .NET Core CLI Stage 0"
+-& "$RepoRoot\scripts\obtain\dotnet-install.ps1" -Channel "master" -Architecture $Architecture
+-if($LASTEXITCODE -ne 0) { throw "Failed to install stage0" }
++cp -r $env:DOTNET_TOOL_DIR $env:DOTNET_INSTALL_DIR
+ 
+ # Put the stage0 on the path
+ $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
 diff --git a/build_projects/update-dependencies/update-dependencies.sh b/build_projects/update-dependencies/update-dependencies.sh
-index 4781c84..8a0d7f9 100755
+index 4781c8453..8a0d7f940 100755
 --- a/build_projects/update-dependencies/update-dependencies.sh
 +++ b/build_projects/update-dependencies/update-dependencies.sh
 @@ -30,15 +30,12 @@ if [ -z "${DOTNET_INSTALL_DIR:-}" ]; then
@@ -38,8 +55,37 @@ index 4781c84..8a0d7f9 100755
  # Put the stage 0 on the path
  export PATH=$DOTNET_INSTALL_DIR:$PATH
  
+diff --git a/run-build.ps1 b/run-build.ps1
+index d3bb1152b..ddbc8527c 100644
+--- a/run-build.ps1
++++ b/run-build.ps1
+@@ -78,23 +78,7 @@ $env:VSTEST_BUILD_TRACE=1
+ $env:VSTEST_TRACE_BUILD=1
+ 
+ # install a stage0
+-$dotnetInstallPath = Join-Path $RepoRoot "scripts\obtain\dotnet-install.ps1"
+-
+-Write-Output "$dotnetInstallPath -Channel ""release/2.0.0"" -InstallDir $env:DOTNET_INSTALL_DIR -Architecture ""$Architecture"""
+-Invoke-Expression "$dotnetInstallPath -Channel ""release/2.0.0"" -InstallDir $env:DOTNET_INSTALL_DIR -Architecture ""$Architecture"""
+-if ($LastExitCode -ne 0)
+-{
+-    Write-Output "The .NET CLI installation failed with exit code $LastExitCode"
+-    exit $LastExitCode
+-}
+-
+-Write-Output "$dotnetInstallPath -Channel ""master"" -InstallDir $env:DOTNET_INSTALL_DIR_PJ -Architecture ""$Architecture"" -Version 1.0.0-preview2-1-003177"
+-Invoke-Expression "$dotnetInstallPath -Channel ""master"" -InstallDir $env:DOTNET_INSTALL_DIR_PJ -Architecture ""$Architecture"" -Version 1.0.0-preview2-1-003177"
+-if ($LastExitCode -ne 0)
+-{
+-    Write-Output "The .NET CLI installation failed with exit code $LastExitCode"
+-    exit $LastExitCode
+-}
++cp -r $env:DOTNET_TOOL_DIR $env:DOTNET_INSTALL_DIR
+ 
+ # Put the stage0 on the path
+ $env:PATH = "$env:DOTNET_INSTALL_DIR;$env:PATH"
 diff --git a/run-build.sh b/run-build.sh
-index 95154cd..3744dcd 100755
+index 95154cdf6..3744dcdf7 100755
 --- a/run-build.sh
 +++ b/run-build.sh
 @@ -155,21 +155,7 @@ export VSTEST_TRACE_BUILD=1
@@ -66,5 +112,5 @@ index 95154cd..3744dcd 100755
  # Put stage 0 on the PATH (for this shell only)
  PATH="$DOTNET_INSTALL_DIR:$PATH"
 -- 
-1.8.3.1
+2.14.1.windows.1
 
