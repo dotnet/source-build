@@ -70,10 +70,10 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("git submodule update --init --recursive");
             shell("./init-tools.sh")
             if(os == "Linux_ARM"){
-              shell("./arm-ci.sh arm ./arm-build.sh /p:Platform=arm /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+              shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
             }
             if(os == "Tizen"){
-              shell("./arm-ci.sh armel ./arm-build.sh /p:Platform=armel /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+              shell("./arm-ci.sh armel ./build.sh /p:Platform=armel /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
             }
         }
       }
