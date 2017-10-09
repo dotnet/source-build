@@ -3,7 +3,7 @@
 Repos must implement these arguments to participate in the orchestrated dependency flow.
 
 
-# Dependency version input arguments
+# Dependency version input arguments (Not yet implemented)
 
 ## `-p:DotNetPackageVersionPropsPath=<path>`
 Directs the repo build to use a "package version props" file at `path`. The versions in the file must be used instead of any defaults the repo would ordinarily depend on.
@@ -74,7 +74,7 @@ Each TFM being built has a property specifying the name of that TFM as built in 
 Import the "restore target framework props" file in a high-level MSBuild file in the repository, and set up an overridable property for each TFM the project uses. Use those properties in project files instead of hard-coded values.
 
 
-# Source override arguments
+# Source override arguments (Not yet implemented)
 
 ## `-p:DotNetBuildOffline=<bool>`
 Directs the repo to skip online sources if `bool` is `true`.
@@ -123,7 +123,7 @@ If the repo doesn't use [NuGet MSBuild targets](https://docs.microsoft.com/en-us
 
 There is no known reasonable way to use NuGet.Config files, satisfy this API, *and* avoid duplicating the default source information. The recommendation is to not use NuGet.Config.
 
-## `-p:DotNetAssetRootUrl=<url>`
+## `-p:DotNetAssetRootUrl=<url>` (Not yet implemented)
 Directs the repo to get binary assets from a given base `url`. For example, installers and lzma files. The scheme can be `http[s]` or `file`. The url ends with a `/`.
 
 ### Conventions
@@ -158,7 +158,7 @@ Use the AssetRoot properties if they are defined. Example (adapted from [CLI's b
 
 The above assumes that Core-Setup publishes outputs to `$(DotNetOutputBlobFeedDir)assets/Runtime/<SharedFrameworkVersion>/`.
 
-## `-p:DotNetAssetRootAccessTokenSuffix=<query string>`
+## `-p:DotNetAssetRootAccessTokenSuffix=<query string>` (Not yet implemented)
 Directs the repo to append `query string` to any URL constructed using the `DotNetAssetRootUrl`.
 
 Recommended implementation is included in the `DotNetAssetRootUrl` section.
@@ -166,7 +166,7 @@ Recommended implementation is included in the `DotNetAssetRootUrl` section.
 
 # Output placement arguments
 
-## `-p:DotNetOutputBlobFeedDir=<target directory>`
+## `-p:DotNetOutputBlobFeedDir=<target directory>` (Not yet implemented)
 Directs the repo to place all outputs in the blob feed located at `target directory`, following blob feed structure.
 
 ### Recommended implementation
