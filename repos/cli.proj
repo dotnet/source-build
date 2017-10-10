@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <CLITargetsArgument Condition="'$(OS)' == 'Windows_NT'">'/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</CLITargetsArgument>
+    <CLITargetsArgument Condition="'$(OS)' != 'Windows_NT'">'/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</CLITargetsArgument>
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)artifacts/linux-x64/packages/</PackagesOutput>
+    <TarBallOutput>$(PackagesOutput)</TarBallOutput>
+    <GitCommitCount>6908</GitCommitCount>
+    <GitCommitHash>38031f6e5c3e21fa39d82aca300f5ed769be10a0</GitCommitHash>
+    <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe -NoProfile $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
+    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="application-insights" />
+    <RepositoryReference Include="cli-migrate" />
+    <RepositoryReference Include="clicommandlineparser" />
+    <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="fsharp" />
+    <RepositoryReference Include="javascriptservices" />
+    <RepositoryReference Include="msbuild" />
+    <RepositoryReference Include="netcorecli-fsc" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="roslyn" />
+    <RepositoryReference Include="sdk" />
+    <RepositoryReference Include="templating" />
+    <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="websdk" />
+    <RepositoryReference Include="xliff-tasks" />
+    <RepositoryReference Include="cli-deps-satellites" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
+    <EnvironemntVariables Include="DropSuffix=true" />
+  </ItemGroup>
+
+  <Target Name="CopyTarBall" AfterTargets="CopyPackage">
+    <ItemGroup>
+      <CliTarBalls Include="$(TarBallOutput)*$(TarBallExtension)" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(CliTarBalls)"
+          DestinationFolder="$(SourceBuiltTarBallPath)"
+          Condition="'@(CliTarBalls)'!=''" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>

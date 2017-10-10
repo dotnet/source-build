@@ -25,13 +25,13 @@ git submodule update --init --recursive
 By default we build the cli and its dependencies but the default root repository to build can be passed in.
 
 ```console
-./build.{cmd|sh} /p:DefaultRepository=core-setup
+./build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
 Sometimes you want to just iterate on a single repo build and not rebuild all depedencies that can be done passing another property.
 
 ```console
-./build.{cmd|sh} /p:DefaultRepository=core-setup /p:BuildDependentRepositories=false
+./build.{cmd|sh} /p:RootRepo=core-setup /p:SkipRepoReferences=true
 ```
 
 ### Cleaning

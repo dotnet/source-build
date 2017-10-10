@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
+    <BuildCommand>$(DotNetCommand) pack -c $(Configuration) --no-build Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj /p:NuspecFile=Microsoft.DotNet.Web.Spa.ProjectTemplates.nuspec</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>

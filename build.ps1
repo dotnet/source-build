@@ -36,4 +36,4 @@ $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
 $captured_args = $args
 
-Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=detailed /clp:v=detailed $captured_args } | Out-Host
+Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m $captured_args } | Out-Host
