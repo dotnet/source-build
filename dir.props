@@ -49,13 +49,11 @@
     <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
     <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
-    <SourceBuiltSymbolsPackagesPath>$(SourceBuiltAssetsDir)</SourceBuiltSymbolsPackagesPath>
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
-    <BuildDependencyBaseDir>$(IntermediatePath)build-dependency/</BuildDependencyBaseDir>
-    <PackageVersionPropsPath>$(BuildDependencyBaseDir)PackageVersions.props</PackageVersionPropsPath>
+    <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
   </PropertyGroup>
 
   <PropertyGroup>
