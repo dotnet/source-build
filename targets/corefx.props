@@ -4,7 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false -- /p:ILLinkTrimAssembly=false</BuildCommand>
     <BuildCommand Condition="'$(Platform)' == 'arm'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
+    <FrameworkBuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false</FrameworkBuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <LatestCommit>8321c729934c0f8be754953439b88e6e1c120c24</LatestCommit>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
@@ -14,13 +14,11 @@
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
-    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="DotNetSourceBuildRestoreSources=$(SourceBuiltPackagesPath)%3B$(PrebuiltPackagesPath)" />
   </ItemGroup>
 </Project>

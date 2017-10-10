@@ -4,6 +4,7 @@
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) -r $(TargetRid) -v 15.3.0 -vs preview-20170628-02 -nomono</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>
