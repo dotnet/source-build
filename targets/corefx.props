@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false -- /p:ILLinkTrimAssembly=false</BuildCommand>
-    <BuildCommand Condition="'$(Platform)' == 'arm'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <FrameworkBuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false</FrameworkBuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <LatestCommit>8321c729934c0f8be754953439b88e6e1c120c24</LatestCommit>
