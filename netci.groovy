@@ -58,7 +58,7 @@ def addPushJob(String project, String branch, String os, String configuration)
 };
 
 [true, false].each { isPR ->
-  ["Linux_ARM", "Tizen"].each { os->
+  ["Linux_ARM"].each { os->
     ["Release", "Debug"].each { configuration ->
       
       def shortJobName = "${os}_${configuration}";

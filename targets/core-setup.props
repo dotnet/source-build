@@ -3,7 +3,7 @@
   <PropertyGroup>
     <ProjectDirectory Condition="'$(PathToRepo)' != ''">$(PathToRepo)</ProjectDirectory>
     <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=false -strip-symbols -SkipTests=true </BuildArguments>
-    <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=arm -DisableCrossgen=true -CrossBuild=true</BuildArguments>
+    <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
