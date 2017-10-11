@@ -9,7 +9,7 @@
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <GitCommitCount>6908</GitCommitCount>
     <GitCommitHash>38031f6e5c3e21fa39d82aca300f5ed769be10a0</GitCommitHash>
-    <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
+    <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; powershell.exe -NoProfile $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
     <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
