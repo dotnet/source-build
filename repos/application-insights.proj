@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -10,13 +9,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

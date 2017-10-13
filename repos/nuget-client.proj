@@ -5,7 +5,6 @@
     <PackagesOutput>$(ProjectDirectory)Nupkgs/</PackagesOutput>
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
     <NuGetClientBuildNumber>4324</NuGetClientBuildNumber>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -22,10 +21,10 @@
   <Target Name="RepoBuild"
           DependsOnTargets="InitSubmodules">
 
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CLI.sln /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/CLI.sln /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)/CLI.sln /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/CLI.sln /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 

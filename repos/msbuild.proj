@@ -2,16 +2,15 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <SolutionToBuild>$(ProjectDirectory)/NetCore.sln</SolutionToBuild>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
-    <BuildCommand>$(DotNetCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
   <Target Name="RestoreSolution"
           BeforeTargets="Build">
-    <Exec Command="$(DotNetCommand) restore $(SolutionToBuild) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(SolutionToBuild) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>

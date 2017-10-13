@@ -4,20 +4,19 @@
 
   <PropertyGroup>
     <NuGetConfigFile>$(ProjectDirectory)/Src/NuGet.Config</NuGetConfigFile>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NewtonsoftJsonKeyFilePath>$(KeysDir)Newtonsoft.Json.snk</NewtonsoftJsonKeyFilePath>
     <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
     <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Dotnet.csproj</NewtonsoftJsonProjectPath>
-    <DotNetCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotNetCommandArguments>
-    <BuildCommand>$(DotNetCommand) build $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildCommand>
-    <BuildPackagesCommand>$(DotNetCommand) pack $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildPackagesCommand>
-    <CleanCommand>$(DotNetCommand) clean $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</CleanCommand>
+    <DotnetToolCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotnetToolCommandArguments>
+    <BuildCommand>$(DotnetToolCommand) build $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildCommand>
+    <BuildPackagesCommand>$(DotnetToolCommand) pack $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildPackagesCommand>
+    <CleanCommand>$(DotnetToolCommand) clean $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</CleanCommand>
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
   <Target Name="Restore" BeforeTargets="Build">
-    <Exec Command="$(DotNetCommand) restore $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
