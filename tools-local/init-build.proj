@@ -33,12 +33,10 @@
     <Message Text="Applying patches only" />
 
     <ItemGroup>
-      <_RootProject Include="$(ProjectDir)targets/repository.proj">
-        <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
-      </_RootProject>
+      <_RepoProjects Include="$(ProjectDir)repos/*.proj" />
     </ItemGroup>
 
-    <MSBuild Projects="@(_RootProject)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
+    <MSBuild Projects="@(_RepoProjects)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">

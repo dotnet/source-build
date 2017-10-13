@@ -5,17 +5,16 @@
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
-    <ItemGroup>
-      <_RootProject Include="$(ProjectDir)targets/repository.proj" Condition="'%(Repository.Identity)' == '$(DefaultRepository)'">
-        <AdditionalProperties>RepositoryName=%(Repository.Identity);PathToRepo=%(Repository.PathToRepo);RepositoryOrganization=%(Repository.Organization);RepositoryBranch=%(Repository.Branch)</AdditionalProperties>
-      </_RootProject>
-    </ItemGroup>
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+  </Target>
 
-    <MSBuild Projects="@(_RootProject)" Targets="BuildRepositoryAndDependencies" BuildInParallel="$(BuildInParallel)" />
+  <Target Name="ApplyPatches">
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="PrepareOutput">
     <MakeDir Directories="$(OutputPath)" />
+    <MakeDir Directories="$(LoggingDir)" />
     <MakeDir Directories="$(IntermediatePath)" />
     <MakeDir Directories="$(SourceBuiltBlobFeedDir)" />
     <MakeDir Directories="$(SourceBuiltPackagesPath)" />

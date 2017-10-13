@@ -22,5 +22,5 @@ SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
 
 set -x
 
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /flp:v=detailed /clp:v=detailed "$@"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /flp:v=diag /clp:v=m "$@"
 

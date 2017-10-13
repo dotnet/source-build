@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
+    <SolutionToBuild>$(ProjectDirectory)/NetCore.sln</SolutionToBuild>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
+    <BuildCommand>$(DotNetCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <Target Name="RestoreSolution"
+          BeforeTargets="Build">
+    <Exec Command="$(DotNetCommand) restore $(SolutionToBuild) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <!-- patch(1) doesn't understand binary diffs so we have to copy
+       the file ourselves -->
+  <Target Name="CopyStrongNameKey"
+          BeforeTargets="Build">
+    <Copy SourceFiles="$(ToolsDir)MSFT.snk"
+          DestinationFiles="$(ProjectDirectory)/build/MSFT.snk" />
+  </Target>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>

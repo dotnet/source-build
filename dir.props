@@ -30,7 +30,6 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -49,17 +48,10 @@
     <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
     <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
-    <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
-    <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <VersionFilename>Latest_Packages.txt</VersionFilename>
-    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
-    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
+    <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -70,26 +62,11 @@
    <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
-    <DefaultRepository>cli</DefaultRepository>
-    <DefaultRepository Condition="$(Platform.Contains('arm'))">core-setup</DefaultRepository>
+    <RootRepo>cli</RootRepo>
+    <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
   </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
-    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
-    <!-- New env-var names to replace the ones above over time -->
-    <EnvironmentVariables Include="DotNetBuildFromSource=true" />
-    <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
-    <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
-  </ItemGroup>
-
-  <Import Project="repositories.props" />
 </Project>

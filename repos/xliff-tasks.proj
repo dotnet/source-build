@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
+    <BuildNumber>48</BuildNumber>
+    <CommitHash>27d43b762aa6dac3a0a6ba48fe55000942d75c1c</CommitHash>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+  <ItemGroup>
+    <EnvironmentVariables Include="CommitCount=$(BuildNumber)" />
+    <EnvironmentVariables Include="Configuration=$(Configuration)" />
+  </ItemGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <Target Name="RepoBuild">
+    <Exec Command="$(DotNetCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+</Project>
+

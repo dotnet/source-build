@@ -2,17 +2,18 @@ import jobs.generation.Utilities;
 
 def project = GithubProject;
 def branch = GithubBranchName;
+loggingOptions = "/clp:v=detailed /p:MinimalConsoleLogOutput=false";
 
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
     steps {
       if (os == "Windows_NT") {
         batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
       }
       else {
         shell("git submodule update --init --recursive");
-        shell("./build.sh /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+        shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}")
       }
     };
   };
@@ -60,20 +61,20 @@ def addPushJob(String project, String branch, String os, String configuration)
 [true, false].each { isPR ->
   ["Linux_ARM"].each { os->
     ["Release", "Debug"].each { configuration ->
-      
+
       def shortJobName = "${os}_${configuration}";
       def contextString = "${os} ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
-      
+
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
             shell("git submodule update --init --recursive");
             shell("./init-tools.sh")
             if(os == "Linux_ARM"){
-              shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+              shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} ${loggingOptions}")
             }
             if(os == "Tizen"){
-              shell("./arm-ci.sh armel ./build.sh /p:Platform=armel /p:Configuration=${configuration} /p:IsJenkinsBuild=true")
+              shell("./arm-ci.sh armel ./build.sh /p:Platform=armel /p:Configuration=${configuration} ${loggingOptions}")
             }
         }
       }
@@ -82,7 +83,7 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
       if(isPR){
-        //We run Tizen Release and Ubuntu ARM Release 
+        //We run Tizen Release and Ubuntu ARM Release
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
         }

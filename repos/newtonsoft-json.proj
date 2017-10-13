@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <NuGetConfigFile>$(ProjectDirectory)/Src/NuGet.Config</NuGetConfigFile>
+    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
+    <NewtonsoftJsonKeyFilePath>$(KeysDir)Newtonsoft.Json.snk</NewtonsoftJsonKeyFilePath>
+    <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
+    <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Dotnet.csproj</NewtonsoftJsonProjectPath>
+    <DotNetCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotNetCommandArguments>
+    <BuildCommand>$(DotNetCommand) build $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildCommand>
+    <BuildPackagesCommand>$(DotNetCommand) pack $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</BuildPackagesCommand>
+    <CleanCommand>$(DotNetCommand) clean $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments)</CleanCommand>
+    <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <Target Name="Restore" BeforeTargets="Build">
+    <Exec Command="$(DotNetCommand) restore $(NewtonsoftJsonProjectPath) $(DotNetCommandArguments) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
