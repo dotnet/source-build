@@ -3,7 +3,7 @@
 Repos must implement these arguments to participate in the orchestrated dependency flow.
 
 
-# Dependency version input arguments (Not yet implemented)
+# Dependency version input arguments
 
 ## `-p:DotNetPackageVersionPropsPath=<path>`
 Directs the repo build to use a "package version props" file at `path`. The versions in the file must be used instead of any defaults the repo would ordinarily depend on.
@@ -50,7 +50,7 @@ Store all defaults in a centralized `.props` file, and import `DotNetPackageVers
 </Project>
 ```
 
-## `-p:DotNetSourceBuildTargetFrameworkPropsPath=<path>`
+## `-p:DotNetSourceBuildTargetFrameworkPropsPath=<path>` (Not yet implemented)
 **NOTE: This API may be simplified to use an argument instead of a file if only one TFM (target framework moniker) is required.** See [source-build#184](https://github.com/dotnet/source-build/issues/184).
 
 Directs the repo to use the "source build target framework props" file at `path`. The repo must use the version of each TFM listed in the file instead of any default.
@@ -74,7 +74,7 @@ Each TFM being built has a property specifying the name of that TFM as built in 
 Import the "restore target framework props" file in a high-level MSBuild file in the repository, and set up an overridable property for each TFM the project uses. Use those properties in project files instead of hard-coded values.
 
 
-# Source override arguments (Not yet implemented)
+# Source override arguments
 
 ## `-p:DotNetBuildOffline=<bool>`
 Directs the repo to skip online sources if `bool` is `true`.
@@ -166,7 +166,7 @@ Recommended implementation is included in the `DotNetAssetRootUrl` section.
 
 # Output placement arguments
 
-## `-p:DotNetOutputBlobFeedDir=<target directory>` (Not yet implemented)
+## `-p:DotNetOutputBlobFeedDir=<target directory>`
 Directs the repo to place all outputs in the blob feed located at `target directory`, following blob feed structure.
 
 ### Recommended implementation
