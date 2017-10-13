@@ -26,6 +26,20 @@ if exist "%BUILD_TOOLS_SEMAPHORE%" (
 
 if exist "%TOOLRUNTIME_DIR%" rmdir /S /Q "%TOOLRUNTIME_DIR%"
 
+if exist "%DotNetBuildToolsDir%" (
+  echo Using tools from '%DotNetBuildToolsDir%'.
+  mklink /j "%TOOLRUNTIME_DIR%" "%DotNetBuildToolsDir%"
+
+  if not exist "%DOTNET_CMD%" (
+    echo ERROR: Ensure that '%DotNetBuildToolsDir%' contains the .NET Core SDK at '%DOTNET_PATH%'
+    exit /b 1
+  )
+
+  echo Done initializing tools.
+  echo Using tools from '%DotNetBuildToolsDir%'. > "%BUILD_TOOLS_SEMAPHORE%"
+  exit /b 0
+)
+
 echo Running %0 > "%INIT_TOOLS_LOG%"
 
 set /p DOTNET_VERSION=< "%~dp0DotnetCLIVersion.txt"
@@ -55,11 +69,6 @@ if NOT exist "%BUILD_TOOLS_PATH%init-tools.cmd" (
 )
 
 :afterbuildtoolsrestore
-
-:: Temporarily fix up BuildTools to work with the current CLI version
-set BUILDTOOLS_PROJECT=%BUILD_TOOLS_PATH%tool-runtime\project.csproj
-echo Fixing up %BUILDTOOLS_PROJECT%
-powershell -NoProfile -ExecutionPolicy unrestricted -Command "$newFileContent = Get-Content '%BUILDTOOLS_PROJECT%'; $newFileContent = $newFileContent -replace \".*^<PackageTargetFallback.*\", \"^<NoWarn^>NU1605^</NoWarn^>\"; $newFileContent | Out-File '%BUILDTOOLS_PROJECT%'"
 
 echo Initializing BuildTools...
 echo Running: "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" >> "%INIT_TOOLS_LOG%"
