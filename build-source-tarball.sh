@@ -27,11 +27,11 @@ if [ $SKIP_BUILD -ne 1 ]; then
         rm -rf "$SCRIPT_ROOT/bin"
     fi
 
-    $SCRIPT_ROOT/clean.sh -a
+    $SCRIPT_ROOT/clean.sh
     $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true /flp:v=detailed
 fi
 
-$SCRIPT_ROOT/clean.sh -a
+$SCRIPT_ROOT/clean.sh
 
 mkdir -p "$TARBALL_ROOT"
 

@@ -1,4 +1,5 @@
 <Project>
+  <Import Project="../../dir.props" />
   <ItemGroup>
     <AllProjects Include="**/*.csproj" />
     <AllProjects Remove="nuspecs/pack.csproj" />
@@ -6,10 +7,9 @@
 
   <Target Name="Restore" />
   <Target Name="Build">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/_._" DestinationFolder="$(IntermediatePath)reference-assemblies/" />
     <MSBuild Projects="@(AllProjects)" Targets="Build" BuildInParallel="true" />
   </Target>
 
-  <Target Name="Pack">
-    <MSBuild Projects="nuspecs/pack.csproj" Targets="Pack" Properties="NuspecFile=%(AllNuSpecs.Identity)" />
-  </Target>
+  <Target Name="Pack"/>
 </Project>
