@@ -3,11 +3,10 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
     <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
-    <BuildCommand>$(DotNetCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource='$(DotNetBuildFromSource)'</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource='$(DotNetBuildFromSource)'</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -36,7 +35,7 @@
       <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
     </PropertyGroup>
 
-    <Exec Command="$(DotNetCommand) restore $(RestoreArgs) $(ProjectDirectory)/CLI.sln $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/CLI.sln $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
@@ -46,7 +45,7 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build">
-    <Exec Command="$(DotNetCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>

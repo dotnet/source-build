@@ -3,7 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <CommitCount>167</CommitCount>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)/CommandLine/bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -11,13 +10,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotNetCommand) msbuild /t:MakeVersionProps /p:CommitCount=$(CommitCount) $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild /t:MakeVersionProps /p:CommitCount=$(CommitCount) $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotNetCommand) pack /p:Configuration=$(Configuration) $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack /p:Configuration=$(Configuration) $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

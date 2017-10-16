@@ -2,11 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/Packages</PackagesOutput>
     <BuildNumber>20170728-1</BuildNumber>
     <CommitHash>e27eeed9161ec9249b329181ab8de036e1ebf106</CommitHash>
-    <BuildCommand>$(DotNetCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 

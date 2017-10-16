@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <BuildNumber>20170727-1</BuildNumber>
     <CommitHash>4ae79a97bb5aadc5486d0f72223bfbf90dd9cfce</CommitHash>
@@ -16,9 +15,9 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotNetCommand) restore $(ProjectDirectory)src $(RedirectRepoOutputToLog)" />
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)src $(RedirectRepoOutputToLog)" />
 
-    <Exec Command="$(DotNetCommand) build $(ProjectDirectory)src /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)src /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
