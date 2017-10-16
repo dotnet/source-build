@@ -289,13 +289,6 @@
     <Exec Command="$(DotNetCliToolDir)/dotnet build $(SubmoduleDirectory)/reference-assemblies/build.proj" />
     <Exec Command="$(DotNetCliToolDir)/dotnet restore $(SubmoduleDirectory)/reference-assemblies/nuspecs/pack.csproj" />
     <Exec Command="$(DotNetCliToolDir)/dotnet pack $(SubmoduleDirectory)/reference-assemblies/nuspecs/PackAll.proj" />
-
-    <ItemGroup>
-      <BuiltReferenceAssemblyPackages Include="$(SubmoduleDirectory)/reference-assemblies/packages/*.nupkg" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(BuiltReferenceAssemblyPackages)"
-          DestinationFolder="$(SourceBuiltPackagesPath)" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
