@@ -54,6 +54,9 @@
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
   </PropertyGroup>
 
+  <!-- Import Build tools common props file where repo-independent properties are found -->
+  <Import Project="$(ToolsDir)Build.Common.props" Condition="Exists('$(ToolsDir)Build.Common.props')" />
+
   <PropertyGroup>
      <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
      <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>

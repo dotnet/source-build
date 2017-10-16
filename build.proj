@@ -8,10 +8,6 @@
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
-  <Target Name="ApplyPatches">
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
-  </Target>
-
   <Target Name="PrepareOutput">
     <MakeDir Directories="$(OutputPath)" />
     <MakeDir Directories="$(LoggingDir)" />

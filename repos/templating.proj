@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <DotNetCommand>$(DotNetCliToolDir)dotnet</DotNetCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
     <CommitHash>238e130268b235be44641bff66d57d75214475d9</CommitHash>
     <BuildNumber>301</BuildNumber>
@@ -26,7 +25,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotNetCommand) msbuild /t:BuildForCli @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild /t:BuildForCli @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
