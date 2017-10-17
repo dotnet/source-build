@@ -6,7 +6,7 @@ __PACKAGES_DIR=$__scriptpath/packages
 __TOOLRUNTIME_DIR=$__scriptpath/Tools
 __DOTNET_PATH=$__TOOLRUNTIME_DIR/dotnetcli
 __DOTNET_CMD=$__DOTNET_PATH/dotnet
-if [ -z "$__BUILDTOOLS_SOURCE" ]; then __BUILDTOOLS_SOURCE=https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json; fi
+if [ -z "${__BUILDTOOLS_SOURCE:-}" ]; then __BUILDTOOLS_SOURCE=https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json; fi
 export __BUILDTOOLS_USE_CSPROJ=true
 __BUILD_TOOLS_PACKAGE_VERSION=$(cat $__scriptpath/BuildToolsVersion.txt)
 __DOTNET_TOOLS_VERSION=$(cat $__scriptpath/DotnetCLIVersion.txt)
@@ -21,7 +21,7 @@ fi
 
 if [ -e $__TOOLRUNTIME_DIR ]; then rm -rf -- $__TOOLRUNTIME_DIR; fi
 
-if [ -d "$DotNetBuildToolsDir" ]; then
+if [ -d "${DotNetBuildToolsDir:-}" ]; then
     echo "Using tools from '$DotNetBuildToolsDir'."
     ln -s "$DotNetBuildToolsDir" "$__TOOLRUNTIME_DIR"
 
@@ -38,7 +38,7 @@ fi
 echo "Running: $__scriptpath/init-tools.sh" > $__init_tools_log
 
 if [ ! -e $__DOTNET_PATH ]; then
-    if [ -z "$__DOTNET_PKG" ]; then
+    if [ -z "${__DOTNET_PKG:-}" ]; then
         if [ "$(uname -m | grep "i[3456]86")" = "i686" ]; then
             echo "Warning: build not supported on 32 bit Unix"
         fi
