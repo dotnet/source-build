@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) --output $(SourceBuiltPackagesPath) --no-build FSharp.NET.Sdk.csproj /p:NuspecFile=FSharp.NET.Sdk.nuspec /p:MSBuildProjectExtensionsPath=$(IntermediatePath)$(RepositoryName)/ /p:IntermediateOutputPath=$(IntermediatePath)$(RepositoryName)/ /p:OutputPath=$(OutputPath)$(RepositoryName)/ /p:RestoreOutputPath=$(IntermediatePath)$(RepositoryName)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) --output $(SourceBuiltPackagesPath) --no-build FSharp.NET.Sdk.csproj /p:NuspecFile=FSharp.NET.Sdk.nuspec /p:OutputPath=$(OutputPath)$(RepositoryName)/ /p:BaseIntermediateOutputPath=$(IntermediatePath)$(RepositoryName)</BuildCommand>
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>

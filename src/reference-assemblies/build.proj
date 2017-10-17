@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="../../dir.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))\dir.props" />
   <ItemGroup>
     <AllProjects Include="**/*.csproj" />
     <AllProjects Remove="nuspecs/pack.csproj" />
@@ -10,6 +10,4 @@
     <Copy SourceFiles="$(MSBuildProjectDirectory)/_._" DestinationFolder="$(IntermediatePath)reference-assemblies/" />
     <MSBuild Projects="@(AllProjects)" Targets="Build" BuildInParallel="true" />
   </Target>
-
-  <Target Name="Pack"/>
 </Project>
