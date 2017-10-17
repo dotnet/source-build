@@ -133,7 +133,8 @@
 
   <Target Name="ReportRepoError">
     <Message Importance="High" Text="$([System.IO.File]::ReadAllText('$(RepoConsoleLogFile)'))" Condition="Exists('$(RepoConsoleLogFile)')" />
-    <Message Importance="High" Text="'$(RepositoryName)' failed during build see '$(RepoConsoleLogFile)' for more information" />
+    <Message Importance="High" Text="'$(RepositoryName)' failed during build." />
+    <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)')" />
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
