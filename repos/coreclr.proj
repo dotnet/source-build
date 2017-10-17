@@ -4,14 +4,12 @@
   <PropertyGroup>
     <BuildArguments>$(Platform) $(Configuration) skiptests -PortableBuild=false </BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore stripSymbols cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg/</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <LatestCommit>36f70fa4be4bd37d4d76d06dd2cc433ff46351bd</LatestCommit>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
     <OfficialBuildId>20170719-03</OfficialBuildId>
-    <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
