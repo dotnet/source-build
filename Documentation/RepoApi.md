@@ -30,6 +30,8 @@ There will be a number of actions source-build will need the repos to implement.
 
 Actions will take the form of `ActionName` and are the first parameter passed to the build script. Action names are case insensitive.
 
+Note that actions don't have a leading dash `-`. Also note that individual repos can support a default action if one isn't specified. However, source-build will always specify an action explicitly.
+
 ### Parameters
 
 Each action above will take a set of parameters used to pass information into the action and control its behavior.
