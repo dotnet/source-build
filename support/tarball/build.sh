@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-CLI_VERSION==$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+CLI_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 CLI_ROOT="$SCRIPT_ROOT/Tools/dotnetcli"
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
