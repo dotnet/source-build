@@ -6,13 +6,10 @@
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</PackagesOutput>
-    <BinariesOutput>$(PackagesOutput)</BinariesOutput>
+    <BinariesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</BinariesOutput>
     <LatestCommit>82b22fa44e46d624ebeddf156f33e9cfb317bd57</LatestCommit>
     <VersionSeedDate>2017-07-20</VersionSeedDate>
     <OfficialBuildId>20170720-05</OfficialBuildId>
-    <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
-    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,17 +23,6 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
-  <!-- We don't build the UAP Package so we need to remove it from the list of
-       packages we try to update from, since it will not be in our Packages.txt
-       file -->
-  <Target Name="RemoveUAPFromUpdateSteps" BeforeTargets="UpdateDependencies">
-    <ItemGroup>
-      <FilteredUpdateStep Include="@(UpdateStep)" Condition="'%(PackageId)' != 'Microsoft.Private.CoreFx.UAP'" />
-      <UpdateStep Remove="@(UpdateStep)" />
-      <UpdateStep Include="@(FilteredUpdateStep)" />
-    </ItemGroup>
-  </Target>
-
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
       <CoreSetupTarballs Include="$(BinariesOutput)*$(TarBallExtension)" />
@@ -45,9 +31,4 @@
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" />
   </Target>
 
-  <!--
-    temporarily skip updating dependencies by overriding the target because it fails for Microsoft.NETCore.Platforms
-    which we don't build in the release branch. This should be removed once the auto-dependencies work is done.
-  -->
-  <Target Name="UpdateDependencies" />
 </Project>
