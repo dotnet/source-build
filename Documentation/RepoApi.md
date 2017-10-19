@@ -28,17 +28,17 @@ There will be a number of actions source-build will need the repos to implement.
 
 1. `Build` - Assemble the product from the current source contained in the repo.
 
-source-build formats arguments using a style that is compatible with MSBuild. The reasoning for this is that the majority of repos have an MSBuild based build system. Using this format will allow for arguments to easily be passed through to MSBuild. Similarly, both action and parameter arguments are case-insensitive, just like MSBuild default behavior.
+Actions will take the form of `ActionName` and are the first parameter passed to the build script. Action names are case insensitive.
 
-Actions will take the form of `-t:ActionName`, just like MSBuild targets are passed to `msbuild.exe`.
+Note that actions don't have a leading dash `-`. Also note that individual repos can support a default action if one isn't specified. However, source-build will always specify an action explicitly.
 
 ### Parameters
 
 Each action above will take a set of parameters used to pass information into the action and control its behavior.
 
-Parameters will take the form of `-p:ParameterName=ParameterValue`, just like MSBuild properties are passed to `msbuild.exe`. One slight variation here is the usage of `-p` instead of `/p`.  MSBuild supports both forms, but source-build chooses `-p` because it meets [POSIX recommendations](https://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html) for command line parameters and avoids any confusion with file paths on Unix machines.
+Parameters will take the form of `-ParameterName ParameterValue`. This form avoids any confusion with file paths on Unix machines by not using `/` to start the argument and works well in both powershell and shell script parsing. Every parameter passed by source-build will have a value, even if that value is just `true`.
 
-In order to avoid conflicts between existing MSBuild properties used by the repos and the properties passed in by source-build, source-build will append a prefix to every property it passes in: `DotNet`.
+In order to avoid conflicts between existing properties (MSBuild or otherwise) used by the repos and the properties passed in by source-build, source-build will append a prefix to every property name it passes in: `DotNet`.
 
 #### Detecting build from source
 
@@ -46,7 +46,7 @@ Some repos build more projects than are necessary to build the .NET Core stack. 
 
 In order to tell repos that these projects shouldn't be built, source-build will pass the following parameter
 
-`-p:DotNetBuildFromSource=true`
+`-DotNetBuildFromSource true`
 
 #### Available tools
 
@@ -63,29 +63,29 @@ To solve this, source-build will have a set of common tools available that it wi
 
 First, a [.NET Core SDK](https://www.microsoft.com/net/download/core#/sdk) will be available for repos to be able to invoke MSBuild, NuGet, etc. The path to the folder containing the `dotnet` executable will be available using the
 
-`-p:DotNetCoreSdkDir`
+`-DotNetCoreSdkDir`
 
 property. This can be used to call `dotnet restore`, `dotnet build`, `dotnet publish`, `dotnet msbuild`, or any other CLI verb on the repo's projects.
 
 Second, a common set of tools used by the `dotnet` org repos is [BuildTools](https://github.com/dotnet/buildtools). This will be available using the
 
-`-p:DotNetBuildToolsDir`
+`-DotNetBuildToolsDir`
 
 property. This can be used to invoke any current or future tool that is part of BuildTools. It is not required that each repo use BuildTools, but if the repo wants to, it can get the tools from this property.
+
+Note that paths will always be enclosed in double quotes `"/path/to"` on all operating systems.
 
 As more toolsets are identified, source-build can and will make more toolsets available when necessary.
 
 ### Example
 
-Here is an example of the list of calls source-build will make on the `dotnet/corefx` repo:
+Here is an example of a call source-build will make on the `dotnet/corefx` repo:
 
 ```
-/path/to/corefx/build.sh -t:Restore -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
-/path/to/corefx/build.sh -t:Build -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
-/path/to/corefx/build.sh -t:Publish -p:DotNetBuildFromSource=true -p:DotNetToolDir=/path/to/dotnet -p:DotNetBuildToolsDir=/path/to/buildtools
+/path/to/corefx/build.sh Build -DotNetBuildFromSource true -DotNetCoreSdkDir "/path/to/dotnet" -DotNetBuildToolsDir "/path/to/buildtools"
 ```
 
-> **Note:** Not all properties have been specified above. As each action gets designed in detail, more `DotNet` properties will be specified. For example, the `Publish` action above isn't getting told where to publish the assets to.
+> **Note:** Not all properties have been specified above. As each action gets designed in detail, more `DotNet` properties will be specified. For example, the `Build` action above isn't getting told which dependency versions to use.
 
 ### .rsp files
 
@@ -98,10 +98,10 @@ To solve this issue, we could implement a response (.rsp) file, where each comma
 Where `currentBuildParameters.rsp` contains
 
 ```
--t:Build
--p:DotNetBuildFromSource=true
--p:DotNetToolDir=/path/to/dotnet
--p:DotNetBuildToolsDir=/path/to/buildtools
+Build
+-DotNetBuildFromSource true
+-DotNetCoreSdkDir "/path/to/dotnet"
+-DotNetBuildToolsDir "/path/to/buildtools"
 ```
 
 ## Future Work
