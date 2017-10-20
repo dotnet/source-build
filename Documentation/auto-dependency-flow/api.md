@@ -141,22 +141,20 @@ Use the AssetRoot properties if they are defined. Example (adapted from [CLI's b
 
   <PropertyGroup>
     <CoreSetupBlobRootUrl Condition="'$(DotNetAssetRootUrl)' != ''">$(DotNetAssetRootUrl)</CoreSetupBlobRootUrl>
-    <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
-
-    <CoreSetupRootUrl>$(CoreSetupBlobRootUrl)Runtime/</CoreSetupRootUrl>
+    <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/Runtime/$(SharedFrameworkVersion)/</CoreSetupBlobRootUrl>
 
     <CoreSetupBlobAccessTokenParam Condition="'$(DotNetAssetRootAccessTokenSuffix)' != ''">$(DotNetAssetRootAccessTokenSuffix)</CoreSetupBlobAccessTokenParam>
   </PropertyGroup>
 
   <ItemGroup>
     <_DownloadAndExtractItem Include="CombinedSharedHostAndFrameworkArchive">
-      <Url>$(CoreSetupRootUrl)$(SharedFrameworkVersion)/$(CombinedFrameworkHostCompressedFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+      <Url>$(CoreSetupBlobRootUrl)$(CombinedFrameworkHostCompressedFileName)$(CoreSetupBlobAccessTokenParam)</Url>
     </_DownloadAndExtractItem>
   </ItemGroup>
 </Project>
 ```
 
-The above assumes that Core-Setup publishes outputs to `$(DotNetOutputBlobFeedDir)assets/Runtime/<SharedFrameworkVersion>/`.
+The above assumes that Core-Setup publishes outputs to `$(DotNetOutputBlobFeedDir)assets/`.
 
 ## `-p:DotNetAssetRootAccessTokenSuffix=<query string>` (Not yet implemented)
 Directs the repo to append `query string` to any URL constructed using the `DotNetAssetRootUrl`.
