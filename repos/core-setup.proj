@@ -6,10 +6,12 @@
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <BinariesOutput>$(ProjectDirectory)/Bin/$(TargetRid).$(Configuration)/packages/</BinariesOutput>
     <LatestCommit>82b22fa44e46d624ebeddf156f33e9cfb317bd57</LatestCommit>
     <VersionSeedDate>2017-07-20</VersionSeedDate>
     <OfficialBuildId>20170720-05</OfficialBuildId>
+
+    <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
+    <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,9 +25,11 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
+  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
-      <CoreSetupTarballs Include="$(BinariesOutput)*$(TarBallExtension)" />
+      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
+      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
     </ItemGroup>
     <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" />
