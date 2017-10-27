@@ -21,13 +21,13 @@
   <Target Name="RepoBuild"
           DependsOnTargets="InitSubmodules">
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:RestoreXPLAT /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:RestoreXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:BuildXPLAT /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:BuildXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:PackXPLAT  /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:PackXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
