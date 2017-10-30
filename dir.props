@@ -14,6 +14,7 @@
     <KeysDir>$(ProjectDir)keys/</KeysDir>
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
+    <PackagesDir>$(ProjectDir)packages/</PackagesDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,13 +30,12 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
   </PropertyGroup>
 
   <PropertyGroup>
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
-    <TaskDirectory>$(ProjectDir)tasks/</TaskDirectory>
+    <TaskDirectory>$(ProjectDir)tools-local/tasks/</TaskDirectory>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</TasksBinDir>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
@@ -43,44 +43,33 @@
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
+    <SourceBuiltBlobFeedDir>$(IntermediatePath)blob-feed/</SourceBuiltBlobFeedDir>
+    <SourceBuiltPackagesPath>$(SourceBuiltBlobFeedDir)packages/</SourceBuiltPackagesPath>
+    <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
     <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
-    <SourceBuiltPackagesPath>$(IntermediatePath)source-built/</SourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
-    <SourceBuiltSymbolsPackagesPath>$(SourceBuiltPackagesPath)symbols/</SourceBuiltSymbolsPackagesPath>
-    <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
-    <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">master</RepositoryBranch>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
+    <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
+    <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
+    <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionFilename>Latest_Packages.txt</VersionFilename>
-    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
-    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
-  </PropertyGroup>
+  <!-- Import Build tools common props file where repo-independent properties are found -->
+  <Import Project="$(ToolsDir)Build.Common.props" Condition="Exists('$(ToolsDir)Build.Common.props')" />
 
   <PropertyGroup>
      <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
      <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
    </PropertyGroup>
- 
+
    <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
-    <DefaultRepository>cli</DefaultRepository>
-    <DefaultRepository Condition="$(Platform.Contains('arm'))">core-setup</DefaultRepository>
+    <RootRepo>cli</RootRepo>
+    <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
   </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
-    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
-    <EnvironmentVariables Include="DotNet_BuildFromSource=true" />
-  </ItemGroup>
-
-  <Import Project="repositories.props" />
 </Project>
