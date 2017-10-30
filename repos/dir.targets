@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" InitialTargets="SetNuGetPackagesEnvironment" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
+    <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+  </ItemGroup>
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+
+  <!--
+    Central property to define that a repo doesn't implement any of the Repo API. If a repo adds an
+    implementation of a specific part of the Repo API, replace RepoApiImplemented in the repo's
+    props file with the properties below. When more API surface area is added, remove the
+    corresponding lines from the repo's props file. Once the entire API is implemented, the props
+    file is clean.
+  -->
+  <PropertyGroup>
+    <RepoApiImplemented Condition="'$(RepoApiImplemented)' == ''">true</RepoApiImplemented>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DependencyVersionInputRepoApiImplemented Condition="'$(DependencyVersionInputRepoApiImplemented)' == ''">$(RepoApiImplemented)</DependencyVersionInputRepoApiImplemented>
+    <SourceOverrideRepoApiImplemented Condition="'$(SourceOverrideRepoApiImplemented)' == ''">$(RepoApiImplemented)</SourceOverrideRepoApiImplemented>
+    <OutputPlacementRepoApiImplemented Condition="'$(OutputPlacementRepoApiImplemented)' == ''">$(RepoApiImplemented)</OutputPlacementRepoApiImplemented>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' != 'true'">
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.config')">$(ProjectDirectory)NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.Config')">$(ProjectDirectory)NuGet.Config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)src\NuGet.config')">$(ProjectDirectory)src\NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)src\NuGet.Config')">$(ProjectDirectory)src\NuGet.Config</NuGetConfigFile>
+  </PropertyGroup>
+
+  <!-- Dependency version input arguments -->
+  <PropertyGroup Condition="'$(DependencyVersionInputRepoApiImplemented)' == 'true'">
+    <RepoApiArgs>$(RepoApiArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</RepoApiArgs>
+  </PropertyGroup>
+  <!-- Source override arguments -->
+  <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' == 'true'">
+    <RepoApiArgs>$(RepoApiArgs) /p:DotNetRestoreSourcePropsPath=$(RestoreSourcePropsPath)</RepoApiArgs>
+    <RepoApiArgs Condition="'$(OfflineBuild)' == 'true'">$(RepoApiArgs) /p:DotNetBuildOffline=true</RepoApiArgs>
+  </PropertyGroup>
+  <!-- Output placement arguments -->
+  <PropertyGroup Condition="'$(OutputPlacementRepoApiImplemented)' == 'true'">
+    <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
+  </PropertyGroup>
+
+  <Import Project="$(ProjectDirectory)dependencies.props"
+          Condition="'$(DependencyVersionInputRepoApiImplemented)' != 'true' AND
+                     Exists('$(ProjectDirectory)dependencies.props')" />
+
+  <Target Name="BuildRepoReferences" Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
+    <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
+    <ItemGroup>
+      <_DependentProject Include="@(RepositoryReference -> '%(Identity).proj')" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+
+  <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'">
+    <ItemGroup>
+      <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <PatchCommand>git apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
+    </PropertyGroup>
+
+    <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
+          WorkingDirectory="$(ProjectDirectory)" />
+  </Target>
+
+  <Target Name="UpdateNuGetConfig"
+          BeforeTargets="Build"
+          Condition="'$(NuGetConfigFile)' != ''">
+    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                                          Condition="'$(OfflineBuild)' != ''" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                            SourceName="prebuilt"
+                            SourcePath="$(PrebuiltPackagesPath)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+                            SourceName="source-built"
+                            SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
+
+  <Target Name="CreateBuildOutputProps"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
+    </ItemGroup>
+    <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+                           OutputPath="$(PackageVersionPropsPath)" />
+  </Target>
+
+  <Target Name="CreateRestoreSourceProps"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
+      <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+    </ItemGroup>
+    <WriteRestoreSourceProps RestoreSources="@(_DotNetRestoreSources)"
+                             OutputPath="$(RestoreSourcePropsPath)" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="BuildRepoReferences">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building '$(RepositoryName)'" />
+    <Message Importance="High" Text="Running command:" />
+    <Message Importance="High" Text="  $(BuildCommand) $(RepoApiArgs)" Condition="'$(BuildCommand)' != ''" />
+    <Message Importance="High" Text="  Using custom build target" Condition="'$(BuildCommand)' == ''" />
+    <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
+    <Message Importance="High" Text="  With Enivornment Varibles:" />
+    <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
+    <CallTarget Targets="RepoBuild" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building '$(RepositoryName)'...done" />
+    <OnError ExecuteTargets="ReportRepoError" />
+  </Target>
+
+  <Target Name="RepoBuild">
+    <ItemGroup>
+      <EnvironmentVariables Condition="'$(NUGET_PACKAGES)'!=''" Include="NUGET_PACKAGES=$(NUGET_PACKAGES)" />
+    </ItemGroup>
+    <Exec Command="$(BuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="ReportRepoError">
+    <Message Importance="High" Text="$([System.IO.File]::ReadAllText('$(RepoConsoleLogFile)'))" Condition="Exists('$(RepoConsoleLogFile)')" />
+    <Message Importance="High" Text="'$(RepositoryName)' failed during build." />
+    <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)')" />
+  </Target>
+
+  <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
+    <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="GatherBuiltPackages">
+    <ItemGroup>
+      <!-- Filter out packages for WriteVersions -->
+      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CopyPackage"
+          AfterTargets="Package"
+          Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND '$(PackagesOutput)' != ''"
+          DependsOnTargets="GatherBuiltPackages">
+    <Copy SourceFiles="@(_BuiltPackages)"
+          DestinationFolder="$(SourceBuiltPackagesPath)"
+          Condition="'@(_BuiltPackages)'!=''" />
+  </Target>
+
+  <Target Name="WriteVersions"
+          AfterTargets="Build;CopyPackage"
+          DependsOnTargets="GatherBuiltPackages">
+    <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
+                       OutputPath="$(VersionFileLocation)"
+                       Condition="'@(_BuiltPackages)'!=''" />
+  </Target>
+
+  <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
+    <Exec Command="$(CleanCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="Update"
+          BeforeTargets="Build"
+          Condition="'$(DependencyVersionInputRepoApiImplemented)' != 'true' AND '$(UpdateCommand)' != ''">
+    <Exec Command="$(UpdateCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="SetNuGetPackagesEnvironment" Condition="'$(ArchiveDownloadedPackages)' == 'true'">
+    <PropertyGroup>
+      <LocalNuGetPackagesRootForRepository>$(LocalNuGetPackagesRoot)$(RepositoryName)/</LocalNuGetPackagesRootForRepository>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(LocalNuGetPackagesRootForRepository)" />
+
+    <ItemGroup>
+      <EnvironmentVariables Include="NUGET_PACKAGES=$(LocalNuGetPackagesRootForRepository)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="BootstrapBuildTools" BeforeTargets="Build"
+         Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'">
+   <PropertyGroup>
+     <ProjectToolsDir>$(ProjectDirectory)Tools/</ProjectToolsDir>
+   </PropertyGroup>
+   <RemoveDir Directories="$(ProjectToolsDir)" />
+   <MakeDir Directories="$(ProjectToolsDir)" />
+   <ItemGroup>
+     <BuildToolsFile Include="$(BootstrapBuildToolsDir)/**" />
+     <BuildToolsFile Include="$(ProjectDirectory)Tools-Override/**" />
+   </ItemGroup>
+
+   <Copy SourceFiles="@(BuildToolsFile)"
+         DestinationFiles="@(BuildToolsFile->'$(ProjectToolsDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+
+   <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
+         DestinationFolder="$(ProjectDirectory)" />
+  </Target>
+
+  <Import Project="$(ToolsDir)VersionTools.targets" />
+</Project>

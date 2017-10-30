@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" InitialTargets="SetNuGetPackagesEnvironment" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <RepositoryName Condition="'$(RepositoryName)' == ''">$(MSBuildProjectName)</RepositoryName>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
+    <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
+    <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">release/2.0.0</RepositoryBranch>
+    <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
+    <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
+    <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionFilename>Latest_Packages.txt</VersionFilename>
+    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
+    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
+    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
+    <!-- New env-var names to replace the ones above over time -->
+    <EnvironmentVariables Include="DotNetBuildFromSource=true" />
+    <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
+    <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+  </ItemGroup>
+
+</Project>

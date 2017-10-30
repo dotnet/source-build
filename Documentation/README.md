@@ -6,16 +6,39 @@ The following document includes documentation for the build scripts. Over time, 
 
 The scripts are supported on Windows, macOS and Linux. The scripts are based on PowerShell on Windows and Bash on macOS and Linux.
 
-### Build on Windows
+### Syncing
 
-```console
-./build.ps1
+This repo uses submodules so remember on fresh clones or when updating/switching branches to run
+
+```
+git submodule update --init --recursive
 ```
 
-### Build on Linux or macOS
+### Building
 
 ```console
-./build.sh
+./build.{cmd|sh}
+```
+
+## Building one repo
+
+By default we build the cli and its dependencies but the default root repository to build can be passed in.
+
+```console
+./build.{cmd|sh} /p:RootRepo=core-setup
+```
+
+Sometimes you want to just iterate on a single repo build and not rebuild all depedencies that can be done passing another property.
+
+```console
+./build.{cmd|sh} /p:RootRepo=core-setup /p:SkipRepoReferences=true
+```
+
+### Cleaning
+
+```console
+./clean.{cmd|sh}      # Cleans root binary directory and fully git cleans and hard resets all submodules
+./clean.{cmd|sh} -a   # Does a full git clean on the root repo as well as fully git cleans and hard resets all submodules
 ```
 
 ## Building .NET Core SDK and a Source tarball

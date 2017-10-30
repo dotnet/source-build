@@ -176,8 +176,8 @@ index 16d9288..e587e48 100644
    <PropertyGroup>
 -    <TargetFrameworks>net46;netstandard1.3</TargetFrameworks>
      <PlatformTarget>AnyCPU</PlatformTarget>
-+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">net46;netstandard1.3</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netstandard1.3</TargetFrameworks>
++    <TargetFrameworks>net46;netstandard1.3</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT' or '$(DotNetBuildFromSource)' == 'true'">netstandard1.3</TargetFrameworks>
      <AssemblyName>Microsoft.NET.Sdk.Publish.Tasks</AssemblyName>
    </PropertyGroup>
    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">

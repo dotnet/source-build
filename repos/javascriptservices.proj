@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) --output $(SourceBuiltPackagesPath) --no-build Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj /p:NuspecFile=Microsoft.DotNet.Web.Spa.ProjectTemplates.nuspec /p:OutputPath=$(OutputPath)$(RepositoryName)/ /p:BaseIntermediateOutputPath=$(IntermediatePath)$(RepositoryName)</BuildCommand>
+    <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>

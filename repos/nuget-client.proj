@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <PackagesOutput>$(ProjectDirectory)Nupkgs/</PackagesOutput>
+    <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
+    <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
+    <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
+    <NuGetClientBuildNumber>4324</NuGetClientBuildNumber>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="common" />
+  </ItemGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <Target Name="RepoBuild"
+          DependsOnTargets="InitSubmodules">
+
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/CLI.sln /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/CLI.sln /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
+    <Exec Command="git submodule init"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="git submodule update"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+</Project>

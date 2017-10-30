@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
+    <BuildNumber>20170721.5</BuildNumber>
+    <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
+    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource='$(DotNetBuildFromSource)'</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
+    <EnvironmentVariables Include="COMMIT_SHA=$(CommitHash)" />
+    <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
+  </ItemGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
+
+  <ItemGroup>
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.CSharp.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Common.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Build.Tasks.nuspec" />
+  </ItemGroup>
+
+  <Target Name="Restore" BeforeTargets="Build">
+    <PropertyGroup>
+      <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/CLI.sln $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+  <Target Name="FixNuSpecFilePathSeparators" BeforeTargets="Build">
+    <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
+  </Target>
+
+  <Target Name="Package" AfterTargets="Build">
+    <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+</Project>
