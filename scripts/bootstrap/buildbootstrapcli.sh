@@ -5,17 +5,17 @@ set -o pipefail
 usage()
 {
     echo "Builds a bootstrap CLI from sources"
-    echo "Usage: $0 [BuildType] --rid <Rid> --seedcli <SeedCli> [--arch <Architecture>] [--os <OS>] [--clang <Major.Minor>] [--corelib <CoreLib>] [--crossgen]"
+    echo "Usage: $0 [BuildType] --rid <Rid> --seedcli <SeedCli> [--os <OS>] [--clang <Major.Minor>] [--corelib <CoreLib>]"
     echo ""
     echo "Options:"
     echo "  BuildType               Type of build (-debug, -release), default: -debug"
-    echo "  -arch <Architecture>    Architecture (x64, x86, arm, arm64, armel), default: x64"
     echo "  -clang <Major.Minor>    Override of the version of clang compiler to use"
     echo "  -config <Configuration> Build configuration (debug, release), default: debug"
     echo "  -corelib <CoreLib>      Path to System.Private.CoreLib.dll, default: use the System.Private.CoreLib.dll from the seed CLI"
     echo "  -os <OS>                Operating system (used for corefx build), default: Linux"
-    echo "  -rid <Rid>              Runtime identifier (without the architecture part)"
+    echo "  -rid <Rid>              Runtime identifier including the architecture part (e.g. rhel.6-x64)"
     echo "  -seedcli <SeedCli>      Seed CLI used to generate the target CLI"
+    echo "  -outputpath <path>      Optional output directory to contain the generated cli and cloned repos, default: <Rid>"
 }
 
 disable_pax_mprotect()
@@ -84,12 +84,21 @@ get_max_version()
     echo $maxversionhi.$maxversionmid.$maxversionlo${maxversiontag:+-$maxversiontag}
 }
 
-__build_arch=x64
+getrealpath()
+{
+    if command -v realpath > /dev/null; then
+        realpath $1
+    else
+        readlink -e $1
+    fi
+}
+
 __build_os=Linux
 __runtime_id=
 __corelib=
 __configuration=debug
 __clangversion=
+__outputpath=
 
 while [[ "$1" != "" ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
@@ -97,10 +106,6 @@ while [[ "$1" != "" ]]; do
     -h|--help)
         usage
         exit 1
-        ;;
-    -arch)
-        shift
-        __build_arch=$1
         ;;
     -rid)
         shift
@@ -122,11 +127,15 @@ while [[ "$1" != "" ]]; do
         ;;
     -seedcli)
         shift
-        __seedclipath=$1
+        __seedclipath=`getrealpath $1`
         ;;
     -clang)
         shift
         __clangversion=clang$1
+        ;;
+    -outputpath)
+        shift
+        __outputpath=`getrealpath $1`
         ;;
      *)
     echo "Unknown argument to build.sh $1"; exit 1
@@ -134,17 +143,33 @@ while [[ "$1" != "" ]]; do
     shift
 done
 
-# NOTE: when realpath is not present, use readlink -e or readlink --canonicalize depending on the platform
-__seedclipath=`realpath $__seedclipath`
 
-mkdir -p $__runtime_id-$__build_arch
-cd $__runtime_id-$__build_arch
-
-if [[ -d dotnetcli ]]; then
-    /bin/rm -r dotnetcli
+if [[ -z "$__runtime_id" ]]; then
+    echo "Missing the required -rid argument"
+    exit 2
 fi
-mkdir -p dotnetcli
-cp -r $__seedclipath/* dotnetcli
+
+if [[ -z "$__seedclipath" ]]; then
+    echo "Missing the required -seedcli argument"
+    exit 3
+fi
+
+__build_arch=${__runtime_id#*-}
+
+if [[ -z "$__outputpath" ]]; then
+   __outputpath=`getrealpath $__runtime_id/dotnetcli`
+fi
+
+if [[ -d "$__outputpath" ]]; then
+    /bin/rm -r $__outputpath
+fi
+
+mkdir -p $__runtime_id
+mkdir -p $__outputpath
+
+cd $__runtime_id
+
+cp -r $__seedclipath/* $__outputpath
 
 __frameworkversion="2.0.0"
 __sdkversion="2.0.0"
@@ -152,15 +177,15 @@ __fxrversion="2.0.0"
 
 echo "**** DETECTING VERSIONS IN SEED CLI ****"
 
-__frameworkversion=`get_max_version dotnetcli/shared/Microsoft.NETCore.App`
-__sdkversion=`get_max_version dotnetcli/sdk`
-__fxrversion=`get_max_version dotnetcli/host/fxr`
+__frameworkversion=`get_max_version $__seedclipath/shared/Microsoft.NETCore.App`
+__sdkversion=`get_max_version $__seedclipath/sdk`
+__fxrversion=`get_max_version $__seedclipath/host/fxr`
 
 echo "Framework version: $__frameworkversion"
 echo "SDK version:       $__sdkversion"
 echo "FXR version:       $__fxrversion"
 
-__frameworkpath="dotnetcli/shared/Microsoft.NETCore.App/$__frameworkversion"
+__frameworkpath=$__outputpath/shared/Microsoft.NETCore.App/$__frameworkversion
 
 echo "**** DETECTING GIT COMMIT HASHES ****"
 
@@ -168,13 +193,13 @@ echo "**** DETECTING GIT COMMIT HASHES ****"
 # the seed cli package was built from
 __coreclrhash=`strings $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/libcoreclr.so | grep "@(#)" | grep -o "[a-f0-9]\{40\}"`
 __corefxhash=`strings $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/System.Native.so | grep "@(#)" | grep -o "[a-f0-9]\{40\}"`
-__coresetuphash=`strings $__seedclipath/dotnet | grep "[a-f0-9]\{40\}"`
+__coresetuphash=`strings $__seedclipath/dotnet | grep -o "[a-f0-9]\{40\}"`
 
 echo "coreclr hash:    $__coreclrhash"
 echo "corefx hash:     $__corefxhash"
 echo "core-setup hash: $__coresetuphash"
 
-# Clone the three repos if they were not clonned yet. If the folders already
+# Clone the three repos if they were not cloned yet. If the folders already
 # exist, leave them alone. This allows patching the cloned sources as needed
 
 if [[ ! -d coreclr ]]; then
@@ -208,7 +233,7 @@ cd ..
 
 echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
 cd coreclr
-./build.sh $__configuration $__build_arch $__clangversion 2>&1 | tee coreclr.log
+./build.sh $__configuration $__build_arch $__clangversion -skipgenerateversion -skipmscorlib -skiprestore -skiprestoreoptdata -skipnuget -nopgooptimize 2>&1 | tee coreclr.log
 export __coreclrbin=$(cat coreclr.log | sed -n -e 's/^.*Product binaries are available at //p')
 cd ..
 echo "CoreCLR binaries will be copied from $__coreclrbin"
@@ -230,18 +255,18 @@ disable_pax_mprotect $__frameworkpath/corerun
 disable_pax_mprotect $__frameworkpath/crossgen
 
 # Now copy the core-setup repo binaries
-cp core-setup/cli/exe/dotnet/dotnet dotnetcli
+cp core-setup/cli/exe/dotnet/dotnet $__outputpath
 cp core-setup/cli/exe/dotnet/dotnet $__frameworkpath/corehost
 
 cp core-setup/cli/dll/libhostpolicy.so $__frameworkpath
-cp core-setup/cli/dll/libhostpolicy.so dotnetcli/sdk/$__sdkversion
+cp core-setup/cli/dll/libhostpolicy.so $__outputpath/sdk/$__sdkversion
 
 cp core-setup/cli/fxr/libhostfxr.so $__frameworkpath
-cp core-setup/cli/fxr/libhostfxr.so dotnetcli/host/fxr/$__fxrversion
-cp core-setup/cli/fxr/libhostfxr.so dotnetcli/sdk/$__sdkversion
+cp core-setup/cli/fxr/libhostfxr.so $__outputpath/host/fxr/$__fxrversion
+cp core-setup/cli/fxr/libhostfxr.so $__outputpath/sdk/$__sdkversion
 
 # Mark the core-setup executables as allowed to create executable memory mappings
-disable_pax_mprotect dotnetcli/dotnet
+disable_pax_mprotect $__outputpath/dotnet
 disable_pax_mprotect $__frameworkpath/corehost
 
 # Finally copy the corefx repo binaries
@@ -260,10 +285,10 @@ echo "**** Adding new rid to Microsoft.NETCore.App.deps.json ****"
 #TODO: add parameter with the parent RID sequence
 
 sed \
-    -e 's/runtime\.linux-x64/runtime.'$__runtime_id-$__build_arch'/g' \
-    -e 's/runtimes\/linux-x64/runtimes\/'$__runtime_id-$__build_arch'/g' \
-    -e 's/Version=v\([0-9].[0-9]\)\/linux-x64/Version=v\1\/'$__runtime_id-$__build_arch'/g' \
-    -e 's/"runtimes": {/&\n    "'$__runtime_id-$__build_arch'": [\n      "unix", "unix-x64", "any", "base"\n    ],/g' \
+    -e 's/runtime\.linux-x64/runtime.'$__runtime_id'/g' \
+    -e 's/runtimes\/linux-x64/runtimes\/'$__runtime_id'/g' \
+    -e 's/Version=v\([0-9].[0-9]\)\/linux-x64/Version=v\1\/'$__runtime_id'/g' \
+    -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-x64", "any", "base"\n    ],/g' \
 $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/Microsoft.NETCore.App.deps.json \
 >$__frameworkpath/Microsoft.NETCore.App.deps.json
 
