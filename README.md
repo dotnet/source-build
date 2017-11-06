@@ -1,5 +1,29 @@
 # .NET Core Build Scripts
 
+[![Join the chat at https://gitter.im/dotnet/source-build](https://badges.gitter.im/dotnet/source-build.svg)](https://gitter.im/dotnet/source-build?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+|OS|Release|Debug|
+|--|-------|-----|
+|Generic Linux - ARM|[![Build Status][linux_arm-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Linux_ARM_Release/)|[![Build Status][linux_arm-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Linux_ARM_Debug/)
+|OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/OSX10.12_Debug/)
+|RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/RHEL7.2_Debug/)
+|Tizen|[![Build Status][tizen-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Tizen_Release/)|[![Build Status][tizen-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Tizen_Debug/)
+|Ubuntu14.04|[![Build Status][ubuntu-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Ubuntu14.04_Release/)|[![Build Status][ubuntu-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Ubuntu14.04_Debug/)
+|Windows|[![Build Status][windows-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Windows_NT_Release/)|[![Build Status][windows-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.0/job/Windows_NT_Debug/)
+
+[linux_arm-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Linux_ARM_Release
+[linux_arm-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Linux_ARM_Debug
+[osx-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/OSX10.12_Release
+[osx-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/OSX10.12_Debug
+[rhel-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/RHEL7.2_Release
+[rhel-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/RHEL7.2_Debug
+[tizen-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Tizen_Release
+[tizen-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Tizen_Debug
+[ubuntu-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Ubuntu14.04_Release
+[ubuntu-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Ubuntu14.04_Debug
+[windows-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Windows_NT_Release
+[windows-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.0/Windows_NT_Debug
+
 This repository contains a set of scripts for building the .NET Core Runtime and SDK from source. The scripts were built to make it easy for anyone to build the .NET Core product.
 
 You can use these scripts to build the .NET Core product for Windows, macOS or Linux. See [Documentation](Documentation) for complete instructions.
