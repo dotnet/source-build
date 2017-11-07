@@ -15,26 +15,11 @@ The `.cmd` file will be called when running on Windows, while the `.sh` file wil
 
 These scripts will contain the logic necessary in order to build, test, publish the repo's assets.
 
-source-build will invoke these scripts on each repo passing in:
+source-build will invoke these scripts on each repo passing in a set of parameters.
 
-1. An action to perform
-1. A set of parameters
-
-Individual repos are free to implement more features in these build scripts than what is required by source-build. For example, a repo may want to provide a default action. These extra behaviors are not defined by source-build.
-
-### Actions
-
-There will be a number of actions source-build will need the repos to implement. As more scenarios are designed and implemented, more commands will specified. The first action necessary is the `Build` action:
-
-1. `Build` - Assemble the product from the current source contained in the repo.
-
-Actions will take the form of `ActionName` and are the first parameter passed to the build script. Action names are case insensitive.
-
-Note that actions don't have a leading dash `-`. Also note that individual repos can support a default action if one isn't specified. However, source-build will always specify an action explicitly.
+Individual repos are free to implement more features in these build scripts than what is required by source-build. These extra behaviors are not defined by source-build.
 
 ### Parameters
-
-Each action above will take a set of parameters used to pass information into the action and control its behavior.
 
 Parameters will take the form of `-ParameterName ParameterValue`. This form avoids any confusion with file paths on Unix machines by not using `/` to start the argument and works well in both powershell and shell script parsing. Every parameter passed by source-build will have a value, even if that value is just `true`.
 
@@ -46,7 +31,9 @@ Some repos build more projects than are necessary to build the .NET Core stack. 
 
 In order to tell repos that these projects shouldn't be built, source-build will pass the following parameter
 
-`-DotNetBuildFromSource true`
+`-DotNetSourceBuildAction Build`
+
+In future actions other than ```Build``` may be defined.
 
 #### Available tools
 
@@ -82,7 +69,7 @@ As more toolsets are identified, source-build can and will make more toolsets av
 Here is an example of a call source-build will make on the `dotnet/corefx` repo:
 
 ```
-/path/to/corefx/build.sh Build -DotNetBuildFromSource true -DotNetCoreSdkDir "/path/to/dotnet" -DotNetBuildToolsDir "/path/to/buildtools"
+/path/to/corefx/build.sh -DotNetSourceBuildAction Build -DotNetCoreSdkDir "/path/to/dotnet" -DotNetBuildToolsDir "/path/to/buildtools"
 ```
 
 > **Note:** Not all properties have been specified above. As each action gets designed in detail, more `DotNet` properties will be specified. For example, the `Build` action above isn't getting told which dependency versions to use.
@@ -91,15 +78,14 @@ Here is an example of a call source-build will make on the `dotnet/corefx` repo:
 
 As you can imagine, specifying properties this way is going to create really long command line strings. On Windows machines, there is a limit to how many characters can be specified. It also becomes really hard to diagnose and reproduce build errors. Parsing large command lines is rather difficult, especially when there are many file paths.
 
-To solve this issue, we could implement a response (.rsp) file, where each command line argument is on a line in a text file. Then that text file is passed into the `build` with a `@` character preceeding the file name.
+To solve this issue, we could implement a response (.rsp) file, where each command line argument is on a line in a text file. Then that text file is passed into the `build` via ```-DotNetSourceBuildArgs``` followed by a file name.
 
-`build.sh @/path/to/currentBuildParameters.rsp`
+`build.sh -DotNetSourceBuildArgs /path/to/currentBuildParameters.rsp`
 
 Where `currentBuildParameters.rsp` contains
 
 ```
-Build
--DotNetBuildFromSource true
+-DotNetSourceBuildAction Build
 -DotNetCoreSdkDir "/path/to/dotnet"
 -DotNetBuildToolsDir "/path/to/buildtools"
 ```
