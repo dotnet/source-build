@@ -2,6 +2,28 @@
 
 [![Join the chat at https://gitter.im/dotnet/source-build](https://badges.gitter.im/dotnet/source-build.svg)](https://gitter.im/dotnet/source-build?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+|OS|Release|Debug|
+|--|-------|-----|
+|CentOS7.1|[![Build Status][centos-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Release/)|[![Build Status][centos-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Debug/)
+|Generic Linux - ARM|[![Build Status][linux_arm-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Linux_ARM_Release/)|[![Build Status][linux_arm-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Linux_ARM_Debug/)
+|OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/OSX10.12_Debug/)
+|RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Debug/)
+|Ubuntu14.04|[![Build Status][ubuntu-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Ubuntu14.04_Release/)|[![Build Status][ubuntu-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Ubuntu14.04_Debug/)
+|Windows|[![Build Status][windows-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Windows_NT_Release/)|[![Build Status][windows-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Windows_NT_Debug/)
+
+[centos-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/CentOS7.1_Release
+[centos-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/CentOS7.1_Debug
+[linux_arm-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Linux_ARM_Release
+[linux_arm-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Linux_ARM_Debug
+[osx-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/OSX10.12_Release
+[osx-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/OSX10.12_Debug
+[rhel-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/RHEL7.2_Release
+[rhel-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/RHEL7.2_Debug
+[ubuntu-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Ubuntu14.04_Release
+[ubuntu-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Ubuntu14.04_Debug
+[windows-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Windows_NT_Release
+[windows-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Windows_NT_Debug
+
 This repository contains a set of scripts for building the .NET Core Runtime and SDK from source. The scripts were built to make it easy for anyone to build the .NET Core product.
 
 You can use these scripts to build the .NET Core product for Windows, macOS or Linux. See [Documentation](Documentation) for complete instructions.
