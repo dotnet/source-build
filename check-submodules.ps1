@@ -52,6 +52,7 @@ function fix_submodule($Path, $ExpectedSha, $ActualSha, $Message, $Prompt) {
       git cat-file -e $expectedSha^`{commit`} 2>&1 | Out-Null
       if ($LastExitCode -ne 0) {
         Write-Error "commit $expectedSha was not found in $path"
+        Write-Host "The remote may have changed in source-build; run 'git submodule sync' and retry."
         Write-Host "Are you using a custom remote for this submodule?  You may need to pick up changes from upstream."
         Write-Host "Canceling remainder of checks."
         exit 1
@@ -95,8 +96,8 @@ function clean_submodule($Path, $Message, $Prompt) {
 # We use the same script for checking the super-repo and the submodules.
 # Having the first argument be "in-submodule" triggers this submodule behavior.
 if ($args[0] -ieq "in-submodule") {
-  $expectedSha = $args[1]
-  $path = $args[2]
+  $path = $args[1]
+  $expectedSha = $args[2]
   $subcommit = git rev-parse HEAD
   if ($subcommit -ne $expectedSha) {
     # merge-base fails if the commit is missing, so check for that first.
@@ -143,5 +144,5 @@ else {
   }
   $ProjectRoot = $ProjectRoot.Replace('\', '/')
   # kick off the submodule behavior for each repo
-  git submodule foreach --quiet --recursive "powershell $ProjectRoot/check-submodules.ps1 in-submodule `$sha1 `$path"
+  git submodule foreach --quiet --recursive "powershell $ProjectRoot/check-submodules.ps1 in-submodule `$path `$sha1"
 }

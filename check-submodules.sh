@@ -50,17 +50,18 @@ fix_submodule () {
     if [[ $REPLY =~ ^[Qq]$ ]]; then
       exit 1
     elif [[ $REPLY =~ ^[Yy]$ ]]; then
-	  # check if we have this commit locally and can skip the fetch
+      # check if we have this commit locally and can skip the fetch
       git cat-file -e $expected^{commit} 2>/dev/null || exitCode=$?
       if [ $exitCode != 0 ]; then
         git fetch
       fi
       exitCode=0
-	  # double-check, we should have the commit now unless something
-	  # weird is going on.
+      # double-check, we should have the commit now unless something
+      # weird is going on.
       git cat-file -e $expected^{commit} 2>/dev/null || exitCode=$?
       if [ $exitCode != 0 ]; then
         echo "error: commit $expected was not found in $path"
+        echo "The remote may have changed in source-build; run 'git submodule sync' and retry."
         echo "Are you using a custom remote for this submodule?  You may need to pick up changes from upstream."
         echo "Canceling remainder of checks."
         exit 1
@@ -102,12 +103,12 @@ clean_submodule() {
 # We use the same script for checking the super-repo and the submodules.
 # Having the first argument be "in-submodule" triggers this submodule behavior.
 if [ ${1:-default} == "in-submodule" ]; then
-  expected_sha=$2
-  path=$3
+  path=$2
+  expected_sha=$3
   subcommit=`git rev-parse HEAD`
   if [ "$subcommit" != "$expected_sha" ]; then
     exitCode=0
-	# merge-base fails if the commit is missing, so check for that first.
+    # merge-base fails if the commit is missing, so check for that first.
     git cat-file -e $expected_sha^{commit} 2>/dev/null || exitCode=$?
     if [ $exitCode != 0 ]; then
       mergeBase="missing commit"
@@ -141,6 +142,6 @@ else
     fi
   done
   # kick off the submodule behavior for each repo
-  git submodule foreach --quiet --recursive "$SCRIPT_ROOT/check-submodules.sh in-submodule \$sha1 \$path"
+  git submodule foreach --quiet --recursive "$SCRIPT_ROOT/check-submodules.sh in-submodule \$path \$sha1"
 fi
 

@@ -14,10 +14,12 @@ if [ "${2:-}" == "--skip-build" ]; then
 fi
 
 TARBALL_ROOT=$1
+FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "error '$TARBALL_ROOT' exists"
 fi
+
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
@@ -73,5 +75,5 @@ done
 # Record commits for the source-build repo and all submodules, to aid in reproducibility.
 echo -e "path\tchecked-in\tactual" > $TARBALL_ROOT/commits.txt
 echo -e "source-build\t$(git rev-parse HEAD)\t$(git rev-parse HEAD)" >> $TARBALL_ROOT/commits.txt
-git submodule foreach --recursive 'actual=$(git rev-parse HEAD); echo "$toplevel/$path\t$sha1\t$actual" >> $TARBALL_ROOT/commits.txt'
+git submodule foreach --quiet --recursive "actual=\$(git rev-parse HEAD); echo -e \"\$toplevel/\$path\t\$sha1\t\$actual\" >> $FULL_TARBALL_ROOT/commits.txt"
 
