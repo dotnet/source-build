@@ -1,15 +1,31 @@
 $answeredAll = $false   # has the user answered "yes to all" to init'ing submodules?
 $ProjectRoot = $PSScriptRoot
 $CleanAllSentinel = "$ProjectRoot\.cleansourcebuildsubmodules"
+# How long to wait between polling for input on ReadKey.
+# This affects apparent responsiveness so setting it fairly low.
+$InputPollingTime = 100 # ms
+$InputCountTimeout = (30 * 1000) / $InputPollingTime # ms
+
+function WaitForInput() {
+  $counter = 0
+  while (-Not [Console]::KeyAvailable -and ($counter++ -lt $InputCountTimeout)) {
+    Start-Sleep -Milliseconds $InputPollingTime
+  }
+  if ([Console]::KeyAvailable) {
+    $k = [Console]::ReadKey()
+    return $k
+  }
+  return $null
+}
 
 # ask for confirmation and initialize a submodule if approved.
 function init_submodule($Path) {
   $done = $false
   while (-Not $done) {
     Write-Warning "submodule $Path does not appear to be initialized."
-    Write-Host "Should I initialize it for you [Yes/no/all/quit]"
-    $answer = [Console]::ReadKey()
-    if ($answer.KeyChar -ieq "a") {
+    Write-Host "Should I initialize it for you [Y]es / [n]o / [a]ll / [q]uit"
+    $answer = WaitForInput
+    if ($answer -eq $null -or $answer.KeyChar -ieq "a") {
       $script:answeredAll = $true
       $done = $true
       git submodule update --init --recursive $Path
@@ -38,8 +54,11 @@ function fix_submodule($Path, $ExpectedSha, $ActualSha, $Message, $Prompt) {
   while (-Not $done) {
     Write-Warning $Message
     Write-Host $Prompt
-    $answer = [Console]::ReadKey()
-    if ($answer.KeyChar -ieq "q") {
+    $answer = WaitForInput
+    if ($answer -eq $null -or $answer.KeyChar -ieq "n" -or $answer.Key -eq [System.ConsoleKey]::Spacebar -or $answer.Key -eq [System.ConsoleKey]::Enter) {
+      $done = $true
+    }
+    elseif ($answer.KeyChar -ieq "q") {
       exit 1
     }
     elseif ($answer.KeyChar -ieq "y") {
@@ -61,9 +80,6 @@ function fix_submodule($Path, $ExpectedSha, $ActualSha, $Message, $Prompt) {
       git checkout $expectedSha
       $done = $true
     }
-    elseif ($answer.KeyChar -ieq "n" -or $answer.Key -eq [System.ConsoleKey]::Spacebar -or $answer.Key -eq [System.ConsoleKey]::Enter) {
-      $done = $true
-    }
     else {
       Write-Host "Didn't understand that ($($answer.KeyChar))"
     }
@@ -76,8 +92,11 @@ function clean_submodule($Path, $Message, $Prompt) {
   while (-Not $done) {
     Write-Warning $Message
     Write-Host $Prompt
-    $answer = [Console]::ReadKey()
-    if ($answer.KeyChar -ieq "a") {
+    $answer = WaitForInput
+    if ($answer -eq $null -or $answer.KeyChar -ieq "n" -or $answer.Key -eq [System.ConsoleKey]::Spacebar -or $answer.Key -eq [System.ConsoleKey]::Enter) {
+      $done = $true
+    }
+    elseif ($answer.KeyChar -ieq "a") {
       git clean -fxd
       git reset --hard HEAD
       New-Item -ItemType File $CleanAllSentinel | Out-Null
@@ -89,9 +108,6 @@ function clean_submodule($Path, $Message, $Prompt) {
     elseif ($answer.KeyChar -ieq "y") {
       git clean -fxd
       git reset --hard HEAD
-      $done = $true
-    }
-    elseif ($answer.KeyChar -ieq "n" -or $answer.Key -eq [System.ConsoleKey]::Spacebar -or $answer.Key -eq [System.ConsoleKey]::Enter) {
       $done = $true
     }
     else {
@@ -116,10 +132,10 @@ if ($args[0] -ieq "in-submodule") {
       $mergeBase = git merge-base HEAD $expectedSha
     }
     if ($mergeBase -ne $expectedSha) {
-      fix_submodule -Path $path -ExpectedSha $expectedSha -ActualSha $subcommit -Message "submodule $path, currently at $subcommit, has diverged from checked-in version $expectedSha" -Prompt "If you are changing a submodule branch or moving a submodule backwards, this is expected.`r`nShould I checkout $path to the expected commit $expectedSha [No/yes/quit]"
+      fix_submodule -Path $path -ExpectedSha $expectedSha -ActualSha $subcommit -Message "submodule $path, currently at $subcommit, has diverged from checked-in version $expectedSha" -Prompt "If you are changing a submodule branch or moving a submodule backwards, this is expected.`r`nShould I checkout $path to the expected commit $expectedSha [N]o / [y]es / [q]uit"
     }
     else {
-      fix_submodule -Path $path -ExpectedSha $expectedSha -ActualSha $subcommit -Message "submodule $path, currently at $subcommit, is ahead of checked-in version $expectedSha" -Prompt "If you are updating a submodule, this is expected.`r`nShould I checkout $path to the expected commit $expectedSha [No/yes/quit]"
+      fix_submodule -Path $path -ExpectedSha $expectedSha -ActualSha $subcommit -Message "submodule $path, currently at $subcommit, is ahead of checked-in version $expectedSha" -Prompt "If you are updating a submodule, this is expected.`r`nShould I checkout $path to the expected commit $expectedSha [N]o / [y]es / [q]uit"
     }
   }
   $dirty = $false
@@ -135,7 +151,7 @@ if ($args[0] -ieq "in-submodule") {
       git reset --hard HEAD
     }
     else {
-      clean_submodule -Path $path -Message "submodule $path has uncommitted changes" -Prompt "Should I clean and reset $path (this will lose ALL uncommitted changes)? [No/yes/all/quit]"
+      clean_submodule -Path $path -Message "submodule $path has uncommitted changes" -Prompt "Should I clean and reset $path (this will lose ALL uncommitted changes)? [N]o / [y]es / [a]ll / [q]uit"
     }
   }
 }
