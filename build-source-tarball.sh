@@ -20,7 +20,6 @@ if [ -e "$TARBALL_ROOT" ]; then
     echo "error '$TARBALL_ROOT' exists"
 fi
 
-
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
 if [ $SKIP_BUILD -ne 1 ]; then

@@ -1,5 +1,6 @@
 $answeredAll = $false   # has the user answered "yes to all" to init'ing submodules?
 $ProjectRoot = $PSScriptRoot
+$CleanAllSentinel = "$ProjectRoot\.cleansourcebuildsubmodules"
 
 # ask for confirmation and initialize a submodule if approved.
 function init_submodule($Path) {
@@ -76,7 +77,13 @@ function clean_submodule($Path, $Message, $Prompt) {
     Write-Warning $Message
     Write-Host $Prompt
     $answer = [Console]::ReadKey()
-    if ($answer.KeyChar -ieq "q") {
+    if ($answer.KeyChar -ieq "a") {
+      git clean -fxd
+      git reset --hard HEAD
+      New-Item -ItemType File $CleanAllSentinel | Out-Null
+      $done = $true
+    }
+    elseif ($answer.KeyChar -ieq "q") {
       exit 1
     }
     elseif ($answer.KeyChar -ieq "y") {
@@ -123,7 +130,13 @@ if ($args[0] -ieq "in-submodule") {
   $untracked = git ls-files --others --exclude-standard
   $dirty = $dirty -or (-Not [string]::IsNullOrWhitespace($untracked))
   if ($dirty) {
-    clean_submodule -Path $path -Message "submodule $path has uncommitted changes" -Prompt "Should I clean and reset $path (this will lose ALL uncommitted changes)? [No/yes/quit]"
+    if (Test-Path $CleanAllSentinel) {
+      git clean -fxd
+      git reset --hard HEAD
+    }
+    else {
+      clean_submodule -Path $path -Message "submodule $path has uncommitted changes" -Prompt "Should I clean and reset $path (this will lose ALL uncommitted changes)? [No/yes/all/quit]"
+    }
   }
 }
 # Main branch for super-repo behavior
@@ -144,5 +157,7 @@ else {
   }
   $ProjectRoot = $ProjectRoot.Replace('\', '/')
   # kick off the submodule behavior for each repo
+  Remove-Item -Force -ErrorAction SilentlyContinue $CleanAllSentinel
   git submodule foreach --quiet --recursive "powershell $ProjectRoot/check-submodules.ps1 in-submodule `$path `$sha1"
+  Remove-Item -Force -ErrorAction SilentlyContinue $CleanAllSentinel
 }

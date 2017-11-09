@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SUBMODULES=$SCRIPT_ROOT/.gitmodules
+CLEAN_ALL_SENTINEL=$SCRIPT_ROOT/.cleansourcebuildsubmodules
 
 # has the user answered "yes to all" to init'ing submodules?
 answered_all=0
@@ -86,7 +87,12 @@ clean_submodule() {
     echo -e "$msg"
     read -p "$prompt " -n 1 -r
     echo
-    if [[ $REPLY =~ ^[Qq]$ ]]; then
+    if [[ $REPLY =~ ^[Aa]$ ]]; then
+      git clean -fxd
+      git reset --hard HEAD
+      touch $CLEAN_ALL_SENTINEL
+      done=1
+    elif [[ $REPLY =~ ^[Qq]$ ]]; then
       exit 1
     elif [[ $REPLY =~ ^[Yy]$ ]]; then
       git clean -fxd
@@ -126,7 +132,12 @@ if [ ${1:-default} == "in-submodule" ]; then
   # check for untracked new files
   untracked="$(git ls-files --others --exclude-standard)"
   if [[ ${exit_code:-0} != 0 || ! -z "$untracked" ]]; then
-    clean_submodule $path "warning: submodule $path has uncommitted changes\nShould I clean and reset $path (this will lose ALL uncommitted changes)?" "[No/yes/quit]"
+    if [ -e $CLEAN_ALL_SENTINEL ]; then
+      git clean -fxd
+      git reset --hard HEAD
+    else
+      clean_submodule $path "warning: submodule $path has uncommitted changes\nShould I clean and reset $path (this will lose ALL uncommitted changes)?" "[No/yes/all/quit]"
+    fi
   fi
 # Main branch for super-repo behavior
 else
@@ -142,6 +153,8 @@ else
     fi
   done
   # kick off the submodule behavior for each repo
+  rm -f $CLEAN_ALL_SENTINEL
   git submodule foreach --quiet --recursive "$SCRIPT_ROOT/check-submodules.sh in-submodule \$path \$sha1"
+  rm -f $CLEAN_ALL_SENTINEL
 fi
 
