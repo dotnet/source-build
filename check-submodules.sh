@@ -3,8 +3,9 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-SUBMODULES=$SCRIPT_ROOT/.gitmodules
-CLEAN_ALL_SENTINEL=$SCRIPT_ROOT/.cleansourcebuildsubmodules
+SUBMODULES="$SCRIPT_ROOT/.gitmodules"
+CLEAN_ALL_SENTINEL="$SCRIPT_ROOT/.cleansourcebuildsubmodules"
+PROMPT_TIMEOUT=30
 
 # has the user answered "yes to all" to init'ing submodules?
 answered_all=0
@@ -14,20 +15,21 @@ init_submodule () {
   module=$1
   done=0
   while [ $done == 0 ]; do
+    noreply=0
     echo "warning: submodules $module does not appear to be initialized."
-    read -p "Should I initialize it for you? [Yes/no/all/quit] " -n 1 -r
+    read -p "Should I initialize it for you? [Y]es / [n]o / [a]ll / [q]uit] " -n 1 -r -t $PROMPT_TIMEOUT || noreply=1
     echo
-    if [[ $REPLY =~ ^[Aa]$ ]]; then
+    if [[ $noreply == 1 || $REPLY =~ ^[Aa]$ ]]; then
       answered_all=1
       done=1
-      git submodule update --init --recursive $module
+      git submodule update --init --recursive "$module"
     elif [[ $REPLY =~ ^[Qq]$ ]]; then
       exit 0
     elif [[ $REPLY =~ ^[Nn]$ ]]; then
       done=1
     elif [[ $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Yy]$ ]]; then
       done=1
-      git submodule update --init --recursive $module
+      git submodule update --init --recursive "$module"
     else
       echo "didn't understand that ($REPLY)"
     fi
@@ -38,17 +40,20 @@ init_submodule () {
 # for being ahead vs being behind or diverged from the expected commit,
 # so this function is parameterized.
 fix_submodule () {
-  path=$1
+  path="$1"
   expected=$2
   actual=$3
-  msg=$4
-  prompt=$5
+  msg="$4"
+  prompt="$5"
   done=0
   while [ $done == 0 ]; do
+    noreply=0
     echo -e "$msg"
-    read -p "$prompt " -n 1 -r
+    read -p "$prompt " -n 1 -r -t $PROMPT_TIMEOUT || noreply=1
     echo
-    if [[ $REPLY =~ ^[Qq]$ ]]; then
+    if [[ $noreply == 1 || $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Nn]$ ]]; then
+      done=1
+    elif [[ $REPLY =~ ^[Qq]$ ]]; then
       exit 1
     elif [[ $REPLY =~ ^[Yy]$ ]]; then
       # check if we have this commit locally and can skip the fetch
@@ -69,8 +74,6 @@ fix_submodule () {
       fi
       git checkout $expected
       done=1
-    elif [[ $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Nn]$ ]]; then
-      done=1
     else
       echo "didn't understand that ($REPLY)"
     fi
@@ -79,26 +82,27 @@ fix_submodule () {
 
 # clean a submodule if the user approves.
 clean_submodule() {
-  path=$1
-  msg=$2
-  prompt=$3
+  path="$1"
+  msg="$2"
+  prompt="$3"
   done=0
   while [ $done == 0 ]; do
+    noreply=0
     echo -e "$msg"
-    read -p "$prompt " -n 1 -r
+    read -p "$prompt " -n 1 -r -t $PROMPT_TIMEOUT || noreply=1
     echo
-    if [[ $REPLY =~ ^[Aa]$ ]]; then
+    if [[ $noreply == 1 || $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Nn]$ ]]; then
+      done=1
+    elif [[ $REPLY =~ ^[Aa]$ ]]; then
       git clean -fxd
       git reset --hard HEAD
-      touch $CLEAN_ALL_SENTINEL
+      touch "$CLEAN_ALL_SENTINEL"
       done=1
     elif [[ $REPLY =~ ^[Qq]$ ]]; then
       exit 1
     elif [[ $REPLY =~ ^[Yy]$ ]]; then
       git clean -fxd
       git reset --hard HEAD
-      done=1
-    elif [[ $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Nn]$ ]]; then
       done=1
     else
       echo "didn't understand that ($REPLY)"
@@ -109,7 +113,7 @@ clean_submodule() {
 # We use the same script for checking the super-repo and the submodules.
 # Having the first argument be "in-submodule" triggers this submodule behavior.
 if [ ${1:-default} == "in-submodule" ]; then
-  path=$2
+  path="$2"
   expected_sha=$3
   subcommit=`git rev-parse HEAD`
   if [ "$subcommit" != "$expected_sha" ]; then
@@ -122,9 +126,9 @@ if [ ${1:-default} == "in-submodule" ]; then
       mergeBase=$(git merge-base HEAD $expected_sha)
     fi
     if [ "$mergeBase" != "$expected_sha" ]; then
-      fix_submodule $path $expected_sha $subcommit "warning: submodule $path, currently at $subcommit, has diverged from checked-in version $expected_sha\nif you are changing a submodule branch or moving a submodule backwards, this is expected.\nShould I checkout $path to the expected commit $expected_sha?" "[No/yes/quit]"
+      fix_submodule $path $expected_sha $subcommit "warning: submodule $path, currently at $subcommit, has diverged from checked-in version $expected_sha\nif you are changing a submodule branch or moving a submodule backwards, this is expected.\nShould I checkout $path to the expected commit $expected_sha?" "[N]o / [y]es / [q]uit"
     else
-      fix_submodule $path $expected_sha $subcommit "warning: submodule $path, currently at $subcommit, is ahead of checked-in version $expected_sha\nif you are updating a submodule, this is expected.\nShould I checkout $path to the expected commit $expected_sha?" "[No/yes/quit]"
+      fix_submodule $path $expected_sha $subcommit "warning: submodule $path, currently at $subcommit, is ahead of checked-in version $expected_sha\nif you are updating a submodule, this is expected.\nShould I checkout $path to the expected commit $expected_sha?" "[N]o / [y]es / [q]uit"
     fi
   fi
   # check for staged changes and unstaged modifications
@@ -132,29 +136,29 @@ if [ ${1:-default} == "in-submodule" ]; then
   # check for untracked new files
   untracked="$(git ls-files --others --exclude-standard)"
   if [[ ${exit_code:-0} != 0 || ! -z "$untracked" ]]; then
-    if [ -e $CLEAN_ALL_SENTINEL ]; then
+    if [ -e "$CLEAN_ALL_SENTINEL" ]; then
       git clean -fxd
       git reset --hard HEAD
     else
-      clean_submodule $path "warning: submodule $path has uncommitted changes\nShould I clean and reset $path (this will lose ALL uncommitted changes)?" "[No/yes/all/quit]"
+      clean_submodule $path "warning: submodule $path has uncommitted changes\nShould I clean and reset $path (this will lose ALL uncommitted changes)?" "[N]o / [y]es / [a]ll / [q]uit"
     fi
   fi
 # Main branch for super-repo behavior
 else
   # submodule foreach doesn't work until submodules are init'd, read the modules manually
-  for module in `git config --file .gitmodules --get-regexp path | awk '{ print $2 }'`
+  for module in `git config --file "$SUBMODULES" --get-regexp path | awk '{ print $2 }'`
   do
     if [ ! -e "$SCRIPT_ROOT/$module/.git" ]; then
       if [ $answered_all == 1 ]; then
-        git submodule update --init --recursive $module
+        git submodule update --init --recursive "$module"
       else
-        init_submodule $module
-     fi
+        init_submodule "$module"
+      fi
     fi
   done
   # kick off the submodule behavior for each repo
-  rm -f $CLEAN_ALL_SENTINEL
-  git submodule foreach --quiet --recursive "$SCRIPT_ROOT/check-submodules.sh in-submodule \$path \$sha1"
-  rm -f $CLEAN_ALL_SENTINEL
+  rm -f "$CLEAN_ALL_SENTINEL"
+  git submodule foreach --quiet --recursive "$SCRIPT_ROOT/check-submodules.sh in-submodule \"\$path\" \"\$sha1\""
+  rm -f "$CLEAN_ALL_SENTINEL"
 fi
 
