@@ -17,7 +17,7 @@
   <Target Name="RepoBuild">
     <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)src $(RedirectRepoOutputToLog)" />
 
-    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)src /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)src /v:normal /flp:Verbosity=Diag $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
