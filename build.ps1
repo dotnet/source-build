@@ -24,6 +24,11 @@ function Exec-Block([scriptblock]$cmd) {
 $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
 
+if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
+{
+  Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
+}
+
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 $env:DOTNET_MULTILEVEL_LOOKUP = '0'
