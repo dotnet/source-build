@@ -63,7 +63,7 @@ def addPushJob(String project, String branch, String os, String configuration)
     ["Release", "Debug"].each { configuration ->
 
       def shortJobName = "${os}_Offline_${configuration}";
-      def contextString = "${os} ${configuration}";
+      def contextString = "${os} Offline ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
