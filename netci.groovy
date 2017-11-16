@@ -68,14 +68,16 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
-            shell("cd source-build")
+          dir('source-build'){
             shell("git submodule update --init --recursive");
             shell("./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
             shell("./build-source-tarball.sh ../tarball-output --skip-build");
+          }
 
+          dir('tarball-output'){
             // For now, perform offline build up to corefx until we work through issues with other repos
-            shell('cd ../tarball-output');
-            shell("./tarball-output/build.sh /p:RootRepo=corefx /p:Configuration=${configuration} ${loggingOptions}")
+            shell("./build.sh /p:RootRepo=corefx /p:Configuration=${configuration} ${loggingOptions}")
+          }
         }
       }
 
