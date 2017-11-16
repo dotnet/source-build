@@ -84,7 +84,12 @@ def addPushJob(String project, String branch, String os, String configuration)
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
       if(isPR){
+        if(configuration == "Release"){
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        }
+        else{
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+        }
       }
       else{
         Utilities.addGithubPushTrigger(newJob);
