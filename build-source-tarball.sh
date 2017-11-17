@@ -21,6 +21,7 @@ if [ -e "$TARBALL_ROOT" ]; then
 fi
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
+SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
@@ -32,39 +33,35 @@ if [ $SKIP_BUILD -ne 1 ]; then
     $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true /flp:v=detailed
 fi
 
-$SCRIPT_ROOT/clean.sh
+git submodule foreach --recursive git clean -xdf
+git submodule foreach --recursive git reset --hard
 
 mkdir -p "$TARBALL_ROOT"
 
-mkdir -p $TARBALL_ROOT/Tools
-cp -rf $SCRIPT_ROOT/Tools/* $TARBALL_ROOT/Tools/
-
-rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
-
-cp -r $SCRIPT_ROOT/build.proj $TARBALL_ROOT/
-cp -r $SCRIPT_ROOT/dir.props $TARBALL_ROOT/
+cp $SCRIPT_ROOT/build.proj $TARBALL_ROOT/
+cp $SCRIPT_ROOT/dir.props $TARBALL_ROOT/
+cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
-cp -r $SCRIPT_ROOT/repositories.props $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/src $TARBALL_ROOT/
-cp -r $SCRIPT_ROOT/targets $TARBALL_ROOT/
-cp -r $SCRIPT_ROOT/tasks $TARBALL_ROOT/
-cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 
 find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
 
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/sdk/2.0.0-preview3-006845/nuGetPackagesArchive.lzma
+cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
+rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
+rm -f $TARBALL_ROOT/Tools/dotnetcli/sdk/$SDK_VERSION/nuGetPackagesArchive.lzma
 rm -rf $TARBALL_ROOT/Tools/dotnetcli/store
 rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
+find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
-for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/source-built -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
