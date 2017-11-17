@@ -10,6 +10,7 @@
 |Generic Linux - ARM|[![Build Status][linux_arm-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Linux_ARM_Release/)|[![Build Status][linux_arm-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Linux_ARM_Debug/)
 |OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/OSX10.12_Debug/)
 |RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/RHEL7.2_Debug/)
+|RHEL7.2 (Offline)|[![Build Status][rhel-offline-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/RHEL7.2_Offline_Release/)|[![Build Status][rhel-offline-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/RHEL7.2_Offline_Debug/)
 |Ubuntu16.04|[![Build Status][ubuntu-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Ubuntu16.04_Release/)|[![Build Status][ubuntu-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Ubuntu16.04_Debug/)
 |Windows|[![Build Status][windows-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Windows_NT_Release/)|[![Build Status][windows-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.0/job/Windows_NT_Debug/)
 
@@ -25,6 +26,8 @@
 [osx-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/OSX10.12_Debug
 [rhel-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/RHEL7.2_Release
 [rhel-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/RHEL7.2_Debug
+[rhel-offline-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/RHEL7.2_Offline_Release
+[rhel-offline-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/RHEL7.2_Offline_Debug
 [ubuntu-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/Ubuntu16.04_Release
 [ubuntu-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/Ubuntu16.04_Debug
 [windows-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.0/Windows_NT_Release
