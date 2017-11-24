@@ -69,7 +69,10 @@ do
 done
 
 # Record commits for the source-build repo and all submodules, to aid in reproducibility.
-echo -e "path\tchecked-in\tactual" > $TARBALL_ROOT/commits.txt
-echo -e "source-build\t$(git rev-parse HEAD)\t$(git rev-parse HEAD)" >> $TARBALL_ROOT/commits.txt
-git submodule foreach --quiet --recursive "actual=\$(git rev-parse HEAD); echo -e \"\$toplevel/\$path\t\$sha1\t\$actual\" >> $FULL_TARBALL_ROOT/commits.txt"
+cat >$TARBALL_ROOT/source-build-info.txt << EOF
+source-build:
+ $(git rev-parse HEAD) . ($(git describe --always HEAD))
 
+submodules:
+$(git submodule status)
+EOF
