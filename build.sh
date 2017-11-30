@@ -18,6 +18,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
+export BUILDTOOLS_CROSSGEN_FEED=https://www.nuget.org/api/v2/
 
 source "$SCRIPT_ROOT/init-tools.sh"
 
