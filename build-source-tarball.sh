@@ -74,5 +74,5 @@ source-build:
  $(git rev-parse HEAD) . ($(git describe --always HEAD))
 
 submodules:
-$(git submodule status)
+$(git submodule status --recursive)
 EOF
