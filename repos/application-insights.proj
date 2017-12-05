@@ -9,13 +9,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/src/Microsoft.ApplicationInsights/Managed/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)/src/Microsoft.ApplicationInsights/Managed/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/src/Microsoft.ApplicationInsights/Managed/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
