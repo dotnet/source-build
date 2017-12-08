@@ -2,7 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>$(Platform) $(Configuration) skiptests -PortableBuild=false </BuildArguments>
+    <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
+    <BuildArguments Condition="'$(PortableBuild)' == ''">$(BuildArguments) -PortableBuild=false</BuildArguments>
+    <BuildArguments Condition="'$(PortableBuild)' != ''">$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
