@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <BuildArguments>-ConfigurationGroup=$(Configuration) -SkipTests=true </BuildArguments>
-    <BuildArguments Condition="'$(PortableBuild)' == ''">$(BuildArguments -PortableBuild=false</BuildArguments>
+    <BuildArguments Condition="'$(PortableBuild)' == ''">$(BuildArguments) -PortableBuild=false</BuildArguments>
     <BuildArguments Condition="'$(PortableBuild)' != ''">$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false</BuildCommand>
