@@ -5,7 +5,10 @@
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+    <PropertyGroup>
+      <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
+    </PropertyGroup>
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="PortableBuild=$(PortableBuild)"/>
   </Target>
 
   <Target Name="PrepareOutput">
