@@ -44,7 +44,7 @@
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
-  <Target Name="BuildDummyPackages" Condition="'$(BuildOffline)' == 'true'">
+  <Target Name="BuildDummyPackages" Condition="'$(OfflineBuild)' == 'true'">
     <ItemGroup>
       <DummyPackage Include="Castle.Core" Version="3.3.3" />
       <DummyPackage Include="Castle.Core" Version="4.0.0-beta001" />
@@ -285,7 +285,7 @@
                         OutputPath="$(SourceBuiltPackagesPath)" />
   </Target>
 
-  <Target Name="BuildReferenceAssemblies" Condition="'$(BuildOffline)' == 'true'">
+  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
     <Exec Command="$(DotNetCliToolDir)/dotnet build $(SubmoduleDirectory)/reference-assemblies/build.proj" />
     <Exec Command="$(DotNetCliToolDir)/dotnet restore $(SubmoduleDirectory)/reference-assemblies/nuspecs/pack.csproj" />
     <Exec Command="$(DotNetCliToolDir)/dotnet pack $(SubmoduleDirectory)/reference-assemblies/nuspecs/PackAll.proj" />

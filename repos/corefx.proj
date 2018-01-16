@@ -36,8 +36,10 @@
 
   <Target Name="BuildNetStandardLibraryNetFramework"
           BeforeTargets="Package">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building .NET Standard Library for 'corefx'" />
     <Exec Command="$(FrameworkBuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building .NET Standard Library for 'corefx'...done" />
   </Target>
 </Project>

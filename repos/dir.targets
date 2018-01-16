@@ -60,7 +60,7 @@
       <_DependentProject Include="@(RepositoryReference -> '%(Identity).proj')" />
     </ItemGroup>
 
-    <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" />
+    <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'">
@@ -138,7 +138,15 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging '$(RepositoryName)'" />
+    <Message Importance="High" Text="Running command:" />
+    <Message Importance="High" Text="  $(BuildPackagesCommand)" />
+    <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
+    <Message Importance="High" Text="  With Enivornment Varibles:" />
+    <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
     <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging '$(RepositoryName)'...done" />
+    <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
   <Target Name="GatherBuiltPackages">

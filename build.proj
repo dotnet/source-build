@@ -8,7 +8,7 @@
     <PropertyGroup>
       <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     </PropertyGroup>
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" Properties="PortableBuild=$(PortableBuild)"/>
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" Properties="PortableBuild=$(PortableBuild)" />
   </Target>
 
   <Target Name="PrepareOutput">
@@ -29,6 +29,6 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
-  <Import Project="$(MSBuildThisfileDirectory)scripts/auto-update/update-submodules.targets" />
+  <Import Project="$(ToolsDir)VersionTools.targets" />
 
 </Project>
