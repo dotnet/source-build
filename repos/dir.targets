@@ -149,7 +149,7 @@
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
-  <Target Name="GatherBuiltPackages">
+  <Target Name="GatherBuiltPackages" AfterTargets="Package">
     <ItemGroup>
       <!-- Filter out packages for WriteVersions -->
       <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
