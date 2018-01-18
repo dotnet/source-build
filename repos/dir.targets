@@ -149,7 +149,7 @@
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
-  <Target Name="GatherBuiltPackages" AfterTargets="Package">
+  <Target Name="GatherBuiltPackages">
     <ItemGroup>
       <!-- Filter out packages for WriteVersions -->
       <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
@@ -166,7 +166,7 @@
   </Target>
 
   <Target Name="WriteVersions"
-          AfterTargets="Build;CopyPackage"
+          AfterTargets="CopyPackage"
           DependsOnTargets="GatherBuiltPackages">
     <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
                        OutputPath="$(VersionFileLocation)"
