@@ -166,7 +166,7 @@
   </Target>
 
   <Target Name="WriteVersions"
-          AfterTargets="Build;CopyPackage"
+          AfterTargets="CopyPackage"
           DependsOnTargets="GatherBuiltPackages">
     <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
                        OutputPath="$(VersionFileLocation)"
