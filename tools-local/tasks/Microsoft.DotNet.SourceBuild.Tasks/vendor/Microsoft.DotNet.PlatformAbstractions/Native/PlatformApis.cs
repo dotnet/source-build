@@ -128,7 +128,13 @@ namespace Microsoft.DotNet.PlatformAbstractions.Native
         // are backwards compatible.
         private static DistroInfo NormalizeDistroInfo(DistroInfo distroInfo)
         {
-            int minorVersionNumberSeparatorIndex = distroInfo.VersionId.IndexOf('.');
+            // If the distro doesn't have a VERSION_ID (like Arch Linux) then return the year + month
+            if(String.IsNullOrEmpty(distroInfo.VersionId))
+            {
+               distroInfo.VersionId = DateTime.Now.ToString("yyMM");
+            }
+
+    	    int minorVersionNumberSeparatorIndex = distroInfo.VersionId.IndexOf('.');
 
             if (distroInfo.Id == "rhel" && minorVersionNumberSeparatorIndex != -1)
             {
