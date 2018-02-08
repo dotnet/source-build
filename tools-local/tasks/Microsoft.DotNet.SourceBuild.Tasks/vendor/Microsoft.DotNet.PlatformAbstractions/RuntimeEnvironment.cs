@@ -52,8 +52,15 @@ namespace Microsoft.DotNet.PlatformAbstractions
                 case Platform.Windows:
                     return GetWindowsProductVersion();
                 case Platform.Linux:
+                    if (string.IsNullOrEmpty(OperatingSystemVersion))
+                    {
+                        return string.Empty;
+                    }
+
                     return $".{OperatingSystemVersion}";
                 case Platform.Darwin:
+                    return $".{OperatingSystemVersion}";
+                case Platform.FreeBSD:
                     return $".{OperatingSystemVersion}";
                 default:
                     return string.Empty; // Unknown Platform? Unknown Version!
@@ -96,6 +103,8 @@ namespace Microsoft.DotNet.PlatformAbstractions
                     return OperatingSystem.ToLowerInvariant();
                 case Platform.Darwin:
                     return "osx";
+                case Platform.FreeBSD:
+                    return "freebsd";
                 default:
                     return "unknown";
             }
