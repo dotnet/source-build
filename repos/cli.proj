@@ -4,7 +4,7 @@
   <PropertyGroup>
     <CLITargetsArgument Condition="'$(OS)' == 'Windows_NT'">'/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</CLITargetsArgument>
     <CLITargetsArgument Condition="'$(OS)' != 'Windows_NT'">'/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</CLITargetsArgument>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:ExternalRestoreSources=$(SourceBuiltPackagesPath) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)artifacts/linux-x64/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <GitCommitCount>6908</GitCommitCount>
