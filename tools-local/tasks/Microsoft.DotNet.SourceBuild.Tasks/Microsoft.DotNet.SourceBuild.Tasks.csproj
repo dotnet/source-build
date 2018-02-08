@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Platform.cs" />
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/RuntimeEnvironment.cs" />
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Darwin.cs" />
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Unix.cs" />
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Windows.cs" />
+    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/PlatformApis.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Build">
       <Version>15.1.0-preview-000370-00</Version>
     </PackageReference>
