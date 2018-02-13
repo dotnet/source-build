@@ -1,16 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
+    <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CoreSetupPlatformAbstractionsPath>$(SubmoduleDirectory)core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Platform.cs" />
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/RuntimeEnvironment.cs" />
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Darwin.cs" />
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Unix.cs" />
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/NativeMethods.Windows.cs" />
-    <Compile Include="../../../src/core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/Native/PlatformApis.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Platform.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)RuntimeEnvironment.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Darwin.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Unix.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Windows.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/PlatformApis.cs" />
   </ItemGroup>
 
   <ItemGroup>
