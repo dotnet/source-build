@@ -58,7 +58,7 @@ Options:
 ```
 So, for example, when we were creating bootstrap CLI for RHEL / CentOS 6, the command was:
 ```bash
-./buildbootstrapcli.sh -arch x64 -rid rhel.6 -release -os Linux -seedcli ~/seed-cli
+./buildbootstrapcli.sh -rid rhel.6 -release -os Linux -seedcli ~/seed-cli
 ```
 After running the script, check the console output. If the last line printed is `**** Bootstrap CLI was successfully built  ****`, then everything went fine and the bootstrap CLI is ready. You can find it in the `<Rid>-<Architecture>/dotnetcli` subfolder. So for the example command above, it would be `rhel.6-x64/dotnetcli`.
 If there were build errors, they need to be looked into and fixed. After that run the `buildbootstrapcli.sh` with the same arguments again. Repeat until everything builds.
