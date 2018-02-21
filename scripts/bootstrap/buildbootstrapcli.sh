@@ -123,7 +123,7 @@ while [[ "$1" != "" ]]; do
         ;;
     -corelib)
         shift
-        __corelib=$1
+        __corelib=`getrealpath $1`
         ;;
     -seedcli)
         shift
@@ -299,6 +299,94 @@ grep -q "\"$__runtime_id\":" $__frameworkpath/Microsoft.NETCore.App.deps.json ||
 sed -i \
     -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-'$__build_arch'", "any", "base"\n    ],/g' \
 $__frameworkpath/Microsoft.NETCore.App.deps.json
+
+__crossgentimeout=120
+
+function crossgenone(){
+    echo $2/crossgen /MissingDependenciesOK /Platform_Assemblies_Paths $2:$3 /in $1 /out $1.ni >$1.log 2>&1
+    timeout $__crossgentimeout $2/crossgen /MissingDependenciesOK /Platform_Assemblies_Paths $2:$3 /in $1 /out $1.ni >>$1.log 2>&1
+    exitCode=$?
+    if [ "$exitCode" == "0" ]
+    then
+        rm $1.log
+        mv $1.ni $1
+    elif grep -q -e 'The module was expected to contain an assembly manifest' \
+                 -e 'An attempt was made to load a program with an incorrect format.' \
+                 -e 'File is PE32' $1.log
+    then
+        rm $1.log
+        echo "$1" >> crossgenskipped
+    else
+        echo "$1" >> crossgenretry
+    fi
+}
+
+# Run an assembly through ildasm ilasm roundtrip to remove x64 crossgen
+function uncrossgenone(){
+    echo >> $1.log 2>&1
+    echo mv $1 $1.x64 >> $1.log 2>&1
+    echo $2/ildasm -raweh -out=$1.il $1.x64 "&& \\" >> $1.log 2>&1
+    echo $2/ilasm -output=$1 -QUIET -NOLOGO -DEBUG -OPTIMIZE $1.il >> $1.log 2>&1
+
+    mv $1 $1.x64
+    $2/ildasm -raweh -out=$1.il $1.x64 && \
+    $2/ilasm -output=$1 -DLL -QUIET -NOLOGO -DEBUG -OPTIMIZE $1.il
+    exitCode=$?
+    if [ "$exitCode" == "0" ]
+    then
+        rm $1.x64
+        rm $1.il
+    else
+        echo "$1" >> uncrossgenfails
+    fi
+}
+
+# if $__build_arch is not x64 then any dll which was crossgened for x64 must be recrossgened for $__build_arch
+if [[ "$__build_arch" != "x64" ]]
+then
+    echo "**** Beginning crossgen for $__build_arch target  ****"
+    export -f crossgenone
+    export __crossgentimeout
+
+    rm -f crossgenretry crossgendlls crossgenskipped uncrossgenfails
+
+    # Assumes System.Private.CoreLib was already crossgened
+    find $__outputpath -type f -name \*.dll -or -name \*.exe | grep -v System.Private.CoreLib > crossgendlls
+
+    cat crossgendlls | xargs -P 0 -n 1 -I {} bash -c 'crossgenone "$@"' _ {} "$__frameworkpath" "$__outputpath/sdk/$__sdkversion"
+
+    echo
+    echo "**** Crossgen skipped for non-managed assembly files:"
+    echo
+
+    touch crossgenskipped
+    cat crossgenskipped
+
+    echo
+    echo "**** Crossgen failed for the following dlls:"
+    echo
+
+    touch crossgenretry
+    cat crossgenretry
+
+    echo
+    echo "**** Beginning uncrossgen for failed dlls  ****"
+    echo
+    export -f uncrossgenone
+
+    rm -f $__coreclrbin/System.Private.CoreLib.dll
+    ln -s $__corelib $__coreclrbin/System.Private.CoreLib.dll
+
+    cat crossgenretry | xargs -P 0 -n 1 -I {} bash -c 'uncrossgenone "$@"' _ {} "$__coreclrbin"
+
+    rm -f $__coreclrbin/System.Private.CoreLib.dll
+
+    echo
+    echo "**** Uncrossgen failed for the following dlls:"
+    echo
+    touch uncrossgenfails
+    cat uncrossgenfails
+fi
 
 echo "**** Bootstrap CLI was successfully built  ****"
 
