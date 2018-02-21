@@ -193,7 +193,10 @@ echo "**** DETECTING GIT COMMIT HASHES ****"
 # the seed cli package was built from
 __coreclrhash=`strings $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/libcoreclr.so | grep "@(#)" | grep -o "[a-f0-9]\{40\}"`
 __corefxhash=`strings $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/System.Native.so | grep "@(#)" | grep -o "[a-f0-9]\{40\}"`
-__coresetuphash=`strings $__seedclipath/dotnet | grep -o "[a-f0-9]\{40\}"`
+__coresetuphash=`strings $__seedclipath/dotnet | grep "@(#)" | grep -o "[a-f0-9]\{40\}"`
+if [[ "$__coresetuphash" == "" ]]; then
+   __coresetuphash=`strings $__seedclipath/dotnet | grep -o "[a-f0-9]\{40\}"`
+fi
 
 echo "coreclr hash:    $__coreclrhash"
 echo "corefx hash:     $__corefxhash"
@@ -288,9 +291,14 @@ sed \
     -e 's/runtime\.linux-x64/runtime.'$__runtime_id'/g' \
     -e 's/runtimes\/linux-x64/runtimes\/'$__runtime_id'/g' \
     -e 's/Version=v\([0-9].[0-9]\)\/linux-x64/Version=v\1\/'$__runtime_id'/g' \
-    -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-x64", "any", "base"\n    ],/g' \
 $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/Microsoft.NETCore.App.deps.json \
 >$__frameworkpath/Microsoft.NETCore.App.deps.json
+
+# add the new RID to the list of runtimes iff it does not already exist (sed inplace)
+grep -q "\"$__runtime_id\":" $__frameworkpath/Microsoft.NETCore.App.deps.json || \
+sed -i \
+    -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-'$__build_arch'", "any", "base"\n    ],/g' \
+$__frameworkpath/Microsoft.NETCore.App.deps.json
 
 echo "**** Bootstrap CLI was successfully built  ****"
 
