@@ -9,6 +9,7 @@
     <BuildArguments>/p:Configuration=$(Configuration)</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -NoTest $(BuildArguments)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
+    <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
