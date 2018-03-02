@@ -10,7 +10,6 @@ usage()
     echo "Options:"
     echo "  BuildType               Type of build (-debug, -release), default: -debug"
     echo "  -clang <Major.Minor>    Override of the version of clang compiler to use"
-    echo "  -config <Configuration> Build configuration (debug, release), default: debug"
     echo "  -corelib <CoreLib>      Path to System.Private.CoreLib.dll, default: use the System.Private.CoreLib.dll from the seed CLI"
     echo "  -os <OS>                Operating system (used for corefx build), default: Linux"
     echo "  -rid <Rid>              Runtime identifier including the architecture part (e.g. rhel.6-x64)"
@@ -300,11 +299,11 @@ sed -i \
     -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-'$__build_arch'", "any", "base"\n    ],/g' \
 $__frameworkpath/Microsoft.NETCore.App.deps.json
 
-__crossgentimeout=120
+__crossgentimeout=300
 
 function crossgenone(){
     echo $2/crossgen /MissingDependenciesOK /Platform_Assemblies_Paths $2:$3 /in $1 /out $1.ni >$1.log 2>&1
-    timeout $__crossgentimeout $2/crossgen /MissingDependenciesOK /Platform_Assemblies_Paths $2:$3 /in $1 /out $1.ni >>$1.log 2>&1
+    timeout $__crossgentimeout $2/crossgen /MissingDependenciesOK /Platform_Assemblies_Paths $2:$(dirname $1) /in $1 /out $1.ni >>$1.log 2>&1
     exitCode=$?
     if [ "$exitCode" == "0" ]
     then
