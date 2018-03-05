@@ -1,7 +1,7 @@
-From e588a99f965cda3c7eb0f34d3804f9fe888b8cf8 Mon Sep 17 00:00:00 2001
+From 3438b4bf619e97a5dd043417d9bca8535baeb2d0 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 18 May 2017 18:35:17 -0700
-Subject: [PATCH] Add projects using the new dotnet sdk
+Subject: [PATCH 1/5] Add projects using the new dotnet sdk
 
 These projects are built using the dotnet tooling instead of the
 current system MSBuild has. Long term, MSBuild wants to start using
@@ -29,7 +29,7 @@ about, for example).
 
 diff --git a/NetCore.sln b/NetCore.sln
 new file mode 100644
-index 0000000..8da5754
+index 00000000..8da57549
 --- /dev/null
 +++ b/NetCore.sln
 @@ -0,0 +1,95 @@
@@ -130,7 +130,7 @@ index 0000000..8da5754
 +EndGlobal
 diff --git a/build/NetCore.props b/build/NetCore.props
 new file mode 100644
-index 0000000..e0777f0
+index 00000000..e0777f09
 --- /dev/null
 +++ b/build/NetCore.props
 @@ -0,0 +1,21 @@
@@ -157,7 +157,7 @@ index 0000000..e0777f0
 +</Project>
 diff --git a/src/Build/Microsoft.Build.NetCore.csproj b/src/Build/Microsoft.Build.NetCore.csproj
 new file mode 100644
-index 0000000..c750992
+index 00000000..7bd793a9
 --- /dev/null
 +++ b/src/Build/Microsoft.Build.NetCore.csproj
 @@ -0,0 +1,466 @@
@@ -404,6 +404,7 @@ index 0000000..c750992
 +    <Compile Include="..\Shared\CopyOnWriteDictionary.cs" />
 +    <Compile Include="Collections\CopyOnWritePropertyDictionary.cs" />
 +    <Compile Include="Collections\IDeepCloneable.cs" />
++    <Compile Include="..\Shared\IConstrainedEqualityComparer.cs" />
 +    <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
 +    <Compile Include="Collections\FilteringEnumerable.cs" />
 +    <Compile Include="Collections\HashTableUtility.cs" />
@@ -516,6 +517,7 @@ index 0000000..c750992
 +    <Compile Include="Evaluation\ExpressionShredder.cs" />
 +    <Compile Include="Evaluation\Evaluator.cs" />
 +    <Compile Include="Evaluation\Expander.cs" />
++    <Compile Include="Evaluation\SemiColonTokenizer.cs" />
 +    <Compile Include="Evaluation\ToolsetProvider.cs" />
 +    <Compile Include="Globbing\CompositeGlob.cs" />
 +    <Compile Include="Globbing\Extensions\MSBuildGlobExtensions.cs" />
@@ -572,9 +574,11 @@ index 0000000..c750992
 +    <Compile Include="Resources\AssemblyResources.cs" />
 +    <Compile Include="Resources\Constants.cs" />
 +    <Compile Include="Utilities\EngineFileUtilities.cs" />
++    <Compile Include="Utilities\FileSpecMatcherTester.cs" />
 +    <Compile Include="Utilities\RegistryKeyWrapper.cs" />
 +    <Compile Include="Utilities\Utilities.cs" />
 +    <Compile Include="Xml\ProjectXmlUtilities.cs" />
++    <Compile Include="Xml\ProjectXmlUtilities.XmlElementChildIterator.cs" />
 +    <Compile Include="Xml\XmlReaderExtension.cs" />
 +    <Compile Include="..\Shared\AssemblyLoadInfo.cs" />
 +    <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
@@ -623,13 +627,9 @@ index 0000000..c750992
 +    <EmbeddedResource Include="..\Shared\Resources\Strings.shared.resx">
 +      <SubType>Designer</SubType>
 +      <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
-+    </EmbeddedResource>
-+  </ItemGroup>
-+
-+</Project>
 diff --git a/src/Framework/Microsoft.Build.Framework.NetCore.csproj b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 new file mode 100644
-index 0000000..92f7aea
+index 00000000..92f7aeae
 --- /dev/null
 +++ b/src/Framework/Microsoft.Build.Framework.NetCore.csproj
 @@ -0,0 +1,80 @@
@@ -715,7 +715,7 @@ index 0000000..92f7aea
 +</Project>
 diff --git a/src/MSBuild/MSBuild.NetCore.csproj b/src/MSBuild/MSBuild.NetCore.csproj
 new file mode 100644
-index 0000000..2f93b25
+index 00000000..ce87bfa4
 --- /dev/null
 +++ b/src/MSBuild/MSBuild.NetCore.csproj
 @@ -0,0 +1,195 @@
@@ -780,6 +780,7 @@ index 0000000..2f93b25
 +    <Compile Include="..\Shared\CopyOnWriteDictionary.cs" />
 +    <Compile Include="..\Shared\HybridDictionary.cs" />
 +    <Compile Include="..\Shared\IKeyed.cs" />
++    <Compile Include="..\Shared\IConstrainedEqualityComparer.cs" />
 +    <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
 +    <Compile Include="..\Shared\ReadOnlyEmptyCollection.cs" />
 +    <Compile Include="..\Shared\ReadOnlyEmptyDictionary.cs" />
@@ -913,10 +914,9 @@ index 0000000..2f93b25
 +
 +  </ItemGroup>
 +
-+</Project>
 diff --git a/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
 new file mode 100644
-index 0000000..ae65493
+index 00000000..ae654931
 --- /dev/null
 +++ b/src/Tasks/Microsoft.Build.Tasks.Core.NetCore.csproj
 @@ -0,0 +1,262 @@
@@ -1184,7 +1184,7 @@ index 0000000..ae65493
 +</Project>
 diff --git a/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
 new file mode 100644
-index 0000000..9a9c5ec
+index 00000000..2a4fbb4c
 --- /dev/null
 +++ b/src/Utilities/Microsoft.Build.Utilities.Core.NetCore.csproj
 @@ -0,0 +1,115 @@
@@ -1199,6 +1199,7 @@ index 0000000..9a9c5ec
 +
 +  <ItemGroup>
 +    <PackageReference Include="NETStandard.Library" Version="1.6.0" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.2.0" />
 +    <PackageReference Include="System.Collections.NonGeneric" Version="4.0.1" />
 +    <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
 +    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
@@ -1244,6 +1245,7 @@ index 0000000..9a9c5ec
 +    <Compile Include="..\Shared\HybridDictionary.cs" />
 +    <Compile Include="..\Shared\InternalErrorException.cs" />
 +    <Compile Include="..\Shared\IKeyed.cs" />
++    <Compile Include="..\Shared\IConstrainedEqualityComparer.cs" />
 +    <Compile Include="..\Shared\MSBuildNameIgnoreCaseComparer.cs" />
 +    <Compile Include="..\Shared\Modifiers.cs" />
 +    <Compile Include="..\Shared\NativeMethodsShared.cs" />
@@ -1302,7 +1304,8 @@ index 0000000..9a9c5ec
 +      <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
 +    </EmbeddedResource>
 +  </ItemGroup>
++
 +</Project>
 -- 
-1.8.3.1
+2.16.1.windows.4
 
