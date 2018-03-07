@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) $(ProjectDirectory)/RoslynToolsNetCore.sln</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
+    <RepoApiImplemented>false</RepoApiImplemented>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
+    <!-- Match the version symreader wants - this is the highest among our client repos -->
+    <EnvironmentVariables Include="BUILD_BUILDNUMBER=20180215.01" />
+  </ItemGroup>
+
+  <Target Name="RestoreTools"
+          BeforeTargets="Build">
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/build/Toolset.proj $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
+
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
