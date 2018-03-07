@@ -6,5 +6,10 @@
     <PackagesOutput>$(ProjectDirectory)/src/Microsoft.DiaSymReader/NetCore/bin/$(Configuration)</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="roslyn-tools" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
