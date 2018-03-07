@@ -66,7 +66,14 @@
    <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
+    <!--
+        Temporarily update RootRepo to known-good
+        repo project until all repos are building clean.
+        When all repos build, this can be changed back
+        to cli.
     <RootRepo>cli</RootRepo>
+    -->
+    <RootRepo>known-good</RootRepo>
     <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
