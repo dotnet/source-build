@@ -6,16 +6,46 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Toolsets -->
+    <RepositoryReference Include="roslyn-tools" />
+
+    <!-- Tier 1 -->
     <RepositoryReference Include="application-insights" />
     <RepositoryReference Include="common" />
-    <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="javascriptservices" />
     <RepositoryReference Include="netcorecli-fsc" />
     <RepositoryReference Include="newtonsoft-json" />
-    <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="standard" />
-    <RepositoryReference Include="websdk" />
     <RepositoryReference Include="xliff-tasks" />
+
+    <!--RepositoryReference Include="msbuild" /-->
+    <!--RepositoryReference Include="clicommandlineparser" /-->
+    <!--RepositoryReference Include="roslyn" /-->
+    <!--RepositoryReference Include="cli-deps-satellites" /-->
+
+    <!-- Tier 2 -->
+    <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="websdk" />
+    <RepositoryReference Include="coreclr" />
+
+    <!--RepositoryReference Include="symreader-portable" /-->
+    <!--RepositoryReference Include="templating" /-->
+
+    <!-- Tier 3 -->
+
+    <!--RepositoryReference Include="corefx" /-->
+
+    <!-- Tier 4 -->
+
+    <!--RepositoryReference Include="core-setup" /-->
+
+    <!-- Tier 5 -->
+
+    <!--RepositoryReference Include="sdk" /-->
+    <!--RepositoryReference Include="vstest" /-->
+    <!--RepositoryReference Include="cli-migrate" /-->
+    <!--RepositoryReference Include="fsharp" /-->
+
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
