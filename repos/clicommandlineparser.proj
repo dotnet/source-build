@@ -7,6 +7,10 @@
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
+  <ItemGroup>
+    <RepositoryReference Include="roslyn-tools" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">

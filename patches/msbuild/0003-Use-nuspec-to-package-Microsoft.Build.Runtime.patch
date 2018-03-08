@@ -1,18 +1,18 @@
-From 65823b7d1a04a4d73a2e38e397e99422abc85cff Mon Sep 17 00:00:00 2001
+From 417b1835464e90e11be534055eb2c3d51e7ca6a2 Mon Sep 17 00:00:00 2001
 From: Matt Ellis <matell@microsoft.com>
 Date: Thu, 22 Jun 2017 22:31:19 -0700
-Subject: [PATCH] Use nuspec to package Microsoft.Build.Runtime
+Subject: [PATCH 3/5] Use nuspec to package Microsoft.Build.Runtime
 
 Using the csproj was causing issues where content files were being
 added to the build which is not what we want.
 ---
- src/MSBuild/MSBuild.NetCore.csproj         | 70 ++----------------------------
+ src/MSBuild/MSBuild.NetCore.csproj         | 70 +++---------------------------
  src/MSBuild/Microsoft.Build.Runtime.nuspec | 48 ++++++++++++++++++++
- 2 files changed, 52 insertions(+), 66 deletions(-)
+ 2 files changed, 53 insertions(+), 65 deletions(-)
  create mode 100644 src/MSBuild/Microsoft.Build.Runtime.nuspec
 
 diff --git a/src/MSBuild/MSBuild.NetCore.csproj b/src/MSBuild/MSBuild.NetCore.csproj
-index 2f93b25..fe63f36 100644
+index ce87bfa4..82b9611b 100644
 --- a/src/MSBuild/MSBuild.NetCore.csproj
 +++ b/src/MSBuild/MSBuild.NetCore.csproj
 @@ -12,6 +12,10 @@
@@ -26,11 +26,10 @@ index 2f93b25..fe63f36 100644
    </PropertyGroup>
  
    <ItemGroup>
-@@ -125,71 +129,5 @@
-       <LogicalName>$(AssemblyName).Strings.shared.resources</LogicalName>
+@@ -127,69 +131,5 @@
        <SubType>Designer</SubType>
      </EmbeddedResource>
--
+ 
 -    <Content Include="MSBuild.runtimeconfig.json">
 -      <PackagePath>contentFiles\any\netcoreapp1.0</PackagePath>
 -    </Content>
@@ -97,10 +96,11 @@ index 2f93b25..fe63f36 100644
 -
    </ItemGroup>
 -
- </Project>
++ </Project>
+\ No newline at end of file
 diff --git a/src/MSBuild/Microsoft.Build.Runtime.nuspec b/src/MSBuild/Microsoft.Build.Runtime.nuspec
 new file mode 100644
-index 0000000..c85453c
+index 00000000..c85453c9
 --- /dev/null
 +++ b/src/MSBuild/Microsoft.Build.Runtime.nuspec
 @@ -0,0 +1,48 @@
@@ -153,5 +153,5 @@ index 0000000..c85453c
 +  </files>
 +</package>
 -- 
-1.8.3.1
+2.16.1.windows.4
 

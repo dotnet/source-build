@@ -1,0 +1,41 @@
+From 09df880325a30630b907bbc9c4669f18e00d0bfc Mon Sep 17 00:00:00 2001
+From: Dan Seefeldt <dseefeld@microsoft.com>
+Date: Wed, 7 Mar 2018 16:55:37 +0000
+Subject: [PATCH] Remove Net46 from publishing
+
+---
+ .../Microsoft.NET.Sdk.Publish.csproj                        | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
+
+diff --git a/pack/Microsoft.NET.Sdk.Publish/Microsoft.NET.Sdk.Publish.csproj b/pack/Microsoft.NET.Sdk.Publish/Microsoft.NET.Sdk.Publish.csproj
+index a907186..10ad975 100644
+--- a/pack/Microsoft.NET.Sdk.Publish/Microsoft.NET.Sdk.Publish.csproj
++++ b/pack/Microsoft.NET.Sdk.Publish/Microsoft.NET.Sdk.Publish.csproj
+@@ -31,17 +31,6 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <!-- Publish task assembly -->
+-    <Content Include="$(WebSdkRoot)\bin\$(Configuration)\net46\$(RuntimeIdenfier)\Microsoft.NET.Sdk.Publish.Tasks.dll">
+-      <Pack>true</Pack>
+-      <PackagePath>tools\net46</PackagePath>
+-    </Content>
+-
+-    <!-- WebDeploy assemblies should be already signed.-->
+-    <Content Include="$(WebSdkBuild)\WebDeploy\**\*.*">
+-      <Pack>true</Pack>
+-      <PackagePath>tools\net46\%(RecursiveDir)%(Filename)%(Extension)</PackagePath>
+-    </Content>
+ 
+     <Content Include="$(WebSdkRoot)\bin\$(Configuration)\netstandard1.3\Microsoft.NET.Sdk.Publish.Tasks.dll">
+       <Pack>true</Pack>
+@@ -99,4 +88,4 @@
+     </Content>
+   </ItemGroup>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+

@@ -4,8 +4,8 @@
   <PropertyGroup>
     <WebSdkVersion>2.0.0-rel-20170629-588</WebSdkVersion>
     <CoreSdkVersion>2.0.0-preview3-20170728-1</CoreSdkVersion>
-    <BuildCommand>$(ProjectDirectory)/build-core$(ShellExtension)</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/bin/Release/NuGet/</PackagesOutput>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) /p:SkipTests=true</BuildCommand>
+    <PackagesOutput>$(ProjectDirectory)/bin/Release/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
@@ -15,15 +15,5 @@
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
-  <Target Name="MakeWritable" AfterTargets="ApplyPatches">
-    <Exec Command="chmod +x $(ProjectDirectory)/tools/BuildCore.sh"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          Condition="'$(OS)' == 'Unix'" />
-    <Exec Command="chmod +x $(ProjectDirectory)/build-core.sh"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          Condition="'$(OS)' == 'Unix'" />
-  </Target>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

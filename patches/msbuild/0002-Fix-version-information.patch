@@ -1,41 +1,26 @@
-From 4db3fb182b8c13eda689935ba865e45100093506 Mon Sep 17 00:00:00 2001
-From: Matt Ellis <matell@microsoft.com>
-Date: Sat, 20 May 2017 17:41:08 -0700
-Subject: [PATCH] Fix version information
+From a1a1570f2f8b20a397b8c0b3fc0dc81e962bd887 Mon Sep 17 00:00:00 2001
+From: karajas <karajas@microsoft.com>
+Date: Wed, 18 Oct 2017 03:15:12 -0400
+Subject: [PATCH 2/5] Fix version information
 
 ---
- build/NetCore.props     | 4 ++--
+ build/NetCore.props     | 3 +--
  src/Shared/Constants.cs | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/build/NetCore.props b/build/NetCore.props
-index e0777f0..2c505e8 100644
+index e0777f09..3ed6a2ed 100644
 --- a/build/NetCore.props
 +++ b/build/NetCore.props
-@@ -6,8 +6,8 @@
+@@ -6,8 +6,7 @@
      <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)MSFT.snk</AssemblyOriginatorKeyFile>
      <SignAssembly>true</SignAssembly>
      <PublicSign>true</PublicSign>
 -    <VersionPrefix>15.3.0</VersionPrefix>
 -    <VersionSuffix>preview-000234-01</VersionSuffix>
-+    <VersionPrefix>15.3.409</VersionPrefix>
-+    <VersionSuffix></VersionSuffix>
++    <VersionPrefix>15.6.82</VersionPrefix>
    </PropertyGroup>
  
    <PropertyGroup>
-diff --git a/src/Shared/Constants.cs b/src/Shared/Constants.cs
-index b58b0d4..2d0b7c6 100644
---- a/src/Shared/Constants.cs
-+++ b/src/Shared/Constants.cs
-@@ -78,7 +78,7 @@ namespace Microsoft.Build.Shared
-         internal const string CurrentAssemblyVersion = Microsoft.VisualStudio.Internal.BrandNames.VSGeneralAssemblyVersion;
- #endif
- 
--        internal const string CurrentAssemblyFileVersion = "15.3.0.0";
-+        internal const string CurrentAssemblyFileVersion = "15.3.409.57025";
- 
-         /// <summary>
-         /// Current version of this MSBuild Engine assembly in the form, e.g, "12.0"
--- 
-1.8.3.1
+2.16.1.windows.4
 

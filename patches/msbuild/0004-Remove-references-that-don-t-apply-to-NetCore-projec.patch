@@ -1,0 +1,90 @@
+From dbf518fd7c645cca2295dbbe6a89be2d8a2abcf5 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 28 Jan 2018 20:45:50 -0600
+Subject: [PATCH 4/5] Remove references that don't apply to NetCore projects
+ only.
+
+---
+ .../AssemblyDependency/ResolveAssemblyReferenceTestFixture.cs            | 1 -
+ src/Tasks/AssemblyDependency/AssemblyInformation.cs                      | 1 -
+ src/Tasks/AssemblyDependency/ReferenceTable.cs                           | 1 -
+ src/Tasks/AssemblyDependency/ResolveAssemblyReference.cs                 | 1 -
+ src/Tasks/Delegate.cs                                                    | 1 -
+ src/Tasks/SystemState.cs                                                 | 1 -
+ 6 files changed, 6 deletions(-)
+
+diff --git a/src/Tasks.UnitTests/AssemblyDependency/ResolveAssemblyReferenceTestFixture.cs b/src/Tasks.UnitTests/AssemblyDependency/ResolveAssemblyReferenceTestFixture.cs
+index 22289d0c..531a90aa 100644
+--- a/src/Tasks.UnitTests/AssemblyDependency/ResolveAssemblyReferenceTestFixture.cs
++++ b/src/Tasks.UnitTests/AssemblyDependency/ResolveAssemblyReferenceTestFixture.cs
+@@ -7,7 +7,6 @@ using System.Runtime.Versioning;
+ using Microsoft.Build.Framework;
+ using Microsoft.Build.Shared;
+ using Microsoft.Build.Tasks;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ using Microsoft.Build.Utilities;
+ using Microsoft.Win32;
+ using FrameworkNameVersioning = System.Runtime.Versioning.FrameworkName;
+diff --git a/src/Tasks/AssemblyDependency/AssemblyInformation.cs b/src/Tasks/AssemblyDependency/AssemblyInformation.cs
+index b200ae84..eb6bd143 100644
+--- a/src/Tasks/AssemblyDependency/AssemblyInformation.cs
++++ b/src/Tasks/AssemblyDependency/AssemblyInformation.cs
+@@ -18,7 +18,6 @@ using System.Reflection.PortableExecutable;
+ using System.Reflection.Metadata;
+ #endif
+ using System.Collections.Generic;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ 
+ namespace Microsoft.Build.Tasks
+ {
+diff --git a/src/Tasks/AssemblyDependency/ReferenceTable.cs b/src/Tasks/AssemblyDependency/ReferenceTable.cs
+index 9f7cee72..f5dba87e 100644
+--- a/src/Tasks/AssemblyDependency/ReferenceTable.cs
++++ b/src/Tasks/AssemblyDependency/ReferenceTable.cs
+@@ -12,7 +12,6 @@ using System.Runtime.Versioning;
+ 
+ using Microsoft.Build.Framework;
+ using Microsoft.Build.Shared;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ using Microsoft.Build.Utilities;
+ #if (!STANDALONEBUILD)
+ using Microsoft.Internal.Performance;
+diff --git a/src/Tasks/AssemblyDependency/ResolveAssemblyReference.cs b/src/Tasks/AssemblyDependency/ResolveAssemblyReference.cs
+index d15d59b5..b67a4151 100644
+--- a/src/Tasks/AssemblyDependency/ResolveAssemblyReference.cs
++++ b/src/Tasks/AssemblyDependency/ResolveAssemblyReference.cs
+@@ -21,7 +21,6 @@ using Microsoft.Internal.Performance;
+ using FrameworkNameVersioning = System.Runtime.Versioning.FrameworkName;
+ using SystemProcessorArchitecture = System.Reflection.ProcessorArchitecture;
+ using System.Xml.Linq;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ 
+ namespace Microsoft.Build.Tasks
+ {
+diff --git a/src/Tasks/Delegate.cs b/src/Tasks/Delegate.cs
+index f9363684..4229bf2c 100644
+--- a/src/Tasks/Delegate.cs
++++ b/src/Tasks/Delegate.cs
+@@ -8,7 +8,6 @@ using System.Collections.Generic;
+ using System.Runtime.Versioning;
+ 
+ using Microsoft.Build.Shared;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ 
+ namespace Microsoft.Build.Tasks
+ {
+diff --git a/src/Tasks/SystemState.cs b/src/Tasks/SystemState.cs
+index 40680f28..f8c30d21 100644
+--- a/src/Tasks/SystemState.cs
++++ b/src/Tasks/SystemState.cs
+@@ -11,7 +11,6 @@ using System.Runtime.Serialization;
+ using System.Runtime.Versioning;
+ using System.Security.Permissions;
+ using Microsoft.Build.Shared;
+-using Microsoft.Build.Tasks.AssemblyDependency;
+ 
+ namespace Microsoft.Build.Tasks
+ {
+-- 
+2.16.1.windows.4
+
