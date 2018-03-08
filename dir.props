@@ -6,6 +6,8 @@
 
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
     <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
+
+    <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
   </PropertyGroup>
 
   <PropertyGroup>
