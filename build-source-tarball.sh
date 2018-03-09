@@ -48,7 +48,7 @@ cp -r $SCRIPT_ROOT/src $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 
-find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm {} \;
+find $TARBALL_ROOT/src -maxdepth 2 -name '.git' -exec rm -rf {} \;
 
 cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
