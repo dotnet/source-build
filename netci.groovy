@@ -58,12 +58,13 @@ def addPushJob(String project, String branch, String os, String configuration)
   };
 };
 
+// Tarball builds that are not enforced to be offline
 [true, false].each { isPR ->
   ["RHEL7.2"].each { os->
     ["Release", "Debug"].each { configuration ->
 
-      def shortJobName = "${os}_Offline_${configuration}";
-      def contextString = "${os} Offline ${configuration}";
+      def shortJobName = "${os}_Tarball_${configuration}";
+      def contextString = "${os} Tarball ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
@@ -77,6 +78,52 @@ def addPushJob(String project, String branch, String os, String configuration)
       }
 
       Utilities.setMachineAffinity(newJob, os, 'latest-or-auto');
+
+      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+      // Clone into the source-build directory
+      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+      if(isPR){
+        if(configuration == "Release"){
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        }
+        else{
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+        }
+      }
+      else{
+        Utilities.addGithubPushTrigger(newJob);
+      }
+
+    }
+  }
+}
+
+// Tarball builds that are enforced offline with unshare
+[true, false].each { isPR ->
+  ["RHEL7.2"].each { os->
+    ["Release", "Debug"].each { configuration ->
+
+      def shortJobName = "${os}_Unshared_${configuration}";
+      def contextString = "${os} Unshared ${configuration}";
+      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+
+      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
+        steps{
+            shell("cd ./source-build;git submodule update --init --recursive");
+            // First build the product itself
+            shell("docker run -v ./source-build:/opt/code --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
+            shell("mkdir tarball-output");
+            // now build the tarball
+            shell("docker run -v ./source-build:/opt/code -v ./tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+            // now build from the tarball offline and without access to the regular non-tarball build
+            shell("sudo docker run --privileged -v ./tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 unshare -n /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+        }
+      }
+
+      // Only Ubuntu Jenkins machines have Docker
+      Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
