@@ -15,7 +15,7 @@
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
-  <Target Name="Restore" BeforeTargets="Build">
+  <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
