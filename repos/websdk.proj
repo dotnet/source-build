@@ -15,5 +15,12 @@
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
+  <Target Name="MakeWritable" AfterTargets="ApplyPatches">
+    <Exec Command="chmod +x $(ProjectDirectory)/build.sh"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          Condition="'$(OS)' == 'Unix'" />
+  </Target>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
