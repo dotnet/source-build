@@ -2,7 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) $(ProjectDirectory)/RoslynToolsNetCore.sln</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -11,15 +10,18 @@
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
     <!-- Match the version symreader wants - this is the highest among our client repos -->
     <EnvironmentVariables Include="BUILD_BUILDNUMBER=20180215.01" />
+    <EnvironmentVariables Include="ExternalRestoreSources=$(PrebuiltPackagesPath)" Condition="'$(DotNetBuildOffline)' == 'true'" />
+    <EnvironmentVariables Include="RestoreSources=$(SourceBuiltPackagesPath)" Condition="'$(DotNetBuildOffline)' == 'true'" />
   </ItemGroup>
 
-  <Target Name="RestoreTools"
-          BeforeTargets="Build">
-    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/build/Toolset.proj $(RedirectRepoOutputToLog)"
-          WorkingDirectory="$(ProjectDirectory)"
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <Target Name="RepoBuild">
+    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/build/Toolset.proj  /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Exec Command="$(DotnetToolCommand) pack -c $(Configuration) $(ProjectDirectory)/RoslynToolsNetCore.sln /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
-
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
