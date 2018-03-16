@@ -15,7 +15,7 @@
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
-  <Target Name="MakeWritable" AfterTargets="ApplyPatches">
+  <Target Name="MakeExecutable" AfterTargets="ApplyPatches">
     <Exec Command="chmod +x $(ProjectDirectory)/build.sh"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
