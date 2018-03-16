@@ -12,5 +12,8 @@
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
+  <ItemGroup>
+    <RepositoryReference Include="newtonsoft-json" />
+  </ItemGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
