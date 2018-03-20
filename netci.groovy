@@ -116,9 +116,9 @@ def addPushJob(String project, String branch, String os, String configuration)
             // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
             shell("mkdir tarball-output");
             // now build the tarball
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+            shell("sudo docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --privileged -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 unshare -n /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
             // now build from the tarball offline and without access to the regular non-tarball build
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 unshare -n /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+            shell("sudo docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --privileged -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 unshare -n /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
             // do cleanup - Jenkins can't because we sudo'd
             shell("cd ./source-build; sudo git clean -fxd")
             shell("sudo rm -rf tarball-output")
