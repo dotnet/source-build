@@ -119,9 +119,6 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
             // now build from the tarball offline and without access to the regular non-tarball build
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
-            // do cleanup - Jenkins can't because we sudo'd
-            shell("cd ./source-build; sudo git clean -fxd")
-            shell("sudo rm -rf tarball-output")
         }
       }
 
