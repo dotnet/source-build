@@ -69,6 +69,20 @@ do
     fi
 done
 
+echo "Initializing BuildTools package dependencies inside the tarball..."
+# init-tools tries to copy from its script directory to Tools, which in this case is a copy to
+# itself. This is an error. To avoid the error, use a temp dir that we immediately delete.
+TEMP_TOOLS_DIR="$TARBALL_ROOT/ToolsTemp"
+TARBALL_PACKAGES_DIR="$TARBALL_ROOT/packages"
+# init-tools assumes the packages dir already exists.
+mkdir -p "$TARBALL_PACKAGES_DIR"
+(
+    set -x
+    "$TARBALL_ROOT/Tools/init-tools.sh" "$TARBALL_ROOT" "$TARBALL_ROOT/Tools/dotnetcli/dotnet" "$TEMP_TOOLS_DIR" "$TARBALL_PACKAGES_DIR"
+    rm -rf "$TEMP_TOOLS_DIR"
+)
+echo "Initialized BuildTools package dependencies inside the tarball. (Exit code $?)"
+
 # Record commits for the source-build repo and all submodules, to aid in reproducibility.
 cat >$TARBALL_ROOT/source-build-info.txt << EOF
 source-build:
