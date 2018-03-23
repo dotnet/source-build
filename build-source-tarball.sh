@@ -80,7 +80,10 @@ TARBALL_PACKAGES_DIR="$TARBALL_ROOT/packages"
 mkdir -p "$TARBALL_PACKAGES_DIR"
 (
     set -x
-    export __INIT_TOOLS_RESTORE_ARGS="--source $TARBALL_PREBUILT_PACKAGES_DIR"
+
+    # dotnet restore doesn't seem to handle ".." in paths: get absolute name.
+    export __INIT_TOOLS_RESTORE_ARGS="--source $(cd "$TARBALL_PREBUILT_PACKAGES_DIR"; pwd -P)"
+
     "$TARBALL_ROOT/Tools/init-tools.sh" "$TARBALL_ROOT" "$TARBALL_ROOT/Tools/dotnetcli/dotnet" "$TEMP_TOOLS_DIR" "$TARBALL_PACKAGES_DIR"
     rm -rf "$TEMP_TOOLS_DIR"
 )
