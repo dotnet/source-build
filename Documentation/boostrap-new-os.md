@@ -30,14 +30,17 @@ The following libraries and tools need to be installed in order to build the boo
 * AWK
 * SED
 #### Development libraries
-* libunwind
 * lttng-ust
 * openssl or libressl
 * krb5
 * curl
 * liblldb
 * icu
+
+For versions earlier than .NET Core 2.0, following dependencies are also required:
+* libunwind
 * libuuid
+
 ### Building the bootstrap CLI
 There is a bash script file that automatizes most of the process of building the bootstrap CLI end to end. The bash script is located at `dotnet/source-build/scripts/bootstrap/buildbootstrapcli.sh`. It first creates a folder named by the new target RID, clones the coreclr, corefx and core-setup repos into it and checks out the same commit of each of the repos as the one that was used to build the seed CLI. This first step is skipped if the coreclr, corefx and core-setup folders already exist. This is important so that the sources can be modified to fix possible build issues and to target the new RID.
 
