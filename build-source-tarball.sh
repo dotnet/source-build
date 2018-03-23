@@ -58,14 +58,16 @@ rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
-mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
+TARBALL_PREBUILT_PACKAGES_DIR="$TARBALL_ROOT/prebuilt/nuget-packages"
+
+mkdir -p "$TARBALL_PREBUILT_PACKAGES_DIR"
+find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} "$TARBALL_PREBUILT_PACKAGES_DIR" \;
+find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} "$TARBALL_PREBUILT_PACKAGES_DIR" \;
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
+    if [ -e "$TARBALL_PREBUILT_PACKAGES_DIR/$(basename $built_package)" ]; then
+        rm "$TARBALL_PREBUILT_PACKAGES_DIR/$(basename $built_package)"
     fi
 done
 
@@ -78,6 +80,7 @@ TARBALL_PACKAGES_DIR="$TARBALL_ROOT/packages"
 mkdir -p "$TARBALL_PACKAGES_DIR"
 (
     set -x
+    export __INIT_TOOLS_RESTORE_ARGS="--source $TARBALL_PREBUILT_PACKAGES_DIR"
     "$TARBALL_ROOT/Tools/init-tools.sh" "$TARBALL_ROOT" "$TARBALL_ROOT/Tools/dotnetcli/dotnet" "$TEMP_TOOLS_DIR" "$TARBALL_PACKAGES_DIR"
     rm -rf "$TEMP_TOOLS_DIR"
 )
