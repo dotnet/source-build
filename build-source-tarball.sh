@@ -40,6 +40,7 @@ mkdir -p "$TARBALL_ROOT"
 
 cp $SCRIPT_ROOT/build.proj $TARBALL_ROOT/
 cp $SCRIPT_ROOT/dir.props $TARBALL_ROOT/
+cp $SCRIPT_ROOT/init-tools.msbuild $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
@@ -58,36 +59,16 @@ rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
-TARBALL_PREBUILT_PACKAGES_DIR="$TARBALL_ROOT/prebuilt/nuget-packages"
-
-mkdir -p "$TARBALL_PREBUILT_PACKAGES_DIR"
-find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} "$TARBALL_PREBUILT_PACKAGES_DIR" \;
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} "$TARBALL_PREBUILT_PACKAGES_DIR" \;
+mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
+find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
+find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e "$TARBALL_PREBUILT_PACKAGES_DIR/$(basename $built_package)" ]; then
-        rm "$TARBALL_PREBUILT_PACKAGES_DIR/$(basename $built_package)"
+    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
     fi
 done
-
-echo "Initializing BuildTools package dependencies inside the tarball..."
-# init-tools tries to copy from its script directory to Tools, which in this case is a copy to
-# itself. This is an error. To avoid the error, use a temp dir that we immediately delete.
-TEMP_TOOLS_DIR="$TARBALL_ROOT/ToolsTemp"
-TARBALL_PACKAGES_DIR="$TARBALL_ROOT/packages"
-# init-tools assumes the packages dir already exists.
-mkdir -p "$TARBALL_PACKAGES_DIR"
-(
-    set -x
-
-    # dotnet restore doesn't seem to handle ".." in paths: get absolute name.
-    export __INIT_TOOLS_RESTORE_ARGS="--source $(cd "$TARBALL_PREBUILT_PACKAGES_DIR"; pwd -P)"
-
-    "$TARBALL_ROOT/Tools/init-tools.sh" "$TARBALL_ROOT" "$TARBALL_ROOT/Tools/dotnetcli/dotnet" "$TEMP_TOOLS_DIR" "$TARBALL_PACKAGES_DIR"
-    rm -rf "$TEMP_TOOLS_DIR"
-)
-echo "Initialized BuildTools package dependencies inside the tarball. (Exit code $?)"
 
 # Record commits for the source-build repo and all submodules, to aid in reproducibility.
 cat >$TARBALL_ROOT/source-build-info.txt << EOF
