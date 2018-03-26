@@ -4,6 +4,8 @@
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
+    <!-- Work around a dependency on .git that doesn't have a good fallback yet: https://github.com/dotnet/buildtools/issues/1980 -->
+    <EnvironmentVariables Include="GitBranchName=N/A" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />

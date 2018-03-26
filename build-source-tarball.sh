@@ -40,6 +40,7 @@ mkdir -p "$TARBALL_ROOT"
 
 cp $SCRIPT_ROOT/build.proj $TARBALL_ROOT/
 cp $SCRIPT_ROOT/dir.props $TARBALL_ROOT/
+cp $SCRIPT_ROOT/init-tools.msbuild $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
