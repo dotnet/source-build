@@ -18,6 +18,7 @@ echo "Expanding BuildTools dependencies into packages directory..."
 TEMP_TOOLS_DIR="$SCRIPT_ROOT/ToolsTemp"
 PREBUILT_PACKAGE_SOURCE="$SCRIPT_ROOT/prebuilt/nuget-packages"
 (
+    # Log the commands that run.
     set -x
 
     "$CLI_ROOT/dotnet" restore "$SCRIPT_ROOT/init-tools.msbuild" --no-cache --packages "$SCRIPT_ROOT/packages" --source "$PREBUILT_PACKAGE_SOURCE" || exit $?
