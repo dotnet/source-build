@@ -65,6 +65,8 @@
 
    <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
+  <Import Project="$(ProjectDir)dependencies.props" />
+
   <PropertyGroup>
     <!--
         Temporarily update RootRepo to known-good

@@ -13,6 +13,7 @@
     <CleanCommand>$(DotnetToolCommand) clean $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</CleanCommand>
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">

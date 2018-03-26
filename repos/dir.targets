@@ -216,5 +216,8 @@
          DestinationFolder="$(ProjectDirectory)" />
   </Target>
 
+  <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
+  <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />
+
   <Import Project="$(ToolsDir)VersionTools.targets" />
 </Project>
