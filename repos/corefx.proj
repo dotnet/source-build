@@ -2,9 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false -BuildTests=false -- /p:ILLinkTrimAssembly=false </BuildCommand>
+    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <FrameworkBuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false</FrameworkBuildCommand>
+    <FrameworkBuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(BuildArguments) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false</FrameworkBuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <LatestCommit>8321c729934c0f8be754953439b88e6e1c120c24</LatestCommit>
