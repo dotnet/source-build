@@ -6,6 +6,7 @@
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
     <BuildCommand>$(DotnetToolCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <Target Name="RestoreSolution"

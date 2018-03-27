@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    A CurrentRef is a commit on the dotnet/versions master branch. It is the single source of truth
+    for which dotnet/versions commit was last used to update the dependency.
+  -->
+  <PropertyGroup>
+    <ProdConCurrentRef>7daa2e55de668c4c8ee832059aab04917153881e</ProdConCurrentRef>
+    <BuildToolsCurrentRef>af030b25653d53483b0200ff81d89209bd30549a</BuildToolsCurrentRef>
+  </PropertyGroup>
+
+  <!-- Package dependency verification/auto-upgrade configuration. -->
+  <PropertyGroup>
+    <BaseDotNetBuildInfo>build-info/dotnet/</BaseDotNetBuildInfo>
+    <DependencyBranch>release/2.1</DependencyBranch>
+    <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
+  </PropertyGroup>
+
+  <!-- ILLink.Tasks package version -->
+  <PropertyGroup>
+    <ILLinkTasksPackage>ILLink.Tasks</ILLinkTasksPackage>
+    <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RemoteDependencyBuildInfo Include="BuildTools">
+      <BuildInfoPath>$(BaseDotNetBuildInfo)buildtools/$(DependencyBranch)</BuildInfoPath>
+      <CurrentRef>$(BuildToolsCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+
+    <DependencyBuildInfo Include="@(RemoteDependencyBuildInfo)">
+      <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
+    </DependencyBuildInfo>
+
+    <DependencyInfo Include="ProdCon">
+      <DependencyType>Orchestrated build</DependencyType>
+      <BasePath>build-info/dotnet/product/cli/release/2.1</BasePath>
+      <CurrentRef>$(ProdConCurrentRef)</CurrentRef>
+      <VersionsRepoOwner>dotnet</VersionsRepoOwner>
+      <VersionsRepo>versions</VersionsRepo>
+    </DependencyInfo>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SkipBuildToolsUpdate)' != 'true'">
+    <UpdateStep Include="BuildTools">
+      <UpdaterType>File</UpdaterType>
+      <Path>$(MSBuildThisFileDirectory)BuildToolsVersion.txt</Path>
+      <PackageId>Microsoft.DotNet.BuildTools</PackageId>
+    </UpdateStep>
+  </ItemGroup>
+</Project>

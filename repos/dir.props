@@ -18,6 +18,10 @@
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
+  </PropertyGroup>
+
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />

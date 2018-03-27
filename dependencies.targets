@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CreateOrchestratedBuildSubmoduleUpdaters"
+          BeforeTargets="CreateDefaultDependencyInfos"
+          Condition="'$(SkipOrchestratedBuildSubmoduleUpdate)' != 'true'">
+
+    <ItemGroup>
+      <OrchestratedBuildRepoProjects Include="$(ProjectDir)repos\*.proj" />
+    </ItemGroup>
+
+    <MSBuild Projects="@(OrchestratedBuildRepoProjects)"
+             Targets="GetOrchestratedManifestBuildName">
+      <Output TaskParameter="TargetOutputs" ItemName="OrchestratedManifestBuildNames" />
+    </MSBuild>
+
+    <MSBuild Projects="@(OrchestratedBuildRepoProjects)"
+             Targets="GetProjectDirectory">
+      <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
+    </MSBuild>
+
+    <ReadGitConfigFile File="$(GitModulesPath)">
+      <Output TaskParameter="SubmoduleConfiguration" ItemName="SubmoduleConfigurations" />
+    </ReadGitConfigFile>
+
+    <!--
+      Perform joins to gather information about each repo into a single item each. Each A-B join
+      first creates all A*B "candidate" combinations. The candidate items are then filtered down to
+      the combinations where the desired metadata from A and B match.
+    -->
+    <ItemGroup>
+      <!-- Join manifest build name to project directory. -->
+      <BuildNamePathCandidate Include="@(OrchestratedManifestBuildNames)">
+        <Path>%(ProjectDirectories.Identity)</Path>
+        <ProjectDirectorySourceProjectFile>%(ProjectDirectories.MSBuildSourceProjectFile)</ProjectDirectorySourceProjectFile>
+      </BuildNamePathCandidate>
+
+      <BuildNamePath Include="@(BuildNamePathCandidate)"
+                     Condition="'%(MSBuildSourceProjectFile)' == '%(ProjectDirectorySourceProjectFile)' AND
+                                '%(Identity)' != 'N/A'" />
+      
+      <!-- Join project directory to submodule URL. -->
+      <BuildNamePathGitUrlCandidate Include="@(BuildNamePath)">
+        <Submodule>$(ProjectDir)%(SubmoduleConfigurations.Path)/</Submodule>
+        <GitUrl>%(SubmoduleConfigurations.Url)</GitUrl>
+      </BuildNamePathGitUrlCandidate>
+
+      <BuildNamePathGitUrl Include="@(BuildNamePathGitUrlCandidate)"
+                           Condition="'%(Path)' == '%(Submodule)'" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <UpdateStep Include="@(BuildNamePathGitUrl)">
+        <UpdaterType>Submodule from orchestrated build</UpdaterType>
+        <BuildName>%(BuildNamePathGitUrl.Identity)</BuildName>
+      </UpdateStep>
+    </ItemGroup>
+  </Target>
+</Project>
