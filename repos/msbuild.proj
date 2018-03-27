@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=1a685bea87d005f2ebcdf9a690012592e381e658</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:DisableNerdbankVersioning=true /p:GitHeadSha=71eedf98975925fa7f2f3e669d19ba6c81391048</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
 
