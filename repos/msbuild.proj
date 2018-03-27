@@ -2,26 +2,12 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <SolutionToBuild>$(ProjectDirectory)/NetCore.sln</SolutionToBuild>
-    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/packages</PackagesOutput>
-    <BuildCommand>$(DotnetToolCommand) pack $(SolutionToBuild) /p:Configuration=$(Configuration) /p:PackageOutputPath=$(PackagesOutput)</BuildCommand>
+    <LatestCommit>71eedf98975925fa7f2f3e669d19ba6c81391048</LatestCommit>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
+    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:DisableNerdbankVersioning=true /p:GitHeadSha=$(LatestCommit)</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
   </PropertyGroup>
 
-  <Target Name="RestoreSolution"
-          BeforeTargets="Build">
-    <Exec Command="$(DotnetToolCommand) restore $(SolutionToBuild) $(RedirectRepoOutputToLog)"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
-
-  <!-- patch(1) doesn't understand binary diffs so we have to copy
-       the file ourselves -->
-  <Target Name="CopyStrongNameKey"
-          BeforeTargets="Build">
-    <Copy SourceFiles="$(ToolsDir)MSFT.snk"
-          DestinationFiles="$(ProjectDirectory)/build/MSFT.snk" />
-  </Target>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
