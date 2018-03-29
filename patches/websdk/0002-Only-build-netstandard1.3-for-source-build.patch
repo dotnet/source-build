@@ -1,0 +1,31 @@
+From e01b4f740e4362a093d33f99dadf984c9bf76225 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 29 Mar 2018 19:54:16 +0000
+Subject: [PATCH] Only build netstandard1.3 for source-build
+
+---
+ .../Microsoft.NET.Sdk.Publish.Tasks.csproj                             | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj b/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
+index 649d71d..f4e928f 100644
+--- a/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
++++ b/src/Publish/Microsoft.NET.Sdk.Publish.Tasks/Microsoft.NET.Sdk.Publish.Tasks.csproj
+@@ -8,6 +8,7 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>net46;netstandard1.3</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard1.3</TargetFrameworks>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+     <OutputPath>$(WebSdkRoot)\bin\$(Configuration)\</OutputPath>
+     <IntermediateOutputPath>$(WebSdkRoot)\obj\$(Configuration)\</IntermediateOutputPath>
+@@ -51,4 +52,4 @@
+       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+     </EmbeddedResource>
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+
