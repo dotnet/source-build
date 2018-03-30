@@ -5,6 +5,9 @@
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>dotnet/symreader</OrchestratedManifestBuildName>
     <LatestCommit>9bb9aec2fdfd165eef3776fd3ff2f1bb9b63e46d</LatestCommit>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>
