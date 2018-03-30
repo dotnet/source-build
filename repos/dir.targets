@@ -99,6 +99,13 @@
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
                            OutputPath="$(PackageVersionPropsPath)" />
+
+    <ReadLinesFromFile File="$(PackageVersionPropsPath)">
+      <Output TaskParameter="Lines" ItemName="VersionProperties" />
+    </ReadLinesFromFile>
+
+    <Message Importance="High" Text="$(RepositoryName) is using versions $(PackageVersionPropsPath)" />
+    <Message Importance="High" Text="%(VersionProperties.Identity)" />
   </Target>
 
   <Target Name="CreateRestoreSourceProps"
