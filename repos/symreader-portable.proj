@@ -2,15 +2,19 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) $(ProjectDirectory)/src/Microsoft.DiaSymReader.PortablePdb/Microsoft.DiaSymReader.PortablePdb.csproj</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/src/Microsoft.DiaSymReader.PortablePdb/bin/$(Configuration)</PackagesOutput>
-    <RepoApiImplemented>false</RepoApiImplemented>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>dotnet/symreader-portable</OrchestratedManifestBuildName>
+    <LatestCommit>6b4292f99164b6e7815eb25937771b4071079eaa</LatestCommit>
   </PropertyGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="symreader" />
-    <RepositoryReference Include="roslyn-tools" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="symreader" />
+    <!-- <RepositoryReference Include="roslyn-tools" /> -->
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

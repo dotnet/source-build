@@ -2,14 +2,17 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(DotnetToolCommand) pack -c $(Configuration) $(ProjectDirectory)/src/Microsoft.DiaSymReader/NetCore/Microsoft.DiaSymReader.csproj</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)/src/Microsoft.DiaSymReader/NetCore/bin/$(Configuration)</PackagesOutput>
-    <RepoApiImplemented>false</RepoApiImplemented>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>dotnet/symreader</OrchestratedManifestBuildName>
+    <LatestCommit>9bb9aec2fdfd165eef3776fd3ff2f1bb9b63e46d</LatestCommit>
   </PropertyGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="roslyn-tools" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <RepositoryReference Include="roslyn-tools" /> -->
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
