@@ -15,7 +15,7 @@ index a0ddead..b4363a7 100755
  
  source "$REPOROOT/scripts/common/_prettyprint.sh"
  export DOTNET_VERSION=2.1.300-preview2-008248
-+if [ ! -z "$DotNetCoreSdkDir" ]
++if [ -n "$DotNetCoreSdkDir" ]
 +then
 +    export DOTNET_VERSION=$( ${DotNetCoreSdkDir}/dotnet --version )
 +fi
