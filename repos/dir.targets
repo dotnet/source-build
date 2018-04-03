@@ -4,8 +4,6 @@
     <EnvironmentVariables Include="LatestCommit=$(LatestCommit)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
-    <!-- Work around a dependency on .git that doesn't have a good fallback yet: https://github.com/dotnet/buildtools/issues/1980 -->
-    <EnvironmentVariables Include="GitBranchName=N/A" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
@@ -101,6 +99,13 @@
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
                            OutputPath="$(PackageVersionPropsPath)" />
+
+    <ReadLinesFromFile File="$(PackageVersionPropsPath)">
+      <Output TaskParameter="Lines" ItemName="VersionProperties" />
+    </ReadLinesFromFile>
+
+    <Message Importance="High" Text="$(RepositoryName) is using versions $(PackageVersionPropsPath)" />
+    <Message Importance="High" Text="%(VersionProperties.Identity)" />
   </Target>
 
   <Target Name="CreateRestoreSourceProps"

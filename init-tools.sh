@@ -8,8 +8,9 @@ __DOTNET_PATH="$__TOOLRUNTIME_DIR/dotnetcli"
 __DOTNET_CMD="$__DOTNET_PATH/dotnet"
 if [ -z "${__BUILDTOOLS_SOURCE:-}" ]; then __BUILDTOOLS_SOURCE=https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json; fi
 export __BUILDTOOLS_USE_CSPROJ=true
-__BUILD_TOOLS_PACKAGE_VERSION=$(cat "$__scriptpath/BuildToolsVersion.txt")
-__DOTNET_TOOLS_VERSION=$(cat "$__scriptpath/DotnetCLIVersion.txt")
+__BUILD_TOOLS_PACKAGE_VERSION=$(cat "$__scriptpath/BuildToolsVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+__DOTNET_TOOLS_VERSION=$(cat "$__scriptpath/DotnetCLIVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+__ILASM_VERSION=$(cat "$__scriptpath/tools-local/ILAsmVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 __BUILD_TOOLS_PATH="$__PACKAGES_DIR/microsoft.dotnet.buildtools/$__BUILD_TOOLS_PACKAGE_VERSION/lib"
 __INIT_TOOLS_RESTORE_PROJECT="$__scriptpath/init-tools.msbuild"
 __BUILD_TOOLS_SEMAPHORE="$__TOOLRUNTIME_DIR/$__BUILD_TOOLS_PACKAGE_VERSION/init-tools.complete"
@@ -37,7 +38,8 @@ fi
 
 echo "Running: $__scriptpath/init-tools.sh" > "$__init_tools_log"
 
-display_error_message() {
+display_error_message()
+{
     echo "Please check the detailed log that follows." 1>&2
     cat "$__init_tools_log" 1>&2
 }
@@ -46,7 +48,7 @@ display_error_message() {
 execute_with_retry() {
     local count=0
     local retries=${retries:-5}
-    local waitFactor=${waitFactor:-6} 
+    local waitFactor=${waitFactor:-6}
     until "$@"; do
         local exit=$?
         count=$(( $count + 1 ))
@@ -54,7 +56,7 @@ execute_with_retry() {
             local wait=$(( waitFactor ** (( count - 1 )) ))
             echo "Retry $count/$retries exited $exit, retrying in $wait seconds..."
             sleep $wait
-        else    
+        else
             say_err "Retry $count/$retries exited $exit, no more retries left."
             return $exit
         fi
@@ -69,7 +71,7 @@ if [ ! -e "$__DOTNET_PATH" ]; then
             echo "Warning: build not supported on 32 bit Unix"
         fi
 
-       __PKG_ARCH=x64
+        __PKG_ARCH=x64
 
         OSName=$(uname -s)
         case $OSName in
@@ -86,7 +88,7 @@ if [ ! -e "$__DOTNET_PATH" ]; then
                 ;;
 
             Linux)
-            __PKG_RID=linux
+                __PKG_RID=linux
                 OS=Linux
 
                 if [ -e /etc/os-release ]; then
@@ -106,28 +108,32 @@ if [ ! -e "$__DOTNET_PATH" ]; then
                 ;;
 
             *)
-                echo "Unsupported OS '$OSName' detected. Downloading linux-$__PKG_ARCH tools."
+            echo "Unsupported OS '$OSName' detected. Downloading linux-$__PKG_ARCH tools."
                 OS=Linux
                 __PKG_RID=linux
                 ;;
-      esac
+        esac
 
-      __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-$__PKG_RID-$__PKG_ARCH
+        __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-$__PKG_RID-$__PKG_ARCH
     fi
-
     mkdir -p "$__DOTNET_PATH"
 
     echo "Installing dotnet cli..."
     __DOTNET_LOCATION="https://dotnetcli.azureedge.net/dotnet/Sdk/${__DOTNET_TOOLS_VERSION}/${__DOTNET_PKG}.tar.gz"
 
     install_dotnet_cli() {
-        echo "Installing '${__DOTNET_LOCATION}' to '$__DOTNET_PATH/dotnet.tar'" >> "$__init_tools_log"
-        rm -rf -- "$__DOTNET_PATH/*"
-        # curl has HTTPS CA trust-issues less often than wget, so lets try that first.
-        if command -v curl > /dev/null; then
-            curl --retry 10 -sSL --create-dirs -o "$__DOTNET_PATH/dotnet.tar" "${__DOTNET_LOCATION}"
+        if [[ -z "${DotNetBootstrapCliTarPath-}" ]]; then
+            echo "Installing '${__DOTNET_LOCATION}' to '$__DOTNET_PATH/dotnet.tar'"
+            rm -rf -- "$__DOTNET_PATH/*"
+            # curl has HTTPS CA trust-issues less often than wget, so lets try that first.
+            if command -v curl > /dev/null; then
+                curl --retry 10 -sSL --create-dirs -o $__DOTNET_PATH/dotnet.tar ${__DOTNET_LOCATION}
+            else
+                wget -q -O $__DOTNET_PATH/dotnet.tar ${__DOTNET_LOCATION}
+            fi
         else
-            wget -q -O "$__DOTNET_PATH/dotnet.tar" "${__DOTNET_LOCATION}"
+            echo "Copying '$DotNetBootstrapCliTarPath' to '$__DOTNET_PATH/dotnet.tar'"
+            cp $DotNetBootstrapCliTarPath $__DOTNET_PATH/dotnet.tar
         fi
         cd "$__DOTNET_PATH"
         tar -xf "$__DOTNET_PATH/dotnet.tar"
@@ -139,12 +145,26 @@ fi
 
 if [ ! -e "$__BUILD_TOOLS_PATH" ]; then
     echo "Restoring BuildTools version $__BUILD_TOOLS_PACKAGE_VERSION..."
-    echo "Running: $__DOTNET_CMD restore \"$__INIT_TOOLS_RESTORE_PROJECT\" --no-cache --packages $__PACKAGES_DIR --source $__BUILDTOOLS_SOURCE /p:BuildToolsPackageVersion=$__BUILD_TOOLS_PACKAGE_VERSION" >> "$__init_tools_log"
-    "$__DOTNET_CMD" restore "$__INIT_TOOLS_RESTORE_PROJECT" --no-cache --packages "$__PACKAGES_DIR" --source "$__BUILDTOOLS_SOURCE" /p:BuildToolsPackageVersion=$__BUILD_TOOLS_PACKAGE_VERSION >> "$__init_tools_log"
-    if [ ! -e "$__BUILD_TOOLS_PATH/init-tools.sh" ]; then 
+    echo "Running: $__DOTNET_CMD restore \"$__INIT_TOOLS_RESTORE_PROJECT\" --no-cache --packages $__PACKAGES_DIR --source $__BUILDTOOLS_SOURCE /p:BuildToolsPackageVersion=$__BUILD_TOOLS_PACKAGE_VERSION /p:ToolsDir=$__TOOLRUNTIME_DIR" >> "$__init_tools_log"
+    "$__DOTNET_CMD" restore "$__INIT_TOOLS_RESTORE_PROJECT" --no-cache --packages "$__PACKAGES_DIR" --source "$__BUILDTOOLS_SOURCE" /p:BuildToolsPackageVersion=$__BUILD_TOOLS_PACKAGE_VERSION /p:ToolsDir="$__TOOLRUNTIME_DIR" >> "$__init_tools_log"
+    if [ ! -e "$__BUILD_TOOLS_PATH/init-tools.sh" ]; then
         echo "ERROR: Could not restore build tools correctly." 1>&2
         display_error_message
     fi
+fi
+
+if [ -z "${__ILASM_RID-}" ]; then
+    __ILASM_RID=$__PKG_RID-$__PKG_ARCH
+fi
+
+echo "Using RID $__ILASM_RID for BuildTools native tools"
+
+export ILASMCOMPILER_VERSION=$__ILASM_VERSION
+export NATIVE_TOOLS_RID=$__ILASM_RID
+
+if [ -n "${DotNetBootstrapCliTarPath-}" ]; then
+    # Assume ilasm is not in nuget yet when bootstrapping...
+    unset ILASMCOMPILER_VERSION
 fi
 
 echo "Initializing BuildTools..."
@@ -154,7 +174,7 @@ echo "Running: $__BUILD_TOOLS_PATH/init-tools.sh $__scriptpath $__DOTNET_CMD $__
 chmod +x "$__BUILD_TOOLS_PATH/init-tools.sh"
 "$__BUILD_TOOLS_PATH/init-tools.sh" "$__scriptpath" "$__DOTNET_CMD" "$__TOOLRUNTIME_DIR" "$__PACKAGES_DIR" >> "$__init_tools_log"
 if [ "$?" != "0" ]; then
-    echo "ERROR: An error occured when trying to initialize the tools."1>&2
+    echo "ERROR: An error occurred when trying to initialize the tools." 1>&2
     display_error_message
     exit 1
 fi
