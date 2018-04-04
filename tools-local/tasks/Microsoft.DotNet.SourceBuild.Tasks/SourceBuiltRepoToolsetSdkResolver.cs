@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks
 {
-    public class SourceBuildSdkResolver : SdkResolver
+    public class SourceBuiltRepoToolsetSdkResolver : SdkResolver
     {
         public override string Name => nameof(SourceBuiltRepoToolsetSdkResolver);
 
