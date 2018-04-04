@@ -11,18 +11,24 @@
 
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
+    <SourceBuildMSBuildSdkResolverPath>$(DotNetSdkResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdkResolverPath>
   </PropertyGroup>
 
   <Target Name="Build"
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;BuildDummyPackages;BuildReferenceAssemblies" />
+    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;BuildDummyPackages;BuildReferenceAssemblies" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="Clean">
     <Delete Files="$(BuildCompetedSuccessSemaphore)" />
+  </Target>
+
+  <Target Name="InstallSourceBuildSdkResolver">
+    <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
+          DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
   </Target>
 
   <Target Name="BuildTasks">
