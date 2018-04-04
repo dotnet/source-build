@@ -78,16 +78,21 @@
 
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
-          Condition="'$(NuGetConfigFile)' != ''">
-    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+          Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''">
+    <!-- Update the detected or manually specified NuGetConfigFile, but also allow multiple. -->
+    <ItemGroup>
+      <NuGetConfigFiles Include="$(NuGetConfigFile)" />
+    </ItemGroup>
+
+    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                                           Condition="'$(OfflineBuild)' != ''" />
 
-    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="prebuilt"
                             SourcePath="$(PrebuiltPackagesPath)"
                             Condition="'$(OfflineBuild)' == 'true'" />
 
-    <AddSourceToNuGetConfig NuGetConfigFile="$(NuGetConfigFile)"
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
