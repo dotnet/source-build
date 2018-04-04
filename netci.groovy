@@ -60,7 +60,7 @@ def addPushJob(String project, String branch, String os, String configuration)
 
 // Tarball builds that are not enforced to be offline
 [true, false].each { isPR ->
-  ["RHEL7.2"].each { os->
+  ["RHEL7.2", "CentOS7.1"].each { os ->
     ["Release", "Debug"].each { configuration ->
 
       def shortJobName = "${os}_Tarball_${configuration}";
