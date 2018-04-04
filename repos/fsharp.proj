@@ -5,9 +5,15 @@
     <PackagesOutput>$(ProjectDirectory)/BuildFromSource/Release/bin</PackagesOutput>
     <BuildRevision>171107</BuildRevision>
     <BuildCommand>$(ProjectDirectory)/src/buildfromsource$(ShellExtension)</BuildCommand>
-    <NuGetConfigFile>$(ProjectDirectory)/src/buildfromsource/NuGet.config</NuGetConfigFile>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <!-- ProdCon is behind source-build: temporarily disable auto-update. -->
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <!-- Auto-detect the root NuGet.Config, but also update the build-from-source-specific one. -->
+  <ItemGroup>
+    <NuGetConfigFiles Include="$(ProjectDirectory)/src/buildfromsource/NuGet.config" />
+  </ItemGroup>
 
   <PropertyGroup>
     <PathListSeparator>:</PathListSeparator>
@@ -18,11 +24,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
     <EnvironmentVariables Include="BuildRevision=$(BuildRevision)" />
     <EnvironmentVariables Include="PATH=$(DotNetCliToolDir)$(PathListSeparator)$(CurrentPath)" />
-    <RepositoryReference Include="core-setup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- <RepositoryReference Include="core-setup" /> -->
     <RepositoryReference Include="symreader" />
     <RepositoryReference Include="symreader-portable" />
   </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
