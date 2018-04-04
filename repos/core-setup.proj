@@ -12,6 +12,9 @@
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
+
+    <!-- ProdCon is behind source-build: temporarily disable auto-update. -->
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
