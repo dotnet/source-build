@@ -4,15 +4,13 @@
   <PropertyGroup>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <LatestCommit>9bb9aec2fdfd165eef3776fd3ff2f1bb9b63e46d</LatestCommit>
+    <LatestCommit>47d48ec691032e35882a7f6c4c632d621f4f04a8</LatestCommit>
     <UsesRepoToolset>true</UsesRepoToolset>
     <BuiltToolPackageId>$(RepoToolsetPackageId)</BuiltToolPackageId>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
-    <!-- Match the version symreader wants - this is the highest among our client repos -->
-    <EnvironmentVariables Include="BUILD_BUILDNUMBER=20180215.01" />
     <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
   </ItemGroup>
 
