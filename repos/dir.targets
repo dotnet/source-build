@@ -11,6 +11,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
+  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
 
   <!--
     Central property to define that a repo doesn't implement any of the Repo API. If a repo adds an
@@ -185,6 +186,24 @@
                        Condition="'@(_BuiltPackages)'!=''" />
   </Target>
 
+  <Target Name="ExtractToolPackage"
+          DependsOnTargets="GatherBuiltPackages"
+          AfterTargets="Build"
+          Condition="'$(BuiltToolPackageId)' != ''">
+    <ItemGroup>
+      <_AllSourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
+      <_ToolPackage Include="@(_AllSourceBuiltPackages)"
+                    Condition="$([System.String]::new('%(Filename)').StartsWith('$(BuiltToolPackageId)'))" />
+    </ItemGroup>
+
+    <Error Text="Expected single package matching '$(BuiltToolPackageId)', found: @(_ToolPackage)"
+           Condition="'@(_ToolPackage->Count())' != '1'" />
+
+    <ZipFileExtractToDirectory SourceArchive="@(_ToolPackage)"
+                               DestinationDirectory="$(ToolPackageExtractDir)$(BuiltToolPackageId)\"
+                               OverwriteDestination="true" />
+  </Target>
+
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
     <Exec Command="$(CleanCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
@@ -224,6 +243,21 @@
 
    <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
          DestinationFolder="$(ProjectDirectory)" />
+  </Target>
+
+  <!--
+    Repo toolset users must use the source-built toolset, but the repo toolset build itself can only
+    consume itself source-built in a tarball (offline) build.
+  -->
+  <Target Name="BootstrapRoslynToolsRepoToolset"
+          BeforeTargets="Build"
+          Condition="'$(UsesRepoToolset)' == 'true' AND
+                     ('$(BuiltToolPackageId)' != '$(RepoToolsetPackageId)' OR '$(OfflineBuild)' == 'true')">
+    <ItemGroup>
+      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_PACKAGE_DIR=$(ToolPackageExtractDir)$(RepoToolsetPackageId)\" />
+      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_DIR=$(ToolPackageExtractDir)$(RepoToolsetPackageId)\sdk\" />
+      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_VERSION=1.0.0-source-built" />
+    </ItemGroup>
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

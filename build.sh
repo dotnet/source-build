@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+export SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"
