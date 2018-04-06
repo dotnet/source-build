@@ -1,0 +1,25 @@
+From 735b7c82a16ddf16f39643830acb2ee62d2f3150 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 6 Apr 2018 15:52:18 +0000
+Subject: [PATCH] blah2
+
+---
+ .../sdk/2.1.101/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Tools/dotnetcli/sdk/2.1.101/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets b/Tools/dotnetcli/sdk/2.1.101/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets
+index 577b74d..18dc593 100755
+--- a/Tools/dotnetcli/sdk/2.1.101/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets
++++ b/Tools/dotnetcli/sdk/2.1.101/Sdks/Microsoft.NET.Sdk/build/Microsoft.NET.Sdk.targets
+@@ -421,7 +421,7 @@ Copyright (c) .NET Foundation. All rights reserved.
+       </SatelliteAssemblyAttribute>
+     </ItemGroup>
+ 
+-    <WriteCodeFragment AssemblyAttributes="@(SatelliteAssemblyAttribute)" Language="$(Language)" OutputFile="$(_AssemblyInfoFile)">
++    <WriteCodeFragment AssemblyAttributes="@(SatelliteAssemblyAttribute)" Language="C#" OutputFile="$(_AssemblyInfoFile)">
+       <Output TaskParameter="OutputFile" ItemName="FileWrites" />
+     </WriteCodeFragment>
+ 
+-- 
+1.8.3.1
+
