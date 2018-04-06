@@ -1,0 +1,34 @@
+From 06801ae380e51ae94b363cdc6a4319cccff0d8d5 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 6 Apr 2018 12:55:26 +0000
+Subject: [PATCH] Update build script to only includ netcore for packaging
+
+---
+ scripts/build.sh | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/scripts/build.sh b/scripts/build.sh
+index 1e10ed1..a6d40e7 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -262,10 +262,14 @@ function publish_package()
+     local packageDir=$TP_OUT_DIR/$TPB_Configuration/$TPB_TargetFramework/$TPB_TargetRuntime
+     local coreCLRPackageDir=$TP_OUT_DIR/$TPB_Configuration/$TPB_TargetFrameworkCore
+     local frameworkPackageDirMap=( \
+-        $TPB_TargetFrameworkCore:$coreCLRPackageDir \
+-        $TPB_TargetFramework:$packageDir
++        $TPB_TargetFrameworkCore:$coreCLRPackageDir
+     )
+-    
++    if [[ $DOTNET_BUILD_FROM_SOURCE = 0 ]]; then
++        frameworkPackageDirMap+=( \
++            $TPB_TargetFramework:$packageDir
++        )
++    fi
++
+     for fxpkg in "${frameworkPackageDirMap[@]}" ;
+     do
+         local framework="${fxpkg%%:*}"
+-- 
+1.8.3.1
+
