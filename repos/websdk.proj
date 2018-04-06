@@ -7,6 +7,9 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) /p:SkipTests=true</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/Release/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
+
+    <!-- ProdCon is behind source-build: temporarily disable auto-update. -->
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +17,6 @@
     <EnvironmentVariables Include="CoreSdkVersion=$(CoreSdkVersion)" />
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
-
-  <Target Name="MakeExecutable" AfterTargets="ApplyPatches">
-    <Exec Command="chmod +x $(ProjectDirectory)/build.sh"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          Condition="'$(OS)' == 'Unix'" />
-  </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
