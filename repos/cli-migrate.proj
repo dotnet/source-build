@@ -2,24 +2,24 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
-    <CommitCount>2133</CommitCount>
-    <RepoApiImplemented>false</RepoApiImplemented>
-    <OrchestratedManifestBuildName>dotnet/cli-migrate</OrchestratedManifestBuildName>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <LatestCommit>8c0c93528be9d4001e59a80cb5084fdbec49c64c</LatestCommit>
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
+    <UsesRepoToolset>true</UsesRepoToolset>
   </PropertyGroup>
 
   <ItemGroup>
-    <MSBuildProperties Include="Configuration=$(Configuration)" />
-    <MSBuildProperties Include="COMMIT_COUNT=$(CommitCount)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="roslyn-tools" />
   </ItemGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) msbuild /t:BuildForCli @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
