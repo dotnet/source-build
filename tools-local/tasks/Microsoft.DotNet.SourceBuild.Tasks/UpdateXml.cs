@@ -34,8 +34,8 @@ namespace Microsoft.DotNet.Build.Tasks
 
             UpdateElement(doc, PathToElement.Split('/'), NewElementValue);
 
-            var outFile = File.OpenWrite(XmlFilePath);
-            doc.Save(outFile);
+            File.WriteAllText(XmlFilePath, doc.ToString());
+
             return true;
         }
         private void UpdateElement(XContainer element, string[] path, string value)
