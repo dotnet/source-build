@@ -1,0 +1,24 @@
+From 26e95835f8c738fd2ceb9b49bd6e46a9d51ee5b3 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Sat, 7 Apr 2018 10:53:05 -0500
+Subject: [PATCH] Exclude all test projects from source build
+
+---
+ src/Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 6ac75870..5851d617 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -25,6 +25,7 @@
+     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+     <GenerateProgramFile>false</GenerateProgramFile>
+     <XUnitRunnerAdditionalArguments>-parallel none</XUnitRunnerAdditionalArguments>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+ </Project>
+-- 
+2.16.1.windows.4
+
