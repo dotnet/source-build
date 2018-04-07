@@ -1,11 +1,13 @@
-From 26e95835f8c738fd2ceb9b49bd6e46a9d51ee5b3 Mon Sep 17 00:00:00 2001
+From aa9cec932a6ddb028c66efaf7a4e7d8c21f73dcb Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Sat, 7 Apr 2018 10:53:05 -0500
 Subject: [PATCH] Exclude all test projects from source build
 
 ---
- src/Directory.Build.props | 1 +
- 1 file changed, 1 insertion(+)
+ src/Directory.Build.props       |  1 +
+ src/Tests/Directory.Build.props | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 src/Tests/Directory.Build.props
 
 diff --git a/src/Directory.Build.props b/src/Directory.Build.props
 index 6ac75870..5851d617 100644
@@ -19,6 +21,27 @@ index 6ac75870..5851d617 100644
    </PropertyGroup>
  
  </Project>
+diff --git a/src/Tests/Directory.Build.props b/src/Tests/Directory.Build.props
+new file mode 100644
+index 00000000..8de73dad
+--- /dev/null
++++ b/src/Tests/Directory.Build.props
+@@ -0,0 +1,15 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
++<Project>
++
++  <PropertyGroup>
++    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)..\Directory.Build.props</MSBuildAllProjects>
++  </PropertyGroup>
++
++  <Import Project="..\Directory.Build.props" />
++
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
++
++</Project>
 -- 
 2.16.1.windows.4
 
