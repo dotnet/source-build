@@ -187,7 +187,7 @@ ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 "$__scriptpath/Tools/crossgen.sh" "$__scriptpath/Tools"
 
 echo "Patching Sdk to workaround issue https://github.com/dotnet/sdk/pull/1997"
-git apply --ignore-whitespace --whitespace=nowarn --directory="$__scriptpath" "$__scriptpath/patches/0001-Patch-Tools-for-sdk-pr-1997.patch"
+(cd "$__scriptpath";git apply --ignore-whitespace --whitespace=nowarn "$__scriptpath/tools-local/patches/0001-Patch-Tools-for-sdk-pr-1997.patch")
 
 mkdir -p "$(dirname "$__BUILD_TOOLS_SEMAPHORE")" && touch "$__BUILD_TOOLS_SEMAPHORE"
 

@@ -3,13 +3,12 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateXml" />
 
   <PropertyGroup>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
     <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
-    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuildTemporary.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -38,10 +37,6 @@
     <UpdateJson JsonFilePath="$(ProjectDirectory)/global.json"
                 PathToAttribute="sdk.version"
                 NewAttributeValue="$(SDK_VERSION)" />
-
-    <UpdateXml  XmlFilePath="$(ProjectDirectory)/build/Targets/Tools.props"
-                PathToElement="Project/PropertyGroup/dotnetSdkVersion"
-                NewElementValue="$(SDK_VERSION)" />
   </Target>
 
   <Target Name="Restore" BeforeTargets="Build">
@@ -49,7 +44,7 @@
       <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
     </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/SourceBuildTemporary.sln $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
