@@ -1,0 +1,25 @@
+From 56a371849e2764bcfcc289aa58175c3a4ccb2c85 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 9 Apr 2018 10:21:16 -0500
+Subject: [PATCH] Skip _GenerateRepoDirectoriesAttribute in BfS
+
+---
+ .../Microsoft.DotNet.Tools.Tests.Utilities.csproj                       | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Tests/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj b/src/Tests/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
+index a672d838..3cd204b3 100644
+--- a/src/Tests/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
++++ b/src/Tests/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
+@@ -30,7 +30,7 @@
+     <_RepoDirectoriesFile>$(IntermediateOutputPath)\RepoDirectories.g.cs</_RepoDirectoriesFile>
+   </PropertyGroup>
+ 
+-  <Target Name="_GenerateRepoDirectoriesAttribute" BeforeTargets="CoreCompile" Outputs="$(_RepoDirectoriesFile)">
++  <Target Name="_GenerateRepoDirectoriesAttribute" BeforeTargets="CoreCompile" Outputs="$(_RepoDirectoriesFile)" Condition="Exists('$(IntermediateOutputPath)')">
+     <ItemGroup>
+       <_Attribute Include="Microsoft.DotNet.Tools.Test.Utilities.RepoDirectoriesAttribute">
+         <_Parameter1>$(RepoRoot)</_Parameter1>
+-- 
+2.16.1.windows.4
+

@@ -2,13 +2,17 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)/Packages</PackagesOutput>
-    <BuildNumber>20170728-1</BuildNumber>
-    <CommitHash>e27eeed9161ec9249b329181ab8de036e1ebf106</CommitHash>
-    <BuildCommand>$(DotnetToolCommand) msbuild /t:BuildForCli /p:Configuration=$(Configuration) /p:BuildNumber=$(BuildNumber) /p:BUILD_SOURCEVERSION=$(CommitHash) $(ProjectDirectory)/build/build.proj</BuildCommand>
-    <RepoApiImplemented>false</RepoApiImplemented>
-    <OrchestratedManifestBuildName>dotnet/sdk</OrchestratedManifestBuildName>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <LatestCommit>dd10bc7fd4a0046d0e27242d7e558dbc34d9fbbd</LatestCommit>
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
+    <UsesRepoToolset>true</UsesRepoToolset>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="core-setup" />
@@ -17,5 +21,6 @@
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="roslyn-tools" />
   </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

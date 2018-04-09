@@ -74,7 +74,8 @@
     </PropertyGroup>
 
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          Condition="'@(PatchesToApply)' != ''" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"

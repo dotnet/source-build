@@ -2,26 +2,21 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <CommitCount>167</CommitCount>
-    <PackagesOutput>$(ProjectDirectory)/CommandLine/bin/$(Configuration)/</PackagesOutput>
-    <RepoApiImplemented>false</RepoApiImplemented>
-    <OrchestratedManifestBuildName>dotnet/CliCommandLineParser</OrchestratedManifestBuildName>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <LatestCommit>31a677abae466176d932c0d50f8bde52d7613bb9</LatestCommit>
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
+    <UsesRepoToolset>true</UsesRepoToolset>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="roslyn-tools" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
-
-  <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) msbuild /t:MakeVersionProps /p:CommitCount=$(CommitCount) $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-
-    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-
-    <Exec Command="$(DotnetToolCommand) pack /p:Configuration=$(Configuration) $(ProjectDirectory)/CommandLine/CommandLine-netcore.csproj $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
 </Project>
