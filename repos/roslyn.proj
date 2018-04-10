@@ -6,7 +6,7 @@
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
     <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
-    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/CLI.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /p:DotNetBuildFromSource='$(DotNetBuildFromSource)'</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>
@@ -27,7 +27,6 @@
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
-    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Build.Tasks.nuspec" />
   </ItemGroup>
 
   <Target Name="Restore" BeforeTargets="Build">
@@ -35,7 +34,7 @@
       <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
     </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/CLI.sln $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
