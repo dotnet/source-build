@@ -2,8 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
-
   <PropertyGroup>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
@@ -30,14 +28,6 @@
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
   </ItemGroup>
-
-  <Target Name="UpdateCLIVersion"
-          BeforeTargets="Restore">
-
-    <UpdateJson JsonFilePath="$(ProjectDirectory)/global.json"
-                PathToAttribute="sdk.version"
-                NewAttributeValue="$(SDK_VERSION)" />
-  </Target>
 
   <Target Name="Restore" BeforeTargets="Build">
     <PropertyGroup>
