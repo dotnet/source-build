@@ -1,0 +1,32 @@
+From 84824127f34ccfa3fecad33e0a78ebef7bec9497 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 11 Apr 2018 19:22:19 +0000
+Subject: [PATCH] Update build script to not kill on source-build
+
+---
+ build/build.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/build.sh b/build/build.sh
+index 0e63f37..f836807 100755
+--- a/build/build.sh
++++ b/build/build.sh
+@@ -137,7 +137,7 @@ function ExitIfError {
+   then
+     echo "$2"
+ 
+-    if ! $ci # kill command not permitted on CI machines
++    if [ "$ci" != "true" && "$dotnetBuildFromSource" != "true" ]; # kill command not permitted on CI machines or in source-build
+     then
+       StopProcesses
+     fi
+@@ -438,4 +438,4 @@ fi
+ 
+ AssertNugetPackages
+ 
+-ExitIfError $? "AssertNugetPackages failed"
+\ No newline at end of file
++ExitIfError $? "AssertNugetPackages failed"
+-- 
+1.8.3.1
+

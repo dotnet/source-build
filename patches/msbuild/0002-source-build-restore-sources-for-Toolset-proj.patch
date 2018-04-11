@@ -1,0 +1,31 @@
+From 73b48c768a29825f2d0dd115b347abda394d057d Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 11 Apr 2018 19:22:58 +0000
+Subject: [PATCH] source-build restore sources for Toolset proj
+
+---
+ build/Toolset.proj | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/build/Toolset.proj b/build/Toolset.proj
+index e8395c3..41b5f8c 100644
+--- a/build/Toolset.proj
++++ b/build/Toolset.proj
+@@ -2,9 +2,13 @@
+ <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
++  <Import Project="$(DotNetRestoreSourcePropsPath)"
++          Condition="'$(DotNetRestoreSourcePropsPath)' != ''"/>
++
+   <PropertyGroup>
+     <TargetFramework>net462</TargetFramework>
+-    <RestoreSources>https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json</RestoreSources>
++    <RestoreSources>$(DotNetRestoreSources)</RestoreSources>
++    <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">$(RestoreSources);https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json</RestoreSources>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+
