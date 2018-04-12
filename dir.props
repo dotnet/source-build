@@ -7,8 +7,9 @@
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
     <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
 
+    <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
-    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == ''">true</UseSystemLibraries>
+    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
   </PropertyGroup>
 
   <PropertyGroup>
