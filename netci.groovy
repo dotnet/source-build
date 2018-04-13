@@ -122,13 +122,13 @@ def addPushJob(String project, String branch, String os, String configuration)
         }
       }
 
-      // Increase timeout. The offline build in Docker takes more than 2 hours.
-      Utilities.setJobTimeout(newJob, 240);
-
       // Only Ubuntu Jenkins machines have Docker
       Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+      // Increase timeout. The offline build in Docker takes more than 2 hours.
+      Utilities.setJobTimeout(newJob, 240);
 
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
