@@ -1,0 +1,31 @@
+From 8276295b4ebd49b9693a4d5c7762740709911779 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Fri, 13 Apr 2018 17:12:31 -0500
+Subject: [PATCH] Revert Microsoft.NETCore.Compilers dependency
+
+Use dependency on Microsoft.CodeAnalysis.CSharp, based on https://github.com/dotnet/cli/commit/ddae0875cf1adaeb0575bffc34630a078d6b8cca#diff-acadc45977478b307ad6d53f23f6e17c
+---
+ src/redist/redist.csproj | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index 04b9a7496..fbb287bd7 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -20,9 +20,10 @@
+     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelPackageVersion)" />
+-    <PackageReference Include="Microsoft.NETCore.Compilers" Version="$(MicrosoftNETCoreCompilersPackageVersion)">
+-      <ExcludeAssets>All</ExcludeAssets>
+-    </PackageReference>
++    <!-- The project json migration commands depend on an older version of Roslyn.
++         Lift the version here to match what tool_roslyn depends on (otherwise an older version will
++         be added to the TPA when we crossgen and we won't be able to crossgen tool_roslyn -->
++    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpPackageVersion)" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+-- 
+2.16.1.windows.4
+
