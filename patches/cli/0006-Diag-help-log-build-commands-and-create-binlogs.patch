@@ -1,0 +1,27 @@
+From fab84ae3503378c61fdff8eb5fe4563949a96a92 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 11 Apr 2018 14:32:39 -0500
+Subject: [PATCH] Diag help: log build commands and create binlogs
+
+---
+ run-build.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/run-build.sh b/run-build.sh
+index 9ebba823b..61373f715 100755
+--- a/run-build.sh
++++ b/run-build.sh
+@@ -186,8 +186,8 @@ fi
+ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+ 
+ if [ $BUILD -eq 1 ]; then
+-    dotnet msbuild build.proj /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles $argsnotargets
+-    dotnet msbuild build.proj /m /v:normal /fl /flp:v=diag /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args
++    (set -x; dotnet msbuild build.proj /bl:msbuild.generatepropsfile.binlog /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles $argsnotargets)
++    (set -x; dotnet msbuild build.proj /m /v:normal /bl:msbuild.binlog /fl /flp:v=diag /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args)
+ else
+     echo "Not building due to --nobuild"
+     echo "Command that would be run is: 'dotnet msbuild build.proj /m /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args'"
+-- 
+2.16.1.windows.4
+

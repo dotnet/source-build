@@ -1,0 +1,98 @@
+From 06b3a5c323acbd5cc300f63c87a4f2be35d2d987 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 11 Apr 2018 14:25:27 -0500
+Subject: [PATCH] Use netcoreapp2.0 for build framework, else 2.1
+
+Pass NETCoreAppMaximumVersion through everywhere to allow 2.1.101 tooling to build netcoreapp2.1.
+
+Make the dotnet-cli-build project use netcoreapp2.0 so it can run using the assemblies that 2.1.101 loads. Otherwise, System.Runtime mismatches.
+---
+ build.proj                                              | 3 ++-
+ build/Prepare.targets                                   | 5 +++--
+ build_projects/dotnet-cli-build/dotnet-cli-build.csproj | 4 ++--
+ src/redist/redist.csproj                                | 3 ++-
+ 4 files changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/build.proj b/build.proj
+index fb895d191..6bbedfabc 100644
+--- a/build.proj
++++ b/build.proj
+@@ -20,7 +20,7 @@
+           DependsOnTargets="MSBuildWorkaroundTarget;
+                             RestoreDotnetCliBuildFramework">
+ 
+-    <Exec Command="$(PreviousStageDotnet) publish --no-restore -o $(DotnetCliBuildDirectory)/bin --framework $(CliTargetFramework) /p:GeneratePropsFile=$(GeneratePropsFile)" 
++    <Exec Command="$(PreviousStageDotnet) publish --no-restore -o $(DotnetCliBuildDirectory)/bin --framework netcoreapp2.0 /p:GeneratePropsFile=$(GeneratePropsFile) /p:NETCoreAppMaximumVersion=$(NETCoreAppMaximumVersion)" 
+           WorkingDirectory="$(DotnetCliBuildDirectory)"/>
+   </Target>
+   
+@@ -37,6 +37,7 @@
+ 
+     <PropertyGroup>
+       <ExtraRestoreArgs>$(ExtraRestoreArgs) /p:GeneratePropsFile=$(GeneratePropsFile)</ExtraRestoreArgs>
++      <ExtraRestoreArgs>$(ExtraRestoreArgs) /p:NETCoreAppMaximumVersion=$(NETCoreAppMaximumVersion)</ExtraRestoreArgs>
+       <ExtraRestoreArgs Condition="'$(OS)' != 'Windows_NT'">$(ExtraRestoreArgs) --disable-parallel</ExtraRestoreArgs>
+     </PropertyGroup>
+ 
+diff --git a/build/Prepare.targets b/build/Prepare.targets
+index 2783c8214..4a5745b88 100644
+--- a/build/Prepare.targets
++++ b/build/Prepare.targets
+@@ -63,7 +63,8 @@
+     <CallTarget Targets="CleanSrcLockFiles" />
+ 
+     <DotNetRestore ToolPath="$(PreviousStageDirectory)"
+-                   ProjectPath="&quot;%(RestoreSrcPackagesInput.FullPath)&quot;" />
++                   ProjectPath="&quot;%(RestoreSrcPackagesInput.FullPath)&quot;"
++                   AdditionalParameters="/p:NETCoreAppMaximumVersion=$(NETCoreAppMaximumVersion)" />
+ 
+   </Target>
+ 
+@@ -89,7 +90,7 @@
+ 
+     <DotNetRestore ToolPath="$(PreviousStageDirectory)"
+                    ProjectPath="&quot;%(RestoreToolsPackagesInput.FullPath)&quot;"
+-                   AdditionalParameters="/p:UsePortableLinuxSharedFramework=$(UsePortableLinuxSharedFramework)" />
++                   AdditionalParameters="/p:UsePortableLinuxSharedFramework=$(UsePortableLinuxSharedFramework) /p:NETCoreAppMaximumVersion=$(NETCoreAppMaximumVersion)" />
+ 
+   </Target>
+ 
+diff --git a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+index bd7badca8..f57978e05 100644
+--- a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
++++ b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+@@ -2,7 +2,7 @@
+   <PropertyGroup>
+     <Description>Build scripts for dotnet-cli</Description>
+     <VersionPrefix>1.0.0</VersionPrefix>
+-    <TargetFramework>$(CliTargetFramework)</TargetFramework>
++    <TargetFramework>netcoreapp2.0</TargetFramework>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <OutputPath>bin\$(Configuration)</OutputPath>
+     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81</AssetTargetFallback>
+@@ -14,7 +14,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.NETCore.App" Version="2.1.0-preview1-26116-04" />
++    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.6" />
+     <PackageReference Include="Microsoft.Build" Version="15.4.8" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.4.8" />
+     <PackageReference Include="Microsoft.CSharp" Version="4.0.1" />
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index bc22fcf3f..7f6473ff5 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -85,7 +85,8 @@
+ 
+     <DotNetPublish ToolPath="$(PreviousStageDirectory)"
+                    Configuration="$(Configuration)"
+-                   ProjectPath="$(SrcDirectory)/tool_fsharp/tool_fsc.csproj" />
++                   ProjectPath="$(SrcDirectory)/tool_fsharp/tool_fsc.csproj"
++                   MSBuildArgs="/p:NETCoreAppMaximumVersion=$(NETCoreAppMaximumVersion)" />
+   </Target>
+ 
+   <Target Name="GenerateCliRuntimeConfigurationFiles"
+-- 
+2.16.1.windows.4
+

@@ -1,0 +1,100 @@
+From cd96ec40e18bf5cdce6cb3aad8b699051da7bf34 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 11 Apr 2018 14:27:25 -0500
+Subject: [PATCH] Make BuildFromSource disable ASP.NET dev certs
+
+Conditional on package restore plus a very rough #if that removes the using and call.
+---
+ build/BundledRuntimes.props                  | 6 +++---
+ src/dotnet/AspNetCoreCertificateGenerator.cs | 5 +++++
+ src/dotnet/dotnet.csproj                     | 5 ++++-
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
+index 1bf1db059..cbb656fd0 100644
+--- a/build/BundledRuntimes.props
++++ b/build/BundledRuntimes.props
+@@ -55,7 +55,7 @@
+ 
+   <ItemGroup>
+     <_DownloadAndExtractItem Include="AspNetCoreSharedFxArchiveFile"
+-                             Condition="!Exists('$(AspNetCoreSharedFxArchiveFile)') And !$(Architecture.StartsWith('arm'))">
++                             Condition="!Exists('$(AspNetCoreSharedFxArchiveFile)') And !$(Architecture.StartsWith('arm')) And '$(IncludeAspNetCoreRuntime)' != 'false'">
+       <Url>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/$(AspNetCoreSharedFxArchiveFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(AspNetCoreSharedFxArchiveFile)</DownloadFileName>
+       <ExtractDestination>$(AspNetCoreSharedFxPublishDirectory)</ExtractDestination>
+@@ -97,14 +97,14 @@
+     </_DownloadAndExtractItem>
+ 
+     <_DownloadAndExtractItem Include="DownloadedAspNetCoreSharedFxInstallerFile"
+-                            Condition="'$(SkipBuildingInstallers)' != 'true' AND '$(DownloadedAspNetCoreSharedFxInstallerFile)' != '' AND !Exists($(DownloadedAspNetCoreSharedFxInstallerFile)) And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm'))">
++                            Condition="'$(SkipBuildingInstallers)' != 'true' AND '$(DownloadedAspNetCoreSharedFxInstallerFile)' != '' AND !Exists($(DownloadedAspNetCoreSharedFxInstallerFile)) And '$(InstallerExtension)' != '' And !$(Architecture.StartsWith('arm')) And '$(IncludeAspNetCoreRuntime)' != 'false'">
+       <Url>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/$(DownloadedAspNetCoreSharedFxInstallerFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(DownloadedAspNetCoreSharedFxInstallerFile)</DownloadFileName>
+       <ExtractDestination></ExtractDestination>
+     </_DownloadAndExtractItem>
+ 
+     <_DownloadAndExtractItem Include="AspNetCoreSharedFxBaseRuntimeVersionFile"
+-                           Condition="!Exists('$(AspNetCoreSharedFxBaseRuntimeVersionFile)') And !$(Architecture.StartsWith('arm'))">
++                           Condition="!Exists('$(AspNetCoreSharedFxBaseRuntimeVersionFile)') And !$(Architecture.StartsWith('arm')) And '$(IncludeAspNetCoreRuntime)' != 'false'">
+       <Url>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/$(AspNetCoreSharedFxBaseRuntimeVersionFileName)$(CoreSetupBlobAccessTokenParam)</Url>
+       <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFile)</DownloadFileName>
+       <ExtractDestination></ExtractDestination>
+diff --git a/src/dotnet/AspNetCoreCertificateGenerator.cs b/src/dotnet/AspNetCoreCertificateGenerator.cs
+index d0fcf0a9a..f4930e22e 100644
+--- a/src/dotnet/AspNetCoreCertificateGenerator.cs
++++ b/src/dotnet/AspNetCoreCertificateGenerator.cs
+@@ -1,7 +1,10 @@
+ ﻿// Copyright (c) .NET Foundation and contributors. All rights reserved.
+ // Licensed under the MIT license. See LICENSE file in the project root for full license information.
+ 
++#if !DOTNET_BUILD_FROM_SOURCE
+ using Microsoft.AspNetCore.DeveloperCertificates.XPlat;
++#endif
++
+ using Microsoft.DotNet.Configurer;
+ 
+ namespace Microsoft.DotNet.Cli
+@@ -10,7 +13,9 @@ public class AspNetCoreCertificateGenerator : IAspNetCoreCertificateGenerator
+     {
+         public void GenerateAspNetCoreDevelopmentCertificate()
+         {
++#if !DOTNET_BUILD_FROM_SOURCE
+             CertificateGenerator.GenerateAspNetHttpsCertificate();
++#endif
+         }
+     }
+ }
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index b7d26a073..1912eece2 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -9,6 +9,7 @@
+     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+     <AssetTargetFallback>dotnet5.4</AssetTargetFallback>
+     <RootNamespace>Microsoft.DotNet.Cli</RootNamespace>
++    <DefineConstants Condition=" '$(DotNetBuildFromSource)' == 'true' ">$(DefineConstants);DOTNET_BUILD_FROM_SOURCE</DefineConstants>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Remove="commands\dotnet-new\**" />
+@@ -60,7 +61,6 @@
+     <PackageReference Include="System.Diagnostics.TextWriterTraceListener" Version="4.3.0" />
+     <PackageReference Include="System.Runtime.Serialization.Primitives" Version="4.3.0" />
+     <PackageReference Include="System.Private.DataContractSerialization" Version="4.3.0" />
+-    <PackageReference Include="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="$(AspNetCoreVersion)" />
+     <PackageReference Include="Microsoft.Win32.Registry" Version="4.3.0" />
+     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
+@@ -75,6 +75,9 @@
+     <PackageReference Include="Microsoft.DotNet.Archive" Version="$(MicrosoftDotNetArchivePackageVersion)" />
+     <PackageReference Include="XliffTasks" Version="$(XliffTasksPackageVersion)" PrivateAssets="All" />
+   </ItemGroup>
++  <ItemGroup Condition=" '$(DotNetBuildFromSource)' != 'true' ">
++    <PackageReference Include="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="$(AspNetCoreVersion)" />
++  </ItemGroup>
+   <ItemGroup>
+     <Folder Include="commands\dotnet-migrate\xlf" />
+     <Folder Include="dotnet-complete\commands\" />
+-- 
+2.16.1.windows.4
+
