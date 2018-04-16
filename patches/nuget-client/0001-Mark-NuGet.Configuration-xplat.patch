@@ -1,0 +1,24 @@
+From 218310c19175af8cd4807d8653f620d8f1792441 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Thu, 12 Apr 2018 11:29:12 -0500
+Subject: [PATCH] Mark NuGet.Configuration xplat
+
+---
+ src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
+index 3b3a0c9ba..4486af683 100644
+--- a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
++++ b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
+@@ -11,6 +11,7 @@
+     <PackProject>true</PackProject>
+     <Shipping>true</Shipping>
+     <IncludeInVSIX>true</IncludeInVSIX>
++    <XPLATProject>true</XPLATProject>
+   </PropertyGroup>
+   
+   <PropertyGroup Condition=" '$(IsVsixBuild)' == 'true' ">
+-- 
+2.16.1.windows.4
+
