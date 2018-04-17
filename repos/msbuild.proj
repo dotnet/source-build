@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
-    <LatestCommit>71eedf98975925fa7f2f3e669d19ba6c81391048</LatestCommit>
+    <LatestCommit>d7690fb9d3d7b97917243ae63aed97dc3d146e85</LatestCommit>
+    <LatestCommitDate>20180227</LatestCommitDate>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
-    <OutputVersionArgs>/p:VersionBase=15.1.9999 /p:DisableNerdbankVersioning=true</OutputVersionArgs>
+    <OutputVersionArgs>/p:VersionBase=15.6.82 /p:DisableNerdbankVersioning=true /p:PreReleaseVersionLabel="preview2" /p:BUILD_BUILDNUMBER=$(LatestCommitDate).01</OutputVersionArgs>
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=$(LatestCommit) $(OutputVersionArgs)</BuildCommand>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
