@@ -27,6 +27,7 @@
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
     <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.Net.Compilers.netcore.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.NETCore.Compilers.nuspec" />
   </ItemGroup>
 
   <Target Name="Restore" BeforeTargets="Build">
@@ -44,7 +45,22 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build">
+    <ItemGroup>
+      <!--
+        "Publish the CoreClr projects (CscCore and VbcCore) and dependencies for later NuGet packaging."
+        https://github.com/dotnet/roslyn/blob/94e73792cfec399f8e1ab3e9246703cbddabbcd4/build/scripts/build.ps1#L280-L288
+      -->
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\CSharp\csc\csc.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\VisualBasic\vbc\vbc.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\Core\MSBuildTask\MSBuildTask.csproj" />
+    </ItemGroup>
+
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'" />
+    <!-- Publish MSBuild project so that Microsoft.NETCore.Compilers.nuspec can find runtimes. -->
+    <Exec Command="$(DotnetToolCommand) msbuild %(PublishWithoutBuildingProject.Identity) /p:Configuration=$(Configuration) /p:TargetFramework=netcoreapp2.0 /t:PublishWithoutBuilding $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/PackHelper.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
