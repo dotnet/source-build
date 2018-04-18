@@ -81,6 +81,9 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
+      // Increase timeout. The tarball builds can take longer than the 2 hour default.
+      Utilities.setJobTimeout(newJob, 240);
+
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
       if(isPR){
