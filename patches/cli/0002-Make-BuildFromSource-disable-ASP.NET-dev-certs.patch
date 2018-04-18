@@ -1,14 +1,15 @@
-From cd96ec40e18bf5cdce6cb3aad8b699051da7bf34 Mon Sep 17 00:00:00 2001
+From 1abc9cd5bff7c74925d5449ddda40e1401dba35a Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 11 Apr 2018 14:27:25 -0500
 Subject: [PATCH] Make BuildFromSource disable ASP.NET dev certs
 
-Conditional on package restore plus a very rough #if that removes the using and call.
+Adds conditionals to package restore items and preprocessor ifs around C# usages.
 ---
- build/BundledRuntimes.props                  | 6 +++---
- src/dotnet/AspNetCoreCertificateGenerator.cs | 5 +++++
- src/dotnet/dotnet.csproj                     | 5 ++++-
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ build/BundledRuntimes.props                                     | 6 +++---
+ src/Microsoft.DotNet.Configurer/DotnetFirstTimeUseConfigurer.cs | 4 ++++
+ src/dotnet/AspNetCoreCertificateGenerator.cs                    | 5 +++++
+ src/dotnet/dotnet.csproj                                        | 5 ++++-
+ 4 files changed, 16 insertions(+), 4 deletions(-)
 
 diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
 index 1bf1db059..cbb656fd0 100644
@@ -40,6 +41,27 @@ index 1bf1db059..cbb656fd0 100644
        <Url>$(AspNetCoreSharedFxRootUrl)$(AspNetCoreVersion)/$(AspNetCoreSharedFxBaseRuntimeVersionFileName)$(CoreSetupBlobAccessTokenParam)</Url>
        <DownloadFileName>$(AspNetCoreSharedFxBaseRuntimeVersionFile)</DownloadFileName>
        <ExtractDestination></ExtractDestination>
+diff --git a/src/Microsoft.DotNet.Configurer/DotnetFirstTimeUseConfigurer.cs b/src/Microsoft.DotNet.Configurer/DotnetFirstTimeUseConfigurer.cs
+index 966bd0d80..32cf87f35 100644
+--- a/src/Microsoft.DotNet.Configurer/DotnetFirstTimeUseConfigurer.cs
++++ b/src/Microsoft.DotNet.Configurer/DotnetFirstTimeUseConfigurer.cs
+@@ -90,12 +90,16 @@ private void GenerateAspNetCertificate()
+ 
+         private bool ShouldGenerateAspNetCertificate()
+         {
++#if DOTNET_BUILD_FROM_SOURCE
++            return false;
++#else
+             var generateAspNetCertificate =
+                 _environmentProvider.GetEnvironmentVariableAsBool("DOTNET_GENERATE_ASPNET_CERTIFICATE", true);
+ 
+             return ShouldRunFirstRunExperience() &&
+                 generateAspNetCertificate &&
+                 !_aspNetCertificateSentinel.Exists();
++#endif
+         }
+ 
+         private bool ShouldAddPackageExecutablePath()
 diff --git a/src/dotnet/AspNetCoreCertificateGenerator.cs b/src/dotnet/AspNetCoreCertificateGenerator.cs
 index d0fcf0a9a..f4930e22e 100644
 --- a/src/dotnet/AspNetCoreCertificateGenerator.cs
