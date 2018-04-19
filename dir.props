@@ -60,6 +60,10 @@
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
+    <!-- Dir where git info is generated during online builds. -->
+    <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
+    <!-- Dir where git info is placed inside the tarball. -->
+    <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->

@@ -3,7 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
-    <CommitHash>2bc0ba26d890223a9874dee0f0233ded8bd7a39a</CommitHash>
     <BuildNumber>301</BuildNumber>
     <PackageDateTime>20170727</PackageDateTime>
     <PackageBuildQuality>beta2</PackageBuildQuality>
@@ -12,7 +11,7 @@
 
   <ItemGroup>
     <MSBuildProperties Include="Configuration=$(Configuration)" />
-    <MSBuildProperties Include="COMMIT_HASH=$(CommitHash)" />
+    <MSBuildProperties Include="COMMIT_HASH=$(GitCommitHash)" />
     <MSBuildProperties Include="COMMIT_COUNT=$(BuildNumber)" />
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
