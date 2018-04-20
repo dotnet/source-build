@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
+SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
-OUTPUT_DIR=bin/x64/Release/
+OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
 DOTNET_TARBALL_REL=$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)
 DOTNET_TARBALL=$(readlink -e ${DOTNET_TARBALL_REL})
 
@@ -11,7 +12,6 @@ projectOutput=false
 keepProjects=false
 dotnetDir=""
 includeWeb=false
-SCRIPT_ROOT="$(pwd)"
 testingDir="$SCRIPT_ROOT/testing-smoke"
 cliDir="$testingDir/builtCli"
 logFile="$testingDir/smoke-test.log"
@@ -172,6 +172,6 @@ if [ "$includeWeb" == "true" ]; then
     doCommand F# webapi new restore run
 fi
 
-rm -rf builtCli
+rm -rf "$cliDir"
 
 echo "ALL TESTS PASSED!"
