@@ -10,17 +10,19 @@ DOTNET_TARBALL=$(readlink -e ${DOTNET_TARBALL_REL})
 projectOutput=false
 keepProjects=false
 dotnetDir=""
-workingDir="$(pwd)"
 includeWeb=false
+SCRIPT_ROOT="$(pwd)"
+testingDir="$SCRIPT_ROOT/testing-smoke"
+cliDir="$testingDir/builtCli"
+logFile="$testingDir/smoke-test.log"
 
-function usage {
+function usage() {
     echo ""
     echo "usage:"
     echo "  --dotnetDir         the directory from which to run dotnet"
     echo "  --projectOutput     echo dotnet's output to console"
     echo "  --keepProjects      keep projects after tests are complete"
     echo "  --includeWeb        run tests for web projects"
-    echo "  --clean             remove the testing directory if it exists"
     echo ""
 }
 
@@ -48,9 +50,6 @@ while :; do
         --includeweb)
             includeWeb=true
             ;;
-        --clean)
-            cleanFirst=true
-            ;;
         *)
             usage
             exit 1
@@ -61,7 +60,7 @@ while :; do
 done
 
 
-function doCommand {
+function doCommand() {
     lang=$1
     proj=$2
     shift; shift;
@@ -77,19 +76,19 @@ function doCommand {
             break
         fi
 
-        echo "    running $1" | tee -a ../smoke-test.log
+        echo "    running $1" | tee -a "$logFile"
 
         if [ "$1" == "new" ]; then
             if [ "$projectOutput" == "true" ]; then
-                ${dotnetCmd} new $proj -lang $lang 
+                "${dotnetCmd}" new $proj -lang $lang | tee -a "$logFile"
             else
-                ${dotnetCmd} new $proj -lang $lang >> ../smoke-test.log 2>&1
+                "${dotnetCmd}" new $proj -lang $lang >> "$logFile" 2>&1
             fi
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
-                ${dotnetCmd} $1 &
+                "${dotnetCmd}" $1 &
             else
-                ${dotnetCmd} $1 >> ../smoke-test.log 2>&1 &
+                "${dotnetCmd}" $1 >> "$logFile" 2>&1 &
             fi
             webPid=$!
             echo "    waiting 20 seconds for web project with pid $webPid"
@@ -100,15 +99,15 @@ function doCommand {
             echo "    terminated with exit code $?"
         else
             if [ "$projectOutput" == "true" ]; then
-                ${dotnetCmd} $1
+                "${dotnetCmd}" $1 | tee -a "$logFile"
             else
-                ${dotnetCmd} $1 >> ../smoke-test.log 2>&1
+                "${dotnetCmd}" $1 >> "$logFile" 2>&1
             fi
         fi
         if [ $? -eq 0 ]; then
-            echo "    $1 succeeded" >> ../smoke-test.log
+            echo "    $1 succeeded" >> "$logFile"
         else
-            echo "    $1 failed with exit code $?" >> tee -a ../smoke-test.log
+            echo "    $1 failed with exit code $?" | tee -a "$logFile"
         fi
 
         shift
@@ -124,23 +123,25 @@ function doCommand {
 }
 
 # Clean up and create directory
-if [ "$cleanFirst" == "true" ]; then
-    rm -rf testing-smoke
+if [ -e "$testingDir"  ]; then
+    read -p "testing-smoke directory exists, remove it? [Y]es / [n]o" -n 1 -r
+    echo
+    if [[ $REPLY == "" || $REPLY == " " || $REPLY =~ ^[Yy]$ ]]; then
+        rm -rf "$testingDir"
+    fi
 fi
 
-mkdir testing-smoke
-cd testing-smoke
+mkdir -p "$testingDir"
+cd "$testingDir"
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    mkdir builtCli
-    cd builtCli
-    tar xzf ${DOTNET_TARBALL}
-    cd ..
-    dotnetDir="../builtCli/"
+    mkdir -p "$cliDir"
+    tar xzf "$DOTNET_TARBALL" -C "$cliDir"
+    dotnetDir="$cliDir"
 else
     if ! [[ "$dotnetDir" = /* ]]; then
-       dotnetDir="$workingDir/$dotnetDir" 
+       dotnetDir="$SCRIPT_ROOT/$dotnetDir"
     fi
 fi
 
