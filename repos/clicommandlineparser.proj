@@ -4,14 +4,13 @@
   <PropertyGroup>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <LatestCommit>31a677abae466176d932c0d50f8bde52d7613bb9</LatestCommit>
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <UsesRepoToolset>true</UsesRepoToolset>
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GIT_COMMIT=$(LatestCommit)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
   </ItemGroup>
 
   <ItemGroup>

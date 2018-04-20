@@ -67,6 +67,7 @@ cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
 rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar

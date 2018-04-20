@@ -5,7 +5,6 @@
   <PropertyGroup>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20170721.5</BuildNumber>
-    <CommitHash>ad0efbb6975c74e3e19051896be7ffcbb70d2122</CommitHash>
     <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -13,7 +12,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
-    <EnvironmentVariables Include="COMMIT_SHA=$(CommitHash)" />
+    <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" />
     <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
   </ItemGroup>
 

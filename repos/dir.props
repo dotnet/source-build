@@ -14,6 +14,18 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
+    <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
+  </PropertyGroup>
+
+  <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
+  <Import Project="$(OfflineGitInfoPropsFile)" Condition="Exists('$(OfflineGitInfoPropsFile)')" />
+
+  <PropertyGroup>
+    <GitCommitDateNoDashes>$(GitCommitDate.Replace('-', ''))</GitCommitDateNoDashes>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <VersionFilename>Latest_Packages.txt</VersionFilename>
     <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
     <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
