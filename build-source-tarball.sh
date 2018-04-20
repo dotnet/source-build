@@ -68,11 +68,18 @@ cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 
-cp -r $SCRIPT_ROOT/Tools $TARBALL_ROOT/
-rm -f $TARBALL_ROOT/Tools/dotnetcli/dotnet.tar
-rm -f $TARBALL_ROOT/Tools/dotnetcli/sdk/$SDK_VERSION/nuGetPackagesArchive.lzma
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/store
-rm -rf $TARBALL_ROOT/Tools/dotnetcli/additionalDeps
+copy_tools() {
+    cp -r "$1/Tools" "$2/"
+    rm -f "$2/Tools/dotnetcli/dotnet.tar"
+    rm -f "$2/Tools/dotnetcli/sdk/$3/nuGetPackagesArchive.lzma"
+    rm -rf "$2/Tools/dotnetcli/store"
+    rm -rf "$2/Tools/dotnetcli/additionalDeps"
+}
+
+copy_tools "$SCRIPT_ROOT" "$TARBALL_ROOT" "$SDK_VERSION"
+
+mkdir "$TARBALL_ROOT/tools-2.0.0"
+copy_tools "$SCRIPT_ROOT/tools-2.0.0" "$TARBALL_ROOT/tools-2.0.0" 2.0.0
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
