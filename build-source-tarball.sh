@@ -77,6 +77,8 @@ copy_tools() {
 }
 
 copy_tools "$SCRIPT_ROOT" "$TARBALL_ROOT" "$SDK_VERSION"
+
+mkdir "$TARBALL_ROOT/tools-2.0.0"
 copy_tools "$SCRIPT_ROOT/tools-2.0.0" "$TARBALL_ROOT/tools-2.0.0" 2.0.0
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
