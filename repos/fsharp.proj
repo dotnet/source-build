@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <!-- Override: use a 2.0.0 SDK for F# build. -->
+    <DotNetCliToolDir>$(ProjectDir)tools-2.0.0/Tools/dotnetcli/</DotNetCliToolDir>
+
     <PackagesOutput>$(ProjectDirectory)/BuildFromSource/Release/bin</PackagesOutput>
     <BuildRevision>171107</BuildRevision>
     <BuildCommand>$(ProjectDirectory)/src/buildfromsource$(ShellExtension)</BuildCommand>

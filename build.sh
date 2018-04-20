@@ -20,6 +20,12 @@ export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
 source "$SCRIPT_ROOT/init-tools.sh"
+(
+  echo "Also initializing 2.0.0 toolset to work around a build issue"
+  cd "$SCRIPT_ROOT/tools-2.0.0"
+  # Don't use 'source': the earlier init-tools created some vars that interfere with this one.
+  ./init-tools.sh
+)
 
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
 SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
