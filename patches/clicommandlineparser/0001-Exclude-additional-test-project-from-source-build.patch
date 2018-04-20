@@ -1,6 +1,6 @@
-From 787d7dfe5ab7ae0c6fe424223f27e3923935b615 Mon Sep 17 00:00:00 2001
-From: Davis Goodin <dagood@microsoft.com>
-Date: Sat, 7 Apr 2018 10:45:18 -0500
+From 9b6182cfadf65298c7be3611a3bc89ab0b837799 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 19 Apr 2018 21:20:43 +0000
 Subject: [PATCH] Exclude additional test project from source build
 
 ---
@@ -8,12 +8,12 @@ Subject: [PATCH] Exclude additional test project from source build
  1 file changed, 4 insertions(+)
 
 diff --git a/src/tests/CommandLine.Tests/Microsoft.DotNet.Cli.CommandLine.Tests.csproj b/src/tests/CommandLine.Tests/Microsoft.DotNet.Cli.CommandLine.Tests.csproj
-index 0e6b12e..8f106b1 100644
+index fba1f45..050fc97 100644
 --- a/src/tests/CommandLine.Tests/Microsoft.DotNet.Cli.CommandLine.Tests.csproj
 +++ b/src/tests/CommandLine.Tests/Microsoft.DotNet.Cli.CommandLine.Tests.csproj
-@@ -6,6 +6,10 @@
-     <TargetFramework>netcoreapp2.0</TargetFramework>
-   </PropertyGroup>
+@@ -14,6 +14,10 @@
+ 
+   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
  
 +  <PropertyGroup>
 +    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
@@ -23,5 +23,5 @@ index 0e6b12e..8f106b1 100644
      <PackageReference Include="FluentAssertions" Version="$(FluentAssertionsVersion)" />
    </ItemGroup>
 -- 
-2.16.1.windows.4
+1.8.3.1
 
