@@ -8,6 +8,7 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
@@ -129,6 +130,15 @@
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
+  </Target>
+
+  <Target Name="UpdateCLIVersionInGlobalJson"
+          BeforeTargets="Build"
+          Condition="'$(GlobalJsonFile)' != ''">
+
+    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
+                PathToAttribute="sdk.version"
+                NewAttributeValue="$(SDK_VERSION)" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
