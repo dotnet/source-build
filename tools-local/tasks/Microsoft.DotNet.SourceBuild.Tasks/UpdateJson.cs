@@ -37,6 +37,7 @@ namespace Microsoft.DotNet.Build.Tasks
             File.WriteAllText(JsonFilePath, jsonObj.ToString());
             return true;
         }
+
         private void UpdateAttribute(JToken jsonObj, string[] path, string newValue)
         {
             string pathItem = path[0];
@@ -47,7 +48,6 @@ namespace Microsoft.DotNet.Build.Tasks
                 return;
             }
             UpdateAttribute(jsonObj[pathItem], path.Skip(1).ToArray(), newValue);
-            
         }
     }
 }
