@@ -1,0 +1,26 @@
+From 8767e665cf966e63cc67df2fe931cf5290d96526 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 25 Apr 2018 21:54:15 +0000
+Subject: [PATCH] Update RoslynTools verison to msbuild specific version until
+ the msbuild repo is updated to the current version.
+
+---
+ build/Versions.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/Versions.props b/build/Versions.props
+index 53de55a..7f10d05 100644
+--- a/build/Versions.props
++++ b/build/Versions.props
+@@ -40,7 +40,7 @@
+     <DotNetCliVersion>2.1.300-preview2-008530</DotNetCliVersion>
+     <!-- We are pretty much always on a preview SDK. No need to warn about it. -->
+     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+-    <RoslynToolsRepoToolsetVersion>1.0.0-beta-62705-01</RoslynToolsRepoToolsetVersion>
++    <RoslynToolsRepoToolsetVersion>1.0.0-msbuild-62811-02</RoslynToolsRepoToolsetVersion>
+     <VSWhereVersion>2.2.7</VSWhereVersion>
+ 
+     <GenApiVersion>2.1.0-prerelease-02404-02</GenApiVersion>
+-- 
+1.8.3.1
+
