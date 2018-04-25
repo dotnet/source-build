@@ -5,7 +5,7 @@
     <OfficialBuildId>20180412.7</OfficialBuildId>
     <OutputVersionArgs>/p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommand>
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <OrchestratedManifestBuildName>dotnet/sdk</OrchestratedManifestBuildName>
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <UsesRepoToolset>true</UsesRepoToolset>

@@ -3,9 +3,10 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <UsesRepoToolset>true</UsesRepoToolset>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <!-- This repo is on a source-build dev branch. -->
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
