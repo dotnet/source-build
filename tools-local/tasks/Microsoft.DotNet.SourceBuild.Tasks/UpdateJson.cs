@@ -9,8 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
-using NuGet.Packaging;
-using NuGet.Packaging.Core;
 
 namespace Microsoft.DotNet.Build.Tasks
 {
@@ -41,7 +39,10 @@ namespace Microsoft.DotNet.Build.Tasks
         private void UpdateAttribute(JToken jsonObj, string[] path, string newValue)
         {
             string pathItem = path[0];
-            if (jsonObj[pathItem] == null) throw new ArgumentException(string.Format("Path item [{0}] not found in json file.", pathItem), "PathToAttribute");
+            if (jsonObj[pathItem] == null) 
+            { 
+                throw new ArgumentException($"Path item [{nameof(PathToAttribute)}] not found in json file.", pathItem);
+            }
             if (path.Length == 1) 
             {
                 jsonObj[pathItem] = newValue;
