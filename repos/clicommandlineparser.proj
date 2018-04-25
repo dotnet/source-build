@@ -2,11 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
-    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <UsesRepoToolset>true</UsesRepoToolset>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 
   <ItemGroup>
