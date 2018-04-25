@@ -27,11 +27,24 @@
     <PackageReference Include="Microsoft.Build.Utilities.Core">
       <Version>15.6.82</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>9.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="NuGet.Packaging">
-      <Version>4.6.0-rtm-4918</Version>
-    </PackageReference>
+  </ItemGroup>
+
+  <!--
+    Use some assemblies from the SDK, instead of package references. This ensures they match what's
+    found when the task is loaded by the SDK's MSBuild.
+  -->
+  <PropertyGroup>
+    <SdkReferenceDir>$(ToolsDir)dotnetcli/sdk/$(SDK_VERSION)/</SdkReferenceDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
+    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="@(SdkAssembly -> '%(FileName)')">
+      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>
