@@ -1,26 +1,13 @@
-From aa9cec932a6ddb028c66efaf7a4e7d8c21f73dcb Mon Sep 17 00:00:00 2001
+From 8c3bf1fa52c6058a5aeefd7ac7cc61e1809b2b13 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
-Date: Sat, 7 Apr 2018 10:53:05 -0500
+Date: Sat, 7 Apr 2018 10:59:38 -0500
 Subject: [PATCH] Exclude all test projects from source build
 
 ---
- src/Directory.Build.props       |  1 +
  src/Tests/Directory.Build.props | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ 1 file changed, 15 insertions(+)
  create mode 100644 src/Tests/Directory.Build.props
 
-diff --git a/src/Directory.Build.props b/src/Directory.Build.props
-index 6ac75870..5851d617 100644
---- a/src/Directory.Build.props
-+++ b/src/Directory.Build.props
-@@ -25,6 +25,7 @@
-     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-     <GenerateProgramFile>false</GenerateProgramFile>
-     <XUnitRunnerAdditionalArguments>-parallel none</XUnitRunnerAdditionalArguments>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-   </PropertyGroup>
- 
- </Project>
 diff --git a/src/Tests/Directory.Build.props b/src/Tests/Directory.Build.props
 new file mode 100644
 index 00000000..8de73dad
