@@ -7,9 +7,11 @@
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WritePackageUsageReportToFile" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
@@ -309,6 +311,37 @@
       <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_DIR=$(ToolPackageExtractDir)$(RepoToolsetPackageId)\sdk\" />
       <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_VERSION=1.0.0-source-built" />
     </ItemGroup>
+  </Target>
+
+  <Target Name="ReportPrebuiltUsage">
+    <ItemGroup>
+      <AllRepoProjects Include="$(ProjectDir)repos\*.proj" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Finding project directories..." />
+
+    <MSBuild Projects="@(AllRepoProjects)"
+             Targets="GetProjectDirectory">
+      <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
+    </MSBuild>
+
+    <ItemGroup>
+      <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
+      <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
+      <ProjectDirectories Include="$(ToolsDir);$(TaskDirectory);$(BaseIntermediatePath)" />
+      <!-- Scan the entire project, in case project.assets.json ends up in an unexpected place. -->
+      <ProjectDirectories Include="$(ProjectDir)" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Reading prebuilt nupkg identities..." />
+
+    <ReadNuGetPackageInfos PackagePaths="@(PrebuiltPackages)">
+      <Output TaskParameter="PackageInfoItems" ItemName="PrebuiltPackageInfoItems" />
+    </ReadNuGetPackageInfos>
+
+    <WritePackageUsageReportToFile NuGetPackageInfos="@(PrebuiltPackageInfoItems)"
+                                   ProjectDirectories="@(ProjectDirectories)"
+                                   OutputDirectory="$(PackageReportDir)" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

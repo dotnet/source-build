@@ -90,7 +90,17 @@ do
     fi
 done
 
-# Record commits for the source-build repo and all submodules, to aid in reproducibility.
+if [ -z "${SOURCE_BUILD_SKIP_PREBUILT_REPORT:-}" ]; then
+    echo 'Creating prebuilt package usage report...'
+    (
+        # Don't clean up (or ask to clean up).
+        export SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1
+        "$SCRIPT_ROOT/build.sh" /nologo /t:ReportTarballPrebuiltUsage /p:TarballPrebuiltPackagesPath="$FULL_TARBALL_ROOT/prebuilt/nuget-packages/"
+    )
+fi
+
+echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
+
 cat >$TARBALL_ROOT/source-build-info.txt << EOF
 source-build:
  $(git rev-parse HEAD) . ($(git describe --always HEAD))
