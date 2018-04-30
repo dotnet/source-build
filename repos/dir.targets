@@ -87,7 +87,15 @@
     <Exec Command="git rev-list --count HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
     </Exec>
-    <Exec Command="git log -1 --format=%25cd --date=short" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
+
+    <PropertyGroup>
+      <GitLogFormatArg>--format=</GitLogFormatArg>
+      <!-- Escape the % with another % on Windows. -->
+      <GitLogFormatArg Condition="'$(OS)' == 'Windows_NT'">$(GitLogFormatArg)%25</GitLogFormatArg>
+      <GitLogFormatArg>$(GitLogFormatArg)%25cd</GitLogFormatArg>
+    </PropertyGroup>
+
+    <Exec Command="git log -1 $(GitLogFormatArg) --date=short" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitDate" />
     </Exec>
 
