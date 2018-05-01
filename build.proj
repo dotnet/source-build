@@ -27,6 +27,18 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
+  <!-- After building offline, create a prebuilt usage report. -->
+  <Target Name="ReportPrebuiltUsageAfterOfflineBuild"
+          AfterTargets="Build"
+          Condition="'$(OfflineBuild)' == 'true' and '$(SkipReportPrebuiltUsageAfterOfflineBuild)' != 'true'">
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
+  </Target>
+
+  <!-- After generating a tarball, check why/where the online build downloaded prebuilts. -->
+  <Target Name="ReportTarballPrebuiltUsage">
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
+  </Target>
+
   <Import Project="$(ProjectDir)dependencies.targets" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />

@@ -34,6 +34,8 @@
     found when the task is loaded by the SDK's MSBuild.
   -->
   <PropertyGroup>
+    <!-- Read SDK_VERSION if not passed in. Enables Visual Studio builds. -->
+    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$([System.IO.File]::ReadAllText('$(ProjectDir)DotnetCLIVersion.txt').Trim())</SDK_VERSION>
     <SdkReferenceDir>$(ToolsDir)dotnetcli/sdk/$(SDK_VERSION)/</SdkReferenceDir>
   </PropertyGroup>
 
