@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <OfficialBuildId>20180412.7</OfficialBuildId>
+    <OfficialBuildId>20180427.7</OfficialBuildId>
     <OutputVersionArgs>/p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommand>
     <OrchestratedManifestBuildName>dotnet/sdk</OrchestratedManifestBuildName>

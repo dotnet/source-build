@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <!-- Override value from commit to match expected build. -->
-    <GitCommitDateNoDashes>20180227</GitCommitDateNoDashes>
+    <GitCommitDateNoDashes>20180426</GitCommitDateNoDashes>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
     <OutputVersionArgs>/p:VersionBase=15.6.82 /p:DisableNerdbankVersioning=true /p:PreReleaseVersionLabel="preview2" /p:BUILD_BUILDNUMBER=$(GitCommitDateNoDashes).01</OutputVersionArgs>
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=$(GitCommitHash) $(OutputVersionArgs)</BuildCommand>
