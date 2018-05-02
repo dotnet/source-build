@@ -77,11 +77,6 @@
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
-  <PropertyGroup>
-    <!-- Always build portable runtime on OSX to match the CLI repo's filename expectations. https://github.com/dotnet/source-build/issues/438 -->
-    <PortableBuild Condition="'$(TargetOS)' == 'OSX'">true</PortableBuild>
-  </PropertyGroup>
-
   <Import Project="$(ProjectDir)dependencies.props" />
 
   <PropertyGroup>
