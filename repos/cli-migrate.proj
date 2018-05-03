@@ -2,11 +2,17 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --restore --pack --configuration $(Configuration)</BuildCommand>
+    <BuildCommandArgs>--restore --pack --configuration $(Configuration)</BuildCommandArgs>
+
+    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <OrchestratedManifestBuildName>dotnet/cli-migrate</OrchestratedManifestBuildName>
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
     <UsesRepoToolset>true</UsesRepoToolset>
 
     <!-- ProdCon is behind source-build: temporarily disable auto-update. -->
@@ -22,6 +28,7 @@
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="roslyn-tools" />
+    <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
