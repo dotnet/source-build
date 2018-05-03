@@ -2,7 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommandArgs>--stage0 $(DotNetCliToolDir)</BuildCommandArgs>
+    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
+    <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
@@ -28,7 +29,10 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackagesOutput>$(ProjectDirectory)bin/2/linux-x64/packages/</PackagesOutput>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
+    <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <GitCommitCount>008673</GitCommitCount>
     <GitCommitHash>f5e3ddbe739af749cd85ec392de8c0980987fa36</GitCommitHash>
