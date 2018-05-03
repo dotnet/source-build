@@ -5,24 +5,31 @@ SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
 OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
+SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/"
 DOTNET_TARBALL_REL=$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)
 DOTNET_TARBALL=$(readlink -e ${DOTNET_TARBALL_REL})
 
 projectOutput=false
 keepProjects=false
 dotnetDir=""
-includeWeb=false
+excludeWebTests=false
+excludeLocalTests=false
+excludeOnlineTests=false
 testingDir="$SCRIPT_ROOT/testing-smoke"
 cliDir="$testingDir/builtCli"
 logFile="$testingDir/smoke-test.log"
+restoredPackagesDir="$testingDir/packages"
 
 function usage() {
     echo ""
     echo "usage:"
-    echo "  --dotnetDir         the directory from which to run dotnet"
-    echo "  --projectOutput     echo dotnet's output to console"
-    echo "  --keepProjects      keep projects after tests are complete"
-    echo "  --includeWeb        run tests for web projects"
+    echo "  --dotnetDir             the directory from which to run dotnet"
+    echo "  --projectOutput         echo dotnet's output to console"
+    echo "  --keepProjects          keep projects after tests are complete"
+    echo "  --minimal               run minimal set of tests - local sources only, no web"
+    echo "  --excludeWebTests       don't run tests for web projects"
+    echo "  --excludeLocalTests     exclude tests that use local sources for nuget packages"
+    echo "  --excludeOnlineTests    exclude test that use online sources for nuget packages"
     echo ""
 }
 
@@ -47,8 +54,18 @@ while :; do
         --keepprojects)
             keepProjects=true
             ;;
-        --includeweb)
-            includeWeb=true
+        --minimal)
+            excludeWebTests=true
+            excludeOnlineTests=true
+            ;;
+        --excludewebtests)
+            excludeWebTests=true
+            ;;
+        --excludelocaltests)
+            excludeLocalTests=true
+            ;;
+        --excludeonlinetests)
+            excludeOnlineTests=true
             ;;
         *)
             usage
@@ -122,6 +139,35 @@ function doCommand() {
     echo "finished language $lang, type $proj" | tee -a smoke-test.log
 }
 
+function runAllTests() {
+    # Run tests for each language and template
+    doCommand C# console new restore run
+    doCommand C# classlib new restore build
+    doCommand C# xunit new restore test
+    doCommand C# mstest new restore test
+     
+    doCommand VB console new restore run
+    doCommand VB classlib new restore build
+    doCommand VB xunit new restore test
+    doCommand VB mstest new restore test
+
+    doCommand F# console new restore run
+    doCommand F# classlib new restore build
+    doCommand F# xunit new restore test
+    doCommand F# mstest new restore test
+     
+    if [ "$excludeWebTests" == "false" ]; then
+        doCommand C# web new restore run
+        doCommand C# mvc new restore run
+        doCommand C# webapi new restore run
+        doCommand C# razor new restore run
+
+        doCommand F# web new restore run
+        doCommand F# mvc new restore run
+        doCommand F# webapi new restore run
+    fi
+}
+
 # Clean up and create directory
 if [ -e "$testingDir"  ]; then
     read -p "testing-smoke directory exists, remove it? [Y]es / [n]o" -n 1 -r
@@ -145,31 +191,33 @@ else
     fi
 fi
 
-# Run tests for each language and template
-doCommand C# console new restore run
-doCommand C# classlib new restore build
-doCommand C# xunit new restore test
-doCommand C# mstest new restore test
- 
-doCommand VB console new restore run
-doCommand VB classlib new restore build
-doCommand VB xunit new restore test
-doCommand VB mstest new restore test
+# setup restore path
+export NUGET_PACKAGES="$restoredPackagesDir"
 
-doCommand F# console new restore run
-doCommand F# classlib new restore build
-doCommand F# xunit new restore test
-doCommand F# mstest new restore test
- 
-if [ "$includeWeb" == "true" ]; then
-    doCommand C# web new restore run
-    doCommand C# mvc new restore run
-    doCommand C# webapi new restore run
-    doCommand C# razor new restore run
+# Run all tests, local restore sources first, online restore sources second
+if [ "$excludeLocalTests" == "false" ]; then
+    # Setup NuGet.Config with local restore source
+    if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
+        cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
+        sed -i "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+    fi
+    echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
+    runAllTests
+    echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
+fi
 
-    doCommand F# web new restore run
-    doCommand F# mvc new restore run
-    doCommand F# webapi new restore run
+# clean restore path
+rm -rf "$restoredPackagesDir"
+
+if [ "$excludeOnlineTests" == "false" ]; then
+    # Setup NuGet.Config to use online restore sources
+    if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
+        cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
+        sed -i "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
+    fi
+    echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
+    runAllTests
+    echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
 rm -rf "$cliDir"
