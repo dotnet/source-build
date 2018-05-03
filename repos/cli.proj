@@ -2,7 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommandArgs>--stage0 $(DotNetCliToolDir) --runtime-id $(TargetRid)</BuildCommandArgs>
+    <RuntimeArg Condition="'$(TargetOS)' != 'OSX'">--runtime-id $(TargetRid)</RuntimeArg>
+    <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
