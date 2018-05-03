@@ -1,0 +1,11 @@
+<Project>
+  <ItemGroup>
+    <AllNuSpecs Include="*.nuspec" />
+  </ItemGroup>
+
+  <Target Name="Restore" />
+
+  <Target Name="Pack">
+    <MSBuild Projects="pack.csproj" Targets="Pack" Properties="NuspecFile=%(AllNuSpecs.Identity)" />
+  </Target>
+</Project>

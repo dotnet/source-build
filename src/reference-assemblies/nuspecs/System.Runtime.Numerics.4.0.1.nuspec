@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>System.Runtime.Numerics</id>
+    <version>4.0.1</version>
+    <description>Support package for source building containing only refs for System.Runtime.Numerics.4.0.1</description>
+    <authors>dotnet</authors>
+    <dependencies>
+      <group targetFramework="netstandard1.1">
+        <dependency id="System.Runtime" version="4.1.0" />
+      </group>
+      <group targetFramework="netstandard1.3">
+        <dependency id="System.Globalization" version="4.0.11" exclude="Compile" />
+        <dependency id="System.Resources.ResourceManager" version="4.0.1" exclude="Compile" />
+        <dependency id="System.Runtime" version="4.1.0" />
+        <dependency id="System.Runtime.Extensions" version="4.1.0" exclude="Compile" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="_._" target="lib/netstandard1.3/_._" />
+    <file src="System.Runtime.Numerics/netstandard1.1/4.0.0.0/System.Runtime.Numerics.dll" target="ref/netstandard1.1/System.Runtime.Numerics.dll" />
+  </files>
+</package>
