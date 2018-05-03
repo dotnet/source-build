@@ -18,7 +18,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;BuildDummyPackages;BuildReferenceAssemblies" />
+    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;BuildDummyPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -300,12 +300,6 @@
 
     <BuildDummyPackages Packages="@(DummyPackage)"
                         OutputPath="$(SourceBuiltPackagesPath)" />
-  </Target>
-
-  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
-    <Exec Command="$(DotNetCliToolDir)/dotnet build $(SubmoduleDirectory)/reference-assemblies/build.proj" />
-    <Exec Command="$(DotNetCliToolDir)/dotnet restore $(SubmoduleDirectory)/reference-assemblies/nuspecs/pack.csproj" />
-    <Exec Command="$(DotNetCliToolDir)/dotnet pack $(SubmoduleDirectory)/reference-assemblies/nuspecs/PackAll.proj" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
