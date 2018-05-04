@@ -1,0 +1,67 @@
+From c46510737402f30f28c23b06a0b309354f98e29a Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 3 May 2018 22:30:30 +0000
+Subject: [PATCH] Update build.sh to uptake source-built repotoolset
+
+---
+ build/build.sh | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/build/build.sh b/build/build.sh
+index 141f779..310cf85 100755
+--- a/build/build.sh
++++ b/build/build.sh
+@@ -278,19 +278,36 @@ function InstallDotNetCli {
+ }
+ 
+ function InstallRepoToolset {
++  CreateDirectory "$RepoToolsetDir"
+   ReadJson "$RepoRoot/global.json" "RoslynTools.RepoToolset"
+   RepoToolsetVersion=$readjsonvalue
+-  RepoToolsetDir="$NuGetPackageRoot/roslyntools.repotoolset/$RepoToolsetVersion/tools"
+-  RepoToolsetBuildProj="$RepoToolsetDir/Build.proj"
++  RepoToolsetLocationFile="$RepoToolsetDir/$RepoToolsetVersion.txt"
++
++  if [[ -a "$RepoToolsetLocationFile" ]]; then
++    local path=`cat $RepoToolsetLocationFile`
++    if [[ -a "$path" ]]; then
++      RepoToolsetBuildProj=$path
++      return
++    fi
++  fi
++  if [[ "$restore" != true ]]; then
++    ExitIfError 2 "Toolset version $RepoToolsetVersion has not been restored."
++  fi
+ 
+   echo "Using repo tools version: $readjsonvalue"
++  local proj="$RepoToolsetDir/restore.proj"
++  echo '<Project Sdk="RoslynTools.RepoToolset"/>' > $proj
+ 
+   local logCmd=$(GetLogCmd Toolset)
++  CallMSBuild $(QQ $proj) /t:__WriteToolsetLocation /m /nologo /clp:None /warnaserror $logCmd /p:__ToolsetLocationOutputFile=$RepoToolsetLocationFile
++  local lastexitcode=$?
+ 
+-  if [ ! -d "$RepoToolsetBuildProj" ]
+-  then
+-    local ToolsetProj="$ScriptRoot/Toolset.csproj"
+-    CallMSBuild $(QQ $ToolsetProj) /t:build /m /clp:Summary /warnaserror /v:$verbosity $logCmd $properties
++  ExitIfError $lastexitcode "Failed to restore toolset (exit code '$lastexitcode')."
++
++  RepoToolsetBuildProj=`cat $RepoToolsetLocationFile`
++
++  if [[ ! -a "$RepoToolsetBuildProj" ]]; then
++    ExitIfError 3 "Invalid toolset path: $RepoToolsetBuildProj"
+   fi
+ }
+ 
+@@ -392,6 +409,7 @@ ArtifactsConfigurationDir="$ArtifactsDir/$configuration"
+ PackagesDir="$ArtifactsConfigurationDir/packages"
+ LogDir="$ArtifactsConfigurationDir/log"
+ VersionsProps="$ScriptRoot/Versions.props"
++RepoToolsetDir="$ArtifactsDir/toolset"
+ 
+ #https://github.com/dotnet/source-build
+ if $dotnetBuildFromSource
+-- 
+1.8.3.1
+

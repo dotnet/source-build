@@ -10,12 +10,17 @@
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=$(GitCommitHash) $(OutputVersionArgs)</BuildCommand>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <UsesRepoToolset>true</UsesRepoToolset>
     <!--
       MSBuild is part of ProdCon, but that branch doesn't build from source yet.
     <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="roslyn-tools" />
+  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
