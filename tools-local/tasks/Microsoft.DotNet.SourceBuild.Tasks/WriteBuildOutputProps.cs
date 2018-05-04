@@ -6,6 +6,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Versioning;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,6 +23,20 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string OutputPath { get; set; }
 
+        /// <summary>
+        /// Package id/versions to add to the build output props, which may not exist as nupkgs.
+        /// 
+        /// %(Identity): Package identity.
+        /// %(Version): Package version.
+        /// </summary>
+        public ITaskItem[] ExtraPackageInfo { get; set; }
+
+        private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
+            ?.Select(item => new PackageIdentity(
+                item.GetMetadata("Identity"),
+                NuGetVersion.Parse(item.GetMetadata("Version"))))
+            ?? Enumerable.Empty<PackageIdentity>();
+
         public override bool Execute()
         {
             PackageIdentity[] latestPackages = NuGetPackages
@@ -31,6 +47,7 @@ namespace Microsoft.DotNet.Build.Tasks
                         return reader.GetIdentity();
                     }
                 })
+                .Concat(ExtraPackageIdentities)
                 .GroupBy(identity => identity.Id)
                 .Select(g => g.OrderBy(id => id.Version).Last())
                 .OrderBy(id => id.Id)

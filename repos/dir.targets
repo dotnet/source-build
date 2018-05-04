@@ -157,6 +157,7 @@
       <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+                           ExtraPackageInfo="@(ExtraPackageVersionPropsPackageInfo)"
                            OutputPath="$(PackageVersionPropsPath)" />
 
     <ReadLinesFromFile File="$(PackageVersionPropsPath)">
