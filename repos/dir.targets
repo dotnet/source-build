@@ -11,8 +11,9 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WritePackageUsageReportToFile" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteUsageReports" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
 
@@ -158,6 +159,9 @@
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
                            OutputPath="$(PackageVersionPropsPath)" />
+
+    <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+                           OutputPath="$(PackageVersionPropsPath).pre.$(RepositoryName).xml" />
 
     <ReadLinesFromFile File="$(PackageVersionPropsPath)">
       <Output TaskParameter="Lines" ItemName="VersionProperties" />
@@ -313,7 +317,7 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="ReportPrebuiltUsage">
+  <Target Name="WritePrebuiltUsageData">
     <ItemGroup>
       <AllRepoProjects Include="$(ProjectDir)repos\*.proj" />
     </ItemGroup>
@@ -328,10 +332,15 @@
     <ItemGroup>
       <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
       <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
+
+      <PackageVersionPropsSnapshotSourceFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
+
       <ProjectDirectories Include="$(ToolsDir);$(TaskDirectory);$(BaseIntermediatePath)" />
       <!-- Scan the entire project, in case project.assets.json ends up in an unexpected place. -->
       <ProjectDirectories Include="$(ProjectDir)" />
     </ItemGroup>
+
+    <Copy SourceFiles="@(PackageVersionPropsSnapshotSourceFiles)" DestinationFolder="$(PackageReportDir)" />
 
     <Message Importance="High" Text="Reading prebuilt nupkg identities..." />
 
@@ -339,10 +348,25 @@
       <Output TaskParameter="PackageInfoItems" ItemName="PrebuiltPackageInfoItems" />
     </ReadNuGetPackageInfos>
 
-    <WritePackageUsageReportToFile NuGetPackageInfos="@(PrebuiltPackageInfoItems)"
-                                   ProjectDirectories="@(ProjectDirectories)"
-                                   OutputDirectory="$(PackageReportDir)" />
+    <WritePackageUsageData NuGetPackageInfos="@(PrebuiltPackageInfoItems)"
+                           ProjectDirectories="@(ProjectDirectories)"
+                           DataFile="$(PackageReportDataFile)" />
   </Target>
+
+  <Target Name="ReportPrebuiltUsage"
+          DependsOnTargets="GetPreviousReleasePrebuiltPackageInfos">
+    <ItemGroup>
+      <PackageVersionPropsSnapshotFiles Include="$(PackageReportDir)PackageVersions.props.pre.*.xml" />
+    </ItemGroup>
+    <WriteUsageReports DataFile="$(PackageReportDataFile)"
+                       PackageVersionPropsSnapshots="@(PackageVersionPropsSnapshotFiles)"
+                       ProdConBuildManifestFile="$(ProdConManifestFile)"
+                       PoisonedReportFile="$(PoisonedReportFile)"
+                       PreviousReleasePrebuiltPackageInfos="@(PreviousReleasePrebuiltPackageInfos)"
+                       OutputDirectory="$(PackageReportDir)" />
+  </Target>
+
+  <Import Project="$(ProjectDir)tools-local/earlier-prebuilts.targets" />
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
   <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />

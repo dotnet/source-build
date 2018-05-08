@@ -15,6 +15,8 @@ namespace Microsoft.DotNet.Build.Tasks
 {
     public class WriteBuildOutputProps : Task
     {
+        private static readonly Regex InvalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
+
         [Required]
         public ITaskItem[] NuGetPackages { get; set; }
 
@@ -38,8 +40,6 @@ namespace Microsoft.DotNet.Build.Tasks
 
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
 
-            var invalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
-
             using (var outStream = File.Open(OutputPath, FileMode.Create))
             using (var sw = new StreamWriter(outStream, new UTF8Encoding(false)))
             {
@@ -48,12 +48,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 sw.WriteLine(@"  <PropertyGroup>");
                 foreach (PackageIdentity packageIdentity in latestPackages)
                 {
-                    string formattedId = invalidElementNameCharRegex.Replace(
-                        packageIdentity.Id,
-                        match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
-                            ?? string.Empty);
-
-                    string propertyName = $"{formattedId}PackageVersion";
+                    string propertyName = GetPropertyName(packageIdentity.Id);
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
@@ -62,6 +57,16 @@ namespace Microsoft.DotNet.Build.Tasks
             }
 
             return true;
+        }
+
+        public static string GetPropertyName(string id)
+        {
+            string formattedId = InvalidElementNameCharRegex.Replace(
+                id,
+                match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
+                    ?? string.Empty);
+
+            return $"{formattedId}PackageVersion";
         }
     }
 }

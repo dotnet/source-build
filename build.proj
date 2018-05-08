@@ -31,11 +31,19 @@
   <Target Name="ReportPrebuiltUsageAfterOfflineBuild"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' == 'true' and '$(SkipReportPrebuiltUsageAfterOfflineBuild)' != 'true'">
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
   </Target>
 
   <!-- After generating a tarball, check why/where the online build downloaded prebuilts. -->
   <Target Name="ReportTarballPrebuiltUsage">
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
+  </Target>
+
+  <!--
+    Dev scenario: regenerate a prebuilt-report. This makes it easy to add data to an existing
+    prebuilt report without performing another full build.
+  -->
+  <Target Name="CreatePrebuiltUsageReport">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
   </Target>
 
