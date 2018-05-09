@@ -4,10 +4,7 @@ set -e
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
-OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/"
-DOTNET_TARBALL_REL=$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)
-DOTNET_TARBALL=$(readlink -e ${DOTNET_TARBALL_REL})
 
 projectOutput=false
 keepProjects=false
@@ -182,6 +179,9 @@ cd "$testingDir"
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
+    OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
+    DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
+
     mkdir -p "$cliDir"
     tar xzf "$DOTNET_TARBALL" -C "$cliDir"
     dotnetDir="$cliDir"
@@ -199,7 +199,7 @@ if [ "$excludeLocalTests" == "false" ]; then
     # Setup NuGet.Config with local restore source
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
-        sed -i "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+        sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
     runAllTests
@@ -213,7 +213,7 @@ if [ "$excludeOnlineTests" == "false" ]; then
     # Setup NuGet.Config to use online restore sources
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
-        sed -i "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
+        sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
     runAllTests
