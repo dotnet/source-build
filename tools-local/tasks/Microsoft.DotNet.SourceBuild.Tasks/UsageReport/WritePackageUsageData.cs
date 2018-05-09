@@ -3,18 +3,18 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.Build.Framework;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Task = Microsoft.Build.Utilities.Task;
 
-namespace Microsoft.DotNet.SourceBuild.Tasks
+namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
-    public class WritePackageUsageReportToFile : Task
+    public class WritePackageUsageData : Task
     {
         /// <summary>
         /// %(PackageId): Identity of the package.
@@ -31,8 +31,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         [Required]
         public string[] ProjectDirectories { get; set; }
 
+        /// <summary>
+        /// Output usage data JSON file path.
+        /// </summary>
         [Required]
-        public string OutputDirectory { get; set; }
+        public string DataFile { get; set; }
 
         public override bool Execute()
         {
@@ -99,68 +102,23 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 }
             }
 
-            Log.LogMessage(MessageImportance.High, $"Creating report XML in '{OutputDirectory}'...");
+            Log.LogMessage(MessageImportance.High, $"Writing data to '{DataFile}'...");
 
-            Directory.CreateDirectory(OutputDirectory);
+            Directory.CreateDirectory(Path.GetDirectoryName(DataFile));
 
-            File.WriteAllText(Path.Combine(OutputDirectory, "UsageSummary.xml"), new XElement(
-                "Usage",
-                GroupsToElements(usages, Grouping.Package, Grouping.Project)).ToString());
-
-            IEnumerable<XElement> unused = packageIdentities
+            string[] unused = packageIdentities
                 .Where(id => !usages.Any(u => IsIdentityEqual(id, u.PackageIdentity)))
-                .Select(id => Node("Package", id, null));
+                .ToArray();
 
-            File.WriteAllText(Path.Combine(OutputDirectory, "UsageDetails.xml"), new XElement(
-                "UsageReport",
-                new XElement(
-                    "Unknown",
-                    unused),
-                new XElement(
-                    "PackageUsages",
-                    GroupsToElements(usages, Grouping.Package, Grouping.Project, Grouping.AssetsFile)),
-                new XElement(
-                    "ProjectUsages",
-                    GroupsToElements(usages, Grouping.Project, Grouping.Package, Grouping.AssetsFile))).ToString());
+            var data = new UsageData
+            {
+                UnusedPackages = unused,
+                Usages = usages.ToArray()
+            };
+
+            File.WriteAllText(DataFile, JsonConvert.SerializeObject(data, Formatting.Indented));
 
             return !Log.HasLoggedErrors;
-        }
-
-        private static IEnumerable<XElement> GroupsToElements(
-            IEnumerable<Usage> usages,
-            params Grouping[] groupings)
-        {
-            return GroupsToElementsCore(usages, groupings);
-        }
-
-        private static IEnumerable<XElement> GroupsToElementsCore(
-            IEnumerable<Usage> usages,
-            IEnumerable<Grouping> groupings)
-        {
-            if (!groupings.Any())
-            {
-                return null;
-            }
-            Grouping grouping = groupings.First();
-            return usages
-                .GroupBy(grouping.GetKey)
-                .OrderBy(g => g.Key)
-                .Select(g => Node(
-                    grouping.Type,
-                    g.Key,
-                    GroupsToElementsCore(g, groupings.Skip(1))));
-        }
-
-        private static XElement Node(string type, string name, IEnumerable<XElement> children)
-        {
-            var node = new XElement(type, children);
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                node.Add(new XAttribute("Name", name));
-            }
-
-            return node;
         }
 
         private static bool IsIdentityEqual(string identity, string other)
@@ -171,37 +129,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         private static bool IsIdentityInText(string identity, string text)
         {
             return text.IndexOf(identity, StringComparison.OrdinalIgnoreCase) != -1;
-        }
-
-        private class Grouping
-        {
-            public static readonly Grouping Package = new Grouping
-            {
-                Type = nameof(Package),
-                GetKey = u => u.PackageIdentity
-            };
-
-            public static readonly Grouping AssetsFile = new Grouping
-            {
-                Type = nameof(AssetsFile),
-                GetKey = u => u.AssetsFile
-            };
-
-            public static readonly Grouping Project = new Grouping
-            {
-                Type = nameof(Project),
-                GetKey = u => u.ProjectDirectory
-            };
-
-            public string Type { get; set; }
-            public Func<Usage, string> GetKey { get; set; }
-        }
-
-        private class Usage
-        {
-            public string ProjectDirectory { get; set; }
-            public string AssetsFile { get; set; }
-            public string PackageIdentity { get; set; }
         }
     }
 }
