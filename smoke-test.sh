@@ -180,7 +180,7 @@ cd "$testingDir"
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
     OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
-    DOTNET_TARBALL=$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)
+    DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
 
     mkdir -p "$cliDir"
     tar xzf "$DOTNET_TARBALL" -C "$cliDir"
