@@ -14,7 +14,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
       else {
         shell("git submodule update --init --recursive");
         shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}")
-        shell("./smoke-test.sh --minimal --projectOutput")
+        shell("./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
       }
     };
   };
@@ -75,7 +75,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
 
             shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
-            shell("cd ./tarball-output;./smoke-test.sh --minimal --projectOutput")
+            shell("cd ./tarball-output;./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
         }
       }
 
@@ -125,7 +125,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             // now build from the tarball offline and without access to the regular non-tarball build
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
             // finally, run a smoke-test on the result
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --projectOutput");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --projectOutput --configuration ${configuration}");
         }
       }
 
