@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
@@ -200,6 +200,8 @@ if [ "$excludeLocalTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+        echo "$testingDir/NuGet.Config Contents:"
+        cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
     runAllTests
@@ -214,6 +216,8 @@ if [ "$excludeOnlineTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
+        echo "$testingDir/NuGet.Config Contents:"
+        cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
     runAllTests
