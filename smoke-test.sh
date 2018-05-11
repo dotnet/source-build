@@ -1,14 +1,14 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
-SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/"
 
 projectOutput=false
 keepProjects=false
 dotnetDir=""
+configuration="Release"
 excludeWebTests=false
 excludeLocalTests=false
 excludeOnlineTests=false
@@ -21,6 +21,7 @@ function usage() {
     echo ""
     echo "usage:"
     echo "  --dotnetDir             the directory from which to run dotnet"
+    echo "  --configuration         the configuration being tested (default=Release)"
     echo "  --projectOutput         echo dotnet's output to console"
     echo "  --keepProjects          keep projects after tests are complete"
     echo "  --minimal               run minimal set of tests - local sources only, no web"
@@ -44,6 +45,10 @@ while :; do
         --dotnetdir)
             shift
             dotnetDir="$1"
+            ;;
+        --configuration)
+            shift
+            configuration="$1"
             ;;
         --projectoutput)
             projectOutput=true
@@ -179,7 +184,7 @@ cd "$testingDir"
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/Release/"
+    OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/$configuration/"
     DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
 
     mkdir -p "$cliDir"
@@ -193,6 +198,7 @@ fi
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
+SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
@@ -200,6 +206,8 @@ if [ "$excludeLocalTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+        echo "$testingDir/NuGet.Config Contents:"
+        cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
     runAllTests
@@ -214,12 +222,12 @@ if [ "$excludeOnlineTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
+        echo "$testingDir/NuGet.Config Contents:"
+        cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
     runAllTests
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
-
-rm -rf "$cliDir"
 
 echo "ALL TESTS PASSED!"
