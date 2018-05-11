@@ -230,6 +230,4 @@ if [ "$excludeOnlineTests" == "false" ]; then
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
-rm -rf "$cliDir"
-
 echo "ALL TESTS PASSED!"
