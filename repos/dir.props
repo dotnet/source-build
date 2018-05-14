@@ -46,6 +46,11 @@
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+
+    <!-- Turn off node reuse for source build because repos use conflicting versions 
+         of compilers which cause assembly load errors.  
+         See https://github.com/dotnet/source-build/issues/541 -->
+    <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
   </ItemGroup>
 
 </Project>
