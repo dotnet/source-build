@@ -46,6 +46,11 @@
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+    <!-- Always build source-build as stabilized.  We don't publish packages so this
+         won't cause conflicts on package feeds, and it will make us match up for releases.  -->
+    <EnvironmentVariables Include="StabilizePackageVersion=true" />
+    <!-- Update the line below when branch quality changes -->
+    <EnvironmentVariables Include="PackageVersionStamp=rc1" />
   </ItemGroup>
 
 </Project>
