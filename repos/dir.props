@@ -46,6 +46,8 @@
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+    <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
+    <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
 
     <!-- Turn off node reuse for source build because repos use conflicting versions 
          of compilers which cause assembly load errors.  
