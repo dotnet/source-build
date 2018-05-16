@@ -35,6 +35,12 @@
     <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <!-- default to the same settings as the official RC1 build -->
+  <PropertyGroup>
+    <VersionStamp Condition="'$(VersionStamp)' == ''">rc1</VersionStamp>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+  </PropertyGroup>
+
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
