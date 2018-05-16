@@ -32,7 +32,7 @@ def addPullRequestJob(String project, String branch, String os, String configura
 
   addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
-  Utilities.setJobTimeout(newJob, 180)
+  Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
@@ -45,7 +45,7 @@ def addPushJob(String project, String branch, String os, String configuration)
 
     addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
-    Utilities.setJobTimeout(newJob, 180)
+    Utilities.setJobTimeout(newJob, 180);
     Utilities.addGithubPushTrigger(newJob);
 }
 
