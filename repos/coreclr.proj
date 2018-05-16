@@ -7,7 +7,8 @@
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -PortableBuild=$(PortableBuild) --</BuildCommand>
+    <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180509-03</OfficialBuildId>
