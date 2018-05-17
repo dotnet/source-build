@@ -286,10 +286,9 @@ export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
 prodConFeedUrl="$(cat "$SCRIPT_ROOT/ProdConFeed.txt")"
 
-resetCaches
-
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
+    resetCaches
     # Setup NuGet.Config with local restore source
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
@@ -303,9 +302,8 @@ if [ "$excludeLocalTests" == "false" ]; then
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
-resetCaches
-
 if [ "$excludeOnlineTests" == "false" ]; then
+    resetCaches
     # Setup NuGet.Config to use online restore sources
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
