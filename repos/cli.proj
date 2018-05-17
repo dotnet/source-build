@@ -41,9 +41,6 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
 
-    <!-- Temporarily disable auto-update: patch consistently conflicts with dependency changes. -->
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-
     <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
     <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
   </PropertyGroup>
