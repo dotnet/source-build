@@ -4,30 +4,40 @@ set -euo pipefail
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
+DEV_CERTS_VERSION_DEFAULT=2.1.0
 
 projectOutput=false
 keepProjects=false
 dotnetDir=""
 configuration="Release"
+excludeNonWebTests=false
 excludeWebTests=false
+excludeWebNoHttpsTests=false
+excludeWebHttpsTests=false
 excludeLocalTests=false
 excludeOnlineTests=false
+devCertsVersion="$DEV_CERTS_VERSION_DEFAULT"
 testingDir="$SCRIPT_ROOT/testing-smoke"
 cliDir="$testingDir/builtCli"
 logFile="$testingDir/smoke-test.log"
 restoredPackagesDir="$testingDir/packages"
+testingHome="$testingDir/home"
 
 function usage() {
     echo ""
     echo "usage:"
-    echo "  --dotnetDir             the directory from which to run dotnet"
-    echo "  --configuration         the configuration being tested (default=Release)"
-    echo "  --projectOutput         echo dotnet's output to console"
-    echo "  --keepProjects          keep projects after tests are complete"
-    echo "  --minimal               run minimal set of tests - local sources only, no web"
-    echo "  --excludeWebTests       don't run tests for web projects"
-    echo "  --excludeLocalTests     exclude tests that use local sources for nuget packages"
-    echo "  --excludeOnlineTests    exclude test that use online sources for nuget packages"
+    echo "  --dotnetDir                    the directory from which to run dotnet"
+    echo "  --configuration                the configuration being tested (default=Release)"
+    echo "  --projectOutput                echo dotnet's output to console"
+    echo "  --keepProjects                 keep projects after tests are complete"
+    echo "  --minimal                      run minimal set of tests - local sources only, no web"
+    echo "  --excludeNonWebTests           don't run tests for non-web projects"
+    echo "  --excludeWebTests              don't run tests for web projects"
+    echo "  --excludeWebNoHttpsTests       don't run web project tests with --no-https"
+    echo "  --excludeWebHttpsTests         don't run web project tests with https using dotnet-dev-certs"
+    echo "  --excludeLocalTests            exclude tests that use local sources for nuget packages"
+    echo "  --excludeOnlineTests           exclude test that use online sources for nuget packages"
+    echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
     echo ""
 }
 
@@ -57,17 +67,29 @@ while :; do
             keepProjects=true
             ;;
         --minimal)
-            excludeWebTests=true
             excludeOnlineTests=true
+            ;;
+        --excludenonwebtests)
+            excludeNonWebTests=true
             ;;
         --excludewebtests)
             excludeWebTests=true
+            ;;
+        --excludewebnohttpstests)
+            excludeWebNoHttpsTests=true
+            ;;
+        --excludewebhttpstests)
+            excludeWebHttpsTests=true
             ;;
         --excludelocaltests)
             excludeLocalTests=true
             ;;
         --excludeonlinetests)
             excludeOnlineTests=true
+            ;;
+        --devcertsversion)
+            shift
+            devCertsVersion="$1"
             ;;
         *)
             usage
@@ -90,6 +112,24 @@ function doCommand() {
     mkdir "${lang}_${proj}"
     cd "${lang}_${proj}"
 
+    newArgs="new $proj -lang $lang"
+
+    while :; do
+        if [ $# -le 0 ]; then
+            break
+        fi
+        case "$1" in
+            --new-arg)
+                shift
+                newArgs="$newArgs $1"
+                ;;
+            *)
+                break
+                ;;
+        esac
+        shift
+    done
+
     while :; do
         if [ $# -le 0 ]; then
             break
@@ -99,9 +139,9 @@ function doCommand() {
 
         if [ "$1" == "new" ]; then
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" new $proj -lang $lang | tee -a "$logFile"
+                "${dotnetCmd}" $newArgs | tee -a "$logFile"
             else
-                "${dotnetCmd}" new $proj -lang $lang >> "$logFile" 2>&1
+                "${dotnetCmd}" $newArgs >> "$logFile" 2>&1
             fi
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
@@ -110,12 +150,20 @@ function doCommand() {
                 "${dotnetCmd}" $1 >> "$logFile" 2>&1 &
             fi
             webPid=$!
-            echo "    waiting 20 seconds for web project with pid $webPid"
-            sleep 20
-            echo "    sending SIGINT to $webPid"
-            pkill -SIGINT -P $webPid
+            killCommand="pkill -SIGTERM -P $webPid"
+            echo "    waiting up to 20 seconds for web project with pid $webPid..."
+            echo "    to clean up manually after an interactive cancellation, run: $killCommand"
+            for seconds in $(seq 20); do
+                if [ "$(tail -n 1 "$logFile")" = 'Application started. Press Ctrl+C to shut down.' ]; then
+                    echo "    app ready for shutdown after $seconds seconds"
+                    break
+                fi
+                sleep 1
+            done
+            echo "    stopping $webPid" | tee -a "$logFile"
+            $killCommand
             wait $!
-            echo "    terminated with exit code $?"
+            echo "    terminated with exit code $?" | tee -a "$logFile"
         else
             if [ "$projectOutput" == "true" ]; then
                 "${dotnetCmd}" $1 | tee -a "$logFile"
@@ -141,33 +189,66 @@ function doCommand() {
     echo "finished language $lang, type $proj" | tee -a smoke-test.log
 }
 
+function setupDevCerts() {
+    echo "Setting up dotnet-dev-certs $devCertsVersion to generate dev certificate" | tee -a "$logFile"
+    (
+        set -x
+        "$dotnetDir/dotnet" tool install -g dotnet-dev-certs --version "$devCertsVersion" --add-source https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+        export DOTNET_ROOT="$dotnetDir"
+        "$testingHome/.dotnet/tools/dotnet-dev-certs" https
+    ) >> "$logFile" 2>&1
+}
+
 function runAllTests() {
     # Run tests for each language and template
-    doCommand C# console new restore run
-    doCommand C# classlib new restore build
-    doCommand C# xunit new restore test
-    doCommand C# mstest new restore test
-     
-    doCommand VB console new restore run
-    doCommand VB classlib new restore build
-    doCommand VB xunit new restore test
-    doCommand VB mstest new restore test
+    if [ "$excludeNonWebTests" == "false" ]; then
+        doCommand C# console new restore run
+        doCommand C# classlib new restore build
+        doCommand C# xunit new restore test
+        doCommand C# mstest new restore test
 
-    doCommand F# console new restore run
-    doCommand F# classlib new restore build
-    doCommand F# xunit new restore test
-    doCommand F# mstest new restore test
-     
-    if [ "$excludeWebTests" == "false" ]; then
-        doCommand C# web new restore run
-        doCommand C# mvc new restore run
-        doCommand C# webapi new restore run
-        doCommand C# razor new restore run
+        doCommand VB console new restore run
+        doCommand VB classlib new restore build
+        doCommand VB xunit new restore test
+        doCommand VB mstest new restore test
 
-        doCommand F# web new restore run
-        doCommand F# mvc new restore run
-        doCommand F# webapi new restore run
+        doCommand F# console new restore run
+        doCommand F# classlib new restore build
+        doCommand F# xunit new restore test
+        doCommand F# mstest new restore test
     fi
+
+    if [ "$excludeWebTests" == "false" ]; then
+        if [ "$excludeWebNoHttpsTests" == "false" ]; then
+            runWebTests --new-arg --no-https
+        fi
+
+        if [ "$excludeWebHttpsTests" == "false" ]; then
+            setupDevCerts
+            runWebTests
+        fi
+    fi
+}
+
+function runWebTests() {
+    doCommand C# web "$@" new restore run
+    doCommand C# mvc "$@" new restore run
+    doCommand C# webapi "$@" new restore run
+    doCommand C# razor "$@" new restore run
+
+    doCommand F# web "$@" new restore run
+    doCommand F# mvc "$@" new restore run
+    doCommand F# webapi "$@" new restore run
+}
+
+function resetCaches() {
+    rm -rf "$testingHome"
+    mkdir "$testingHome"
+
+    HOME="$testingHome"
+
+    # clean restore path
+    rm -rf "$restoredPackagesDir"
 }
 
 function setupProdConFeed() {
@@ -205,6 +286,8 @@ export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
 prodConFeedUrl="$(cat "$SCRIPT_ROOT/ProdConFeed.txt")"
 
+resetCaches
+
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
     # Setup NuGet.Config with local restore source
@@ -220,8 +303,7 @@ if [ "$excludeLocalTests" == "false" ]; then
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
-# clean restore path
-rm -rf "$restoredPackagesDir"
+resetCaches
 
 if [ "$excludeOnlineTests" == "false" ]; then
     # Setup NuGet.Config to use online restore sources
