@@ -170,6 +170,10 @@ function runAllTests() {
     fi
 }
 
+function setupProdConFeed() {
+    sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConFeedUrl|g" "$testingDir/NuGet.Config"
+}
+
 # Clean up and create directory
 if [ -e "$testingDir"  ]; then
     read -p "testing-smoke directory exists, remove it? [Y]es / [n]o" -n 1 -r
@@ -199,6 +203,7 @@ fi
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
+prodConFeedUrl="$(cat "$SCRIPT_ROOT/ProdConFeed.txt")"
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
@@ -206,6 +211,7 @@ if [ "$excludeLocalTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
+        setupProdConFeed
         echo "$testingDir/NuGet.Config Contents:"
         cat "$testingDir/NuGet.Config"
     fi
@@ -222,6 +228,7 @@ if [ "$excludeOnlineTests" == "false" ]; then
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
+        setupProdConFeed
         echo "$testingDir/NuGet.Config Contents:"
         cat "$testingDir/NuGet.Config"
     fi
