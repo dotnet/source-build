@@ -49,7 +49,7 @@
         Microsoft.AspNetCore.All;
         Microsoft.AspNetCore.App;
         Microsoft.NET.Sdk.Razor"
-      Version="2.1.0-rtm-30752" />
+      Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -95,6 +95,23 @@
     -->
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
+
+  <Target Name="AddProdConFeed" BeforeTargets="Build">
+    <PropertyGroup>
+      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
+
+      <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
+      <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
+      <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
+
+      <NugetConfigTargetsContents>$([System.IO.File]::ReadAllText('$(NugetConfigTargetsFile)'))</NugetConfigTargetsContents>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(NugetConfigTargetsFile)"
+                      Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
+                      Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
+                      Overwrite="true" />
+  </Target>
 
   <Target Name="CopyTarBall" AfterTargets="CopyPackage">
     <ItemGroup>
