@@ -94,6 +94,10 @@
       Unable to find package dotnet-watch.
     -->
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
+
+    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
+         is fixed we will be able to determine this automatically.  -->
+    <EnvironmentVariables Include="DropSuffix=true" />
   </ItemGroup>
 
   <Target Name="AddProdConFeed" BeforeTargets="Build">
