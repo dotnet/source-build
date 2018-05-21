@@ -44,15 +44,14 @@ For versions earlier than .NET Core 2.0, following dependencies are also require
 ### Building the bootstrap CLI
 There is a bash script file that automatizes most of the process of building the bootstrap CLI end to end. The bash script is located at `dotnet/source-build/scripts/bootstrap/buildbootstrapcli.sh`. It first creates a folder named by the new target RID, clones the coreclr, corefx and core-setup repos into it and checks out the same commit of each of the repos as the one that was used to build the seed CLI. This first step is skipped if the coreclr, corefx and core-setup folders already exist. This is important so that the sources can be modified to fix possible build issues and to target the new RID.
 
-The script needs to be passed several arguments. The target architecture, the build configuration, the target OS, the new RID and path to the folder with the untared seed CLI. There is also an optional option to specify the version of the Clang compiler to use to compile the native code. There is also an option to pass in a System.Private.CoreLib.dll built elsewhere and an option to crossgen it. This is useful if you are building debug configuration, since the seed CLI that comes from Azure is built for release configuration and the release version of System.Private.CoreLib.dll is not compatible with debug version of libcoreclr.so.
+The script needs to be passed several arguments. The target architecture, the build configuration, the target OS, the new RID and path to the folder with the untared seed CLI. There is also an optional option to specify the version of the Clang compiler to use to compile the native code. There is also an option to pass in a System.Private.CoreLib.dll built elsewhere. This is useful if you are building debug configuration, since the seed CLI that comes from Azure is built for release configuration and the release version of System.Private.CoreLib.dll is not compatible with debug version of libcoreclr.so.
 Here is the summary of the options that you get from running the script with `--help` option:
 ```
-Usage: buildbootstrapcli.sh [BuildType] --rid <Rid> --seedcli <SeedCli> [--os <OS>] [--clang <Major.Minor>] [--corelib <CoreLib>]
+Usage: buildbootstrapcli.sh [BuildType] -rid <Rid> -seedcli <SeedCli> [-os <OS>] [-clang <Major.Minor>] [-corelib <CoreLib>]
 
 Options:
   BuildType               Type of build (-debug, -release), default: -debug
   -clang <Major.Minor>    Override of the version of clang compiler to use
-  -config <Configuration> Build configuration (debug, release), default: debug
   -corelib <CoreLib>      Path to System.Private.CoreLib.dll, default: use the System.Private.CoreLib.dll from the seed CLI
   -os <OS>                Operating system (used for corefx build), default: Linux
   -rid <Rid>              Runtime identifier including the architecture part (e.g. rhel.6-x64)
@@ -61,7 +60,7 @@ Options:
 ```
 So, for example, when we were creating bootstrap CLI for RHEL / CentOS 6, the command was:
 ```bash
-./buildbootstrapcli.sh -rid rhel.6 -release -os Linux -seedcli ~/seed-cli
+./buildbootstrapcli.sh -release -rid rhel.6-x64 -os Linux -seedcli ~/seed-cli
 ```
 After running the script, check the console output. If the last line printed is `**** Bootstrap CLI was successfully built  ****`, then everything went fine and the bootstrap CLI is ready. You can find it in the `<Rid>-<Architecture>/dotnetcli` subfolder. So for the example command above, it would be `rhel.6-x64/dotnetcli`.
 If there were build errors, they need to be looked into and fixed. After that run the `buildbootstrapcli.sh` with the same arguments again. Repeat until everything builds.
