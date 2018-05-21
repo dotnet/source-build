@@ -6,6 +6,10 @@
 
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
     <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
+
+    <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
+    <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
+    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -15,6 +19,8 @@
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
+    <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
+    <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,11 +36,14 @@
 
   <PropertyGroup>
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
+    <GitModulesPath>$(ProjectDir).gitmodules</GitModulesPath>
+    <ProdConFeedPath>$(ProjectDir)ProdConFeed.txt</ProdConFeedPath>
   </PropertyGroup>
 
   <PropertyGroup>
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
+    <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
     <TaskDirectory>$(ProjectDir)tools-local/tasks/</TaskDirectory>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</TasksBinDir>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
@@ -52,6 +61,14 @@
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
+    <!-- Dir where git info is generated during online builds. -->
+    <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
+    <!-- Dir where git info is placed inside the tarball. -->
+    <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
+    <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
+    <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.json</PackageReportDataFile>
+    <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
+    <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->
@@ -62,10 +79,24 @@
      <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
    </PropertyGroup>
 
-   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
+  <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
+    <!-- Always build portable runtime on OSX to match the CLI repo's filename expectations. https://github.com/dotnet/source-build/issues/438 -->
+    <PortableBuild Condition="'$(TargetOS)' == 'OSX'">true</PortableBuild>
+  </PropertyGroup>
+
+  <Import Project="$(ProjectDir)dependencies.props" />
+
+  <PropertyGroup>
+    <!--
+        Temporarily update RootRepo to known-good
+        repo project until all repos are building clean.
+        When all repos build, this can be changed back
+        to cli.
     <RootRepo>cli</RootRepo>
+    -->
+    <RootRepo>known-good</RootRepo>
     <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 

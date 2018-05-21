@@ -1,21 +1,52 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
+    <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
     <TargetFramework>netstandard1.5</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CoreSetupPlatformAbstractionsPath>$(SubmoduleDirectory)core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Platform.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)RuntimeEnvironment.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Darwin.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Unix.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Windows.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/PlatformApis.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Build">
-      <Version>15.1.0-preview-000370-00</Version>
+      <Version>15.6.82</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Build.Utilities.Core">
-      <Version>15.1.0-preview-000370-00</Version>
+      <Version>15.6.82</Version>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json">
-      <Version>9.0.1</Version>
-    </PackageReference>
-    <PackageReference Include="NuGet.Packaging">
-      <Version>4.3.0-preview1-2500</Version>
-    </PackageReference>
+  </ItemGroup>
+
+  <!--
+    Use some assemblies from the SDK, instead of package references. This ensures they match what's
+    found when the task is loaded by the SDK's MSBuild.
+  -->
+  <PropertyGroup>
+    <!-- Read SDK_VERSION if not passed in. Enables Visual Studio builds. -->
+    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$([System.IO.File]::ReadAllText('$(ProjectDir)DotnetCLIVersion.txt').Trim())</SDK_VERSION>
+    <SdkReferenceDir>$(ToolsDir)dotnetcli/sdk/$(SDK_VERSION)/</SdkReferenceDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
+    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="@(SdkAssembly -> '%(FileName)')">
+      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

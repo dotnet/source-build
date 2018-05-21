@@ -2,17 +2,55 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <CLITargetsArgument Condition="'$(OS)' == 'Windows_NT'">'/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</CLITargetsArgument>
-    <CLITargetsArgument Condition="'$(OS)' != 'Windows_NT'">'/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</CLITargetsArgument>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(CLITargetsArgument) /v:detailed /p:SkipBuildingInstallers=true /p:IncludeNuGetPackageArchive=false /p:IncludeAdditionalSharedFrameworks=false /flp:v=detailed /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot) /p:UsePortableLinuxSharedFramework=false /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false /p:IncludeAspNetCoreRuntime=false /p:IncludeMSBuildSdkResolver=false</BuildCommand>
-    <PackagesOutput>$(ProjectDirectory)artifacts/linux-x64/packages/</PackagesOutput>
+    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
+    <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
+
+    <!--
+      Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
+      See https://github.com/dotnet/sdk/issues/1512#issuecomment-377082883
+    -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:NETCoreAppMaximumVersion=99.9</BuildCommandArgs>
+
+    <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
+
+    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SkipBuildingInstallers=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeNuGetPackageArchive=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeAdditionalSharedFrameworks=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
+
+    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) /v:detailed</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+
+    <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
+    <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
-    <GitCommitCount>6908</GitCommitCount>
-    <GitCommitHash>38031f6e5c3e21fa39d82aca300f5ed769be10a0</GitCommitHash>
-    <UpdateCommand>(set DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot)) &amp; (set GITHUB_UPSTREAM_BRANCH=release/2.0.0) &amp; powershell.exe -NoProfile $(ProjectDirectory)build_projects/update-dependencies/update-dependencies.ps1 -Update</UpdateCommand>
-    <UpdateCommand Condition="'$(OS)' != 'Windows_NT'">DOTNET_VERSION_URL=file:%2F%2F$(LocalBuildInfoRoot) GITHUB_UPSTREAM_BRANCH=release/2.0.0 $(ProjectDirectory)build_projects/update-dependencies/update-dependencies$(ShellExtension) --Update</UpdateCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
+
+    <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo
+      Include="
+        Microsoft.AspNetCore.All;
+        Microsoft.AspNetCore.App;
+        Microsoft.NET.Sdk.Razor"
+      Version="2.1.0" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="application-insights" />
@@ -31,14 +69,49 @@
     <RepositoryReference Include="vstest" />
     <RepositoryReference Include="websdk" />
     <RepositoryReference Include="xliff-tasks" />
-    <RepositoryReference Include="cli-deps-satellites" />
   </ItemGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
-    <EnvironemntVariables Include="DropSuffix=true" />
+
+    <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
+    <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
+
+    <!--
+      Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
+      parameter, it is lost during the restore call.
+    -->
+    <EnvironmentVariables Include="IncludeAspNetCoreRuntime=false" />
+
+    <!--
+      Disable bundled tools until we can figure out:
+
+      Unable to find package dotnet-dev-certs.
+      Unable to find package dotnet-ef.
+      Unable to find package dotnet-sql-cache.
+      Unable to find package dotnet-user-secrets.
+      Unable to find package dotnet-watch.
+    -->
+    <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
+
+  <Target Name="AddProdConFeed" BeforeTargets="Build">
+    <PropertyGroup>
+      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
+
+      <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
+      <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
+      <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
+
+      <NugetConfigTargetsContents>$([System.IO.File]::ReadAllText('$(NugetConfigTargetsFile)'))</NugetConfigTargetsContents>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(NugetConfigTargetsFile)"
+                      Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
+                      Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
+                      Overwrite="true" />
+  </Target>
 
   <Target Name="CopyTarBall" AfterTargets="CopyPackage">
     <ItemGroup>

@@ -268,4 +268,11 @@ Session.vim
 config.ps1
 **/IISApplications
 
+### source-build ###
 prebuilt/
+msbuild.binlog
+
+# Exists temporarily during build. Interferes with VersionTools'
+# UpdateDependenciesAndSubmitPullRequest: if no upgrades are performed, the
+# sanity check fails when "git status" shows this file.
+msbuild.ProjectImports.zip

@@ -60,6 +60,8 @@ namespace Microsoft.DotNet.Build.Tasks
 
             public FrameworkName TargetFramework => new FrameworkName("netstandard", new Version(1,0,0));
 
+            public DateTimeOffset LastWriteTime => DateTimeOffset.Now;
+
             public Stream GetStream()
             {
                 return new MemoryStream();

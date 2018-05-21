@@ -6,6 +6,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
+using NuGet.Versioning;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,11 +17,27 @@ namespace Microsoft.DotNet.Build.Tasks
 {
     public class WriteBuildOutputProps : Task
     {
+        private static readonly Regex InvalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
+
         [Required]
         public ITaskItem[] NuGetPackages { get; set; }
 
         [Required]
         public string OutputPath { get; set; }
+
+        /// <summary>
+        /// Package id/versions to add to the build output props, which may not exist as nupkgs.
+        /// 
+        /// %(Identity): Package identity.
+        /// %(Version): Package version.
+        /// </summary>
+        public ITaskItem[] ExtraPackageInfo { get; set; }
+
+        private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
+            ?.Select(item => new PackageIdentity(
+                item.GetMetadata("Identity"),
+                NuGetVersion.Parse(item.GetMetadata("Version"))))
+            ?? Enumerable.Empty<PackageIdentity>();
 
         public override bool Execute()
         {
@@ -31,14 +49,13 @@ namespace Microsoft.DotNet.Build.Tasks
                         return reader.GetIdentity();
                     }
                 })
+                .Concat(ExtraPackageIdentities)
                 .GroupBy(identity => identity.Id)
                 .Select(g => g.OrderBy(id => id.Version).Last())
                 .OrderBy(id => id.Id)
                 .ToArray();
 
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
-
-            var invalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
 
             using (var outStream = File.Open(OutputPath, FileMode.Create))
             using (var sw = new StreamWriter(outStream, new UTF8Encoding(false)))
@@ -48,12 +65,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 sw.WriteLine(@"  <PropertyGroup>");
                 foreach (PackageIdentity packageIdentity in latestPackages)
                 {
-                    string formattedId = invalidElementNameCharRegex.Replace(
-                        packageIdentity.Id,
-                        match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
-                            ?? string.Empty);
-
-                    string propertyName = $"{formattedId}PackageVersion";
+                    string propertyName = GetPropertyName(packageIdentity.Id);
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
@@ -62,6 +74,16 @@ namespace Microsoft.DotNet.Build.Tasks
             }
 
             return true;
+        }
+
+        public static string GetPropertyName(string id)
+        {
+            string formattedId = InvalidElementNameCharRegex.Replace(
+                id,
+                match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
+                    ?? string.Empty);
+
+            return $"{formattedId}PackageVersion";
         }
     }
 }

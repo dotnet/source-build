@@ -14,6 +14,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
       else {
         shell("git submodule update --init --recursive");
         shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}")
+        shell("./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
       }
     };
   };
@@ -31,6 +32,7 @@ def addPullRequestJob(String project, String branch, String os, String configura
 
   addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
+  Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
@@ -43,47 +45,103 @@ def addPushJob(String project, String branch, String os, String configuration)
 
     addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
+    Utilities.setJobTimeout(newJob, 180);
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["RHEL7.2", "Windows_NT", "CentOS7.1"].each { os ->
+["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };
 
 // Per push, run all the jobs
-["Ubuntu14.04", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
+["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
     addPushJob(project, branch, os, configuration);
   };
 };
 
+// Tarball builds that are not enforced to be offline
 [true, false].each { isPR ->
-  ["Linux_ARM"].each { os->
+  ["RHEL7.2", "CentOS7.1"].each { os ->
     ["Release", "Debug"].each { configuration ->
 
-      def shortJobName = "${os}_${configuration}";
-      def contextString = "${os} ${configuration}";
+      def shortJobName = "${os}_Tarball_${configuration}";
+      def contextString = "${os} Tarball ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
-            shell("git submodule update --init --recursive");
-            shell("./init-tools.sh")
-            if(os == "Linux_ARM"){
-              shell("./arm-ci.sh arm ./build.sh /p:Platform=arm /p:Configuration=${configuration} ${loggingOptions}")
-            }
-            if(os == "Tizen"){
-              shell("./arm-ci.sh armel ./build.sh /p:Platform=armel /p:Configuration=${configuration} ${loggingOptions}")
-            }
+            shell("cd ./source-build;git submodule update --init --recursive");
+            shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
+
+            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
+            shell("cd ./tarball-output;./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
         }
       }
 
-      Utilities.setMachineAffinity(newJob, 'Ubuntu', 'arm-cross-latest');
+      Utilities.setMachineAffinity(newJob, os, 'latest-or-auto');
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+      // Increase timeout. The tarball builds can take longer than the 2 hour default.
+      Utilities.setJobTimeout(newJob, 240);
+
+      // Clone into the source-build directory
+      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
       if(isPR){
-        //We run Tizen Release and Ubuntu ARM Release
+        if(configuration == "Release"){
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        }
+        else{
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+        }
+      }
+      else{
+        Utilities.addGithubPushTrigger(newJob);
+      }
+
+    }
+  }
+}
+
+// Tarball builds that are enforced offline with unshare
+[true, false].each { isPR ->
+  ["RHEL7.2"].each { os->
+    ["Release", "Debug"].each { configuration ->
+
+      def shortJobName = "${os}_Unshared_${configuration}";
+      def contextString = "${os} Unshared ${configuration}";
+      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+
+      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
+        steps{
+            shell("cd ./source-build;git submodule update --init --recursive");
+            // First build the product itself
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
+            shell("mkdir tarball-output");
+            // now build the tarball
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+            // now build from the tarball offline and without access to the regular non-tarball build
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+            // finally, run a smoke-test on the result
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --projectOutput --configuration ${configuration}");
+        }
+      }
+
+      // Only Ubuntu Jenkins machines have Docker
+      Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
+
+      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+      // Increase timeout. The offline build in Docker takes more than 2 hours.
+      Utilities.setJobTimeout(newJob, 240);
+
+      // Clone into the source-build directory
+      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+      if(isPR){
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
         }

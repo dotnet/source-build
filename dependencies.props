@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    A CurrentRef is a commit on the dotnet/versions master branch. It is the single source of truth
+    for which dotnet/versions commit was last used to update the dependency.
+  -->
+  <PropertyGroup>
+    <ProdConCurrentRef>b0f08270da85e75c1fc9ac0b8b56937a4708958e</ProdConCurrentRef>
+    <CoreClrCurrentRef>b0f08270da85e75c1fc9ac0b8b56937a4708958e</CoreClrCurrentRef>
+    <BuildToolsCurrentRef>54227d85bec7093210eef26b6013d1435c6fc21e</BuildToolsCurrentRef>
+  </PropertyGroup>
+
+  <!-- Package dependency verification/auto-upgrade configuration. -->
+  <PropertyGroup>
+    <BaseDotNetBuildInfo>build-info/dotnet/</BaseDotNetBuildInfo>
+    <DependencyBranch>release/2.1</DependencyBranch>
+    <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
+  </PropertyGroup>
+
+  <!-- ILLink.Tasks package version -->
+  <PropertyGroup>
+    <ILLinkTasksPackage>ILLink.Tasks</ILLinkTasksPackage>
+    <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Get ILAsm tool version from CoreCLR. -->
+    <RemoteDependencyBuildInfo Include="CoreClr">
+      <BuildInfoPath>$(BaseDotNetBuildInfo)coreclr/$(DependencyBranch)</BuildInfoPath>
+      <CurrentRef>$(CoreClrCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+    <RemoteDependencyBuildInfo Include="BuildTools">
+      <BuildInfoPath>$(BaseDotNetBuildInfo)buildtools/$(DependencyBranch)</BuildInfoPath>
+      <CurrentRef>$(BuildToolsCurrentRef)</CurrentRef>
+    </RemoteDependencyBuildInfo>
+
+    <DependencyBuildInfo Include="@(RemoteDependencyBuildInfo)">
+      <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
+    </DependencyBuildInfo>
+
+    <DependencyInfo Include="ProdCon">
+      <DependencyType>Orchestrated build</DependencyType>
+      <BasePath>build-info/dotnet/product/cli/release/2.1</BasePath>
+      <CurrentRef>$(ProdConCurrentRef)</CurrentRef>
+      <VersionsRepoOwner>dotnet</VersionsRepoOwner>
+      <VersionsRepo>versions</VersionsRepo>
+    </DependencyInfo>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SkipBuildToolsUpdate)' != 'true'">
+    <UpdateStep Include="BuildTools">
+      <UpdaterType>File</UpdaterType>
+      <Path>$(MSBuildThisFileDirectory)BuildToolsVersion.txt</Path>
+      <PackageId>Microsoft.DotNet.BuildTools</PackageId>
+    </UpdateStep>
+    <UpdateStep Include="BuildTools">
+      <UpdaterType>File</UpdaterType>
+      <Path>$(MSBuildThisFileDirectory)tools-local/ILAsmVersion.txt</Path>
+      <PackageId>Microsoft.NETCore.ILAsm</PackageId>
+    </UpdateStep>
+  </ItemGroup>
+</Project>

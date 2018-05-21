@@ -2,19 +2,21 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -portable=false -- /p:ILLinkTrimAssembly=false</BuildCommand>
+    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <FrameworkBuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) -buildArch=$(Platform) -Framework=netfx -OSGroup=Windows_NT -- /p:ILLinkTrimAssembly=false</FrameworkBuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <LatestCommit>8321c729934c0f8be754953439b88e6e1c120c24</LatestCommit>
-    <VersionSeedDate>2017-07-19</VersionSeedDate>
-    <OfficialBuildId>20170719-03</OfficialBuildId>
+    <OfficialBuildId>20180509-03</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
@@ -31,12 +33,5 @@
     <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
                          Rid="$(TargetRid)-$(Platform)" />
-  </Target>
-
-  <Target Name="BuildNetStandardLibraryNetFramework"
-          BeforeTargets="Package">
-    <Exec Command="$(FrameworkBuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
