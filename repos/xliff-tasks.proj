@@ -4,8 +4,8 @@
   <PropertyGroup>
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <BuildNumber>48</BuildNumber>
-    <CommitHash>27d43b762aa6dac3a0a6ba48fe55000942d75c1c</CommitHash>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
   <ItemGroup>
     <EnvironmentVariables Include="CommitCount=$(BuildNumber)" />
@@ -14,7 +14,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag;LogFile=$(ProjectDirectory)msbuild.log $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
