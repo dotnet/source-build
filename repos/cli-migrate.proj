@@ -2,22 +2,32 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
-    <CommitCount>2133</CommitCount>
-    <RepoApiImplemented>false</RepoApiImplemented>
+    <BuildCommandArgs>--restore --pack --configuration $(Configuration)</BuildCommandArgs>
+
+    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <OrchestratedManifestBuildName>dotnet/cli-migrate</OrchestratedManifestBuildName>
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
+    <UsesRepoToolset>true</UsesRepoToolset>
+    <OrchestratedManifestBuildName>dotnet/cli-migrate</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
-    <MSBuildProperties Include="Configuration=$(Configuration)" />
-    <MSBuildProperties Include="COMMIT_COUNT=$(CommitCount)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="roslyn-tools" />
+    <RepositoryReference Include="roslyn" />
   </ItemGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) msbuild /t:BuildForCli @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
