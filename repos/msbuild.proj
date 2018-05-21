@@ -6,7 +6,7 @@
     <!-- Override value from commit to match expected build. -->
     <OfficialBuildId>20180426.1</OfficialBuildId>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
-    <OutputVersionArgs>/p:VersionPrefix=15.6.82 /p:DisableNerdbankVersioning=true /p:PreReleaseVersionLabel="rc" /p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
+    <OutputVersionArgs>/p:VersionPrefix=15.7.179 /p:DisableNerdbankVersioning=true /p:PreReleaseVersionLabel="" /p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=$(GitCommitHash) $(OutputVersionArgs)</BuildCommand>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
