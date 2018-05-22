@@ -2,12 +2,13 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)Nupkgs/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/nupkgs/</PackagesOutput>
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientBuildNumber>4324</NuGetClientBuildNumber>
+    <NuGetClientBuildNumber>5156</NuGetClientBuildNumber>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <OrchestratedManifestBuildName>nuget.client</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +22,13 @@
   <Target Name="RepoBuild"
           DependsOnTargets="InitSubmodules">
 
-    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/CLI.sln /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:RestoreXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/CLI.sln /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:BuildXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:PackXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 
