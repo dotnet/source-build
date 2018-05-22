@@ -13,8 +13,13 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
       }
       else {
         shell("git submodule update --init --recursive");
-        shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}")
-        shell("./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
+        shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
+        smokeTestExcludes = "";
+        if (os == "Fedora24" || os == "OSX10.12") {
+          // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
+          smokeTestExcludes += " --excludeWebHttpsTests";
+        }
+        shell("./smoke-test.sh --minimal --projectOutput --configuration ${configuration} ${smokeTestExcludes}");
       }
     };
   };
