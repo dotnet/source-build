@@ -37,7 +37,7 @@ The following libraries and tools need to be installed in order to build the boo
 * liblldb
 * icu
 
-For versions earlier than .NET Core 2.0, following dependencies are also required:
+For versions earlier than .NET Core 2.1, following dependencies are also required:
 * libunwind
 * libuuid
 
