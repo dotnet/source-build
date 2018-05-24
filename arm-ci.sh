@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 __currentWorkingDirectory=`pwd`
 __buildArch=$1
 shift;
