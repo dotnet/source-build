@@ -94,6 +94,10 @@
       Unable to find package dotnet-watch.
     -->
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
+
+    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
+         is fixed we will be able to determine this automatically.  -->
+    <EnvironmentVariables Include="DropSuffix=true" />
   </ItemGroup>
 
   <Target Name="AddProdConFeed" BeforeTargets="Build">
@@ -110,6 +114,28 @@
     <WriteLinesToFile File="$(NugetConfigTargetsFile)"
                       Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
                       Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
+                      Overwrite="true" />
+  </Target>
+
+  <!--
+    Ignore this error in the CLI build, which doesn't seem to happen in ProdCon:
+
+      error NU5104: A stable release of a package should not have a prerelease dependency. Either
+      modify the version spec of dependency "NuGet.Frameworks [4.7.0-rtm.5156, )" or update the
+      version field in the nuspec.
+  -->
+  <Target Name="AddNoWarnNU5104ByDefault" BeforeTargets="Build">
+    <PropertyGroup>
+      <BuildDefaultsFile>$(ProjectDirectory)build\BuildDefaults.props</BuildDefaultsFile>
+      <ReplacementEndMark>&lt;/NoWarn&gt;</ReplacementEndMark>
+      <InsertItemLine>;NU5104$(ReplacementEndMark)</InsertItemLine>
+
+      <BuildDefaultsPropsContents>$([System.IO.File]::ReadAllText('$(BuildDefaultsFile)'))</BuildDefaultsPropsContents>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(BuildDefaultsFile)"
+                      Lines="$(BuildDefaultsPropsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
+                      Condition="! $(BuildDefaultsPropsContents.Contains('$(InsertItemLine)'))"
                       Overwrite="true" />
   </Target>
 

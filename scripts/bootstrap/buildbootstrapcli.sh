@@ -5,12 +5,11 @@ set -o pipefail
 usage()
 {
     echo "Builds a bootstrap CLI from sources"
-    echo "Usage: $0 [BuildType] --rid <Rid> --seedcli <SeedCli> [--os <OS>] [--clang <Major.Minor>] [--corelib <CoreLib>]"
+    echo "Usage: $0 [BuildType] -rid <Rid> -seedcli <SeedCli> [-os <OS>] [-clang <Major.Minor>] [-corelib <CoreLib>]"
     echo ""
     echo "Options:"
     echo "  BuildType               Type of build (-debug, -release), default: -debug"
     echo "  -clang <Major.Minor>    Override of the version of clang compiler to use"
-    echo "  -config <Configuration> Build configuration (debug, release), default: debug"
     echo "  -corelib <CoreLib>      Path to System.Private.CoreLib.dll, default: use the System.Private.CoreLib.dll from the seed CLI"
     echo "  -os <OS>                Operating system (used for corefx build), default: Linux"
     echo "  -rid <Rid>              Runtime identifier including the architecture part (e.g. rhel.6-x64)"
