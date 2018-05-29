@@ -4,7 +4,9 @@ set -euo pipefail
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=2.1
-DEV_CERTS_VERSION_DEFAULT=2.1.0
+# See https://github.com/dotnet/source-build/issues/579, this version
+# needs to be compatible with the runtime produced from source-build
+DEV_CERTS_VERSION_DEFAULT=2.1.0-rtm-30762
 
 projectOutput=false
 keepProjects=false
