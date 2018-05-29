@@ -22,13 +22,13 @@ git submodule update --init --recursive
 
 ## Building one repo
 
-By default we build the cli and its dependencies but the default root repository to build can be passed in.
+By default we build the cli and its dependencies but the default root repository to build can be passed in. For example, if you just want to build the .NET Core Runtime, you would just build the `core-setup` repo and its dependencies:
 
 ```console
 ./build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
-Sometimes you want to just iterate on a single repo build and not rebuild all depedencies that can be done passing another property.
+Sometimes you want to just iterate on a single repo build and not rebuild all dependencies that can be done passing another property.
 
 ```console
 ./build.{cmd|sh} /p:RootRepo=core-setup /p:SkipRepoReferences=true
@@ -47,4 +47,12 @@ You can build the .NET Core SDK and generate a source tarball in a specific dire
 
 ```console
 ./build-source-tarball.sh <path-to-tarball-root>
+```
+
+After this completes, you can take the output tarball and build .NET Core again without an internet connection.
+
+```console
+tar -xf <path-to-tarball-root> -C <path-to-extraction-root>
+cd <path-to-extraction-root>
+./build.sh
 ```

@@ -72,3 +72,30 @@ TODO: describe how to do debug build and replace System.Private.CoreLib.dll
 #### Using bootstrap CLI on platforms with different OS or architecture
 If the bootstrap CLI was created for OS other than the one the seed cli supports (e.g. FreeBSD) or the target architecture of the target OS differs from the architecture of the bootstrap cli (e.g. ARM64), the managed assemblies in the bootstrap CLI cannot be loaded, since they contain native code for the target OS and architecture. Fortunately, they also contain the original IL code, so they can be re-crossgened for the target OS and architecture. Or it is possible to instruct the CoreCLR runtime to ignore the native code and use the IL by setting environment variables `COMPlus_ZapDisable=1` and `COMPlus_ReadyToRun=0`. That can be useful during the bringup. But ultimately, re-crossgening should be made to improve startup performance.
 TODO: describe how to re-crossgen the managed assemblies
+
+## Use the bootstrap CLI to build source-build
+Now that you have an SDK that works on the new OS, you can build all of the .NET Core source code. To do this, first tar up the boostrap CLI: 
+```
+tar -czf ~/dotnet.tar --directory /your/path/to/bootstrap/dotnetcli "."
+```
+Next, the ILASM tool that you built locally needs to be copied out so it can be used.
+
+```console
+mkdir ~/ilasm
+cp dotnet/source-build/scripts/bootstrap/RID/coreclr/bin/Product/RID.Release/* ~/ilasm
+cp /your/path/to/bootstrap/dotnetcli/shared/Microsoft.NETCore.App/VERSION/System.Private.CoreLib.dll ~/ilasm
+```
+TODO: make this next step better - possibly by adding a new build parameter that takes the path to ILASM.
+Now, we can initialize our build tools with the bootstrap CLI and the ILASM tool.
+
+```console
+DotNetBootstrapCliTarPath=~/dotnet.tar SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1 ./init-tools.sh
+# Copy ILASM into the Tools directory
+cp ~/ilasm/* dotnet/source-build/Tools/ilasm/
+```
+
+Now you can build the whole product using the toolset you just bootstrapped:
+
+```console
+SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1 ./build.sh
+```
