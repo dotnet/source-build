@@ -47,12 +47,13 @@ You can build the .NET Core SDK and generate a source tarball in a specific dire
 
 ```console
 ./build-source-tarball.sh <path-to-tarball-root>
+tar -czf <tarball-destination> --directory <path-to-tarball-root> "."
 ```
 
-After this completes, you can take the output tarball and build .NET Core again without an internet connection.
+After this completes, you can take the output tarball to another machine and build .NET Core again without an internet connection.
 
 ```console
-tar -xf <path-to-tarball-root> -C <path-to-extraction-root>
+tar -xf <tarball-destination> -C <path-to-extraction-root>
 cd <path-to-extraction-root>
 ./build.sh
 ```
