@@ -1,4 +1,5 @@
 import jobs.generation.Utilities;
+import jobs.generation.ArchivalSettings;
 
 def project = GithubProject;
 def branch = GithubBranchName;
