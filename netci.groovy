@@ -4,6 +4,17 @@ def project = GithubProject;
 def branch = GithubBranchName;
 loggingOptions = "/clp:v=detailed /p:MinimalConsoleLogOutput=false";
 
+def addArchival(def job) {
+  def archivalSettings = new ArchivalSettings()
+  archivalSettings.addFiles("bin/logs/*.log")
+  archivalSettings.addFiles("src/**/artifacts/**/log/*.binlog")
+  archivalSettings.addFiles("testing-smoke/smoke-test.log")
+  archivalSettings.setFailIfNothingArchived()
+  archivalSettings.setArchiveOnFailure()
+
+  Utilities.addArchival(job, archivalSettings)
+}
+
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
     steps {
@@ -31,6 +42,7 @@ def addPullRequestJob(String project, String branch, String os, String configura
   def newJob = job(newJobName);
 
   addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+  addArchival(newJob);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
@@ -44,6 +56,7 @@ def addPushJob(String project, String branch, String os, String configuration)
     def newJob = job(newJobName);
 
     addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+    addArchival(newJob);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.setJobTimeout(newJob, 180);
     Utilities.addGithubPushTrigger(newJob);
@@ -90,6 +103,8 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+      addArchival(newJob);
       if(isPR){
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
@@ -141,6 +156,8 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+      addArchival(newJob);
       if(isPR){
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
