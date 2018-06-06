@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <RepositoryReference Include="roslyn-tools" />
+    <EnvironmentVariables Condition="'$(OS)' == 'Windows_NT'" Include="DOTNET_MSBUILD_SDK_RESOLVER_SDKS_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Condition="'$(OS)' == 'Windows_NT'" Include="MSBuildSDKsPath=$(DotNetCliToolDir)sdk\$(SDK_VERSION)\Sdks" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

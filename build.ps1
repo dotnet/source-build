@@ -32,7 +32,7 @@ if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $en
 $env:SDK_VERSION = $SdkVersion
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
-$env:DOTNET_MULTILEVEL_LOOKUP = '0'
+$env:DOTNET_MULTILEVEL_LOOKUP = 0
 $env:NUGET_PACKAGES = "$SCRIPT_ROOT\packages\"
 
 Exec-Block { & "$SCRIPT_ROOT\init-tools.cmd" } | Out-Host
