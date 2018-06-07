@@ -2,9 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments Condition="'$(OS)' == 'Windows_NT'">-pack -configuration $(Configuration)</BuildArguments>
-    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">--pack --configuration $(Configuration)</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) --pack --configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <UsesRepoToolset>true</UsesRepoToolset>
     <BuiltToolPackageId>$(RepoToolsetPackageId)</BuiltToolPackageId>

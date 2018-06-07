@@ -20,7 +20,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     steps {
       if (os == "Windows_NT") {
         batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions} /p:RootRepo=core-setup")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
       }
       else {
         shell("git submodule update --init --recursive");

@@ -2,9 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- In Windows -restore is already passed by default by build.cmd to build.ps1 -->
-    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">-pack -configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">--restore --pack --configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>--restore --pack --configuration $(Configuration)</BuildCommandArgs>
 
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>

@@ -97,7 +97,7 @@
     <RootRepo>cli</RootRepo>
     -->
     <RootRepo>known-good</RootRepo>
-    <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
+    <RootRepo Condition="$(Platform.Contains('arm')) OR '$(OS)' == 'Windows_NT'">core-setup</RootRepo>
   </PropertyGroup>
 
   <ItemGroup>
