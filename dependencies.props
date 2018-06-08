@@ -7,13 +7,13 @@
   <PropertyGroup>
     <ProdConCurrentRef>79731c509a9d31b921f531ee63c48daa8e0c30d5</ProdConCurrentRef>
     <CoreClrCurrentRef>79731c509a9d31b921f531ee63c48daa8e0c30d5</CoreClrCurrentRef>
-    <BuildToolsCurrentRef>54227d85bec7093210eef26b6013d1435c6fc21e</BuildToolsCurrentRef>
+    <BuildToolsCurrentRef>6051ebc6718c36d71ea08596f1de43fc8eec639e</BuildToolsCurrentRef>
   </PropertyGroup>
 
   <!-- Package dependency verification/auto-upgrade configuration. -->
   <PropertyGroup>
     <BaseDotNetBuildInfo>build-info/dotnet/</BaseDotNetBuildInfo>
-    <DependencyBranch>release/2.1</DependencyBranch>
+    <DependencyBranch>master</DependencyBranch>
     <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
   </PropertyGroup>
 
@@ -40,11 +40,17 @@
 
     <DependencyInfo Include="ProdCon">
       <DependencyType>Orchestrated build</DependencyType>
-      <BasePath>build-info/dotnet/product/cli/release/2.1</BasePath>
+      <BasePath>build-info/dotnet/product/cli/release/2.1.1</BasePath>
       <CurrentRef>$(ProdConCurrentRef)</CurrentRef>
       <VersionsRepoOwner>dotnet</VersionsRepoOwner>
       <VersionsRepo>versions</VersionsRepo>
     </DependencyInfo>
+
+    <UpdateStep Include="ProdCon">
+      <UpdaterType>Orchestrated blob feed attribute</UpdaterType>
+      <SingleLineFile>$(MSBuildThisFileDirectory)ProdConFeed.txt</SingleLineFile>
+      <AttributeName>Url</AttributeName>
+    </UpdateStep>
   </ItemGroup>
 
   <ItemGroup Condition="'$(SkipBuildToolsUpdate)' != 'true'">
@@ -53,7 +59,7 @@
       <Path>$(MSBuildThisFileDirectory)BuildToolsVersion.txt</Path>
       <PackageId>Microsoft.DotNet.BuildTools</PackageId>
     </UpdateStep>
-    <UpdateStep Include="BuildTools">
+    <UpdateStep Include="CoreClr">
       <UpdaterType>File</UpdaterType>
       <Path>$(MSBuildThisFileDirectory)tools-local/ILAsmVersion.txt</Path>
       <PackageId>Microsoft.NETCore.ILAsm</PackageId>
