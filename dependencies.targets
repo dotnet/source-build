@@ -1,58 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="CreateOrchestratedBuildSubmoduleUpdaters"
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="JoinItems" />
+
+  <Target Name="CreateOrchestratedBuildUpdaters"
           BeforeTargets="CreateDefaultDependencyInfos"
-          Condition="'$(SkipOrchestratedBuildSubmoduleUpdate)' != 'true'">
+          Condition="'$(SkipOrchestratedBuildUpdate)' != 'true'">
 
     <ItemGroup>
-      <OrchestratedBuildRepoProjects Include="$(ProjectDir)repos\*.proj" />
+      <RepoProjectFile Include="$(ProjectDir)repos\*.proj" />
     </ItemGroup>
 
-    <MSBuild Projects="@(OrchestratedBuildRepoProjects)"
-             Targets="GetOrchestratedManifestBuildName">
+    <!--
+      Evaluate the dependency properties of each repo project. Use MSBuildSourceProjectFile as the
+      join key to make one combined item for each project with all available metadata.
+    -->
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOrchestratedManifestBuildName">
       <Output TaskParameter="TargetOutputs" ItemName="OrchestratedManifestBuildNames" />
     </MSBuild>
+    <ItemGroup>
+      <_RepoProjectExtractedProperties
+        Include="@(OrchestratedManifestBuildNames)"
+        BuildName="%(Identity)"
+        KeepMetadata="MSBuildSourceProjectFile" />
+    </ItemGroup>
 
-    <MSBuild Projects="@(OrchestratedBuildRepoProjects)"
-             Targets="GetProjectDirectory">
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetProjectDirectory">
       <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
     </MSBuild>
+    <ItemGroup>
+      <_RepoProjectExtractedProperties
+        Include="@(ProjectDirectories)"
+        ProjectDirectory="%(Identity)"
+        KeepMetadata="MSBuildSourceProjectFile" />
+    </ItemGroup>
 
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOfficialBuildId">
+      <Output TaskParameter="TargetOutputs" ItemName="OfficialBuildIds" />
+    </MSBuild>
+    <ItemGroup>
+      <_RepoProjectExtractedProperties
+        Include="@(OfficialBuildIds)"
+        OfficialBuildId="%(Identity)"
+        KeepMetadata="MSBuildSourceProjectFile" />
+    </ItemGroup>
+
+    <JoinItems
+      Left="@(RepoProjectFile)" LeftMetadata="*"
+      Right="@(_RepoProjectExtractedProperties)" RightKey="MSBuildSourceProjectFile" RightMetadata="*">
+      <Output TaskParameter="JoinResult" ItemName="_JoinProjectFileProperties" />
+    </JoinItems>
+
+    <!-- Add the git submodule directory to each project item. -->
     <ReadGitConfigFile File="$(GitModulesPath)">
       <Output TaskParameter="SubmoduleConfiguration" ItemName="SubmoduleConfigurations" />
     </ReadGitConfigFile>
-
-    <!--
-      Perform joins to gather information about each repo into a single item each. Each A-B join
-      first creates all A*B "candidate" combinations. The candidate items are then filtered down to
-      the combinations where the desired metadata from A and B match.
-    -->
     <ItemGroup>
-      <!-- Join manifest build name to project directory. -->
-      <BuildNamePathCandidate Include="@(OrchestratedManifestBuildNames)">
-        <Path>%(ProjectDirectories.Identity)</Path>
-        <ProjectDirectorySourceProjectFile>%(ProjectDirectories.MSBuildSourceProjectFile)</ProjectDirectorySourceProjectFile>
-      </BuildNamePathCandidate>
-
-      <BuildNamePath Include="@(BuildNamePathCandidate)"
-                     Condition="'%(MSBuildSourceProjectFile)' == '%(ProjectDirectorySourceProjectFile)' AND
-                                '%(Identity)' != 'N/A'" />
-      
-      <!-- Join project directory to submodule URL. -->
-      <BuildNamePathGitUrlCandidate Include="@(BuildNamePath)">
-        <Submodule>$(ProjectDir)%(SubmoduleConfigurations.Path)/</Submodule>
-        <GitUrl>%(SubmoduleConfigurations.Url)</GitUrl>
-      </BuildNamePathGitUrlCandidate>
-
-      <BuildNamePathGitUrl Include="@(BuildNamePathGitUrlCandidate)"
-                           Condition="'%(Path)' == '%(Submodule)'" />
+      <_ExtractedGitModuleProperties
+        Include="@(SubmoduleConfigurations)"
+        ProjectDirectory="$(ProjectDir)%(Path)/"
+        GitUrl="%(Url)"
+        KeepMetadata="Identity" />
     </ItemGroup>
 
+    <JoinItems
+      Left="@(_JoinProjectFileProperties)" LeftKey="ProjectDirectory" LeftMetadata="*" LeftItemSpec="Identity"
+      Right="@(_ExtractedGitModuleProperties)" RightKey="ProjectDirectory" RightMetadata="*">
+      <Output TaskParameter="JoinResult" ItemName="RepoProjectWithProperties" />
+    </JoinItems>
+
     <ItemGroup>
-      <UpdateStep Include="@(BuildNamePathGitUrl)">
-        <UpdaterType>Submodule from orchestrated build</UpdaterType>
-        <BuildName>%(BuildNamePathGitUrl.Identity)</BuildName>
-      </UpdateStep>
+      <UpdateStep
+        Include="@(RepoProjectWithProperties)"
+        Condition="'%(RepoProjectWithProperties.BuildName)' != 'N/A'"
+        UpdaterType="Submodule from orchestrated build"
+        Path="%(RepoProjectWithProperties.ProjectDirectory)" />
+
+      <UpdateStep
+        Include="@(RepoProjectWithProperties)"
+        Condition="
+          '%(RepoProjectWithProperties.BuildName)' != 'N/A' AND
+          '%(RepoProjectWithProperties.OfficialBuildId)' != ''"
+        UpdaterType="Build attribute from orchestrated build"
+        AttributeName="BuildId"
+        Path="%(RepoProjectWithProperties.Identity)"
+        ElementName="OfficialBuildId" />
     </ItemGroup>
   </Target>
 </Project>
