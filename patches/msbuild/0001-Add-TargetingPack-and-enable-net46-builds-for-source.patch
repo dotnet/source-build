@@ -1,0 +1,62 @@
+From 188f05c2b4a76d4a4d20c4170343130cbee3cbdd Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 8 Jun 2018 10:53:06 -0500
+Subject: [PATCH] Add TargetingPack and enable net46 builds for source-build.
+
+---
+ src/Directory.Build.props              | 6 +++---
+ src/Tasks/Microsoft.Build.Tasks.csproj | 8 +++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 8eecb72f..7435f7d6 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -20,8 +20,7 @@
+     <Platforms>AnyCPU;x64</Platforms>
+     
+     <!-- Defaults for target frameworks and architecture -->
+-    <LibraryTargetFrameworks>netstandard2.0</LibraryTargetFrameworks>
+-    <LibraryTargetFrameworks Condition="'$(OsEnvironment)'=='windows'">net46;netstandard2.0</LibraryTargetFrameworks>
++    <LibraryTargetFrameworks>net46;netstandard2.0</LibraryTargetFrameworks>
+     <LibraryTargetFrameworks Condition="'$(MonoBuild)'=='true'">net461</LibraryTargetFrameworks>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+ 
+@@ -63,8 +62,9 @@
+ 
+   <ItemGroup>
+     <PackageReference Condition="'$(DisableNerdbankVersioning)' != 'true'" Include="Nerdbank.GitVersioning" Version="$(GitVersioningVersion)" PrivateAssets="All" />
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-003" PrivateAssets="all"/>
+   </ItemGroup>
+-  
++
+   <PropertyGroup Condition="$(TargetFramework.StartsWith('net4'))">
+     <!-- When targeting .NET Framework, Exe and unit test projects build with x86 architecture if Platform is AnyCPU,
+          and build for x64 architecture when Platform is x64 -->
+diff --git a/src/Tasks/Microsoft.Build.Tasks.csproj b/src/Tasks/Microsoft.Build.Tasks.csproj
+index f863499d..5008fc6d 100644
+--- a/src/Tasks/Microsoft.Build.Tasks.csproj
++++ b/src/Tasks/Microsoft.Build.Tasks.csproj
+@@ -944,9 +944,6 @@
+   <ItemGroup>
+     <ProjectReference Include="..\Framework\Microsoft.Build.Framework.csproj" />
+     <ProjectReference Include="..\Utilities\Microsoft.Build.Utilities.csproj" />
+-    
+-    <Content Include="$(NuGetPackageRoot)\netstandard.library\2.0.0\build\netstandard2.0\ref\netstandard.dll" CopyToOutputDirectory="PreserveNewest" LinkBase="ref" />
+-    <Content Include="$(NuGetPackageRoot)\netstandard.library\2.0.0\build\netstandard2.0\ref\mscorlib.dll" CopyToOutputDirectory="PreserveNewest" LinkBase="ref" />
+   </ItemGroup>
+   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="$(VisualStudioSetupInteropVersion)" />
+@@ -982,4 +979,9 @@
+     -->
+     <Content Update="@(Content)" Pack="false" />
+   </ItemGroup>
++
++  <Target Name="CopyMscorlib" AfterTargets="Build">
++    <Copy SourceFiles="$(NuGetPackageRoot)\netstandard.library\2.0.0\build\netstandard2.0\ref\netstandard.dll" DestinationFolder="$(ArtifactsBinDir)/MSBuild/$(TargetFramework)/ref" />
++    <Copy SourceFiles="$(NuGetPackageRoot)\netstandard.library\2.0.0\build\netstandard2.0\ref\mscorlib.dll" DestinationFolder="$(ArtifactsBinDir)/MSBuild/$(TargetFramework)/ref" />
++  </Target>
+ </Project>
+-- 
+2.14.1
+
