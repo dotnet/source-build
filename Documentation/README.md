@@ -65,7 +65,7 @@ The .NET Core Runtime consists of 4 repos, core-setup at the top of the stack (w
 
 This means that in order to get a runtime you'll need to build the source-build repo with the `/p:RootRepo=core-setup` parameter, this will automatically build coreclr, standard and corefx. Source-Build is composed by git submodules, so the first thing you need to run before doing anything is:
 
-```
+```console
 git submodule --init --recursive
 ```
 
@@ -91,28 +91,28 @@ public static void PNSE() { }
 Of course we need to commit this changes in our current repos. Once we've commited this locally, let's move to the source-build repo.
 
 Once in the source-build in our commmand prompt or terminal, lets navigate to `src/coreclr`. Once there, we will need to add a remote to the local coreclr repo, in example:
-```
+```console
 git remote add local C:\repos\coreclr
 ```
 
 Then, let's fetch the changes from our repo, by running:
-```
+```console
 git fetch local
 ```
 
 Once we've fetch the changes, we just need to checkout the branch where we made the changes:
-```
+```console
 git checkout branchWithChanges
 ```
 
 Just repeat this steps under `src/corefx` as well, to pull the corefx changes. Once we've done that, let's navigate to the `source-build` root and run:
 
-```
+```console
 build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
 Note that since you've changed the coreclr and corefx commits, the incremental build will find the current commit changed so if you don't want to see messages like:
-```
+```console
 WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
 version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
 If you are changing a submodule branch or moving a submodule backwards, this is expected.
@@ -128,7 +128,7 @@ Once the build is done, we will have a .NET Runtime containing the `Hashtable.PN
 The produced runtime will be under `bin/obj/{architecture}/{configuration}/blob-feed/packages`.
 
 Go to that folder and just run the installer. Then create a new .NET Core project:
-```
+```console
 dotnet new Console -o source-build-test
 ```
 
