@@ -23,6 +23,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
 
     <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
@@ -49,7 +50,7 @@
         Microsoft.AspNetCore.All;
         Microsoft.AspNetCore.App;
         Microsoft.NET.Sdk.Razor"
-      Version="2.1.0" />
+      Version="2.1.1" />
   </ItemGroup>
 
   <ItemGroup>

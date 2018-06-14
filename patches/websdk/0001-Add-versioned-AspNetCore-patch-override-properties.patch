@@ -1,0 +1,47 @@
+From d5f8588d6a97ba9972e572219c2a1a714fd587b1 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 13 Jun 2018 12:35:52 -0500
+Subject: [PATCH] Add versioned AspNetCore patch override properties
+
+https://github.com/aspnet/websdk/issues/355 will include changes that make this patch unnecessary.
+---
+ .../Sdk.DefaultItems.targets                           | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/src/Web/Microsoft.NET.Sdk.Web.Targets/Sdk.DefaultItems.targets b/src/Web/Microsoft.NET.Sdk.Web.Targets/Sdk.DefaultItems.targets
+index 9fc331e..15ebdc5 100644
+--- a/src/Web/Microsoft.NET.Sdk.Web.Targets/Sdk.DefaultItems.targets
++++ b/src/Web/Microsoft.NET.Sdk.Web.Targets/Sdk.DefaultItems.targets
+@@ -67,11 +67,12 @@ Copyright (c) .NET Foundation. All rights reserved.
+       <!-- Latest patch version of .All Framework -->
+       <PropertyGroup Condition="'$(LatestAspNetCoreAllPatchVersion)' == ''">
+         <!-- Placeholder for setting latest patch version using the bundled version from CLI for previous TFMs, this will not apply until 2.2 -->
+-        <!-- <LatestAspNetCoreAllPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.1'">$(LatestPatchVersionForAspNetCoreAll2_1)</LatestAspNetCoreAllPatchVersion> -->
++        <LatestAspNetCoreAllPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.1'">$(LatestPatchVersionForAspNetCoreAll2_1)</LatestAspNetCoreAllPatchVersion>
++        <LatestAspNetCoreAllPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.2'">$(LatestPatchVersionForAspNetCoreAll2_2)</LatestAspNetCoreAllPatchVersion>
+ 
+         <!-- If targeting the same release that is bundled with the .NET Core SDK, use the bundled package version
+             provided by Microsoft.NETCoreSdk.BundledVersions.props -->
+-        <LatestAspNetCoreAllPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '$(BundledAspNetCoreAllTargetFrameworkVersion)'">$(BundledAspNetCoreAllPackageVersion)</LatestAspNetCoreAllPatchVersion>
++        <LatestAspNetCoreAllPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '$(BundledAspNetCoreAllTargetFrameworkVersion)' AND '$(LatestAspNetCoreAllPatchVersion)' == ''">$(BundledAspNetCoreAllPackageVersion)</LatestAspNetCoreAllPatchVersion>
+         <!-- If not covered by the previous cases use the target framework version for the latest patch version -->
+         <LatestAspNetCoreAllPatchVersion Condition="'$(LatestAspNetCoreAllPatchVersion)' == ''">$(_TargetFrameworkVersionWithoutV)</LatestAspNetCoreAllPatchVersion>
+       </PropertyGroup>
+@@ -79,11 +80,12 @@ Copyright (c) .NET Foundation. All rights reserved.
+       <!-- Latest patch version of .App Framework -->
+       <PropertyGroup Condition="'$(LatestAspNetCoreAppPatchVersion)' == ''">
+         <!-- Placeholder for setting latest patch version using the bundled version from CLI for previous TFMs, this will not apply until 2.2 -->
+-        <!-- <LatestAspNetCoreAppPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.1'">$(LatestPatchVersionForAspNetCoreApp2_1)</LatestAspNetCoreAppPatchVersion> -->
++        <LatestAspNetCoreAppPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.1'">$(LatestPatchVersionForAspNetCoreApp2_1)</LatestAspNetCoreAppPatchVersion>
++        <LatestAspNetCoreAppPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '2.2'">$(LatestPatchVersionForAspNetCoreApp2_2)</LatestAspNetCoreAppPatchVersion>
+ 
+         <!-- If targeting the same release that is bundled with the .NET Core SDK, use the bundled package version
+             provided by Microsoft.NETCoreSdk.BundledVersions.props -->
+-        <LatestAspNetCoreAppPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '$(BundledAspNetCoreAppTargetFrameworkVersion)'">$(BundledAspNetCoreAppPackageVersion)</LatestAspNetCoreAppPatchVersion>
++        <LatestAspNetCoreAppPatchVersion Condition="'$(_TargetFrameworkVersionWithoutV)' == '$(BundledAspNetCoreAppTargetFrameworkVersion)' AND '$(LatestAspNetCoreAppPatchVersion)' == ''">$(BundledAspNetCoreAppPackageVersion)</LatestAspNetCoreAppPatchVersion>
+         <!-- If not covered by the previous cases use the target framework version for the latest patch version -->
+         <LatestAspNetCoreAppPatchVersion Condition="'$(LatestAspNetCoreAppPatchVersion)' == ''">$(_TargetFrameworkVersionWithoutV)</LatestAspNetCoreAppPatchVersion>
+       </PropertyGroup>
+-- 
+2.17.1.windows.2
+

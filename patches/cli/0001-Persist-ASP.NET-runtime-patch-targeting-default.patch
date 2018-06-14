@@ -1,0 +1,29 @@
+From 9609106bcab766e1e44e464c38cc4148ea639a23 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 13 Jun 2018 09:46:43 -0500
+Subject: [PATCH] Persist ASP.NET runtime patch targeting default
+
+Let the CLI build take a default value for TargetLatestAspNetCoreRuntimePatch in the output SDK.
+
+https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
+---
+ build/MSBuildExtensions.targets | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
+index 042cd2e93..7df11b659 100644
+--- a/build/MSBuildExtensions.targets
++++ b/build/MSBuildExtensions.targets
+@@ -185,6 +185,9 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <LatestPatchVersionForNetCore1_0 Condition="'$(LatestPatchVersionForNetCore1_0)' == ''">1.0.11</LatestPatchVersionForNetCore1_0>
+     <LatestPatchVersionForNetCore1_1 Condition="'$(LatestPatchVersionForNetCore1_1)' == ''">1.1.8</LatestPatchVersionForNetCore1_1>
+     <LatestPatchVersionForNetCore2_0 Condition="'$(LatestPatchVersionForNetCore2_0)' == ''">2.0.7</LatestPatchVersionForNetCore2_0>
++
++    <!-- If true, always target the latest ASP.NET Core runtime by default -->
++    <TargetLatestAspNetCoreRuntimePatch Condition="'$(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
+   </PropertyGroup>
+ </Project>
+ ]]>
+-- 
+2.17.1.windows.2
+
