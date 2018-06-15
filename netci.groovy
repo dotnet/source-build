@@ -35,8 +35,8 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     };
   };
 
-  if (os == "Fedora27") {
-    Utilities.setMachineAffinity(job, "Fedora.27.Amd64.Open");
+  if (os == "Fedora28") {
+    Utilities.setMachineAffinity(job, "Fedora.28.Amd64.Open");
   }
   else {
     Utilities.setMachineAffinity(job, os, "latest-or-auto");
@@ -72,13 +72,13 @@ def addPushJob(String project, String branch, String os, String configuration)
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["Ubuntu16.04", "Fedora27", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
+["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };
 
 // Per push, run all the jobs
-["Ubuntu16.04", "Fedora27", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
+["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
     addPushJob(project, branch, os, configuration);
   };
