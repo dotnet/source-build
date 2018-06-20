@@ -96,7 +96,10 @@
         to cli.
     <RootRepo>cli</RootRepo>
     -->
-    <RootRepo>known-good</RootRepo>
+
+    <!-- Temporarily update RootRepo to core-setup repo project
+    until all repos build clean out of master -->
+    <RootRepo>core-setup</RootRepo>
     <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
