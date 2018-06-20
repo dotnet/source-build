@@ -112,15 +112,18 @@ Just repeat this steps under `src/corefx` as well, to pull the corefx changes. O
 build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
-Note that since you've changed the coreclr and corefx commits, the build will find the current commit changed so if you don't want to see messages like:
-```console
-WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
-version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
-If you are changing a submodule branch or moving a submodule backwards, this is expected.
-Should I checkout src/corefx to the expected commit 5b7674e4ae5cc782e99f50b2919dfdeb29106a46 [N]o / [y]es / [q]uit
-```
-
-You can set `SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1` environment variable or after you've pulled the changes, before you build, in your `source-build` repo just add the changes with, `git add src/corefx` and/or `git add src/coreclr`.
+> The build detects you've changed the coreclr and corefx commits and offers to move them back to the tracked commits. Press `n` when you see the following message to decline and keep your changes:
+>
+> ```console
+> WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
+> version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
+> If you are changing a submodule branch or moving a submodule backwards, this is expected.
+> Should I checkout src/corefx to the expected commit 5b7674e4ae5cc782e99f50b2919dfdeb29106a46 [N]o / [y]es / [q]uit
+> ```
+>
+> To skip this check and avoid pressing `n` for each build, you can either:
+>  * Set the environment variable `SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1`.
+>  * Stage the submodule changes with `git add src/corefx` and/or `git add src/coreclr`.
 
 Once the build is done, we will have a .NET Runtime containing the `Hashtable.PNSE()` API that can be used with our local cli in .NET Core projects.
 
@@ -167,9 +170,9 @@ Then in your csproj we need to set the Runtime version:
 Note that the `TargetFramework` value needs to be the minimum or later framework that the Runtime supports. Therefore if there is no cli produced yet or you don't have installed a dotnet cli that supports that `TargetFramework` you need to add the property `NETCoreAppMaximumVersion` to match the version framework you want to target.
 
 If you don't set this property, you will see an error similar to this one:
-```console
-C:\Program Files\dotnet\sdk\2.1.300\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.TargetFrameworkInference.targets(137,5): error : The current .NET SDK does not support targeting .NET Core 2.2.  Either target .NET Core 2.1 or lower, or use a version of the .NET SDK that supports .NET Core 2.2.
-```
+
+`C:\Program Files\dotnet\sdk\2.1.300\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.TargetFrameworkInference.targets(137,5): error : The current .NET SDK does not support targeting .NET Core 2.2.  Either target .NET Core 2.1 or lower, or use a version of the .NET SDK that supports .NET Core 2.2.`
+
 
 Also, `RuntimeFrameworkVersion` needs to match whatever version of the runtime was produced.
 
@@ -194,9 +197,7 @@ namespace source_build_test
 In order to run the app you have two options:
 
 1. Publish the app:
-
-  - Run `dotnet publish`.
-  - Run `.exe` in publish directory.
-
+   - Run `dotnet publish -r RID`. You more information about publish and RID in [this guide](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog).
+   - Run produced executable in publish directory.
 2. Use `dotnet run`:
-  - In order to use `dotnet run` you will have to install the produced runtime before running the app. Note that installing the runtime, whenever a real runtime for the current produced version is released, if you forget to delete/uninstall the custom runtime, it could cause issues.
+   - In order to use `dotnet run` you will have to install the produced runtime before running the app. Note that installing the runtime, whenever a real runtime for the current produced version is released, if you forget to delete/uninstall the custom runtime, it could cause issues.
