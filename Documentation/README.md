@@ -69,8 +69,9 @@ This means that in order to get a runtime you'll need to build the source-build 
 git submodule --init --recursive
 ```
 
-This will initialize the submodules and clone the repos under the src folder if they haven't been initialized. Note that this will point the submodule to the branch and commit that the submodule is pointing to. However you can go to each repo indivually, add custom remotes and checkout certain branches containing your changes.
+This will initialize the submodules and clone the repos under the src folder if they haven't been initialized. Note that this will update every submodule to their tracking commit checked in to the `source-build` repo . However you can go to each repo indivually, add custom remotes and checkout certain branches containing your changes.
 
+### Example .NET Runtime build from source
 Let's say that you want to produce a runtime that has a new API that it's implementation lives in coreclr and you want to create a .NET Core console app that uses it to test it without waiting for a new SDK or Runtime to be produced by official builds. Imagine we will add an API that just throws in Hashtable. 
 
 Hashtable implementation lives in coreclr and it's APIs are exposed in corefx in the System.Runtime.Extensions.cs contract. So in my local coreclr repo I will just add Hashtable.cs the following API:
@@ -111,7 +112,7 @@ Just repeat this steps under `src/corefx` as well, to pull the corefx changes. O
 build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
-Note that since you've changed the coreclr and corefx commits, the incremental build will find the current commit changed so if you don't want to see messages like:
+Note that since you've changed the coreclr and corefx commits, the build will find the current commit changed so if you don't want to see messages like:
 ```console
 WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
 version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
@@ -119,7 +120,7 @@ If you are changing a submodule branch or moving a submodule backwards, this is 
 Should I checkout src/corefx to the expected commit 5b7674e4ae5cc782e99f50b2919dfdeb29106a46 [N]o / [y]es / [q]uit
 ```
 
-After you've pulled the changes, before you build, in your `source-build` repo just add the changes with, `git add src/corefx` and/or `git add src/coreclr`.
+You can set `SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1` environment variable or after you've pulled the changes, before you build, in your `source-build` repo just add the changes with, `git add src/corefx` and/or `git add src/coreclr`.
 
 Once the build is done, we will have a .NET Runtime containing the `Hashtable.PNSE()` API that can be used with our local cli in .NET Core projects.
 
@@ -127,7 +128,7 @@ Once the build is done, we will have a .NET Runtime containing the `Hashtable.PN
 
 The produced runtime will be under `bin/obj/{architecture}/{configuration}/blob-feed/packages`.
 
-Go to that folder and just run the installer. Then create a new .NET Core project:
+Now create a new .NET Core project:
 ```console
 dotnet new Console -o source-build-test
 ```
@@ -165,6 +166,11 @@ Then in your csproj we need to set the Runtime version:
 
 Note that the `TargetFramework` value needs to be the minimum or later framework that the Runtime supports. Therefore if there is no cli produced yet or you don't have installed a dotnet cli that supports that `TargetFramework` you need to add the property `NETCoreAppMaximumVersion` to match the version framework you want to target.
 
+If you don't set this property, you will see an error similar to this one:
+```console
+C:\Program Files\dotnet\sdk\2.1.300\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.TargetFrameworkInference.targets(137,5): error : The current .NET SDK does not support targeting .NET Core 2.2.  Either target .NET Core 2.1 or lower, or use a version of the .NET SDK that supports .NET Core 2.2.
+```
+
 Also, `RuntimeFrameworkVersion` needs to match whatever version of the runtime was produced.
 
 After that you're all set to use your new API and test it with a locally produced runtime.
@@ -184,3 +190,13 @@ namespace source_build_test
     }
 }
 ```
+
+In order to run the app you have two options:
+
+1. Publish the app:
+
+  - Run `dotnet publish`.
+  - Run `.exe` in publish directory.
+
+2. Use `dotnet run`:
+  - In order to use `dotnet run` you will have to install the produced runtime before running the app. Note that installing the runtime, whenever a real runtime for the current produced version is released, if you forget to delete/uninstall the custom runtime, it could cause issues.
