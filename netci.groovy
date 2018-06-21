@@ -15,6 +15,24 @@ def addArchival(def job) {
   Utilities.addArchival(job, archivalSettings)
 }
 
+def setMachineAffinity(job, os) {
+  // Map os to queue:  If the os is present,
+  // use the specified queue, otherwise,
+  // fall back to the old behavior.
+  def queueMap = [
+    'Fedora28': 'Fedora.28.Amd64.Open'
+  ]
+
+  def queueName = queueMap.get(os)
+
+  if (queueName != null) {
+    Utilities.setMachineAffinity(job, queueName)
+  }
+  else {
+    Utilities.setMachineAffinity(job, os, "latest-or-auto")
+  }
+}
+
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
     steps {
@@ -26,7 +44,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
         shell("git submodule update --init --recursive");
         shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
         smokeTestExcludes = "";
-        if (os == "Fedora24" || os == "OSX10.12") {
+        if (os == "OSX10.12") {
           // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
           smokeTestExcludes += " --excludeWebHttpsTests";
         }
@@ -35,12 +53,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     };
   };
 
-  if (os == "Fedora28") {
-    Utilities.setMachineAffinity(job, "Fedora.28.Amd64.Open");
-  }
-  else {
-    Utilities.setMachineAffinity(job, os, "latest-or-auto");
-  }
+  setMachineAffinity(job, os);
 }
 
 def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
@@ -104,7 +117,7 @@ def addPushJob(String project, String branch, String os, String configuration)
         }
       }
 
-      Utilities.setMachineAffinity(newJob, os, 'latest-or-auto');
+      setMachineAffinity(newJob, os);
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
@@ -157,7 +170,7 @@ def addPushJob(String project, String branch, String os, String configuration)
       }
 
       // Only Ubuntu Jenkins machines have Docker
-      Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
+      setMachineAffinity(newJob, "Ubuntu16.04");
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
