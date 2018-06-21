@@ -85,7 +85,7 @@ def addPushJob(String project, String branch, String os, String configuration)
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
+["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   addPullRequestJob(project, branch, os, "Release", true);
   addPullRequestJob(project, branch, os, "Debug", false);
 };

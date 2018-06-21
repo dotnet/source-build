@@ -7,6 +7,7 @@ VERSION_PREFIX=2.1
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=2.1.0-rtm-30762
+__ROOT_REPO=$(cat "$SCRIPT_ROOT/bin/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 
 projectOutput=false
 keepProjects=false
@@ -256,6 +257,11 @@ function resetCaches() {
 function setupProdConFeed() {
     sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConFeedUrl|g" "$testingDir/NuGet.Config"
 }
+
+if [[ $__ROOT_REPO != "cli" && $__ROOT_REPO != "known-good" ]]; then
+    echo "Skipping smoke-tests since cli was not built";
+    exit
+fi
 
 # Clean up and create directory
 if [ -e "$testingDir"  ]; then
