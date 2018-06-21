@@ -101,7 +101,7 @@ Then, let's fetch the changes from our repo, by running:
 git fetch local
 ```
 
-Once we've fetch the changes, we just need to checkout the branch where we made the changes:
+Once we've fetched the changes, we just need to checkout the branch where we made the changes:
 ```console
 git checkout branchWithChanges
 ```
@@ -112,15 +112,15 @@ Just repeat this steps under `src/corefx` as well, to pull the corefx changes. O
 build.{cmd|sh} /p:RootRepo=core-setup
 ```
 
-> The build detects you've changed the coreclr and corefx commits and offers to move them back to the tracked commits. Press `n` when you see the following message to decline and keep your changes:
->
-> ```console
-> WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
-> version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
-> If you are changing a submodule branch or moving a submodule backwards, this is expected.
-> Should I checkout src/corefx to the expected commit 5b7674e4ae5cc782e99f50b2919dfdeb29106a46 [N]o / [y]es / [q]uit
-> ```
->
+The build detects you've changed the coreclr and corefx commits and offers to move them back to the tracked commits. Press `n` when you see the following message to decline and keep your changes:
+
+```console
+ WARNING: submodule src/corefx, currently at 831264e53e5b9333850baa659af8a2857a9cb9b7, has diverged from checked-in
+ version 5b7674e4ae5cc782e99f50b2919dfdeb29106a46
+ If you are changing a submodule branch or moving a submodule backwards, this is expected.
+ Should I checkout src/corefx to the expected commit 5b7674e4ae5cc782e99f50b2919dfdeb29106a46 [N]o / [y]es / [q]uit
+ ```
+
 > To skip this check and avoid pressing `n` for each build, you can either:
 >  * Set the environment variable `SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1`.
 >  * Stage the submodule changes with `git add src/corefx` and/or `git add src/coreclr`.
