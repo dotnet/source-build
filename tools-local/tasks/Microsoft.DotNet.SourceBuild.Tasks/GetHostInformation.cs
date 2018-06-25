@@ -38,6 +38,9 @@ namespace Microsoft.DotNet.Build.Tasks
                 case Platform.Darwin:
                     OSName = "OSX";
                     break;
+                case Platform.FreeBSD:
+                    OSName = "FreeBSD";
+                    break;
                 default:
                     Log.LogError("Could not determine display name for platform.");
                     return false;
