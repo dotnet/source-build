@@ -28,14 +28,22 @@ phases:
   steps:
     - template: ./vsts-build-templates/docker-cleanup-linux.yml
 
-    # create working directory and copy source into it & update submodules
+    # create working directory and copy source into it
     - script: |
         set -x
         $(docker.runInRoot) $(imageName) rm -rf /root/sb/
         $(docker.runInRoot) $(imageName) mkdir -p /root/sb/tarball 
         $(docker.runInSrc) -v $(rootDirectory):/root $(imageName) cp -r . /root/sb/source-build
-        $(docker.runInSourceBuild) $(imageName) git submodule update --init --recursive
       displayName: Clean sb directory and copy source from cloned directory
+
+    # fetch vsts commits if building internally
+    - script: $(docker.runInSourceBuild) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
+      displayName: Fetch internal vsts commits
+      condition: and(succeeded(), ne(variables['user.PAT'], ''))
+
+    # init submodules
+    - script: $(docker.runInSourceBuild) $(imageName) git submodule update --init --recursive
+      displayName: Initialize submodules
 
     # build source-build
     - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=$(buildConfiguration) $(buildLoggingOptions)
