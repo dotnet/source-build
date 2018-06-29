@@ -101,10 +101,8 @@
     <EnvironmentVariables Include="DropSuffix=true" />
   </ItemGroup>
 
-  <Target Name="AddProdConFeed" BeforeTargets="Build">
+  <Target Name="AddProdConFeed" BeforeTargets="Build" DependsOnTargets="GetProdConBlobFeedUrl">
     <PropertyGroup>
-      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
-
       <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
       <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
       <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>

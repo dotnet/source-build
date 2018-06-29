@@ -374,4 +374,5 @@
   <Target Name="GetOfficialBuildId" Outputs="$(OfficialBuildId)" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., dir.targets))/dir.targets" />
 </Project>

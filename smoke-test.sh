@@ -22,6 +22,7 @@ cliDir="$testingDir/builtCli"
 logFile="$testingDir/smoke-test.log"
 restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
+prodConBlobFeedUrl=${prodConBlobFeedUrl-}
 
 function usage() {
     echo ""
@@ -38,6 +39,9 @@ function usage() {
     echo "  --excludeLocalTests            exclude tests that use local sources for nuget packages"
     echo "  --excludeOnlineTests           exclude test that use online sources for nuget packages"
     echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
+    echo "  --prodConBlobFeedUrl <url>     override the prodcon blob feed specified in ProdConFeed.txt"
+    echo "environment:"
+    echo "  prodConBlobFeedUrl    override the prodcon blob feed specified in ProdConFeed.txt"
     echo ""
 }
 
@@ -90,6 +94,10 @@ while :; do
         --devcertsversion)
             shift
             devCertsVersion="$1"
+            ;;
+        --prodconblobfeedurl)
+            shift
+            prodConBlobFeedUrl="$1"
             ;;
         *)
             usage
@@ -252,7 +260,7 @@ function resetCaches() {
 }
 
 function setupProdConFeed() {
-    sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConFeedUrl|g" "$testingDir/NuGet.Config"
+    sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConBlobFeedUrl|g" "$testingDir/NuGet.Config"
 }
 
 # Clean up and create directory
@@ -284,7 +292,7 @@ fi
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
-prodConFeedUrl="$(cat "$SCRIPT_ROOT/ProdConFeed.txt")"
+prodConBlobFeedUrl="${prodConBlobFeedUrl:-$(cat "$SCRIPT_ROOT/ProdConFeed.txt")}"
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then

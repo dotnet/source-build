@@ -9,6 +9,7 @@ phases:
     docker.runInSourceBuild: docker run --rm -v $(rootDirectory)/sb/source-build:/src -w /src
     docker.runInTarball: docker run --rm -v $(rootDirectory)/sb/tarball/$(tarballName):/tb -w /tb
     dropDirectory: $(stagingDirectory)/drop
+    prodConBlobFeedUrlPrefix: ''
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
@@ -46,7 +47,7 @@ phases:
       displayName: Initialize submodules
 
     # build source-build
-    - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=$(buildConfiguration) $(buildLoggingOptions)
+    - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) $(buildLoggingOptions)
       displayName: Build source-build
       timeoutInMinutes: 90
 
@@ -60,7 +61,7 @@ phases:
       continueOnError: true
 
     # run smoke tests
-    - script: $(docker.runInSourceBuild) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration)
+    - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /t:RunSmokeTest /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       displayName: Run smoke-test
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], false))
 
