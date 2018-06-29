@@ -37,4 +37,14 @@
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" />
   </Target>
 
+  <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
+    <ItemGroup>
+      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BinariesToCopy)"
+          DestinationFolder="$(OutputPath)runtime"
+          Condition="'@(BinariesToCopy)'!=''" />
+  </Target>
+
 </Project>
