@@ -9,7 +9,6 @@ phases:
     docker.runInSourceBuild: docker run --rm -v $(rootDirectory)/sb/source-build:/src -w /src
     docker.runInTarball: docker run --rm -v $(rootDirectory)/sb/tarball/$(tarballName):/tb -w /tb
     dropDirectory: $(stagingDirectory)/drop
-    prodConBlobFeedUrlPrefix: ''
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
@@ -38,7 +37,14 @@ phases:
       displayName: Clean sb directory and copy source from cloned directory
 
     # fetch vsts commits if building internally
-    - script: $(docker.runInSourceBuild) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
+    - script: |
+        set -x
+        # Ignore failure for the first command. It will intentionally fail if the commit is only
+        # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
+        # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
+        # .git/modules/src/coreclr/ directories.)
+        $(docker.runInSourceBuild) $(imageName) git submodule update --init --recursive
+        $(docker.runInSourceBuild) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
       displayName: Fetch internal vsts commits
       condition: and(succeeded(), ne(variables['user.PAT'], ''))
 
@@ -88,7 +94,9 @@ phases:
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
     # run smoke tests
-    - script: $(docker.runInTarball) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration)
+    # "-e SKIP_INIT_BUILD=true": init-build was already done by the build. Now, skip it, because the
+    # support build.sh tries to pass all args to init-build.proj where there is no "RunSmokeTest".
+    - script: $(docker.runInTarball) -e SKIP_INIT_BUILD=true $(imageName) ./build.sh /t:RunSmokeTest /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       displayName: Run smoke-test
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 

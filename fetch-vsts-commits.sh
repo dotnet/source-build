@@ -28,10 +28,10 @@ fetch() {
     name=$1
     remote=$2
 
-    pushd "$SCRIPT_ROOT/src/$name"
-    git fetch "$remote" +refs/heads/*:refs/remotes/${remote_ref_name}/*
-    popd
-
+    (
+        cd "$SCRIPT_ROOT/src/$name"
+        git fetch "$remote" +refs/heads/*:refs/remotes/${remote_ref_name}/*
+    )
 }
 
 fetch_vsts() {
