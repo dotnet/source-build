@@ -93,7 +93,8 @@ phases:
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
     # run smoke tests
-    - script: $(docker.runInTarball) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration)
+    - script: $(docker.runInTarball) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration) --prodConBlobFeedUrl ''
+      displayName: Run smoke-test in tarball
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
     # copy all tarball logs to working directory
