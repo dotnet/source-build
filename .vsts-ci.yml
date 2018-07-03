@@ -16,7 +16,7 @@ phases:
   queue:
     name: DotNet-Build
     demands: agent.os -equals linux
-    timeoutInMinutes: 180
+    timeoutInMinutes: 240
     parallel: 2
     matrix:
       centos71:
@@ -69,7 +69,6 @@ phases:
     # run smoke tests
     - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /t:RunSmokeTest /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       displayName: Run smoke-test
-      condition: and(succeeded(), eq(variables['buildOfflineTarball'], false))
 
     # copy smoke test logs to working directory
     - script: $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName)  /bin/bash -c "mkdir -p /logs/source-build/smoke-test; find ./testing-smoke -name '*.log' -exec cp {} /logs/source-build/smoke-test \;"
@@ -94,10 +93,7 @@ phases:
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
     # run smoke tests
-    # "-e SKIP_INIT_BUILD=true": init-build was already done by the build. Now, skip it, because the
-    # support build.sh tries to pass all args to init-build.proj where there is no "RunSmokeTest".
-    - script: $(docker.runInTarball) -e SKIP_INIT_BUILD=true $(imageName) ./build.sh /t:RunSmokeTest /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-      displayName: Run smoke-test
+    - script: $(docker.runInTarball) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration)
       condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
     # copy all tarball logs to working directory

@@ -23,6 +23,9 @@ logFile="$testingDir/smoke-test.log"
 restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
 prodConBlobFeedUrl=${prodConBlobFeedUrl-}
+archiveRestoredPackages=false
+archivedPackagesDir="$testingDir/smoke-test-packages"
+smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
 
 function usage() {
     echo ""
@@ -40,6 +43,7 @@ function usage() {
     echo "  --excludeOnlineTests           exclude test that use online sources for nuget packages"
     echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
     echo "  --prodConBlobFeedUrl <url>     override the prodcon blob feed specified in ProdConFeed.txt"
+    echo "  --archiveRestoredPackages      capture all restored packages to $archivedPackagesDir"
     echo "environment:"
     echo "  prodConBlobFeedUrl    override the prodcon blob feed specified in ProdConFeed.txt"
     echo ""
@@ -98,6 +102,9 @@ while :; do
         --prodconblobfeedurl)
             shift
             prodConBlobFeedUrl="$1"
+            ;;
+        --archiverestoredpackages)
+            archiveRestoredPackages=true
             ;;
         *)
             usage
@@ -263,6 +270,22 @@ function setupProdConFeed() {
     sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConBlobFeedUrl|g" "$testingDir/NuGet.Config"
 }
 
+function setupSmokeTestFeed() {
+    # Setup smoke-test-packages if they exist
+    if [ -e "$smokeTestPrebuilts" ]; then
+        sed -i.bakSmokeTestFeed "s|SMOKE_TEST_PACKAGE_FEED|$smokeTestPrebuilts|g" "$testingDir/NuGet.Config"
+    else
+        sed -i.bakSmokeTestFeed "/SMOKE_TEST_PACKAGE_FEED/d" "$testingDir/NuGet.Config"
+    fi
+}
+
+function copyRestoredPackages() {
+    if [ "$archiveRestoredPackages" == "true" ]; then
+        mkdir -p "$archivedPackagesDir"
+        cp -rf "$restoredPackagesDir"/* "$archivedPackagesDir"
+    fi
+}
+
 # Clean up and create directory
 if [ -e "$testingDir"  ]; then
     read -p "testing-smoke directory exists, remove it? [Y]es / [n]o" -n 1 -r
@@ -302,11 +325,13 @@ if [ "$excludeLocalTests" == "false" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "s|SOURCE_BUILT_PACKAGES|$SOURCE_BUILT_PKGS_PATH|g" "$testingDir/NuGet.Config"
         setupProdConFeed
+        setupSmokeTestFeed
         echo "$testingDir/NuGet.Config Contents:"
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
     runAllTests
+    copyRestoredPackages
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
@@ -317,11 +342,13 @@ if [ "$excludeOnlineTests" == "false" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
         sed -i.bak "/SOURCE_BUILT_PACKAGES/d" "$testingDir/NuGet.Config"
         setupProdConFeed
+        setupSmokeTestFeed
         echo "$testingDir/NuGet.Config Contents:"
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
     runAllTests
+    copyRestoredPackages
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
