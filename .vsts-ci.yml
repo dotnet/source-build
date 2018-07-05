@@ -103,6 +103,9 @@ phases:
         $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/binlogs; find . -name '*.binlog' -exec cp {} /logs/tarball/binlogs \;"
         $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/logs; find ./bin/logs -name '*.log' -exec cp {} /logs/tarball/logs \;"
         $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/smoke-test; find ./testing-smoke -name '*.log' -exec cp {} /logs/tarball/smoke-test \;"
+        # Copy prebuilt report
+        $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/prebuilt-report/online;  cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/online"
+        $(docker.runInTarball)     -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/prebuilt-report/offline; cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/offline"
       displayName: Copy tarball logs
       condition: eq(variables['buildOfflineTarball'], true)
       continueOnError: true

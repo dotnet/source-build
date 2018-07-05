@@ -22,7 +22,6 @@ cliDir="$testingDir/builtCli"
 logFile="$testingDir/smoke-test.log"
 restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
-prodConBlobFeedUrl=${prodConBlobFeedUrl-}
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
 smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
@@ -115,6 +114,7 @@ while :; do
     shift
 done
 
+prodConBlobFeedUrl="${prodConBlobFeedUrl-$(cat "$SCRIPT_ROOT/ProdConFeed.txt")}"
 
 function doCommand() {
     lang=$1
@@ -319,7 +319,6 @@ fi
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
-prodConBlobFeedUrl="${prodConBlobFeedUrl:-$(cat "$SCRIPT_ROOT/ProdConFeed.txt")}"
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
