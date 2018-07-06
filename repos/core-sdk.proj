@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) --stage0 $(DotNetCliToolDir) --</BuildCommand>
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="cli" />
+  </ItemGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
