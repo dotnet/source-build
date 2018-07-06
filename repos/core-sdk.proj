@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) --stage0 $(DotNetCliToolDir) --</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) --stage0 $(DotNetCliToolDir)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
