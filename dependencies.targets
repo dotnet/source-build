@@ -91,7 +91,9 @@
         Include="ProdCon"
         UpdaterType="Orchestrated blob feed attribute"
         SingleLineFile="$(MSBuildThisFileDirectory)ProdConFeed.txt"
-        AttributeName="Url" />
+        AttributeName="Url"
+        ReplacementSubstituteOld="$(ProdConBlobFeedReplaceOld)"
+        ReplacementSubstituteNew="$(ProdConBlobFeedReplaceNew)" />
     </ItemGroup>
   </Target>
 </Project>
