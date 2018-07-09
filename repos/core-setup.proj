@@ -39,7 +39,12 @@
 
   <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
     <ItemGroup>
-      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" />
+      <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
+      <_builtRuntimePackages>
+        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
+      </_builtRuntimePackages>
+      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
+      <BinariesToCopy Include="@(_builtRuntimePackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
     </ItemGroup>
 
     <Copy SourceFiles="@(BinariesToCopy)"
