@@ -24,7 +24,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" AfterTargets="Package">
+  <Target Name="PublishBinaries" AfterTargets="GenerateArchives">
     <ItemGroup>
       <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
     </ItemGroup>
