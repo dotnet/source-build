@@ -21,15 +21,15 @@
     <RepositoryReference Include="cli" />
   </ItemGroup>
 
-  <Target Name="CopyToolsetZips" AfterTargets="Build">
+  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
+  <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
-      <ToolsetZips Include="$(ToolsetZipOutput)*.zip" />
+      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
     </ItemGroup>
-
-    <Copy SourceFiles="@(ToolsetZips)"
-          DestinationFolder="$(SourceBuiltTarBallPath)"
-          Condition="'@(ToolsetZips)'!=''" />
+    <PublishCoreSetupBinaries Binaries="@(ToolsetZips)"
+                              DestinationFolderTemplate="$(LocalBlobStorageRoot)Sdk/{version}/" />
   </Target>
+
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
