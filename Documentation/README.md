@@ -129,7 +129,7 @@ Once the build is done, we will have a .NET Runtime containing the `Hashtable.PN
 
 ### How to use the produced Runtime
 
-The produced runtime will be under `bin/obj/{architecture}/{configuration}/blob-feed/packages`.
+The produced runtime will be under `bin/{architecture}/{configuration}/runtime`.
 
 Now create a new .NET Core project:
 ```console
@@ -145,7 +145,7 @@ In your new project add a new NuGet.config to point to the Microsoft.NETCore.App
   <!-- The command-line doesn't need it, but the IDE does.                    -->
   <packageSources>
     <clear/>
-    <add key="local feed" value="C:\repos\source-build\bin\obj\x64\Release\blob-feed\packages" />
+    <add key="local feed" value="E:\repos\source-build\bin\x64\Release\runtime" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
 </configuration>
