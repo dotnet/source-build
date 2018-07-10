@@ -3,7 +3,10 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -c $(Configuration) --stage0 $(DotNetCliToolDir)</BuildCommand>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
@@ -24,10 +27,11 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" AfterTargets="GenerateArchives">
+  <Target Name="PublishBinaries" AfterTargets="Build">
     <ItemGroup>
       <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
     </ItemGroup>
+    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Sdk/{version}/" />
     <PublishCoreSetupBinaries Binaries="@(ToolsetZips)"
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Sdk/{version}/" />
   </Target>

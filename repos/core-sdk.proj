@@ -3,6 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
 
