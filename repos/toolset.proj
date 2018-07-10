@@ -21,6 +21,8 @@
     <RepositoryReference Include="cli" />
   </ItemGroup>
 
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
+
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Package">
     <ItemGroup>
@@ -29,7 +31,6 @@
     <PublishCoreSetupBinaries Binaries="@(ToolsetZips)"
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Sdk/{version}/" />
   </Target>
-
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
