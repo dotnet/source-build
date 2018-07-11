@@ -92,7 +92,8 @@
     <RootRepo>cli</RootRepo>
     <!-- Temporarily update RootRepo for Windows to core-setup repo project
     until all repos build clean out of master -->
-    <RootRepo Condition="'$(OS))' == 'Windows_NT'">core-setup</RootRepo>
+    <RootRepo Condition="'$(OS)' == 'Windows_NT'">core-setup</RootRepo>
+    <!-- Update RootRepo for arm to only build through core-setup -->
     <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 

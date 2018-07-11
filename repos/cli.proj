@@ -74,6 +74,9 @@
                           Condition="'$(UseStableVersions)' == 'true'" />
   </ItemGroup>
 
+  <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.
+       See https://github.com/dotnet/source-build/issues/561
+  -->
   <Target Name="AddProdConFeed" BeforeTargets="Build">
     <PropertyGroup>
       <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
