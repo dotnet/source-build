@@ -66,7 +66,7 @@ The .NET Core Runtime consists of 4 repos, core-setup at the top of the stack (w
 This means that in order to get a runtime you'll need to build the source-build repo with the `/p:RootRepo=core-setup` parameter, this will automatically build coreclr, standard and corefx. Source-Build is composed by git submodules, so the first thing you need to run before doing anything is:
 
 ```console
-git submodule --init --recursive
+git submodule update --init --recursive
 ```
 
 This will initialize the submodules and clone the repos under the src folder if they haven't been initialized. Note that this will update every submodule to their tracking commit checked in to the `source-build` repo . However you can go to each repo indivually, add custom remotes and checkout certain branches containing your changes.
