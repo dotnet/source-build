@@ -258,7 +258,7 @@ function setupProdConFeed() {
     sed -i.bakProdCon "s|PRODUCT_CONTRUCTION_PACKAGES|$prodConFeedUrl|g" "$testingDir/NuGet.Config"
 }
 
-if [[ $__ROOT_REPO != "cli" && $__ROOT_REPO != "known-good" ]]; then
+if [ "$__ROOT_REPO" != "known-good" ]; then
     echo "Skipping smoke-tests since cli was not built";
     exit
 fi

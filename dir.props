@@ -89,17 +89,10 @@
   <Import Project="$(ProjectDir)dependencies.props" />
 
   <PropertyGroup>
-    <!--
-        Temporarily update RootRepo to known-good
-        repo project until all repos are building clean.
-        When all repos build, this can be changed back
-        to cli.
     <RootRepo>cli</RootRepo>
-    -->
-
-    <!-- Temporarily update RootRepo to core-setup repo project
+    <!-- Temporarily update RootRepo for Windows to core-setup repo project
     until all repos build clean out of master -->
-    <RootRepo>core-setup</RootRepo>
+    <RootRepo Condition="'$(OS))' == 'Windows_NT'">core-setup</RootRepo>
     <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
