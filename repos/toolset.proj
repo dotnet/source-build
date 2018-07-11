@@ -24,7 +24,7 @@
     <RepositoryReference Include="cli" />
   </ItemGroup>
 
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishToolsetBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Build">
@@ -32,7 +32,7 @@
       <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
     </ItemGroup>
     <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Sdk/{version}/" />
-    <PublishCoreSetupBinaries Binaries="@(ToolsetZips)"
+    <PublishToolsetBinaries Binaries="@(ToolsetZips)"
                               DestinationFolderTemplate="$(LocalBlobStorageRoot)Sdk/{version}/" />
   </Target>
 
