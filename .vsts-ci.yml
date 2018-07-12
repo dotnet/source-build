@@ -26,7 +26,7 @@ phases:
         buildOfflineTarball: true
 
   steps:
-    - template: ./vsts-build-templates/docker-cleanup-linux.yml
+    - template: ./.vsts.pipelines/steps/docker-cleanup-linux.yml
 
     # create working directory and copy source into it
     - script: |
@@ -128,4 +128,4 @@ phases:
         ArtifactName: drop
         ArtifactType: Container
 
-    - template: ./vsts-build-templates/docker-cleanup-linux.yml
+    - template: ./.vsts.pipelines/steps/docker-cleanup-linux.yml
