@@ -47,8 +47,19 @@
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
   </Target>
 
+  <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
+    <!--
+      Pass prodConBlobFeedUrl via EnvironmentVariables because it has '//' in it, which is
+      translated into '/' if it's passed in the Command arg.
+      This is also a problem when passing CLI feeds: https://github.com/dotnet/source-build/issues/561
+    -->
+    <Exec Command="./smoke-test.sh --minimal --projectOutput --configuration $(Configuration) --archiveRestoredPackages"
+          EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
+  </Target>
+
   <Import Project="$(ProjectDir)dependencies.targets" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
 </Project>

@@ -1,0 +1,131 @@
+phases:
+- phase: source_build_ci
+  variables:
+    buildLoggingOptions: /clp:v=detailed /p:MinimalConsoleLogOutput=false
+    buildConfiguration: Release
+    buildOfflineTarball: false
+    docker.runInRoot: docker run --rm -v $(rootDirectory):/root -w /root
+    docker.runInSrc: docker run --rm -v $(Build.SourcesDirectory):/src -w /src
+    docker.runInSourceBuild: docker run --rm -v $(rootDirectory)/sb/source-build:/src -w /src
+    docker.runInTarball: docker run --rm -v $(rootDirectory)/sb/tarball/$(tarballName):/tb -w /tb
+    dropDirectory: $(stagingDirectory)/drop
+    rootDirectory: $(Build.SourcesDirectory)/..
+    stagingDirectory: $(rootDirectory)/sb/staging
+    tarballName: tarball_$(Build.BuildId)
+
+  queue:
+    name: DotNet-Build
+    demands: agent.os -equals linux
+    timeoutInMinutes: 240
+    parallel: 2
+    matrix:
+      centos71:
+        imageName: microsoft/dotnet-buildtools-prereqs:centos711503_prereqs_2
+      rhel7-unshared:
+        imageName: microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2
+        buildOfflineTarball: true
+
+  steps:
+    - template: ./vsts-build-templates/docker-cleanup-linux.yml
+
+    # create working directory and copy source into it
+    - script: |
+        set -x
+        $(docker.runInRoot) $(imageName) rm -rf /root/sb/
+        $(docker.runInRoot) $(imageName) mkdir -p /root/sb/tarball 
+        $(docker.runInSrc) -v $(rootDirectory):/root $(imageName) cp -r . /root/sb/source-build
+      displayName: Clean sb directory and copy source from cloned directory
+
+    # fetch vsts commits if building internally
+    - script: |
+        set -x
+        # Ignore failure for the first command. It will intentionally fail if the commit is only
+        # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
+        # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
+        # .git/modules/src/coreclr/ directories.)
+        $(docker.runInSourceBuild) $(imageName) git submodule update --init --recursive
+        $(docker.runInSourceBuild) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
+      displayName: Fetch internal vsts commits
+      condition: and(succeeded(), ne(variables['user.PAT'], ''))
+
+    # init submodules
+    - script: $(docker.runInSourceBuild) $(imageName) git submodule update --init --recursive
+      displayName: Initialize submodules
+
+    # build source-build
+    - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) $(buildLoggingOptions)
+      displayName: Build source-build
+      timeoutInMinutes: 90
+
+    # copy logs to working directory
+    - script: |
+        set -x
+        $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/source-build/binlogs; find . -name '*.binlog' -exec cp {} /logs/source-build/binlogs \;"
+        $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/source-build/logs; find ./bin/logs -name '*.log' -exec cp {} /logs/source-build/logs \;"
+      displayName: Copy source-build logs
+      condition: always()
+      continueOnError: true
+
+    # run smoke tests
+    - script: $(docker.runInSourceBuild) $(imageName) ./build.sh /t:RunSmokeTest /p:Configuration=$(buildConfiguration) /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+      displayName: Run smoke-test
+
+    # copy smoke test logs to working directory
+    - script: $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName)  /bin/bash -c "mkdir -p /logs/source-build/smoke-test; find ./testing-smoke -name '*.log' -exec cp {} /logs/source-build/smoke-test \;"
+      displayName: Copy smoke-test logs
+      condition: and(succeeded(), eq(variables['buildOfflineTarball'], false))
+      continueOnError: true
+
+    # create tarball
+    - script: $(docker.runInSourceBuild) -v $(rootDirectory)/sb/tarball:/tb $(imageName) ./build-source-tarball.sh /tb/$(tarballName) --skip-build
+      displayName: Create tarball
+      condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+
+    # tar the tarball directory into the drop directory
+    - script: $(docker.runInSourceBuild) -v $(rootDirectory)/sb/tarball:/tb -v $(dropDirectory):/drop $(imageName) tar -zcvf /drop/$(tarballName).tar.gz /tb/$(tarballName)
+      displayName: Copy tarball to output
+      condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+
+    # build tarball
+    - script: $(docker.runInTarball) --network='none' $(imageName) ./build.sh /p:Configuration=$(buildConfiguration) $(buildLoggingOptions)
+      displayName: Build tarball
+      timeoutInMinutes: 90
+      condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+
+    # run smoke tests
+    - script: $(docker.runInTarball) $(imageName) ./smoke-test.sh --minimal --projectOutput --configuration $(buildConfiguration) --prodConBlobFeedUrl ''
+      displayName: Run smoke-test in tarball
+      condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+
+    # copy all tarball logs to working directory
+    - script: |
+        set -x
+        $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/binlogs; find . -name '*.binlog' -exec cp {} /logs/tarball/binlogs \;"
+        $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/logs; find ./bin/logs -name '*.log' -exec cp {} /logs/tarball/logs \;"
+        $(docker.runInTarball) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/tarball/smoke-test; find ./testing-smoke -name '*.log' -exec cp {} /logs/tarball/smoke-test \;"
+        # Copy prebuilt report
+        $(docker.runInSourceBuild) -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/prebuilt-report/online;  cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/online"
+        $(docker.runInTarball)     -v $(dropDirectory)/logs:/logs $(imageName) /bin/bash -c "mkdir -p /logs/prebuilt-report/offline; cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/offline"
+      displayName: Copy tarball logs
+      condition: eq(variables['buildOfflineTarball'], true)
+      continueOnError: true
+
+    # copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files have correct ownership so VSTS can clean them up later.
+    - task: CopyFiles@2
+      condition: always()
+      continueOnError: true
+      inputs:
+        sourceFolder: $(stagingDirectory)
+        targetFolder: $(Build.ArtifactStagingDirectory)
+
+    # publish artifacts
+    - task: PublishBuildArtifacts@1
+      displayName: Publish artifacts
+      condition: always()
+      continueOnError: true
+      inputs:
+        PathtoPublish: $(Build.ArtifactStagingDirectory)/drop
+        ArtifactName: drop
+        ArtifactType: Container
+
+    - template: ./vsts-build-templates/docker-cleanup-linux.yml

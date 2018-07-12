@@ -48,8 +48,11 @@
     <ExtraPackageVersionPropsPackageInfo
       Include="
         Microsoft.AspNetCore.All;
-        Microsoft.AspNetCore.App;
-        Microsoft.NET.Sdk.Razor"
+        Microsoft.AspNetCore.App"
+      Version="2.1.2" />
+    <!-- This package wasn't built in latest 2.1.2 build: stick with what we had from 2.1.1. -->
+    <ExtraPackageVersionPropsPackageInfo
+      Include="Microsoft.NET.Sdk.Razor"
       Version="2.1.1" />
   </ItemGroup>
 
@@ -101,10 +104,8 @@
     <EnvironmentVariables Include="DropSuffix=true" />
   </ItemGroup>
 
-  <Target Name="AddProdConFeed" BeforeTargets="Build">
+  <Target Name="AddProdConFeed" BeforeTargets="Build" DependsOnTargets="GetProdConBlobFeedUrl">
     <PropertyGroup>
-      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
-
       <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
       <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
       <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
