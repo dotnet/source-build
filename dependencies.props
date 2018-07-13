@@ -38,19 +38,17 @@
       <RawVersionsBaseUrl>https://raw.githubusercontent.com/dotnet/versions</RawVersionsBaseUrl>
     </DependencyBuildInfo>
 
-    <DependencyInfo Include="ProdCon">
+    <DependencyInfo Include="ProdCon" Condition="'$(UpdateFromManifestFile)' == ''">
       <DependencyType>Orchestrated build</DependencyType>
       <BasePath>build-info/dotnet/product/cli/release/2.1.1</BasePath>
       <CurrentRef>$(ProdConCurrentRef)</CurrentRef>
       <VersionsRepoOwner>dotnet</VersionsRepoOwner>
       <VersionsRepo>versions</VersionsRepo>
     </DependencyInfo>
-
-    <UpdateStep Include="ProdCon">
-      <UpdaterType>Orchestrated blob feed attribute</UpdaterType>
-      <SingleLineFile>$(MSBuildThisFileDirectory)ProdConFeed.txt</SingleLineFile>
-      <AttributeName>Url</AttributeName>
-    </UpdateStep>
+    <DependencyInfo Include="ProdCon" Condition="'$(UpdateFromManifestFile)' != ''">
+      <DependencyType>Orchestrated build file</DependencyType>
+      <Path>$(UpdateFromManifestFile)</Path>
+    </DependencyInfo>
   </ItemGroup>
 
   <ItemGroup Condition="'$(SkipBuildToolsUpdate)' != 'true'">

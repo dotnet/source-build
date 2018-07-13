@@ -77,10 +77,8 @@
   <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.
        See https://github.com/dotnet/source-build/issues/561
   -->
-  <Target Name="AddProdConFeed" BeforeTargets="Build">
+  <Target Name="AddProdConFeed" BeforeTargets="Build" DependsOnTargets="GetProdConBlobFeedUrl">
     <PropertyGroup>
-      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
-
       <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
       <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
       <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
