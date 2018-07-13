@@ -17,11 +17,6 @@
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
-    <BuildCommandArgs>$(BuildCommandArgs) /p:SkipBuildingInstallers=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeNuGetPackageArchive=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeAdditionalSharedFrameworks=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
 
     <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
@@ -31,10 +26,7 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
-    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
-    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)bin/2/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
@@ -53,28 +45,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="application-insights" />
     <RepositoryReference Include="cli-migrate" />
     <RepositoryReference Include="clicommandlineparser" />
     <RepositoryReference Include="core-setup" />
-    <RepositoryReference Include="fsharp" />
-    <RepositoryReference Include="javascriptservices" />
+    <RepositoryReference Include="corefx" />
     <RepositoryReference Include="msbuild" />
-    <RepositoryReference Include="netcorecli-fsc" />
-    <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="sdk" />
+    <RepositoryReference Include="standard" />
     <RepositoryReference Include="templating" />
-    <RepositoryReference Include="vstest" />
-    <RepositoryReference Include="websdk" />
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
-
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
     <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
 
@@ -84,23 +68,15 @@
     -->
     <EnvironmentVariables Include="IncludeAspNetCoreRuntime=false" />
 
-    <!--
-      Disable bundled tools until we can figure out:
-
-      Unable to find package dotnet-dev-certs.
-      Unable to find package dotnet-ef.
-      Unable to find package dotnet-sql-cache.
-      Unable to find package dotnet-user-secrets.
-      Unable to find package dotnet-watch.
-    -->
-    <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
-
     <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
          is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
   </ItemGroup>
 
+  <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.
+       See https://github.com/dotnet/source-build/issues/561
+  -->
   <Target Name="AddProdConFeed" BeforeTargets="Build">
     <PropertyGroup>
       <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
@@ -116,38 +92,6 @@
                       Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
                       Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
                       Overwrite="true" />
-  </Target>
-
-  <!--
-    Ignore this error in the CLI build, which doesn't seem to happen in ProdCon:
-
-      error NU5104: A stable release of a package should not have a prerelease dependency. Either
-      modify the version spec of dependency "NuGet.Frameworks [4.7.0-rtm.5156, )" or update the
-      version field in the nuspec.
-  -->
-  <Target Name="AddNoWarnNU5104ByDefault" BeforeTargets="Build">
-    <PropertyGroup>
-      <BuildDefaultsFile>$(ProjectDirectory)build\BuildDefaults.props</BuildDefaultsFile>
-      <ReplacementEndMark>&lt;/NoWarn&gt;</ReplacementEndMark>
-      <InsertItemLine>;NU5104$(ReplacementEndMark)</InsertItemLine>
-
-      <BuildDefaultsPropsContents>$([System.IO.File]::ReadAllText('$(BuildDefaultsFile)'))</BuildDefaultsPropsContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(BuildDefaultsFile)"
-                      Lines="$(BuildDefaultsPropsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
-                      Condition="! $(BuildDefaultsPropsContents.Contains('$(InsertItemLine)'))"
-                      Overwrite="true" />
-  </Target>
-
-  <Target Name="CopyTarBall" AfterTargets="CopyPackage">
-    <ItemGroup>
-      <CliTarBalls Include="$(TarBallOutput)*$(TarBallExtension)" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(CliTarBalls)"
-          DestinationFolder="$(SourceBuiltTarBallPath)"
-          Condition="'@(CliTarBalls)'!=''" />
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
