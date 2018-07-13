@@ -83,12 +83,19 @@ mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
+if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
+    cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
+fi
+
 echo 'Removing source-built packages from tarball prebuilts...'
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
+    fi
+    if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
     fi
 done
 
