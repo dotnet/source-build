@@ -1,0 +1,40 @@
+From 7c3f8f470aa6fd832ca0dfd6d7a94b2d9adeb6fb Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 16 Jul 2018 12:33:29 -0500
+Subject: [PATCH] Fix NuGet SDK resolver PackageVersion property
+
+https://github.com/dotnet/cli/issues/9669 is required to remove this patch.
+---
+ build/DependencyVersions.props | 2 +-
+ src/redist/redist.csproj       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/DependencyVersions.props b/build/DependencyVersions.props
+index 099c68052..618d48771 100644
+--- a/build/DependencyVersions.props
++++ b/build/DependencyVersions.props
+@@ -52,7 +52,7 @@
+     <NuGetPackagingPackageVersion>$(NuGetBuildTasksPackageVersion)</NuGetPackagingPackageVersion>
+     <NuGetProjectModelPackageVersion>$(NuGetBuildTasksPackageVersion)</NuGetProjectModelPackageVersion>
+     <NuGetVersioningPackageVersion>$(NuGetBuildTasksPackageVersion)</NuGetVersioningPackageVersion>
+-    <NuGetSdkResolverPackageVersion>$(NuGetBuildTasksPackageVersion)</NuGetSdkResolverPackageVersion>
++    <MicrosoftBuildNuGetSdkResolverPackageVersion>$(NuGetBuildTasksPackageVersion)</MicrosoftBuildNuGetSdkResolverPackageVersion>
+     <MicrosoftNETTestSdkPackageVersion>15.8.0-preview-20180605-02</MicrosoftNETTestSdkPackageVersion>
+     <MicrosoftTestPlatformCLIPackageVersion>$(MicrosoftNETTestSdkPackageVersion)</MicrosoftTestPlatformCLIPackageVersion>
+     <MicrosoftTestPlatformBuildPackageVersion>$(MicrosoftNETTestSdkPackageVersion)</MicrosoftTestPlatformBuildPackageVersion>
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index 05a2b52c0..8b069b3ad 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -17,7 +17,7 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.NETCore.App" Version="$(MicrosoftNETCoreAppPackageVersion)" />
+     <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(NuGetSdkResolverPackageVersion)" />
++    <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(MicrosoftBuildNuGetSdkResolverPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
+     <PackageReference Condition=" '$(DotNetBuildFromSource)' != 'true' " Include="NuGet.Localization" Version="$(NuGetProjectModelPackageVersion)" />
+-- 
+2.17.1.windows.2
+
