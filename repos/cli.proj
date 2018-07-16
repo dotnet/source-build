@@ -118,21 +118,6 @@
                       Overwrite="true" />
   </Target>
 
-  <Target Name="AddBinlogging" BeforeTargets="Build">
-    <PropertyGroup>
-      <RunBuildScriptFile>$(ProjectDirectory)run-build.sh</RunBuildScriptFile>
-      <RunBuildScriptContents>$([System.IO.File]::ReadAllText('$(RunBuildScriptFile)'))</RunBuildScriptContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(RunBuildScriptFile)"
-                      Lines="$(RunBuildScriptContents
-                          .Replace('dotnet msbuild build.proj /p', 'dotnet msbuild build.proj /bl:msbuild.generatepropsfile.binlog /p')
-                          .Replace('dotnet msbuild build.proj /m', 'dotnet msbuild build.proj /bl:msbuild.mainbuild.binlog /m')
-                        )"
-                      Condition="! $(RunBuildScriptContents.Contains('binlog'))"
-                      Overwrite="true" />
-  </Target>
-
   <!--
     Ignore this error in the CLI build, which doesn't seem to happen in ProdCon:
 

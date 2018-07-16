@@ -1,0 +1,28 @@
+From 0287e8c92360de0474295864496c13c5c1eae190 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 16 Jul 2018 14:13:54 -0500
+Subject: [PATCH] Add binlog build args
+
+https://github.com/dotnet/cli/issues/9671 is required to remove this patch.
+---
+ run-build.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/run-build.sh b/run-build.sh
+index 1f2ed25a9..426604aee 100755
+--- a/run-build.sh
++++ b/run-build.sh
+@@ -189,8 +189,8 @@ fi
+ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+ 
+ if [ $BUILD -eq 1 ]; then
+-    dotnet msbuild build.proj /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles ${argsnotargets[@]}
+-    dotnet msbuild build.proj /m /v:normal /fl /flp:v=diag /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args
++    dotnet msbuild build.proj /bl:msbuild.generatepropsfile.binlog /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS /p:GeneratePropsFile=true /t:WriteDynamicPropsToStaticPropsFiles ${argsnotargets[@]}
++    dotnet msbuild build.proj /bl:msbuild.mainbuild.binlog /m /v:normal /fl /flp:v=diag /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args
+ else
+     echo "Not building due to --nobuild"
+     echo "Command that would be run is: 'dotnet msbuild build.proj /m /p:Architecture=$ARCHITECTURE $CUSTOM_BUILD_ARGS $args'"
+-- 
+2.17.1.windows.2
+
