@@ -4,8 +4,8 @@ IFS=$'\n\t'
 
 getIndexedSubmoduleSha() {
     (
-        cd "$DIR"
-        git ls-tree HEAD "src/$REPO_NAME" | awk '{print $3}'
+        cd ".."
+        git ls-tree HEAD "$REPO_NAME" | awk '{print $3}'
     )
 }
 
