@@ -6,6 +6,17 @@
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
+
+    <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
+
+    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeNuGetPackageArchive=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
+
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
@@ -13,10 +24,27 @@
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
     <ToolsetZipOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</ToolsetZipOutput>
 
+    <RepoApiImplemented>false</RepoApiImplemented>
+    <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
+
+    <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
+
+    <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
+    <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
+
+    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
+                  is fixed we will be able to determine this automatically.  -->
+    <EnvironmentVariables Include="DropSuffix=true"
+                          Condition="'$(UseStableVersions)' == 'true'" />
+
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
   </ItemGroup>
 
@@ -29,7 +57,7 @@
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Build">
     <ItemGroup>
-      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
+      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*$(TarBallExtension)" />
     </ItemGroup>
     <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Sdk/{version}/" />
     <PublishToolsetBinaries Binaries="@(ToolsetZips)"
