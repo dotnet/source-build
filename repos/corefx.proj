@@ -3,8 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
-    <BuildArguments>$(BuildCommandArgs) /p:DotNetAssetRootUrl=file:%2F%2F$(SourceBuiltAssetsDir)</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false /p:DotNetAssetRootUrl=file:%2F%2F$(SourceBuiltAssetsDir)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
