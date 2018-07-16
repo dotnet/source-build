@@ -5,7 +5,7 @@ IFS=$'\n\t'
 getIndexedSubmoduleSha() {
     (
         cd "$DIR"
-        git ls-tree HEAD src/cli | awk '{print $3}'
+        git ls-tree HEAD "src/$REPO_NAME" | awk '{print $3}'
     )
 }
 
@@ -17,9 +17,9 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-BASE_SHA=${1:-$(getIndexedSubmoduleSha)}
 REPO_NAME=$(basename $(pwd))
 PATCHES_DIR=$DIR/patches/$REPO_NAME
+BASE_SHA=${1:-$(getIndexedSubmoduleSha)}
 
 if [ ! -d $PATCHES_DIR ]; then
     mkdir -p $PATCHES_DIR
