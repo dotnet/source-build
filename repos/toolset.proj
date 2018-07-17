@@ -59,9 +59,9 @@
     <ItemGroup>
       <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*$(TarBallExtension)" />
     </ItemGroup>
-    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Sdk/{version}/" />
+    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Toolset/{version}/" />
     <PublishToolsetBinaries Binaries="@(ToolsetZips)"
-                              DestinationFolderTemplate="$(LocalBlobStorageRoot)Sdk/{version}/" />
+                              DestinationFolderTemplate="$(LocalBlobStorageRoot)Toolset/{version}/" />
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
