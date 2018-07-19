@@ -358,7 +358,7 @@ SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packag
 # XXX temporary workaround XXX
 # This is a temporary workaround to disable tests that will fail until ASP.NET packages are updated.
 # See https://github.com/dotnet/source-build/issues/635 for more details.
-echo "WARNING: Ignoring parameters to disable known-failing tests." | tee -a "$logFile"
+echo "WARNING: Setting excludeWebTests and excludeOnlineTests to disable known-failing tests." | tee -a "$logFile"
 excludeWebTests=true
 excludeOnlineTests=true
 # XXX temporary workaround XXX
