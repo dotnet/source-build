@@ -22,7 +22,7 @@
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <ToolsetZipOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</ToolsetZipOutput>
+    <ToolsetZipOutputDir>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</ToolsetZipOutputDir>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
@@ -62,9 +62,9 @@
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Build">
     <ItemGroup>
-      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
+      <ToolsetZips Include="$(ToolsetZipOutputDir)dotnet-*.zip" />
     </ItemGroup>
-    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Toolset/{version}/" />
+    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutputDir) to $(LocalBlobStorageRoot)Toolset/{version}/" />
     <PublishToolsetBinaries Binaries="@(ToolsetZips)"
                             DestinationFolderTemplate="$(LocalBlobStorageRoot)Toolset/{version}/" />
   </Target>
