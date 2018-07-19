@@ -1,0 +1,45 @@
+From 50c21af57be8b6a6cd379556ef156670f01d1533 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 17 Jul 2018 15:00:24 -0500
+Subject: [PATCH] Fix OrchestratedPackageVersionProps for source-build.
+
+When InitRepo was removed, the call to DownloadPackageVersionProps did
+not get moved elsewhere.  This change restores it and the properties
+that the target depends on.
+
+This patch can be removed when https://github.com/dotnet/cli/pull/9700
+is merged.
+---
+ Directory.Build.props | 3 +++
+ build/Prepare.targets | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index cabea4e55..108ebda8a 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -17,6 +17,9 @@ tools\TestAssetsDependencies\TestAssetsDependencies.csproj
+ 
+   <PropertyGroup>
+     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
++    <RelativeGeneratedPropsDir>bin/obj</RelativeGeneratedPropsDir>
++    <GeneratedPropsDir>$(RepoRoot)/$(RelativeGeneratedPropsDir)</GeneratedPropsDir>
++    <OrchestratedPackageVersionsProps>$(GeneratedPropsDir)/OrchestratedPackageVersionsProps.props</OrchestratedPackageVersionsProps>
+ 
+     <NuGetPackagesDir>$(NUGET_PACKAGES)</NuGetPackagesDir>
+     <NuGetPackagesDir Condition=" '$(NuGetPackagesDir)' == '' ">$(RepoRoot)/.nuget/packages</NuGetPackagesDir>
+diff --git a/build/Prepare.targets b/build/Prepare.targets
+index f4cb25b37..1cbd1db5b 100644
+--- a/build/Prepare.targets
++++ b/build/Prepare.targets
+@@ -7,6 +7,7 @@
+ 
+   <Target Name="Init"
+           DependsOnTargets="SetTelemetryProfile;
++                            DownloadPackageVersionsProps;
+                             BuildDotnetCliBuildFramework;">
+   </Target>
+ 
+-- 
+2.14.1
+

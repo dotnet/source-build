@@ -1,0 +1,37 @@
+From f8fcb2ce36ec228d58cf4a5923e72e8a5ea9cdf6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 17 Jul 2018 13:26:23 -0500
+Subject: [PATCH] Fix archiving to .zip.
+
+All CLI archives are named with .zip, but without this patch will
+still archive to gzip format on Linux.  This confuses downstream
+repos when they determine the archive type by extension.
+
+This patch can be removed when https://github.com/dotnet/cli/pull/9699
+is merged.
+---
+ build/package/Archive.targets | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/build/package/Archive.targets b/build/package/Archive.targets
+index cbbbfe63c..a36d06983 100644
+--- a/build/package/Archive.targets
++++ b/build/package/Archive.targets
+@@ -17,14 +17,6 @@
+     </PropertyGroup>
+ 
+     <ZipFileCreateFromDirectory
+-        Condition=" '$(OS)' == 'Windows_NT' "
+-        SourceDirectory="%(GenerateArchivesInputsOutputs.InputDirectory)"
+-        DestinationArchive="$(GenerateArchivesDestinationArchive)"
+-        OverwriteDestination="true"
+-        ExcludePatterns="%(GenerateArchivesInputsOutputs.ExcludePatterns)" />
+-
+-    <TarGzFileCreateFromDirectory
+-        Condition=" '$(OS)' != 'Windows_NT' "
+         SourceDirectory="%(GenerateArchivesInputsOutputs.InputDirectory)"
+         DestinationArchive="$(GenerateArchivesDestinationArchive)"
+         OverwriteDestination="true"
+-- 
+2.14.1
+
