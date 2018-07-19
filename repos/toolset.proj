@@ -57,7 +57,7 @@
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Build">
     <ItemGroup>
-      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*$(TarBallExtension)" />
+      <ToolsetZips Include="$(ToolsetZipOutput)dotnet-*.zip" />
     </ItemGroup>
     <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutput) to $(LocalBlobStorageRoot)Toolset/{version}/" />
     <PublishToolsetBinaries Binaries="@(ToolsetZips)"
