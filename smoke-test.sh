@@ -165,7 +165,7 @@ function doCommand() {
             # this is a temporary workaround before templates are updated to use netcoreapp3.0.
             # see issue https://github.com/dotnet/source-build/issues/635 for more details.
             echo "WARNING: Changing netcoreapp2.1 to netcoreapp3.0 in project file." | tee -a "$logFile"
-            sed -i 's/netcoreapp2\.1/netcoreapp3.0/g' *.*proj
+            sed -i.bak 's/netcoreapp2\.1/netcoreapp3.0/g' *.*proj
             # XXX temporary workaround XXX
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
