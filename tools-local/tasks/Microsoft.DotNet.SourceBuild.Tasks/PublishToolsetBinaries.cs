@@ -2,6 +2,12 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+// This is mostly a duplicate of PublishCoreSetupBinaries with a
+// different regex (because version numbers are formatted differently
+// between core-setup and toolset).
+// https://github.com/dotnet/source-build/issues/554 tracks figuring
+// out a better process for doing this.
+
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
