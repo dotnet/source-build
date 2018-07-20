@@ -7,7 +7,11 @@ loggingOptions = "/clp:v=detailed /p:MinimalConsoleLogOutput=false";
 
 def addArchival(def job) {
   def archivalSettings = new ArchivalSettings()
-  archivalSettings.addFiles("src/**/artifacts/**/log/*.binlog")
+  archivalSettings.addFiles("bin/logs/*")
+  archivalSettings.addFiles("src/**/*.binlog")
+  archivalSettings.addFiles("src/**/*.log")
+  archivalSettings.addFiles("init-tools.log")
+  archivalSettings.addFiles("msbuild.log")
   archivalSettings.addFiles("testing-smoke/smoke-test.log")
   archivalSettings.setFailIfNothingArchived()
   archivalSettings.setArchiveOnFailure()
