@@ -7,7 +7,7 @@
 |CentOS7.1|[![Build Status][centos-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Release/)|[![Build Status][centos-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Debug/)
 |CentOS7.1 (Tarball)|[![Build Status][centos-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Tarball_Release/)|[![Build Status][centos-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/CentOS7.1_Tarball_Debug/)
 |Debian8.4|[![Build Status][debian-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Debian8.4_Release/)|[![Build Status][debian-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Debian8.4_Debug/)
-|Fedora24|[![Build Status][fedora-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Fedora24_Release/)|[![Build Status][fedora-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Fedora24_Debug/)
+|Fedora28|[![Build Status][fedora-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Fedora28_Release/)|[![Build Status][fedora-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/Fedora28_Debug/)
 |OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/OSX10.12_Debug/)
 |RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Debug/)
 |RHEL7.2 (Tarball)|[![Build Status][rhel-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Tarball_Release/)|[![Build Status][rhel-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/master/job/RHEL7.2_Tarball_Debug/)
@@ -21,8 +21,8 @@
 [centos-tarball-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/CentOS7.1_Tarball_Debug
 [debian-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Debian8.4_Release
 [debian-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Debian8.4_Debug
-[fedora-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Fedora24_Release
-[fedora-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Fedora24_Debug
+[fedora-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Fedora28_Release
+[fedora-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Fedora28_Debug
 [linux_arm-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Linux_ARM_Release
 [linux_arm-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/Linux_ARM_Debug
 [osx-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/master/OSX10.12_Release
