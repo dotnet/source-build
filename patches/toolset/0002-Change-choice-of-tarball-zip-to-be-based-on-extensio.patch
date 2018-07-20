@@ -1,0 +1,40 @@
+From 2ff6684fd29e4fda339d7c1d25b709cf038d4fb8 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 18 Jul 2018 19:51:14 -0500
+Subject: [PATCH] Change choice of tarball/zip to be based on extension instead
+ of OS.
+
+Previously, Linux machines would produce a tarball but with a .zip
+extension, which confused some downstream repos which use the extension
+to determine how to extract them.
+
+This patch can be removed after https://github.com/dotnet/toolset/pull/12
+is merged.
+---
+ build/package/Archive.targets | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/package/Archive.targets b/build/package/Archive.targets
+index 047d49ae3..1fb10793b 100644
+--- a/build/package/Archive.targets
++++ b/build/package/Archive.targets
+@@ -17,14 +17,14 @@
+     </PropertyGroup>
+ 
+     <ZipFileCreateFromDirectory
+-        Condition=" '$(OSName)' == 'win' "
++        Condition=" $(GenerateArchivesDestinationArchive.EndsWith('.zip')) "
+         SourceDirectory="%(GenerateArchivesInputsOutputs.InputDirectory)"
+         DestinationArchive="$(GenerateArchivesDestinationArchive)"
+         OverwriteDestination="true"
+         ExcludePatterns="%(GenerateArchivesInputsOutputs.ExcludePatterns)" />
+ 
+     <TarGzFileCreateFromDirectory
+-        Condition=" '$(OSName)' != 'win' "
++        Condition=" $(GenerateArchivesDestinationArchive.EndsWith('.tar.gz')) "
+         SourceDirectory="%(GenerateArchivesInputsOutputs.InputDirectory)"
+         DestinationArchive="$(GenerateArchivesDestinationArchive)"
+         OverwriteDestination="true"
+-- 
+2.14.1
+

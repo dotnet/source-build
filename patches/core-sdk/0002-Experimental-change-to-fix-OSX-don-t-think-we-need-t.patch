@@ -1,0 +1,26 @@
+From 234cae6a6a802edd60f729f455ff751e79c4b04f Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 19 Jul 2018 15:13:12 -0500
+Subject: [PATCH] Experimental change to fix OSX - don't think we need this
+ after the repo split.
+
+---
+ build/BundledRuntimes.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/BundledRuntimes.props b/build/BundledRuntimes.props
+index 2de7068b0..8958a919c 100644
+--- a/build/BundledRuntimes.props
++++ b/build/BundledRuntimes.props
+@@ -1,7 +1,7 @@
+ <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <CoreSetupRid>$(HostRid)</CoreSetupRid>
+-    <CoreSetupRid Condition=" ('$(HostOSName)' == 'win' or '$(HostOSName)' == 'osx') and '$(DotNetBuildFromSource)' != 'true' ">$(HostMonikerRid)</CoreSetupRid>
++    <CoreSetupRid Condition=" '$(HostOSName)' == 'win' or '$(HostOSName)' == 'osx' ">$(HostMonikerRid)</CoreSetupRid>
+ 
+     <!-- only the runtime OSX .pkgs have a `-internal` suffix -->
+     <InstallerStartSuffix Condition="'$(HostOSName)' == 'osx'">-internal</InstallerStartSuffix>
+-- 
+2.14.1
+

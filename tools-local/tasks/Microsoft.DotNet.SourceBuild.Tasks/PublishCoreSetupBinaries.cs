@@ -20,15 +20,15 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string DestinationFolderTemplate { get; set; }
 
+        // This regular expression is crafted to extract the semver component from the artifacts
+        // that Core-Setup produces. They have filenames like this (note the two formats!)
+        //   dotnet-runtime-rhel.7-x64.2.0.0-preview2-25401-9.tar.gz
+        //   dotnet-runtime-2.0.0-preview2-25401-9-rhel.7-x64.tar.gz
+        // the "semver" capture would be 2.0.0-preview2-25401-9 in this case.
+        protected virtual string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+-[0-9]+-[0-9]+)?)";
+
         public override bool Execute()
         {
-            // This regular expression is crafted to extract the semver component from the artifacts
-            // that Core-Setup produces. They have filenames like this (note the two formats!)
-            //   dotnet-runtime-rhel.7-x64.2.0.0-preview2-25401-9.tar.gz
-            //   dotnet-runtime-2.0.0-preview2-25401-9-rhel.7-x64.tar.gz
-            // the "semver" capture would be 2.0.0-beta-001545-00 in this case.
-            const string VersionMatchRegex = @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+-[0-9]+-[0-9]+)?)";
-
             bool anyErrors = false;
 
             foreach (ITaskItem binary in Binaries)

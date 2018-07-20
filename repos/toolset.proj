@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
+
+    <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
+
+    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeNuGetPackageArchive=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+
+    <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
+    <ToolsetZipOutputDir>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</ToolsetZipOutputDir>
+
+    <RepoApiImplemented>false</RepoApiImplemented>
+    <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
+
+    <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
+
+    <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
+    <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
+
+    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
+                  is fixed we will be able to determine this automatically.  -->
+    <EnvironmentVariables Include="DropSuffix=true"
+                          Condition="'$(UseStableVersions)' == 'true'" />
+
+    <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="cli" />
+    <RepositoryReference Include="fsharp" />
+    <RepositoryReference Include="netcorecli-fsc" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="websdk" />
+  </ItemGroup>
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishToolsetBinaries" />
+
+  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
+  <Target Name="PublishBinaries" AfterTargets="Build">
+    <ItemGroup>
+      <ToolsetZips Include="$(ToolsetZipOutputDir)dotnet-*.zip" />
+    </ItemGroup>
+    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutputDir) to $(LocalBlobStorageRoot)Toolset/{version}/" />
+    <PublishToolsetBinaries Binaries="@(ToolsetZips)"
+                            DestinationFolderTemplate="$(LocalBlobStorageRoot)Toolset/{version}/" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
