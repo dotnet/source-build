@@ -8,7 +8,7 @@ usage()
     echo "Usage: $0 [BuildType] -rid <Rid> -seedcli <SeedCli> [-os <OS>] [-clang <Major.Minor>] [-corelib <CoreLib>]"
     echo ""
     echo "Options:"
-    echo "  BuildType               Type of build (-debug, -release), default: -debug"
+    echo "  BuildType               Type of build (-debug, -release), default: -release"
     echo "  -clang <Major.Minor>    Override of the version of clang compiler to use"
     echo "  -corelib <CoreLib>      Path to System.Private.CoreLib.dll, default: use the System.Private.CoreLib.dll from the seed CLI"
     echo "  -os <OS>                Operating system (used for corefx build), default: Linux"
@@ -95,7 +95,7 @@ getrealpath()
 __build_os=Linux
 __runtime_id=
 __corelib=
-__configuration=debug
+__configuration=release
 __clangversion=
 __outputpath=
 
@@ -230,7 +230,7 @@ fi
 
 echo "**** BUILDING CORE-SETUP NATIVE COMPONENTS ****"
 cd core-setup
-src/corehost/build.sh --arch "$__build_arch" --hostver "2.0.0" --apphostver "2.0.0" --fxrver "2.0.0" --policyver "2.0.0" --commithash `git rev-parse HEAD`
+src/corehost/build.sh --configuration $__configuration --arch "$__build_arch" --hostver "2.0.0" --apphostver "2.0.0" --fxrver "2.0.0" --policyver "2.0.0" --commithash `git rev-parse HEAD`
 cd ..
 
 echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
