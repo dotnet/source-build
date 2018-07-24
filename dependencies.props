@@ -23,6 +23,16 @@
     <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
   </PropertyGroup>
 
+  <!--
+    Packages built by ProdCon, but not source-build. These are included as prebuilts, or embedded in
+    the product as version strings to be used by the SDK to fetch extra content.
+  -->
+  <PropertyGroup>
+    <MicrosoftAspNetCoreAllPackageVersion>2.1.3</MicrosoftAspNetCoreAllPackageVersion>
+    <MicrosoftAspNetCoreAppPackageVersion>2.1.3</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftNETSdkRazorPackageVersion>2.1.2</MicrosoftNETSdkRazorPackageVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Get ILAsm tool version from CoreCLR. -->
     <RemoteDependencyBuildInfo Include="CoreClr">
