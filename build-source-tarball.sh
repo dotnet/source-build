@@ -108,6 +108,29 @@ if [ -z "${SOURCE_BUILD_SKIP_PREBUILT_REPORT:-}" ]; then
     )
 fi
 
+
+echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
+
+ROSLYN_TOOLS_PACKAGE='RoslynTools.RepoToolset'
+JSON_LINE=$(grep "$ROSLYN_TOOLS_PACKAGE" "$SCRIPT_ROOT/src/roslyn-tools/global.json")
+# Remove spaces.
+JSON_LINE=${JSON_LINE// }
+
+# Isolate version from something like: "RoslynTools.RepoToolset":"1.0.0-beta2-62805-03"
+PREFIX="\"$ROSLYN_TOOLS_PACKAGE\":\""
+ROSLYN_TOOLS_REPO_TOOLSET_VERSION=${JSON_LINE:${#PREFIX}:$((${#JSON_LINE} - ${#PREFIX} - 1))}
+REPO_TOOLSET_PACKAGE_DIR="$SCRIPT_ROOT/packages/${ROSLYN_TOOLS_PACKAGE,,}/$ROSLYN_TOOLS_REPO_TOOLSET_VERSION"
+
+if [ ! -d "$REPO_TOOLSET_PACKAGE_DIR" ]; then
+    echo "Failed to find repo toolset at: $REPO_TOOLSET_PACKAGE_DIR"
+    exit 1
+fi
+
+SOURCE_BUILT_SDK_TOOLS_DIR="$TARBALL_ROOT/Tools/source-built/$ROSLYN_TOOLS_PACKAGE/tools"
+cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
+cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
+
+
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 
 cat >$TARBALL_ROOT/source-build-info.txt << EOF
