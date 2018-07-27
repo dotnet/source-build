@@ -25,7 +25,6 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string OutputPath { get; set; }
 
-
         /// <summary>
         /// Package id/versions to add to the build output props, which may not exist as nupkgs.
         /// 
@@ -34,9 +33,12 @@ namespace Microsoft.DotNet.Build.Tasks
         /// </summary>
         public ITaskItem[] ExtraPackageInfo { get; set; }
 
-        // Additional asset paths are assumed to have the structure <pathToAsset>/<assetName>/<assetVersion>
-        // i.e. /bin/obj/x64/Release/blobs/Toolset/3.0.100
-        public string[] AdditionalAssetPaths { get; set; }
+        /// <summary>
+        /// Additional assets to be added to the build output props. They are assumed to have the
+        /// structure <pathToAsset>/<assetName>/<assetVersion>
+        /// i.e. /bin/obj/x64/Release/blobs/Toolset/3.0.100
+        /// </summary>
+        public string[] AdditionalAssetDirs { get; set; }
 
         private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
             ?.Select(item => new PackageIdentity(
@@ -60,12 +62,12 @@ namespace Microsoft.DotNet.Build.Tasks
                 .OrderBy(id => id.Id)
                 .ToArray();
 
-            var additionalAssets = (AdditionalAssetPaths ?? new string[0])
+            var additionalAssets = (AdditionalAssetDirs ?? new string[0])
                 .Where(Directory.Exists)
-                .Where(path => Directory.GetDirectories(path).Count() > 0)
-                .Select(path => new {
-                    Name = new DirectoryInfo(path).Name + "Version",
-                    Version = new DirectoryInfo(Directory.EnumerateDirectories(path).OrderByDescending(s => s).First()).Name
+                .Where(dir => Directory.GetDirectories(dir).Count() > 0)
+                .Select(dir => new {
+                    Name = new DirectoryInfo(dir).Name + "Version",
+                    Version = new DirectoryInfo(Directory.EnumerateDirectories(dir).OrderBy(s => s).Last()).Name
                 }).ToArray();
 
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
