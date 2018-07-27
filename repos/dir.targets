@@ -157,8 +157,12 @@
     <ItemGroup>
       <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
     </ItemGroup>
+    <ItemGroup>
+      <_AdditionalAssetPaths Include="$(SourceBuiltToolsetPath)" Condition="Exists('$(SourceBuiltToolsetPath)')" />
+    </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
                            ExtraPackageInfo="@(ExtraPackageVersionPropsPackageInfo)"
+                           AdditionalAssetPaths="@(_AdditionalAssetPaths)"
                            OutputPath="$(PackageVersionPropsPath)" />
 
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"

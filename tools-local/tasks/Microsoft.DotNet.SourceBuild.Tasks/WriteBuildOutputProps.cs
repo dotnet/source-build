@@ -25,6 +25,7 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string OutputPath { get; set; }
 
+
         /// <summary>
         /// Package id/versions to add to the build output props, which may not exist as nupkgs.
         /// 
@@ -32,6 +33,10 @@ namespace Microsoft.DotNet.Build.Tasks
         /// %(Version): Package version.
         /// </summary>
         public ITaskItem[] ExtraPackageInfo { get; set; }
+
+        // Additional asset paths are assumed to have the structure <pathToAsset>/<assetName>/<assetVersion>
+        // i.e. /bin/obj/x64/Release/blobs/Toolset/3.0.100
+        public string[] AdditionalAssetPaths { get; set; }
 
         private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
             ?.Select(item => new PackageIdentity(
@@ -55,6 +60,14 @@ namespace Microsoft.DotNet.Build.Tasks
                 .OrderBy(id => id.Id)
                 .ToArray();
 
+            var additionalAssets = (AdditionalAssetPaths ?? new string[0])
+                .Where(Directory.Exists)
+                .Where(path => Directory.GetDirectories(path).Count() > 0)
+                .Select(path => new {
+                    Name = new DirectoryInfo(path).Name + "Version",
+                    Version = new DirectoryInfo(Directory.EnumerateDirectories(path).OrderByDescending(s => s).First()).Name
+                }).ToArray();
+
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
 
             using (var outStream = File.Open(OutputPath, FileMode.Create))
@@ -68,6 +81,10 @@ namespace Microsoft.DotNet.Build.Tasks
                     string propertyName = GetPropertyName(packageIdentity.Id);
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
+                }
+                foreach (var additionalAsset in additionalAssets)
+                {
+                    sw.WriteLine($"    <{additionalAsset.Name}>{additionalAsset.Version}</{additionalAsset.Name}>");
                 }
                 sw.WriteLine(@"  </PropertyGroup>");
                 sw.WriteLine(@"</Project>");

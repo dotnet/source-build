@@ -34,7 +34,7 @@
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
     </ItemGroup>
     <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
-                              DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" >
+                              DestinationFolderTemplate="$(SourceBuiltRuntimePath){version}/" >
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishCoreSetupBinaries>
     <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
