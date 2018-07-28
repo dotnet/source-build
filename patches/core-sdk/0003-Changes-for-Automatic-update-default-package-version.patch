@@ -1,0 +1,108 @@
+From 6779735044a55fc55fcdf1302427b172dc28a981 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 26 Jul 2018 20:12:43 +0000
+Subject: [PATCH] Changes for Automatic update default package version Needed
+ until these two PRs are merged into master:  -
+ https://github.com/dotnet/cli/pull/9507  -
+ https://github.com/dotnet/cli/pull/9702
+
+---
+ build/MSBuildExtensions.targets                    | 17 +++++++++---
+ build/Microsoft.DotNet.Cli.tasks                   |  1 +
+ .../GetUseBundledVersionAsDefaultVersion.cs        | 30 ++++++++++++++++++++++
+ 3 files changed, 45 insertions(+), 3 deletions(-)
+ create mode 100644 build_projects/dotnet-cli-build/GetUseBundledVersionAsDefaultVersion.cs
+
+diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
+index 45f875c..7dd6bd4 100644
+--- a/build/MSBuildExtensions.targets
++++ b/build/MSBuildExtensions.targets
+@@ -41,6 +41,16 @@
+       <_NETCoreSdkIsPreview Condition=" '$(DropSuffix)' != 'true' ">true</_NETCoreSdkIsPreview>
+     </PropertyGroup>
+ 
++    <!--
++        Setting the property to true if patch == 0 and preview == true. SDK will set DefaultNetCorePatchVersion according to this flag.
++        So that we don't need to manually update the version selection logic between when we ship a final release and when we ship the first patch
++      -->
++    <GetUseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion
++      BundledNETCoreAppPackageVersion="$(_NETCoreAppPackageVersion)">
++      <Output TaskParameter="UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion"
++              PropertyName="_UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion" />
++    </GetUseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion>
++
+     <ItemGroup>
+       <BundledVersionsVariable Include="BundledAspNetCoreAllTargetFrameworkVersion" Value="$(_AspNetCoreAllTargetFrameworkVersion)" />
+       <BundledVersionsVariable Include="BundledAspNetCoreAllPackageVersion" Value="$(_AspNetCoreAllPackageVersion)" />
+@@ -80,6 +90,7 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <NETCoreAppMaximumVersion>$(_NETCoreAppTargetFrameworkVersion)</NETCoreAppMaximumVersion>
+     <BundledNETCoreAppTargetFrameworkVersion>$(_NETCoreAppTargetFrameworkVersion)</BundledNETCoreAppTargetFrameworkVersion>
+     <BundledNETCoreAppPackageVersion>$(_NETCoreAppPackageVersion)</BundledNETCoreAppPackageVersion>
++    <UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion>$(_UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion)</UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion>
+     <BundledNETStandardTargetFrameworkVersion>$(_NETStandardTargetFrameworkVersion)</BundledNETStandardTargetFrameworkVersion>
+     <BundledNETStandardPackageVersion>$(_NETStandardLibraryPackageVersion)</BundledNETStandardPackageVersion>
+     <BundledNETCorePlatformsPackageVersion>$(_NETCorePlatformsPackageVersion)</BundledNETCorePlatformsPackageVersion>
+@@ -88,9 +99,9 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <_NETCoreSdkIsPreview>$(_NETCoreSdkIsPreview)</_NETCoreSdkIsPreview>
+ 
+     <!-- Latest patch versions for each minor version of .NET Core -->
+-    <LatestPatchVersionForNetCore1_0 Condition="'$(LatestPatchVersionForNetCore1_0)' == ''">1.0.11</LatestPatchVersionForNetCore1_0>
+-    <LatestPatchVersionForNetCore1_1 Condition="'$(LatestPatchVersionForNetCore1_1)' == ''">1.1.8</LatestPatchVersionForNetCore1_1>
+-    <LatestPatchVersionForNetCore2_0 Condition="'$(LatestPatchVersionForNetCore2_0)' == ''">2.0.7</LatestPatchVersionForNetCore2_0>
++    <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">1.0.12</LatestPatchVersionForNetCore1_0>
++    <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.9</LatestPatchVersionForNetCore1_1>
++    <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
+   </PropertyGroup>
+ </Project>
+ ]]>
+diff --git a/build/Microsoft.DotNet.Cli.tasks b/build/Microsoft.DotNet.Cli.tasks
+index 6ada95a..58227dc 100644
+--- a/build/Microsoft.DotNet.Cli.tasks
++++ b/build/Microsoft.DotNet.Cli.tasks
+@@ -23,6 +23,7 @@
+   <UsingTask TaskName="GenerateMsiVersion" AssemblyFile="$(CLIBuildDll)" />
+   <UsingTask TaskName="GenerateNuGetPackagesArchiveVersion" AssemblyFile="$(CLIBuildDll)" />
+   <UsingTask TaskName="GetCurrentRuntimeInformation" AssemblyFile="$(CLIBuildDll)" />
++  <UsingTask TaskName="GetUseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion" AssemblyFile="$(CLIBuildDll)"/>
+   <UsingTask TaskName="MakeRelative" AssemblyFile="$(CLIBuildDll)" />
+   <UsingTask TaskName="RemoveAssetFromDepsPackages" AssemblyFile="$(CLIBuildDll)" />
+   <UsingTask TaskName="ReplaceFileContents" AssemblyFile="$(CLIBuildDll)" />
+diff --git a/build_projects/dotnet-cli-build/GetUseBundledVersionAsDefaultVersion.cs b/build_projects/dotnet-cli-build/GetUseBundledVersionAsDefaultVersion.cs
+new file mode 100644
+index 0000000..91d1069
+--- /dev/null
++++ b/build_projects/dotnet-cli-build/GetUseBundledVersionAsDefaultVersion.cs
+@@ -0,0 +1,30 @@
++// Copyright (c) .NET Foundation and contributors. All rights reserved.
++// Licensed under the MIT license. See LICENSE file in the project root for full license information.
++
++using System;
++using System.IO;
++using Microsoft.Build.Utilities;
++using Microsoft.Build.Framework;
++using Microsoft.DotNet.Cli.Build.Framework;
++using NuGet.Versioning;
++
++namespace Microsoft.DotNet.Cli.Build
++{
++    public class GetUseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion : Task
++    {
++        [Required]
++        public string BundledNETCoreAppPackageVersion { get; set; }
++
++        [Output]
++        public string UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion { get; set; }
++
++        public override bool Execute()
++        {
++            var parsedVersion = NuGetVersion.Parse(BundledNETCoreAppPackageVersion);
++            UseBundledNETCoreAppPackageVersionAsDefaultNetCorePatchVersion =
++                (parsedVersion.Patch == 0) && parsedVersion.IsPrerelease ? "true" : "false";
++
++            return true;
++        }
++    }
++}
+-- 
+1.8.3.1
+
