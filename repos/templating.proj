@@ -16,15 +16,28 @@
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
     <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
+    <MSBuildProperties Include="PB_SkipTests=true" />
+    <MSBuildProperties Include="TargetFramework=netcoreapp2.1" />
+    <MSBuildProperties Include="CoreOnly=true" />
   </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="clicommandlineparser" />
   </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) msbuild /t:Build @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj $(RedirectRepoOutputToLog)"
+    <PropertyGroup>
+      <BuildCommandArgs>/t:GetReady /t:Restore /t:Build /t:Pack</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) @(MSBuildProperties->'/p:%(Identity)', ' ')</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)build/CoreBuild.proj</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) msbuild $(BuildCommandArgs)"
+          WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
 
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
