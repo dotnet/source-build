@@ -38,7 +38,7 @@
   <!-- for RTM only, default to stabilized builds because that's what matches the official builds -->
   <!-- once https://github.com/dotnet/source-build/issues/550 is fixed we will be able to determine this automatically -->
   <PropertyGroup>
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
   </PropertyGroup>
 
   <ItemGroup>
