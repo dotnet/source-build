@@ -34,9 +34,10 @@ namespace Microsoft.DotNet.Build.Tasks
         public ITaskItem[] ExtraPackageInfo { get; set; }
 
         /// <summary>
-        /// Additional assets to be added to the build output props. They are assumed to have the
-        /// structure <pathToAsset>/<assetName>/<assetVersion>
+        /// Additional assets to be added to the build output props.
         /// i.e. /bin/obj/x64/Release/blobs/Toolset/3.0.100
+        /// This parameter is the <pathToAsset>/<assetName> portion only, and the asset
+        /// must be in a <AdditionalAssetDir>/<assetVersion> folder.
         /// </summary>
         public string[] AdditionalAssetDirs { get; set; }
 
