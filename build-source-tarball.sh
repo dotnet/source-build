@@ -2,22 +2,50 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if [ -z "${1:-}" ]; then
+usage() {
     echo "usage: $0 <path-to-tarball-root> [--skip-build]"
+    echo ""
+}
+
+if [ -z "${1:-}" ]; then
+    usage
     exit 1
 fi
 
+TARBALL_ROOT=$1
+shift
+
 SKIP_BUILD=0
 
-if [ "${2:-}" == "--skip-build" ]; then
-    SKIP_BUILD=1
-fi
+while :; do
+    if [ $# -le 0 ]; then
+        break
+    fi
 
-TARBALL_ROOT=$1
+    lowerI="$(echo $1 | awk '{print tolower($0)}')"
+    case $lowerI in
+        -?|-h|--help)
+            usage
+            exit 1
+            ;;
+        --skip-build)
+            SKIP_BUILD=1
+            ;;
+        *)
+            echo "Unrecognized argument '$1'"
+            usage
+            exit 1
+            ;;
+    esac
+
+    shift
+done
+
 export FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "error '$TARBALL_ROOT' exists"
+    exit 1
 fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
