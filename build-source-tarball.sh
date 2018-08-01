@@ -44,8 +44,7 @@ done
 export FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
 
 if [ -e "$TARBALL_ROOT" ]; then
-    echo "error '$TARBALL_ROOT' exists"
-    exit 1
+    echo "info: '$TARBALL_ROOT' already exists"
 fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
