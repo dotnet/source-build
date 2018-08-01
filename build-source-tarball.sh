@@ -26,7 +26,7 @@ while :; do
     case $lowerI in
         -?|-h|--help)
             usage
-            exit 1
+            exit 0
             ;;
         --skip-build)
             SKIP_BUILD=1
