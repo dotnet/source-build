@@ -57,7 +57,7 @@ while :; do
     case $lowerI in
         -?|-h|--help)
             usage
-            exit 1
+            exit 0
             ;;
         --dotnetdir)
             shift
@@ -106,6 +106,7 @@ while :; do
             archiveRestoredPackages=true
             ;;
         *)
+            echo "Unrecognized argument '$1'"
             usage
             exit 1
             ;;
