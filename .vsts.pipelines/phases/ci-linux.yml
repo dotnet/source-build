@@ -107,7 +107,7 @@ phases:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run smoke-test
 
-   # Copy smoke test logs to working directory.
+  # Copy smoke test logs to working directory.
   - script: |
       $(docker.run) $(docker.map.logs) $(docker.map.src) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/smoke-test
