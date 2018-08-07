@@ -14,7 +14,7 @@ def addArchival(def job) {
   archivalSettings.addFiles("msbuild.log")
   archivalSettings.addFiles("testing-smoke/smoke-test.log")
   archivalSettings.setFailIfNothingArchived()
-  archivalSettings.setArchiveOnFailure()
+  archivalSettings.setAlwaysArchive()
 
   Utilities.addArchival(job, archivalSettings)
 }
