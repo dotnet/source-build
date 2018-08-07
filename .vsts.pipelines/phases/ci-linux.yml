@@ -16,13 +16,16 @@ phases:
     buildConfiguration: Release
     buildOfflineTarball: false
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
-    docker.map.agentSrc: -v $(Build.SourcesDirectory):/agentSrc -w /agentSrc
-    docker.map.drop: -v $(dropDirectory):/drop:z -w /drop
-    docker.map.logs: -v $(dropDirectory)/logs:/logs:z -w /logs
-    docker.map.root: -v $(rootDirectory):/root:z -w /root
-    docker.map.src: -v $(rootDirectory)/sb/source-build:/src:z -w /src
-    docker.map.tb: -v $(rootDirectory)/sb/tarball:/tb:z -w /tb
+    docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
+    docker.agentSrc.work: -w /agentSrc
+    docker.drop.map: -v $(dropDirectory):/drop:z
+    docker.logs.map: -v $(dropDirectory)/logs:/logs:z
+    docker.root.map: -v $(rootDirectory):/root:z
     docker.run: docker run --rm
+    docker.src.map: -v $(rootDirectory)/sb/source-build:/src:z
+    docker.src.work: -w /src
+    docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
+    docker.tb.work: -w /tb
     dockerRegistry.password: ${{ parameters.dockerRegistryPassword }}
     dockerRegistry.server: ${{ parameters.dockerRegistryServer }}
     dockerRegistry.userName: ${{ parameters.dockerRegistryUserName }}
@@ -54,7 +57,7 @@ phases:
   # Create working directory and copy source into it.
   - script: |
       set -x
-      $(docker.run) $(docker.map.root) $(docker.map.agentSrc) $(imageName) bash -c '
+      $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
         rm -rf /root/sb/
         mkdir -p /root/sb/tarball
         cp -r . /root/sb/source-build'
@@ -67,18 +70,18 @@ phases:
       # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
       # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
       # .git/modules/src/coreclr/ directories.)
-      $(docker.run) $(docker.map.src) $(imageName) git submodule update --init --recursive
-      $(docker.run) $(docker.map.src) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) git submodule update --init --recursive
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
     displayName: Fetch internal vsts commits
     condition: and(succeeded(), ne(variables['user.PAT'], ''))
 
   # Initialize submodules.
-  - script: $(docker.run) $(docker.map.src) $(imageName) git submodule update --init --recursive
+  - script: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) git submodule update --init --recursive
     displayName: Initialize submodules
 
   # Build source-build.
   - script: |
-      $(docker.run) $(docker.map.src) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /p:ArchiveDownloadedPackages=true \
         /p:Configuration=$(buildConfiguration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
@@ -89,7 +92,7 @@ phases:
   # Copy logs to working directory.
   - script: |
       set -x
-      $(docker.run) $(docker.map.logs) $(docker.map.src) $(imageName) /bin/bash -c "
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/logs
         find . \( \
           -iname '*.binlog' -o \
@@ -101,7 +104,7 @@ phases:
 
   # Run smoke tests.
   - script: |
-      $(docker.run) $(docker.map.src) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /t:RunSmokeTest \
         /p:Configuration=$(buildConfiguration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
@@ -109,7 +112,7 @@ phases:
 
   # Copy smoke test logs to working directory.
   - script: |
-      $(docker.run) $(docker.map.logs) $(docker.map.src) $(imageName) /bin/bash -c "
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/smoke-test
         find ./testing-smoke -name '*.log' -exec cp {} /logs/source-build/smoke-test \;"
     displayName: Copy smoke-test logs
@@ -118,7 +121,7 @@ phases:
 
   # Create tarball.
   - script: |
-      $(docker.run) $(docker.map.tb) $(docker.map.src) $(imageName) ./build-source-tarball.sh \
+      $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         --skip-build
     displayName: Create tarball
@@ -126,14 +129,14 @@ phases:
 
   # tar the tarball directory into the drop directory.
   - script: |
-      $(docker.run) $(docker.map.tb) $(docker.map.drop) $(imageName) \
+      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(imageName) \
         tar -zcf "/drop/$(tarballName).tar.gz" "/tb/$(tarballName)"
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
   # Build tarball.
   - script: |
-      $(docker.run) $(docker.map.tb) --network='none' $(imageName) "$(tarballName)/build.sh" \
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) --network='none' $(imageName) "$(tarballName)/build.sh" \
         /p:Configuration=$(buildConfiguration) \
         $(buildLoggingOptions)
     displayName: Build tarball
@@ -142,7 +145,7 @@ phases:
 
   # Run smoke tests.
   - script: |
-      $(docker.run) $(docker.map.tb) $(imageName) "$(tarballName)/smoke-test.sh" \
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
         --minimal \
         --projectOutput \
         --configuration $(buildConfiguration) \
@@ -153,7 +156,7 @@ phases:
   # Copy all tarball logs to working directory.
   - script: |
       set -x
-      $(docker.run) $(docker.map.logs) $(docker.map.tb) $(imageName) /bin/bash -c "
+      $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/tarball/logs
         cd \"$(tarballName)\"
         find . \( \
@@ -163,7 +166,7 @@ phases:
         # Copy offline prebuilt report
         mkdir -p /logs/prebuilt-report/offline
         cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/offline"
-      $(docker.run) $(docker.map.logs) $(docker.map.src) $(imageName) /bin/bash -c "
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         # Copy online prebuilt report
         mkdir -p /logs/prebuilt-report/online
         cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/online"
@@ -191,7 +194,7 @@ phases:
       ArtifactType: Container
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
-  - script: $(docker.run) $(docker.map.root) $(imageName) bash -c 'rm -rf /root/sb'
+  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
     displayName: Clean sb directory
     condition: always()
     continueOnError: true
