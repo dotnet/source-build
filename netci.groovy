@@ -7,29 +7,22 @@ loggingOptions = "";
 
 def addArchival(def job) {
   def archivalSettings = new ArchivalSettings()
-  archivalSettings.addFiles("bin/logs/*")
-  // also grab prebuilt reports
-  archivalSettings.addFiles("bin/logs/**/*")
-  archivalSettings.addFiles("src/**/*.binlog")
-  archivalSettings.addFiles("src/**/*.log")
-  archivalSettings.addFiles("init-tools.log")
-  archivalSettings.addFiles("msbuild.log")
-  archivalSettings.addFiles("testing-smoke/smoke-test.log")
-  // tarball builds use subdirectories, so add these
-  archivalSettings.addFiles("source-build/bin/logs/*")
-  archivalSettings.addFiles("source-build/bin/logs/**/*")
-  archivalSettings.addFiles("source-build/src/**/*.binlog")
-  archivalSettings.addFiles("source-build/src/**/*.log")
-  archivalSettings.addFiles("source-build/init-tools.log")
-  archivalSettings.addFiles("source-build/msbuild.log")
-  archivalSettings.addFiles("source-build/testing-smoke/smoke-test.log")
-  archivalSettings.addFiles("tarball-output/bin/logs/*")
-  archivalSettings.addFiles("tarball-output/bin/logs/**/*")
-  archivalSettings.addFiles("tarball-output/src/**/*.binlog")
-  archivalSettings.addFiles("tarball-output/src/**/*.log")
-  archivalSettings.addFiles("tarball-output/init-tools.log")
-  archivalSettings.addFiles("tarball-output/msbuild.log")
-  archivalSettings.addFiles("tarball-output/testing-smoke/smoke-test.log")
+  // non-tarball builds just build in the root workspace directory.
+  // tarball builds clone to source-build, build from there, and then
+  // additionally build from a tarball-output directory.
+  // Grab these logs from all of those locations.
+  [ "", "source-build/", "tarball-output/"].each { logRoot ->
+    archivalSettings.addFiles("${logRoot}bin/logs/*")
+    // also grab prebuilt reports (bin/logs/prebuilt-reports).
+    // Use a wildcard here since we probably want anything added to
+    // bin/logs to show up in Jenkins anyway.
+    archivalSettings.addFiles("${logRoot}bin/logs/**/*")
+    archivalSettings.addFiles("${logRoot}src/**/*.binlog")
+    archivalSettings.addFiles("${logRoot}src/**/*.log")
+    archivalSettings.addFiles("${logRoot}init-tools.log")
+    archivalSettings.addFiles("${logRoot}msbuild.log")
+    archivalSettings.addFiles("${logRoot}testing-smoke/smoke-test.log")
+  }
 
   archivalSettings.setFailIfNothingArchived()
   archivalSettings.setAlwaysArchive()
