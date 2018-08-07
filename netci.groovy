@@ -3,7 +3,7 @@ import jobs.generation.ArchivalSettings;
 
 def project = GithubProject;
 def branch = GithubBranchName;
-loggingOptions = "/clp:v=detailed /p:MinimalConsoleLogOutput=false";
+loggingOptions = "";
 
 def addArchival(def job) {
   def archivalSettings = new ArchivalSettings()
@@ -13,6 +13,20 @@ def addArchival(def job) {
   archivalSettings.addFiles("init-tools.log")
   archivalSettings.addFiles("msbuild.log")
   archivalSettings.addFiles("testing-smoke/smoke-test.log")
+  // tarball builds use subdirectories, so add these
+  archivalSettings.addFiles("source-build/bin/logs/*")
+  archivalSettings.addFiles("source-build/src/**/*.binlog")
+  archivalSettings.addFiles("source-build/src/**/*.log")
+  archivalSettings.addFiles("source-build/init-tools.log")
+  archivalSettings.addFiles("source-build/msbuild.log")
+  archivalSettings.addFiles("source-build/testing-smoke/smoke-test.log")
+  archivalSettings.addFiles("tarball-output/bin/logs/*")
+  archivalSettings.addFiles("tarball-output/src/**/*.binlog")
+  archivalSettings.addFiles("tarball-output/src/**/*.log")
+  archivalSettings.addFiles("tarball-output/init-tools.log")
+  archivalSettings.addFiles("tarball-output/msbuild.log")
+  archivalSettings.addFiles("tarball-output/testing-smoke/smoke-test.log")
+
   archivalSettings.setFailIfNothingArchived()
   archivalSettings.setAlwaysArchive()
 
