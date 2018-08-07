@@ -13,10 +13,7 @@ def addArchival(def job) {
   // Grab these logs from all of those locations.
   [ "", "source-build/", "tarball-output/"].each { logRoot ->
     archivalSettings.addFiles("${logRoot}bin/logs/*")
-    // also grab prebuilt reports (bin/logs/prebuilt-reports).
-    // Use a wildcard here since we probably want anything added to
-    // bin/logs to show up in Jenkins anyway.
-    archivalSettings.addFiles("${logRoot}bin/logs/**/*")
+    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/*")
     archivalSettings.addFiles("${logRoot}src/**/*.binlog")
     archivalSettings.addFiles("${logRoot}src/**/*.log")
     archivalSettings.addFiles("${logRoot}init-tools.log")
