@@ -129,8 +129,9 @@ phases:
 
   # tar the tarball directory into the drop directory.
   - script: |
-      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(imageName) \
-        tar -zcf "/drop/$(tarballName).tar.gz" "/tb/$(tarballName)"
+      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(imageName) /bin/bash -c '
+        mkdir -p /drop/tarball/
+        tar -zcf "/drop/tarball/$(tarballName).tar.gz" "/tb/$(tarballName)"'
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
@@ -185,12 +186,20 @@ phases:
 
   # Publish artifacts.
   - task: PublishBuildArtifacts@1
-    displayName: Publish artifacts
+    displayName: Publish Logs artifact
     condition: always()
     continueOnError: true
     inputs:
-      PathtoPublish: $(Build.ArtifactStagingDirectory)/drop
+      PathtoPublish: $(dropDirectory)/logs
       ArtifactName: Logs $(artifactName)
+      ArtifactType: Container
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Tarball artifact
+    condition: always()
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(dropDirectory)/tarball
+      ArtifactName: Tarball $(artifactName)
       ArtifactType: Container
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
