@@ -195,7 +195,7 @@ phases:
       ArtifactType: Container
   - task: PublishBuildArtifacts@1
     displayName: Publish Tarball artifact
-    condition: always()
+    condition: eq(variables['buildOfflineTarball'], true)
     continueOnError: true
     inputs:
       PathtoPublish: $(dropDirectory)/tarball
