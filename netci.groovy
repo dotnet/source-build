@@ -1,8 +1,31 @@
+import jobs.generation.ArchivalSettings;
 import jobs.generation.Utilities;
 
 def project = GithubProject;
 def branch = GithubBranchName;
-loggingOptions = "/clp:v=detailed /p:MinimalConsoleLogOutput=false";
+loggingOptions = "";
+
+def addArchival(def job) {
+  def archivalSettings = new ArchivalSettings()
+  // non-tarball builds just build in the root workspace directory.
+  // tarball builds clone to source-build, build from there, and then
+  // additionally build from a tarball-output directory.
+  // Grab these logs from all of those locations.
+  [ "", "source-build/", "tarball-output/"].each { logRoot ->
+    archivalSettings.addFiles("${logRoot}bin/logs/*")
+    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/*")
+    archivalSettings.addFiles("${logRoot}src/**/*.binlog")
+    archivalSettings.addFiles("${logRoot}src/**/*.log")
+    archivalSettings.addFiles("${logRoot}init-tools.log")
+    archivalSettings.addFiles("${logRoot}msbuild.log")
+    archivalSettings.addFiles("${logRoot}testing-smoke/smoke-test.log")
+  }
+
+  archivalSettings.setFailIfNothingArchived()
+  archivalSettings.setAlwaysArchive()
+
+  Utilities.addArchival(job, archivalSettings)
+}
 
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
@@ -19,7 +42,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
           // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
           smokeTestExcludes += " --excludeWebHttpsTests";
         }
-        shell("./smoke-test.sh --minimal --projectOutput --configuration ${configuration} ${smokeTestExcludes}");
+        shell("./smoke-test.sh --minimal --configuration ${configuration} ${smokeTestExcludes}");
       }
     };
   };
@@ -36,6 +59,7 @@ def addPullRequestJob(String project, String branch, String os, String configura
   def newJob = job(newJobName);
 
   addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+  addArchival(newJob);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
@@ -49,6 +73,7 @@ def addPushJob(String project, String branch, String os, String configuration)
     def newJob = job(newJobName);
 
     addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+    addArchival(newJob);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.setJobTimeout(newJob, 180);
     Utilities.addGithubPushTrigger(newJob);
@@ -82,7 +107,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
 
             shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
-            shell("cd ./tarball-output;./smoke-test.sh --minimal --projectOutput --configuration ${configuration}")
+            shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
         }
       }
 
@@ -95,6 +120,8 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+      addArchival(newJob);
       if(isPR){
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
@@ -132,7 +159,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             // now build from the tarball offline and without access to the regular non-tarball build
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
             // finally, run a smoke-test on the result
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --projectOutput --configuration ${configuration}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
         }
       }
 
@@ -146,6 +173,8 @@ def addPushJob(String project, String branch, String os, String configuration)
 
       // Clone into the source-build directory
       Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+      addArchival(newJob);
       if(isPR){
         if(configuration == "Release"){
           Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
