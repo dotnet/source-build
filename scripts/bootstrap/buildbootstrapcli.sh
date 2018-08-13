@@ -134,7 +134,7 @@ while [[ "$1" != "" ]]; do
         ;;
     -outputpath)
         shift
-        __outputpath=`getrealpath $1`
+        __outputpath=$1
         ;;
      *)
     echo "Unknown argument to build.sh $1"; exit 1
@@ -156,7 +156,7 @@ fi
 __build_arch=${__runtime_id#*-}
 
 if [[ -z "$__outputpath" ]]; then
-   __outputpath=`getrealpath $__runtime_id/dotnetcli`
+   __outputpath=$__runtime_id/dotnetcli
 fi
 
 if [[ -d "$__outputpath" ]]; then
@@ -165,6 +165,8 @@ fi
 
 mkdir -p $__runtime_id
 mkdir -p $__outputpath
+
+__outputpath=`getrealpath $__outputpath`
 
 cd $__runtime_id
 
