@@ -20,6 +20,9 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string DestinationFolderTemplate { get; set; }
 
+        [Output]
+        public string PublishedVersion { get; set; }
+
         // This regular expression is crafted to extract the semver component from the artifacts
         // that Core-Setup produces. They have filenames like this (note the two formats!)
         //   dotnet-runtime-rhel.7-x64.2.0.0-preview2-25401-9.tar.gz
@@ -48,6 +51,8 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 Directory.CreateDirectory(destinationFolder);
                 File.Copy(binaryFullPath, Path.Combine(destinationFolder, binaryFileName), overwrite: true);
+
+                PublishedVersion = version;
             }
 
             return !anyErrors;

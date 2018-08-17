@@ -33,6 +33,14 @@ namespace Microsoft.DotNet.Build.Tasks
         /// </summary>
         public ITaskItem[] ExtraPackageInfo { get; set; }
 
+        /// <summary>
+        /// Additional assets to be added to the build output props.
+        /// i.e. /bin/obj/x64/Release/blobs/Toolset/3.0.100
+        /// This parameter is the <pathToAsset>/<assetName> portion only, and the asset
+        /// must be in a <AdditionalAssetDir>/<assetVersion> folder.
+        /// </summary>
+        public string[] AdditionalAssetDirs { get; set; }
+
         private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
             ?.Select(item => new PackageIdentity(
                 item.GetMetadata("Identity"),
@@ -55,6 +63,14 @@ namespace Microsoft.DotNet.Build.Tasks
                 .OrderBy(id => id.Id)
                 .ToArray();
 
+            var additionalAssets = (AdditionalAssetDirs ?? new string[0])
+                .Where(Directory.Exists)
+                .Where(dir => Directory.GetDirectories(dir).Count() > 0)
+                .Select(dir => new {
+                    Name = new DirectoryInfo(dir).Name + "Version",
+                    Version = new DirectoryInfo(Directory.EnumerateDirectories(dir).OrderBy(s => s).Last()).Name
+                }).ToArray();
+
             Directory.CreateDirectory(Path.GetDirectoryName(OutputPath));
 
             using (var outStream = File.Open(OutputPath, FileMode.Create))
@@ -68,6 +84,10 @@ namespace Microsoft.DotNet.Build.Tasks
                     string propertyName = GetPropertyName(packageIdentity.Id);
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
+                }
+                foreach (var additionalAsset in additionalAssets)
+                {
+                    sw.WriteLine($"    <{additionalAsset.Name}>{additionalAsset.Version}</{additionalAsset.Name}>");
                 }
                 sw.WriteLine(@"  </PropertyGroup>");
                 sw.WriteLine(@"</Project>");
