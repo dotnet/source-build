@@ -4,39 +4,39 @@
 
 |OS|Release|Debug|
 |--|-------|-----|
-|CentOS7.1|[![Build Status][centos-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/CentOS7.1_Release/)|[![Build Status][centos-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/CentOS7.1_Debug/)
-|CentOS7.1 (Tarball)|[![Build Status][centos-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/CentOS7.1_Tarball_Release/)|[![Build Status][centos-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/CentOS7.1_Tarball_Debug/)
-|Debian8.4|[![Build Status][debian-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Debian8.4_Release/)|[![Build Status][debian-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Debian8.4_Debug/)
-|Fedora24|[![Build Status][fedora-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Fedora24_Release/)|[![Build Status][fedora-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Fedora24_Debug/)
-|OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/OSX10.12_Debug/)
-|RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Debug/)
-|RHEL7.2 (Tarball)|[![Build Status][rhel-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Tarball_Release/)|[![Build Status][rhel-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Tarball_Debug/)
-|RHEL7.2 (Unshared)|[![Build Status][rhel-unshared-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Unshared_Release/)|[![Build Status][rhel-unshared-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/RHEL7.2_Unshared_Debug/)
-|Ubuntu16.04|[![Build Status][ubuntu-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Ubuntu16.04_Release/)|[![Build Status][ubuntu-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Ubuntu16.04_Debug/)
-|Windows|[![Build Status][windows-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Windows_NT_Release/)|[![Build Status][windows-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/dev_release_2.1/job/Windows_NT_Debug/)
+|CentOS7.1|[![Build Status][centos-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/CentOS7.1_Release/)|[![Build Status][centos-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/CentOS7.1_Debug/)
+|CentOS7.1 (Tarball)|[![Build Status][centos-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/CentOS7.1_Tarball_Release/)|[![Build Status][centos-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/CentOS7.1_Tarball_Debug/)
+|Debian8.4|[![Build Status][debian-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Debian8.4_Release/)|[![Build Status][debian-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Debian8.4_Debug/)
+|Fedora24|[![Build Status][fedora-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Fedora24_Release/)|[![Build Status][fedora-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Fedora24_Debug/)
+|OSX10.12|[![Build Status][osx-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/OSX10.12_Release/)|[![Build Status][osx-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/OSX10.12_Debug/)
+|RHEL7.2|[![Build Status][rhel-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Release/)|[![Build Status][rhel-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Debug/)
+|RHEL7.2 (Tarball)|[![Build Status][rhel-tarball-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Tarball_Release/)|[![Build Status][rhel-tarball-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Tarball_Debug/)
+|RHEL7.2 (Unshared)|[![Build Status][rhel-unshared-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Unshared_Release/)|[![Build Status][rhel-unshared-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/RHEL7.2_Unshared_Debug/)
+|Ubuntu16.04|[![Build Status][ubuntu-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Ubuntu16.04_Release/)|[![Build Status][ubuntu-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Ubuntu16.04_Debug/)
+|Windows|[![Build Status][windows-release-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Windows_NT_Release/)|[![Build Status][windows-debug-badge]](https://ci.dot.net/job/dotnet_source-build/job/release_2.2/job/Windows_NT_Debug/)
 
-[centos-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/CentOS7.1_Release
-[centos-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/CentOS7.1_Debug
-[centos-tarball-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/CentOS7.1_Tarball_Release
-[centos-tarball-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/CentOS7.1_Tarball_Debug
-[debian-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Debian8.4_Release
-[debian-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Debian8.4_Debug
-[fedora-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Fedora24_Release
-[fedora-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Fedora24_Debug
-[linux_arm-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Linux_ARM_Release
-[linux_arm-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Linux_ARM_Debug
-[osx-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/OSX10.12_Release
-[osx-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/OSX10.12_Debug
-[rhel-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Release
-[rhel-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Debug
-[rhel-tarball-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Tarball_Release
-[rhel-tarball-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Tarball_Debug
-[rhel-unshared-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Unshared_Release
-[rhel-unshared-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/RHEL7.2_Unshared_Debug
-[ubuntu-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Ubuntu16.04_Release
-[ubuntu-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Ubuntu16.04_Debug
-[windows-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Windows_NT_Release
-[windows-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/dev_release_2.1/Windows_NT_Debug
+[centos-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/CentOS7.1_Release
+[centos-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/CentOS7.1_Debug
+[centos-tarball-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/CentOS7.1_Tarball_Release
+[centos-tarball-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/CentOS7.1_Tarball_Debug
+[debian-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Debian8.4_Release
+[debian-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Debian8.4_Debug
+[fedora-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Fedora24_Release
+[fedora-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Fedora24_Debug
+[linux_arm-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Linux_ARM_Release
+[linux_arm-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Linux_ARM_Debug
+[osx-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/OSX10.12_Release
+[osx-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/OSX10.12_Debug
+[rhel-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Release
+[rhel-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Debug
+[rhel-tarball-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Tarball_Release
+[rhel-tarball-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Tarball_Debug
+[rhel-unshared-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Unshared_Release
+[rhel-unshared-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/RHEL7.2_Unshared_Debug
+[ubuntu-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Ubuntu16.04_Release
+[ubuntu-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Ubuntu16.04_Debug
+[windows-release-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Windows_NT_Release
+[windows-debug-badge]: https://ci.dot.net/buildStatus/icon?job=dotnet_source-build/release_2.2/Windows_NT_Debug
 
 This repository contains a set of scripts for building the .NET Core Runtime and SDK from source. The scripts were built to make it easy for anyone to build the .NET Core product.
 
