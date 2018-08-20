@@ -237,7 +237,7 @@ cd ..
 
 echo "**** BUILDING CORECLR NATIVE COMPONENTS ****"
 cd coreclr
-./build.sh $__configuration $__build_arch $__clangversion -skipgenerateversion -skipmscorlib -skiprestore -skiprestoreoptdata -skipnuget -nopgooptimize 2>&1 | tee coreclr.log
+./build.sh $__configuration $__build_arch $__clangversion -skipgenerateversion -skipmanaged -skipmscorlib -skiprestore -skiprestoreoptdata -skipnuget -nopgooptimize 2>&1 | tee coreclr.log
 export __coreclrbin=$(cat coreclr.log | sed -n -e 's/^.*Product binaries are available at //p')
 cd ..
 echo "CoreCLR binaries will be copied from $__coreclrbin"
