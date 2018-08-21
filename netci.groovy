@@ -45,6 +45,14 @@ def setMachineAffinity(job, os) {
   }
 }
 
+def getDockerImageForOs(os) {
+  def imageMap = [
+    'RHEL7.2': 'microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2',
+    'CentOS7.1': 'microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416',
+  ]
+  return imageMap.get(os)
+}
+
 def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
   job.with {
     steps {
@@ -111,26 +119,27 @@ def addPushJob(String project, String branch, String os, String configuration)
 
 // Tarball builds that are enforced offline with unshare
 [true, false].each { isPR ->
-  ["RHEL7.2"].each { os->
+  ["RHEL7.2", "CentOS7.1"].each { os->
     ["Release", "Debug"].each { configuration ->
 
       def shortJobName = "${os}_Unshared_${configuration}";
       def contextString = "${os} Unshared ${configuration}";
       def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+      def imageName = getDockerImageForOs(os);
 
       def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
         steps{
             shell("cd ./source-build;git submodule update --init --recursive");
             // First build the product itself
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
             // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
             shell("mkdir tarball-output");
             // now build the tarball
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
             // now build from the tarball offline and without access to the regular non-tarball build
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
             // finally, run a smoke-test on the result
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2 /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
         }
       }
 
