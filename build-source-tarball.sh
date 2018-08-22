@@ -138,7 +138,6 @@ if [ -z "${SOURCE_BUILD_SKIP_PREBUILT_REPORT:-}" ]; then
     )
 fi
 
-
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
 
 ROSLYN_TOOLS_PACKAGE='RoslynTools.RepoToolset'
