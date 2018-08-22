@@ -129,9 +129,13 @@ phases:
 
   # tar the tarball directory into the drop directory.
   - script: |
-      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(imageName) /bin/bash -c '
+      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
-        tar -zcf "/drop/tarball/$(tarballName).tar.gz" "/tb/$(tarballName)"'
+        smokeTestPackages="$(tarballName)/prebuilt/smoke-test-packages"
+        find "$smokeTestPackages" -iname "*.nupkg" -exec mv {} "$smokeTestPackages" \;
+        find "$smokeTestPackages" -not -iname "*.nupkg" -delete
+        tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
+        tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
 
