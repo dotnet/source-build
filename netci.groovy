@@ -27,6 +27,24 @@ def addArchival(def job) {
   Utilities.addArchival(job, archivalSettings)
 }
 
+def setMachineAffinity(job, os) {
+  // Map os to queue:  If the os is present,
+  // use the specified queue, otherwise,
+  // fall back to the old behavior.
+  def queueMap = [
+    'Fedora28': 'Fedora.28.Amd64.Open'
+  ]
+
+  def queueName = queueMap.get(os)
+
+  if (queueName != null) {
+    Utilities.setMachineAffinity(job, queueName)
+  }
+  else {
+    Utilities.setMachineAffinity(job, os, "latest-or-auto")
+  }
+}
+
 def getDockerImageForOs(os) {
   def imageMap = [
     'RHEL7.2': 'microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2',
