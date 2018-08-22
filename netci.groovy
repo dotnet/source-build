@@ -27,6 +27,24 @@ def addArchival(def job) {
   Utilities.addArchival(job, archivalSettings)
 }
 
+def setMachineAffinity(job, os) {
+  // Map os to queue:  If the os is present,
+  // use the specified queue, otherwise,
+  // fall back to the old behavior.
+  def queueMap = [
+    'Fedora28': 'Fedora.28.Amd64.Open'
+  ]
+
+  def queueName = queueMap.get(os)
+
+  if (queueName != null) {
+    Utilities.setMachineAffinity(job, queueName)
+  }
+  else {
+    Utilities.setMachineAffinity(job, os, "latest-or-auto")
+  }
+}
+
 def getDockerImageForOs(os) {
   def imageMap = [
     'RHEL7.2': 'microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2',
@@ -55,7 +73,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     };
   };
 
-  Utilities.setMachineAffinity(job, os, "latest-or-auto");
+  setMachineAffinity(job, os);
 }
 
 def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
@@ -99,6 +117,53 @@ def addPushJob(String project, String branch, String os, String configuration)
   };
 };
 
+// Tarball builds that are not enforced to be offline
+[true, false].each { isPR ->
+  ["RHEL7.2", "CentOS7.1"].each { os ->
+    ["Release", "Debug"].each { configuration ->
+
+      def shortJobName = "${os}_Tarball_${configuration}";
+      def contextString = "${os} Tarball ${configuration}";
+      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+
+      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
+        steps{
+            shell("cd ./source-build;git submodule update --init --recursive");
+            shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
+
+            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
+            shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
+        }
+      }
+
+      setMachineAffinity(newJob, os);
+
+      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+      // Increase timeout. The tarball builds can take longer than the 2 hour default.
+      Utilities.setJobTimeout(newJob, 240);
+
+      // Clone into the source-build directory
+      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+      addArchival(newJob);
+      if(isPR){
+        if(configuration == "Release"){
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        }
+        else{
+          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+        }
+      }
+      else{
+        Utilities.addGithubPushTrigger(newJob);
+      }
+
+    }
+  }
+}
+
 // Tarball builds that are enforced offline with unshare
 [true, false].each { isPR ->
   ["RHEL7.2", "CentOS7.1"].each { os->
@@ -126,7 +191,7 @@ def addPushJob(String project, String branch, String os, String configuration)
       }
 
       // Only Ubuntu Jenkins machines have Docker
-      Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
+      setMachineAffinity(newJob, "Ubuntu16.04");
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
