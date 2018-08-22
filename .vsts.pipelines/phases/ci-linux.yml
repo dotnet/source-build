@@ -132,8 +132,14 @@ phases:
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
         smokeTestPackages="$(tarballName)/prebuilt/smoke-test-packages"
+        # smokeTestPackages is a package cache, with redundant data and unnecessary structure. E.g.
+        # $smokeTestPackages/name/version/name.version.nupkg <- We want this.
+        # $smokeTestPackages/name/version/lib/net46/name.dll <- This is already in the nupkg.
+        # This find moves the nupkg files into $smokeTestPackages:
         find "$smokeTestPackages" -iname "*.nupkg" -exec mv {} "$smokeTestPackages" \;
+        # This find removes all non-nupkg files, which are not wanted:
         find "$smokeTestPackages" -not -iname "*.nupkg" -delete
+        # Make one .tar.gz for build, another for extras necessary to smoke test:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
         tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
     displayName: Copy tarball to output
