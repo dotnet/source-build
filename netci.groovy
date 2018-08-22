@@ -73,7 +73,7 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     };
   };
 
-  Utilities.setMachineAffinity(job, os, "latest-or-auto");
+  setMachineAffinity(job, os);
 }
 
 def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
@@ -191,7 +191,7 @@ def addPushJob(String project, String branch, String os, String configuration)
       }
 
       // Only Ubuntu Jenkins machines have Docker
-      Utilities.setMachineAffinity(newJob, "Ubuntu16.04", 'latest-or-auto');
+      setMachineAffinity(newJob, "Ubuntu16.04");
 
       Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
