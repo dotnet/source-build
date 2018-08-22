@@ -44,11 +44,17 @@ You can use these scripts to build the .NET Core product for Windows, macOS or L
 
 ## Using the Scripts
 
-The scripts are currently support only Linux at the moment. Windows and OSX are in the pipeline.
+The scripts are supported on Windows, macOS and Linux. The scripts are based on PowerShell on Windows and Bash on macOS and Linux.  Currently, Windows scripts only build through core-setup and do not build the complete SDK.
 
 If you are building on Windows or OSX, building is possible via Docker. (https://hub.docker.com/r/microsoft/dotnet/)
 
-### Build on Linux
+### Build on Windows
+
+```console
+./build.ps1
+```
+
+### Build on Linux or macOS
 
 ```console
 ./build.sh

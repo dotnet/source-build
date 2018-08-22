@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
