@@ -2,8 +2,6 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <OfficialBuildId>20180720-2</OfficialBuildId>
-
     <!-- CLI will always use the portable core-setup build for OSX anyway.  Turning this on for
          an OSX build will make it try to use linux-x64 instead of osx-64.  -->
     <UsePortableLinuxSharedFramework>$(PortableBuild)</UsePortableLinuxSharedFramework>
@@ -13,8 +11,11 @@
 
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
 
+    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
+    <ReleaseSuffix>source</ReleaseSuffix>
+    <OfficialBuildId>30000001-1</OfficialBuildId>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(OfficialBuildId)</BuildCommandArgs>
 
     <!--
@@ -51,6 +52,7 @@
     <ExtraPackageVersionPropsPackageInfo Include="Microsoft.AspNetCore.All" Version="$(MicrosoftAspNetCoreAllPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="Microsoft.AspNetCore.App" Version="$(MicrosoftAspNetCoreAppPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="Microsoft.NET.Sdk.Razor" Version="$(MicrosoftNETSdkRazorPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternal" Version="3.0.100-$(ReleaseSuffix)-$(OfficialBuildId)" />
   </ItemGroup>
 
   <ItemGroup>
