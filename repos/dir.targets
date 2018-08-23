@@ -344,6 +344,7 @@
       <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
       <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
 
+      <!-- Allow custom usage checks like FindSourceBuiltUsages where packages aren't prebuilts. -->
       <PrebuiltPackages Include="$(CustomUsageCheckPackageDir)*.nupkg" Condition="'$(CustomUsageCheckPackageDir)' != ''" />
 
       <PackageVersionPropsSnapshotSourceFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
