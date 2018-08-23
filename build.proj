@@ -47,6 +47,18 @@
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
   </Target>
 
+  <!--
+    Dev scenario: find usages of the source-built package id/versions. This is useful to diagnose
+    difficult CheckCacheForSourceBuiltNupkgConflicts failures by finding places where the bad
+    restore might have happened.
+  -->
+  <Target Name="FindSourceBuiltUsages">
+    <MSBuild Projects="repos\$(RootRepo).proj"
+             Targets="WritePrebuiltUsageData;ReportPrebuiltUsage"
+             Properties="CustomUsageCheckPackageDir=$(SourceBuiltPackagesPath)"/>
+    <Message Importance="high" Text="Usage reports generated in '$(PackageReportDir)'" />
+  </Target>
+
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
     <!--
       Pass prodConBlobFeedUrl via EnvironmentVariables because it has '//' in it, which is

@@ -7,6 +7,7 @@
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CheckCacheForSourceBuiltNupkgConflicts" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
@@ -155,7 +156,8 @@
   <Target Name="CreateBuildOutputProps"
           BeforeTargets="Build">
     <ItemGroup>
-      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
+      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
+                                      Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
                            ExtraPackageInfo="@(ExtraPackageVersionPropsPackageInfo)"
@@ -170,6 +172,14 @@
 
     <Message Importance="High" Text="$(RepositoryName) is using versions $(PackageVersionPropsPath)" />
     <Message Importance="High" Text="%(VersionProperties.Identity)" />
+
+    <ReadNuGetPackageInfos PackagePaths="@(_PreviouslySourceBuiltPackages)">
+      <Output TaskParameter="PackageInfoItems" ItemName="_PreviouslySourceBuiltPackageInfos" />
+    </ReadNuGetPackageInfos>
+
+    <CheckCacheForSourceBuiltNupkgConflicts
+      SourceBuiltPackageInfos="@(_PreviouslySourceBuiltPackageInfos)"
+      PackageCacheDir="$(PackagesDir)" />
   </Target>
 
   <Target Name="CreateRestoreSourceProps"
@@ -333,6 +343,8 @@
     <ItemGroup>
       <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
       <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
+
+      <PrebuiltPackages Include="$(CustomUsageCheckPackageDir)*.nupkg" Condition="'$(CustomUsageCheckPackageDir)' != ''" />
 
       <PackageVersionPropsSnapshotSourceFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
 
