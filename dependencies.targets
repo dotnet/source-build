@@ -95,5 +95,20 @@
         ReplacementSubstituteOld="$(ProdConBlobFeedReplaceOld)"
         ReplacementSubstituteNew="$(ProdConBlobFeedReplaceNew)" />
     </ItemGroup>
+
+    <!-- Upgrade some package versions that are built only by ProdCon. -->
+    <ItemGroup>
+      <PackageUpdatedFromProdCon Include="Microsoft.AspNetCore.All" Element="MicrosoftAspNetCoreAllPackageVersion" />
+      <PackageUpdatedFromProdCon Include="Microsoft.AspNetCore.App" Element="MicrosoftAspNetCoreAppPackageVersion" />
+      <PackageUpdatedFromProdCon Include="Microsoft.NET.Sdk.Razor" Element="MicrosoftNETSdkRazorPackageVersion" />
+
+      <UpdateStep
+        Include="ProdCon"
+        UpdaterType="Orchestrated blob feed package version"
+        PackageId="@(PackageUpdatedFromProdCon)"
+        Path="$(MSBuildThisFileDirectory)dependencies.props"
+        ElementName="%(PackageUpdatedFromProdCon.Element)"
+        SkipIfNoReplacementFound="true" />
+    </ItemGroup>
   </Target>
 </Project>
