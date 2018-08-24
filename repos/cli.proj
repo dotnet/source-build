@@ -14,9 +14,7 @@
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
-    <ReleaseSuffix>source</ReleaseSuffix>
-    <OfficialBuildId>30000001-1</OfficialBuildId>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(OfficialBuildId) /p:ReleaseSuffix=$(ReleaseSuffix)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(CliInternalBuildVersion) /p:ReleaseSuffix=$(CliInternalReleaseTag)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.

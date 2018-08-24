@@ -108,4 +108,19 @@
   <ItemGroup>
     <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
   </ItemGroup>
+
+  <!-- CLI internal version is statically set by us to a version that will never show up in the wild.
+       This ensures we will never restore a public version instead of our source-built version.  We
+       invlude the version number because it is used both by CLI.proj and the core-sdk build and they
+       have to be synced up.  ExtraPackageVersionPropsPackageInfo doesn't work in cli.proj because
+       toolset is between CLI and core-sdk, and the extra package version info is lost.               -->
+  <PropertyGroup>
+    <CliInternalReleaseTag>source</CliInternalReleaseTag>
+    <CliInternalBuildVersion>30000001-1</CliInternalBuildVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternal" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />
+  </ItemGroup>
+
 </Project>
