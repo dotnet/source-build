@@ -119,7 +119,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
                     ?? string.Empty);
 
-            return $"{formattedId}PackageVersion";
+            return formattedId;
         }
     }
 }
