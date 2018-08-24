@@ -16,7 +16,7 @@
 
     <ReleaseSuffix>source</ReleaseSuffix>
     <OfficialBuildId>30000001-1</OfficialBuildId>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(OfficialBuildId)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(OfficialBuildId) /p:ReleaseSuffix=$(ReleaseSuffix)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
