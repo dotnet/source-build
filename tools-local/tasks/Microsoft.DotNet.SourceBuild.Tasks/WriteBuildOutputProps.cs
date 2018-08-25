@@ -67,7 +67,6 @@ namespace Microsoft.DotNet.Build.Tasks
                         return reader.GetIdentity();
                     }
                 })
-                .Concat(ExtraPackageIdentities)
                 .GroupBy(identity => identity.Id)
                 .Select(g => g.OrderBy(id => id.Version).Last())
                 .OrderBy(id => id.Id)
@@ -95,6 +94,10 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
+                foreach (var extraPackage in ExtraPackageIdentities)
+                {
+                    sw.WriteLine($"    <{packageIdentity.Id}>{packageIdentity.Version}</{packageIdentity.Id}>");
+                }
                 foreach (var additionalAsset in additionalAssets)
                 {
                     sw.WriteLine($"    <{additionalAsset.Name}>{additionalAsset.Version}</{additionalAsset.Name}>");
@@ -119,7 +122,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
                     ?? string.Empty);
 
-            return formattedId;
+            return $"{formattedId}PackageVersion";
         }
     }
 }
