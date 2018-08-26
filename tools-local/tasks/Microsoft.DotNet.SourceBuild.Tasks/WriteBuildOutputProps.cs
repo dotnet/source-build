@@ -96,7 +96,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
                 foreach (var extraPackage in ExtraPackageIdentities)
                 {
-                    sw.WriteLine($"    <{packageIdentity.Id}>{packageIdentity.Version}</{packageIdentity.Id}>");
+                    sw.WriteLine($"    <{extraPackage.Id}>{extraPackage.Version}</{extraPackage.Id}>");
                 }
                 foreach (var additionalAsset in additionalAssets)
                 {
