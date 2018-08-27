@@ -19,7 +19,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// This usually results in prebuilt packages being used, which can either break the build or
     /// end up in the outputs.
     /// </summary>
-    public class CheckCacheForSourceBuiltNupkgConflicts : Task
+    public class GetSourceBuiltNupkgCacheConflicts : Task
     {
         /// <summary>
         /// Items containing package id and version of each source-built package.
@@ -40,60 +40,56 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         [Required]
         public string PackageCacheDir { get; set; }
 
+        [Output]
+        public ITaskItem[] ConflictingPackageInfos { get; set; }
+
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
 
-            bool anyPackageNotIdentical = false;
-
-            foreach (ITaskItem item in SourceBuiltPackageInfos)
-            {
-                string sourceBuiltPath = item.ItemSpec;
-                string id = item.GetMetadata("PackageId");
-                string version = item.GetMetadata("PackageVersion");
-
-                string packageCachePath = Path.Combine(
-                    PackageCacheDir,
-                    id.ToLowerInvariant(),
-                    version,
-                    $"{id.ToLowerInvariant()}.{version}.nupkg");
-
-                if (!File.Exists(packageCachePath))
+            ConflictingPackageInfos = SourceBuiltPackageInfos
+                .Where(item =>
                 {
+                    string sourceBuiltPath = item.ItemSpec;
+                    string id = item.GetMetadata("PackageId");
+                    string version = item.GetMetadata("PackageVersion");
+
+                    string packageCachePath = Path.Combine(
+                        PackageCacheDir,
+                        id.ToLowerInvariant(),
+                        version,
+                        $"{id.ToLowerInvariant()}.{version}.nupkg");
+
+                    if (!File.Exists(packageCachePath))
+                    {
+                        Log.LogMessage(
+                            MessageImportance.Low,
+                            $"OK: Package not found in package cache: {id} {version}");
+                        return false;
+                    }
+
                     Log.LogMessage(
                         MessageImportance.Low,
-                        $"OK: Package not found in package cache: {id} {version}");
-                    continue;
-                }
+                        $"Package id/version found in package cache, verifying: {id} {version}");
 
-                Log.LogMessage(
-                    MessageImportance.Low,
-                    $"Package id/version found in package cache, verifying: {id} {version}");
+                    bool identical = File.ReadAllBytes(sourceBuiltPath)
+                        .SequenceEqual(File.ReadAllBytes(packageCachePath));
 
-                bool identical = File.ReadAllBytes(sourceBuiltPath)
-                    .SequenceEqual(File.ReadAllBytes(packageCachePath));
+                    if (!identical)
+                    {
+                        Log.LogMessage(
+                            MessageImportance.Low,
+                            "BAD: Source-built nupkg is not byte-for-byte identical " +
+                                $"to nupkg in cache: {id} {version}");
+                        return true;
+                    }
 
-                if (!identical)
-                {
-                    anyPackageNotIdentical = true;
                     Log.LogMessage(
-                        MessageImportance.High,
-                        "Watch out! Source-built nupkg is not byte-for-byte identical " +
-                            $"to nupkg in cache: {id} {version}");
-                }
-
-                Log.LogMessage(
-                    MessageImportance.Low,
-                    $"OK: Package in cache is identical to source-built: {id} {version}");
-            }
-
-            if (anyPackageNotIdentical)
-            {
-                Log.LogMessage(
-                    MessageImportance.High,
-                    "To find usages that may have caused this issue, consider running " +
-                        "'./build.sh /t:FindSourceBuiltUsages' (or ps1 equivalent)");
-            }
+                        MessageImportance.Low,
+                        $"OK: Package in cache is identical to source-built: {id} {version}");
+                    return false;
+                })
+                .ToArray();
 
             // Tell the user about this task, in case it takes a while.
             Log.LogMessage(
