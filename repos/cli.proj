@@ -14,8 +14,6 @@
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
-    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(CliInternalBuildVersion) /p:ReleaseSuffix=$(CliInternalReleaseTag)</BuildCommandArgs>
-
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
       See https://github.com/dotnet/sdk/issues/1512#issuecomment-377082883
@@ -83,6 +81,9 @@
          is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
+
+    <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
+    <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
   </ItemGroup>
 
   <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.
