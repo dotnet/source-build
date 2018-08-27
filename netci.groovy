@@ -55,16 +55,16 @@ def getDockerImageForOs(os) {
   return imageMap.get(os)
 }
 
-def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
+def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration, boolean portable) {
   job.with {
     steps {
       if (os == "Windows_NT") {
         batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
       }
       else {
         shell("git submodule update --init --recursive");
-        shell("./build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
+        shell("./build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
         smokeTestExcludes = "";
         if (os == "Fedora24" || os == "OSX10.12") {
           // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
@@ -78,29 +78,39 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
   setMachineAffinity(job, os);
 }
 
-def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
+def addPullRequestJob(String project, String branch, String os, String configuration, boolean portable, boolean runByDefault)
 {
-  def newJobName = Utilities.getFullJobName(project, "${os}_${configuration}", true);
+  def config = configuration;
+  if (portable) {
+    config = "${configuration}_Portable"
+  }
+  def newJobName = Utilities.getFullJobName(project, "${os}_${config}", true);
   def contextString = "${os} ${configuration}";
+  if (portable) {
+    contextString = "${os} ${configuration} Portable";
+  }
   def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
   def newJob = job(newJobName);
 
-  addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+  addBuildStepsAndSetMachineAffinity(newJob, os, configuration, portable);
   addArchival(newJob);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
-def addPushJob(String project, String branch, String os, String configuration)
+def addPushJob(String project, String branch, String os, String configuration, boolean portable)
 {
     def shortJobName = "${os}_${configuration}";
+    if (portable) {
+      shortJobName = "${os}_${configuration}_Portable";
+    }
 
     def newJobName = Utilities.getFullJobName(project, shortJobName, false);
     def newJob = job(newJobName);
 
-    addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+    addBuildStepsAndSetMachineAffinity(newJob, os, configuration, portable);
     addArchival(newJob);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.setJobTimeout(newJob, 180);
@@ -108,14 +118,21 @@ def addPushJob(String project, String branch, String os, String configuration)
 }
 
 ["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
-  addPullRequestJob(project, branch, os, "Release", true);
-  addPullRequestJob(project, branch, os, "Debug", false);
+  addPullRequestJob(project, branch, os, "Release", false, true);
+  addPullRequestJob(project, branch, os, "Debug", false, false);
 };
+
+// do some but not all the portable builds
+["Ubuntu16.04", "RHEL7.2", "OSX10.12"].each { os ->
+  addPullRequestJob(project, branch, os, "Release", true, true);
+}
 
 // Per push, run all the jobs
 ["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
-    addPushJob(project, branch, os, configuration);
+    [true, false].each { portability ->
+      addPushJob(project, branch, os, configuration, portability);
+    };
   };
 };
 
