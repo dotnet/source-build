@@ -96,8 +96,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
                 foreach (var extraPackage in ExtraPackageIdentities)
                 {
-                    string propertyName = GetExtraPackagePropertyName(extraPackage.Id);
-                    sw.WriteLine($"    <{extraPackage.Id}>{propertyName}</{extraPackage.Id}>");
+                    sw.WriteLine($"    <{extraPackage.Id}>{extraPackage.Version}</{extraPackage.Id}>");
                 }
                 foreach (var additionalAsset in additionalAssets)
                 {
@@ -124,16 +123,6 @@ namespace Microsoft.DotNet.Build.Tasks
                     ?? string.Empty);
 
             return $"{formattedId}PackageVersion";
-        }
-
-        public static string GetExtraPackagePropertyName(string id)
-        {
-            string formattedId = InvalidElementNameCharRegex.Replace(
-                id,
-                match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
-                    ?? string.Empty);
-
-            return formattedId;
         }
     }
 }
