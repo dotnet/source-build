@@ -7,6 +7,7 @@
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetSourceBuiltNupkgCacheConflicts" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
@@ -155,7 +156,8 @@
   <Target Name="CreateBuildOutputProps"
           BeforeTargets="Build">
     <ItemGroup>
-      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
+      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
+                                      Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
       <_AdditionalAssetDirs Include="$(SourceBuiltToolsetDir)" Condition="Exists('$(SourceBuiltToolsetDir)')" />
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
@@ -172,6 +174,34 @@
 
     <Message Importance="High" Text="$(RepositoryName) is using versions $(PackageVersionPropsPath)" />
     <Message Importance="High" Text="%(VersionProperties.Identity)" />
+
+    <ReadNuGetPackageInfos PackagePaths="@(_PreviouslySourceBuiltPackages)">
+      <Output TaskParameter="PackageInfoItems" ItemName="_PreviouslySourceBuiltPackageInfos" />
+    </ReadNuGetPackageInfos>
+
+    <GetSourceBuiltNupkgCacheConflicts SourceBuiltPackageInfos="@(_PreviouslySourceBuiltPackageInfos)"
+                                       PackageCacheDir="$(PackagesDir)">
+      <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
+    </GetSourceBuiltNupkgCacheConflicts>
+  </Target>
+
+  <Target Name="CheckSourceBuiltNupkgConflictUsages"
+          DependsOnTargets="GetAllProjectDirectories"
+          AfterTargets="CreateBuildOutputProps"
+          Condition="'@(ConflictingPackageInfos)' != ''">
+    <PropertyGroup>
+      <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
+      <_ReportDataFile>$(_ReportDir)usage.json</_ReportDataFile>
+    </PropertyGroup>
+
+    <WritePackageUsageData NuGetPackageInfos="@(ConflictingPackageInfos)"
+                           ProjectDirectories="@(ProjectDirectories)"
+                           DataFile="$(_ReportDataFile)" />
+
+    <WriteUsageReports DataFile="$(_ReportDataFile)"
+                       OutputDirectory="$(_ReportDir)" />
+
+    <Warning Text="Detected package id/version(s) in the cache that were source-built, but contents don't match. They were probably downloaded. See $(_ReportDir) for usage details. @(ConflictingPackageInfos->'%(PackageId) %(PackageVersion)', ', ')" />
   </Target>
 
   <Target Name="CreateRestoreSourceProps"
@@ -320,18 +350,8 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="WritePrebuiltUsageData">
-    <ItemGroup>
-      <AllRepoProjects Include="$(ProjectDir)repos\*.proj" />
-    </ItemGroup>
-
-    <Message Importance="High" Text="Finding project directories..." />
-
-    <MSBuild Projects="@(AllRepoProjects)"
-             Targets="GetProjectDirectory">
-      <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
-    </MSBuild>
-
+  <Target Name="WritePrebuiltUsageData"
+          DependsOnTargets="GetAllProjectDirectories">
     <ItemGroup>
       <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
       <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
@@ -354,6 +374,19 @@
     <WritePackageUsageData NuGetPackageInfos="@(PrebuiltPackageInfoItems)"
                            ProjectDirectories="@(ProjectDirectories)"
                            DataFile="$(PackageReportDataFile)" />
+  </Target>
+
+  <Target Name="GetAllProjectDirectories">
+    <ItemGroup>
+      <AllRepoProjects Include="$(ProjectDir)repos\*.proj" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Finding project directories..." />
+
+    <MSBuild Projects="@(AllRepoProjects)"
+             Targets="GetProjectDirectory">
+      <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
+    </MSBuild>
   </Target>
 
   <Target Name="ReportPrebuiltUsage"
