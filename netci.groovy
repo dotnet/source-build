@@ -82,12 +82,12 @@ def addPullRequestJob(String project, String branch, String os, String configura
 {
   def config = configuration;
   if (portable) {
-    config = "${configuration}_Portable"
+    config += "_Portable";
   }
   def newJobName = Utilities.getFullJobName(project, "${os}_${config}", true);
   def contextString = "${os} ${configuration}";
   if (portable) {
-    contextString = "${os} ${configuration} Portable";
+    contextString += " Portable";
   }
   def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
@@ -104,7 +104,7 @@ def addPushJob(String project, String branch, String os, String configuration, b
 {
     def shortJobName = "${os}_${configuration}";
     if (portable) {
-      shortJobName = "${os}_${configuration}_Portable";
+      shortJobName += "_Portable";
     }
 
     def newJobName = Utilities.getFullJobName(project, shortJobName, false);
@@ -130,8 +130,8 @@ def addPushJob(String project, String branch, String os, String configuration, b
 // Per push, run all the jobs
 ["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
-    [true, false].each { portability ->
-      addPushJob(project, branch, os, configuration, portability);
+    [true, false].each { portable ->
+      addPushJob(project, branch, os, configuration, portable);
     };
   };
 };
