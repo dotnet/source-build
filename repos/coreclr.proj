@@ -2,7 +2,11 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>$(Platform) $(Configuration) skiptests -PortableBuild=$(PortableBuild) </BuildArguments>
+    <!-- core-setup uses the portable RID for OSX all the time, so override -->
+    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX'">true</OverridePortableBuild>
+
+    <BuildArguments>$(Platform) $(Configuration) skiptests -PortableBuild=$(OverridePortableBuild) </BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
