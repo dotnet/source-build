@@ -7,7 +7,7 @@ The following docker images have been verified to successfully build the source-
 3. Running smoke tests
 
 | OS | Image Name | Verification Commit / Date |
-| --- | --- | --- | --- |
+| --- | --- | --- |
 | CentOS 7.1 | microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416 | [b46d863](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/blob/b46d86339939ada16dfb8be30ebe62fbd51d3999/src/centos/7/Dockerfile) / 2018.09.05 |
 | Fedora 28 | microsoft/dotnet-buildtools-prereqs:fedora-28-c103199-20180628122443 | [c103199](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/blob/c103199065cb74842c2983f0422ea4a1f0b0fe25/src/fedora/28/Dockerfile) / 2018.09.05 |
 | Ubuntu 16.04 | microsoft/dotnet-buildtools-prereqs:ubuntu-16.04-c103199-20180628134544 |[c103199](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/blob/c103199065cb74842c2983f0422ea4a1f0b0fe25/src/ubuntu/16.04/Dockerfile) / 2018.09.05 |
