@@ -14,7 +14,7 @@ The following docker images have been verified to successfully build the source-
 
 ## Building source-build with Docker ##
 
-### Running an interactive docker container
+### Running an interactive docker container ###
 ```
 ### Run a bash shell inside a docker container. All later steps run in the interactive shell.
 docker run -it --rm <imageName> /bin/bash
@@ -37,7 +37,8 @@ cd ../tarball
 exit
 ```
 
-### Running build commands in a docker container with a docker volume for a working directory.  A docker volume allows you to persist data across docker container instances.
+### Running with a docker volume ###
+Running build commands in a docker container with a docker volume for a working directory.  A docker volume allows you to persist data across docker container instances.
 ```
 ### Create a volume on which to build source-build
 docker volume create source-build-volume 
