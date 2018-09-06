@@ -49,34 +49,49 @@ def getDockerImageForOs(os) {
   def imageMap = [
     'RHEL7.2': 'microsoft/dotnet-buildtools-prereqs:rhel7_prereqs_2',
     'CentOS7.1': 'microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416',
+    'Fedora28': 'microsoft/dotnet-buildtools-prereqs:fedora-28-c103199-20180628122443',
   ]
   return imageMap.get(os)
 }
 
-def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration) {
+def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration, boolean runInDocker) {
+  smokeTestExcludes = "";
+  if (os == "OSX10.12") {
+    // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
+    smokeTestExcludes += " --excludeWebHttpsTests";
+  }
+
   job.with {
     steps {
-      if (os == "Windows_NT") {
-        batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
+      if (runInDocker) {
+        def imageName = getDockerImageForOs(os);
+      
+        shell("git submodule update --init --recursive");
+        shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd):/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+        shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd):/opt/code --rm -w /opt/code ${imageName} /opt/code/smoke-test.sh --minimal --configuration ${configuration} ${smokeTestExcludes}");
+
+        // Only Ubuntu Jenkins machines have Docker
+        setMachineAffinity(job, "Ubuntu16.04");
       }
       else {
-        shell("git submodule update --init --recursive");
-        shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
-        smokeTestExcludes = "";
-        if (os == "OSX10.12") {
-          // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
-          smokeTestExcludes += " --excludeWebHttpsTests";
+        if (os == "Windows_NT") {
+          batchFile("git submodule update --init --recursive");
+          batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
         }
-        shell("./smoke-test.sh --minimal --configuration ${configuration} ${smokeTestExcludes}");
+        else {
+          shell("git submodule update --init --recursive");
+          shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
+          shell("./smoke-test.sh --minimal --configuration ${configuration} ${smokeTestExcludes}");
+        }
+        setMachineAffinity(job, os);
       }
     };
   };
 
-  setMachineAffinity(job, os);
+
 }
 
-def addPullRequestJob(String project, String branch, String os, String configuration, boolean runByDefault)
+def addPullRequestJob(String project, String branch, String os, String configuration, boolean runInDocker, boolean runByDefault)
 {
   def newJobName = Utilities.getFullJobName(project, "${os}_${configuration}", true);
   def contextString = "${os} ${configuration}";
@@ -84,36 +99,48 @@ def addPullRequestJob(String project, String branch, String os, String configura
 
   def newJob = job(newJobName);
 
-  addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+  addBuildStepsAndSetMachineAffinity(newJob, os, configuration, runInDocker);
   addArchival(newJob);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
-def addPushJob(String project, String branch, String os, String configuration)
+def addPushJob(String project, String branch, String os, String configuration, boolean runInDocker)
 {
     def shortJobName = "${os}_${configuration}";
 
     def newJobName = Utilities.getFullJobName(project, shortJobName, false);
     def newJob = job(newJobName);
 
-    addBuildStepsAndSetMachineAffinity(newJob, os, configuration);
+    addBuildStepsAndSetMachineAffinity(newJob, os, configuration, runInDocker);
     addArchival(newJob);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.setJobTimeout(newJob, 180);
     Utilities.addGithubPushTrigger(newJob);
 }
 
-["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
-  addPullRequestJob(project, branch, os, "Release", true);
-  addPullRequestJob(project, branch, os, "Debug", false);
+["Ubuntu16.04", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
+  addPullRequestJob(project, branch, os, "Release", false, true);
+  addPullRequestJob(project, branch, os, "Debug", false, false);
+};
+
+// Pull request jobs that run in Docker
+["Fedora28"].each { os ->
+  addPullRequestJob(project, branch, os, "Release", true, true);
+  addPullRequestJob(project, branch, os, "Debug", true, false);
 };
 
 // Per push, run all the jobs
-["Ubuntu16.04", "Fedora28", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
+["Ubuntu16.04", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
-    addPushJob(project, branch, os, configuration);
+    addPushJob(project, branch, os, configuration, false);
+  };
+};
+// Push jobs that run in Docker
+["Fedora28"].each { os ->
+  ["Release", "Debug"].each { configuration ->
+    addPushJob(project, branch, os, configuration, true);
   };
 };
 
