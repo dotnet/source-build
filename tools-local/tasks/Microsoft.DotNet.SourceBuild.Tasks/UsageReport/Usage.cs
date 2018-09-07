@@ -10,7 +10,7 @@ using System.Xml.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
-    public class Usage
+    public class Usage : IEquatable<Usage>
     {
         public PackageIdentity PackageIdentity { get; set; }
 
@@ -74,5 +74,27 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             $"{PackageIdentity.Id} {PackageIdentity.Version} " +
             (string.IsNullOrEmpty(RuntimePackageRid) ? "" : $"({RuntimePackageRid}) ") +
             (string.IsNullOrEmpty(AssetsFile) ? "with unknown use" : $"used by '{AssetsFile}'");
+
+        public bool Equals(Usage other)
+        {
+            if (other is null)
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return
+                Equals(PackageIdentity, other.PackageIdentity) &&
+                string.Equals(AssetsFile, other.AssetsFile, StringComparison.Ordinal) &&
+                string.Equals(RuntimePackageRid, other.RuntimePackageRid, StringComparison.Ordinal);
+        }
+
+        public override int GetHashCode() => (
+            PackageIdentity,
+            AssetsFile,
+            RuntimePackageRid
+        ).GetHashCode();
     }
 }
