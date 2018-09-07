@@ -29,21 +29,26 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             PackageInfoItems = PackagePaths
                 .Select(p =>
                 {
-                    using (var reader = new PackageArchiveReader(p))
-                    {
-                        PackageIdentity identity = reader.GetIdentity();
-                        return new TaskItem(
-                            p,
-                            new Dictionary<string, string>
-                            {
-                                ["PackageId"] = identity.Id,
-                                ["PackageVersion"] = identity.Version.OriginalVersion
-                            });
-                    }
+                    PackageIdentity identity = ReadIdentity(p);
+                    return new TaskItem(
+                        p,
+                        new Dictionary<string, string>
+                        {
+                            ["PackageId"] = identity.Id,
+                            ["PackageVersion"] = identity.Version.OriginalVersion
+                        });
                 })
                 .ToArray();
 
             return !Log.HasLoggedErrors;
+        }
+
+        public static PackageIdentity ReadIdentity(string nupkgFile)
+        {
+            using (var reader = new PackageArchiveReader(nupkgFile))
+            {
+                return reader.GetIdentity();
+            }
         }
     }
 }
