@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-using System.Collections.Generic;
+using NuGet.Packaging.Core;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -10,76 +10,48 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
     public class UsageData
     {
-        public string[] UnusedPackages { get; set; }
+        public string CreatedByRid { get; set; }
+        public string[] ProjectDirectories { get; set; }
+        public PackageIdentity[] NeverRestoredTarballPrebuilts { get; set; }
         public Usage[] Usages { get; set; }
 
-        public XElement CreateSummaryReport()
+        public XElement ToXml() => new XElement(
+            nameof(UsageData),
+            CreatedByRid == null ? null : new XElement(
+                nameof(CreatedByRid),
+                CreatedByRid),
+            ProjectDirectories?.Any() != true ? null : new XElement(
+                nameof(ProjectDirectories),
+                ProjectDirectories
+                    .Select(dir => new XElement("Dir", dir))),
+            NeverRestoredTarballPrebuilts?.Any() != true ? null : new XElement(
+                nameof(NeverRestoredTarballPrebuilts),
+                NeverRestoredTarballPrebuilts
+                    .OrderBy(id => id)
+                    .Select(id => id.ToXElement())),
+            Usages?.Any() != true ? null : new XElement(
+                nameof(Usages),
+                Usages
+                    .OrderBy(u => u.PackageIdentity)
+                    .ThenByOrdinal(u => u.AssetsFile)
+                    .Select(u => u.ToXml())));
+
+        public static UsageData Parse(XElement xml) => new UsageData
         {
-            return new XElement(
-                "UsageSummary",
-                GroupsToElements(
-                    Usages,
-                    new UsageGrouping.Package(),
-                    new UsageGrouping.Project()));
-        }
-
-        public XElement CreateDetailedReport()
-        {
-            return new XElement(
-                "UsageDetails",
-                new XElement(
-                    "Unknown",
-                    UnusedPackages.Select(id => Node("Package", id, null))),
-                new XElement(
-                    "PackageUsages",
-                    GroupsToElements(
-                        Usages,
-                        new UsageGrouping.Package(),
-                        new UsageGrouping.Project(),
-                        new UsageGrouping.AssetsFile())),
-                new XElement(
-                    "ProjectUsages",
-                    GroupsToElements(
-                        Usages,
-                        new UsageGrouping.Project(),
-                        new UsageGrouping.Package(),
-                        new UsageGrouping.AssetsFile())));
-        }
-
-        private static IEnumerable<XElement> GroupsToElements(
-            IEnumerable<Usage> usages,
-            params UsageGrouping[] groupings)
-        {
-            return GroupsToElementsCore(usages, groupings);
-        }
-
-        private static IEnumerable<XElement> GroupsToElementsCore(
-            IEnumerable<Usage> usages,
-            IEnumerable<UsageGrouping> groupings)
-        {
-            if (!groupings.Any())
-            {
-                return null;
-            }
-            UsageGrouping grouping = groupings.First();
-            return usages
-                .GroupBy(grouping.GetKey)
-                .OrderBy(g => g.Key)
-                .Select(g => grouping.CreateNode(
-                    g.First(),
-                    GroupsToElementsCore(g, groupings.Skip(1))));
-        }
-
-        private static XElement Node(string type, string name, IEnumerable<XElement> children)
-        {
-            var node = new XElement(type, children);
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                node.Add(new XAttribute("Name", name));
-            }
-
-            return node;
-        }
+            CreatedByRid = xml.Element(nameof(CreatedByRid))
+                ?.Value,
+            ProjectDirectories = xml.Element(nameof(ProjectDirectories))
+                ?.Elements()
+                .Select(x => x.Value)
+                .ToArray(),
+            NeverRestoredTarballPrebuilts = xml.Element(nameof(NeverRestoredTarballPrebuilts))
+                ?.Elements()
+                .Select(XmlParsingHelpers.ParsePackageIdentity)
+                .ToArray(),
+            Usages = xml.Element(nameof(Usages))
+                ?.Elements()
+                .Select(Usage.Parse)
+                .ToArray()
+        };
     }
 }

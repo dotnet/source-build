@@ -3,15 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Utilities;
 using Microsoft.DotNet.Build.Tasks;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
-using Task = Microsoft.Build.Utilities.Task;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
@@ -25,9 +24,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         /// </summary>
         [Required]
         public string DataFile { get; set; }
-
-        [Required]
-        public string OutputDirectory { get; set; }
 
         /// <summary>
         /// A set of "PackageVersions.props.pre.{repo}.xml" files. They are analyzed to find
@@ -52,15 +48,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public string ProdConBuildManifestFile { get; set; }
 
         /// <summary>
-        /// Infos for packages that were approved as prebuilts in an earlier release.
-        /// 
-        /// %(PackageId): Identity of the package.
-        /// %(PackageVersion): Version of the package.
-        /// %(Release): Name of the earlier release, e.g. "2.0".
-        /// </summary>
-        public ITaskItem[] PreviousReleasePrebuiltPackageInfos { get; set; }
-
-        /// <summary>
         /// File containing the results of poisoning the prebuilts. Example format:
         /// 
         /// MATCH: output built\dotnet-sdk-...\System.Collections.dll(hash 4b...31) matches one of:
@@ -70,9 +57,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         /// </summary>
         public string PoisonedReportFile { get; set; }
 
+        [Required]
+        public string OutputDirectory { get; set; }
+
         public override bool Execute()
         {
-            UsageData data = JObject.Parse(File.ReadAllText(DataFile)).ToObject<UsageData>();
+            UsageData data = UsageData.Parse(XElement.Parse(File.ReadAllText(DataFile)));
 
             IEnumerable<RepoOutput> sourceBuildRepoOutputs = GetSourceBuildRepoOutputs();
 
@@ -80,7 +70,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             var prodConPackageOrigin = new Dictionary<string, string>(
                 StringComparer.OrdinalIgnoreCase);
 
-            foreach (ITaskItem item in ProdConPackageInfos ?? Enumerable.Empty<ITaskItem>())
+            foreach (ITaskItem item in ProdConPackageInfos.NullAsEmpty())
             {
                 AddProdConPackage(
                     prodConPackageOrigin,
@@ -100,15 +90,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 }
             }
 
-            PreviousReleasePrebuilt[] previousReleasePrebuilts = PreviousReleasePrebuiltPackageInfos
-                ?.Select(item => new PreviousReleasePrebuilt
-                {
-                    Id = item.GetMetadata("PackageId"),
-                    Version = item.GetMetadata("PackageVersion"),
-                    Release = item.GetMetadata("Release")
-                })
-                .ToArray();
-
             var poisonNupkgFilenames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             if (File.Exists(PoisonedReportFile))
@@ -125,19 +106,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 }
             }
 
-            foreach (Usage usage in data.Usages)
-            {
-                string[] identity = usage.PackageIdentity.Split('/');
-                if (identity.Length != 2)
-                {
-                    Log.LogWarning(
-                        $"Data file contains invalid package identity '{usage.PackageIdentity}'. " +
-                        "Expected 2 segments when split by '/'.");
-                    continue;
-                }
+            var report = new XElement("AnnotatedUsages");
 
-                string id = identity[0];
-                string version = identity[1];
+            foreach (Usage usage in data.Usages.NullAsEmpty())
+            {
+                string id = usage.PackageIdentity.Id;
+                string version = usage.PackageIdentity.Version.OriginalVersion;
 
                 string pvpIdent = WriteBuildOutputProps.GetPropertyName(id);
 
@@ -163,51 +137,77 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
                 prodConPackageOrigin.TryGetValue(id, out string prodConCreator);
 
-                string previousReleasePrebuilt = previousReleasePrebuilts
-                    ?.FirstOrDefault(p => p.Matches(id, version))
-                    ?.Release;
-
-                usage.Annotation = new UsageAnnotation
+                var annotated = new AnnotatedUsage
                 {
-                    SourceBuildPackageIdCreator = sourceBuildCreator.ToString(),
+                    Usage = usage,
+
+                    Project = data.ProjectDirectories
+                        ?.FirstOrDefault(p => usage.AssetsFile?.StartsWith(p) ?? false),
+
+                    SourceBuildPackageIdCreator = sourceBuildCreator.Length == 0
+                        ? null
+                        : sourceBuildCreator.ToString(),
+
                     ProdConPackageIdCreator = prodConCreator,
-                    InEarlierReleaseExactPrebuilt = previousReleasePrebuilt,
+
                     EndsUpInOutput = poisonNupkgFilenames.Contains($"{id}.{version}")
                 };
+
+                report.Add(annotated.ToXml());
             }
 
             Directory.CreateDirectory(OutputDirectory);
 
             File.WriteAllText(
-                Path.Combine(OutputDirectory, "UsageSummary.xml"),
-                data.CreateSummaryReport().ToString());
-
-            File.WriteAllText(
-                Path.Combine(OutputDirectory, "UsageDetails.xml"),
-                data.CreateDetailedReport().ToString());
+                Path.Combine(OutputDirectory, "annotated-usage.xml"),
+                report.ToString());
 
             return !Log.HasLoggedErrors;
         }
 
-        private IEnumerable<RepoOutput> GetSourceBuildRepoOutputs()
+        private RepoOutput[] GetSourceBuildRepoOutputs()
         {
-            if (PackageVersionPropsSnapshots == null)
-            {
-                return Enumerable.Empty<RepoOutput>();
-            }
-
-            var pvpSnapshotFiles = PackageVersionPropsSnapshots
-                .Select(item => item.ItemSpec)
-                .OrderBy(File.GetLastWriteTimeUtc)
-                .Select(file =>
+            var pvpSnapshotFiles = PackageVersionPropsSnapshots.NullAsEmpty()
+                .Select(item =>
                 {
-                    string filename = Path.GetFileName(file);
+                    var content = File.ReadAllText(item.ItemSpec);
+                    return new
+                    {
+                        Path = item.ItemSpec,
+                        Content = content,
+                        Xml = XElement.Parse(content)
+                    };
+                })
+                .OrderBy(snapshot =>
+                {
+                    // Get the embedded creation time if possible: the file's original metadata may
+                    // have been destroyed by copying, zipping, etc.
+                    string creationTime = snapshot.Xml
+                        // Get the second PropertyGroup.
+                        .Elements().Skip(1).FirstOrDefault()
+                        // Get the creation time element.
+                        ?.Element(snapshot.Xml
+                            .GetDefaultNamespace()
+                            .GetName(WriteBuildOutputProps.CreationTimePropertyName))
+                        ?.Value;
+
+                    if (string.IsNullOrEmpty(creationTime))
+                    {
+                        Log.LogError($"No creation time property found in snapshot {snapshot.Path}");
+                        return default(DateTime);
+                    }
+
+                    return new DateTime(long.Parse(creationTime));
+                })
+                .Select(snapshot =>
+                {
+                    string filename = Path.GetFileName(snapshot.Path);
                     return new
                     {
                         Repo = filename.Substring(
                             SnapshotPrefix.Length,
                             filename.Length - SnapshotPrefix.Length - SnapshotSuffix.Length),
-                        PackageVersionProp = PackageVersionPropsElement.ParseFileElements(file)
+                        PackageVersionProp = PackageVersionPropsElement.Parse(snapshot.Xml)
                     };
                 })
                 .ToArray();
@@ -241,14 +241,14 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
         private struct PackageVersionPropsElement
         {
-            public static PackageVersionPropsElement[] ParseFileElements(string file)
+            public static PackageVersionPropsElement[] Parse(XElement xml)
             {
-                return XElement.Parse(File.ReadAllText(file))
+                return xml
                     // Get the single PropertyGroup
-                    .Nodes().OfType<XElement>()
+                    .Elements()
                     .First()
                     // Get all *PackageVersion property elements.
-                    .Nodes().OfType<XElement>()
+                    .Elements()
                     .Select(x => new PackageVersionPropsElement(
                         x.Name.LocalName,
                         x.Nodes().OfType<XText>().First().Value))
@@ -263,17 +263,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 Name = name;
                 Version = version;
             }
-        }
-
-        private class PreviousReleasePrebuilt
-        {
-            public string Id { get; set; }
-            public string Version { get; set; }
-            public string Release { get; set; }
-
-            public bool Matches(string id, string version) =>
-                Id.Equals(id, StringComparison.OrdinalIgnoreCase) &&
-                Version.Equals(version, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
