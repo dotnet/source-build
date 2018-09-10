@@ -406,6 +406,8 @@
       <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
       <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(BaselineDataFile)offline.xml</BaselineDataFile>
       <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(BaselineDataFile)online.xml</BaselineDataFile>
+
+      <ContinueOnPrebuiltBaselineError Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">false</ContinueOnPrebuiltBaselineError>
     </PropertyGroup>
 
     <ValidateUsageAgainstBaseline
