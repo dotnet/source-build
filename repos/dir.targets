@@ -406,13 +406,16 @@
       <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
       <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(BaselineDataFile)offline.xml</BaselineDataFile>
       <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(BaselineDataFile)online.xml</BaselineDataFile>
+
+      <ContinueOnPrebuiltBaselineError Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">false</ContinueOnPrebuiltBaselineError>
     </PropertyGroup>
 
     <ValidateUsageAgainstBaseline
       DataFile="$(PackageReportDataFile)"
       BaselineDataFile="$(BaselineDataFile)"
       OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
-      OutputReportFile="$(PackageReportDir)baseline-comparison.xml" />
+      OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
+      ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
 
     <ItemGroup>
       <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
