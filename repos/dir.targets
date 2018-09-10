@@ -412,7 +412,8 @@
       DataFile="$(PackageReportDataFile)"
       BaselineDataFile="$(BaselineDataFile)"
       OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
-      OutputReportFile="$(PackageReportDir)baseline-comparison.xml" />
+      OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
+      ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
 
     <ItemGroup>
       <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />

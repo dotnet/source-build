@@ -178,7 +178,7 @@ def addPushJob(String project, String branch, String os, String configuration)
         steps{
             shell("cd ./source-build;git submodule update --init --recursive");
             // First build the product itself
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:ContinueOnPrebuiltBaselineError=true ${loggingOptions}");
             // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
             shell("mkdir tarball-output");
             // now build the tarball
