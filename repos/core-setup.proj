@@ -4,7 +4,7 @@
   <PropertyGroup>
     <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=$(PortableBuild) -SkipTests=true </BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:PreReleaseLabel="preview"</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <OfficialBuildId>20180905-02</OfficialBuildId>
 
