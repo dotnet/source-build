@@ -11,6 +11,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="RemoveInternetSourcesFromNuGetConfig" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="UpdateJson" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="ValidateUsageAgainstBaseline" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
@@ -164,6 +165,7 @@
                            OutputPath="$(PackageVersionPropsPath)" />
 
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+                           IncludeCreationTimeProperty="true"
                            OutputPath="$(PackageVersionPropsPath).pre.$(RepositoryName).xml" />
 
     <ReadLinesFromFile File="$(PackageVersionPropsPath)">
@@ -189,11 +191,11 @@
           Condition="'@(ConflictingPackageInfos)' != ''">
     <PropertyGroup>
       <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
-      <_ReportDataFile>$(_ReportDir)usage.json</_ReportDataFile>
+      <_ReportDataFile>$(_ReportDir)usage.xml</_ReportDataFile>
     </PropertyGroup>
 
     <WritePackageUsageData NuGetPackageInfos="@(ConflictingPackageInfos)"
-                           ProjectDirectories="@(ProjectDirectories)"
+                           RootDir="$(ProjectDir)"
                            DataFile="$(_ReportDataFile)" />
 
     <WriteUsageReports DataFile="$(_ReportDataFile)"
@@ -350,28 +352,40 @@
 
   <Target Name="WritePrebuiltUsageData"
           DependsOnTargets="GetAllProjectDirectories">
+    <!-- Save the PVP snapshot of each build step to be evaluated while building the report. -->
     <ItemGroup>
-      <PrebuiltPackages Include="$(PrebuiltPackagesPath)*.nupkg" />
-      <PrebuiltPackages Include="$(TarballPrebuiltPackagesPath)*.nupkg" Condition="'$(TarballPrebuiltPackagesPath)' != ''"/>
+      <PackageVersionPropsSnapshotFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
+    </ItemGroup>
+    <Copy SourceFiles="@(PackageVersionPropsSnapshotFiles)" DestinationFolder="$(PackageReportDir)snapshots/" />
 
-      <PackageVersionPropsSnapshotSourceFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
+    <ItemGroup>
+      <AllRestoredPackageFiles Include="$(LocalNuGetPackagesRoot)**/*.nupkg" />
+      <AllRestoredPackageFiles Include="$(PackagesDir)**/*.nupkg" />
 
+      <!-- Only contains packages when building a tarball. -->
+      <TarballPrebuiltPackageFiles Include="$(PrebuiltPackagesPath)*.nupkg" />
+
+      <SourceBuiltPackageFiles Include="$(SourceBuiltBlobFeedDir)**/*.nupkg" />
+
+      <!-- Check all RIDs from all restored Microsoft.NETCore.Platforms packages. -->
+      <PlatformsRuntimeJsonFiles Include="$(LocalNuGetPackagesRoot)*/microsoft.netcore.platforms/*/runtime.json" />
+      <PlatformsRuntimeJsonFiles Include="$(PackagesDir)microsoft.netcore.platforms/*/runtime.json" />
+
+      <!-- Add some other potential top-level project directories for a more specific report. -->
       <ProjectDirectories Include="$(ToolsDir);$(TaskDirectory);$(BaseIntermediatePath)" />
-      <!-- Scan the entire project, in case project.assets.json ends up in an unexpected place. -->
+      <!-- Finally, scan entire source-build, in case project.assets.json ends up in an unexpected place. -->
       <ProjectDirectories Include="$(ProjectDir)" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(PackageVersionPropsSnapshotSourceFiles)" DestinationFolder="$(PackageReportDir)" />
-
-    <Message Importance="High" Text="Reading prebuilt nupkg identities..." />
-
-    <ReadNuGetPackageInfos PackagePaths="@(PrebuiltPackages)">
-      <Output TaskParameter="PackageInfoItems" ItemName="PrebuiltPackageInfoItems" />
-    </ReadNuGetPackageInfos>
-
-    <WritePackageUsageData NuGetPackageInfos="@(PrebuiltPackageInfoItems)"
-                           ProjectDirectories="@(ProjectDirectories)"
-                           DataFile="$(PackageReportDataFile)" />
+    <WritePackageUsageData
+      RestoredPackageFiles="@(AllRestoredPackageFiles)"
+      TarballPrebuiltPackageFiles="@(TarballPrebuiltPackageFiles)"
+      SourceBuiltPackageFiles="@(SourceBuiltPackageFiles)"
+      PlatformsRuntimeJsonFiles="@(PlatformsRuntimeJsonFiles)"
+      TargetRid="$(TargetRid)"
+      ProjectDirectories="@(ProjectDirectories)"
+      RootDir="$(ProjectDir)"
+      DataFile="$(PackageReportDataFile)" />
   </Target>
 
   <Target Name="GetAllProjectDirectories">
@@ -387,20 +401,32 @@
     </MSBuild>
   </Target>
 
-  <Target Name="ReportPrebuiltUsage"
-          DependsOnTargets="GetPreviousReleasePrebuiltPackageInfos">
+  <Target Name="ReportPrebuiltUsage">
+    <PropertyGroup>
+      <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
+      <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(BaselineDataFile)offline.xml</BaselineDataFile>
+      <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(BaselineDataFile)online.xml</BaselineDataFile>
+
+      <ContinueOnPrebuiltBaselineError Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">false</ContinueOnPrebuiltBaselineError>
+    </PropertyGroup>
+
+    <ValidateUsageAgainstBaseline
+      DataFile="$(PackageReportDataFile)"
+      BaselineDataFile="$(BaselineDataFile)"
+      OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
+      OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
+      ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
+
     <ItemGroup>
-      <PackageVersionPropsSnapshotFiles Include="$(PackageReportDir)PackageVersions.props.pre.*.xml" />
+      <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
     </ItemGroup>
+
     <WriteUsageReports DataFile="$(PackageReportDataFile)"
-                       PackageVersionPropsSnapshots="@(PackageVersionPropsSnapshotFiles)"
+                       PackageVersionPropsSnapshots="@(PackageVersionPropsSavedSnapshotFiles)"
                        ProdConBuildManifestFile="$(ProdConManifestFile)"
                        PoisonedReportFile="$(PoisonedReportFile)"
-                       PreviousReleasePrebuiltPackageInfos="@(PreviousReleasePrebuiltPackageInfos)"
                        OutputDirectory="$(PackageReportDir)" />
   </Target>
-
-  <Import Project="$(ProjectDir)tools-local/earlier-prebuilts.targets" />
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
   <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />
