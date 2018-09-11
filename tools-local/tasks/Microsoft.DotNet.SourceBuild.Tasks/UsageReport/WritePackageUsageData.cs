@@ -4,6 +4,9 @@
 
 using Microsoft.Build.Framework;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using NuGet.Packaging.Core;
+using NuGet.Versioning;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,20 +19,48 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 {
     public class WritePackageUsageData : Task
     {
+        public string[] RestoredPackageFiles { get; set; }
+        public string[] TarballPrebuiltPackageFiles { get; set; }
+        public string[] SourceBuiltPackageFiles { get; set; }
+
         /// <summary>
+        /// Specific PackageInfo items to check for usage. An alternative to passing lists of nupkgs
+        /// when the nupkgs have already been parsed to get package info items.
+        ///
+        /// %(Identity): Path to the original nupkg.
         /// %(PackageId): Identity of the package.
         /// %(PackageVersion): Version of the package.
         /// </summary>
-        [Required]
         public ITaskItem[] NuGetPackageInfos { get; set; }
+
+        /// <summary>
+        /// runtime.json files (from Microsoft.NETCore.Platforms) to use to look for the set of all
+        /// possible runtimes. This is used to determine which part of a package id is its
+        /// 'runtime.{rid}.' prefix, if it has the prefix.
+        /// </summary>
+        public string[] PlatformsRuntimeJsonFiles { get; set; }
+
+        /// <summary>
+        /// Keep track of the RID built that caused these usages.
+        /// </summary>
+        public string TargetRid { get; set; }
 
         /// <summary>
         /// Project directories to scan for project.assets.json files. If these directories contain
         /// one another, the project.assets.json files is reported as belonging to the first project
         /// directory that contains it. For useful results, put the leafmost directories first.
+        ///
+        /// This isn't used here, but it's included in the usage data so report generation can
+        /// happen independently of commits that add/remove submodules.
+        /// </summary>
+        public string[] ProjectDirectories { get; set; }
+
+        /// <summary>
+        /// A root dir that contains all ProjectDirectories. This is used to find the relative path
+        /// of each usage.
         /// </summary>
         [Required]
-        public string[] ProjectDirectories { get; set; }
+        public string RootDir { get; set; }
 
         /// <summary>
         /// Output usage data JSON file path.
@@ -39,96 +70,140 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
         public override bool Execute()
         {
-            string[] packageIdentities = NuGetPackageInfos
-                .Select(item => $"{item.GetMetadata("PackageId")}/{item.GetMetadata("PackageVersion")}")
+            DateTime startTime = DateTime.Now;
+            Log.LogMessage(MessageImportance.High, "Writing package usage data...");
+
+            string[] projectDirectoriesOutsideRoot = ProjectDirectories.NullAsEmpty()
+                .Where(dir => !dir.StartsWith(RootDir, StringComparison.Ordinal))
                 .ToArray();
 
-            // Remove trailing slash from dir to avoid EnumerateFiles method adding slash twice,
-            // which would cause multiple unique paths per file and break the hash set.
-            ProjectDirectories = ProjectDirectories
-                .Where(Directory.Exists)
-                .Select(dir => dir.TrimEnd('/', '\\'))
-                .ToArray();
-
-            Log.LogMessage(MessageImportance.High, "Finding project.assets.json files...");
-
-            Dictionary<string, IEnumerable<string>> projectDirAssetFiles = ProjectDirectories
-                .ToDictionary(
-                    dir => dir,
-                    dir => Directory.EnumerateFiles(
-                        dir,
-                        "project.assets.json",
-                        SearchOption.AllDirectories));
-
-            Log.LogMessage(MessageImportance.High, "Reading usage info...");
-
-            var assetFileUsages = new ConcurrentDictionary<string, Usage[]>();
-
-            Parallel.ForEach(
-                projectDirAssetFiles.Values.SelectMany(v => v).Distinct(),
-                assetsFile =>
-                {
-                    string contents = File.ReadAllText(assetsFile);
-
-                    assetFileUsages.TryAdd(
-                        assetsFile,
-                        packageIdentities
-                            .Where(id => IsIdentityInText(id, contents))
-                            .Select(id => new Usage
-                            {
-                                AssetsFile = assetsFile,
-                                PackageIdentity = id
-                            })
-                            .ToArray());
-                });
-
-            Log.LogMessage(MessageImportance.High, "Associating usage info with projects...");
-
-            var usedAssetFiles = new HashSet<string>();
-            var usages = new List<Usage>();
-
-            foreach (string dir in ProjectDirectories)
+            if (projectDirectoriesOutsideRoot.Any())
             {
-                foreach (string assetsFile in projectDirAssetFiles[dir])
-                {
-                    if (usedAssetFiles.Add(assetsFile))
-                    {
-                        foreach (var usage in assetFileUsages[assetsFile])
-                        {
-                            usage.ProjectDirectory = dir;
-                            usages.Add(usage);
-                        }
-                    }
-                }
+                throw new ArgumentException(
+                    $"All ProjectDirectories must be in RootDir '{RootDir}', but found " +
+                    string.Join(", ", projectDirectoriesOutsideRoot));
             }
 
-            Log.LogMessage(MessageImportance.High, $"Writing data to '{DataFile}'...");
+            Log.LogMessage(MessageImportance.Low, "Finding set of RIDs...");
 
-            Directory.CreateDirectory(Path.GetDirectoryName(DataFile));
-
-            string[] unused = packageIdentities
-                .Where(id => !usages.Any(u => IsIdentityEqual(id, u.PackageIdentity)))
+            string[] possibleRids = PlatformsRuntimeJsonFiles.NullAsEmpty()
+                .SelectMany(ReadRidsFromRuntimeJson)
+                .Distinct()
                 .ToArray();
+
+            Log.LogMessage(MessageImportance.Low, "Reading package identities...");
+
+            PackageIdentity[] restored = RestoredPackageFiles.NullAsEmpty()
+                .Select(ReadNuGetPackageInfos.ReadIdentity)
+                .Distinct()
+                .ToArray();
+
+            PackageIdentity[] tarballPrebuilt = TarballPrebuiltPackageFiles.NullAsEmpty()
+                .Select(ReadNuGetPackageInfos.ReadIdentity)
+                .Distinct()
+                .ToArray();
+
+            PackageIdentity[] sourceBuilt = SourceBuiltPackageFiles.NullAsEmpty()
+                .Select(ReadNuGetPackageInfos.ReadIdentity)
+                .Distinct()
+                .ToArray();
+
+            IEnumerable<PackageIdentity> prebuilt = restored.Except(sourceBuilt);
+
+            PackageIdentity[] toCheck = NuGetPackageInfos.NullAsEmpty()
+                .Select(item => new PackageIdentity(
+                    item.GetMetadata("PackageId"),
+                    NuGetVersion.Parse(item.GetMetadata("PackageVersion"))))
+                .Concat(prebuilt)
+                .ToArray();
+
+            Log.LogMessage(MessageImportance.Low, "Finding project.assets.json files...");
+
+            string[] assetFiles = Directory.GetFiles(
+                RootDir,
+                "project.assets.json",
+                SearchOption.AllDirectories);
+
+            Log.LogMessage(MessageImportance.Low, "Reading usage info...");
+
+            var usages = new ConcurrentBag<Usage>();
+
+            Parallel.ForEach(
+                assetFiles,
+                assetFile =>
+                {
+                    var properties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                    using (var file = File.OpenRead(assetFile))
+                    using (var reader = new StreamReader(file))
+                    using (var jsonReader = new JsonTextReader(reader))
+                    {
+                        while (jsonReader.Read())
+                        {
+                            if (jsonReader.TokenType == JsonToken.PropertyName &&
+                                jsonReader.Value is string value)
+                            {
+                                properties.Add(value);
+                            }
+                        }
+                    }
+
+                    foreach (var identity in toCheck
+                        .Where(id => properties.Contains(id.Id + "/" + id.Version.OriginalVersion)))
+                    {
+                        usages.Add(Usage.Create(
+                            // Store relative path for future report generation.
+                            assetFile.Substring(RootDir.Length),
+                            identity,
+                            possibleRids));
+                    }
+                });
+
+            Log.LogMessage(MessageImportance.Low, "Searching for unused packages...");
+
+            foreach (PackageIdentity restoredWithoutUsagesFound in
+                toCheck.Except(usages.Select(u => u.PackageIdentity)))
+            {
+                usages.Add(Usage.Create(
+                    null,
+                    restoredWithoutUsagesFound,
+                    possibleRids));
+            }
+
+            // Packages that were included in the tarball as prebuilts, but weren't even restored.
+            PackageIdentity[] neverRestoredTarballPrebuilts = tarballPrebuilt
+                .Except(restored)
+                .ToArray();
+
+            Log.LogMessage(MessageImportance.Low, $"Writing data to '{DataFile}'...");
 
             var data = new UsageData
             {
-                UnusedPackages = unused,
-                Usages = usages.ToArray()
+                CreatedByRid = TargetRid,
+                Usages = usages.ToArray(),
+                NeverRestoredTarballPrebuilts = neverRestoredTarballPrebuilts,
+                ProjectDirectories = ProjectDirectories
+                    ?.Select(dir => dir.Substring(RootDir.Length))
+                    .ToArray()
             };
 
-            File.WriteAllText(DataFile, JsonConvert.SerializeObject(data, Formatting.Indented));
+            Directory.CreateDirectory(Path.GetDirectoryName(DataFile));
+            File.WriteAllText(DataFile, data.ToXml().ToString());
+
+            Log.LogMessage(
+                MessageImportance.High,
+                $"Writing package usage data... done. Took {DateTime.Now - startTime}");
 
             return !Log.HasLoggedErrors;
         }
 
-        private static bool IsIdentityEqual(string identity, string other)
+        private static string[] ReadRidsFromRuntimeJson(string path)
         {
-            return string.Equals(identity, other, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool IsIdentityInText(string identity, string text)
-        {
-            return text.IndexOf(identity, StringComparison.OrdinalIgnoreCase) != -1;
+            var root = JObject.Parse(File.ReadAllText(path));
+            return root["runtimes"]
+                .Values<JProperty>()
+                .Select(o => o.Name)
+                .ToArray();
         }
     }
 }

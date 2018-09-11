@@ -129,15 +129,6 @@ do
     fi
 done
 
-if [ -z "${SOURCE_BUILD_SKIP_PREBUILT_REPORT:-}" ]; then
-    echo 'Creating prebuilt package usage report...'
-    (
-        # Don't clean up (or ask to clean up).
-        export SOURCE_BUILD_SKIP_SUBMODULE_CHECK=1
-        "$SCRIPT_ROOT/build.sh" /nologo /t:ReportTarballPrebuiltUsage /p:TarballPrebuiltPackagesPath="$FULL_TARBALL_ROOT/prebuilt/nuget-packages/"
-    )
-fi
-
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
 
 ROSLYN_TOOLS_PACKAGE='RoslynTools.RepoToolset'

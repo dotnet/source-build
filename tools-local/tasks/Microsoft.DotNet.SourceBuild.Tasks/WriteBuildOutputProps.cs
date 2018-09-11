@@ -7,6 +7,7 @@ using Microsoft.Build.Utilities;
 using NuGet.Packaging;
 using NuGet.Packaging.Core;
 using NuGet.Versioning;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,11 +20,20 @@ namespace Microsoft.DotNet.Build.Tasks
     {
         private static readonly Regex InvalidElementNameCharRegex = new Regex(@"(^|[^A-Za-z0-9])(?<FirstPartChar>.)");
 
+        public const string CreationTimePropertyName = "BuildOutputPropsCreationTime";
+
         [Required]
         public ITaskItem[] NuGetPackages { get; set; }
 
         [Required]
         public string OutputPath { get; set; }
+
+        /// <summary>
+        /// Adds a second PropertyGroup to the output XML containing a property with the time of
+        /// creation in UTC DateTime Ticks. This can be used to track creation time in situations
+        /// where file metadata isn't reliable or preserved.
+        /// </summary>
+        public bool IncludeCreationTimeProperty { get; set; }
 
         /// <summary>
         /// Package id/versions to add to the build output props, which may not exist as nupkgs.
@@ -90,6 +100,12 @@ namespace Microsoft.DotNet.Build.Tasks
                     sw.WriteLine($"    <{additionalAsset.Name}>{additionalAsset.Version}</{additionalAsset.Name}>");
                 }
                 sw.WriteLine(@"  </PropertyGroup>");
+                if (IncludeCreationTimeProperty)
+                {
+                    sw.WriteLine(@"  <PropertyGroup>");
+                    sw.WriteLine($@"    <{CreationTimePropertyName}>{DateTime.UtcNow.Ticks}</{CreationTimePropertyName}>");
+                    sw.WriteLine(@"  </PropertyGroup>");
+                }
                 sw.WriteLine(@"</Project>");
             }
 

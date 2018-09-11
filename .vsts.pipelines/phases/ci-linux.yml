@@ -84,6 +84,7 @@ phases:
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /p:ArchiveDownloadedPackages=true \
         /p:Configuration=$(buildConfiguration) \
+        /p:ContinueOnPrebuiltBaselineError=$(buildOfflineTarball) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
         $(buildLoggingOptions)
     displayName: Build source-build
