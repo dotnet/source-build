@@ -1,0 +1,24 @@
+From 81f7e530100315ccd2d18048c45772d035bd5eee Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 12 Sep 2018 18:27:49 +0000
+Subject: [PATCH] Conditionally remove uap from TargetFramework
+
+---
+ .../Microsoft.TestPlatform.PlatformAbstractions.csproj                   | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
+index b89400e..31ba348 100644
+--- a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
++++ b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
+@@ -7,6 +7,7 @@
+   <PropertyGroup>
+     <AssemblyName>Microsoft.TestPlatform.PlatformAbstractions</AssemblyName>
+     <TargetFrameworks>netstandard1.0;netcoreapp1.0;net451;uap10.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard1.0;netcoreapp1.0;net451</TargetFrameworks>
+     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+     <EnableCodeAnalysis>true</EnableCodeAnalysis>
+   </PropertyGroup>
+-- 
+1.8.3.1
+

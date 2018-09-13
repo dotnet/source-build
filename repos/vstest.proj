@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -DotnetBuildFromSource -DotnetCoreSdkDir $(DotNetCliToolDir) -c $(Configuration) -r $(TargetRid) -v 15.3.0 -vs preview-20170628-02</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -DotnetBuildFromSource -DotnetCoreSdkDir $(DotNetCliToolDir) -c $(Configuration) -r $(TargetRid) -v 15.9.0 -vs preview-20180807-05</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
