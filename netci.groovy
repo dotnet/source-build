@@ -118,8 +118,14 @@ def addPushJob(String project, String branch, String os, String configuration, b
 }
 
 ["Ubuntu16.04", "Fedora24", "Debian8.4", "RHEL7.2", "CentOS7.1", "OSX10.12"].each { os ->
+  // Release non-portable run by default
   addPullRequestJob(project, branch, os, "Release", false, true);
+  // Debug non-portable can be triggered
   addPullRequestJob(project, branch, os, "Debug", false, false);
+  // Release portable can be triggered
+  addPullRequestJob(project, branch, os, "Release", true, false);
+  // Debug portable can be triggered
+  addPullRequestJob(project, branch, os, "Debug", true, false);
 };
 
 // Per push, run all the jobs
