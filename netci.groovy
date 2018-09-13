@@ -139,6 +139,12 @@ def addPushJob(String project, String branch, String os, String configuration, b
 
         def shortJobName = "${os}_Tarball_${configuration}";
         def contextString = "${os} Tarball ${configuration}";
+
+        if (portable) {
+          shortJobName += "_Portable"
+          contextString += " Portable"
+        }
+
         def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
         def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
@@ -188,6 +194,12 @@ def addPushJob(String project, String branch, String os, String configuration, b
 
         def shortJobName = "${os}_Unshared_${configuration}";
         def contextString = "${os} Unshared ${configuration}";
+
+        if (portable) {
+          shortJobName += "_Portable"
+          contextString += " Portable"
+        }
+
         def triggerPhrase = "(?i).*test\\W+${contextString}.*";
         def imageName = getDockerImageForOs(os);
 
