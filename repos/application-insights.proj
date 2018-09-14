@@ -11,12 +11,15 @@
 
   <Target Name="RepoBuild">
     <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) /bl:restore.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
     <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) /bl:build.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
     <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) /bl:pack.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 </Project>

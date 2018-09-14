@@ -15,7 +15,8 @@
 
   <Target Name="RepoBuild">
     <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag /bl $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 </Project>
 

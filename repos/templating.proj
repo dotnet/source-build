@@ -27,7 +27,8 @@
 
   <Target Name="RepoBuild">
     <Exec Command="$(DotnetToolCommand) msbuild /t:Build @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj /bl $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
     <ItemGroup>

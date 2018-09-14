@@ -28,13 +28,16 @@
           DependsOnTargets="InitSubmodules">
 
     <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:RestoreXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /bl:restore.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
     <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:BuildXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /bl:build.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
     <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:PackXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed /bl:pack.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 
   <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
