@@ -13,7 +13,8 @@ def addArchival(def job) {
   // Grab these logs from all of those locations.
   [ "", "source-build/", "tarball-output/"].each { logRoot ->
     archivalSettings.addFiles("${logRoot}bin/logs/*")
-    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/*")
+    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/conflict-report/**/*")
     archivalSettings.addFiles("${logRoot}src/**/*.binlog")
     archivalSettings.addFiles("${logRoot}src/**/*.log")
     archivalSettings.addFiles("${logRoot}init-tools.log")
