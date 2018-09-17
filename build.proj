@@ -27,23 +27,20 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
-  <!-- After building offline, create a prebuilt usage report. -->
-  <Target Name="ReportPrebuiltUsageAfterOfflineBuild"
+  <!-- After building, generate a prebuilt usage report. -->
+  <Target Name="ReportPrebuiltUsage"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' == 'true' and '$(SkipReportPrebuiltUsageAfterOfflineBuild)' != 'true'">
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
-  </Target>
-
-  <!-- After generating a tarball, check why/where the online build downloaded prebuilts. -->
-  <Target Name="ReportTarballPrebuiltUsage">
+          Condition="'$(SkipReportPrebuiltUsage)' != 'true'">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
   </Target>
 
   <!--
-    Dev scenario: regenerate a prebuilt-report. This makes it easy to add data to an existing
-    prebuilt report without performing another full build.
+    Dev scenario: rewrite a prebuilt-report. This makes it easy to add data to an existing
+    prebuilt report without performing another full build. This doesn't reevalutate which packages
+    are prebuilts or search the projects: it uses the existing usage.xml file to generate report
+    XMLs based on the info put in bin/.
   -->
-  <Target Name="CreatePrebuiltUsageReport">
+  <Target Name="RewritePrebuiltUsageReport">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
   </Target>
 

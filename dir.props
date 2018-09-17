@@ -44,7 +44,8 @@
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
-    <TaskDirectory>$(ProjectDir)tools-local/tasks/</TaskDirectory>
+    <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
+    <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</TasksBinDir>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
@@ -66,9 +67,10 @@
     <!-- Dir where git info is placed inside the tarball. -->
     <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
     <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
-    <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.json</PackageReportDataFile>
+    <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
+    <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->
