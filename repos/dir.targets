@@ -192,11 +192,13 @@
     <PropertyGroup>
       <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
       <_ReportDataFile>$(_ReportDir)usage.xml</_ReportDataFile>
+      <_ProjectAssetsJsonArchiveFile>$(_ReportDir)all-project-assets-json-files.zip</_ProjectAssetsJsonArchiveFile>
     </PropertyGroup>
 
     <WritePackageUsageData NuGetPackageInfos="@(ConflictingPackageInfos)"
                            RootDir="$(ProjectDir)"
-                           DataFile="$(_ReportDataFile)" />
+                           DataFile="$(_ReportDataFile)"
+                           ProjectAssetsJsonArchiveFile="$(_ProjectAssetsJsonArchiveFile)" />
 
     <WriteUsageReports DataFile="$(_ReportDataFile)"
                        OutputDirectory="$(_ReportDir)" />
@@ -385,7 +387,8 @@
       TargetRid="$(TargetRid)"
       ProjectDirectories="@(ProjectDirectories)"
       RootDir="$(ProjectDir)"
-      DataFile="$(PackageReportDataFile)" />
+      DataFile="$(PackageReportDataFile)"
+      ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
   </Target>
 
   <Target Name="GetAllProjectDirectories">

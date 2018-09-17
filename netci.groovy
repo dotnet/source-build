@@ -59,11 +59,11 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     steps {
       if (os == "Windows_NT") {
         batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:FailOnPrebuiltBaselineError=true /p:Configuration=${configuration} ${loggingOptions}")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
       }
       else {
         shell("git submodule update --init --recursive");
-        shell("./build.sh /p:FailOnPrebuiltBaselineError=true /p:Configuration=${configuration} ${loggingOptions}");
+        shell("./build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
         smokeTestExcludes = "";
         if (os == "Fedora24" || os == "OSX10.12") {
           // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
@@ -133,7 +133,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
             shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
 
-            shell("cd ./tarball-output;./build.sh /p:FailOnPrebuiltBaselineError=true /p:Configuration=${configuration} ${loggingOptions}")
+            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
             shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
         }
       }
