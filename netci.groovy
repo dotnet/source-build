@@ -15,6 +15,7 @@ def addArchival(def job) {
     archivalSettings.addFiles("${logRoot}bin/logs/*")
     archivalSettings.addFiles("${logRoot}bin/prebuilt-report/**/*")
     archivalSettings.addFiles("${logRoot}bin/conflict-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/msbuild-debug/**/*")
     archivalSettings.addFiles("${logRoot}src/**/*.binlog")
     archivalSettings.addFiles("${logRoot}src/**/*.log")
     archivalSettings.addFiles("${logRoot}init-tools.log")
