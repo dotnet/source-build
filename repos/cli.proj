@@ -2,7 +2,15 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
+    <!-- CLI will always use the portable core-setup build for OSX anyway.  Turning this on for
+         an OSX build will make it try to use linux-x64 instead of osx-64.  -->
+    <UsePortableLinuxSharedFramework>$(PortableBuild)</UsePortableLinuxSharedFramework>
+    <UsePortableLinuxSharedFramework Condition="'$(TargetOS)' == 'OSX'">false</UsePortableLinuxSharedFramework>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+
+    <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
+
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
     <!--
@@ -20,7 +28,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:SkipBuildingInstallers=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeNuGetPackageArchive=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeAdditionalSharedFrameworks=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=$(UsePortableLinuxSharedFramework)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
@@ -32,9 +40,7 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
-    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
-    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
+    <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(OverrideTargetRid)</PackageOutputRid>
     <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
