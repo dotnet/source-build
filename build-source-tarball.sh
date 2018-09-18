@@ -110,6 +110,7 @@ rm -rf $TARBALL_ROOT/Tools/configuration/configuration.props
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
+mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
@@ -127,6 +128,12 @@ do
     if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
     fi
+done
+
+for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg')
+do
+    echo "copying $built_package to $TARBALL_ROOT/prebuilt/source-built/"
+    cp $built_package $TARBALL_ROOT/prebuilt/source-built/
 done
 
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
