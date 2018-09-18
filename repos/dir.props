@@ -56,6 +56,9 @@
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
 
+    <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
+    <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
+
     <!-- Turn off node reuse for source build because repos use conflicting versions 
          of compilers which cause assembly load errors.  
          See https://github.com/dotnet/source-build/issues/541 -->

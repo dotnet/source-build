@@ -13,7 +13,9 @@ def addArchival(def job) {
   // Grab these logs from all of those locations.
   [ "", "source-build/", "tarball-output/"].each { logRoot ->
     archivalSettings.addFiles("${logRoot}bin/logs/*")
-    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/*")
+    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/conflict-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/msbuild-debug/**/*")
     archivalSettings.addFiles("${logRoot}src/**/*.binlog")
     archivalSettings.addFiles("${logRoot}src/**/*.log")
     archivalSettings.addFiles("${logRoot}init-tools.log")
@@ -58,11 +60,11 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration)
     steps {
       if (os == "Windows_NT") {
         batchFile("git submodule update --init --recursive");
-        batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
+        batchFile(".\\build.cmd /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
       }
       else {
         shell("git submodule update --init --recursive");
-        shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
+        shell("./build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
         smokeTestExcludes = "";
         if (os == "Fedora24" || os == "OSX10.12") {
           // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
@@ -132,7 +134,7 @@ def addPushJob(String project, String branch, String os, String configuration)
             shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
             shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
 
-            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
+            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
             shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
         }
       }
@@ -178,13 +180,13 @@ def addPushJob(String project, String branch, String os, String configuration)
         steps{
             shell("cd ./source-build;git submodule update --init --recursive");
             // First build the product itself
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:ContinueOnPrebuiltBaselineError=true ${loggingOptions}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
             // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
             shell("mkdir tarball-output");
             // now build the tarball
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
             // now build from the tarball offline and without access to the regular non-tarball build
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
+            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
             // finally, run a smoke-test on the result
             shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
         }
