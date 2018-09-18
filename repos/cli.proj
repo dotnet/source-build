@@ -9,7 +9,7 @@
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
 
-    <RuntimeArg>--runtime-id $(TargetRid)</RuntimeArg>
+    <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
 
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
