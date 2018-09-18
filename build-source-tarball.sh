@@ -99,6 +99,13 @@ do
     fi
 done
 
+echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
+
+for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg')
+do
+    cp $built_package $TARBALL_ROOT/prebuilt/source-built/
+done
+
 if [ -z "${SOURCE_BUILD_SKIP_PREBUILT_REPORT:-}" ]; then
     echo 'Creating prebuilt package usage report...'
     (
