@@ -1,0 +1,197 @@
+From d438b2ff6ae4b90424267f8c46f72d25349af76d Mon Sep 17 00:00:00 2001
+From: Eugene Rozenfeld <erozen@microsoft.com>
+Date: Tue, 4 Apr 2017 23:27:47 -0700
+Subject: [PATCH] Add an option to use reflection heuristics during marking
+ step.
+
+This change adds a -h option that can specify heuristics for keeping
+types/methods/fields that may be needed for reflection. Three simple
+and coarse-grained heuristic options are added initially (all are off by default):
+
+1. "LdtokenTypeMethods": mark all methods of types whose token is used
+in an ldtoken instruction.
+2. "LdtokenTypeFields": mark all fields of types whose token is used
+in an ldtoken instruction.
+3. "InstanceConstructors": mark all instance constructors in types
+where an instance member has been marked but none of the instance
+constructors have been marked. (The type is likely to be instantiated via CreateInstance).
+
+When -h is specified MarkStep is replaced with MarkStepWithReflectionHeuristics that
+derives from MarkStep. The names of heuristics are specified in a comma-separated list.
+More heuristics will be added over time and any subset of them can be used for a particular
+linker invocation.
+
+https://github.com/dotnet/source-build/issues/777 tracks removing this patch.
+---
+ .../MarkStepWithReflectionHeuristics.cs       | 98 +++++++++++++++++++
+ linker/Linker/Driver.cs                       | 22 +++++
+ linker/Mono.Linker.csproj                     |  1 +
+ 3 files changed, 121 insertions(+)
+ create mode 100644 linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
+
+diff --git a/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs b/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
+new file mode 100644
+index 0000000..3cb98b1
+--- /dev/null
++++ b/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
+@@ -0,0 +1,98 @@
++using System;
++using System.Collections;
++using System.Collections.Generic;
++
++using Mono.Cecil;
++using Mono.Cecil.Cil;
++
++namespace Mono.Linker.Steps {
++
++	public class MarkStepWithReflectionHeuristics : MarkStep {
++
++		protected ICollection<string> _reflectionHeuristics;
++
++		public MarkStepWithReflectionHeuristics (ICollection<string> reflectionHeuristics)
++		{
++			_reflectionHeuristics = reflectionHeuristics;
++		}
++
++		protected override void MarkInstruction (Instruction instruction)
++		{
++			base.MarkInstruction (instruction);
++
++			if (instruction.OpCode == OpCodes.Ldtoken) {
++				object token = instruction.Operand;
++				if (token is TypeReference) {
++					TypeDefinition type = ResolveTypeDefinition (GetOriginalType (((TypeReference) token)));
++					if (type != null) {
++						if (_reflectionHeuristics.Contains ("LdtokenTypeMethods")) {
++							MarkMethods (type);
++						}
++						if (_reflectionHeuristics.Contains  ("LdtokenTypeFields")) {
++							MarkFields (type, includeStatic: true);
++						}
++					}
++				}
++			}
++		}
++
++		protected override void DoAdditionalProcessing()
++		{
++			if (_reflectionHeuristics.Contains ("InstanceConstructors")) {
++				ProcessConstructors ();
++			}
++		}
++
++		void ProcessConstructors()
++		{
++			foreach (AssemblyDefinition assembly in _context.GetAssemblies ()) {
++				foreach (TypeDefinition type in assembly.MainModule.Types) {
++					ProcessConstructors (type);
++				}
++			}
++		}
++
++		void ProcessConstructors(TypeDefinition type)
++		{
++			if (Annotations.IsMarked (type)) {
++
++				bool hasMarkedConstructors = false;
++				bool hasMarkedInstanceMember = false;
++				foreach (var method in type.Methods) {
++					if (Annotations.IsMarked (method)) {
++						if (!method.IsStatic) {
++							hasMarkedInstanceMember = true;
++						}
++
++						if (IsInstanceConstructor (method)) {
++							hasMarkedConstructors = true;
++						}
++
++						if (hasMarkedInstanceMember && hasMarkedConstructors) {
++							break;
++						}
++					}
++				}
++
++				if (!hasMarkedConstructors) {
++					if (!hasMarkedInstanceMember) {
++						foreach (var field in type.Fields) {
++							if (!field.IsStatic && Annotations.IsMarked (field)) {
++								hasMarkedInstanceMember = true;
++								break;
++							}
++						}
++					}
++
++					if (hasMarkedInstanceMember) {
++						MarkMethodsIf (type.Methods, IsInstanceConstructor);
++					}
++				}
++
++				foreach (var nestedType in type.NestedTypes) {
++					ProcessConstructors (nestedType);
++				}
++			}
++		}
++	}
++}
+diff --git a/linker/Linker/Driver.cs b/linker/Linker/Driver.cs
+index 8a380db..0d6a9f6 100644
+--- a/linker/Linker/Driver.cs
++++ b/linker/Linker/Driver.cs
+@@ -232,6 +232,10 @@ namespace Mono.Linker {
+ 					case 'v':
+ 						context.KeepMembersForDebugger = bool.Parse (GetParam ());
+ 						break;
++					case 'h':
++						ICollection<string> reflectionHeuristics = ParseReflectionHeuristics (GetParam ());
++						p.ReplaceStep (typeof (MarkStep), new MarkStepWithReflectionHeuristics (reflectionHeuristics));
++						break;
+ 					default:
+ 						Usage ("Unknown option: `" + token [1] + "'");
+ 						break;
+@@ -340,6 +344,15 @@ namespace Mono.Linker {
+ 			return assemblies;
+ 		}
+ 
++		protected static ICollection<string> ParseReflectionHeuristics(string str)
++		{
++			HashSet<string> heuristics = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
++			string[] parts = str.Split (',');
++			foreach (string part in parts)
++				heuristics.Add (part);
++
++			return heuristics;
++		}
+ 
+ 		AssemblyAction ParseAssemblyAction (string s)
+ 		{
+@@ -399,6 +412,15 @@ namespace Mono.Linker {
+ 			Console.WriteLine ("   -b                  Generate debug symbols for each linked module (true or false)");
+ 			Console.WriteLine ("   -g                  Generate a new unique guid for each linked module (true or false)");
+ 			Console.WriteLine ("   -v                  Keep members needed by debugger (true or false)");
++			Console.WriteLine ("   -h                  List of reflection heuristics separated with a comma.");
++			Console.WriteLine ("                       Supported heuristics:");
++			Console.WriteLine ("                         LdtokenTypeMethods:   mark all methods of types whose token is used");
++			Console.WriteLine ("                                               in an ldtoken instruction");
++			Console.WriteLine ("                         LdtokenTypeFields:    mark all fields of types whose token is used");
++			Console.WriteLine ("                                               in an ldtoken instruction");
++			Console.WriteLine ("                         InstanceConstructors: mark all instance constructors in types");
++			Console.WriteLine ("                                               where an instance member has been marked but");
++			Console.WriteLine ("                                               none of the instance constructors have been marked");
+ 			Console.WriteLine ("   -l                  List of i18n assemblies to copy to the output directory");
+ 			Console.WriteLine ("                         separated with a comma: none,all,cjk,mideast,other,rare,west");
+ 			Console.WriteLine ("                         default is all");
+diff --git a/linker/Mono.Linker.csproj b/linker/Mono.Linker.csproj
+index d328491..4e8f143 100644
+--- a/linker/Mono.Linker.csproj
++++ b/linker/Mono.Linker.csproj
+@@ -70,6 +70,7 @@
+     <Compile Include="Linker.Steps\IStep.cs" />
+     <Compile Include="Linker.Steps\LoadReferencesStep.cs" />
+     <Compile Include="Linker.Steps\MarkStep.cs" />
++    <Compile Include="Linker.Steps\MarkStepWithReflectionHeuristics.cs" />
+     <Compile Include="Linker.Steps\OutputStep.cs" />
+     <Compile Include="Linker.Steps\ResolveFromXApiStep.cs" />
+     <Compile Include="Linker.Steps\ResolveFromAssemblyStep.cs" />
+-- 
+2.17.1.windows.2
+
