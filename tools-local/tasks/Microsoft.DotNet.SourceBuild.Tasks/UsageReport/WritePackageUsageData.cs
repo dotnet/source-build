@@ -11,6 +11,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Task = Microsoft.Build.Utilities.Task;
@@ -68,6 +69,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         [Required]
         public string DataFile { get; set; }
 
+        /// <summary>
+        /// If passed, the path of the archive file to generate that includes a copy of all
+        /// project.asset.json files found.
+        /// </summary>
+        public string ProjectAssetsJsonArchiveFile { get; set; }
+
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
@@ -123,6 +130,35 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 RootDir,
                 "project.assets.json",
                 SearchOption.AllDirectories);
+
+            if (!string.IsNullOrEmpty(ProjectAssetsJsonArchiveFile))
+            {
+                Log.LogMessage(MessageImportance.Low, "Archiving project.assets.json files...");
+
+                Directory.CreateDirectory(Path.GetDirectoryName(ProjectAssetsJsonArchiveFile));
+
+                using (var projectAssetArchive = new ZipArchive(
+                    File.Open(
+                        ProjectAssetsJsonArchiveFile,
+                        FileMode.Create,
+                        FileAccess.ReadWrite),
+                    ZipArchiveMode.Create))
+                {
+                    // Only one entry can be open at a time, so don't do this during the Parallel
+                    // ForEach later.
+                    foreach (var file in assetFiles)
+                    {
+                        string relativePath = file.Substring(RootDir.Length);
+                        using (var stream = File.OpenRead(file))
+                        using (Stream entryWriter = projectAssetArchive
+                            .CreateEntry(relativePath, CompressionLevel.Optimal)
+                            .Open())
+                        {
+                            stream.CopyTo(entryWriter);
+                        }
+                    }
+                }
+            }
 
             Log.LogMessage(MessageImportance.Low, "Reading usage info...");
 
