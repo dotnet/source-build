@@ -1,28 +1,29 @@
-From a0c69929154c148ccbbf5e833c830d3be512df68 Mon Sep 17 00:00:00 2001
+From 18a85b215bacb7ca8fe0d4cdae3cd591b8899cbc Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 12 Jun 2018 18:14:46 -0500
 Subject: [PATCH] Add TargetingPack and enable net46 builds for source-build.
 
+https://github.com/NuGet/NuGet.Client/pull/2287 is required to remove this patch.
 ---
- NuGet.Config                                                          | 1 +
- build/common.project.props                                            | 4 ++++
- src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj          | 1 -
- src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj   | 1 -
- src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj             | 1 -
- src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj | 1 -
- src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj                   | 1 -
- src/NuGet.Core/NuGet.Common/NuGet.Common.csproj                       | 1 -
- src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj         | 1 -
- .../NuGet.DependencyResolver.Core.csproj                              | 1 -
- src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj               | 1 -
- src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj           | 1 -
- src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj       | 1 -
- src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj                 | 3 +--
- src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj           | 1 -
- src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj                   | 1 -
- src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj                   | 1 -
- src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj               | 1 -
- 18 files changed, 6 insertions(+), 17 deletions(-)
+ NuGet.Config                                                  | 1 +
+ build/common.project.props                                    | 4 ++++
+ src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj  | 1 -
+ .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj      | 1 -
+ src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj     | 1 -
+ .../NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj    | 1 -
+ src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj           | 1 -
+ src/NuGet.Core/NuGet.Common/NuGet.Common.csproj               | 1 -
+ src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj | 1 -
+ .../NuGet.DependencyResolver.Core.csproj                      | 1 -
+ src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj       | 1 -
+ src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj   | 1 -
+ .../NuGet.Packaging.Core/NuGet.Packaging.Core.csproj          | 1 -
+ src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj         | 1 -
+ src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj   | 1 -
+ src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj           | 1 -
+ src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj           | 1 -
+ src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj       | 1 -
+ 18 files changed, 5 insertions(+), 16 deletions(-)
 
 diff --git a/NuGet.Config b/NuGet.Config
 index 9b7d2ae0a..fc4c20dd9 100644
@@ -50,10 +51,10 @@ index e77304739..fa513587a 100644
 +
  </Project>
 diff --git a/src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj b/src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj
-index 3b0f0878f..1fb72a408 100644
+index be318015b..71dea6403 100644
 --- a/src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj
 +++ b/src/NuGet.Clients/NuGet.Credentials/NuGet.Credentials.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -62,10 +63,10 @@ index 3b0f0878f..1fb72a408 100644
      <Shipping>true</Shipping>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
-index 143c460dc..15dee5c95 100644
+index 594a391d0..6c54f5ff2 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -74,10 +75,10 @@ index 143c460dc..15dee5c95 100644
      <AssemblyName>NuGet.Build.Tasks.Pack</AssemblyName>
      <RootNamespace>$(AssemblyName)</RootNamespace>
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
-index 930c76c2b..1f005b8d6 100644
+index f2668829f..fd46961f9 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -86,34 +87,34 @@ index 930c76c2b..1f005b8d6 100644
      <Shipping>true</Shipping>
      <IncludeInVSIX>true</IncludeInVSIX>
 diff --git a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
-index d4c24c328..aec028cda 100644
+index 6391a8c27..b4fdc4d59 100644
 --- a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
 +++ b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>NuGet wrapper for dotnet.exe</Description>
      <TargetFrameworks>netcoreapp1.0;net46</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">netcoreapp1.0</TargetFrameworks>
      <RuntimeIdentifier Condition=" '$(TargetFramework)' == 'net46' ">win7-x86</RuntimeIdentifier>
-     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <NoWarn>$(NoWarn);CS1591;CS1701</NoWarn>
      <OutputType>Exe</OutputType>
 diff --git a/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj b/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
-index ea84ac4a6..7ae9a3a18 100644
+index 82731c899..076634be5 100644
 --- a/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
 +++ b/src/NuGet.Core/NuGet.Commands/NuGet.Commands.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>Complete commands common to command-line and GUI NuGet clients</Description>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">netstandard1.6</TargetFrameworks>
      <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573;CS1584;CS1658</NoWarn>
-     <PackProject>true</PackProject>
+     <NoWarn Condition="'$(TargetFramework)' == 'netstandard1.6'">$(NoWarn);CS1998</NoWarn>
 diff --git a/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj b/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
-index 83b6e2c7d..a59e91121 100644
+index fa9f2509b..3e70cdfaf 100644
 --- a/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
 +++ b/src/NuGet.Core/NuGet.Common/NuGet.Common.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -122,10 +123,10 @@ index 83b6e2c7d..a59e91121 100644
      <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
-index 1771bf6e6..3acb11f53 100644
+index afc4c651d..b29b620bb 100644
 --- a/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
 +++ b/src/NuGet.Core/NuGet.Configuration/NuGet.Configuration.csproj
-@@ -5,7 +5,6 @@
+@@ -6,7 +6,6 @@
      <Description>NuGet's client configuration settings implementation.</Description>
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -134,10 +135,10 @@ index 1771bf6e6..3acb11f53 100644
      <PackProject>true</PackProject>
      <Shipping>true</Shipping>
 diff --git a/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj b/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
-index b6ee4551e..2b2dc288c 100644
+index 212b01511..e22711052 100644
 --- a/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
 +++ b/src/NuGet.Core/NuGet.DependencyResolver.Core/NuGet.DependencyResolver.Core.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -146,10 +147,10 @@ index b6ee4551e..2b2dc288c 100644
      <NoWarn>$(NoWarn);CS1591;CS1574</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
-index 7bae6915c..2dd1d0699 100644
+index 65c15d4fb..ec76820e8 100644
 --- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 +++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>The understanding of target frameworks for NuGet.Packaging</Description>
      <TargetFrameworks>netstandard1.6;net46;net40</TargetFrameworks>
@@ -158,10 +159,10 @@ index 7bae6915c..2dd1d0699 100644
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
      <LangVersion>5</LangVersion>
 diff --git a/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj b/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
-index 3f37b015d..97a613aaf 100644
+index b663de55b..430541f8c 100644
 --- a/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
 +++ b/src/NuGet.Core/NuGet.LibraryModel/NuGet.LibraryModel.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -170,10 +171,10 @@ index 3f37b015d..97a613aaf 100644
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj b/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
-index aa625dd14..4d2981e93 100644
+index 8b737e776..126c53666 100644
 --- a/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
 +++ b/src/NuGet.Core/NuGet.Packaging.Core/NuGet.Packaging.Core.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>The core data structures for NuGet.Packaging</Description>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -182,29 +183,22 @@ index aa625dd14..4d2981e93 100644
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj b/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
-index dcbf1ad24..149e1c7e5 100644
+index 6be3f658b..7bab06e1b 100644
 --- a/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
 +++ b/src/NuGet.Core/NuGet.Packaging/NuGet.Packaging.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>NuGet's implementation for reading nupkg package and nuspec package specification files.</Description>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">netstandard1.6</TargetFrameworks>
      <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573;CS1572</NoWarn>
-     <PackProject>true</PackProject>
-@@ -83,4 +82,4 @@
-   </ItemGroup>
-   
-   <Import Project="$(BuildCommonDirectory)common.targets" />
--</Project>
-\ No newline at end of file
-+</Project>
+     <NoWarn Condition="'$(TargetFramework)' == 'netstandard1.6'">$(NoWarn);CS0414</NoWarn>
 diff --git a/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj b/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
-index a731b35e1..0d8d59bf3 100644
+index b8e950897..4b28c36d0 100644
 --- a/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
 +++ b/src/NuGet.Core/NuGet.ProjectModel/NuGet.ProjectModel.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -213,10 +207,10 @@ index a731b35e1..0d8d59bf3 100644
      <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj b/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
-index 209895edd..b54cf27a3 100644
+index 3f5eb9335..90df11544 100644
 --- a/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
 +++ b/src/NuGet.Core/NuGet.Protocol/NuGet.Protocol.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -225,10 +219,10 @@ index 209895edd..b54cf27a3 100644
      <NoWarn>$(NoWarn);CS1591;CS1573;CS0012</NoWarn>
      <PackageTags>nuget protocol</PackageTags>
 diff --git a/src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj b/src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj
-index a05b2f1b3..c3192d93a 100644
+index 9d14c11cc..a9c88818e 100644
 --- a/src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj
 +++ b/src/NuGet.Core/NuGet.Resolver/NuGet.Resolver.csproj
-@@ -4,7 +4,6 @@
+@@ -5,7 +5,6 @@
    <PropertyGroup>
      <Description>NuGet's dependency resolver within the NuGet.Packaging package</Description>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -237,10 +231,10 @@ index a05b2f1b3..c3192d93a 100644
      <NoWarn>$(NoWarn);CS1591;CS1573</NoWarn>
      <PackProject>true</PackProject>
 diff --git a/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj b/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
-index f55224948..4954e4a3f 100644
+index e39d6422a..5da35299d 100644
 --- a/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
 +++ b/src/NuGet.Core/NuGet.Versioning/NuGet.Versioning.csproj
-@@ -3,7 +3,6 @@
+@@ -4,7 +4,6 @@
  
    <PropertyGroup>
      <TargetFrameworks>netstandard1.6;net46</TargetFrameworks>
@@ -249,5 +243,5 @@ index f55224948..4954e4a3f 100644
      <Description>NuGet's implementation of Semantic Versioning.</Description>
      <PackageTags>semver;semantic versioning</PackageTags>
 -- 
-2.14.1
+2.17.1.windows.2
 

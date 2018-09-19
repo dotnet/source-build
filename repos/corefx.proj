@@ -2,15 +2,22 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false /p:BuildAllPackages=true</BuildCommand>
+    <!-- OSX core-setup build always uses the portable RID, so override it -->
+    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX'">true</OverridePortableBuild>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+
+    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(OverridePortableBuild) -BuildTests=false -PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildAllPackages=true /bl</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <OfficialBuildId>20180629-01</OfficialBuildId>
+    <OfficialBuildId>20180814-02</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
   </ItemGroup>

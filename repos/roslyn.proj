@@ -5,7 +5,7 @@
   <PropertyGroup>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20180426.3</BuildNumber>
-    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /bl:build.binlog</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" />
     <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
   </ItemGroup>
@@ -58,10 +57,10 @@
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'" />
     <!-- Publish MSBuild project so that Microsoft.NETCore.Compilers.nuspec can find runtimes. -->
-    <Exec Command="$(DotnetToolCommand) msbuild %(PublishWithoutBuildingProject.Identity) /p:Configuration=$(Configuration) /p:TargetFramework=netcoreapp2.0 /t:PublishWithoutBuilding $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) msbuild %(PublishWithoutBuildingProject.Identity) /p:Configuration=$(Configuration) /p:TargetFramework=netcoreapp2.0 /t:PublishWithoutBuilding /bl:publish.binlog $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/NuGetProjectPackUtil.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) -p:NuGetPackageKind=release $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/NuGetProjectPackUtil.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) -p:NuGetPackageKind=release /bl:pack.binlog $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'...done" />
