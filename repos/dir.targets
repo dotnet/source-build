@@ -419,6 +419,16 @@
       <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
+    </ItemGroup>
+
+    <WriteUsageReports DataFile="$(PackageReportDataFile)"
+                       PackageVersionPropsSnapshots="@(PackageVersionPropsSavedSnapshotFiles)"
+                       ProdConBuildManifestFile="$(ProdConManifestFile)"
+                       PoisonedReportFile="$(PoisonedReportFile)"
+                       OutputDirectory="$(PackageReportDir)" />
+
     <PropertyGroup Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">
       <ContinueOnPrebuiltBaselineError>false</ContinueOnPrebuiltBaselineError>
       <ContinueOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' != 'true'">true</ContinueOnPrebuiltBaselineError>
@@ -430,16 +440,6 @@
       OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
       OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
-
-    <ItemGroup>
-      <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
-    </ItemGroup>
-
-    <WriteUsageReports DataFile="$(PackageReportDataFile)"
-                       PackageVersionPropsSnapshots="@(PackageVersionPropsSavedSnapshotFiles)"
-                       ProdConBuildManifestFile="$(ProdConManifestFile)"
-                       PoisonedReportFile="$(PoisonedReportFile)"
-                       OutputDirectory="$(PackageReportDir)" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

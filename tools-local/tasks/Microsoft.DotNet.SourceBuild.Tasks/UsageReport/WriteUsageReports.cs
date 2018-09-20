@@ -108,53 +108,65 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
             var report = new XElement("AnnotatedUsages");
 
-            foreach (Usage usage in data.Usages.NullAsEmpty())
-            {
-                string id = usage.PackageIdentity.Id;
-                string version = usage.PackageIdentity.Version.OriginalVersion;
-
-                string pvpIdent = WriteBuildOutputProps.GetPropertyName(id);
-
-                var sourceBuildCreator = new StringBuilder();
-                foreach (RepoOutput output in sourceBuildRepoOutputs)
+            var annotatedUsages = data.Usages.NullAsEmpty()
+                .Select(usage =>
                 {
-                    foreach (PackageVersionPropsElement p in output.Built)
+                    string id = usage.PackageIdentity.Id;
+                    string version = usage.PackageIdentity.Version.OriginalVersion;
+
+                    string pvpIdent = WriteBuildOutputProps.GetPropertyName(id);
+
+                    var sourceBuildCreator = new StringBuilder();
+                    foreach (RepoOutput output in sourceBuildRepoOutputs)
                     {
-                        if (p.Name.Equals(pvpIdent, StringComparison.OrdinalIgnoreCase))
+                        foreach (PackageVersionPropsElement p in output.Built)
                         {
-                            if (sourceBuildCreator.Length != 0)
+                            if (p.Name.Equals(pvpIdent, StringComparison.OrdinalIgnoreCase))
                             {
+                                if (sourceBuildCreator.Length != 0)
+                                {
+                                    sourceBuildCreator.Append(" ");
+                                }
+                                sourceBuildCreator.Append(output.Repo);
                                 sourceBuildCreator.Append(" ");
+                                sourceBuildCreator.Append(p.Name);
+                                sourceBuildCreator.Append("/");
+                                sourceBuildCreator.Append(p.Version);
                             }
-                            sourceBuildCreator.Append(output.Repo);
-                            sourceBuildCreator.Append(" ");
-                            sourceBuildCreator.Append(p.Name);
-                            sourceBuildCreator.Append("/");
-                            sourceBuildCreator.Append(p.Version);
                         }
                     }
-                }
 
-                prodConPackageOrigin.TryGetValue(id, out string prodConCreator);
+                    prodConPackageOrigin.TryGetValue(id, out string prodConCreator);
 
-                var annotated = new AnnotatedUsage
-                {
-                    Usage = usage,
+                    return new AnnotatedUsage
+                    {
+                        Usage = usage,
 
-                    Project = data.ProjectDirectories
-                        ?.FirstOrDefault(p => usage.AssetsFile?.StartsWith(p) ?? false),
+                        Project = data.ProjectDirectories
+                            ?.FirstOrDefault(p => usage.AssetsFile?.StartsWith(p) ?? false),
 
-                    SourceBuildPackageIdCreator = sourceBuildCreator.Length == 0
-                        ? null
-                        : sourceBuildCreator.ToString(),
+                        SourceBuildPackageIdCreator = sourceBuildCreator.Length == 0
+                            ? null
+                            : sourceBuildCreator.ToString(),
 
-                    ProdConPackageIdCreator = prodConCreator,
+                        ProdConPackageIdCreator = prodConCreator,
 
-                    EndsUpInOutput = poisonNupkgFilenames.Contains($"{id}.{version}")
-                };
+                        TestProjectByHeuristic = IsTestUsageByHeuristic(usage),
 
-                report.Add(annotated.ToXml());
+                        EndsUpInOutput = poisonNupkgFilenames.Contains($"{id}.{version}")
+                    };
+                })
+                .ToArray();
+
+            foreach (var onlyTestProjectUsage in annotatedUsages
+                .GroupBy(u => u.Usage.PackageIdentity)
+                .Where(g => g.All(u => u.TestProjectByHeuristic))
+                .SelectMany(g => g))
+            {
+                onlyTestProjectUsage.TestProjectOnlyByHeuristic = true;
             }
+
+            report.Add(annotatedUsages.Select(u => u.ToXml()));
 
             Directory.CreateDirectory(OutputDirectory);
 
@@ -231,6 +243,29 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             {
                 packageOrigin[id] = origin;
             }
+        }
+
+        public static bool IsTestUsageByHeuristic(Usage usage)
+        {
+            string[] assetsFileParts = usage.AssetsFile?.Split('/', '\\');
+
+            // If the dir name ends in Test(s), it's probably a test project.
+            // Ignore the first two segments to avoid classifying everything in "src/vstest".
+            // This also catches "test" dirs that contain many test projects.
+            if (assetsFileParts?.Skip(2).Any(p =>
+                p.EndsWith("Tests", StringComparison.OrdinalIgnoreCase) ||
+                p.EndsWith("Test", StringComparison.OrdinalIgnoreCase)) == true)
+            {
+                return true;
+            }
+
+            // CoreFX restores test dependencies during this sync project.
+            if (assetsFileParts?.Contains("XUnit.Runtime") == true)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private class RepoOutput
