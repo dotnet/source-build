@@ -9,7 +9,7 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
 
     <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(OverridePortableBuild) -BuildTests=false -PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /bl</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildAllPackages=true /bl</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>

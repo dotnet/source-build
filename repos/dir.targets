@@ -141,6 +141,11 @@
                             Condition="'$(OfflineBuild)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="previously-source-built"
+                            SourcePath="$(PrebuiltSourceBuiltPackagesPath)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
@@ -211,6 +216,7 @@
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
     </ItemGroup>
     <WriteRestoreSourceProps RestoreSources="@(_DotNetRestoreSources)"
                              OutputPath="$(RestoreSourcePropsPath)" />
