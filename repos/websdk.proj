@@ -4,7 +4,12 @@
   <PropertyGroup>
     <WebSdkVersion>2.0.0-rel-20170629-588</WebSdkVersion>
     <CoreSdkVersion>2.0.0-preview3-20170728-1</CoreSdkVersion>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) /p:SkipTests=true /bl</BuildCommand>
+
+    <BuildCommandArgs>/p:SkipTests=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+
     <PackagesOutput>$(ProjectDirectory)/bin/Release/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
   </PropertyGroup>

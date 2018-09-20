@@ -5,7 +5,16 @@
   <PropertyGroup>
     <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
     <BuildNumber>20180426.3</BuildNumber>
-    <BuildCommand>$(DotnetToolCommand) build $(ProjectDirectory)/SourceBuild.sln /p:Configuration=$(Configuration) /p:OfficialBuild=true /p:BuildNumber=$(BuildNumber) /bl:build.binlog</BuildCommand>
+
+    <BuildCommandArgs>build</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)/SourceBuild.sln</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /bl:build.binlog</BuildCommandArgs>
+
+    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -31,12 +40,19 @@
 
   <Target Name="Restore" BeforeTargets="Build">
     <PropertyGroup>
-      <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">--disable-parallel</RestoreArgs>
+      <RestoreArgs>restore</RestoreArgs>
+      <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">$(RestoreArgs) --disable-parallel</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) $(RedirectRepoOutputToLog)</RestoreArgs>
     </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) restore $(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln $(RedirectRepoOutputToLog)"
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring 'roslyn'" />
+
+    <Exec Command="$(DotnetToolCommand) $(RestoreArgs)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring 'roslyn'...done" />
   </Target>
 
   <Target Name="FixNuSpecFilePathSeparators" BeforeTargets="Build">
@@ -56,13 +72,34 @@
     </ItemGroup>
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'" />
+
     <!-- Publish MSBuild project so that Microsoft.NETCore.Compilers.nuspec can find runtimes. -->
-    <Exec Command="$(DotnetToolCommand) msbuild %(PublishWithoutBuildingProject.Identity) /p:Configuration=$(Configuration) /p:TargetFramework=netcoreapp2.0 /t:PublishWithoutBuilding /bl:publish.binlog $(RedirectRepoOutputToLog)"
+    <PropertyGroup>
+      <PublishCommandArgs>msbuild</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /p:Configuration=$(Configuration)</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /p:TargetFramework=netcoreapp2.0</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /t:PublishWithoutBuilding</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /bl:publish.binlog</PublishCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) $(PublishCommandArgs) %(PublishWithoutBuildingProject.Identity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="$(DotnetToolCommand) pack --no-build $(ProjectDirectory)/src/NuGet/NuGetProjectPackUtil.csproj -p:Configuration=$(Configuration) -p:NuspecFile=%(NuSpecFiles.Identity) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration) -p:PackageOutputPath=$(PackagesOutput) -p:NuGetPackageKind=release /bl:pack.binlog $(RedirectRepoOutputToLog)"
+
+    <PropertyGroup>
+      <PackCommandArgs>pack --no-build</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) $(ProjectDirectory)/src/NuGet/NuGetProjectPackUtil.csproj</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:Configuration=$(Configuration)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:PackageOutputPath=$(PackagesOutput)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:NuGetPackageKind=release</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /bl:pack.binlog</PackCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) $(PackCommandArgs) -p:NuspecFile=%(NuSpecFiles.Identity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)" />
+
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'...done" />
   </Target>
 
