@@ -2,7 +2,15 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
+    <!-- CLI will always use the portable core-setup build for OSX anyway.  Turning this on for
+         an OSX build will make it try to use linux-x64 instead of osx-64.  -->
+    <UsePortableLinuxSharedFramework>$(PortableBuild)</UsePortableLinuxSharedFramework>
+    <UsePortableLinuxSharedFramework Condition="'$(TargetOS)' == 'OSX'">false</UsePortableLinuxSharedFramework>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+
+    <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
+
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
     <!--

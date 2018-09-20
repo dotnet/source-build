@@ -13,7 +13,9 @@ def addArchival(def job) {
   // Grab these logs from all of those locations.
   [ "", "source-build/", "tarball-output/"].each { logRoot ->
     archivalSettings.addFiles("${logRoot}bin/logs/*")
-    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/*")
+    archivalSettings.addFiles("${logRoot}bin/prebuilt-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/conflict-report/**/*")
+    archivalSettings.addFiles("${logRoot}bin/msbuild-debug/**/*")
     archivalSettings.addFiles("${logRoot}src/**/*.binlog")
     archivalSettings.addFiles("${logRoot}src/**/*.log")
     archivalSettings.addFiles("${logRoot}init-tools.log")
@@ -54,7 +56,7 @@ def getDockerImageForOs(os) {
   return imageMap.get(os)
 }
 
-def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration, boolean runInDocker) {
+def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration, boolean portable, boolean runInDocker) {
   smokeTestExcludes = "";
   if (os == "OSX10.12") {
     // Dev certs doesn't seem to work in these platforms. https://github.com/dotnet/source-build/issues/560
@@ -76,11 +78,11 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration,
       else {
         if (os == "Windows_NT") {
           batchFile("git submodule update --init --recursive");
-          batchFile(".\\build.cmd /p:Configuration=${configuration} ${loggingOptions}")
+          batchFile(".\\build.cmd /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
         }
         else {
           shell("git submodule update --init --recursive");
-          shell("./build.sh /p:Configuration=${configuration} ${loggingOptions}");
+          shell("./build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
           shell("./smoke-test.sh --minimal --configuration ${configuration} ${smokeTestExcludes}");
         }
         setMachineAffinity(job, os);
@@ -91,29 +93,39 @@ def addBuildStepsAndSetMachineAffinity(def job, String os, String configuration,
 
 }
 
-def addPullRequestJob(String project, String branch, String os, String configuration, boolean runInDocker, boolean runByDefault)
+def addPullRequestJob(String project, String branch, String os, String configuration, boolean portable, boolean runInDocker, boolean runByDefault)
 {
-  def newJobName = Utilities.getFullJobName(project, "${os}_${configuration}", true);
+  def config = configuration;
+  if (portable) {
+    config += "_Portable";
+  }
+  def newJobName = Utilities.getFullJobName(project, "${os}_${config}", true);
   def contextString = "${os} ${configuration}";
+  if (portable) {
+    contextString += " Portable";
+  }
   def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
   def newJob = job(newJobName);
 
-  addBuildStepsAndSetMachineAffinity(newJob, os, configuration, runInDocker);
+  addBuildStepsAndSetMachineAffinity(newJob, os, configuration, portable, runInDocker);
   addArchival(newJob);
   Utilities.standardJobSetup(newJob, project, true, "*/${branch}");
   Utilities.setJobTimeout(newJob, 180);
   Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase, !runByDefault);
 }
 
-def addPushJob(String project, String branch, String os, String configuration, boolean runInDocker)
+def addPushJob(String project, String branch, String os, String configuration, boolean portable, boolean runInDocker)
 {
     def shortJobName = "${os}_${configuration}";
+    if (portable) {
+      shortJobName += "_Portable";
+    }
 
     def newJobName = Utilities.getFullJobName(project, shortJobName, false);
     def newJob = job(newJobName);
 
-    addBuildStepsAndSetMachineAffinity(newJob, os, configuration, runInDocker);
+    addBuildStepsAndSetMachineAffinity(newJob, os, configuration, portable, runInDocker);
     addArchival(newJob);
     Utilities.standardJobSetup(newJob, project, false, "*/${branch}");
     Utilities.setJobTimeout(newJob, 180);
@@ -121,26 +133,35 @@ def addPushJob(String project, String branch, String os, String configuration, b
 }
 
 ["Ubuntu16.04", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
-  addPullRequestJob(project, branch, os, "Release", false, true);
-  addPullRequestJob(project, branch, os, "Debug", false, false);
+  // Release non-portable run by default
+  addPullRequestJob(project, branch, os, "Release", false, false, true);
+  // Debug non-portable can be triggered
+  addPullRequestJob(project, branch, os, "Debug", false, false, false);
+  // Release portable can be triggered
+  addPullRequestJob(project, branch, os, "Release", true, false, false);
+  // Debug portable can be triggered
+  addPullRequestJob(project, branch, os, "Release", false, false, true);
+  addPullRequestJob(project, branch, os, "Debug", false, false, false);
 };
 
 // Pull request jobs that run in Docker
 ["Fedora28"].each { os ->
-  addPullRequestJob(project, branch, os, "Release", true, true);
-  addPullRequestJob(project, branch, os, "Debug", true, false);
+  addPullRequestJob(project, branch, os, "Release", false, true, true);
+  addPullRequestJob(project, branch, os, "Debug", false, true, false);
 };
 
 // Per push, run all the jobs
 ["Ubuntu16.04", "Debian8.4", "RHEL7.2", "Windows_NT", "CentOS7.1", "OSX10.12"].each { os ->
   ["Release", "Debug"].each { configuration ->
-    addPushJob(project, branch, os, configuration, false);
+    [true, false].each { portable ->
+      addPushJob(project, branch, os, configuration, portable, false);
+    };
   };
 };
 // Push jobs that run in Docker
 ["Fedora28"].each { os ->
   ["Release", "Debug"].each { configuration ->
-    addPushJob(project, branch, os, configuration, true);
+    addPushJob(project, branch, os, configuration, false, true);
   };
 };
 
@@ -148,45 +169,53 @@ def addPushJob(String project, String branch, String os, String configuration, b
 [true, false].each { isPR ->
   ["RHEL7.2", "CentOS7.1"].each { os ->
     ["Release", "Debug"].each { configuration ->
+      [true, false].each { portable ->
 
-      def shortJobName = "${os}_Tarball_${configuration}";
-      def contextString = "${os} Tarball ${configuration}";
-      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+        def shortJobName = "${os}_Tarball_${configuration}";
+        def contextString = "${os} Tarball ${configuration}";
 
-      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
-        steps{
-            shell("cd ./source-build;git submodule update --init --recursive");
-            shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} ${loggingOptions}");
-            shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
-
-            shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} ${loggingOptions}")
-            shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
+        if (portable) {
+          shortJobName += "_Portable"
+          contextString += " Portable"
         }
-      }
 
-      setMachineAffinity(newJob, os);
+        def triggerPhrase = "(?i).*test\\W+${contextString}.*";
 
-      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+        def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
+          steps{
+              shell("cd ./source-build;git submodule update --init --recursive");
+              shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:PortableBuild=${portable} ${loggingOptions}");
+              shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
 
-      // Increase timeout. The tarball builds can take longer than the 2 hour default.
-      Utilities.setJobTimeout(newJob, 240);
+              shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
+              shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
+          }
+        }
 
-      // Clone into the source-build directory
-      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+        setMachineAffinity(newJob, os);
 
-      addArchival(newJob);
-      if(isPR){
-        if(configuration == "Release"){
-          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+
+        // Increase timeout. The tarball builds can take longer than the 2 hour default.
+        Utilities.setJobTimeout(newJob, 240);
+
+        // Clone into the source-build directory
+        Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+        addArchival(newJob);
+        if(isPR){
+          if(configuration == "Release"){
+            Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+          }
+          else{
+            Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+          }
         }
         else{
-          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+          Utilities.addGithubPushTrigger(newJob);
         }
-      }
-      else{
-        Utilities.addGithubPushTrigger(newJob);
-      }
 
+      }
     }
   }
 }
@@ -195,52 +224,60 @@ def addPushJob(String project, String branch, String os, String configuration, b
 [true, false].each { isPR ->
   ["RHEL7.2", "CentOS7.1"].each { os->
     ["Release", "Debug"].each { configuration ->
+      [true, false].each { portable ->
 
-      def shortJobName = "${os}_Unshared_${configuration}";
-      def contextString = "${os} Unshared ${configuration}";
-      def triggerPhrase = "(?i).*test\\W+${contextString}.*";
-      def imageName = getDockerImageForOs(os);
+        def shortJobName = "${os}_Unshared_${configuration}";
+        def contextString = "${os} Unshared ${configuration}";
 
-      def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
-        steps{
-            shell("cd ./source-build;git submodule update --init --recursive");
-            // First build the product itself
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:ContinueOnPrebuiltBaselineError=true ${loggingOptions}");
-            // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
-            shell("mkdir tarball-output");
-            // now build the tarball
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
-            // now build from the tarball offline and without access to the regular non-tarball build
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} ${loggingOptions}");
-            // finally, run a smoke-test on the result
-            shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
+        if (portable) {
+          shortJobName += "_Portable"
+          contextString += " Portable"
         }
-      }
 
-      // Only Ubuntu Jenkins machines have Docker
-      setMachineAffinity(newJob, "Ubuntu16.04");
+        def triggerPhrase = "(?i).*test\\W+${contextString}.*";
+        def imageName = getDockerImageForOs(os);
 
-      Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
+        def newJob = job(Utilities.getFullJobName(project, shortJobName, isPR)){
+          steps{
+              shell("cd ./source-build;git submodule update --init --recursive");
+              // First build the product itself
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home -v \$(pwd)/source-build:/opt/code --rm -w /opt/code ${imageName} /opt/code/build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:ContinueOnPrebuiltBaselineError=true ${loggingOptions}");
+              // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
+              shell("mkdir tarball-output");
+              // now build the tarball
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+              // now build from the tarball offline and without access to the regular non-tarball build
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
+              // finally, run a smoke-test on the result
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
+          }
+        }
 
-      // Increase timeout. The offline build in Docker takes more than 2 hours.
-      Utilities.setJobTimeout(newJob, 240);
+        // Only Ubuntu Jenkins machines have Docker
+        setMachineAffinity(newJob, "Ubuntu16.04");
 
-      // Clone into the source-build directory
-      Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+        Utilities.standardJobSetup(newJob, project, isPR, "*/${branch}");
 
-      addArchival(newJob);
-      if(isPR){
-        if(configuration == "Release"){
-          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+        // Increase timeout. The offline build in Docker takes more than 2 hours.
+        Utilities.setJobTimeout(newJob, 240);
+
+        // Clone into the source-build directory
+        Utilities.addScmInSubDirectory(newJob, project, isPR, 'source-build');
+
+        addArchival(newJob);
+        if(isPR){
+          if(configuration == "Release"){
+            Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString);
+          }
+          else{
+            Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+          }
         }
         else{
-          Utilities.addGithubPRTriggerForBranch(newJob, branch, contextString, triggerPhrase);
+          Utilities.addGithubPushTrigger(newJob);
         }
-      }
-      else{
-        Utilities.addGithubPushTrigger(newJob);
-      }
 
+      }
     }
   }
 }

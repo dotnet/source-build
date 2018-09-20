@@ -42,7 +42,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_RUNTIME_ID=$(TargetRid)" />
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
     <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
@@ -55,6 +54,9 @@
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
+
+    <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
+    <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
 
     <!-- Turn off node reuse for source build because repos use conflicting versions 
          of compilers which cause assembly load errors.  

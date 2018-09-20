@@ -14,8 +14,9 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj /v:normal /flp:Verbosity=Diag /bl $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 </Project>
 

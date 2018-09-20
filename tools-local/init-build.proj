@@ -75,6 +75,12 @@
       <Output PropertyName="TargetOS" TaskParameter="OSName" />
     </GetHostInformation>
 
+    <PropertyGroup Condition="'$(PortableBuild)' == 'true'">
+      <TargetRid Condition="'$(TargetOS)' == 'OSX'">osx-$(Platform)</TargetRid>
+      <TargetRid Condition="'$(TargetOS)' == 'Linux'">linux-$(Platform)</TargetRid>
+      <TargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-$(Platform)</TargetRid>
+    </PropertyGroup>
+
     <PropertyGroup>
       <TargetInfoPropsContent>&lt;Project ToolsVersion=&quot;15.0&quot;&gt;
   &lt;PropertyGroup&gt;

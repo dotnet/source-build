@@ -2,9 +2,15 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=$(PortableBuild) -SkipTests=true </BuildArguments>
+    <!-- CLI uses the portable RID for OSX all the time, so override -->
+    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX'">true</OverridePortableBuild>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+
+    <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=$(OverridePortableBuild) -SkipTests=true </BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:PreReleaseLabel="preview"</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:OutputRid=$(OverrideTargetRid) /p:PreReleaseLabel="preview" /bl</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <OfficialBuildId>20180529-01</OfficialBuildId>
 

@@ -64,12 +64,14 @@
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
+    <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <!-- Dir where git info is generated during online builds. -->
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->
     <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
     <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
+    <ProjectAssetsJsonArchiveFile>$(PackageReportDir)all-project-assets-json-files.zip</ProjectAssetsJsonArchiveFile>
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
