@@ -12,7 +12,7 @@
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:OutputRid=$(OverrideTargetRid) /bl</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <OfficialBuildId>20180814-02</OfficialBuildId>
+    <OfficialBuildId>20180919-01</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
