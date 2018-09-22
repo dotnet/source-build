@@ -8,9 +8,18 @@
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
 
-    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(OverridePortableBuild) -BuildTests=false -PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildAllPackages=true /bl</BuildCommand>
+    <BuildArguments>-$(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -buildArch=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -portable=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) --</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180919-02</OfficialBuildId>

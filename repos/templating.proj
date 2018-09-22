@@ -23,12 +23,21 @@
   <ItemGroup>
     <RepositoryReference Include="clicommandlineparser" />
   </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) msbuild /t:Build @(MSBuildProperties->'/p:%(Identity)', ' ') $(ProjectDirectory)/build.proj /bl $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)" />
+    <PropertyGroup>
+      <BuildCommandArgs>/t:Build</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) @(MSBuildProperties->'/p:%(Identity)', ' ')</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)build.proj</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) msbuild $(BuildCommandArgs)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)" />
 
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
     <ItemGroup>

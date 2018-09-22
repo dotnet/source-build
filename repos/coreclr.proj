@@ -6,13 +6,18 @@
     <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
     <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX'">true</OverridePortableBuild>
 
-    <BuildArguments>$(Platform) $(Configuration) skiptests -PortableBuild=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
+    <BuildArguments>$(BuildArguments) --</BuildArguments>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180919-02</OfficialBuildId>
   </PropertyGroup>
