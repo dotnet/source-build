@@ -5,6 +5,7 @@
     <GeneratingStaticPropertiesFile>true</GeneratingStaticPropertiesFile>
   </PropertyGroup>
   <Import Project="..\dir.props" />
+  <Import Project="..\Tools\Packaging.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
@@ -18,7 +19,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages;BuildReferenceAssemblies" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -33,7 +34,7 @@
 
   <Target Name="BuildTasks">
     <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-      <OfflineSources>$(PrebuiltPackagesPath)</OfflineSources>
+      <OfflineSources>$(PrebuiltPackagesPath)%3B$(ReferencePackagesDir)</OfflineSources>
     </PropertyGroup>
     <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj /p:RestoreSources=$(OfflineSources)" />
   </Target>
@@ -65,6 +66,16 @@
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
      <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
+  </Target>
+
+  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">  
+    <ItemGroup>
+      <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
+    </ItemGroup>
+    <NugetPack Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
+               OutputDirectory="$(ReferencePackagesDir)"
+               ExcludeEmptyDirectories="false"
+               CreateSymbolPackage="false" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">

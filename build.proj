@@ -3,6 +3,7 @@
   <Import Project="dir.props" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="CheckForPoison" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CopyReferenceOnlyPackages" />
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -28,6 +29,15 @@
 
   <Target Name="Clean">
     <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
+  <Target Name="CopyReferenceOnlyPackages"
+          AfterTargets="Build"
+          Condition="'$(OfflineBuild)' != 'true'">
+    <CopyReferenceOnlyPackages
+        PackageCacheDir="$(PackagesDir)"
+        DestinationDir="$(ReferencePackagesDir)"
+        />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->

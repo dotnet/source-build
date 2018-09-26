@@ -119,6 +119,8 @@ mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
+cp -r $SCRIPT_ROOT/reference-packages $TARBALL_ROOT/reference-packages
+
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
 fi
