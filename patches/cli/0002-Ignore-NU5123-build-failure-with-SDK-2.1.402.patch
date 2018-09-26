@@ -1,0 +1,28 @@
+From da960c2ac8e60edeeba7657b8f8afe56e2488260 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 26 Sep 2018 14:15:23 -0500
+Subject: [PATCH] Ignore NU5123: build failure with SDK 2.1.402
+
+The symbol package contains crossgen symbols, and the map files have very long names. This triggers NU5123, new to SDK 2.1.402, which fails the build.
+
+Tracked by https://github.com/dotnet/cli/issues/10052
+---
+ build/BuildDefaults.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/BuildDefaults.props b/build/BuildDefaults.props
+index 1f26ed860..fc501c48d 100644
+--- a/build/BuildDefaults.props
++++ b/build/BuildDefaults.props
+@@ -30,7 +30,7 @@
+     <!-- Since we disabled the implict fallback to net461, this will only kick in when we have an explicit fallback and we don't need to be warned about it doing what we asked it to do. -->
+     <!-- NU5104: Disable 'A stable release of a package should not have a prerelease dependency' warning globally -->
+     <!-- The "pack" command under 'buildCrossTargeting' for 'Microsoft.DotNet.MSBuildSdkResolver' throws a "NU5104" warning/error while using a "2.1.300" stage0 SDK. For: Linux-x64, Linux-arm, and Linux-arm64 -->
+-    <NoWarn>NU1701;NU5104</NoWarn>
++    <NoWarn>NU1701;NU5104;NU5123</NoWarn>
+ 
+     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+     <MSBuildTreatWarningsAsErrors>true</MSBuildTreatWarningsAsErrors>
+-- 
+2.17.1.windows.2
+
