@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection]"
     echo ""
 }
 
@@ -16,6 +16,7 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
+INCLUDE_LEAK_DETECTION=1
 
 while :; do
     if [ $# -le 0 ]; then
@@ -30,6 +31,9 @@ while :; do
             ;;
         --skip-build)
             SKIP_BUILD=1
+            ;;
+        --enable-leak-detection)
+            INCLUDE_LEAK_DETECTION=1
             ;;
         *)
             echo "Unrecognized argument '$1'"
@@ -157,6 +161,13 @@ fi
 SOURCE_BUILT_SDK_TOOLS_DIR="$TARBALL_ROOT/Tools/source-built/$ROSLYN_TOOLS_PACKAGE/tools"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
+
+if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
+  find $TARBALL_ROOT/prebuilt
+  echo 'Building leak detection MSBuild tasks...'
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+fi
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 
