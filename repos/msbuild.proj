@@ -6,8 +6,23 @@
     <!-- Override value from commit to match expected build. -->
     <OfficialBuildId>20180911.1</OfficialBuildId>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
-    <OutputVersionArgs>/p:PackageVersion=15.9.0-preview-000008 /p:VersionPrefix=15.9.8 /p:DisableNerdbankVersioning=true /p:PB_VersionStamp="preview" /p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
-    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) build -DotNetBuildFromSource -DotNetCoreSdkDir $(DotNetCliToolDir) -bootstraponly -skiptests -pack -configuration $(Configuration) /p:GitHeadSha=$(GitCommitHash) $(OutputVersionArgs)</BuildCommand>
+
+    <OutputVersionArgs>/p:PackageVersion=15.9.0-preview-000008</OutputVersionArgs>
+    <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.9.8</OutputVersionArgs>
+    <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
+    <OutputVersionArgs>$(OutputVersionArgs) /p:PB_VersionStamp="preview"</OutputVersionArgs>
+    <OutputVersionArgs>$(OutputVersionArgs) /p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
+
+    <BuildCommandArgs>build -DotNetBuildFromSource</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bootstraponly</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -skiptests</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:GitHeadSha=$(GitCommitHash)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
     <UsesRepoToolset>true</UsesRepoToolset>

@@ -26,16 +26,32 @@
 
   <Target Name="RepoBuild"
           DependsOnTargets="InitSubmodules">
+    <PropertyGroup>
+      <BuildCommandBase>$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:VisualStudioVerion=15.0</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(NuGetClientBuildNumber)</BuildCommandBase>
+    </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:RestoreXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /bl:restore.binlog $(RedirectRepoOutputToLog)"
+    <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)" />
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:BuildXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /bl:build.binlog $(RedirectRepoOutputToLog)"
+    <Exec Command="$(BuildCommandBase) /t:BuildXPLAT /bl:build.binlog $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)" />
 
-    <Exec Command="$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj /t:PackXPLAT /p:VisualStudioVerion=15.0 /p:Configuration=$(Configuration) /p:BuildRTM=false /p:BuildNumber=$(NuGetClientBuildNumber) /p:PackageOutputPath=$(PackagesOutput) /p:NoPackageAnalysis=true /flp:v=detailed /bl:pack.binlog $(RedirectRepoOutputToLog)"
+    <PropertyGroup>
+      <PackCommand>$(BuildCommandBase) /t:PackXPlat</PackCommand>
+      <PackCommand>$(PackCommand) /p:PackageOutputPath=$(PackagesOutput)</PackCommand>
+      <PackCommand>$(PackCommand) /p:NoPackageAnalysis=true</PackCommand>
+      <PackCommand>$(PackCommand) /flp:v=detailed</PackCommand>
+      <PackCommand>$(PackCommand) /bl:pack.binlog</PackCommand>
+      <PackCommand>$(PackCommand) $(RedirectRepoOutputToLog)</PackCommand>
+    </PropertyGroup>
+
+    <Exec Command="$(PackCommand)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)" />
   </Target>

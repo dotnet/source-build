@@ -141,6 +141,11 @@
                             Condition="'$(OfflineBuild)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="previously-source-built"
+                            SourcePath="$(PrebuiltSourceBuiltPackagesPath)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
@@ -211,6 +216,7 @@
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
     </ItemGroup>
     <WriteRestoreSourceProps RestoreSources="@(_DotNetRestoreSources)"
                              OutputPath="$(RestoreSourcePropsPath)" />
@@ -413,6 +419,16 @@
       <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
+    </ItemGroup>
+
+    <WriteUsageReports DataFile="$(PackageReportDataFile)"
+                       PackageVersionPropsSnapshots="@(PackageVersionPropsSavedSnapshotFiles)"
+                       ProdConBuildManifestFile="$(ProdConManifestFile)"
+                       PoisonedReportFile="$(PoisonedReportFile)"
+                       OutputDirectory="$(PackageReportDir)" />
+
     <PropertyGroup Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">
       <ContinueOnPrebuiltBaselineError>false</ContinueOnPrebuiltBaselineError>
       <ContinueOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' != 'true'">true</ContinueOnPrebuiltBaselineError>
@@ -424,16 +440,6 @@
       OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
       OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
-
-    <ItemGroup>
-      <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
-    </ItemGroup>
-
-    <WriteUsageReports DataFile="$(PackageReportDataFile)"
-                       PackageVersionPropsSnapshots="@(PackageVersionPropsSavedSnapshotFiles)"
-                       ProdConBuildManifestFile="$(ProdConManifestFile)"
-                       PoisonedReportFile="$(PoisonedReportFile)"
-                       OutputDirectory="$(PackageReportDir)" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
