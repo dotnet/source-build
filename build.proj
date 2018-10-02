@@ -31,7 +31,7 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
-  <Target Name="CopyReferenceOnlyPackages"
+  <Target Name="CopyAndDisAssembleReferenceOnlyPackages"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true'">
 

@@ -35,7 +35,7 @@
 
   <Target Name="BuildTasks">
     <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-      <OfflineSources>$(PrebuiltPackagesPath)%3B$(ReferencePackagesDir)</OfflineSources>
+      <OfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</OfflineSources>
     </PropertyGroup>
     <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj /p:RestoreSources='$(OfflineSources)'" />
   </Target>
