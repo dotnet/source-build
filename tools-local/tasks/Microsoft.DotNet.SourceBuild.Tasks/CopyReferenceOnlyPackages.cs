@@ -14,8 +14,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// For each nupkg directory under the PackageCacheDir, find all directories containing only
     /// dlls under the /ref/ folder.  These are packages that contain references only.
     /// Copies all found expanded reference-only packages to the destination directory, excluding
-    /// the .nupkg file.  The .nupkg file is deleted from the PackageCacheDir so it doesn't end up
-    /// in prebuilts.
+    /// the .nupkg file.  
     /// </summary>
     public class CopyReferenceOnlyPackages : Task
     {
@@ -30,10 +29,25 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         public string PackageCacheDir { get; set; }
 
         /// <summary>
+        /// The destination directory for the dlls in reference packages.
+        /// Paths are preserved in the destination.
+        /// </summary>
+        [Required]
+        public string DllDestinationDir { get; set; }
+
+        /// <summary>
+        /// The destination directory for the nupkg files identified 
+        /// as containing reference-only packages.
+        /// </summary>
+        [Required]
+        public string IdentifiedPackagesDir { get; set; }
+
+        /// <summary>
         /// The destination directory for the reference packages.
         /// </summary>
         [Required]
         public string DestinationDir { get; set; }
+
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
@@ -59,36 +73,33 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 })
                 .Select(f => Path.GetDirectoryName(f));
 
+            Directory.CreateDirectory(IdentifiedPackagesDir);
             foreach (var dir in referenceOnlyPackageDirectories)
             {
-                Log.LogMessage(
-                    MessageImportance.High,
-                    $"{dir}");
                 Directory.CreateDirectory(dir.Replace(PackageCacheDir, DestinationDir));
                 foreach (string dirPath in Directory.EnumerateDirectories(dir, "*", SearchOption.AllDirectories))
                 {
                     Directory.CreateDirectory(dirPath.Replace(PackageCacheDir, DestinationDir));
                 }
-                if (Directory.EnumerateFiles(dir, "*.dll", SearchOption.AllDirectories).Count() > 0)
-                {
-                    Log.LogMessage(
-                        MessageImportance.High,
-                            $"Found dlls in {dir}.");
-                }
                 foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith(".nupkg") && !f.EndsWith(".nupkg.sha512")))
                 {
-                    File.Copy(file, file.Replace(PackageCacheDir, DestinationDir));
+                    var destination = file.Replace(PackageCacheDir, DestinationDir);
+                    if (file.EndsWith(".dll"))
+                    {
+                        destination = file.Replace(PackageCacheDir, DllDestinationDir);
+                        Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                    }
+                    File.Copy(file, destination);
                 }
-                // Remove nupkgs for the packages that were copied so they don't end up in prebuilts
                 foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => f.EndsWith(".nupkg")))
                 {
-                    File.Delete(file);
+                    File.Copy(file, IdentifiedPackagesDir);
                 }
             }
 
+            // Add a wildcard for files in each nuspec
             foreach (var file in Directory.EnumerateFiles(DestinationDir, "*.nuspec", SearchOption.AllDirectories))
             {
-                Log.LogMessage(MessageImportance.High, $"Adding <files> section to {file}");
                 var fileText = File.ReadAllText(file);
                 File.WriteAllText(file, fileText.Replace("</package>", "<files><file src=\".\\**\\*.*\"/></files>\n</package>"));
             }

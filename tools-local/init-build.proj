@@ -6,6 +6,7 @@
   </PropertyGroup>
   <Import Project="..\dir.props" />
   <Import Project="..\Tools\Packaging.targets" />
+  <Import Project="..\Tools\IL.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
@@ -68,10 +69,25 @@
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
-  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">  
+  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
     <ItemGroup>
+      <IlSource Include="$(ReferencePackagesSourceDir)/**/*.il" />
       <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
     </ItemGroup>
+
+    <Message Importance="High" Text="refdir=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.FileName).dll" />
+    <Exec Command="$(IlasmToolPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
+
+    <!-- Temporary workaround to copy dlls that can't be round-tripped 
+         They just get copied from the source to the package staging area
+    -->
+    <ItemGroup>
+        <DllsInSource Include="$(ReferencePackagesSourceDir)/**/*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="%(DllsInSource.Identity)" DestinationFiles="$(ReferencePackagesStagingDir)%(DllsInSource.RecursiveDir)%(DllsInSource.Filename).dll" />
+
+    <!-- End Temporary workaround -->
+
     <NugetPack Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
                OutputDirectory="$(ReferencePackagesDir)"
                ExcludeEmptyDirectories="false"

@@ -119,7 +119,9 @@ mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
-cp -r $SCRIPT_ROOT/reference-packages $TARBALL_ROOT/reference-packages
+mkdir -p $TARBALL_ROOT/reference-packages
+cp -r $SCRIPT_ROOT/reference-packages/source $TARBALL_ROOT/reference-packages/source
+cp -r $SCRIPT_ROOT/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
@@ -142,6 +144,18 @@ echo 'Copying source-built packages to tarball to replace packages needed before
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg')
 do
     cp $built_package $TARBALL_ROOT/prebuilt/source-built/
+done
+
+echo 'Removing reference-only packages from tarball prebuilts...'
+
+for built_package in $(find $SCRIPT_ROOT/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+do
+    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
+    fi
+    if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
+    fi
 done
 
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'

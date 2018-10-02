@@ -34,10 +34,31 @@
   <Target Name="CopyReferenceOnlyPackages"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true'">
+
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"
+        DllDestinationDir="$(ReferencePackagesSourceDir)"
+        IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
         DestinationDir="$(ReferencePackagesStagingDir)"
         />
+
+    <ItemGroup>
+        <IldasmPath Include="./src/coreclr/bin/Product/*/ildasm" />
+    </ItemGroup>
+    
+    <!-- Temporary workaround to exclude dlls that can't be round-tripped 
+         They'll end up in the source directory as dlls for now 
+    -->
+
+    <ItemGroup>
+        <Dlls Include="$(ReferencePackagesSourceDir)/**/*.dll" Exclude="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
+    </ItemGroup>
+
+    <!-- End Temporary workaround -->
+
+    <Message Importance="High" Text="Disassembling @(Dlls->Count()) dlls" />
+    <Exec Command="@(IldasmPath) %(Dlls.Identity) -all -out=%(Dlls.RootDir)%(Dlls.Directory)%(Dlls.Filename).il" />
+    <Delete Files="@(Dlls)" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
