@@ -48,6 +48,11 @@
     
     <!-- Temporary workaround to exclude dlls that can't be round-tripped 
          They'll end up in the source directory as dlls for now 
+
+        Keep the following ItemGroup when workaround is removed:
+    <ItemGroup>
+        <Dlls Include="$(ReferencePackagesSourceDir)/**/*.dll" />
+    </ItemGroup>
     -->
 
     <ItemGroup>
@@ -58,6 +63,8 @@
 
     <Message Importance="High" Text="Disassembling @(Dlls->Count()) dlls" />
     <Exec Command="@(IldasmPath) %(Dlls.Identity) -all -out=%(Dlls.RootDir)%(Dlls.Directory)%(Dlls.Filename).il" />
+
+    <Message Importance="High" Text="Deleting disassembled dlls" />
     <Delete Files="@(Dlls)" />
   </Target>
 

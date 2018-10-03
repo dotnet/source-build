@@ -148,13 +148,13 @@ done
 
 echo 'Removing reference-only packages from tarball prebuilts...'
 
-for built_package in $(find $SCRIPT_ROOT/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for ref_package in $(find $SCRIPT_ROOT/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
+    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package)
     fi
-    if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
+    if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $ref_package)
     fi
 done
 
