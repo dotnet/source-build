@@ -5,8 +5,8 @@
     <GeneratingStaticPropertiesFile>true</GeneratingStaticPropertiesFile>
   </PropertyGroup>
   <Import Project="..\dir.props" />
-  <Import Project="..\Tools\Packaging.targets" />
-  <Import Project="..\Tools\IL.targets" />
+  <Import Project="$(ToolsDir)Packaging.targets" />
+  <Import Project="$(ToolsDir)IL.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
@@ -75,7 +75,7 @@
       <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
     </ItemGroup>
 
-    <Message Importance="High" Text="refdir=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.FileName).dll" />
+    <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" Condition="!Exists('$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)')" />
     <Exec Command="$(IlasmToolPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
 
     <!-- Temporary workaround to copy dlls that can't be round-tripped 

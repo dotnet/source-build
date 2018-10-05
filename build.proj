@@ -31,7 +31,7 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
-  <Target Name="CopyAndDisAssembleReferenceOnlyPackages"
+  <Target Name="CopyAndDisassembleReferenceOnlyPackages"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true'">
 
@@ -41,31 +41,38 @@
         IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
         DestinationDir="$(ReferencePackagesStagingDir)"
         />
-
-    <ItemGroup>
-        <IldasmPath Include="./src/coreclr/bin/Product/*/ildasm" />
-    </ItemGroup>
     
-    <!-- Temporary workaround to exclude dlls that can't be round-tripped 
-         They'll end up in the source directory as dlls for now 
-
-        Keep the following ItemGroup when workaround is removed:
     <ItemGroup>
-        <Dlls Include="$(ReferencePackagesSourceDir)/**/*.dll" />
+      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)/**/*.dll" />
     </ItemGroup>
+
+    <!-- Temporary workaround to exclude dlls that can't be round-tripped. See: https://github.com/dotnet/coreclr/issues/20262
+         They'll end up in the source directory as dlls for now 
     -->
 
     <ItemGroup>
-        <Dlls Include="$(ReferencePackagesSourceDir)/**/*.dll" Exclude="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
+    <!-- Issue https://github.com/dotnet/coreclr/issues/20262 -->
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
+    <!-- The following dlls were brought in by Microsoft.NETCore.App-2.0.0-beta-001509-00 with the linker repo.  They contain ref assemblies
+         that either contain resources or have native/unmanaged methods and cannot be round-tripped with ildasm/ilasm. -->
+    <!-- Contain resources -->
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Collections.Immutable.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Threading.Tasks.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Reflection.Metadata.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Threading.Tasks.Dataflow.dll" />
+    <!-- Pinvoke issue -->
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Data.dll" /> 
     </ItemGroup>
 
     <!-- End Temporary workaround -->
 
-    <Message Importance="High" Text="Disassembling @(Dlls->Count()) dlls" />
-    <Exec Command="@(IldasmPath) %(Dlls.Identity) -all -out=%(Dlls.RootDir)%(Dlls.Directory)%(Dlls.Filename).il" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembling @(ReferenceOnlyPackageDlls->Count()) dlls" />
+    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=%(ReferenceOnlyPackageDlls.RootDir)%(ReferenceOnlyPackageDlls.Directory)%(ReferenceOnlyPackageDlls.Filename).il" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
 
-    <Message Importance="High" Text="Deleting disassembled dlls" />
-    <Delete Files="@(Dlls)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls" />
+    <Delete Files="@(ReferenceOnlyPackageDlls)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls done." />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->

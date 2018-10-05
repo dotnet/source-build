@@ -19,10 +19,6 @@
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
-    <ReferencePackagesStagingDir>$(ProjectDir)reference-packages/staging/</ReferencePackagesStagingDir>
-    <ReferencePackagesSourceDir>$(ProjectDir)reference-packages/source/</ReferencePackagesSourceDir>
-    <ReferencePackagesDir>$(ProjectDir)reference-packages/packages/</ReferencePackagesDir>
-    <ReferencePackagesToDeleteDir>$(ProjectDir)reference-packages/packages-to-delete/</ReferencePackagesToDeleteDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
   </PropertyGroup>
@@ -48,6 +44,7 @@
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
+    <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</TasksBinDir>
@@ -84,6 +81,17 @@
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
+    <ReferencePackagesBasePath>$(IntermediatePath)</ReferencePackagesBasePath>
+    <!--
+      Change ReferencePackagesBasePath conditionally in offline build.
+      See corresponding change in build-source-tarball.sh to copy reference-packages
+      from source-build bin dir to tarball reference-packages dir.
+    -->
+    <ReferencePackagesBasePath Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)</ReferencePackagesBasePath>
+    <ReferencePackagesStagingDir>$(ReferencePackagesBasePath)reference-packages/staging/</ReferencePackagesStagingDir>
+    <ReferencePackagesSourceDir>$(ReferencePackagesBasePath)reference-packages/source/</ReferencePackagesSourceDir>
+    <ReferencePackagesDir>$(ReferencePackagesBasePath)reference-packages/packages/</ReferencePackagesDir>
+    <ReferencePackagesToDeleteDir>$(ReferencePackagesBasePath)reference-packages/packages-to-delete/</ReferencePackagesToDeleteDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->

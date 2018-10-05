@@ -5,6 +5,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -18,6 +19,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// </summary>
     public class CopyReferenceOnlyPackages : Task
     {
+        private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd" };
+        private static readonly string[] pathsToExclude = { "testdata" };
+        private static readonly string refPath = string.Concat(Path.DirectorySeparatorChar, "ref", Path.DirectorySeparatorChar);
+
         /// <summary>
         /// Package cache dir containing prebuilt nupkgs. Path is expected to be like:
         /// 
@@ -48,61 +53,72 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         [Required]
         public string DestinationDir { get; set; }
 
+        /// <summary>
+        /// Enumerate all files in a directory and its sub-directories.
+        /// </summary>
+        private static IEnumerable<string> EnumerateAllFiles(string path, string searchPattern)
+        {
+            return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
+        }
+
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
 
-            var referenceOnlyPackageDirectories = Directory.EnumerateFiles(PackageCacheDir, "*.nupkg", SearchOption.AllDirectories)
+            var referenceOnlyPackageDirectories = EnumerateAllFiles(PackageCacheDir, "*.nupkg")
                 .Where(nupkgFilePath =>
                 {
                     // Get all files in the nupkg path and normalize directory separators
-                    var nupkgFiles = Directory.EnumerateFiles(Path.GetDirectoryName(nupkgFilePath), "*.*", SearchOption.AllDirectories).Select(f => f.Replace("\\","/"));
+                    var nupkgFiles = EnumerateAllFiles(Path.GetDirectoryName(nupkgFilePath), "*.*").ToArray();
 
                     // Do not include directories that contain exes, shared object files, OSX dynamic libraries
                     // or profiling data
-                    string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd" };
-                    string[] pathsToExclude = { "testdata" };
+                    if (nupkgFiles
+                        .Any(
+                            file => extensionsToExclude.Contains(Path.GetExtension(file)) 
+                            || pathsToExclude.Any(path => file.Contains(path))))
+                    {
+                        return false;
+                    }
                     
                     // Return directories that, if containing dlls, only have dlls in the
-                    // ref folder.
-                    return
-                        !nupkgFiles.Any(file => extensionsToExclude.Contains(Path.GetExtension(file)) || pathsToExclude.Any(path => file.Contains(path))) &&
-                        nupkgFiles
+                    // ref folder
+                    return nupkgFiles
                             .Where(file => String.Equals(Path.GetExtension(file), ".dll", StringComparison.OrdinalIgnoreCase))
-                            .All(dir => dir.Contains(@"/ref/"));
+                            .All(dir => dir.Contains(refPath));
                 })
-                .Select(f => Path.GetDirectoryName(f));
+                .Select(Path.GetDirectoryName)
+                .ToArray();
 
             Directory.CreateDirectory(IdentifiedPackagesDir);
             foreach (var dir in referenceOnlyPackageDirectories)
             {
-                Directory.CreateDirectory(dir.Replace(PackageCacheDir, DestinationDir));
-                foreach (string dirPath in Directory.EnumerateDirectories(dir, "*", SearchOption.AllDirectories))
+                foreach (var file in EnumerateAllFiles(dir, "*.*"))
                 {
-                    Directory.CreateDirectory(dirPath.Replace(PackageCacheDir, DestinationDir));
-                }
-                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => !f.EndsWith(".nupkg") && !f.EndsWith(".nupkg.sha512")))
-                {
-                    var destination = file.Replace(PackageCacheDir, DestinationDir);
-                    if (file.EndsWith(".dll"))
+                    if (file.EndsWith(".nupkg")) 
                     {
-                        destination = file.Replace(PackageCacheDir, DllDestinationDir);
-                        Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                        File.Copy(file, Path.Combine(IdentifiedPackagesDir, Path.GetFileName(file)), true);
                     }
-                    File.Copy(file, destination);
-                }
-                foreach (var file in Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).Where(f => f.EndsWith(".nupkg")))
-                {
-                    File.Copy(file, IdentifiedPackagesDir);
+                    else if (!file.EndsWith(".nupkg.sha512"))
+                    {
+                        var destination = file.Replace(PackageCacheDir, DestinationDir);
+                        if (file.EndsWith(".dll"))
+                        {
+                            destination = file.Replace(PackageCacheDir, DllDestinationDir);
+                        }
+                        Directory.CreateDirectory(Path.GetDirectoryName(destination));
+                        File.Copy(file, destination, true);
+                        
+                        // Add a wildcard for files in each nuspec
+                        if (destination.EndsWith(".nuspec"))
+                        {
+                            var fileText = File.ReadAllText(destination);
+                            File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*.*\"/></files>\n</package>"));
+                        }
+                    }
                 }
             }
 
-            // Add a wildcard for files in each nuspec
-            foreach (var file in Directory.EnumerateFiles(DestinationDir, "*.nuspec", SearchOption.AllDirectories))
-            {
-                var fileText = File.ReadAllText(file);
-                File.WriteAllText(file, fileText.Replace("</package>", "<files><file src=\".\\**\\*.*\"/></files>\n</package>"));
-            }
             // Report status on the task
             Log.LogMessage(
                 MessageImportance.High,
