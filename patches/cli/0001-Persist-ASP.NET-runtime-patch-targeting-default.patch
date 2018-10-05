@@ -1,4 +1,4 @@
-From d6f6922c24e205a53bc5f2420695a4a177648808 Mon Sep 17 00:00:00 2001
+From dfe28f2b2cfbe8878e637a51a79ab55f8dd41ed7 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 13 Jun 2018 09:46:43 -0500
 Subject: [PATCH] Persist ASP.NET runtime patch targeting default
@@ -7,23 +7,28 @@ Let the CLI build take a default value for TargetLatestAspNetCoreRuntimePatch in
 
 https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
 ---
- build/MSBuildExtensions.targets | 3 +++
- 1 file changed, 3 insertions(+)
+ build/MSBuildExtensions.targets | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index f5365724a..f192226b8 100644
+index f5365724a..fd2fa3719 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -196,6 +196,9 @@ Copyright (c) .NET Foundation. All rights reserved.
+@@ -196,6 +196,14 @@ Copyright (c) .NET Foundation. All rights reserved.
      <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">1.0.12</LatestPatchVersionForNetCore1_0>
      <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.9</LatestPatchVersionForNetCore1_1>
      <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
 +
-+    <!-- If true, always target the latest ASP.NET Core runtime by default -->
++    <!-- If true, always target the latest ASP.NET Core runtime by default.
++         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
++         Source-build does not include the shared ASP.NET Framework, so it will use the latest .0 version instead.
++         The .0 version may not be up-to-date, so this can introduce security issues.  Here we override this choice for
++         all apps so they use the latest patch version instead of the .0 version.
++         See https://github.com/dotnet/source-build/issues/586 for more discussion. -->
 +    <TargetLatestAspNetCoreRuntimePatch Condition="'%24(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
    </PropertyGroup>
  </Project>
  ]]>
 -- 
-2.17.1.windows.2
+2.18.0
 
