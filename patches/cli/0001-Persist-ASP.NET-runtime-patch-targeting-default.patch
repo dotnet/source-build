@@ -20,7 +20,7 @@ index f5365724a..f192226b8 100644
      <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
 +
 +    <!-- If true, always target the latest ASP.NET Core runtime by default -->
-+    <TargetLatestAspNetCoreRuntimePatch Condition="'$(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
++    <TargetLatestAspNetCoreRuntimePatch Condition="'%24(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
    </PropertyGroup>
  </Project>
  ]]>
