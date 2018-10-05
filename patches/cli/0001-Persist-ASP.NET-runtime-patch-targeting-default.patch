@@ -19,7 +19,7 @@ index f5365724a..fd2fa3719 100644
      <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.9</LatestPatchVersionForNetCore1_1>
      <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
 +
-+    <!-- If true, always target the latest ASP.NET Core runtime by default.
++    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
 +         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
 +         Source-build does not include the shared ASP.NET Framework, so it will use the latest .0 version instead.
 +         The .0 version may not be up-to-date, so this can introduce security issues.  Here we override this choice for
