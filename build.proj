@@ -55,13 +55,7 @@
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
     <!-- The following dlls were brought in by Microsoft.NETCore.App-2.0.0-beta-001509-00 with the linker repo.  They contain ref assemblies
          that either contain resources or have native/unmanaged methods and cannot be round-tripped with ildasm/ilasm. -->
-    <!-- Contain resources -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Collections.Immutable.dll" />
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Threading.Tasks.dll" />
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Reflection.Metadata.dll" />
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Threading.Tasks.Dataflow.dll" />
-    <!-- Pinvoke issue -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/System.Data.dll" /> 
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/*.dll" />
     </ItemGroup>
 
     <!-- End Temporary workaround -->
