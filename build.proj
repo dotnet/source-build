@@ -37,13 +37,14 @@
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"
-        DllDestinationDir="$(ReferencePackagesSourceDir)"
+        DllDestinationDir="$(ReferencePackagesDllsDir)"
         IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
         DestinationDir="$(ReferencePackagesStagingDir)"
         />
     
     <ItemGroup>
-      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)/**/*.dll" />
+      <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)/**/*.nupkg" />
+      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesDllsDir)/**/*.dll" />
     </ItemGroup>
 
     <!-- Temporary workaround to exclude dlls that can't be round-tripped. See: https://github.com/dotnet/coreclr/issues/20262
@@ -52,21 +53,24 @@
 
     <ItemGroup>
     <!-- Issue https://github.com/dotnet/coreclr/issues/20262 -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesDllsDir)/**/System.Runtime.dll;$(ReferencePackagesDllsDir)/**/netstandard.dll" />
     <!-- The following dlls were brought in by Microsoft.NETCore.App-2.0.0-beta-001509-00 with the linker repo.  They contain ref assemblies
          that either contain resources or have native/unmanaged methods and cannot be round-tripped with ildasm/ilasm. -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/*.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesDllsDir)/**/2.0.0-beta-001509-00/**/*.dll" />
     </ItemGroup>
 
     <!-- End Temporary workaround -->
 
+    <Message Importance="High" Text="Reference-only Packages:" />
+    <Message Importance="High" Text="%(ReferenceOnlyPackages.Identity)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembling @(ReferenceOnlyPackageDlls->Count()) dlls" />
-    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=%(ReferenceOnlyPackageDlls.RootDir)%(ReferenceOnlyPackageDlls.Directory)%(ReferenceOnlyPackageDlls.Filename).il" />
+    <MakeDir Directories="$(ReferencePackagesSourceDir)%(ReferenceOnlyPackageDlls.RecursiveDir)" />
+    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(ReferencePackagesSourceDir)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls" />
-    <Delete Files="@(ReferenceOnlyPackageDlls)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls done." />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls directory" />
+    <RemoveDir Directories="$(ReferencePackagesDllsDir)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls directory done." />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
