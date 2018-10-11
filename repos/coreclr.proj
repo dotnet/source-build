@@ -7,11 +7,11 @@
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
-    <BuildArguments Condition="'$(OS)' != 'Windows_NT' AND $'(Platform)' == 'x86'">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
     <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT' AND $'(Platform)' == 'x86'">$(CrossRootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(CrossRootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180529-01</OfficialBuildId>
   </PropertyGroup>
