@@ -81,7 +81,7 @@
   <PropertyGroup>
      <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
      <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
-     <CrossRootFsEnvironmentVariables Condition="'$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)cross/rootfs/x86</CrossRootFsEnvironmentVariables> 
+     <CrossRootFsEnvironmentVariables Condition="'$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/x86</CrossRootFsEnvironmentVariables> 
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
