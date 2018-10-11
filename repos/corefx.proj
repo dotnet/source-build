@@ -5,6 +5,7 @@
     <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(CrossRootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180529-01</OfficialBuildId>
