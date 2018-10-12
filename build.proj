@@ -41,6 +41,15 @@
         IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
         DestinationDir="$(ReferencePackagesStagingDir)"
         />
+
+    <!-- Ildasm has trouble writing to paths that are longer than 260 chars. (see https://github.com/dotnet/coreclr/issues/20397)
+         Create a temporary path to write il output which will then be copied back to the reference-packages/source dir.
+    -->
+    <PropertyGroup>
+      <TempPath>$([System.IO.Path]::GetTempPath())</TempPath>
+      <IldasmTempOutputFolderName>$([System.IO.Path]::GetRandomFileName())</IldasmTempOutputFolderName>
+      <IldasmTempOutputPath>$([System.IO.Path]::Combine($(TempPath),$(IldasmTempOutputFolderName)))/</IldasmTempOutputPath>
+    </PropertyGroup>
     
     <ItemGroup>
       <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)/**/*.nupkg" />
@@ -65,13 +74,22 @@
     <Message Importance="High" Text="%(ReferenceOnlyPackages.Identity)" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembling @(ReferenceOnlyPackageDlls->Count()) dlls" />
-    <MakeDir Directories="$(ReferencePackagesSourceDir)%(ReferenceOnlyPackageDlls.RecursiveDir)" />
-    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(ReferencePackagesSourceDir)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
+    <MakeDir Directories="$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)" />
+    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls" />
+    <ItemGroup>
+      <IlSourceFiles Include="$(IldasmTempOutputPath)/**/*.il" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying @(IlSourceFiles->Count()) IL source files" />
+    <Copy SourceFiles="@(IlSourceFiles)" DestinationFiles="$(ReferencePackagesSourceDir)%(IlSourceFiles.RecursiveDir)%(IlSourceFiles.Filename).il" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying IL source files done." />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source" />
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls done." />
+    <Delete Files="@(IlSourceFiles)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
