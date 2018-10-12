@@ -230,6 +230,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                     var match = new PoisonMatch
                     {
                         File = matchingCatalogedFile.Path,
+                        Package = p.Path,
                         PackageId = p.Id,
                         PackageVersion = p.Version,
                     };
@@ -312,12 +313,14 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             {
                 throw new ArgumentOutOfRangeException($"Don't know how to decompress {zipToCheck}");
             }
+
+            if (!string.IsNullOrWhiteSpace(markerFileName) && File.Exists(Path.Combine(tempDir, markerFileName)))
+            {
+                poisonEntry.Type |= PoisonType.NupkgFile;
+            }
+
             foreach (var child in Directory.EnumerateFiles(tempDir, "*", SearchOption.AllDirectories))
             {
-                if (!string.IsNullOrWhiteSpace(markerFileName) && Path.GetFileName(child) == markerFileName)
-                {
-                    poisonEntry.Type |= PoisonType.NupkgFile;
-                }
                 // also add anything in this zip/package for checking
                 futureFilesToCheck.Enqueue(child);
             }
