@@ -16,7 +16,8 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
-INCLUDE_LEAK_DETECTION=1
+INCLUDE_LEAK_DETECTION=0
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
     if [ $# -le 0 ]; then
@@ -163,10 +164,9 @@ cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
-  find $TARBALL_ROOT/prebuilt
   echo 'Building leak detection MSBuild tasks...'
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1 ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
