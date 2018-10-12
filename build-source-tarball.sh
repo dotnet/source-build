@@ -119,11 +119,11 @@ mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
-# Copy reference-packages from bin dir to reference-packages directory.
+# Copy refpkgs from bin dir to refpkgs directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
-mkdir -p $TARBALL_ROOT/reference-packages
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+mkdir -p $TARBALL_ROOT/refpkgs
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/refpkgs/src $TARBALL_ROOT/refpkgs/src
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/refpkgs/staging $TARBALL_ROOT/refpkgs/staging
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt

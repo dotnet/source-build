@@ -84,14 +84,14 @@
     <ReferencePackagesBasePath>$(IntermediatePath)</ReferencePackagesBasePath>
     <!--
       Change ReferencePackagesBasePath conditionally in offline build.
-      See corresponding change in build-source-tarball.sh to copy reference-packages
-      from source-build bin dir to tarball reference-packages dir.
+      See corresponding change in build-source-tarball.sh to copy refpkgs
+      from source-build bin dir to tarball refpkgs dir.
     -->
     <ReferencePackagesBasePath Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)</ReferencePackagesBasePath>
-    <ReferencePackagesStagingDir>$(ReferencePackagesBasePath)reference-packages/staging/</ReferencePackagesStagingDir>
-    <ReferencePackagesSourceDir>$(ReferencePackagesBasePath)reference-packages/source/</ReferencePackagesSourceDir>
-    <ReferencePackagesDir>$(ReferencePackagesBasePath)reference-packages/packages/</ReferencePackagesDir>
-    <ReferencePackagesToDeleteDir>$(ReferencePackagesBasePath)reference-packages/packages-to-delete/</ReferencePackagesToDeleteDir>
+    <ReferencePackagesStagingDir>$(ReferencePackagesBasePath)refpkgs/staging/</ReferencePackagesStagingDir>
+    <ReferencePackagesSourceDir>$(ReferencePackagesBasePath)refpkgs/src/</ReferencePackagesSourceDir>
+    <ReferencePackagesDir>$(ReferencePackagesBasePath)refpkgs/packages/</ReferencePackagesDir>
+    <ReferencePackagesToDeleteDir>$(ReferencePackagesBasePath)refpkgs/packages-to-delete/</ReferencePackagesToDeleteDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->

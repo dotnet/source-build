@@ -35,8 +35,6 @@
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true'">
 
-    <Exec Command="df -m $(PackagesDir)" />
-
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"
         DllDestinationDir="$(ReferencePackagesSourceDir)"
@@ -63,7 +61,6 @@
 
     <!-- End Temporary workaround -->
 
-    <Exec Command="df -m $(PackagesDir)" />
     <Message Importance="High" Text="Reference-only Packages:" />
     <Message Importance="High" Text="%(ReferenceOnlyPackages.Identity)" />
 
@@ -72,11 +69,9 @@
     <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(ReferencePackagesSourceDir)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
 
-    <Exec Command="df -m $(PackagesDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls" />
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls done." />
-    <Exec Command="df -m $(PackagesDir)" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
