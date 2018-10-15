@@ -60,12 +60,23 @@
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
+    <PropertyGroup>
+      <SmokeTestCommand>./smoke-test.sh</SmokeTestCommand>
+      <SmokeTestCommand>$(SmokeTestCommand) --minimal</SmokeTestCommand>
+      <SmokeTestCommand>$(SmokeTestCommand) --projectOutput</SmokeTestCommand>
+      <SmokeTestCommand>$(SmokeTestCommand) --configuration $(Configuration)</SmokeTestCommand>
+      <SmokeTestCommand>$(SmokeTestCommand) --archiveRestoredPackages</SmokeTestCommand>
+
+      <!-- Dev certs don't work on this platform. -->
+      <SmokeTestCommand Condition="'$(TargetOS)' == 'OSX'">$(SmokeTestCommand) --excludeWebHttpsTests</SmokeTestCommand>
+    </PropertyGroup>
+
     <!--
       Pass prodConBlobFeedUrl via EnvironmentVariables because it has '//' in it, which is
       translated into '/' if it's passed in the Command arg.
       This is also a problem when passing CLI feeds: https://github.com/dotnet/source-build/issues/561
     -->
-    <Exec Command="./smoke-test.sh --minimal --projectOutput --configuration $(Configuration) --archiveRestoredPackages"
+    <Exec Command="$(SmokeTestCommand)"
           EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
   </Target>
 

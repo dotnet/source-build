@@ -1,21 +1,25 @@
+# Matrix build types:
+#   Production: Only runs the build, not a tarball build. Called "production" because it's the part
+#     used to produce tarballs. Some platforms might not be capable of producing a tarball yet: we
+#     still call this type of build "production" for consistency.
+#   Online: The leg produces a tarball then builds it while connected to the internet.
+#   Offline: The leg produces a tarball then builds it offline. Network disconnected using Docker.
+
 phases:
 - template: ../phases/ci-linux.yml
   parameters:
-    name: ci_Docker
+    phase: centos71
+    imageName: microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416
     matrix:
-      centos71-unshared:
-        artifactName: ci_Docker_centos71-unshared
-        buildOfflineTarball: true
-        imageName: microsoft/dotnet-buildtools-prereqs:centos711503_prereqs_2
+      Production: {}
+      Online: { type: Online }
+      Online Portable: { type: Online Portable }
+      Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
+
 - template: ../phases/ci-linux.yml
   parameters:
-    name: ci_Docker_RHEL_host
-    dockerRegistryPassword: $(BotAccount-dotnet-docker-acr-bot-password)
-    dockerRegistryServer: $(acr.server)
-    dockerRegistryUserName: $(acr.userName)
-    queueName: DotNetCore-Infra
-    queueDemands: VSTS_OS -equals Linux_RHEL_7.4
-    matrix:
-      rhel7.5:
-        artifactName: ci_Docker_RHEL_host_rhel7.5
-        imageName: dotnetdocker.azurecr.io/dotnet-buildtools-prereqs:rhel-7.5-b4560f6-20180725153037
+    phase: ubuntu1604
+    imageName: microsoft/dotnet-buildtools-prereqs:ubuntu-16.04-c103199-20180628134544
+
+- template: ../phases/ci-osx.yml

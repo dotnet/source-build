@@ -1,10 +1,5 @@
-  steps:
-  # TODO: Remove this redundant step once agent supports "--volumes".
-  - script: docker system prune -a -f
-    displayName: Cleanup Docker (without --volumes, for agent compatibility)
-    condition: always()
-    continueOnError: true
-  - script: docker system prune -a -f --volumes
-    displayName: Cleanup Docker
-    condition: always()
-    continueOnError: true
+steps:
+- script: docker system prune -a -f --volumes
+  displayName: Cleanup Docker
+  condition: always()
+  continueOnError: true
