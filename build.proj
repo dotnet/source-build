@@ -59,15 +59,9 @@
     <!-- Temporary workaround to exclude dlls that can't be round-tripped. See: https://github.com/dotnet/coreclr/issues/20262
          They'll end up in the source directory as dlls for now 
     -->
-
     <ItemGroup>
-    <!-- Issue https://github.com/dotnet/coreclr/issues/20262 -->
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
-    <!-- The following dlls were brought in by Microsoft.NETCore.App-2.0.0-beta-001509-00 with the linker repo.  They contain ref assemblies
-         that either contain resources or have native/unmanaged methods and cannot be round-tripped with ildasm/ilasm. -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/2.0.0-beta-001509-00/**/*.dll" />
     </ItemGroup>
-
     <!-- End Temporary workaround -->
 
     <Message Importance="High" Text="Reference-only Packages:" />

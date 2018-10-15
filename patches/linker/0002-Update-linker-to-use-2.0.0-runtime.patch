@@ -1,0 +1,25 @@
+From c884d2eeacddbb3a09b8b2bac3c132ff3b3b63e4 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 15 Oct 2018 19:18:18 +0000
+Subject: [PATCH] Update linker to use 2.0.0 runtime
+
+---
+ linker/ILLink.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/linker/ILLink.props b/linker/ILLink.props
+index db2a8a8..b24b882 100644
+--- a/linker/ILLink.props
++++ b/linker/ILLink.props
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
+     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netcoreapp2.0</TargetFrameworks>
+-    <RuntimeFrameworkVersion>2.0.0-beta-001509-00</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
+     <DefineConstants>$(DefineConstants);FEATURE_ILLINK</DefineConstants>
+     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+-- 
+1.8.3.1
+
