@@ -148,6 +148,12 @@ do
     cp $built_package $TARBALL_ROOT/prebuilt/source-built/
 done
 
+if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
+  echo 'Building leak detection MSBuild tasks...'
+  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+fi
+
 echo 'Removing reference-only packages from tarball prebuilts...'
 
 for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
@@ -177,12 +183,6 @@ fi
 SOURCE_BUILT_SDK_TOOLS_DIR="$TARBALL_ROOT/Tools/source-built/$ROSLYN_TOOLS_PACKAGE/tools"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
-
-if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
-  echo 'Building leak detection MSBuild tasks...'
-  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
-  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
-fi
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 
