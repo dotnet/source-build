@@ -81,17 +81,17 @@
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
-    <ReferencePackagesBasePath>$(IntermediatePath)</ReferencePackagesBasePath>
+    <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
     <!--
-      Change ReferencePackagesBasePath conditionally in offline build.
+      Change ReferencePackagesBaseDir conditionally in offline build.
       See corresponding change in build-source-tarball.sh to copy reference-packages
       from source-build bin dir to tarball reference-packages dir.
     -->
-    <ReferencePackagesBasePath Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)</ReferencePackagesBasePath>
-    <ReferencePackagesStagingDir>$(ReferencePackagesBasePath)reference-packages/staging/</ReferencePackagesStagingDir>
-    <ReferencePackagesSourceDir>$(ReferencePackagesBasePath)reference-packages/source/</ReferencePackagesSourceDir>
-    <ReferencePackagesDir>$(ReferencePackagesBasePath)reference-packages/packages/</ReferencePackagesDir>
-    <ReferencePackagesToDeleteDir>$(ReferencePackagesBasePath)reference-packages/packages-to-delete/</ReferencePackagesToDeleteDir>
+    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)reference-packages/</ReferencePackagesBaseDir>
+    <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
+    <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
+    <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
+    <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->

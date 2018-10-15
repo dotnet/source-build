@@ -3,6 +3,9 @@ From: dseefeld <dseefeld@microsoft.com>
 Date: Mon, 15 Oct 2018 19:18:18 +0000
 Subject: [PATCH] Update linker to use 2.0.0 runtime
 
+This patch changes the RuntimeFrameworkVersion because the beta-001509-00
+version causes issues with ildasm/ilasm round trip of reference-only 
+packages.
 ---
  linker/ILLink.props | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

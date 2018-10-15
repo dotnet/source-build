@@ -52,15 +52,16 @@
     </PropertyGroup>
     
     <ItemGroup>
-      <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)/**/*.nupkg" />
-      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)/**/*.dll" />
+      <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)**/*.nupkg" />
+      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)**/*.dll" />
     </ItemGroup>
 
     <!-- Temporary workaround to exclude dlls that can't be round-tripped. See: https://github.com/dotnet/coreclr/issues/20262
          They'll end up in the source directory as dlls for now 
     -->
     <ItemGroup>
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)/**/System.Runtime.dll;$(ReferencePackagesSourceDir)/**/netstandard.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Runtime.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/netstandard.dll" />
     </ItemGroup>
     <!-- End Temporary workaround -->
 
@@ -82,7 +83,7 @@
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source" />
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
-    <Delete Files="@(IlSourceFiles)" />
+    <RemoveDir Directories="$(TempPath)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
   </Target>
 
