@@ -145,10 +145,18 @@ def addPushJob(String project, String branch, String os, String configuration, b
 
         def shortJobName = "${os}_Tarball_${configuration}";
         def contextString = "${os} Tarball ${configuration}";
+        def poisonProductionBuildArgument = ""
+        def poisonConsumptionBuildArugment = ""
 
         if (portable) {
           shortJobName += "_Portable"
           contextString += " Portable"
+        }
+
+        // only run poisoning on one platform for now
+        if (os == "CentOS7.1") {
+          poisonProductionBuildArgument = "--enable-leak-detection"
+          poisonConsumptionBuildArugment = "/p:EnablePoison=true"
         }
 
         def triggerPhrase = "(?i).*test\\W+${contextString}.*";
@@ -157,9 +165,9 @@ def addPushJob(String project, String branch, String os, String configuration, b
           steps{
               shell("cd ./source-build;git submodule update --init --recursive");
               shell("cd ./source-build;./build.sh /p:ArchiveDownloadedPackages=true /p:Configuration=${configuration} /p:PortableBuild=${portable} ${loggingOptions}");
-              shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build");
+              shell("cd ./source-build;./build-source-tarball.sh ../tarball-output --skip-build ${poisonProductionBuildArgument}");
 
-              shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}")
+              shell("cd ./tarball-output;./build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${poisonConsumptionBuildArugment} ${loggingOptions}")
               shell("cd ./tarball-output;./smoke-test.sh --minimal --configuration ${configuration}")
           }
         }
@@ -200,10 +208,18 @@ def addPushJob(String project, String branch, String os, String configuration, b
 
         def shortJobName = "${os}_Unshared_${configuration}";
         def contextString = "${os} Unshared ${configuration}";
+        def poisonProductionBuildArgument = ""
+        def poisonConsumptionBuildArugment = ""
 
         if (portable) {
           shortJobName += "_Portable"
           contextString += " Portable"
+        }
+
+        // only run poisoning on one platform for now
+        if (os == "CentOS7.1") {
+          poisonProductionBuildArgument = "--enable-leak-detection"
+          poisonConsumptionBuildArugment = "/p:EnablePoison=true"
         }
 
         def triggerPhrase = "(?i).*test\\W+${contextString}.*";
@@ -217,9 +233,9 @@ def addPushJob(String project, String branch, String os, String configuration, b
               // Have to make this directory before volume-sharing it unlike non-docker build - existing directory is really only a warning in build-source-tarball.sh
               shell("mkdir tarball-output");
               // now build the tarball
-              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build");
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/code/home --network none -v \$(pwd)/source-build:/opt/code -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/code ${imageName} /opt/code/build-source-tarball.sh /opt/tarball --skip-build ${poisonProductionBuildArgument}");
               // now build from the tarball offline and without access to the regular non-tarball build
-              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${loggingOptions}");
+              shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home --network none -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/build.sh /p:Configuration=${configuration} /p:PortableBuild=${portable} /p:FailOnPrebuiltBaselineError=true ${poisonConsumptionBuildArugment} ${loggingOptions}");
               // finally, run a smoke-test on the result
               shell("docker run -u=\"\$(id -u):\$(id -g)\" -t --sig-proxy=true -e HOME=/opt/tarball/home -v \$(pwd)/tarball-output:/opt/tarball --rm -w /opt/tarball ${imageName} /opt/tarball/smoke-test.sh --minimal --configuration ${configuration}");
           }
