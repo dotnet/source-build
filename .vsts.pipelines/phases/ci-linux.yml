@@ -1,20 +1,16 @@
 parameters:
-  dockerRegistryPassword: ''
-  dockerRegistryServer: ''
-  dockerRegistryUserName: ''
-  matrix: null
-  name: ci
-  queueDemands: Agent.OS -equals Linux
-  queueName: DotNet-Build
+  imageName: null
+  matrix:
+    Production: {}
+  phase: null
+  queueDemands: docker
+  queueName: dnceng-linux-external-temp
 
 phases:
-- phase: ${{ parameters.name }}
+- phase: ${{ parameters.phase }}
   variables:
-    # Prefix to distinguish artifacts from different legs. No documented variable for this exists.
-    artifactName: no_artifact_name
-    buildLoggingOptions: ''
-    buildConfiguration: Release
-    buildOfflineTarball: false
+    # Prefix to distinguish artifacts from different legs.
+    artifactName: ${{ format('$(type) {0}', parameters.phase) }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc
@@ -26,107 +22,73 @@ phases:
     docker.src.work: -w /src
     docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
     docker.tb.work: -w /tb
-    dockerRegistry.password: ${{ parameters.dockerRegistryPassword }}
-    dockerRegistry.server: ${{ parameters.dockerRegistryServer }}
-    dockerRegistry.userName: ${{ parameters.dockerRegistryUserName }}
     dropDirectory: $(stagingDirectory)/drop
+    imageName: ${{ parameters.imageName }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
+    # Default type, can be overridden by matrix legs.
+    type: Production
   queue:
     name: ${{ parameters.queueName }}
     demands: ${{ parameters.queueDemands }}
-    timeoutInMinutes: 240
-    parallel: 2
+    timeoutInMinutes: 270
+    parallel: 8
     matrix: ${{ parameters.matrix }}
+
   steps:
   - template: ../steps/docker-cleanup-linux.yml
-
-  # Docker registry login and pull, if one is defined.
-  - script: |
-      docker login -u $(dockerRegistry.userName) -p $(dockerRegistry.password) $(dockerRegistry.server)
-      docker pull $(imageName)
-    displayName: Docker login and image pull
-    condition: and(succeeded(), ne(variables['dockerRegistry.server'], ''))
-
-  # Docker registry logout, if one is defined. Do this immediately: avoid unnecessary login time.
-  - script: docker logout $(dockerRegistry.server)
-    displayName: Docker logout
-    condition: ne(variables['dockerRegistry.server'], '')
+  - template: ../steps/calculate-config-flags-linux.yml
 
   # Create working directory and copy source into it.
   - script: |
       set -x
+      df -h
       $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
         rm -rf /root/sb/
         mkdir -p /root/sb/tarball
         cp -r . /root/sb/source-build'
     displayName: Clean sb directory and copy source from cloned directory
 
-  # Fetch vsts commits if building internally.
-  - script: |
-      set -x
-      # Ignore failure for the first command. It will intentionally fail if the commit is only
-      # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
-      # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
-      # .git/modules/src/coreclr/ directories.)
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) git submodule update --init --recursive
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./fetch-vsts-commits.sh $(user.PAT)
-    displayName: Fetch internal vsts commits
-    condition: and(succeeded(), ne(variables['user.PAT'], ''))
-
-  # Initialize submodules.
-  - script: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) git submodule update --init --recursive
-    displayName: Initialize submodules
+  - template: ../steps/init-submodules-sh.yml
+    parameters:
+      commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
 
   # Build source-build.
   - script: |
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
-        /p:ArchiveDownloadedPackages=true \
-        /p:Configuration=$(buildConfiguration) \
-        /p:ContinueOnPrebuiltBaselineError=$(buildOfflineTarball) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
-        $(buildLoggingOptions)
-    displayName: Build source-build
-    timeoutInMinutes: 90
-
-  # Copy logs to working directory.
-  - script: |
       set -x
-      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs
-        find . \( \
-          -iname '*.binlog' -o \
-          -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;"
-    displayName: Copy source-build logs
-    condition: always()
-    continueOnError: true
+      df -h
+      if [ "$(sb.tarball)" != "true" ]; then
+        failOnBaselineError=true
+      fi
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+        /p:Configuration=$(sb.configuration) \
+        /p:PortableBuild=$(sb.portable) \
+        /p:ArchiveDownloadedPackages=$(sb.tarball) \
+        /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+    displayName: Build source-build
+    timeoutInMinutes: 120
 
   # Run smoke tests.
   - script: |
+      set -x
+      df -h
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /t:RunSmokeTest \
-        /p:Configuration=$(buildConfiguration) \
+        /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run smoke-test
 
-  # Copy smoke test logs to working directory.
-  - script: |
-      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/smoke-test
-        find ./testing-smoke -name '*.log' -exec cp {} /logs/source-build/smoke-test \;"
-    displayName: Copy smoke-test logs
-    condition: always()
-    continueOnError: true
-
   # Create tarball.
   - script: |
+      set -x
+      df -h
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         --skip-build
     displayName: Create tarball
-    condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # tar the tarball directory into the drop directory.
   - script: |
@@ -144,46 +106,66 @@ phases:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
         tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
     displayName: Copy tarball to output
-    condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Build tarball.
   - script: |
-      $(docker.run) $(docker.tb.map) $(docker.tb.work) --network='none' $(imageName) "$(tarballName)/build.sh" \
-        /p:Configuration=$(buildConfiguration) \
-        $(buildLoggingOptions)
+      set -x
+      df -h
+      networkArg=
+      if [ "$(sb.tarballOffline)" = "true" ]; then
+        networkArg="--network=none"
+      fi
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
+        /p:Configuration=$(sb.configuration) \
+        /p:PortableBuild=$(sb.portable) \
+        /p:FailOnPrebuiltBaselineError=true
     displayName: Build tarball
-    timeoutInMinutes: 90
-    condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+    timeoutInMinutes: 120
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Run smoke tests.
   - script: |
+      set -x
+      df -h
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
         --minimal \
         --projectOutput \
-        --configuration $(buildConfiguration) \
+        --configuration $(sb.configuration) \
         --prodConBlobFeedUrl ''
     displayName: Run smoke-test in tarball
-    condition: and(succeeded(), eq(variables['buildOfflineTarball'], true))
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
-  # Copy all tarball logs to working directory.
+  - script: df -h
+    displayName: Check space (df -h)
+    condition: always()
+    continueOnError: true
+
+  # Copy logs and reports to staging directory.
+  - script: |
+      set -x
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
+        mkdir -p /logs/source-build/logs
+        find . \( \
+          -path './bin/*-report/*' -o \
+          -iname '*.binlog' -o \
+          -iname '*.log' \) \
+          -exec cp {} --parents /logs/source-build/logs \;"
+    displayName: Copy source-build logs
+    condition: always()
+    continueOnError: true
   - script: |
       set -x
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/tarball/logs
         cd \"$(tarballName)\"
         find . \( \
+          -path './bin/*-report/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/tarball/logs \;
-        # Copy offline prebuilt report
-        mkdir -p /logs/prebuilt-report/offline
-        cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/offline"
-      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        # Copy online prebuilt report
-        mkdir -p /logs/prebuilt-report/online
-        cp -r ./bin/prebuilt-report/* /logs/prebuilt-report/online"
+          -exec cp {} --parents /logs/tarball/logs \;"
     displayName: Copy tarball logs
-    condition: eq(variables['buildOfflineTarball'], true)
+    condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 
   # Copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files
@@ -201,15 +183,15 @@ phases:
     condition: always()
     continueOnError: true
     inputs:
-      PathtoPublish: $(dropDirectory)/logs
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
       ArtifactName: Logs $(artifactName)
       ArtifactType: Container
   - task: PublishBuildArtifacts@1
     displayName: Publish Tarball artifact
-    condition: eq(variables['buildOfflineTarball'], true)
+    condition: eq(variables['sb.tarball'], true)
     continueOnError: true
     inputs:
-      PathtoPublish: $(dropDirectory)/tarball
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
       ArtifactName: Tarball $(artifactName)
       ArtifactType: Container
 
@@ -220,3 +202,8 @@ phases:
     continueOnError: true
 
   - template: ../steps/docker-cleanup-linux.yml
+
+  - script: df -h
+    displayName: Check space (df -h)
+    condition: always()
+    continueOnError: true
