@@ -11,7 +11,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
-MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed" "/clp:v=detailed")
+MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 
 echo "Expanding BuildTools dependencies into packages directory..."
 # init-tools tries to copy from its script directory to Tools, which in this case is a copy to
