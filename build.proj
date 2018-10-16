@@ -83,7 +83,7 @@
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source" />
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
-    <RemoveDir Directories="$(TempPath)" />
+    <RemoveDir Directories="$(IldasmTempOutputPath)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
   </Target>
 
