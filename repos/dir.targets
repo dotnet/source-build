@@ -146,6 +146,11 @@
                             Condition="'$(OfflineBuild)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="reference-packages"
+                            SourcePath="$(ReferencePackagesDir)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
@@ -215,6 +220,7 @@
           BeforeTargets="Build">
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
+      <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
       <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
     </ItemGroup>
@@ -374,6 +380,7 @@
       <TarballPrebuiltPackageFiles Include="$(PrebuiltPackagesPath)*.nupkg" />
 
       <SourceBuiltPackageFiles Include="$(SourceBuiltBlobFeedDir)**/*.nupkg" />
+      <ReferencePackageFiles Condition="'$(OfflineBuild)' == 'true'" Include="$(ReferencePackagesDir)**/*.nupkg" />
 
       <!-- Check all RIDs from all restored Microsoft.NETCore.Platforms packages. -->
       <PlatformsRuntimeJsonFiles Include="$(LocalNuGetPackagesRoot)*/microsoft.netcore.platforms/*/runtime.json" />
@@ -389,6 +396,7 @@
       RestoredPackageFiles="@(AllRestoredPackageFiles)"
       TarballPrebuiltPackageFiles="@(TarballPrebuiltPackageFiles)"
       SourceBuiltPackageFiles="@(SourceBuiltPackageFiles)"
+      ReferencePackageFiles="@(ReferencePackageFiles)"
       PlatformsRuntimeJsonFiles="@(PlatformsRuntimeJsonFiles)"
       TargetRid="$(TargetRid)"
       ProjectDirectories="@(ProjectDirectories)"

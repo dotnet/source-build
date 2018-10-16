@@ -3,6 +3,7 @@
   <Import Project="dir.props" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="CheckForPoison" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CopyReferenceOnlyPackages" />
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -28,6 +29,62 @@
 
   <Target Name="Clean">
     <RemoveDir Directories="$(BaseOutputPath)" />
+  </Target>
+
+  <Target Name="CopyAndDisassembleReferenceOnlyPackages"
+          AfterTargets="Build"
+          Condition="'$(OfflineBuild)' != 'true'">
+
+    <CopyReferenceOnlyPackages
+        PackageCacheDir="$(PackagesDir)"
+        DllDestinationDir="$(ReferencePackagesSourceDir)"
+        IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
+        DestinationDir="$(ReferencePackagesStagingDir)"
+        />
+
+    <!-- Ildasm has trouble writing to paths that are longer than 260 chars. (see https://github.com/dotnet/coreclr/issues/20397)
+         Create a temporary path to write il output which will then be copied back to the reference-packages/source dir.
+    -->
+    <PropertyGroup>
+      <TempPath>$([System.IO.Path]::GetTempPath())</TempPath>
+      <IldasmTempOutputFolderName>$([System.IO.Path]::GetRandomFileName())</IldasmTempOutputFolderName>
+      <IldasmTempOutputPath>$([System.IO.Path]::Combine($(TempPath),$(IldasmTempOutputFolderName)))/</IldasmTempOutputPath>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)**/*.nupkg" />
+      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)**/*.dll" />
+    </ItemGroup>
+
+    <!-- Temporary workaround to exclude dlls that can't be round-tripped. See: https://github.com/dotnet/coreclr/issues/20262
+         They'll end up in the source directory as dlls for now 
+    -->
+    <ItemGroup>
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Runtime.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/netstandard.dll" />
+    </ItemGroup>
+    <!-- End Temporary workaround -->
+
+    <Message Importance="High" Text="Reference-only Packages:" />
+    <Message Importance="High" Text="%(ReferenceOnlyPackages.Identity)" />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembling @(ReferenceOnlyPackageDlls->Count()) dlls" />
+    <MakeDir Directories="$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)" />
+    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
+
+    <ItemGroup>
+      <IlSourceFiles Include="$(IldasmTempOutputPath)/**/*.il" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying @(IlSourceFiles->Count()) IL source files" />
+    <Copy SourceFiles="@(IlSourceFiles)" DestinationFiles="$(ReferencePackagesSourceDir)%(IlSourceFiles.RecursiveDir)%(IlSourceFiles.Filename).il" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying IL source files done." />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source" />
+    <Delete Files="@(ReferenceOnlyPackageDlls)" />
+    <RemoveDir Directories="$(IldasmTempOutputPath)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
