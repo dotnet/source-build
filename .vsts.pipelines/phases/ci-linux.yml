@@ -10,7 +10,7 @@ phases:
 - phase: ${{ parameters.phase }}
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type)_{0}', parameters.phase) }}
+    artifactName: ${{ format('$(type) {0}', parameters.phase) }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc

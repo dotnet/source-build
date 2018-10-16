@@ -9,7 +9,7 @@ phases:
 - phase: ${{ parameters.phase }}
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type)_{0}', parameters.phase) }}
+    artifactName: ${{ format('$(type) {0}', parameters.phase) }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
