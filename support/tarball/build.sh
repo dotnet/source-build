@@ -11,7 +11,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
-MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed" "/clp:v=detailed")
+MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 
 echo "Rebuild reference assemblies"
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll $SCRIPT_ROOT/tools-local/init-build.proj /t:BuildReferenceAssemblies ${MSBUILD_ARGUMENTS[@]} "$@"

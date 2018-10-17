@@ -35,6 +35,13 @@
     <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <!-- A human-readable description of what's building and why. -->
+  <PropertyGroup>
+    <ProjectBuildReason>'$(RepositoryName)'</ProjectBuildReason>
+    <ProjectBuildReason Condition="'$(OfflineBuild)' != 'true' AND '$(ArchiveDownloadedPackages)' == 'true'">$(ProjectBuildReason) to produce tarball</ProjectBuildReason>
+    <ProjectBuildReason Condition="'$(OfflineBuild)' == 'true'">$(ProjectBuildReason) in tarball</ProjectBuildReason>
+  </PropertyGroup>
+
   <!-- for RTM only, default to stabilized builds because that's what matches the official builds -->
   <!-- once https://github.com/dotnet/source-build/issues/550 is fixed we will be able to determine this automatically -->
   <PropertyGroup>
