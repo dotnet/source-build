@@ -10,8 +10,7 @@
     <BuildArguments Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
     <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) --</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm'))">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="'$(RootFsEnvironmentVariables)' != ''">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20180529-01</OfficialBuildId>
   </PropertyGroup>

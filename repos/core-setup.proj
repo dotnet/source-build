@@ -6,8 +6,7 @@
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:PreReleaseLabel="preview"</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm'))">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <BuildCommand Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
+    <BuildCommand Condition="'$(RootFsEnvironmentVariables)' != ''">$(RootFsEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <OfficialBuildId>20180529-01</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
