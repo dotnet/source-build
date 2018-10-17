@@ -24,6 +24,10 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <LogVerbosity Condition="'$(LogVerbosity)'==''">minimal</LogVerbosity>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <BuildInParallel Condition="'$(BuildInParallel)'==''">false</BuildInParallel>
   </PropertyGroup>
 

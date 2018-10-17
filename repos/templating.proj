@@ -30,6 +30,7 @@
   <Target Name="RepoBuild">
     <PropertyGroup>
       <BuildCommandArgs>/t:Build</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) @(MSBuildProperties->'/p:%(Identity)', ' ')</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)build.proj</BuildCommandArgs>

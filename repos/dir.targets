@@ -34,6 +34,7 @@
     <DependencyVersionInputRepoApiImplemented Condition="'$(DependencyVersionInputRepoApiImplemented)' == ''">$(RepoApiImplemented)</DependencyVersionInputRepoApiImplemented>
     <SourceOverrideRepoApiImplemented Condition="'$(SourceOverrideRepoApiImplemented)' == ''">$(RepoApiImplemented)</SourceOverrideRepoApiImplemented>
     <OutputPlacementRepoApiImplemented Condition="'$(OutputPlacementRepoApiImplemented)' == ''">$(RepoApiImplemented)</OutputPlacementRepoApiImplemented>
+    <LogVerbosityRepoApiImplemented Condition="'$(LogVerbosityRepoApiImplemented)' == ''">$(RepoApiImplemented)</LogVerbosityRepoApiImplemented>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' != 'true'">
@@ -55,6 +56,10 @@
   <!-- Output placement arguments -->
   <PropertyGroup Condition="'$(OutputPlacementRepoApiImplemented)' == 'true'">
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
+  </PropertyGroup>
+  <!-- Logging arguments -->
+  <PropertyGroup Condition="'$(LogVerbosityRepoApiImplemented)' == 'true'">
+    <RepoApiArgs>$(RepoApiArgs) /v:$(LogVerbosity)</RepoApiArgs>
   </PropertyGroup>
 
   <Import Project="$(ProjectDirectory)dependencies.props"
@@ -272,7 +277,7 @@
     <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
     <Message Importance="High" Text="  With Environment Variables:" />
     <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
-    <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(BuildPackagesCommand) /v:$(LogVerbosity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
@@ -351,7 +356,7 @@
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
-    <Exec Command="$(CleanCommand) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(CleanCommand) /v:$(LogVerbosity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
