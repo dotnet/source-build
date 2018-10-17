@@ -35,12 +35,6 @@
     <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
   </PropertyGroup>
 
-  <!-- for RTM only, default to stabilized builds because that's what matches the official builds -->
-  <!-- once https://github.com/dotnet/source-build/issues/550 is fixed we will be able to determine this automatically -->
-  <PropertyGroup>
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
-  </PropertyGroup>
-
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
@@ -51,9 +45,12 @@
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
+
     <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
+    <EnvironmentVariables Include="PB_VersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
 
     <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
     <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
