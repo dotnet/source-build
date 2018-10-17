@@ -89,7 +89,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
-                foreach (var extraProp in ExtraProperties)
+                foreach (var extraProp in ExtraProperties ?? Enumerable.Empty<ITaskItem>())
                 {
                     string propertyName = extraProp.GetMetadata("Identity");
                     sw.WriteLine($"    <{propertyName}>{extraProp.GetMetadata("Version")}</{propertyName}>");
