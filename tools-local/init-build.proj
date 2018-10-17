@@ -63,9 +63,9 @@
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
      <Message Text="Generating Root FS with Platform=$(Platform)" />
-     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
-     <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
-     <Exec Condition="'$(Platform)' == 'x86'" Command="$(CrossRootFsEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh x86" />
+     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(RootFsEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
+     <Exec Condition="'$(Platform)' == 'armel'" Command="$(RootFsEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
+     <Exec Condition="'$(Platform)' == 'x86'" Command="$(RootFsEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh x86" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">

@@ -79,9 +79,9 @@
   <Import Project="$(ToolsDir)Build.Common.props" Condition="Exists('$(ToolsDir)Build.Common.props')" />
 
   <PropertyGroup>
-     <ArmEnvironmentVariables Condition="'$(ArmEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</ArmEnvironmentVariables>
-     <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
-     <CrossRootFsEnvironmentVariables Condition="'$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/x86</CrossRootFsEnvironmentVariables> 
+     <RootFsEnvironmentVariables Condition="'$(RootFsEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</RootFsEnvironmentVariables>
+     <RootFsEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</RootFsEnvironmentVariables>
+     <RootFsEnvironmentVariables Condition="'$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/x86</RootFsEnvironmentVariables> 
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
