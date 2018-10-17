@@ -167,7 +167,7 @@
       <_AdditionalAssetDirs Include="$(SourceBuiltToolsetDir)" Condition="Exists('$(SourceBuiltToolsetDir)')" />
     </ItemGroup>
     <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
-                           ExtraPackageInfo="@(ExtraPackageVersionPropsPackageInfo)"
+                           ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                            AdditionalAssetDirs="@(_AdditionalAssetDirs)"
                            OutputPath="$(PackageVersionPropsPath)" />
 

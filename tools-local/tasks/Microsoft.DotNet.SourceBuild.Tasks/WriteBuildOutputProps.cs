@@ -36,12 +36,13 @@ namespace Microsoft.DotNet.Build.Tasks
         public bool IncludeCreationTimeProperty { get; set; }
 
         /// <summary>
-        /// Package id/versions to add to the build output props, which may not exist as nupkgs.
+        /// Properties to add to the build output props, which may not exist as nupkgs.
+        /// FOr example, this is used to pass the version of the CLI toolset archives.
         /// 
         /// %(Identity): Package identity.
         /// %(Version): Package version.
         /// </summary>
-        public ITaskItem[] ExtraPackageInfo { get; set; }
+        public ITaskItem[] ExtraProperties { get; set; }
 
         /// <summary>
         /// Additional assets to be added to the build output props.
@@ -50,12 +51,6 @@ namespace Microsoft.DotNet.Build.Tasks
         /// must be in a <AdditionalAssetDir>/<assetVersion> folder.
         /// </summary>
         public string[] AdditionalAssetDirs { get; set; }
-
-        private IEnumerable<PackageIdentity> ExtraPackageIdentities => ExtraPackageInfo
-            ?.Select(item => new PackageIdentity(
-                item.GetMetadata("Identity"),
-                NuGetVersion.Parse(item.GetMetadata("Version"))))
-            ?? Enumerable.Empty<PackageIdentity>();
 
         public override bool Execute()
         {
@@ -94,9 +89,10 @@ namespace Microsoft.DotNet.Build.Tasks
 
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
-                foreach (var extraPackage in ExtraPackageIdentities)
+                foreach (var extraProp in ExtraProperties)
                 {
-                    sw.WriteLine($"    <{extraPackage.Id}>{extraPackage.Version}</{extraPackage.Id}>");
+                    string propertyName = extraProp.GetMetadata("Identity");
+                    sw.WriteLine($"    <{propertyName}>{extraProp.GetMetadata("Version")}</{propertyName}>");
                 }
                 foreach (var additionalAsset in additionalAssets)
                 {
