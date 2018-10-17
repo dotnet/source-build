@@ -10,11 +10,11 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
 
     <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
-    <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
     <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
