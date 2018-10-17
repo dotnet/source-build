@@ -11,7 +11,7 @@
 
     <BuildArguments>-$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -portable=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
     <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
     <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
