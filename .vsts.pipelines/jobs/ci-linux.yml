@@ -1,16 +1,22 @@
 parameters:
-  imageName: null
+  job: null
   matrix:
     Production: {}
-  phase: null
-  queueDemands: docker
-  queueName: dnceng-linux-external-temp
+  poolName: dnceng-linux-external-temp
+  poolDemands: docker
+  imageName: null
 
-phases:
-- phase: ${{ parameters.phase }}
+jobs:
+- job: ${{ parameters.job }}
+  strategy:
+    matrix: ${{ parameters.matrix }}
+  pool:
+    name: ${{ parameters.poolName }}
+    demands: ${{ parameters.poolDemands }}
+  timeoutInMinutes: 270
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type) {0}', parameters.phase) }}
+    artifactName: ${{ format('$(type) {0}', parameters.job) }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc
@@ -29,12 +35,6 @@ phases:
     tarballName: tarball_$(Build.BuildId)
     # Default type, can be overridden by matrix legs.
     type: Production
-  queue:
-    name: ${{ parameters.queueName }}
-    demands: ${{ parameters.queueDemands }}
-    timeoutInMinutes: 270
-    parallel: 8
-    matrix: ${{ parameters.matrix }}
 
   steps:
   - template: ../steps/docker-cleanup-linux.yml
