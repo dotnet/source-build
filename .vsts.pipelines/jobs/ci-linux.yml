@@ -2,17 +2,15 @@ parameters:
   job: null
   matrix:
     Production: {}
-  poolName: dnceng-linux-external-temp
-  poolDemands: docker
+  pool:
+    name: Hosted Ubuntu 1604
   imageName: null
 
 jobs:
 - job: ${{ parameters.job }}
   strategy:
     matrix: ${{ parameters.matrix }}
-  pool:
-    name: ${{ parameters.poolName }}
-    demands: ${{ parameters.poolDemands }}
+  pool: ${{ parameters.pool }}
   timeoutInMinutes: 270
   variables:
     # Prefix to distinguish artifacts from different legs.

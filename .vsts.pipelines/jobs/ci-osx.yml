@@ -2,16 +2,15 @@ parameters:
   job: osx
   matrix:
     Production: {}
-  poolName: DotNetCore-Mac
-  poolDemands: Agent.OS -equals Darwin
+  pool:
+    name: DotNetCore-Mac
+    demands: Agent.OS -equals Darwin
 
 jobs:
 - job: ${{ parameters.job }}
   strategy:
     matrix: ${{ parameters.matrix }}
-  pool:
-    name: ${{ parameters.poolName }}
-    demands: ${{ parameters.poolDemands }}
+  pool: ${{ parameters.pool }}
   timeoutInMinutes: 240
   variables:
     # Prefix to distinguish artifacts from different legs.
