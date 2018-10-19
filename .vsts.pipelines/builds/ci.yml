@@ -5,10 +5,10 @@
 #   Online: The leg produces a tarball then builds it while connected to the internet.
 #   Offline: The leg produces a tarball then builds it offline. Network disconnected using Docker.
 
-phases:
-- template: ../phases/ci-linux.yml
+jobs:
+- template: ../jobs/ci-linux.yml
   parameters:
-    phase: centos71
+    job: centos71
     imageName: microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416
     matrix:
       Production: {}
@@ -17,9 +17,9 @@ phases:
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../phases/ci-linux.yml
+- template: ../jobs/ci-linux.yml
   parameters:
-    phase: ubuntu1604
+    job: ubuntu1604
     imageName: microsoft/dotnet-buildtools-prereqs:ubuntu-16.04-c103199-20180628134544
 
-- template: ../phases/ci-osx.yml
+- template: ../jobs/ci-osx.yml

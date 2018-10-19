@@ -1,24 +1,24 @@
 parameters:
+  job: osx
   matrix:
     Production: {}
-  phase: osx
-  queueDemands: Agent.OS -equals Darwin
-  queueName: DotNetCore-Mac
+  pool:
+    name: DotNetCore-Mac
+    demands: Agent.OS -equals Darwin
 
-phases:
-- phase: ${{ parameters.phase }}
+jobs:
+- job: ${{ parameters.job }}
+  strategy:
+    matrix: ${{ parameters.matrix }}
+  pool: ${{ parameters.pool }}
+  timeoutInMinutes: 240
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type) {0}', parameters.phase) }}
+    artifactName: ${{ format('$(type) {0}', parameters.job) }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
-  queue:
-    name: ${{ parameters.queueName }}
-    demands: ${{ parameters.queueDemands }}
-    timeoutInMinutes: 240
-    matrix: ${{ parameters.matrix }}
 
   steps:
   - checkout: self
