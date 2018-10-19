@@ -78,10 +78,10 @@
   <!-- Import Build tools common props file where repo-independent properties are found -->
   <Import Project="$(ToolsDir)Build.Common.props" Condition="Exists('$(ToolsDir)Build.Common.props')" />
 
-  <PropertyGroup>
-     <RootFsEnvironmentVariables Condition="'$(RootFsEnvironmentVariables)' == ''">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</RootFsEnvironmentVariables>
+  <PropertyGroup Condition="'$(RootFsEnvironmentVariables)' == ''">
+     <RootFsEnvironmentVariables Condition="$(Platform.Contains('arm'))">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/arm</RootFsEnvironmentVariables>
      <RootFsEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</RootFsEnvironmentVariables>
-     <RootFsEnvironmentVariables Condition="'$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/x86</RootFsEnvironmentVariables> 
+     <RootFsEnvironmentVariables Condition="'$(OS)' != 'Windows_NT' AND '$(Platform)' == 'x86'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/x86</RootFsEnvironmentVariables> 
   </PropertyGroup>
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
