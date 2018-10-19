@@ -27,6 +27,12 @@
     <MicrosoftNETSdkRazorPackageVersion>2.1.2</MicrosoftNETSdkRazorPackageVersion>
   </PropertyGroup>
 
+  <!-- Build stabilization properties as passed in by ProdCon. -->
+  <PropertyGroup>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+    <VersionStamp Condition="'$(VersionStamp)' == ''"></VersionStamp>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Get ILAsm tool version from CoreCLR. -->
     <RemoteDependencyBuildInfo Include="CoreClr">
