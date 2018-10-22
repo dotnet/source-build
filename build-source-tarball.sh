@@ -88,8 +88,7 @@ git submodule foreach --quiet --recursive '
     fi'
 
 echo 'Removing binaries from tarball src...'
-find $TARBALL_ROOT/src -type f -iname *.dll -exec rm {} \;
-find $TARBALL_ROOT/src -type f -iname *.exe -exec rm {} \;
+find $TARBALL_ROOT/src \( -type f -iname *.dll -o -iname *.exe \) -exec rm {} \;
 
 echo 'Copying scripts and tools to tarball...'
 
