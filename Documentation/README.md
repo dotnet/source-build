@@ -141,8 +141,14 @@ In your new project add a new NuGet.config to point to the Microsoft.NETCore.App
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-  <!-- NOTE: Leave this file here and keep it in sync with list in dir.props. -->
-  <!-- The command-line doesn't need it, but the IDE does.                    -->
+  <!--
+    Use a fresh packages directory located in the working directory.
+    This helps avoid nuget cache collision problems.
+  -->
+  <config>
+    <add key="globalPackagesFolder" value="packages" />
+  </config>
+  <!-- Prefer the source-built packages over the ones from nuget.org. -->
   <packageSources>
     <clear/>
     <add key="local feed" value="E:\repos\source-build\bin\x64\Release\runtime" />
@@ -158,10 +164,10 @@ Then in your csproj we need to set the Runtime version:
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <RootNamespace>source_build_test</RootNamespace>
-    <RuntimeFrameworkVersion>2.2.0-preview1-26509-04</RuntimeFrameworkVersion>
-    <NETCoreAppMaximumVersion>2.2</NETCoreAppMaximumVersion>
+    <RuntimeFrameworkVersion>3.0.0-preview1-26509-04</RuntimeFrameworkVersion>
+    <NETCoreAppMaximumVersion>3.0</NETCoreAppMaximumVersion>
   </PropertyGroup>
 
 </Project>
