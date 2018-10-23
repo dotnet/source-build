@@ -16,6 +16,7 @@
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments Condition="'$(PortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
@@ -38,6 +39,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="AdditionalRestoreArgs=/p:ToolsDir=$(ToolsDir)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
