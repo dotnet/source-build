@@ -2,6 +2,8 @@
 <Project ToolsVersion="15.0" InitialTargets="PrepareOutput" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="dir.props" />
 
+  <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="CheckForPoison" />
+
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
@@ -47,6 +49,18 @@
   -->
   <Target Name="RewritePrebuiltUsageReport">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
+  </Target>
+
+  <Target Name="ReportPoisonUsage"
+          AfterTargets="Build"
+          Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'">
+    <ItemGroup>
+      <FinalCliTarball Include="$(SourceBuiltTarBallPath)**/*$(TarBallExtension)" />
+    </ItemGroup>
+    <CheckForPoison FilesToCheck="@(FinalCliTarball)"
+                    HashCatalogFilePath="$(PoisonReportDataFile)"
+                    MarkerFileName="$(PoisonMarkerFile)"
+                    PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">

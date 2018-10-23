@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
+    <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard1.5</TargetFramework>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CoreSetupPlatformAbstractionsPath>$(SubmoduleDirectory)core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build">
+      <Version>15.6.82</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Utilities.Core">
+      <Version>15.6.82</Version>
+    </PackageReference>
+    <ProjectReference Include="../../../src/linker/cecil/Mono.Cecil.csproj">
+      <SetConfiguration Condition=" '$(Configuration)' == 'Debug' ">Configuration=netstandard_Debug</SetConfiguration>
+      <SetConfiguration Condition=" '$(Configuration)' == 'Release' ">Configuration=netstandard_Release</SetConfiguration>
+      <Project>{D68133BD-1E63-496E-9EDE-4FBDBF77B486}</Project>
+      <Name>Mono.Cecil</Name>
+    </ProjectReference>
+    <ProjectReference Include="../Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj" />
+  </ItemGroup>
+
+  <!--
+    Use some assemblies from the SDK, instead of package references. This ensures they match what's
+    found when the task is loaded by the SDK's MSBuild.
+  -->
+  <PropertyGroup>
+    <!-- Read SDK_VERSION if not passed in. Enables Visual Studio builds. -->
+    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$([System.IO.File]::ReadAllText('$(ProjectDir)DotnetCLIVersion.txt').Trim())</SDK_VERSION>
+    <SdkReferenceDir>$(ToolsDir)dotnetcli/sdk/$(SDK_VERSION)/</SdkReferenceDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
+    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="@(SdkAssembly -> '%(FileName)')">
+      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>
