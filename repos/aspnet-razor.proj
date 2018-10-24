@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <PropertyGroup>
+    <RazorSdkProjectDir>$(ProjectDirectory)src/Microsoft.NET.Sdk.Razor/</RazorSdkProjectDir>
+    <RazorSdkProjectFile>$(RazorSdkProjectDir)Microsoft.NET.Sdk.Razor.csproj</RazorSdkProjectFile>
+
+    <BuildNumber>30932</BuildNumber>
+
+    <BuildCommandArgs>pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(RazorSdkProjectFile)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
+    <!-- A nonfinal build adds "-t000" to the package version. (Prerelease builds are "final".) -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IsFinalBuild=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+
+    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+
+    <PackagesOutput>$(RazorSdkProjectDir)bin/$(Configuration)/</PackagesOutput>
+
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+
+    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
