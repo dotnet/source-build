@@ -1,0 +1,54 @@
+From 5022a1f4c0f490e81710630e775e496ad7cfd112 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 23 Aug 2018 11:36:10 -0500
+Subject: [PATCH] Add RuntimeFrameworkVersion to build with source-built
+ MS.NETCore.App under 2.1.401.
+
+This version number comes from the version of core-setup that source-build is building
+and will need to be kept synchronized with that version.
+
+---
+ build_projects/dotnet-cli-build/dotnet-cli-build.csproj | 1 +
+ src/dotnet/dotnet.csproj                                | 1 +
+ src/redist/redist.csproj                                | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+index acc4382e6..0b7f0d0da 100644
+--- a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
++++ b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
+@@ -3,6 +3,7 @@
+     <Description>Build scripts for dotnet-cli</Description>
+     <VersionPrefix>1.0.0</VersionPrefix>
+     <TargetFramework>$(CliTargetFramework)</TargetFramework>
++    <RuntimeFrameworkVersion>3.0.0-preview1-27023-03</RuntimeFrameworkVersion>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <OutputPath>bin\$(Configuration)</OutputPath>
+     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81</AssetTargetFallback>
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index 9d8d691a2..e6ef608f4 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -2,6 +2,7 @@
+   <PropertyGroup>
+     <Version>$(SdkVersion)</Version>
+     <TargetFramework>$(CliTargetFramework)</TargetFramework>
++    <RuntimeFrameworkVersion>3.0.0-preview1-27023-03</RuntimeFrameworkVersion>
+     <AssemblyName>dotnet</AssemblyName>
+     <OutputType>Exe</OutputType>
+     <AssemblyOriginatorKeyFile>../../tools/Key.snk</AssemblyOriginatorKeyFile>
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index efa5f0ab0..ae3efaa7d 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -5,6 +5,7 @@
+   <PropertyGroup>
+     <Version>$(SdkVersion)</Version>
+     <TargetFramework>$(CliTargetFramework)</TargetFramework>
++    <RuntimeFrameworkVersion>3.0.0-preview1-27023-03</RuntimeFrameworkVersion>
+     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+     <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
+     <AssetTargetFallback>dotnet5.4</AssetTargetFallback>
+-- 
+2.18.0
+
