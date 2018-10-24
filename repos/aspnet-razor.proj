@@ -10,8 +10,7 @@
     <BuildCommandArgs>pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RazorSdkProjectFile)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
-    <!-- A nonfinal build adds "-t000" to the package version. (Prerelease builds are "final".) -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:IsFinalBuild=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:IsFinalBuild=$(UseStableVersions)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
 
