@@ -5,6 +5,7 @@
 #   Online: The leg produces a tarball then builds it while connected to the internet.
 #   Offline: The leg produces a tarball then builds it offline. Network disconnected using Docker.
 
+name: $(Date:yyyyMMdd).$(Rev:.r)
 jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
