@@ -66,6 +66,7 @@ jobs:
       mkdir -p "$(logsDirectory)"
       find . \( \
         -path './bin/*-report/*' -o \
+        -path './bin/msbuild-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
         -exec rsync -R {} "$(logsDirectory)" \;

@@ -146,6 +146,7 @@ jobs:
         mkdir -p /logs/source-build/logs
         find . \( \
           -path './bin/*-report/*' -o \
+          -path './bin/msbuild-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/source-build/logs \;"
@@ -159,6 +160,7 @@ jobs:
         cd \"$(tarballName)\"
         find . \( \
           -path './bin/*-report/*' -o \
+          -path './bin/msbuild-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/tarball/logs \;"
