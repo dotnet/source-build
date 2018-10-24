@@ -87,6 +87,15 @@ git submodule foreach --quiet --recursive '
         git --work-tree="$TARBALL_SUBMODULE_PATH" checkout -- .
     fi'
 
+echo 'Removing binaries from tarball src...'
+find $TARBALL_ROOT/src \( -type f \( \
+    -iname *.dll -o \
+    -iname *.exe -o \
+    -iname *.pdb -o \
+    -iname *.mdb -o \
+    -iname *.zip -o \
+    -iname *.nupkg \) \) -exec rm {} \;
+
 echo 'Copying scripts and tools to tarball...'
 
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
