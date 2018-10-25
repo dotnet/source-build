@@ -2,11 +2,21 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>-ConfigurationGroup=$(Configuration) -PortableBuild=$(PortableBuild) -SkipTests=true </BuildArguments>
+    <BuildArguments>-ConfigurationGroup=$(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -SkipTests=true</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:BuildDebPackage=false /p:BuildAllPackages=true /p:PreReleaseLabel="preview"</BuildCommand>
+    <BuildArguments>$(BuildArguments) --</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:OutputRid=$(TargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(VersionStamp)"</BuildArguments>
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-    <OfficialBuildId>20180529-01</OfficialBuildId>
+
+    <OfficialBuildId>20181023-03</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>

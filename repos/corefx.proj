@@ -2,15 +2,33 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildArguments>-$(Configuration) -buildArch=$(Platform) -portable=$(PortableBuild) -BuildTests=false</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments) -- /p:ILLinkTrimAssembly=false</BuildCommand>
+    <!-- OSX core-setup build always uses the portable RID, so override it -->
+    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
+
+    <BuildArguments>-$(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -buildArch=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -portable=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) --</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
+
     <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <OfficialBuildId>20180529-01</OfficialBuildId>
+    <OfficialBuildId>20181023-03</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
   </ItemGroup>

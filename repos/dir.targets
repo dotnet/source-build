@@ -141,6 +141,11 @@
                             Condition="'$(OfflineBuild)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="previously-source-built"
+                            SourcePath="$(PrebuiltSourceBuiltPackagesPath)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
@@ -194,11 +199,13 @@
     <PropertyGroup>
       <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
       <_ReportDataFile>$(_ReportDir)usage.xml</_ReportDataFile>
+      <_ProjectAssetsJsonArchiveFile>$(_ReportDir)all-project-assets-json-files.zip</_ProjectAssetsJsonArchiveFile>
     </PropertyGroup>
 
     <WritePackageUsageData NuGetPackageInfos="@(ConflictingPackageInfos)"
                            RootDir="$(ProjectDir)"
-                           DataFile="$(_ReportDataFile)" />
+                           DataFile="$(_ReportDataFile)"
+                           ProjectAssetsJsonArchiveFile="$(_ProjectAssetsJsonArchiveFile)" />
 
     <WriteUsageReports DataFile="$(_ReportDataFile)"
                        OutputDirectory="$(_ReportDir)" />
@@ -211,6 +218,7 @@
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
     </ItemGroup>
     <WriteRestoreSourceProps RestoreSources="@(_DotNetRestoreSources)"
                              OutputPath="$(RestoreSourcePropsPath)" />
@@ -387,7 +395,8 @@
       TargetRid="$(TargetRid)"
       ProjectDirectories="@(ProjectDirectories)"
       RootDir="$(ProjectDir)"
-      DataFile="$(PackageReportDataFile)" />
+      DataFile="$(PackageReportDataFile)"
+      ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
   </Target>
 
   <Target Name="GetAllProjectDirectories">
@@ -409,15 +418,8 @@
       <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(BaselineDataFile)offline.xml</BaselineDataFile>
       <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(BaselineDataFile)online.xml</BaselineDataFile>
 
-      <ContinueOnPrebuiltBaselineError Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">false</ContinueOnPrebuiltBaselineError>
+      <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
-
-    <ValidateUsageAgainstBaseline
-      DataFile="$(PackageReportDataFile)"
-      BaselineDataFile="$(BaselineDataFile)"
-      OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
-      OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
-      ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
 
     <ItemGroup>
       <PackageVersionPropsSavedSnapshotFiles Include="$(PackageReportDir)snapshots/PackageVersions.props.pre.*.xml" />
@@ -428,6 +430,18 @@
                        ProdConBuildManifestFile="$(ProdConManifestFile)"
                        PoisonedReportFile="$(PoisonedReportFile)"
                        OutputDirectory="$(PackageReportDir)" />
+
+    <PropertyGroup Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">
+      <ContinueOnPrebuiltBaselineError>false</ContinueOnPrebuiltBaselineError>
+      <ContinueOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' != 'true'">true</ContinueOnPrebuiltBaselineError>
+    </PropertyGroup>
+
+    <ValidateUsageAgainstBaseline
+      DataFile="$(PackageReportDataFile)"
+      BaselineDataFile="$(BaselineDataFile)"
+      OutputBaselineFile="$(PackageReportDir)generated-new-baseline.xml"
+      OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
+      ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

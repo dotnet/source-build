@@ -10,13 +10,22 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
-    <Exec Command="$(DotnetToolCommand) restore $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+    <PropertyGroup>
+      <BuildCommandArgs>$(ProjectDirectory)/Microsoft.ApplicationInsights.csproj</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
+    </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) build $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotnetToolCommand) restore /bl:restore.binlog $(BuildCommandArgs)  "
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
 
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)/Microsoft.ApplicationInsights.csproj /p:Configuration=$(Configuration) $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(DotnetToolCommand) build /bl:build.binlog $(BuildCommandArgs)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
+
+    <Exec Command="$(DotnetToolCommand) pack /bl:pack.binlog $(BuildCommandArgs)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
   </Target>
 </Project>

@@ -7,6 +7,7 @@
   <Import Project="..\dir.props" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
 
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
@@ -17,7 +18,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches" />
+    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -75,6 +76,12 @@
       <Output PropertyName="TargetOS" TaskParameter="OSName" />
     </GetHostInformation>
 
+    <PropertyGroup Condition="'$(PortableBuild)' == 'true'">
+      <TargetRid Condition="'$(TargetOS)' == 'OSX'">osx-$(Platform)</TargetRid>
+      <TargetRid Condition="'$(TargetOS)' == 'Linux'">linux-$(Platform)</TargetRid>
+      <TargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-$(Platform)</TargetRid>
+    </PropertyGroup>
+
     <PropertyGroup>
       <TargetInfoPropsContent>&lt;Project ToolsVersion=&quot;15.0&quot;&gt;
   &lt;PropertyGroup&gt;
@@ -85,6 +92,15 @@
     </PropertyGroup>
     <MakeDir Directories="$(IntermediatePath)" Condition="!Exists('$(IntermediatePath)')" />
     <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
+  </Target>
+
+  <Target Name="PoisonPrebuiltPackages" Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'">
+    <ItemGroup>
+      <PrebuiltPackages Include="$(PrebuiltPackagesPath)**/*.nupkg" />
+      <PrebuiltSourceBuiltPackages Include="$(PrebuiltSourceBuiltPackagesPath)**/*.nupkg" />
+    </ItemGroup>
+    <MarkAndCatalogPackages PackagesToMark="@(PrebuiltPackages)" CatalogOutputFilePath="$(PoisonReportDataFile)" MarkerFileName="$(PoisonMarkerFile)" />
+    <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
   </Target>
 
 </Project>

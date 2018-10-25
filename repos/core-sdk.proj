@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux' or '$(TargetOS)' == 'OSX'">--runtime-id $(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
 
@@ -22,6 +22,7 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
     <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
@@ -35,7 +36,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="javascriptservices" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="toolset" />
   </ItemGroup>

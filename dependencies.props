@@ -17,12 +17,6 @@
     <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
   </PropertyGroup>
 
-  <!-- ILLink.Tasks package version -->
-  <PropertyGroup>
-    <ILLinkTasksPackage>ILLink.Tasks</ILLinkTasksPackage>
-    <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
-  </PropertyGroup>
-
   <!--
     Packages built by ProdCon, but not source-build. These are included as prebuilts, or embedded in
     the product as version strings to be used by the SDK to fetch extra content.
@@ -31,6 +25,12 @@
     <MicrosoftAspNetCoreAllPackageVersion>2.1.0</MicrosoftAspNetCoreAllPackageVersion>
     <MicrosoftAspNetCoreAppPackageVersion>2.1.0</MicrosoftAspNetCoreAppPackageVersion>
     <MicrosoftNETSdkRazorPackageVersion>2.1.0</MicrosoftNETSdkRazorPackageVersion>
+  </PropertyGroup>
+
+  <!-- Build stabilization properties as passed in by ProdCon. -->
+  <PropertyGroup>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
+    <VersionStamp Condition="'$(VersionStamp)' == ''">preview1</VersionStamp>
   </PropertyGroup>
 
   <ItemGroup>

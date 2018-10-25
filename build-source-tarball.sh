@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection]"
     echo ""
 }
 
@@ -16,6 +16,8 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
+INCLUDE_LEAK_DETECTION=0
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
     if [ $# -le 0 ]; then
@@ -30,6 +32,9 @@ while :; do
             ;;
         --skip-build)
             SKIP_BUILD=1
+            ;;
+        --enable-leak-detection)
+            INCLUDE_LEAK_DETECTION=1
             ;;
         *)
             echo "Unrecognized argument '$1'"
@@ -110,6 +115,7 @@ rm -rf $TARBALL_ROOT/Tools/configuration/configuration.props
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
 mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
+mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
@@ -127,6 +133,13 @@ do
     if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
     fi
+done
+
+echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
+
+for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg')
+do
+    cp $built_package $TARBALL_ROOT/prebuilt/source-built/
 done
 
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
@@ -150,6 +163,11 @@ SOURCE_BUILT_SDK_TOOLS_DIR="$TARBALL_ROOT/Tools/source-built/$ROSLYN_TOOLS_PACKA
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
 
+if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
+  echo 'Building leak detection MSBuild tasks...'
+  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+fi
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 

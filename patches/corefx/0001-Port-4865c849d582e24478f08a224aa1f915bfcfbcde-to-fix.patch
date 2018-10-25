@@ -1,0 +1,27 @@
+From a1ec3cb7060eedf4f9842e8f749d4f6fc8470f8a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 24 Oct 2018 10:24:51 -0500
+Subject: [PATCH] Port 4865c849d582e24478f08a224aa1f915bfcfbcde to fix errors.
+
+---
+ CodeAnalysis.ruleset | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/CodeAnalysis.ruleset b/CodeAnalysis.ruleset
+index 2bf447f3f6..8920fd2575 100644
+--- a/CodeAnalysis.ruleset
++++ b/CodeAnalysis.ruleset
+@@ -35,4 +35,8 @@
+     <Rule Id="CA5350" Action="Error" /> <!-- Do not use Weak/Broken cryptographic algorithms -->
+     <Rule Id="CA5351" Action="Error" />
+   </Rules>
+-</RuleSet>
++  <Rules AnalyzerId="Microsoft.AnalyzerPowerPack.CSharp" RuleNamespace="Microsoft.AnalyzerPowerPack.CSharp">
++    <!-- Disable analyzer warning 1821 until https://github.com/dotnet/roslyn-analyzers/issues/1804 is resolved -->
++    <Rule Id="CA1821" Action="None" />
++  </Rules>
++</RuleSet>
+\ No newline at end of file
+-- 
+2.18.0
+
