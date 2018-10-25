@@ -10,7 +10,6 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
 
     <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
