@@ -87,6 +87,15 @@ git submodule foreach --quiet --recursive '
         git --work-tree="$TARBALL_SUBMODULE_PATH" checkout -- .
     fi'
 
+echo 'Removing binaries from tarball src...'
+find $TARBALL_ROOT/src \( -type f \( \
+    -iname *.dll -o \
+    -iname *.exe -o \
+    -iname *.pdb -o \
+    -iname *.mdb -o \
+    -iname *.zip -o \
+    -iname *.nupkg \) \) -exec rm {} \;
+
 echo 'Copying scripts and tools to tarball...'
 
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
@@ -119,6 +128,12 @@ mkdir -p $TARBALL_ROOT/prebuilt/source-built
 find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
 
+# Copy reference-packages from bin dir to reference-packages directory.
+# See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
+mkdir -p $TARBALL_ROOT/reference-packages
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
 fi
@@ -142,6 +157,21 @@ do
     cp $built_package $TARBALL_ROOT/prebuilt/source-built/
 done
 
+if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
+  echo 'Building leak detection MSBuild tasks...'
+  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+fi
+
+echo 'Removing reference-only packages from tarball prebuilts...'
+
+for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+do
+    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package)
+    fi
+done
+
 echo 'WORKAROUND: Overwriting the source-built roslyn-tools MSBuild files with prebuilt so that roslyn-tools can successfully build in the tarball... (https://github.com/dotnet/source-build/issues/654)'
 
 ROSLYN_TOOLS_PACKAGE='RoslynTools.RepoToolset'
@@ -162,12 +192,6 @@ fi
 SOURCE_BUILT_SDK_TOOLS_DIR="$TARBALL_ROOT/Tools/source-built/$ROSLYN_TOOLS_PACKAGE/tools"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.props "$SOURCE_BUILT_SDK_TOOLS_DIR"
 cp "$REPO_TOOLSET_PACKAGE_DIR/tools/"*.targets "$SOURCE_BUILT_SDK_TOOLS_DIR"
-
-if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
-  echo 'Building leak detection MSBuild tasks...'
-  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
-  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
-fi
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 

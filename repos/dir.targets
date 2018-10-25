@@ -146,6 +146,11 @@
                             Condition="'$(OfflineBuild)' == 'true'" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="reference-packages"
+                            SourcePath="$(ReferencePackagesDir)"
+                            Condition="'$(OfflineBuild)' == 'true'" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
@@ -215,6 +220,7 @@
           BeforeTargets="Build">
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
+      <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
       <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
     </ItemGroup>
@@ -223,15 +229,15 @@
   </Target>
 
   <Target Name="Build" DependsOnTargets="BuildRepoReferences">
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building '$(RepositoryName)'" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildCommand) $(RepoApiArgs)" Condition="'$(BuildCommand)' != ''" />
     <Message Importance="High" Text="  Using custom build target" Condition="'$(BuildCommand)' == ''" />
     <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
-    <Message Importance="High" Text="  With Enivornment Varibles:" />
+    <Message Importance="High" Text="  With Environment Variables:" />
     <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
     <CallTarget Targets="RepoBuild" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building '$(RepositoryName)'...done" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)...done" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -249,14 +255,14 @@
   </Target>
 
   <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging '$(RepositoryName)'" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildPackagesCommand)" />
     <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
-    <Message Importance="High" Text="  With Enivornment Varibles:" />
+    <Message Importance="High" Text="  With Environment Variables:" />
     <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
     <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging '$(RepositoryName)'...done" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)...done" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -374,6 +380,7 @@
       <TarballPrebuiltPackageFiles Include="$(PrebuiltPackagesPath)*.nupkg" />
 
       <SourceBuiltPackageFiles Include="$(SourceBuiltBlobFeedDir)**/*.nupkg" />
+      <ReferencePackageFiles Condition="'$(OfflineBuild)' == 'true'" Include="$(ReferencePackagesDir)**/*.nupkg" />
 
       <!-- Check all RIDs from all restored Microsoft.NETCore.Platforms packages. -->
       <PlatformsRuntimeJsonFiles Include="$(LocalNuGetPackagesRoot)*/microsoft.netcore.platforms/*/runtime.json" />
@@ -389,6 +396,7 @@
       RestoredPackageFiles="@(AllRestoredPackageFiles)"
       TarballPrebuiltPackageFiles="@(TarballPrebuiltPackageFiles)"
       SourceBuiltPackageFiles="@(SourceBuiltPackageFiles)"
+      ReferencePackageFiles="@(ReferencePackageFiles)"
       PlatformsRuntimeJsonFiles="@(PlatformsRuntimeJsonFiles)"
       TargetRid="$(TargetRid)"
       ProjectDirectories="@(ProjectDirectories)"
