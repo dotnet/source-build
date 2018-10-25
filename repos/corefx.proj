@@ -15,6 +15,7 @@
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid) </BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
@@ -55,6 +56,6 @@
 
     <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
-                         Rid="$(TargetRid)-$(Platform)" />
+                         Rid="$(OverrideTargetRid)-$(Platform)" />
   </Target>
 </Project>
