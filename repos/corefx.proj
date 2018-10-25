@@ -16,10 +16,9 @@
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid) </BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
-    <BuildArguments Condition="'$(PortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
+    <BuildArguments Condition="'$(OverridePortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
