@@ -1,5 +1,5 @@
 <UsageData>
-  <CreatedByRid>centos.7-x64</CreatedByRid>
+  <CreatedByRid>rhel.7-x64</CreatedByRid>
   <ProjectDirectories>
     <Dir>src/application-insights/</Dir>
     <Dir>src/cli-migrate/</Dir>
@@ -12,6 +12,7 @@
     <Dir>src/corefx/</Dir>
     <Dir>src/fsharp/</Dir>
     <Dir>src/known-good/</Dir>
+    <Dir>src/linker/</Dir>
     <Dir>src/msbuild/</Dir>
     <Dir>src/netcorecli-fsc/</Dir>
     <Dir>src/newtonsoft-json/</Dir>
@@ -32,15 +33,15 @@
   </ProjectDirectories>
   <NeverRestoredTarballPrebuilts>
     <PackageIdentity Id="Microsoft.DotNet.BuildTools" Version="2.2.0-preview1-03013-01" />
-    <PackageIdentity Id="Microsoft.NETCore.App" Version="2.1.3-servicing-26708-02" />
-    <PackageIdentity Id="Microsoft.NETCore.ILAsm" Version="2.1.0-rtm-26515-03" />
-    <PackageIdentity Id="Microsoft.NETCore.Jit" Version="2.1.0-rtm-26515-03" />
-    <PackageIdentity Id="Microsoft.NETCore.Runtime.CoreCLR" Version="2.1.0-rtm-26515-03" />
+    <PackageIdentity Id="Microsoft.NETCore.App" Version="2.1.4" />
+    <PackageIdentity Id="Microsoft.NETCore.ILAsm" Version="2.2.0-preview3-27008-03" />
+    <PackageIdentity Id="Microsoft.NETCore.Jit" Version="2.2.0-preview3-27008-03" />
+    <PackageIdentity Id="Microsoft.NETCore.Runtime.CoreCLR" Version="2.2.0-preview3-27008-03" />
     <PackageIdentity Id="RoslynTools.RepoToolset" Version="1.0.0-beta2-62805-03" />
-    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.App" Version="2.1.3-servicing-26708-02" />
-    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="2.1.0-rtm-26515-03" />
-    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.Jit" Version="2.1.0-rtm-26515-03" />
-    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.Runtime.CoreCLR" Version="2.1.0-rtm-26515-03" />
+    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.App" Version="2.1.4" />
+    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="2.2.0-preview3-27008-03" />
+    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.Jit" Version="2.2.0-preview3-27008-03" />
+    <PackageIdentity Id="runtime.linux-x64.Microsoft.NETCore.Runtime.CoreCLR" Version="2.2.0-preview3-27008-03" />
   </NeverRestoredTarballPrebuilts>
   <Usages>
     <Usage Id="CommandLineParser" Version="2.1.1-beta" />
@@ -51,8 +52,7 @@
     <Usage Id="fmdev.ResX" Version="0.2.0" />
     <Usage Id="fmdev.xlftool" Version="0.1.3" />
     <Usage Id="fmdev.XliffParser" Version="0.5.3" />
-    <Usage Id="FSharp.Core" Version="4.5.0" />
-    <Usage Id="ILLink.Tasks" Version="0.1.5-preview-1461378" />
+    <Usage Id="FSharp.Core" Version="4.5.2" />
     <Usage Id="Libuv" Version="1.9.1" />
     <Usage Id="MicroBuild.Core" Version="0.2.0" />
     <Usage Id="Microsoft.3rdpartytools.MarkdownLog" Version="0.10.0-alpha-experimental" />
@@ -63,6 +63,7 @@
     <Usage Id="Microsoft.Build" Version="15.6.82" />
     <Usage Id="Microsoft.Build" Version="15.7.0-preview-000143" />
     <Usage Id="Microsoft.Build" Version="15.7.177" />
+    <Usage Id="Microsoft.Build" Version="15.7.179" />
     <Usage Id="Microsoft.Build.Framework" Version="14.3.0" />
     <Usage Id="Microsoft.Build.Framework" Version="15.1.548" />
     <Usage Id="Microsoft.Build.Framework" Version="15.1.1012" />
@@ -72,6 +73,7 @@
     <Usage Id="Microsoft.Build.Framework" Version="15.6.85" />
     <Usage Id="Microsoft.Build.Framework" Version="15.7.0-preview-000143" />
     <Usage Id="Microsoft.Build.Framework" Version="15.7.177" />
+    <Usage Id="Microsoft.Build.Framework" Version="15.7.179" />
     <Usage Id="Microsoft.Build.Localization" Version="15.8.0-preview-000061" />
     <Usage Id="Microsoft.Build.NuGetSdkResolver" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
     <Usage Id="Microsoft.Build.Runtime" Version="15.3.409" />
@@ -88,6 +90,7 @@
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.6.82" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.7.0-preview-000143" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.7.177" />
+    <Usage Id="Microsoft.Build.Utilities.Core" Version="15.7.179" />
     <Usage Id="Microsoft.Cci" Version="4.0.0-rc3-24214-00" />
     <Usage Id="Microsoft.CodeAnalysis.Analyzers" Version="1.1.0" />
     <Usage Id="Microsoft.CodeAnalysis.Common" Version="1.3.0" />
@@ -111,7 +114,6 @@
     <Usage Id="Microsoft.DiaSymReader.Native" Version="1.5.0" />
     <Usage Id="Microsoft.DiaSymReader.Native" Version="1.7.0" />
     <Usage Id="Microsoft.Docker.Sdk" Version="1.1.0" />
-    <Usage Id="Microsoft.DotNet.Archive" Version="0.2.0-beta-62628-01" />
     <Usage Id="Microsoft.DotNet.Build.Tasks.Feed" Version="2.1.0-prerelease-02430-04" />
     <Usage Id="Microsoft.DotNet.BuildTools.CoreCLR" Version="1.0.4-prerelease" />
     <Usage Id="Microsoft.DotNet.BuildTools.TestSuite" Version="2.2.0-preview1-03013-03" />
@@ -145,6 +147,7 @@
     <Usage Id="Microsoft.NETCore.App" Version="1.0.5" />
     <Usage Id="Microsoft.NETCore.App" Version="1.1.1" />
     <Usage Id="Microsoft.NETCore.App" Version="1.1.2" />
+    <Usage Id="Microsoft.NETCore.App" Version="2.0.0-beta-001509-00" />
     <Usage Id="Microsoft.NETCore.App" Version="2.0.0" />
     <Usage Id="Microsoft.NETCore.App" Version="2.1.0-preview1-26116-04" />
     <Usage Id="Microsoft.NETCore.App" Version="2.1.0-preview2-26406-04" />
@@ -182,6 +185,7 @@
     <Usage Id="Microsoft.NETCore.Platforms" Version="1.0.2-beta-24224-02" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="1.0.2" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="1.1.0" />
+    <Usage Id="Microsoft.NETCore.Platforms" Version="2.0.0-beta-25006-01" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.0.0" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.1.0-preview1-26116-01" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.1.0-preview2-26406-04" />
@@ -204,7 +208,7 @@
     <Usage Id="Microsoft.TargetingPack.NETFramework.v4.6" Version="1.0.1" />
     <Usage Id="Microsoft.TargetingPack.NETFramework.v4.7.2" Version="1.0.0" />
     <Usage Id="Microsoft.TargetingPack.Private.WinRT" Version="1.0.5" />
-    <Usage Id="Microsoft.TemplateEngine.Cli.Localization" Version="1.0.2-beta3" />
+    <Usage Id="Microsoft.TemplateEngine.Cli.Localization" Version="1.0.2-beta4-20180930-2076037" />
     <Usage Id="Microsoft.TestPlatform.ObjectModel" Version="15.0.0" />
     <Usage Id="Microsoft.TestPlatform.ObjectModel" Version="15.3.0" />
     <Usage Id="Microsoft.TestPlatform.ObjectModel" Version="15.6.0" />
@@ -230,6 +234,7 @@
     <Usage Id="Microsoft.xunit.netcore.extensions" Version="2.2.0-preview1-03013-03" />
     <Usage Id="NETStandard.Library" Version="1.6.0" />
     <Usage Id="NETStandard.Library" Version="1.6.1" />
+    <Usage Id="NETStandard.Library" Version="2.0.0-beta-25006-01" />
     <Usage Id="NETStandard.Library" Version="2.0.0" />
     <Usage Id="NETStandard.Library" Version="2.0.1" />
     <Usage Id="NETStandard.Library" Version="2.0.3" />
@@ -240,29 +245,39 @@
     <Usage Id="NuGet.CommandLine" Version="3.4.3" />
     <Usage Id="NuGet.Commands" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
     <Usage Id="NuGet.Common" Version="4.0.0-rtm-2283" />
+    <Usage Id="NuGet.Common" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Common" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Common" Version="4.3.0" />
     <Usage Id="NuGet.Common" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
+    <Usage Id="NuGet.Configuration" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Configuration" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Configuration" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
     <Usage Id="NuGet.Credentials" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
+    <Usage Id="NuGet.DependencyResolver.Core" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.DependencyResolver.Core" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Frameworks" Version="4.0.0-rtm-2283" />
+    <Usage Id="NuGet.Frameworks" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Frameworks" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Frameworks" Version="4.3.0" />
     <Usage Id="NuGet.Frameworks" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
+    <Usage Id="NuGet.LibraryModel" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.LibraryModel" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Packaging" Version="4.0.0-rtm-2283" />
+    <Usage Id="NuGet.Packaging" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Packaging" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Packaging" Version="4.3.0" />
     <Usage Id="NuGet.Packaging" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
+    <Usage Id="NuGet.Packaging.Core" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Packaging.Core" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Packaging.Core" Version="4.3.0" />
     <Usage Id="NuGet.Packaging.Core" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
+    <Usage Id="NuGet.ProjectModel" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.ProjectModel" Version="4.3.0-preview2-4095" />
+    <Usage Id="NuGet.Protocol" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Protocol" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Protocol" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
     <Usage Id="NuGet.Versioning" Version="4.0.0-rtm-2283" />
+    <Usage Id="NuGet.Versioning" Version="4.3.0-preview1-2500" />
     <Usage Id="NuGet.Versioning" Version="4.3.0-preview2-4095" />
     <Usage Id="NuGet.Versioning" Version="4.3.0" />
     <Usage Id="NuGet.Versioning" Version="4.8.0-preview1.5196+82e818a8a3bccd780945d603d03b9db963d5f56d" />
@@ -663,7 +678,6 @@
     <Usage Id="System.Threading.Tasks" Version="4.0.11-rc2-24027" />
     <Usage Id="System.Threading.Tasks" Version="4.0.11" />
     <Usage Id="System.Threading.Tasks" Version="4.3.0" />
-    <Usage Id="System.Threading.Tasks.Dataflow" Version="4.5.24" />
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.6.0" />
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.7.0" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.0.0" />
