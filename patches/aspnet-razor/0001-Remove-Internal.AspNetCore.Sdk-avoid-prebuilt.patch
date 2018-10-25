@@ -1,0 +1,25 @@
+From c5c693544b006014e6dfd7e8161e091a1ff19ca5 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 24 Oct 2018 12:27:13 -0500
+Subject: [PATCH] Remove Internal.AspNetCore.Sdk: avoid prebuilt
+
+Internal.AspNetCore.Sdk is not used for the very specific build source-build needs to perform. Remove it to avoid adding prebuilt packages.
+---
+ Directory.Build.props | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 8260b6f3..6a18283d 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -20,7 +20,6 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Internal.AspNetCore.Sdk" PrivateAssets="All" Version="$(InternalAspNetCoreSdkPackageVersion)" />
+   </ItemGroup>
+ 
+ </Project>
+-- 
+2.17.1.windows.2
+
