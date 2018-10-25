@@ -18,8 +18,11 @@
     <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
-    <UsesRepoToolset>true</UsesRepoToolset>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />

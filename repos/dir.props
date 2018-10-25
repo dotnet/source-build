@@ -10,7 +10,6 @@
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
     <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
     <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>
-    <RepoToolsetPackageId>RoslynTools.RepoToolset</RepoToolsetPackageId>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -73,4 +72,8 @@
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <RepoToolsetSdkOverride Include="RoslynTools.RepoToolset" Group="REPO_TOOLSET" />
+    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" />
+  </ItemGroup>
 </Project>

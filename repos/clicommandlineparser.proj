@@ -11,7 +11,6 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
-    <UsesRepoToolset>true</UsesRepoToolset>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <!--
       This repo is not currently built in ProdCon
@@ -19,6 +18,10 @@
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />

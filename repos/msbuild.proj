@@ -25,13 +25,16 @@
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
-    <UsesRepoToolset>true</UsesRepoToolset>
     <!--
       MSBuild is part of ProdCon, but that branch doesn't build from source yet.
     <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="roslyn-tools" />

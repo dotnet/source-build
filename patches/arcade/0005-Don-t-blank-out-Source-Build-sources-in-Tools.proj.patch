@@ -1,0 +1,25 @@
+From 7dc844b621681c91db34175ca3f9461571127064 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 3 Dec 2018 14:21:24 -0600
+Subject: [PATCH] Don't blank out Source-Build sources in Tools.proj
+
+---
+ src/Microsoft.DotNet.Arcade.Sdk/tools/Tools.proj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Tools.proj b/src/Microsoft.DotNet.Arcade.Sdk/tools/Tools.proj
+index 3eb0d82..fe47977 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Tools.proj
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Tools.proj
+@@ -18,7 +18,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <RestoreSources/>
++    <RestoreSources>$(DotNetRestoreSources)</RestoreSources>
+     <RestoreSources>
+       $(RestoreSources);
+       https://api.nuget.org/v3/index.json;
+-- 
+2.17.1.windows.2
+

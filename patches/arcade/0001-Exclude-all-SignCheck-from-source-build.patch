@@ -1,0 +1,27 @@
+From 50e658870f8634b8fa9e51009b0442d24e821e91 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Fri, 26 Oct 2018 13:30:05 -0500
+Subject: [PATCH] Exclude all SignCheck from source-build
+
+---
+ src/SignCheck/Directory.Build.props | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 src/SignCheck/Directory.Build.props
+
+diff --git a/src/SignCheck/Directory.Build.props b/src/SignCheck/Directory.Build.props
+new file mode 100644
+index 0000000..3db6a11
+--- /dev/null
++++ b/src/SignCheck/Directory.Build.props
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project>
++  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., Directory.Build.props))/Directory.Build.props" />
++
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
++</Project>
+-- 
+2.17.1.windows.2
+

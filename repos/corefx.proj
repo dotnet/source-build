@@ -30,6 +30,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
