@@ -5,6 +5,8 @@
     <GeneratingStaticPropertiesFile>true</GeneratingStaticPropertiesFile>
   </PropertyGroup>
   <Import Project="..\dir.props" />
+  <Import Project="$(ToolsDir)Packaging.targets" />
+  <Import Project="$(ToolsDir)IL.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
@@ -33,9 +35,9 @@
 
   <Target Name="BuildTasks">
     <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-      <OfflineSources>$(PrebuiltPackagesPath)</OfflineSources>
+      <OfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</OfflineSources>
     </PropertyGroup>
-    <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj /p:RestoreSources=$(OfflineSources)" />
+    <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj /p:RestoreSources='$(OfflineSources)'" />
   </Target>
 
   <Target Name="GetRepoProjects">
@@ -65,6 +67,35 @@
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
      <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
+  </Target>
+
+  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building reference-only assemblies." />
+    <ItemGroup>
+      <IlSource Include="$(ReferencePackagesSourceDir)**/*.il" />
+      <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
+    <Exec Command="$(IlasmToolPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
+
+    <!-- Temporary workaround to copy dlls that can't be round-tripped 
+         They just get copied from the source to the package staging area
+    -->
+    <ItemGroup>
+      <DllsInSource Include="$(ReferencePackagesSourceDir)**/*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="%(DllsInSource.Identity)" DestinationFiles="$(ReferencePackagesStagingDir)%(DllsInSource.RecursiveDir)%(DllsInSource.Filename).dll" />
+
+    <!-- End Temporary workaround -->
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
+    <NugetPack Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
+               OutputDirectory="$(ReferencePackagesDir)"
+               ExcludeEmptyDirectories="false"
+               CreateSymbolPackage="false" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">

@@ -35,6 +35,13 @@
     <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <!-- A human-readable description of what's building and why. -->
+  <PropertyGroup>
+    <ProjectBuildReason>'$(RepositoryName)'</ProjectBuildReason>
+    <ProjectBuildReason Condition="'$(OfflineBuild)' != 'true' AND '$(ArchiveDownloadedPackages)' == 'true'">$(ProjectBuildReason) to produce tarball</ProjectBuildReason>
+    <ProjectBuildReason Condition="'$(OfflineBuild)' == 'true'">$(ProjectBuildReason) in tarball</ProjectBuildReason>
+  </PropertyGroup>
+
   <ItemGroup>
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
