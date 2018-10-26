@@ -1,0 +1,44 @@
+From 0edee692b10b8957f5109ed15d3fa4981c9c541d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 16 Jul 2018 20:21:59 -0500
+Subject: [PATCH] Use netcoreapp3.0 target frameworks to match the rest of the
+ build.
+
+This patch needs further research.  I believe this is the same issue as CLI
+patch #0003 and can be removed after core-setup/CLI/toolset/core-sdk are synced.
+---
+ Directory.Build.props                                    | 4 ++--
+ tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 7d89ac218..65e9a7bf1 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -27,9 +27,9 @@ tools\TestAssetsDependencies\TestAssetsDependencies.csproj
+     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+     <DisableImplicitPackageTargetFallback>true</DisableImplicitPackageTargetFallback>
+ 
+-    <CliTargetFramework>netcoreapp2.2</CliTargetFramework>
++    <CliTargetFramework>netcoreapp3.0</CliTargetFramework>
+     <!-- We only need this until we get a stage0 with a 2.2 SDK. -->
+-    <NETCoreAppMaximumVersion>2.2</NETCoreAppMaximumVersion>
++    <NETCoreAppMaximumVersion>3.0</NETCoreAppMaximumVersion>
+   </PropertyGroup>
+ 
+   <Import Project="build/InitRepo.props" />
+diff --git a/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj b/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
+index 0ca594efa..344b4b41e 100644
+--- a/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
++++ b/tools/CrossGen.Dependencies/CrossGen.Dependencies.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+-    <TargetFramework>netcoreapp2.2</TargetFramework>
++    <TargetFramework>netcoreapp3.0</TargetFramework>
+     <RuntimeIdentifier>$(SharedFrameworkRid)</RuntimeIdentifier>
+   </PropertyGroup>
+ 
+-- 
+2.14.1
+
