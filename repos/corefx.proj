@@ -2,23 +2,16 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- OSX core-setup build always uses the portable RID, so override it -->
-    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
-
     <BuildArguments>-$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild) </BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid) </BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(PortableBuild)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PackageRid=$(TargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
-    <BuildArguments Condition="'$(OverridePortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
+    <BuildArguments Condition="'$(PortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
@@ -54,6 +47,6 @@
 
     <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
-                         Rid="$(OverrideTargetRid)-$(Platform)" />
+                         Rid="$(TargetRid)-$(Platform)" />
   </Target>
 </Project>
