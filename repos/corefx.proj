@@ -2,15 +2,20 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <!-- OSX core-setup build always uses the portable RID, so override it -->
+    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
+
     <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(PortableBuild)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PackageRid=$(TargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildTests=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) -buildArch=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -portable=$(OverridePortableBuild) </BuildArguments>
+    <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
-    <BuildArguments Condition="'$(PortableBuild)' == 'false'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
@@ -30,7 +35,6 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="AdditionalRestoreArgs=/p:ToolsDir=$(ToolsDir)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
