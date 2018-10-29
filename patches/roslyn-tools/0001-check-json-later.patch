@@ -1,0 +1,25 @@
+From 306e7d823fbd5c68b8ec347d5c673cd22523e97d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 29 Oct 2018 17:21:19 -0500
+Subject: [PATCH] check json later
+
+---
+ eng/common/build.ps1 | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/eng/common/build.ps1 b/eng/common/build.ps1
+index ec8dbff..4a3ee7b 100644
+--- a/eng/common/build.ps1
++++ b/eng/common/build.ps1
+@@ -188,6 +188,8 @@ try {
+   $Log = Join-Path $LogDir "Build.binlog"
+   $ToolsetRestoreLog = Join-Path $LogDir "ToolsetRestore.binlog"
+   $TempDir = Join-Path (Join-Path $ArtifactsDir $configuration) "tmp"
++  $GlobalJsonContent = Get-Content(Join-Path $RepoRoot "global.json")
++  Write-Host ">>>$GlobalJsonContent<<<"
+   $GlobalJson = Get-Content(Join-Path $RepoRoot "global.json") | ConvertFrom-Json
+   
+   if ($solution -eq "") {
+-- 
+2.18.0
+
