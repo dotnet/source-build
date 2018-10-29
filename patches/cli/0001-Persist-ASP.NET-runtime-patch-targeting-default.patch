@@ -11,12 +11,12 @@ https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
  1 file changed, 8 insertions(+)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index f5365724a..fd2fa3719 100644
+index a85966295..448c3a27e 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
 @@ -196,6 +196,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">1.0.12</LatestPatchVersionForNetCore1_0>
-     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.9</LatestPatchVersionForNetCore1_1>
+     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">1.0.13</LatestPatchVersionForNetCore1_0>
+     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.10</LatestPatchVersionForNetCore1_1>
      <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
 +
 +    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
