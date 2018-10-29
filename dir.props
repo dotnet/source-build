@@ -97,12 +97,11 @@
   <Import Project="$(ProjectDir)dependencies.props" />
 
   <PropertyGroup>
+    <!-- known-good (repos/known-good.proj) conditionally includes submodules based on the platform,
+         so this will not always correspond to the same repos - see that file for details.
+         We need an "empty" project after the last real project in order for prebuilt detection
+         to work, so we always build known-good. -->
     <RootRepo>known-good</RootRepo>
-    <!-- Temporarily update RootRepo for Windows to core-setup repo project
-    until all repos build clean out of master -->
-    <RootRepo Condition="'$(OS)' == 'Windows_NT'">core-setup</RootRepo>
-    <!-- Update RootRepo for arm to only build through core-setup -->
-    <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
   <ItemGroup>
