@@ -101,7 +101,7 @@ azdo() {
   query="?branchName=$branch_azdo&jobname=$job&configuration=$job_type_escaped"
 
   raw_print "[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/dotnet/source-build/source-build-CI$query)]"
-  raw_print "(https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114) | "
+  raw_print "(https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114&branchName=$branch_azdo) | "
 }
 
 none() {
