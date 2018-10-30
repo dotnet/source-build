@@ -80,7 +80,7 @@ The scripts can be thought of as solving challenges that would otherwise making 
 
 ## Goals
  
-Many Linux distributions have specific rules for official packages. The rules can be summarized as two main rules: source for everything, and consistent reproducability.
+Many Linux distributions have specific rules for official packages. The rules can be summarized as two main rules: source for everything, and consistent reproducibility.
 
 A key goal of this repository was to satisfy the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). 
 
