@@ -46,7 +46,7 @@
   <Target Name="ReplaceNuspecDllIncludeLines" BeforeTargets="Build">
     <PropertyGroup>
       <LinkerTasksNuspecFile>$(ProjectDirectory)corebuild/integration/ILLink.Tasks/ILLink.Tasks.nuspec</LinkerTasksNuspecFile>
-      <NuspecFileContents>
+      <NuspecFileContents Condition="'$(OS)' == 'Windows_NT'">
         <![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
@@ -60,6 +60,23 @@
     <file src="ILLink.CrossGen.targets" target="build" />
     <file src="netcoreapp2.0/**/*.dll" target="tools/netcoreapp2.0" />
     <file src="net46/**/*.dll" target="tools/net46" />
+  </files>
+</package>
+]]>
+      </NuspecFileContents>
+      <NuspecFileContents Condition="'$(OS)' != 'Windows_NT'">
+        <![CDATA[<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$authors$</authors>
+    <description>$description$</description>
+  </metadata>
+  <files>
+    <file src="ILLink.Tasks.targets" target="build" />
+    <file src="ILLink.CrossGen.targets" target="build" />
+    <file src="netcoreapp2.0/**/*.dll" target="tools/netcoreapp2.0" />
   </files>
 </package>
 ]]>
