@@ -2,17 +2,15 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- core-setup uses the portable RID for OSX all the time, so override -->
-    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
-
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true'">$(BuildArguments) cmakeargs "-DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE"</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
+    <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
+         Additionally, Linux builds are portable by default and only have a switch to turn it off -->
+    <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
