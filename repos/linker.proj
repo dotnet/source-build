@@ -12,7 +12,7 @@
     <!-- These are intended to be auto-detected via NuGetRestoreTargets, but it doesn't seem to work. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:ILLinkBuild=true</BuildCommandArgs>
     <!-- later repos use net46 version of the linker on Windows -->
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
 
     <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
 
@@ -59,6 +59,7 @@
     <file src="ILLink.Tasks.targets" target="build" />
     <file src="ILLink.CrossGen.targets" target="build" />
     <file src="netcoreapp2.0/**/*.dll" target="tools/netcoreapp2.0" />
+    <file src="net46/**/*.dll" target="tools/net46" />
   </files>
 </package>
 ]]>
