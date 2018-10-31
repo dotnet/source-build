@@ -13,6 +13,12 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /bl:build.binlog</BuildCommandArgs>
 
+    <!--
+      Work around https://github.com/dotnet/sourcelink/issues/91:
+      error : SourceRoot items must include at least one top-level (not nested) item when DeterministicSourcePaths is true
+    -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
+
     <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
 
     <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
