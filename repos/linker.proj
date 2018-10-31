@@ -11,7 +11,8 @@
 
     <!-- These are intended to be auto-detected via NuGetRestoreTargets, but it doesn't seem to work. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:ILLinkBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
+    <!-- later repos use net46 version of the linker on Windows -->
+    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
 
     <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
 
