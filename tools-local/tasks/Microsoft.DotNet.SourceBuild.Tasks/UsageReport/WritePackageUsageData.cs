@@ -22,6 +22,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
     {
         public string[] RestoredPackageFiles { get; set; }
         public string[] TarballPrebuiltPackageFiles { get; set; }
+        public string[] ReferencePackageFiles { get; set; }
         public string[] SourceBuiltPackageFiles { get; set; }
 
         /// <summary>
@@ -110,12 +111,17 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 .Distinct()
                 .ToArray();
 
+            PackageIdentity[] referencePackages = ReferencePackageFiles.NullAsEmpty()
+                .Select(ReadNuGetPackageInfos.ReadIdentity)
+                .Distinct()
+                .ToArray();
+
             PackageIdentity[] sourceBuilt = SourceBuiltPackageFiles.NullAsEmpty()
                 .Select(ReadNuGetPackageInfos.ReadIdentity)
                 .Distinct()
                 .ToArray();
 
-            IEnumerable<PackageIdentity> prebuilt = restored.Except(sourceBuilt);
+            IEnumerable<PackageIdentity> prebuilt = restored.Except(sourceBuilt).Except(referencePackages);
 
             PackageIdentity[] toCheck = NuGetPackageInfos.NullAsEmpty()
                 .Select(item => new PackageIdentity(

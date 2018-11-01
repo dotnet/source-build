@@ -1,0 +1,29 @@
+From 76a329da8b4c0cefd7c4fd499041b84963eea6ff Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Fri, 21 Sep 2018 13:17:43 -0500
+Subject: [PATCH] Don't check for libintl.h on Darwin (OSX)
+
+https://github.com/dotnet/coreclr/issues/20092 will allow patch removal.
+---
+ src/pal/src/configure.cmake | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/pal/src/configure.cmake b/src/pal/src/configure.cmake
+index 8b3fb099a4..c8b4d44509 100644
+--- a/src/pal/src/configure.cmake
++++ b/src/pal/src/configure.cmake
+@@ -37,7 +37,10 @@ check_include_files(sys/prctl.h HAVE_PRCTL_H)
+ check_include_files(numa.h HAVE_NUMA_H)
+ check_include_files(pthread_np.h HAVE_PTHREAD_NP_H)
+ check_include_files("sys/auxv.h;asm/hwcap.h" HAVE_AUXV_HWCAP_H)
+-check_include_files("libintl.h" HAVE_LIBINTL_H)
++
++if(NOT CMAKE_SYSTEM_NAME STREQUAL Darwin)
++  check_include_files("libintl.h" HAVE_LIBINTL_H)
++endif()
+ 
+ if(NOT CMAKE_SYSTEM_NAME STREQUAL FreeBSD AND NOT CMAKE_SYSTEM_NAME STREQUAL NetBSD)
+   set(CMAKE_REQUIRED_FLAGS "-ldl")
+-- 
+2.17.1.windows.2
+

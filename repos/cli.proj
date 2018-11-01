@@ -41,7 +41,7 @@
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
 
     <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
-    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -52,6 +52,7 @@
 
   <ItemGroup>
     <RepositoryReference Include="application-insights" />
+    <RepositoryReference Include="aspnet-razor" />
     <RepositoryReference Include="cli-migrate" />
     <RepositoryReference Include="clicommandlineparser" />
     <RepositoryReference Include="core-setup" />
