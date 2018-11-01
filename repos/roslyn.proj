@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <NuGetPackageVersion>2.3.2-beta1-61921-05</NuGetPackageVersion>
+    <NuGetPackageVersion>2.10.0-beta2-63410-10</NuGetPackageVersion>
     <BuildNumber>20180426.3</BuildNumber>
 
     <BuildCommandArgs>build</BuildCommandArgs>
@@ -12,6 +12,12 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /bl:build.binlog</BuildCommandArgs>
+
+    <!--
+      Work around https://github.com/dotnet/sourcelink/issues/91:
+      error : SourceRoot items must include at least one top-level (not nested) item when DeterministicSourcePaths is true
+    -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
 
     <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
 
