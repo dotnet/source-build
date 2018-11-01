@@ -1,11 +1,14 @@
-From a1ec3cb7060eedf4f9842e8f749d4f6fc8470f8a Mon Sep 17 00:00:00 2001
-From: Chris Rummel <crummel@microsoft.com>
-Date: Wed, 24 Oct 2018 10:24:51 -0500
-Subject: [PATCH] Port 4865c849d582e24478f08a224aa1f915bfcfbcde to fix errors.
+From 32bdfc0f1800c14baee5ebe0880d047148b8cea2 Mon Sep 17 00:00:00 2001
+From: Wes Haggard <Wes.Haggard@microsoft.com>
+Date: Fri, 7 Sep 2018 18:15:25 -0700
+Subject: [PATCH] Update to released SDK
 
+As part of this we need to disable a roslyn analyzer to workaround
+https://github.com/dotnet/roslyn-analyzers/issues/1804.
 ---
  CodeAnalysis.ruleset | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ DotnetCLIVersion.txt | 2 +-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/CodeAnalysis.ruleset b/CodeAnalysis.ruleset
 index 2bf447f3f6..8920fd2575 100644
@@ -21,6 +24,14 @@ index 2bf447f3f6..8920fd2575 100644
 +    <Rule Id="CA1821" Action="None" />
 +  </Rules>
 +</RuleSet>
+\ No newline at end of file
+diff --git a/DotnetCLIVersion.txt b/DotnetCLIVersion.txt
+index 3aa4b00373..6f1c03c6a3 100644
+--- a/DotnetCLIVersion.txt
++++ b/DotnetCLIVersion.txt
+@@ -1 +1 @@
+-2.1.401-preview-009081
++2.1.401
 \ No newline at end of file
 -- 
 2.18.0

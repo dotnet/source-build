@@ -42,7 +42,7 @@
   </Target>
 
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->
-  <Target Name="ReplaceNuspecDllIncludeLines" BeforeTargets="Build">
+  <Target Name="ReplaceNuspecDllIncludeLines" BeforeTargets="Build" Condition="'$(TargetOS)' != 'Windows_NT'">
     <PropertyGroup>
       <LinkerTasksNuspecFile>$(ProjectDirectory)corebuild/integration/ILLink.Tasks/ILLink.Tasks.nuspec</LinkerTasksNuspecFile>
       <NuspecFileContents>

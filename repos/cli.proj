@@ -11,6 +11,7 @@
 
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
 
+    <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
     <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
 
     <!--
@@ -44,9 +45,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ExtraPackageVersionPropsPackageInfo Include="Microsoft.AspNetCore.All" Version="$(MicrosoftAspNetCoreAllPackageVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="Microsoft.AspNetCore.App" Version="$(MicrosoftAspNetCoreAppPackageVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="Microsoft.NET.Sdk.Razor" Version="$(MicrosoftNETSdkRazorPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAllPackageVersion" Version="$(MicrosoftAspNetCoreAllPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppPackageVersion" Version="$(MicrosoftAspNetCoreAppPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETSdkRazorPackageVersion" Version="$(MicrosoftNETSdkRazorPackageVersion)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -80,6 +81,9 @@
          is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
+
+    <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
+    <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
   </ItemGroup>
 
   <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.

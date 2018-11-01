@@ -6,57 +6,76 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
-  <ItemGroup>
-    <!-- Toolsets -->
-    <RepositoryReference Include="roslyn-tools" />
+  <!-- This project file serves a couple of purpose.
+       - We conditionally include repos based on what works on different platforms/configurations.
+       - We need an "empty" build after the last real repo for prebuilt detection to work - this is that file.
+       - If we have a repo that is not in core-sdk's dependency tree, we can still build it by including it here.  -->
 
-    <!-- Tier 1 -->
-    <RepositoryReference Include="application-insights" />
-    <RepositoryReference Include="common" />
-    <RepositoryReference Include="netcorecli-fsc" />
-    <RepositoryReference Include="newtonsoft-json" />
-    <RepositoryReference Include="standard" />
-    <RepositoryReference Include="xliff-tasks" />
+  <!-- Windows and ARM builds currently only work through core-setup -->
+  <Choose>
+    <When Condition="'$(OS)' == 'Windows_NT'">
+      <ItemGroup>
+        <RepositoryReference Include="core-setup" />
+      </ItemGroup>
+    </When>
+    <When Condition="$(Platform.Contains('arm'))">
+      <ItemGroup>
+        <RepositoryReference Include="core-setup" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <!-- Toolsets -->
+        <RepositoryReference Include="roslyn-tools" />
 
-    <RepositoryReference Include="clicommandlineparser" />
-    <RepositoryReference Include="roslyn" />
+        <!-- Tier 1 -->
+        <RepositoryReference Include="application-insights" />
+        <RepositoryReference Include="common" />
+        <RepositoryReference Include="netcorecli-fsc" />
+        <RepositoryReference Include="newtonsoft-json" />
+        <RepositoryReference Include="standard" />
+        <RepositoryReference Include="xliff-tasks" />
 
-    <!-- Tier 2 -->
-    <RepositoryReference Include="msbuild" />
-    <RepositoryReference Include="nuget-client" />
-    <RepositoryReference Include="websdk" />
-    <RepositoryReference Include="coreclr" />
+        <RepositoryReference Include="clicommandlineparser" />
+        <RepositoryReference Include="roslyn" />
 
-    <RepositoryReference Include="templating" />
+        <!-- Tier 2 -->
+        <RepositoryReference Include="msbuild" />
+        <RepositoryReference Include="nuget-client" />
+        <RepositoryReference Include="websdk" />
+        <RepositoryReference Include="coreclr" />
 
-    <!-- Tier 3 -->
+        <RepositoryReference Include="templating" />
 
-    <RepositoryReference Include="corefx" />
+        <!-- Tier 3 -->
 
-    <!-- Tier 4 -->
+        <RepositoryReference Include="corefx" />
 
-    <RepositoryReference Include="core-setup" />
+        <!-- Tier 4 -->
 
-    <!-- Tier 5 -->
+        <RepositoryReference Include="core-setup" />
 
-    <RepositoryReference Include="sdk" />
-    <RepositoryReference Include="vstest" />
-    <RepositoryReference Include="cli-migrate" />
-    <RepositoryReference Include="fsharp" />
+        <!-- Tier 5 -->
 
-    <!-- Tier 6 -->
+        <RepositoryReference Include="sdk" />
+        <RepositoryReference Include="vstest" />
+        <RepositoryReference Include="cli-migrate" />
+        <RepositoryReference Include="fsharp" />
 
-    <RepositoryReference Include="cli" />
+        <!-- Tier 6 -->
 
-    <!-- Tier 7 -->
+        <RepositoryReference Include="cli" />
 
-    <RepositoryReference Include="toolset" />
+        <!-- Tier 7 -->
 
-    <!-- Tier 8 -->
+        <RepositoryReference Include="toolset" />
 
-    <RepositoryReference Include="core-sdk" />
+        <!-- Tier 8 -->
 
-  </ItemGroup>
+        <RepositoryReference Include="core-sdk" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
