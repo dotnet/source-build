@@ -18,7 +18,7 @@ index 967d71cb8d..02c3e297f4 100644
 -    <_ILLinkTasksDir>$(_ILLinkTasksToolsDir)/net46/</_ILLinkTasksDir>
 -    <_ILLinkTasksDir Condition="'$(MSBuildRuntimeType)' == 'Core'">$(_ILLinkTasksToolsDir)/netcoreapp2.0/</_ILLinkTasksDir>
 +    <_ILLinkTasksDir>$(_ILLinkTasksToolsDir)/netcoreapp2.0/</_ILLinkTasksDir>
-+    <_ILLinkTasksDir Condition="'Exists($(_ILLinkTasksDir)ILLink.Tasks.dll)">$(_ILLinkTasksToolsDir)/netcoreapp2.0/</_ILLinkTasksDir>
++    <_ILLinkTasksDir Condition="'!Exists($(_ILLinkTasksDir)ILLink.Tasks.dll)">$(_ILLinkTasksToolsDir)/netcoreapp2.0/</_ILLinkTasksDir>
    </PropertyGroup>
  
    <!-- Generates the xml root descriptor file for ILLink. The file contains roots required by the runtime. -->
