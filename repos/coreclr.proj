@@ -13,9 +13,6 @@
 
     <BuildArguments>$(BuildArguments) --</BuildArguments>
 
-    <!-- Force use of .NET Core tasks -->
-    <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:MSBuildRuntimeType=Core</BuildArguments>
-
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
