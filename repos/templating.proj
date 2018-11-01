@@ -18,6 +18,8 @@
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
     <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
+    <!-- Force SharedTestProjects to be unset, so they aren't restored/built. -->
+    <MSBuildProperties Include="SharedTestProjects=" />
   </ItemGroup>
 
   <ItemGroup>
