@@ -6,6 +6,8 @@ Subject: [PATCH] Skip CoreFx.Private.TestUtilities in source-build
 This project referenced the XUnit.Runtime dependency project, causing test-only prebuilt dependencies.
 
 Even though we always pass BuildTests=false, include a condition to handle "true" to make intent clear.
+
+Patch PR: https://github.com/dotnet/corefx/pull/33217
 ---
  dir.props      | 8 ++++++++
  src/ref.builds | 2 +-
