@@ -35,9 +35,10 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
+  <!-- reference assemblies are not rebuilt on Windows, so don't produce them either -->
   <Target Name="CopyAndDisassembleReferenceOnlyPackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true'">
+          Condition="'$(OfflineBuild)' != 'true' AND '$(OS)' != 'Windows_NT'">
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"

@@ -41,6 +41,21 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddRidToRuntimeJson" />
 
+  <Target Name="GenerateVersionFile"
+          BeforeTargets="Build"
+          Condition="'$(TargetOS)' != 'Windows_NT'">
+    <PropertyGroup>
+      <GenerateVersionFileCommand>$(ProjectDirectory)/build-managed.sh -OfficialBuildId=$(OfficialBuildId) -- /t:GenerateVersionSourceFile /p:GenerateVersionSourceFile=true</GenerateVersionFileCommand>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Generating version file with $(GenerateVersionFileCommand)" />
+
+    <Exec Command="$(GenerateVersionFileCommand) /bl:generateVersionFile.binlog $(RedirectRepoOutputToLog)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          WorkingDirectory="$(ProjectDirectory)" />
+
+  </Target>
+
   <Target Name="UpdateRuntimeGraph"
           BeforeTargets="Build"
           Condition="'$(_IsBootstrapping)' == 'true'">

@@ -179,6 +179,10 @@ if [ "$?" != "0" ]; then
     exit 1
 fi
 
+echo "Restoring ILDasm (workaround for certain buildtools versions)"
+cp "$__scriptpath/tools-local/ildasm.depproj" "$__TOOLRUNTIME_DIR/ilasm/"
+$__DOTNET_CMD build "${__TOOLRUNTIME_DIR}/ilasm/ildasm.depproj" --packages "${__PACKAGES_DIR}/." --source https://dotnet.myget.org/F/dotnet-core/api/v3/index.json -r $__ILASM_RID -p:ILAsmPackageVersion=$__ILASM_VERSION
+
 echo "Making all .sh files executable under Tools."
 # Executables restored with .NET Core 2.0 do not have executable permission flags. https://github.com/NuGet/Home/issues/4424
 ls "$__scriptpath/Tools/"*.sh | xargs chmod +x
