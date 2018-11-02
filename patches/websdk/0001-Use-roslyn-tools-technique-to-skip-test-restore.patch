@@ -1,0 +1,61 @@
+From 93e0640c274606a6e2a2c9c07c83df0341247a97 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Thu, 1 Nov 2018 12:50:42 -0500
+Subject: [PATCH] Use roslyn-tools technique to skip test restore
+
+Patch PR: https://github.com/aspnet/websdk/pull/421
+---
+ build/Empty.targets          | 23 +++++++++++++++++++++++
+ test/Directory.Build.targets | 10 ++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 build/Empty.targets
+ create mode 100644 test/Directory.Build.targets
+
+diff --git a/build/Empty.targets b/build/Empty.targets
+new file mode 100644
+index 0000000..36b4744
+--- /dev/null
++++ b/build/Empty.targets
+@@ -0,0 +1,23 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
++<!-- Copied from https://github.com/dotnet/roslyn-tools/blob/c442fe46e02b31e3954a7c669cc309a8b0175115/sdks/RepoToolset/tools/Empty.targets -->
++<Project DefaultTargets="Build">
++
++  <PropertyGroup>
++    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
++  </PropertyGroup>
++
++  <!--
++    Import this file to suppress all targets while allowing the project to participate in the build.
++    Workaround for https://github.com/dotnet/sdk/issues/2071.
++    
++    The targets defined here are not sufficient for the project to be open in Visual Studio without issues though.    
++  -->
++
++  <Target Name="_IsProjectRestoreSupported"/>
++  <Target Name="Restore"/>
++  <Target Name="Build"/>
++  <Target Name="Test"/>
++  <Target Name="Pack"/>
++
++</Project>
+diff --git a/test/Directory.Build.targets b/test/Directory.Build.targets
+new file mode 100644
+index 0000000..037d46b
+--- /dev/null
++++ b/test/Directory.Build.targets
+@@ -0,0 +1,10 @@
++<?xml version="1.0" encoding="utf-8"?>
++<Project>
++  <!-- Projects in this directory are test-related, and shouldn't participate in source-build. -->
++  <PropertyGroup>
++    <_SuppressAllTargets>false</_SuppressAllTargets>
++    <_SuppressAllTargets Condition="'$(DotNetBuildFromSource)' == 'true'">true</_SuppressAllTargets>
++  </PropertyGroup>
++
++  <Import Project="$(MSBuildThisFileDirectory)..\build\Empty.targets" Condition="$(_SuppressAllTargets)"/>
++</Project>
+-- 
+2.17.1.windows.2
+
