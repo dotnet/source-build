@@ -13,7 +13,6 @@ jobs:
     matrix:
       Production: {}
       Online: { type: Online }
-      Online Portable: { type: Online Portable }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
@@ -24,7 +23,16 @@ jobs:
     matrix:
       Production: {}
       Online: { type: Online }
+
+- template: ../jobs/ci-linux.yml
+  parameters:
+    job: fedora29
+    imageName: microsoft/dotnet-buildtools-prereqs:fedora-29-2f0798a-20181105183801
+    matrix:
+      Production: {}
+      Online: { type: Online }
       Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
 
 - template: ../jobs/ci-linux.yml
   parameters:
