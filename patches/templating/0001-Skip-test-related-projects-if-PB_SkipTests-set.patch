@@ -1,0 +1,36 @@
+From 5019f96deaebf22f2f7883c2ee16b0d6839ffaa4 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 6 Nov 2018 12:43:44 -0600
+Subject: [PATCH] Skip test-related projects if PB_SkipTests set
+
+Setting SharedTestProjects='' worked, but that approach is more difficult with
+OuterRingProjects where a semicolon-delimited string would need to be passed.
+Instead, patch PB_SkipTests handling to be more extensive.
+---
+ build.proj | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/build.proj b/build.proj
+index 0870ec97..b923f863 100644
+--- a/build.proj
++++ b/build.proj
+@@ -40,10 +40,14 @@
+     <OuterRingProjects>
+         src/Microsoft.TemplateEngine.Edge/Microsoft.TemplateEngine.Edge.csproj;
+         src/Microsoft.TemplateEngine.IDE/Microsoft.TemplateEngine.IDE.csproj;
+-        test/Microsoft.TemplateEngine.Mocks/Microsoft.TemplateEngine.Mocks.csproj
+     </OuterRingProjects>
+ 
+-    <SharedTestProjects>
++    <OuterRingProjects Condition="'$(PB_SkipTests)' != 'true'">
++        $(OuterRingProjects)
++        test/Microsoft.TemplateEngine.Mocks/Microsoft.TemplateEngine.Mocks.csproj;
++    </OuterRingProjects>
++
++    <SharedTestProjects Condition="'$(PB_SkipTests)' != 'true'">
+         test/Microsoft.TemplateEngine.TestHelper/Microsoft.TemplateEngine.TestHelper.csproj
+     </SharedTestProjects>
+ 
+-- 
+2.17.1.windows.2
+
