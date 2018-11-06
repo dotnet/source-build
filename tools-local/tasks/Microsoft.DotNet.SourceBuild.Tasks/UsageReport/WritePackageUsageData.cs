@@ -140,8 +140,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
             string[] assetFiles = Directory
                 .GetFiles(RootDir, "project.assets.json", SearchOption.AllDirectories)
-                .Select(path => path.Substring(RootDir.Length))
                 .Except(IgnoredProjectAssetsJsonFiles.NullAsEmpty())
+                .Select(path => path.Substring(RootDir.Length))
                 .ToArray();
 
             if (!string.IsNullOrEmpty(ProjectAssetsJsonArchiveFile))
