@@ -16,7 +16,7 @@
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
     <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
-    <MSBuildProperties Include="PB_SkipTests=true" />
+    <MSBuildProperties Include="PB_SKIPTESTS=true" />
     <MSBuildProperties Include="TargetFramework=netcoreapp2.1" />
     <MSBuildProperties Include="CoreOnly=true" />
     <MSBuildProperties Include="SourceLinkCreate=false" />
@@ -44,6 +44,13 @@
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
     <ItemGroup>
       <AdditionalTemplatePackages Include="$(ProjectDirectory)/artifacts/templates/*.nupkg" />
+
+      <!--
+        Don't include the Test templates in source-build: they are now coming from another repo, so
+        without this line we would build the wrong version and force CLI to use it. Instead, allow
+        CLI to bring them in as text-only prebuilt.
+      -->
+      <AdditionalTemplatePackages Remove="$(ProjectDirectory)/artifacts/templates/Microsoft.DotNet.Test.ProjectTemplates.*.nupkg" />
     </ItemGroup>
 
     <Copy SourceFiles="@(AdditionalTemplatePackages)"

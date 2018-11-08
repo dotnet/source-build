@@ -20,14 +20,17 @@ print_rows() {
   echo '| -- | :-- | :-- | :-- |'
   row 'CentOS7.1' 'Production'; jenkins; azdo; end
   row 'CentOS7.1' 'Online'; jenkins; azdo; end
-  row 'CentOS7.1' 'Online Portable'; jenkins; azdo; end
+  row 'CentOS7.1' 'Online Portable'; jenkins; end
   row 'CentOS7.1' 'Offline'; none; none; azdo; end
   row 'CentOS7.1' 'Offline Portable'; none; none; azdo; end
   row 'Debian8.2' 'Production'; none; none; azdo; end
   row 'Debian8.2' 'Online'; none; none; azdo; end
-  row 'Debian8.2' 'Offline'; none; none; azdo; end
   row 'Debian8.4' 'Production'; jenkins; end
   row 'Fedora24' 'Production'; jenkins; end
+  row 'Fedora29' 'Production'; none; none; azdo; end
+  row 'Fedora29' 'Online'; none; none; azdo; end
+  row 'Fedora29' 'Offline'; none; none; azdo; end
+  row 'Fedora29' 'Offline Portable'; none; none; azdo; end
   row 'OSX10.12' 'Production'; jenkins; azdo; end
   row 'RHEL7.2' 'Production'; jenkins; end
   row 'RHEL7.2' 'Online'; jenkins; end
@@ -101,7 +104,7 @@ azdo() {
   query="?branchName=$branch_azdo&jobname=$job&configuration=$job_type_escaped"
 
   raw_print "[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/dotnet/source-build/source-build-CI$query)]"
-  raw_print "(https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114) | "
+  raw_print "(https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114&branchName=$branch_azdo) | "
 }
 
 none() {
