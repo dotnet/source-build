@@ -26,6 +26,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         [Required]
         public string OutputReportFile { get; set; }
 
+        public bool AllowTestProjectUsage { get; set; }
+
         public override bool Execute()
         {
             var used = UsageData.Parse(XElement.Parse(File.ReadAllText(DataFile)));
@@ -69,6 +71,26 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 Log.LogMessage(
                     MessageImportance.High,
                     $"{diff.Unchanged.Length} packages used as expected in the baseline.");
+            }
+
+            if (!AllowTestProjectUsage)
+            {
+                Usage[] testProjectUsages = used.Usages
+                    .Where(WriteUsageReports.IsTestUsageByHeuristic)
+                    .ToArray();
+
+                if (testProjectUsages.Any())
+                {
+                    string[] projects = testProjectUsages
+                        .Select(u => u.AssetsFile)
+                        .Distinct()
+                        .ToArray();
+
+                    Log.LogError(
+                        $"{testProjectUsages.Length} forbidden test usages found in " +
+                        $"{projects.Length} projects:\n" +
+                        string.Join("\n", projects));
+                }
             }
 
             // Simplify the used data to what is necessary for a baseline, to reduce file size.
