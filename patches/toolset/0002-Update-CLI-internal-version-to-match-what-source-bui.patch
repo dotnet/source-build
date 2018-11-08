@@ -1,4 +1,4 @@
-From 34e7974ce80262660e523ba16377fd33b9fbf5c2 Mon Sep 17 00:00:00 2001
+From 080ae54d74810833fc0a5549b5c2f31383de895d Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 17 Jul 2018 12:08:25 -0500
 Subject: [PATCH] Update CLI internal version to match what source-build
@@ -6,24 +6,23 @@ Subject: [PATCH] Update CLI internal version to match what source-build
 
 See https://github.com/dotnet/source-build/issues/657 for details.  This
 patch can be removed after that issue is fixed.
-
 ---
  build/DependencyVersions.props | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/build/DependencyVersions.props b/build/DependencyVersions.props
-index 6f6e4f604..fd496a7b4 100644
+index 31798051a..0b7e4f5a5 100644
 --- a/build/DependencyVersions.props
 +++ b/build/DependencyVersions.props
 @@ -2,7 +2,7 @@
  <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <PropertyGroup>
-     <DotNetCoreSdkLKGVersion>2.2.100-preview1-008982</DotNetCoreSdkLKGVersion>
--    <DotnetCliInternalVersion>2.2.100-refac-refac-20180613-1</DotnetCliInternalVersion>
+     <DotNetCoreSdkLKGVersion>3.0.100-preview-009718</DotNetCoreSdkLKGVersion>
+-    <DotnetCliInternalVersion>3.0.100-preview-20181105-1</DotnetCliInternalVersion>
 +    <DotnetCliInternalVersion>3.0.100-alpha1-00000001-01</DotnetCliInternalVersion>
-     <MicrosoftAspNetCoreAllPackageVersion>2.2.0-preview1-34355</MicrosoftAspNetCoreAllPackageVersion>
-     <MicrosoftAspNetCoreAppPackageVersion>$(MicrosoftAspNetCoreAllPackageVersion)</MicrosoftAspNetCoreAppPackageVersion>
-     <MicrosoftNETCoreAppPackageVersion>2.2.0-preview1-26529-01</MicrosoftNETCoreAppPackageVersion>
+     <MicrosoftNETSdkPackageVersion>3.0.100-preview.18554.1</MicrosoftNETSdkPackageVersion>
+     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
+     <MicrosoftAspNetCoreAllPackageVersion>2.2.0-preview3-35497</MicrosoftAspNetCoreAllPackageVersion>
 -- 
-2.14.1
+2.18.0
 

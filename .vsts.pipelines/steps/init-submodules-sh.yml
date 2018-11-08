@@ -1,0 +1,25 @@
+parameters:
+  commandPrefix: ''
+
+steps:
+  # Fetch vsts commits if building internally.
+  - script: |
+      set -x
+      # Ignore failure for the first command. It will intentionally fail if the commit is only
+      # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
+      # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
+      # .git/modules/src/coreclr/ directories.)
+      $commandPrefix git submodule update --init --recursive
+      $commandPrefix ./fetch-vsts-commits.sh $(user.PAT)
+    displayName: Fetch internal vsts commits
+    env:
+      commandPrefix: ${{ parameters.commandPrefix }}
+    condition: and(succeeded(), ne(variables['user.PAT'], ''))
+
+  # Initialize submodules.
+  - script: |
+      set -x
+      $commandPrefix git submodule update --init --recursive
+    displayName: Initialize submodules
+    env:
+      commandPrefix: ${{ parameters.commandPrefix }}
