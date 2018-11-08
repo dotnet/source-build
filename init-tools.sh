@@ -193,5 +193,14 @@ ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
 mkdir -p "$(dirname "$__BUILD_TOOLS_SEMAPHORE")" && touch "$__BUILD_TOOLS_SEMAPHORE"
 
+echo "Done initializing BuildTools."
+
+echo "Initializing Arcade..."
+scriptroot=$__scriptpath/eng/common/ \
+DOTNET_INSTALL_DIR=$__DOTNET_PATH \
+$__scriptpath/eng/common/init-tools.sh
+
+echo "Done initializing Arcade."
+
 echo "Done initializing tools."
 
