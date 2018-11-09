@@ -161,7 +161,13 @@
 
     <UpdateJson JsonFilePath="$(GlobalJsonFile)"
                 PathToAttribute="sdk.version"
-                NewAttributeValue="$(SDK_VERSION)" />
+                NewAttributeValue="$(SDK_VERSION)"
+                SkipUpdateIfMissingKey="true" />
+
+    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
+                PathToAttribute="tools.dotnet"
+                NewAttributeValue="$(SDK_VERSION)"
+                SkipUpdateIfMissingKey="true" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
