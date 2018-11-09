@@ -14,10 +14,7 @@ diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
 index ebfb1fb6d..ce7f3c174 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -237,6 +237,9 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.10</LatestPatchVersionForNetCore1_1>
-     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
-     <LatestPatchVersionForNetCore2_1 Condition="'%24(LatestPatchVersionForNetCore2_1)' == ''">2.1.2</LatestPatchVersionForNetCore2_1>
+@@ -240,3 +240,6 @@ Copyright (c) .NET Foundation. All rights reserved.
 +
 +    <!-- If true, always target the latest ASP.NET Core runtime by default -->
 +    <TargetLatestAspNetCoreRuntimePatch Condition="'$(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
