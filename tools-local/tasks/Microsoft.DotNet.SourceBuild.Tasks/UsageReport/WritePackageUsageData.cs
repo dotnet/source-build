@@ -140,8 +140,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
             string[] assetFiles = Directory
                 .GetFiles(RootDir, "project.assets.json", SearchOption.AllDirectories)
-                .Except(IgnoredProjectAssetsJsonFiles.NullAsEmpty())
-                .Select(path => path.Substring(RootDir.Length))
+                .Select(GetPathRelativeToRoot)
+                .Except(IgnoredProjectAssetsJsonFiles.NullAsEmpty().Select(GetPathRelativeToRoot))
                 .ToArray();
 
             if (!string.IsNullOrEmpty(ProjectAssetsJsonArchiveFile))
@@ -230,7 +230,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 Usages = usages.ToArray(),
                 NeverRestoredTarballPrebuilts = neverRestoredTarballPrebuilts,
                 ProjectDirectories = ProjectDirectories
-                    ?.Select(dir => dir.Substring(RootDir.Length))
+                    ?.Select(GetPathRelativeToRoot)
                     .ToArray()
             };
 
@@ -242,6 +242,16 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 $"Writing package usage data... done. Took {DateTime.Now - startTime}");
 
             return !Log.HasLoggedErrors;
+        }
+
+        private string GetPathRelativeToRoot(string path)
+        {
+            if (path.StartsWith(RootDir))
+            {
+                return path.Substring(RootDir.Length).Replace(Path.DirectorySeparatorChar, '/');
+            }
+
+            throw new ArgumentException($"Path '{path}' is not within RootDir '{RootDir}'");
         }
 
         private static string[] ReadRidsFromRuntimeJson(string path)
