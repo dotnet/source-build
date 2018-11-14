@@ -16,6 +16,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public bool EndsUpInOutput { get; set; }
         public bool TestProjectByHeuristic { get; set; }
         public bool TestProjectOnlyByHeuristic { get; set; }
+        public bool IsDirectDependency { get; set; }
+        public bool IsAutoReferenced { get; set; }
 
         public XElement ToXml() => new XElement(
             nameof(AnnotatedUsage),
@@ -25,6 +27,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             ProdConPackageIdCreator.ToXAttributeIfNotNull(nameof(ProdConPackageIdCreator)),
             TestProjectByHeuristic.ToXAttributeIfTrue(nameof(TestProjectByHeuristic)),
             TestProjectOnlyByHeuristic.ToXAttributeIfTrue(nameof(TestProjectOnlyByHeuristic)),
+            IsDirectDependency.ToXAttributeIfTrue(nameof(IsDirectDependency)),
+            IsAutoReferenced.ToXAttributeIfTrue(nameof(IsAutoReferenced)),
             EndsUpInOutput.ToXAttributeIfTrue(nameof(EndsUpInOutput)));
     }
 }

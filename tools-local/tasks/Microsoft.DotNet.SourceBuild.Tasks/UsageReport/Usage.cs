@@ -16,6 +16,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
         public string AssetsFile { get; set; }
 
+        public bool IsDirectDependency { get; set; }
+
+        public bool IsAutoReferenced { get; set; }
+
         /// <summary>
         /// The Runtime ID this package is for, or null. Runtime packages (are assumed to) have the
         /// id 'runtime.{rid}.{rest of id}'. We can't use a simple regex to grab this value since
@@ -28,6 +32,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             nameof(Usage),
             PackageIdentity.ToXElement().Attributes(),
             AssetsFile.ToXAttributeIfNotNull("File"),
+            IsDirectDependency.ToXAttributeIfTrue(nameof(IsDirectDependency)),
+            IsAutoReferenced.ToXAttributeIfTrue(nameof(IsAutoReferenced)),
             RuntimePackageRid.ToXAttributeIfNotNull("Rid"));
 
         public static Usage Parse(XElement xml) => new Usage
@@ -40,12 +46,16 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public static Usage Create(
             string assetsFile,
             PackageIdentity identity,
+            bool isDirectDependency,
+            bool isAutoReferenced,
             IEnumerable<string> possibleRuntimePackageRids)
         {
             return new Usage
             {
                 AssetsFile = assetsFile,
                 PackageIdentity = identity,
+                IsDirectDependency = isDirectDependency,
+                IsAutoReferenced = isAutoReferenced,
                 RuntimePackageRid = possibleRuntimePackageRids
                     .Where(rid => identity.Id.StartsWith($"runtime.{rid}.", StringComparison.Ordinal))
                     .OrderByDescending(rid => rid.Length)

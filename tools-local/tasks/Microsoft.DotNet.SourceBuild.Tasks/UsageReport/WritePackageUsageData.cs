@@ -180,28 +180,37 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 assetFiles,
                 assetFile =>
                 {
-                    var properties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    JObject jObj;
 
                     using (var file = File.OpenRead(Path.Combine(RootDir, assetFile)))
                     using (var reader = new StreamReader(file))
                     using (var jsonReader = new JsonTextReader(reader))
                     {
-                        while (jsonReader.Read())
-                        {
-                            if (jsonReader.TokenType == JsonToken.PropertyName &&
-                                jsonReader.Value is string value)
-                            {
-                                properties.Add(value);
-                            }
-                        }
+                        jObj = (JObject)JToken.ReadFrom(jsonReader);
                     }
+
+                    var properties = new HashSet<string>(
+                        jObj.SelectToken("$.targets.*").Select(t => ((JProperty)t).Name).Union(
+                            jObj.SelectToken("$.libraries").Select(t => ((JProperty)t).Name)),
+                        StringComparer.OrdinalIgnoreCase);
+
+                    var directDependencies = jObj.SelectToken("$.project.frameworks.*.dependencies").Select(dep =>
+                        new {
+                            name = ((JProperty)dep).Name,
+                            version = dep.SelectToken("$..version")?.ToString().Replace("[", "").Replace(", )", ""),
+                            autoReferenced = dep.SelectToken("$..autoReferenced")?.ToString() == "True",
+                        });
 
                     foreach (var identity in toCheck
                         .Where(id => properties.Contains(id.Id + "/" + id.Version.OriginalVersion)))
                     {
+                        var directDependency = directDependencies.Where(d => d.name == identity.Id && d.version == identity.Version.OriginalVersion).FirstOrDefault();
+
                         usages.Add(Usage.Create(
                             assetFile,
                             identity,
+                            directDependency != null ? true : false,
+                            directDependency != null ? directDependency.autoReferenced : false,
                             possibleRids));
                     }
                 });
@@ -214,6 +223,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 usages.Add(Usage.Create(
                     null,
                     restoredWithoutUsagesFound,
+                    false,
+                    false,
                     possibleRids));
             }
 
