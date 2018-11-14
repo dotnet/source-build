@@ -36,11 +36,13 @@
 
     <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <Exec Command="$(BuildCommandBase) /t:BuildXPLAT /bl:build.binlog $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <PropertyGroup>
       <PackCommand>$(BuildCommandBase) /t:PackXPlat</PackCommand>
@@ -53,7 +55,8 @@
 
     <Exec Command="$(PackCommand)"
           EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)" />
+          WorkingDirectory="$(ProjectDirectory)"
+          IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
   <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
