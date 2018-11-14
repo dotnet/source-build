@@ -38,7 +38,8 @@
 
     <Exec Command="$(DotnetToolCommand) msbuild $(BuildCommandArgs)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
     <ItemGroup>

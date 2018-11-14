@@ -245,7 +245,10 @@
     <ItemGroup>
       <EnvironmentVariables Condition="'$(NUGET_PACKAGES)'!=''" Include="NUGET_PACKAGES=$(NUGET_PACKAGES)" />
     </ItemGroup>
-    <Exec Command="$(BuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(BuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
   <Target Name="ReportRepoError">
@@ -261,7 +264,10 @@
     <Message Importance="High" Text="  Log: $(RepoConsoleLogFile)" />
     <Message Importance="High" Text="  With Environment Variables:" />
     <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
-    <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(BuildPackagesCommand) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)...done" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
@@ -309,13 +315,10 @@
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
-    <Exec Command="$(CleanCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
-
-  <Target Name="Update"
-          BeforeTargets="Build"
-          Condition="'$(DependencyVersionInputRepoApiImplemented)' != 'true' AND '$(UpdateCommand)' != ''">
-    <Exec Command="$(UpdateCommand) $(RedirectRepoOutputToLog)" WorkingDirectory="$(ProjectDirectory)" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="$(CleanCommand) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
   <Target Name="SetNuGetPackagesEnvironment" Condition="'$(ArchiveDownloadedPackages)' == 'true'">

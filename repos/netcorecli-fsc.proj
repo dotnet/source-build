@@ -12,7 +12,8 @@
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore FSharp.NET.Sdk.csproj $(OutputArgs) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
