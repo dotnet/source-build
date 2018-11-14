@@ -137,6 +137,30 @@
           EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
   </Target>
 
+  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.CloudTestTasks.dll" TaskName="UploadToAzure" />
+
+  <Target Name="PublishPrebuiltReportData">
+    <Error Text="RelativeBlobPath must be set to a non-empty string." Condition="'$(RelativeBlobPath)' == ''" />
+    <Error Text="ContainerName must be set to a non-empty string." Condition="'$(ContainerName)' == ''" />
+    <Error Text="AzureAccountName must be set to a non-empty string." Condition="'$(AzureAccountName)' == ''" />
+    <Error Text="AzureAccessToken must be set to a non-empty string." Condition="'$(AzureAccessToken)' == ''" />
+
+    <ItemGroup>
+      <ItemsToPublish Include="$(PackageReportDir)*.xml" />
+      <ItemsToPublish>
+        <RelativeBlobPath>$(RelativeBlobPath)/%(Filename)%(Extension)</RelativeBlobPath>
+      </ItemsToPublish>
+    </ItemGroup>
+
+    <Message Text="Uploading files to '$(AzureAccountName)' blob storage at $(ContainerName)/$(RelativeBlobPath)" />
+
+    <UploadToAzure AccountName="$(AzureAccountName)"
+                   AccountKey="$(AzureAccessToken)"
+                   ContainerName="$(ContainerName)"
+                   Items="@(ItemsToPublish)"
+                   Overwrite="true" />
+  </Target>
+
   <Import Project="$(ProjectDir)dependencies.targets" />
 
   <Import Project="$(ToolsDir)VersionTools.targets" />

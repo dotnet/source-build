@@ -28,6 +28,7 @@ jobs:
     docker.tb.work: -w /tb
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
+    prebuiltReportBlobPath: prebuilt-data/$(Build.SourceBranchName)/$(artifactName)
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
@@ -194,6 +195,19 @@ jobs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
       ArtifactName: Tarball $(artifactName)
       ArtifactType: Container
+
+  # Publish prebuilt report data to blob storage.
+  - script: |
+      set -x
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+        /t:PublishPrebuiltReportData \
+        '/p:RelativeBlobPath=$(prebuiltReportBlobPath)' \
+        /p:ContainerName=$(publish.blobStorage.container) \
+        /p:AzureAccountName=$(publish.blobStorage.account) \
+        /p:AzureAccessToken=$(publish.blobStorage.accessToken) \
+        /clp:v=D
+    displayName: Publish prebuilt report data
+    condition: and(succeeded(), ne(variables['publish.blobStorage.accessToken'], ''), eq(variables['sb.tarball'], true))
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
