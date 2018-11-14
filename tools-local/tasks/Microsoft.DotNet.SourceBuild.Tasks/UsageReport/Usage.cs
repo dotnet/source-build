@@ -40,6 +40,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         {
             PackageIdentity = XmlParsingHelpers.ParsePackageIdentity(xml),
             AssetsFile = xml.Attribute("File")?.Value,
+            IsDirectDependency = Convert.ToBoolean(xml.Attribute(nameof(IsDirectDependency))?.Value),
+            IsAutoReferenced = Convert.ToBoolean(xml.Attribute(nameof(IsAutoReferenced))?.Value),
             RuntimePackageRid = xml.Attribute("Rid")?.Value
         };
 

@@ -190,27 +190,34 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                     }
 
                     var properties = new HashSet<string>(
-                        jObj.SelectToken("$.targets.*").Select(t => ((JProperty)t).Name).Union(
-                            jObj.SelectToken("$.libraries").Select(t => ((JProperty)t).Name)),
+                        jObj.SelectTokens("$.targets.*")?.Children()
+                            .Concat(jObj.SelectToken("$.libraries"))
+                            .Select(t => ((JProperty)t).Name)
+                            .Distinct(), 
                         StringComparer.OrdinalIgnoreCase);
 
-                    var directDependencies = jObj.SelectToken("$.project.frameworks.*.dependencies").Select(dep =>
-                        new {
-                            name = ((JProperty)dep).Name,
-                            version = dep.SelectToken("$..version")?.ToString().Replace("[", "").Replace(", )", ""),
+                    var directDependencies = jObj.SelectTokens("$.project.frameworks.*.dependencies")?.Children().Select(dep =>
+                        new
+                        {
+                            name = ((Newtonsoft.Json.Linq.JProperty)dep).Name,
+                            target = dep.SelectToken("$..target")?.ToString(),
+                            version = VersionRange.Parse(dep.SelectToken("$..version")?.ToString()), //dep.SelectToken("$..version")?.ToString().Replace("[", "").Replace(", )", ""),
                             autoReferenced = dep.SelectToken("$..autoReferenced")?.ToString() == "True",
-                        });
+                        })
+                        .ToArray();
 
                     foreach (var identity in toCheck
                         .Where(id => properties.Contains(id.Id + "/" + id.Version.OriginalVersion)))
                     {
-                        var directDependency = directDependencies.Where(d => d.name == identity.Id && d.version == identity.Version.OriginalVersion).FirstOrDefault();
-
+                        var directDependency =
+                            directDependencies?.FirstOrDefault(
+                                d => d.name == identity.Id && 
+                                     d.version.Satisfies(identity.Version));
                         usages.Add(Usage.Create(
                             assetFile,
                             identity,
-                            directDependency != null ? true : false,
-                            directDependency != null ? directDependency.autoReferenced : false,
+                            directDependency != null,
+                            directDependency?.autoReferenced == true,
                             possibleRids));
                     }
                 });
