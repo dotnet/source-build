@@ -190,18 +190,18 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                     }
 
                     var properties = new HashSet<string>(
-                        jObj.SelectTokens("$.targets.*")?.Children()
+                        jObj.SelectTokens("$.targets.*").Children()
                             .Concat(jObj.SelectToken("$.libraries"))
                             .Select(t => ((JProperty)t).Name)
                             .Distinct(), 
                         StringComparer.OrdinalIgnoreCase);
 
-                    var directDependencies = jObj.SelectTokens("$.project.frameworks.*.dependencies")?.Children().Select(dep =>
+                    var directDependencies = jObj.SelectTokens("$.project.frameworks.*.dependencies").Children().Select(dep =>
                         new
                         {
-                            name = ((Newtonsoft.Json.Linq.JProperty)dep).Name,
+                            name = ((JProperty)dep).Name,
                             target = dep.SelectToken("$..target")?.ToString(),
-                            version = VersionRange.Parse(dep.SelectToken("$..version")?.ToString()), //dep.SelectToken("$..version")?.ToString().Replace("[", "").Replace(", )", ""),
+                            version = VersionRange.Parse(dep.SelectToken("$..version")?.ToString()),
                             autoReferenced = dep.SelectToken("$..autoReferenced")?.ToString() == "True",
                         })
                         .ToArray();
