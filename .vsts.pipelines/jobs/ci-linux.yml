@@ -202,7 +202,7 @@ jobs:
   # Also publish per-build data to a unique location for future use.
   - template: ../steps/publish-prebuilt-data-sh.yml
     parameters:
-      relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/rolling/$(Build.SourceVersion)/$(Build.DefinitionName)/$(Build.BuildNumber)/$(artifactName)
+      relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/rolling/$(Build.SourceVersion)/$(Build.BuildNumber)/$(Build.DefinitionName)/$(artifactName)
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
