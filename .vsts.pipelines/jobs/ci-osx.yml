@@ -13,7 +13,7 @@ jobs:
   timeoutInMinutes: 240
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type) {0}', parameters.job) }}
+    artifactName: ${{ format('{0} $(type)', parameters.job) }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
