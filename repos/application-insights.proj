@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(SubmoduleDirectory)/bin/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
@@ -13,6 +13,9 @@
     <PropertyGroup>
       <BuildCommandArgs>$(ProjectDirectory)/Microsoft.ApplicationInsights.csproj</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
+      <!-- Re-assign EnlistmentRoot property so output directories end up under src/application-insights -->
+      <BuildCommandArgs>$(BuildCommandArgs) /p:EnlistmentRoot=$(ProjectDirectory)/src</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /p:RelativeOutputPathBase=</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
     </PropertyGroup>
 
