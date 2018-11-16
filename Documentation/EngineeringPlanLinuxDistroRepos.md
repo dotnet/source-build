@@ -3,7 +3,7 @@
 ## Requirements ##
 
 Requirements for getting .NET Core into other Linux Distros are included in *.NET Core in Linux Distro Repositories*. 
-See [Requirements Documents](RequirementsDocument)
+See [Requirements Documents][RequirementsDocument]
 
 [RequirementsDocument]: https://github.com/dotnet/source-build/issues/782
 
