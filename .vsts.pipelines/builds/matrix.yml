@@ -5,6 +5,9 @@
 #   Online: The leg produces a tarball then builds it while connected to the internet.
 #   Offline: The leg produces a tarball then builds it offline. Network disconnected using Docker.
 
+parameters:
+  windowsPoolName: dotnet-external-temp
+
 jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
@@ -40,4 +43,20 @@ jobs:
     job: ubuntu1604
     imageName: microsoft/dotnet-buildtools-prereqs:ubuntu-16.04-c103199-20180628134544
 
-- template: ../jobs/ci-osx.yml
+- template: ../jobs/ci-local.yml
+  parameters:
+    job: osx
+    pool:
+      name: Hosted macOS
+    buildScript: ./build.sh
+    setupMac: true
+
+- template: ../jobs/ci-local.yml
+  parameters:
+    job: windows
+    pool:
+      name: ${{ parameters.windowsPoolName }}
+    buildScript: build.cmd
+    setupWindows: true
+    skipSmokeTest: true
+    failOnPrebuiltBaselineError: false
