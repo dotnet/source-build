@@ -16,6 +16,8 @@
   <PropertyGroup>
     <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
     <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
+    <FlagParameterPrefix Condition="'$(OS)' == 'Windows_NT'">-</FlagParameterPrefix>
+    <FlagParameterPrefix Condition="'$(OS)' != 'Windows_NT'">--</FlagParameterPrefix>
   </PropertyGroup>
 
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
