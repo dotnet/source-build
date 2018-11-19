@@ -1,9 +1,13 @@
 parameters:
-  job: osx
+  job: null
   matrix:
     Production: {}
-  pool:
-    name: Hosted macOS
+  pool: null
+  buildScript: null
+  setupMac: false
+  setupWindows: false
+  skipSmokeTest: false
+  failOnPrebuiltBaselineError: true
 
 jobs:
 - job: ${{ parameters.job }}
@@ -12,8 +16,18 @@ jobs:
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 240
   variables:
+    args.build: >
+      /p:Configuration=$(sb.configuration)
+      /p:PortableBuild=$(sb.portable)
+      /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
+      /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+    args.smokeTest: >
+      /t:RunSmokeTest
+      /p:Configuration=$(sb.configuration)
+      /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     # Prefix to distinguish artifacts from different legs.
     artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
@@ -23,63 +37,43 @@ jobs:
   - checkout: self
     clean: true
 
-  - script: |
-      ./clean.sh -a
-      # Make sure submodules from other branches are removed: pass extra f.
-      git clean -xdff
-    displayName: Clean
+  # Make sure submodules from other branches are removed: pass extra f.
+  - script: git clean -xdff
+    displayName: Clean leftover submodules
 
-  - template: ../steps/calculate-config-flags-linux.yml
+  - template: ../steps/check-space-powershell.yml
 
-  - script: |
-      ( set -o posix; set )
-    displayName: Print all variables in environment
+  - ${{ if eq(parameters.setupMac, true) }}:
+    - template: ../steps/setup-macos-native.yml
+  - ${{ if eq(parameters.setupWindows, true) }}:
+    - template: ../steps/setup-windows-bash.yml
 
-  # Install native dependencies not present in hosted pool.
-  - script: |
-      setvariable() {
-        (
-          set +x
-          echo "Setting '$1' to '$2'"
-          echo "##vso[task.setvariable variable=$1;]$2"
-        )
-      }
-      set -x
-      # Based on https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
-      brew install icu4c openssl
-      brew link --force icu4c
-      # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
-      brew install cmake pkgconfig openssl
-      brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
-      # Use 'for' to get last/latest openssl install dir.
-      for openssl_path in $brew_openssl_paths; do :; done
-      setvariable OPENSSL_ROOT_DIR "$openssl_path"
-    displayName: Install native dependencies
+  - template: ../steps/calculate-config-flags.yml
 
-  - template: ../steps/init-submodules-sh.yml
+  - template: ../steps/init-submodules.yml
+
+  - template: ../steps/check-space-powershell.yml
 
   # Build source-build.
-  - script: |
-      set -x
-      ./build.sh \
-        /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
-        /p:FailOnPrebuiltBaselineError=true \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+  - script: ${{ format('{0} $(args.build)', parameters.buildScript) }}
     displayName: Build source-build
     timeoutInMinutes: 150
 
-  # Run smoke tests.
-  - script: |
-      set -x
-      ./build.sh \
-        /t:RunSmokeTest \
-        /p:Configuration=$(sb.configuration) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-    displayName: Run smoke-test
+  - template: ../steps/check-space-powershell.yml
 
-  - script: |
+  # Run smoke tests.
+  - ${{ if ne(parameters.skipSmokeTest, true) }}:
+    - bash: ${{ format('{0} $(args.smokeTest)', parameters.buildScript) }}
+      displayName: Run smoke-test
+
+  # Gather artifacts. Uses git bash on Windows.
+  - bash: |
       set -x
+      copyWithParents="cp {} --parents"
+      if command -v rsync; then
+        # On Mac, "--parents" isn't supported, but we can use rsync.
+        copyWithParents="rsync -R {}"
+      fi
       # Clean up previous build's staging dir, in case VSTS didn't do it.
       rm -rf "$(logsDirectory)"
       # Copy all these files to the logs dir, preserving relative path.
@@ -89,7 +83,7 @@ jobs:
         -path './bin/msbuild-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
-        -exec rsync -R {} "$(logsDirectory)" \;
+        -exec $copyWithParents "$(logsDirectory)" \;
     displayName: Copy logs to staging directory
     condition: always()
     continueOnError: true

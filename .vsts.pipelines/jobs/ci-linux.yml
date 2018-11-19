@@ -38,7 +38,7 @@ jobs:
 
   steps:
   - template: ../steps/docker-cleanup-linux.yml
-  - template: ../steps/calculate-config-flags-linux.yml
+  - template: ../steps/calculate-config-flags.yml
 
   # Create working directory and copy source into it.
   - script: |
@@ -50,7 +50,7 @@ jobs:
         cp -r . /root/sb/source-build'
     displayName: Clean sb directory and copy source from cloned directory
 
-  - template: ../steps/init-submodules-sh.yml
+  - template: ../steps/init-submodules.yml
     parameters:
       commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
 
