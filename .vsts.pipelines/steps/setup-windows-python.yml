@@ -23,6 +23,9 @@ steps:
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [System.IO.Compression.ZipFile]::ExtractToDirectory($pythonZip, $pythonDir)
 
+    # Work around https://bugs.python.org/issue34841 causing CoreCLR to fail on script dir import
+    rm "$pythonDir\python37._pth"
+
     echo "Adding $pythonDir to PATH as AzDO variable for python.exe..."
     $env:PATH = "$pythonDir;" + $env:PATH
     echo "##vso[task.setvariable variable=PATH;]$($env:PATH)"
