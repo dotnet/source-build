@@ -47,6 +47,7 @@ jobs:
     - template: ../steps/setup-macos-native.yml
   - ${{ if eq(parameters.setupWindows, true) }}:
     - template: ../steps/setup-windows-bash.yml
+    - template: ../steps/setup-windows-python.yml
 
   - template: ../steps/calculate-config-flags.yml
 
