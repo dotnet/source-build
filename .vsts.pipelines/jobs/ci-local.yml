@@ -3,7 +3,8 @@ parameters:
   matrix:
     Production: {}
   pool: null
-  buildScript: null
+  scriptPrefix: null
+  scriptSuffix: null
   setupMac: false
   setupWindows: false
   skipSmokeTest: false
@@ -41,6 +42,11 @@ jobs:
   - script: git clean -xdff
     displayName: Clean leftover submodules
 
+  # Run 'clean -a' script to recursively clean submodules: AzDO doesn't do this, and otherwise we
+  # fail to apply patches on persistent machines like dotnet-external-temp.
+  - script: ${{ format('{0}clean{1} -a', parameters.scriptPrefix, parameters.scriptSuffix) }}
+    displayName: Run source-build 'clean all' script
+
   - template: ../steps/check-space-powershell.yml
 
   - ${{ if eq(parameters.setupMac, true) }}:
@@ -56,7 +62,7 @@ jobs:
   - template: ../steps/check-space-powershell.yml
 
   # Build source-build.
-  - script: ${{ format('{0} $(args.build)', parameters.buildScript) }}
+  - script: ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
     timeoutInMinutes: 150
 
@@ -64,7 +70,7 @@ jobs:
 
   # Run smoke tests.
   - ${{ if ne(parameters.skipSmokeTest, true) }}:
-    - bash: ${{ format('{0} $(args.smokeTest)', parameters.buildScript) }}
+    - bash: ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
       displayName: Run smoke-test
 
   # Gather artifacts. Uses git bash on Windows.

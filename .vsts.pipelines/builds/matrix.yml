@@ -48,7 +48,8 @@ jobs:
     job: osx
     pool:
       name: Hosted macOS
-    buildScript: ./build.sh
+    scriptPrefix: ./
+    scriptSuffix: .sh
     setupMac: true
 
 - template: ../jobs/ci-local.yml
@@ -56,7 +57,8 @@ jobs:
     job: windows
     pool:
       name: ${{ parameters.windowsPoolName }}
-    buildScript: build.cmd
+    scriptPrefix: ''
+    scriptSuffix: .cmd
     setupWindows: true
     skipSmokeTest: true
     failOnPrebuiltBaselineError: false
