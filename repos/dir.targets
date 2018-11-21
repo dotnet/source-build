@@ -334,9 +334,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <_PackagesNotCreatedReason Include="^ Silent submodule build failure: check $(RepoConsoleLogFile)" />
-      <_PackagesNotCreatedReason Include="^ $(RepositoryName) doesn't build nuget packages: add SkipEnsurePackagesCreated=true property to $(MSBuildProjectFile)" />
-      <_PackagesNotCreatedReason Include="^ Identities already present in dirty 'bin' directory: perform clean build or check $(_PackageVersionPropsBackupPath)" />
+      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
+      <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
+      <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(_PackageVersionPropsBackupPath)" />
     </ItemGroup>
 
     <Error Condition="'@(JustSourceBuiltPackages)' == ''"
