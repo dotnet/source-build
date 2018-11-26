@@ -121,7 +121,7 @@ jobs:
         networkArg="--network=none"
       fi
       poisonArg=
-      if [ "$(sb.tarball)" != "true" ]; then
+      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         poisonArg="/p:EnablePoison=true"
       fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
