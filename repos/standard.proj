@@ -3,13 +3,22 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -$(Configuration) --</BuildCommand>
+    <BuildArguments>-$(Configuration)</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
     <OfficialBuildId>20170719-03</OfficialBuildId>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- standard spawns new MSBuild processes so this needs to be an environment
+         variable instead of a property argument -->
+    <EnvironmentVariables Include="ToolsDir=$(ToolsDir)" />
+  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
