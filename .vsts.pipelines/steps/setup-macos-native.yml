@@ -1,0 +1,21 @@
+steps:
+- script: |
+    setvariable() {
+      (
+        set +x
+        echo "Setting '$1' to '$2'"
+        echo "##vso[task.setvariable variable=$1;]$2"
+      )
+    }
+    set -x
+    # Install macOS native dependencies not present in hosted pool.
+    # Based on https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
+    brew install icu4c openssl
+    brew link --force icu4c
+    # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
+    brew install cmake pkgconfig openssl
+    brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
+    # Use 'for' to get last/latest openssl install dir.
+    for openssl_path in $brew_openssl_paths; do :; done
+    setvariable OPENSSL_ROOT_DIR "$openssl_path"
+  displayName: Install native dependencies

@@ -1,0 +1,29 @@
+# The dotnet-*-temp pools seem to have an install of bash along with its git, but its shell
+# is named sh.exe which isn't found by 'bash' steps. Make a copy in the build's working directory
+# and copy sh.exe to bash.exe, then add the new dir to PATH to make it accessible to 'bash' tasks.
+steps:
+- powershell: |
+    echo "Finding dir containing sh.exe based on git.exe path..."
+    $binDir = [IO.Path]::Combine(
+      [IO.Path]::GetDirectoryName([IO.Path]::GetDirectoryName((get-command git).Source)),
+      "usr", "bin")
+
+    echo "Creating the custom bin dir to add to PATH"
+    $bashDir = "$(Build.ArtifactStagingDirectory)\usr\bin"
+    mkdir -f $bashDir
+
+    echo "Creating bash.exe from sh.exe in $bashDir..."
+    cp -Recurse "$binDir\*" $bashDir
+    cp "$bashDir\sh.exe" "$bashDir\bash.exe"
+
+    echo "Files in bash dir:"
+    ls $bashDir
+
+    echo "Adding $bashDir to PATH as AzDO variable for bash.exe..."
+    $env:PATH = "$bashDir;" + $env:PATH
+    echo "##vso[task.setvariable variable=PATH;]$($env:PATH)"
+
+    echo "Creating /tmp to avoid stderr warnings later..."
+    bash --noprofile --norc -c 'mkdir /tmp'
+    bash --noprofile --norc -c pwd
+  displayName: Set up Windows bash

@@ -1,0 +1,9 @@
+steps:
+- powershell: |
+    $g = 1024 * 1024 * 1024;
+    echo "Name`tAvailable (GiB)`tTotal (GiB)"
+    [System.IO.DriveInfo]::GetDrives() |
+      %{ echo "$($_.Name)`t$($_.AvailableFreeSpace / $g)`t$($_.TotalSize / $g)" }
+  displayName: (Diag) Check drive fullness
+  condition: always()
+  continueOnError: true

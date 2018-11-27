@@ -4,6 +4,8 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using NuGet.Packaging.Core;
+using NuGet.Versioning;
 using System;
 using System.IO;
 using System.Linq;
@@ -40,12 +42,32 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         [Required]
         public string PackageCacheDir { get; set; }
 
+        /// <summary>
+        /// Paths to packages to compare against when conflicts are detected. Knowing where the
+        /// package in the cache came from can help diagnose a conflict. For example, is it from
+        /// prebuilt/source-built? Or does the build not have the nupkg anywhere else, and
+        /// therefore it most likely came from the internet?
+        /// </summary>
+        public string[] KnownOriginPackagePaths { get; set; }
+
         [Output]
         public ITaskItem[] ConflictingPackageInfos { get; set; }
 
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
+
+            var knownNupkgs = new Lazy<ILookup<PackageIdentity, string>>(() =>
+            {
+                Log.LogMessage(
+                    MessageImportance.Low,
+                    $"Reading all {nameof(KnownOriginPackagePaths)} package identities to search " +
+                        "for conflicting package origin...");
+
+                return KnownOriginPackagePaths.NullAsEmpty().ToLookup(
+                    ReadNuGetPackageInfos.ReadIdentity,
+                    path => path);
+            });
 
             ConflictingPackageInfos = SourceBuiltPackageInfos
                 .Where(item =>
@@ -72,22 +94,50 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                         MessageImportance.Low,
                         $"Package id/version found in package cache, verifying: {id} {version}");
 
-                    bool identical = File.ReadAllBytes(sourceBuiltPath)
-                        .SequenceEqual(File.ReadAllBytes(packageCachePath));
+                    byte[] packageCacheBytes = File.ReadAllBytes(packageCachePath);
 
-                    if (!identical)
+                    if (packageCacheBytes.SequenceEqual(File.ReadAllBytes(sourceBuiltPath)))
                     {
                         Log.LogMessage(
                             MessageImportance.Low,
-                            "BAD: Source-built nupkg is not byte-for-byte identical " +
-                                $"to nupkg in cache: {id} {version}");
-                        return true;
+                            $"OK: Package in cache is identical to source-built: {id} {version}");
+                        return false;
                     }
 
                     Log.LogMessage(
                         MessageImportance.Low,
-                        $"OK: Package in cache is identical to source-built: {id} {version}");
-                    return false;
+                        "BAD: Source-built nupkg is not byte-for-byte identical " +
+                            $"to nupkg in cache: {id} {version}");
+
+                    var ident = new PackageIdentity(id, NuGetVersion.Parse(version));
+
+                    string message = null;
+
+                    foreach (string knownNupkg in knownNupkgs.Value[ident])
+                    {
+                        if (packageCacheBytes.SequenceEqual(File.ReadAllBytes(knownNupkg)))
+                        {
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                $"Found identity match with identical contents: {knownNupkg}");
+
+                            message = (message ?? "Nupkg found at") + $" '{knownNupkg}'";
+                        }
+                        else
+                        {
+                            Log.LogMessage(
+                                MessageImportance.Low,
+                                $"Package identity match, but contents differ: {knownNupkg}");
+                        }
+                    }
+
+                    item.SetMetadata(
+                        "WarningMessage",
+                        message ??
+                            "Origin nupkg not found in build directory. It may have been " +
+                            "downloaded by NuGet restore.");
+
+                    return true;
                 })
                 .ToArray();
 

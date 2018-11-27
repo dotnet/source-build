@@ -1,0 +1,106 @@
+parameters:
+  job: null
+  matrix:
+    Production: {}
+  pool: null
+  scriptPrefix: null
+  scriptSuffix: null
+  setupMac: false
+  setupWindows: false
+  skipSmokeTest: false
+  failOnPrebuiltBaselineError: true
+
+jobs:
+- job: ${{ parameters.job }}
+  strategy:
+    matrix: ${{ parameters.matrix }}
+  pool: ${{ parameters.pool }}
+  timeoutInMinutes: 240
+  variables:
+    args.build: >
+      /p:Configuration=$(sb.configuration)
+      /p:PortableBuild=$(sb.portable)
+      /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
+      /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+    args.smokeTest: >
+      /t:RunSmokeTest
+      /p:Configuration=$(sb.configuration)
+      /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+    # Prefix to distinguish artifacts from different legs.
+    artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
+    logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
+    # Default type, can be overridden by matrix legs.
+    type: Production
+
+  steps:
+  - checkout: self
+    clean: true
+
+  # Make sure submodules from other branches are removed: pass extra f.
+  - script: git clean -xdff
+    displayName: Clean leftover submodules
+
+  # Run 'clean -a' script to recursively clean submodules: AzDO doesn't do this, and otherwise we
+  # fail to apply patches on persistent machines like dotnet-external-temp.
+  - script: ${{ format('{0}clean{1} -a', parameters.scriptPrefix, parameters.scriptSuffix) }}
+    displayName: Run source-build 'clean all' script
+
+  - template: ../steps/check-space-powershell.yml
+
+  - ${{ if eq(parameters.setupMac, true) }}:
+    - template: ../steps/setup-macos-native.yml
+  - ${{ if eq(parameters.setupWindows, true) }}:
+    - template: ../steps/setup-windows-bash.yml
+    - template: ../steps/setup-windows-python.yml
+
+  - template: ../steps/calculate-config-flags.yml
+
+  - template: ../steps/init-submodules.yml
+
+  - template: ../steps/check-space-powershell.yml
+
+  # Build source-build.
+  - script: ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+    displayName: Build source-build
+    timeoutInMinutes: 150
+
+  - template: ../steps/check-space-powershell.yml
+
+  # Run smoke tests.
+  - ${{ if ne(parameters.skipSmokeTest, true) }}:
+    - bash: ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+      displayName: Run smoke-test
+
+  # Gather artifacts. Uses git bash on Windows.
+  - bash: |
+      set -x
+      copyWithParents="cp {} --parents"
+      if command -v rsync; then
+        # On Mac, "--parents" isn't supported, but we can use rsync.
+        copyWithParents="rsync -R {}"
+      fi
+      # Clean up previous build's staging dir, in case VSTS didn't do it.
+      rm -rf "$(logsDirectory)"
+      # Copy all these files to the logs dir, preserving relative path.
+      mkdir -p "$(logsDirectory)"
+      find . \( \
+        -path './bin/*-report/*' -o \
+        -path './bin/msbuild-debug/*' -o \
+        -iname '*.binlog' -o \
+        -iname '*.log' \) \
+        -exec $copyWithParents "$(logsDirectory)" \;
+    displayName: Copy logs to staging directory
+    condition: always()
+    continueOnError: true
+
+  # Publish artifacts.
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Logs artifact
+    condition: always()
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(logsDirectory)
+      ArtifactName: Logs $(artifactName)
+      ArtifactType: Container
