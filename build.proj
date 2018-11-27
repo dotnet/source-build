@@ -31,9 +31,20 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
+  <!--
+    Workaround: Skip Windows_NT.
+
+    When trying to CopyReferenceOnlyPackages, it gets errors like:
+
+      System.IO.IOException: The process cannot access the file
+      '<root>\packages\microsoft.codeanalysis.compilers\2.6.0-beta3-62316-02\microsoft.codeanalysis.compilers.nuspec'
+      because it is being used by another process.
+
+    We don't support producing a tarball on Windows, so there's little value in fixing this.
+  -->
   <Target Name="CopyAndDisassembleReferenceOnlyPackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"

@@ -50,7 +50,26 @@
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
     </ItemGroup>
     <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
-                              DestinationFolderTemplate="$(LocalBlobStorageRoot)Runtime/{version}/" />
+                              DestinationFolderTemplate="$(SourceBuiltRuntimeDir){version}/" >
+      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
+    </PublishCoreSetupBinaries>
+    <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
+  </Target>
+
+
+  <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
+    <ItemGroup>
+      <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
+      <_builtRuntimePackages>
+        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
+      </_builtRuntimePackages>
+      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
+      <BinariesToCopy Include="@(_builtRuntimePackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BinariesToCopy)"
+          DestinationFolder="$(OutputPath)runtime"
+          Condition="'@(BinariesToCopy)'!=''" />
   </Target>
 
 </Project>

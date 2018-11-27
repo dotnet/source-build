@@ -61,6 +61,7 @@
     <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
     <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)prebuilt/source-built/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
+    <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
@@ -107,15 +108,11 @@
   <Import Project="$(ProjectDir)dependencies.props" />
 
   <PropertyGroup>
-    <!--
-        Temporarily update RootRepo to known-good
-        repo project until all repos are building clean.
-        When all repos build, this can be changed back
-        to cli.
-    <RootRepo>cli</RootRepo>
-    -->
+    <!-- known-good (repos/known-good.proj) conditionally includes submodules based on the platform,
+         so this will not always correspond to the same repos - see that file for details.
+         We need an "empty" project after the last real project in order for prebuilt detection
+         to work, so we always build known-good. -->
     <RootRepo>known-good</RootRepo>
-    <RootRepo Condition="$(Platform.Contains('arm'))">core-setup</RootRepo>
   </PropertyGroup>
 
   <ItemGroup>
