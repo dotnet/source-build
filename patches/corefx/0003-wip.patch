@@ -1,0 +1,25 @@
+From c095c6f5dff1830293626c7ddbe5684b89dc9b34 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 17 Nov 2018 16:08:26 -0600
+Subject: [PATCH] wip
+
+---
+ eng/Tools.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 58398dc85f..7725dec5cf 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -43,7 +43,7 @@
+       <ToolsDir Condition="'$(ToolsDir)' == ''">$(RepoRoot)Tools</ToolsDir>
+       <BuildToolsSemaphore>$(ToolsDir)/$(BuildToolsPackageVersion).init-tools.completed</BuildToolsSemaphore>
+       <PackagesDir>$(NuGetPackageRoot)/</PackagesDir>
+-      <BuildToolsPackageDir>$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
++      <BuildToolsPackageDir Condition="'$(BuildToolsPackageDir)' == ''">$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
+       <CmdExt>cmd</CmdExt>
+       <CmdExt Condition="'$(OS)' != 'Windows_NT'">sh</CmdExt>
+       <DotNetRoot Condition="'$(DotNetRoot)' == ''">$(RepoRoot).dotnet\</DotNetRoot>
+-- 
+2.18.0
+

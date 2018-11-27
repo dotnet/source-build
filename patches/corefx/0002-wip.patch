@@ -1,0 +1,25 @@
+From 4eeb8ad025672ec92abe8cf56c959acd68461c96 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 17 Nov 2018 15:49:56 -0600
+Subject: [PATCH] wip
+
+---
+ eng/Tools.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index e20a3716e1..58398dc85f 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -40,7 +40,7 @@
+   <Target Name="InitTools" AfterTargets="Restore">
+ 
+     <PropertyGroup>
+-      <ToolsDir>$(RepoRoot)Tools</ToolsDir>
++      <ToolsDir Condition="'$(ToolsDir)' == ''">$(RepoRoot)Tools</ToolsDir>
+       <BuildToolsSemaphore>$(ToolsDir)/$(BuildToolsPackageVersion).init-tools.completed</BuildToolsSemaphore>
+       <PackagesDir>$(NuGetPackageRoot)/</PackagesDir>
+       <BuildToolsPackageDir>$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
+-- 
+2.18.0
+
