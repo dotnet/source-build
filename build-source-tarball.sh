@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [-- [extra build.sh args]]"
     echo ""
 }
 
@@ -26,15 +26,20 @@ while :; do
 
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
-        -?|-h|--help)
-            usage
-            exit 0
-            ;;
         --skip-build)
             SKIP_BUILD=1
             ;;
         --enable-leak-detection)
             INCLUDE_LEAK_DETECTION=1
+            ;;
+        --)
+            shift
+            echo "Detected '--': passing remaining parameters '$@' as build.sh arguments."
+            break
+            ;;
+        -?|-h|--help)
+            usage
+            exit 0
             ;;
         *)
             echo "Unrecognized argument '$1'"
@@ -62,7 +67,7 @@ if [ $SKIP_BUILD -ne 1 ]; then
     fi
 
     $SCRIPT_ROOT/clean.sh
-    $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true /flp:v=detailed
+    $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true "$@"
 fi
 
 mkdir -p "$TARBALL_ROOT"
