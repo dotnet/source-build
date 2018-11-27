@@ -166,26 +166,26 @@
 
   <Target Name="CreateBuildOutputProps"
           BeforeTargets="Build">
+    <PropertyGroup>
+      <_PackageVersionPropsBackupPath>$(PackageVersionPropsPath).pre.$(RepositoryName).xml</_PackageVersionPropsBackupPath>
+    </PropertyGroup>
+
     <ItemGroup>
-      <_PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
+      <PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
                                       Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
     </ItemGroup>
-    <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+
+    <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            ExtraPackageInfo="@(ExtraPackageVersionPropsPackageInfo)"
                            OutputPath="$(PackageVersionPropsPath)" />
 
-    <WriteBuildOutputProps NuGetPackages="@(_PreviouslySourceBuiltPackages)"
+    <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            IncludeCreationTimeProperty="true"
-                           OutputPath="$(PackageVersionPropsPath).pre.$(RepositoryName).xml" />
+                           OutputPath="$(_PackageVersionPropsBackupPath)" />
 
-    <ReadLinesFromFile File="$(PackageVersionPropsPath)">
-      <Output TaskParameter="Lines" ItemName="VersionProperties" />
-    </ReadLinesFromFile>
+    <Message Importance="High" Text="$(RepositoryName) using package version properties saved at $(_PackageVersionPropsBackupPath) " />
 
-    <Message Importance="High" Text="$(RepositoryName) is using versions $(PackageVersionPropsPath)" />
-    <Message Importance="High" Text="%(VersionProperties.Identity)" />
-
-    <ReadNuGetPackageInfos PackagePaths="@(_PreviouslySourceBuiltPackages)">
+    <ReadNuGetPackageInfos PackagePaths="@(PreviouslySourceBuiltPackages)">
       <Output TaskParameter="PackageInfoItems" ItemName="_PreviouslySourceBuiltPackageInfos" />
     </ReadNuGetPackageInfos>
 
@@ -320,6 +320,34 @@
     <ZipFileExtractToDirectory SourceArchive="@(_ToolPackage)"
                                DestinationDirectory="$(ToolPackageExtractDir)$(BuiltToolPackageId)\"
                                OverwriteDestination="true" />
+  </Target>
+
+  <Target Name="EnsurePackagesCreated"
+          AfterTargets="CopyPackage"
+          Condition="'$(SkipEnsurePackagesCreated)' != 'true'">
+    <ItemGroup>
+      <JustSourceBuiltPackages
+        Include="$(SourceBuiltPackagesPath)*.nupkg"
+        Exclude="
+          $(SourceBuiltPackagesPath)*.symbols.nupkg;
+          @(PreviouslySourceBuiltPackages)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
+      <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
+      <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(_PackageVersionPropsBackupPath)" />
+    </ItemGroup>
+
+    <Error Condition="'@(JustSourceBuiltPackages)' == ''"
+           Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_PackagesNotCreatedReason, '%0A')" />
+
+    <ReadNuGetPackageInfos PackagePaths="@(JustSourceBuiltPackages)">
+      <Output TaskParameter="PackageInfoItems" ItemName="_JustSourceBuiltPackageInfos" />
+    </ReadNuGetPackageInfos>
+
+    <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
+    <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
