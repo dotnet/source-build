@@ -277,7 +277,7 @@
   <Target Name="GatherBuiltPackages">
     <ItemGroup>
       <!-- Filter out packages for WriteVersions -->
-      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <_BuiltPackages Include="$(PackagesOutput)/**/*.nupkg" Exclude="$(PackagesOutput)/**/*.symbols.nupkg"/>
     </ItemGroup>
   </Target>
 
