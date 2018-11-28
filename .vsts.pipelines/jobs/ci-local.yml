@@ -38,6 +38,10 @@ jobs:
   - checkout: self
     clean: true
 
+  # If the machine is dirty, submodule URLs may be from a different branch. Sync to prevent that.
+  - script: git submodule sync
+    displayName: Sync submodule urls
+
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
     displayName: Clean leftover submodules
