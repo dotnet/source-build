@@ -56,7 +56,8 @@
 
     <Exec Command="$(DotnetToolCommand) $(RestoreArgs)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring 'roslyn'...done" />
   </Target>
@@ -90,7 +91,8 @@
 
     <Exec Command="$(DotnetToolCommand) $(PublishCommandArgs) %(PublishWithoutBuildingProject.Identity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <PropertyGroup>
       <PackCommandArgs>pack --no-build</PackCommandArgs>
@@ -104,7 +106,8 @@
 
     <Exec Command="$(DotnetToolCommand) $(PackCommandArgs) -p:NuspecFile=%(NuSpecFiles.Identity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'...done" />
   </Target>
