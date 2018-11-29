@@ -1,101 +1,87 @@
-phases:
-- phase: vsts_prodcon_update
+jobs:
+- job: vsts_prodcon_update
+  pool:
+    name: Hosted VS2017
+  timeoutInMinutes: 180
   variables:
     # autoUpdate.skipBuildToolsUpdate: (User input: Should the BuildTools update be skipped? This is useful to isolate the update to ProdCon.)
-    # pb.feed.buildId: (User input: What build id is the prodcon blob feed from? This shows up in the commit.)
-    # pb.feed.indexJsonUrl: (User input: Where is the prodcon blob feed?)
     # pb.feed.replaceNew: (User input for ProdConBlobFeedReplaceNew.)
     # pb.feed.replaceOld: (User input for ProdConBlobFeedReplaceOld.)
-    manifestDir: $(repo.orchestrationUtilities.dir)\bin\obj\manifest-temp
-    manifestFile: $(manifestDir)\build.xml
-    repo.orchestrationUtilities.dir: $(Build.BinariesDirectory)\utilities
-    repo.orchestrationUtilities.url: https://usernameplaceholder:$(user.PAT)@devdiv.visualstudio.com/DefaultCollection/DevDiv/_git/DotNet-Orchestration-Utilities
-    repo.sourceBuild.url: https://usernameplaceholder:$(user.PAT)@devdiv.visualstudio.com/DefaultCollection/DevDiv/_git/DotNet-Source-Build-Trusted
-
-  queue:
-    name: DotNet-Build
-    demands: agent.os -equals windows_nt
-    timeoutInMinutes: 180
+    # pb.manifest.branch: (User input e.g. orchestrated-release-2-1)
+    # pb.manifest.build: (User input e.g. 20180102-03)
+    # pb.manifest.prefix: (User input e.g. https://dotnetfeed.blob.core.windows.net/)
+    # user.dncengPAT: (User input: PAT for pushing commit and opening PR.)
+    # user.PAT: (User input: PAT for fetching submodule commits.)
+    CommitMessage: Update to ProdCon $(pb.manifest.build)
+    logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    manifestFile: $(Build.BinariesDirectory)\build.xml
+    pb.manifest.buildXmlPath: final/assets/orchestration-metadata/manifests/build.xml
+    pb.manifest.url: $(pb.manifest.prefix)$(pb.manifest.branch)/$(pb.manifest.build)/$(pb.manifest.buildXmlPath)
 
   steps:
-    - powershell: |
-        $prefix = "refs/heads/"
-        $branch = "$(Build.SourceBranch)"
-        $branchName = $branch
-        if ($branchName.StartsWith($prefix))
-        {
-          $branchName = $branchName.Substring($prefix.Length)
-        }
-        Write-Host "For Build.SourceBranch $branch, FullBranchName is $branchName"
-        Write-Host "##vso[task.setvariable variable=FullBranchName;]$branchName"
-      displayName: Find true SourceBranchName
+  - powershell: |
+      $prefix = "refs/heads/"
+      $branch = "$(Build.SourceBranch)"
+      $branchName = $branch
+      if ($branchName.StartsWith($prefix))
+      {
+        $branchName = $branchName.Substring($prefix.Length)
+      }
+      Write-Host "For Build.SourceBranch $branch, FullBranchName is $branchName"
+      Write-Host "##vso[task.setvariable variable=FullBranchName;]$branchName"
+    displayName: Find true SourceBranchName
 
-    - powershell: |
-        # Ignore failure for the first command. It will intentionally fail if the commit is only
-        # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
-        # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
-        # .git/modules/src/coreclr/ directories.)
-        git submodule update --init --recursive
-        # This fetches old commits (allowing the next update to succeed) and populates the git repo
-        # with the potential commits that may be upgraded to.
-        ./fetch-vsts-commits.ps1 $(user.PAT)
-        git submodule update --init --recursive
-      displayName: Fetch internal vsts commits
+  - powershell: |
+      Invoke-WebRequest $(pb.manifest.url) -OutFile $(manifestFile)
+      echo "Writing all build manifest:"
+      cat $(manifestFile)
+    displayName: Download build manifest
 
-    - powershell: |
-        # Ensure no straggling artifacts could interfere with manifest generation.
-        rm -Recurse -Force -ErrorAction Ignore "$(repo.orchestrationUtilities.dir)"
-        git clone "$(repo.orchestrationUtilities.url)" "$(repo.orchestrationUtilities.dir)"
-      displayName: Initialize DotNet-Orchestration-Utilities
+  - template: ../steps/init-submodules.yml
 
-    - powershell: |
-        .\init-tools.cmd
-        Tools\dotnetcli\dotnet msbuild .\src\publish.proj `
-          /t:CreateFeedOrchestratedBuildManifest `
-          /p:ExpectedFeedUrl=$(pb.feed.indexJsonUrl) `
-          /p:AccountKey=$(pb.feed.accountKey) `
-          /p:ManifestName=cli `
-          /p:ManifestBuildId=$(pb.feed.buildId) `
-          /v:N /flp:v=Diag
-      workingDirectory: $(repo.orchestrationUtilities.dir)
-      displayName: Create orchestrated build manifest
+  - powershell: |
+      .\build.cmd /t:InitBuild /p:SkipPatches=true
+      .\build.cmd `
+        /t:UpdateDependencies `
+        /p:SkipBuildToolsUpdate=$(autoUpdate.skipBuildToolsUpdate) `
+        /p:UpdateFromManifestFile=$(manifestFile) `
+        /p:ProdConBlobFeedReplaceOld=$(pb.feed.replaceOld) `
+        /p:ProdConBlobFeedReplaceNew=$(pb.feed.replaceNew) `
+        /t:SubmitPullRequestIfChanged `
+        /p:MadeChanges=true `
+        /p:ProjectRepoOwner=internal `
+        /p:ProjectRepoName=dotnet-source-build `
+        /p:ProjectRepoBranch=$(FullBranchName) `
+        /p:PullRequestServiceType=Vsts `
+        /p:VstsInstanceName=dnceng `
+        /p:PullRequestAuthToken=$(user.dncengPAT) `
+        /p:PullRequestUser=dn-bot `
+        /p:PullRequestAuthor=dotnet-bot `
+        /p:PullRequestEmail=dotnet-bot@microsoft.com `
+        /clp:v=Normal
+    displayName: Perform auto-update changes
 
-    - powershell: |
-        .\build.cmd /t:InitBuild /p:SkipPatches=true
-        .\build.cmd `
-          /t:UpdateDependencies `
-          /p:SkipBuildToolsUpdate=$(autoUpdate.skipBuildToolsUpdate) `
-          /p:UpdateFromManifestFile=$(manifestFile) `
-          /p:ProdConBlobFeedReplaceOld=$(pb.feed.replaceOld) `
-          /p:ProdConBlobFeedReplaceNew=$(pb.feed.replaceNew) `
-          /clp:v=Normal
-      displayName: Perform auto-update changes
+  # Gather artifacts. Uses git bash on Windows.
+  - bash: |
+      set -x
+      copyWithParents="cp {} --parents"
+      # Copy all these files to the logs dir, preserving relative path.
+      mkdir -p "$(logsDirectory)"
+      find . \( \
+        -iname '*.binlog' -o \
+        -iname '*.log' \) \
+        -exec $copyWithParents "$(logsDirectory)" \;
+    displayName: Copy logs to staging directory
+    condition: always()
+    continueOnError: true
 
-    - powershell: |
-        git `
-          -c user.name=dotnet-maestro-bot `
-          -c "user.email=dotnet-maestro-bot@microsoft.com" `
-          commit -a -m "Update to ProdCon $(pb.feed.buildId)"
-        git push -f $(repo.sourceBuild.url) HEAD:refs/heads/auto-update/$(FullBranchName)
-      displayName: Push auto-update commit
+  # Publish artifacts.
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Logs artifact
+    condition: always()
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(logsDirectory)
+      ArtifactName: Logs
+      ArtifactType: Container
 
-    - task: CopyFiles@2
-      condition: always()
-      continueOnError: true
-      inputs:
-        sourceFolder: $(manifestDir)
-        targetFolder: $(Build.ArtifactStagingDirectory)\manifestDir
-
-    - task: PublishBuildArtifacts@1
-      displayName: Publish artifacts
-      condition: always()
-      continueOnError: true
-      inputs:
-        PathtoPublish: $(Build.ArtifactStagingDirectory)
-        ArtifactName: artifacts
-        ArtifactType: Container
-
-    - powershell: rm -Recurse -Force "$(repo.orchestrationUtilities.dir)"
-      condition: always()
-      continueOnError: true
-      displayName: Clean up DotNet-Orchestration-Utilities
