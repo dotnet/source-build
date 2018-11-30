@@ -1,4 +1,4 @@
-From 7a1fc257f39b0d99724f2aad964061601f46c1d9 Mon Sep 17 00:00:00 2001
+From 3e292ac2b2dbec5d71d91185e1f94abac4aab6b5 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 15 Nov 2018 09:58:35 -0600
 Subject: [PATCH] Add arcade
@@ -1238,6 +1238,7 @@ index b1ade59..90f6838 100644
 +                IsMissing = true;
 +            }
  
+-            try
 +            // allow for components to specify their dependencies themselves, by placing a file next to their source file.
 +            var additionalDependenciesFile = SourceFile + AdditionalDependenciesFileSuffix;
 +
@@ -1264,7 +1265,7 @@ index b1ade59..90f6838 100644
 +
 +            // Files may be related to other files via OriginalItemSpec
 +            if (OriginalItem != null)
-+            {
+             {
 +                var relatedToPath = OriginalItem.GetMetadata("OriginalItemSpec");
 +
 +                if (!String.IsNullOrEmpty(relatedToPath))
@@ -1314,8 +1315,7 @@ index b1ade59..90f6838 100644
 +
 +        private void PopulateDependenciesFromMetadata(IDictionary<string, FileNode> allFiles, bool preferNativeImage, ILog log, Stack<FileNode> stack)
 +        {
-             try
--            {
++            try
 +            { 
                  using (var peReader = new PEReader(new FileStream(SourceFile, FileMode.Open, FileAccess.Read, FileShare.Delete | FileShare.Read)))
                  {
@@ -1929,9 +1929,8 @@ index 6193486..3e0febf 100644
 +                trimmable.IsPackageTrimmable(package.Id) ||
 +                (TreatMetaPackagesAsTrimmable && package.IsMetaPackage) ||
 +                (TreatMultiPackagesAsTrimmable && package.IsMultiPackage && package.Files.Any(f => !f.IsIncluded));
-         }
- 
--        private static void IncludeNode<T>(Queue<T> queue, T node) where T : IIsIncluded
++        }
++
 +        private void IncludeRoot(Queue<FileNode> queue, FileNode root)
 +        {
 +            Log.LogMessage(MessageImportance.Low, $"Including root file {root}.");
@@ -1966,8 +1965,9 @@ index 6193486..3e0febf 100644
 +        {
 +            Log.LogMessage(MessageImportance.Low, $"Including package {child} referenced by package {parent}.");
 +            QueueNode(queue, child);
-+        }
-+
+         }
+ 
+-        private static void IncludeNode<T>(Queue<T> queue, T node) where T : IIsIncluded
 +        private static void QueueNode<T>(Queue<T> queue, T node) where T : IIsIncluded
          {
              if (!node.IsIncluded)
@@ -13138,5 +13138,5 @@ index 3d1a7e3..accaacb 100644
    <ItemGroup>
      <Project Include="netstandard/ref/*.csproj" />
 -- 
-2.18.0
+2.17.1.windows.2
 

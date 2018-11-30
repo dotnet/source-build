@@ -1,25 +1,24 @@
-From 4eeb8ad025672ec92abe8cf56c959acd68461c96 Mon Sep 17 00:00:00 2001
+From 065eadb639ac39d3bc616e5487c228ffa8e242f1 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Sat, 17 Nov 2018 15:49:56 -0600
+Date: Thu, 15 Nov 2018 19:27:20 -0600
 Subject: [PATCH] wip
 
 ---
- eng/Tools.props | 2 +-
+ global.json | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/eng/Tools.props b/eng/Tools.props
-index e20a3716e1..58398dc85f 100644
---- a/eng/Tools.props
-+++ b/eng/Tools.props
-@@ -40,7 +40,7 @@
-   <Target Name="InitTools" AfterTargets="Restore">
- 
-     <PropertyGroup>
--      <ToolsDir>$(RepoRoot)Tools</ToolsDir>
-+      <ToolsDir Condition="'$(ToolsDir)' == ''">$(RepoRoot)Tools</ToolsDir>
-       <BuildToolsSemaphore>$(ToolsDir)/$(BuildToolsPackageVersion).init-tools.completed</BuildToolsSemaphore>
-       <PackagesDir>$(NuGetPackageRoot)/</PackagesDir>
-       <BuildToolsPackageDir>$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
+diff --git a/global.json b/global.json
+index 808d3a98ec..2c55eb7cde 100644
+--- a/global.json
++++ b/global.json
+@@ -1,6 +1,6 @@
+ {
+   "tools": {
+-    "dotnet": "2.1.401"
++    "dotnet": "2.1.403"
+   },
+   "msbuild-sdks": {
+     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.18556.6",
 -- 
-2.18.0
+2.17.1.windows.2
 
