@@ -5,6 +5,7 @@ parameters:
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
+  reportPrebuiltLeaks: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -14,7 +15,7 @@ jobs:
   timeoutInMinutes: 270
   variables:
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('$(type) {0}', parameters.job) }}
+    artifactName: ${{ format('{0} $(type)', parameters.job) }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc
@@ -28,6 +29,7 @@ jobs:
     docker.tb.work: -w /tb
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
+    reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
@@ -36,7 +38,7 @@ jobs:
 
   steps:
   - template: ../steps/docker-cleanup-linux.yml
-  - template: ../steps/calculate-config-flags-linux.yml
+  - template: ../steps/calculate-config-flags.yml
 
   # Create working directory and copy source into it.
   - script: |
@@ -48,7 +50,7 @@ jobs:
         cp -r . /root/sb/source-build'
     displayName: Clean sb directory and copy source from cloned directory
 
-  - template: ../steps/init-submodules-sh.yml
+  - template: ../steps/init-submodules.yml
     parameters:
       commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
 
@@ -68,7 +70,7 @@ jobs:
     displayName: Build source-build
     timeoutInMinutes: 120
 
-  # Run smoke tests.
+  # Run smoke tests. This is needed even in tarball legs to create the smoke-test-prereqs archive.
   - script: |
       set -x
       df -h
@@ -82,9 +84,13 @@ jobs:
   - script: |
       set -x
       df -h
+      args="--skip-build"
+      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+        args="$args --enable-leak-detection"
+      fi
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
-        --skip-build
+        $args
     displayName: Create tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
@@ -114,10 +120,15 @@ jobs:
       if [ "$(sb.tarballOffline)" = "true" ]; then
         networkArg="--network=none"
       fi
+      poisonArg=
+      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+        poisonArg="/p:EnablePoison=true"
+      fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
-        /p:FailOnPrebuiltBaselineError=true
+        /p:FailOnPrebuiltBaselineError=true \
+        $poisonArg
     displayName: Build tarball
     timeoutInMinutes: 120
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
@@ -194,6 +205,15 @@ jobs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
       ArtifactName: Tarball $(artifactName)
       ArtifactType: Container
+
+  # Publish prebuilt report data to blob storage.
+  - template: ../steps/publish-prebuilt-data-sh.yml
+    parameters:
+      relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/latest/$(artifactName)
+  # Also publish per-build data to a unique location for future use.
+  - template: ../steps/publish-prebuilt-data-sh.yml
+    parameters:
+      relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/rolling/$(Build.SourceVersion)/$(Build.BuildNumber)/$(Build.DefinitionName)/$(artifactName)
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'

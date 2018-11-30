@@ -3,7 +3,7 @@
 ## Requirements ##
 
 Requirements for getting .NET Core into other Linux Distros are included in *.NET Core in Linux Distro Repositories*. 
-See [Requirements Documents](RequirementsDocument)
+See [Requirements Documents][RequirementsDocument]
 
 [RequirementsDocument]: https://github.com/dotnet/source-build/issues/782
 
@@ -16,7 +16,7 @@ There is one exception to the *"no prebuilt binaries rule"* for the case of boot
 
 This is discussed in the Fedora packaging guidelines as an exception to the guideline of *no inclusion of pre-built binaries or libraries*.  See [Bootstrap Exception](https://fedoraproject.org/wiki/Packaging:Guidelines#Exceptions)
 
-![Source Build Bootstrap](https://github.com/dseefeld/Sandbox/raw/master/Documentation/SourceBuildBootstrap.png)
+![Source Build Bootstrap](https://github.com/dseefeld/Sandbox/raw/master/Documentation/SourceBuildBootstrap-updated.png)
 
 
 >>Toolset bootstrapping is different than runtime bootstapping provided in [scripts/bootstrap/buildbootstrapcli.sh](https://github.com/dotnet/source-build/blob/92546b3a4000d58b3fb75771fd633f1bef1cfbc7/scripts/bootstrap/buildbootstrapcli.sh).  This script is only needed when starting with a new distro on which .NET Core has never built.  For the distros being discussed in this document, there are already existing .NET Core runtime and SDK builds available.  For that reason, runtime bootstrapping is outside the scope of this document.
@@ -28,7 +28,11 @@ In the [requirements document](RequirementsDocument), it is suggested that we *R
 In either case, it makes sense to split out the creation of a separate archive package for runtime and toolset with the appropriate package dependency.
 
 ### N-1 Toolset ###
-Subsequent versions of .NET Core, when being built for an already bootstrapped distro do not need to follow the bootstrap process as described above.  Subsequent versions will use the N-1 version of the toolset from the archive to build.  Note, N-1 in this context means the previous version of .NET Core that was included in the distro archive.  If, during development of a new version, it is necessary to use a feature from that version, there are two options with regards to source-build:
+Subsequent versions of .NET Core, when being built for an already bootstrapped distro do not need to follow the bootstrap process as described above.  Subsequent versions will use the N-1 version of the toolset from the archive to build.  Note, N-1 in this context means the previous version of .NET Core that was included in the distro archive.  
+
+![Source Build N+1 Build](https://github.com/dseefeld/Sandbox/raw/master/Documentation/SourceBuild-NPlusOneBuild.png)
+
+If, during development of a new version, it is necessary to use a feature from that version, there are two options with regards to source-build:
 1. Ship an intermediate release to establish the toolset baseline.  
 2. Re-execute the bootstrap process for the distro to establish a new baseline for the toolset.
 

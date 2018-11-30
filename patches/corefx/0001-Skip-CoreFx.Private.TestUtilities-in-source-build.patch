@@ -1,0 +1,51 @@
+From 3c58c35b188d80799948917e1e09721ff8316ad2 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 31 Oct 2018 22:33:26 -0500
+Subject: [PATCH] Skip CoreFx.Private.TestUtilities in source-build
+
+This project referenced the XUnit.Runtime dependency project, causing test-only prebuilt dependencies.
+
+Even though we always pass BuildTests=false, include a condition to handle "true" to make intent clear.
+
+Patch PR: https://github.com/dotnet/corefx/pull/33217
+---
+ Directory.Build.props | 8 ++++++++
+ src/ref.builds        | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index eb59fd5c25..3fdd594ffa 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -320,6 +320,14 @@
+     <IncludeDllSafeSearchPathAttribute Condition="'$(TargetGroup)' == 'netstandard1.0'">false</IncludeDllSafeSearchPathAttribute>
+   </PropertyGroup>
+ 
++  <!--
++    Remove test-only dependencies during source-build: disable project that brings in XUnit.Runtime
++    dependencies through 'ReferenceFromRuntime' property.
++  -->
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildTests)' != 'true'">
++    <ProjectExclusions Include="$(SourceDir)CoreFx.Private.TestUtilities/**/*.csproj" />
++  </ItemGroup>
++
+   <!-- Properties related to multi-file mode for ILC tests -->
+   <PropertyGroup Condition="'$(TargetGroup)' == 'uapaot'">
+     <!-- Only enable multi-file for Release-x64 and Debug-x86 for now -->
+diff --git a/src/ref.builds b/src/ref.builds
+index 2753148a20..e12cf4aa5a 100644
+--- a/src/ref.builds
++++ b/src/ref.builds
+@@ -7,7 +7,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <Project Include="$(MSBuildThisFileDirectory)*\ref\*.*proj" />
++    <Project Include="$(MSBuildThisFileDirectory)*\ref\*.*proj" Exclude="@(ProjectExclusions)" />
+   </ItemGroup>
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.traversal.targets))\dir.traversal.targets" />
+ </Project>
+\ No newline at end of file
+-- 
+2.17.1.windows.2
+

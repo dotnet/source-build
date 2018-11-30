@@ -35,10 +35,20 @@
     <RemoveDir Directories="$(BaseOutputPath)" />
   </Target>
 
-  <!-- reference assemblies are not rebuilt on Windows, so don't produce them either -->
+  <!--
+    Workaround: Skip Windows_NT.
+
+    When trying to CopyReferenceOnlyPackages, it gets errors like:
+
+      System.IO.IOException: The process cannot access the file
+      '<root>\packages\microsoft.codeanalysis.compilers\2.6.0-beta3-62316-02\microsoft.codeanalysis.compilers.nuspec'
+      because it is being used by another process.
+
+    We don't support producing a tarball on Windows, so there's little value in fixing this.
+  -->
   <Target Name="CopyAndDisassembleReferenceOnlyPackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' AND '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"
@@ -140,6 +150,30 @@
     -->
     <Exec Command="$(SmokeTestCommand)"
           EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
+  </Target>
+
+  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.CloudTestTasks.dll" TaskName="UploadToAzure" />
+
+  <Target Name="PublishPrebuiltReportData">
+    <Error Text="RelativeBlobPath must be set to a non-empty string." Condition="'$(RelativeBlobPath)' == ''" />
+    <Error Text="ContainerName must be set to a non-empty string." Condition="'$(ContainerName)' == ''" />
+    <Error Text="AzureAccountName must be set to a non-empty string." Condition="'$(AzureAccountName)' == ''" />
+    <Error Text="AzureAccessToken must be set to a non-empty string." Condition="'$(AzureAccessToken)' == ''" />
+
+    <ItemGroup>
+      <ItemsToPublish Include="$(PackageReportDir)*.xml" />
+      <ItemsToPublish>
+        <RelativeBlobPath>$(RelativeBlobPath)/%(Filename)%(Extension)</RelativeBlobPath>
+      </ItemsToPublish>
+    </ItemGroup>
+
+    <Message Text="Uploading files to '$(AzureAccountName)' blob storage at $(ContainerName)/$(RelativeBlobPath)" />
+
+    <UploadToAzure AccountName="$(AzureAccountName)"
+                   AccountKey="$(AzureAccessToken)"
+                   ContainerName="$(ContainerName)"
+                   Items="@(ItemsToPublish)"
+                   Overwrite="true" />
   </Target>
 
   <Import Project="$(ProjectDir)dependencies.targets" />

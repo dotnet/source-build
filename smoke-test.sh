@@ -133,6 +133,13 @@ function doCommand() {
 
     newArgs="new $proj -lang $lang"
 
+    # XXX temporary workaround XXX
+    # this is a temporary workaround before templates are updated to use netcoreapp3.0.
+    # see issue https://github.com/dotnet/source-build/issues/635 for more details.
+    # This part ensures packages won't fail to restore before we can edit the csproj.
+    newArgs="$newArgs --no-restore"
+    # XXX temporary workaround XXX
+
     while :; do
         if [ $# -le 0 ]; then
             break

@@ -7,14 +7,14 @@
 
     <BuildNumber>35497</BuildNumber>
 
-    <BuildCommandArgs>pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(RazorSdkProjectFile)</BuildCommandArgs>
+    <BuildCommandArgs>$(RazorSdkProjectFile)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IsFinalBuild=$(UseStableVersions)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
 
-    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) build /bl:build.binlog $(BuildCommandArgs)</BuildCommand>
+
+    <BuildPackagesCommand>$(DotnetToolCommand) pack /bl:pack.binlog $(BuildCommandArgs)</BuildPackagesCommand>
 
     <PackagesOutput>$(RazorSdkProjectDir)bin/$(Configuration)/</PackagesOutput>
 
@@ -22,6 +22,10 @@
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="standard" />
+  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

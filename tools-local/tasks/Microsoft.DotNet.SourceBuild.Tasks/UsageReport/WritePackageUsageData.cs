@@ -65,6 +65,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public string RootDir { get; set; }
 
         /// <summary>
+        /// project.assets.json files to ignore, for example, because they are checked-in assets not
+        /// generated during source-build and cause false positives.
+        /// </summary>
+        public string[] IgnoredProjectAssetsJsonFiles { get; set; }
+
+        /// <summary>
         /// Output usage data JSON file path.
         /// </summary>
         [Required]
@@ -132,10 +138,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
             Log.LogMessage(MessageImportance.Low, "Finding project.assets.json files...");
 
-            string[] assetFiles = Directory.GetFiles(
-                RootDir,
-                "project.assets.json",
-                SearchOption.AllDirectories);
+            string[] assetFiles = Directory
+                .GetFiles(RootDir, "project.assets.json", SearchOption.AllDirectories)
+                .Select(GetPathRelativeToRoot)
+                .Except(IgnoredProjectAssetsJsonFiles.NullAsEmpty().Select(GetPathRelativeToRoot))
+                .ToArray();
 
             if (!string.IsNullOrEmpty(ProjectAssetsJsonArchiveFile))
             {
@@ -152,10 +159,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 {
                     // Only one entry can be open at a time, so don't do this during the Parallel
                     // ForEach later.
-                    foreach (var file in assetFiles)
+                    foreach (var relativePath in assetFiles)
                     {
-                        string relativePath = file.Substring(RootDir.Length);
-                        using (var stream = File.OpenRead(file))
+                        using (var stream = File.OpenRead(Path.Combine(RootDir, relativePath)))
                         using (Stream entryWriter = projectAssetArchive
                             .CreateEntry(relativePath, CompressionLevel.Optimal)
                             .Open())
@@ -174,29 +180,44 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 assetFiles,
                 assetFile =>
                 {
-                    var properties = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                    JObject jObj;
 
-                    using (var file = File.OpenRead(assetFile))
+                    using (var file = File.OpenRead(Path.Combine(RootDir, assetFile)))
                     using (var reader = new StreamReader(file))
                     using (var jsonReader = new JsonTextReader(reader))
                     {
-                        while (jsonReader.Read())
-                        {
-                            if (jsonReader.TokenType == JsonToken.PropertyName &&
-                                jsonReader.Value is string value)
-                            {
-                                properties.Add(value);
-                            }
-                        }
+                        jObj = (JObject)JToken.ReadFrom(jsonReader);
                     }
+
+                    var properties = new HashSet<string>(
+                        jObj.SelectTokens("$.targets.*").Children()
+                            .Concat(jObj.SelectToken("$.libraries"))
+                            .Select(t => ((JProperty)t).Name)
+                            .Distinct(), 
+                        StringComparer.OrdinalIgnoreCase);
+
+                    var directDependencies = jObj.SelectTokens("$.project.frameworks.*.dependencies").Children().Select(dep =>
+                        new
+                        {
+                            name = ((JProperty)dep).Name,
+                            target = dep.SelectToken("$..target")?.ToString(),
+                            version = VersionRange.Parse(dep.SelectToken("$..version")?.ToString()),
+                            autoReferenced = dep.SelectToken("$..autoReferenced")?.ToString() == "True",
+                        })
+                        .ToArray();
 
                     foreach (var identity in toCheck
                         .Where(id => properties.Contains(id.Id + "/" + id.Version.OriginalVersion)))
                     {
+                        var directDependency =
+                            directDependencies?.FirstOrDefault(
+                                d => d.name == identity.Id && 
+                                     d.version.Satisfies(identity.Version));
                         usages.Add(Usage.Create(
-                            // Store relative path for future report generation.
-                            assetFile.Substring(RootDir.Length),
+                            assetFile,
                             identity,
+                            directDependency != null,
+                            directDependency?.autoReferenced == true,
                             possibleRids));
                     }
                 });
@@ -209,6 +230,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 usages.Add(Usage.Create(
                     null,
                     restoredWithoutUsagesFound,
+                    false,
+                    false,
                     possibleRids));
             }
 
@@ -225,7 +248,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 Usages = usages.ToArray(),
                 NeverRestoredTarballPrebuilts = neverRestoredTarballPrebuilts,
                 ProjectDirectories = ProjectDirectories
-                    ?.Select(dir => dir.Substring(RootDir.Length))
+                    ?.Select(GetPathRelativeToRoot)
                     .ToArray()
             };
 
@@ -237,6 +260,16 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                 $"Writing package usage data... done. Took {DateTime.Now - startTime}");
 
             return !Log.HasLoggedErrors;
+        }
+
+        private string GetPathRelativeToRoot(string path)
+        {
+            if (path.StartsWith(RootDir))
+            {
+                return path.Substring(RootDir.Length).Replace(Path.DirectorySeparatorChar, '/');
+            }
+
+            throw new ArgumentException($"Path '{path}' is not within RootDir '{RootDir}'");
         }
 
         private static string[] ReadRidsFromRuntimeJson(string path)

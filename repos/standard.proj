@@ -4,7 +4,10 @@
 
   <PropertyGroup>
     <BuildArguments>-$(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+
     <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
