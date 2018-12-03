@@ -25,6 +25,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
     {
         /// <summary>
         /// Specifies the root directory for git.
+        /// Note: Requires a trailing "/" when specifying the directory.
         /// </summary>
         [Required]
         public string RootDirectory { get; set; }
@@ -42,20 +43,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         [Required]
         public string OutputFilePath { get; set; }
 
-        class commit
-        {
-            public string sha { get; set; }
-            public string title { get; set; }
-            public DateTime commitDate { get; set; }
-            public int packageVersionCount { get; set; }
-            public int packageCount { get; set; }
-
-            public override string ToString()
-            {
-                return $"{sha}, {title}, {commitDate}, {packageVersionCount}, {packageCount}";
-            }
-        }
-
         public override bool Execute()
         {
             string baselineRelativeFileName = PrebuiltBaselineFile.Replace(RootDirectory, "");
@@ -64,23 +51,26 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             DateTime startTime = DateTime.Now;
             Log.LogMessage(MessageImportance.High, "Generating summary usage burndown data...");
 
-
-            var data = ExecuteGitCommand(RootDirectory, gitLogCommand).AsParallel().Select(commitLine =>
+            ParallelQuery<string> data = ExecuteGitCommand(RootDirectory, gitLogCommand).AsParallel().Select(commitLine =>
             {
                 var splitLine = commitLine.Split(',');
-                var commit = new commit() { sha = splitLine[0], title = splitLine[1], commitDate = DateTime.Parse(splitLine[2]) };
-                var fileContents = GetFileContents(baselineRelativeFileName, commit.sha);
-                var usages = UsageData.Parse(XElement.Parse(fileContents)).Usages.NullAsEmpty().ToArray();
-                commit.packageVersionCount = usages.Count();
-                commit.packageCount = usages.GroupBy(i => i.PackageIdentity.Id).Select(grp => grp.First()).Count();
+                var commit = new Commit()
+                    {
+                        Sha = splitLine[0],
+                        Title = splitLine[1],
+                        CommitDate = DateTime.Parse(splitLine[2])
+                    };
+                string fileContents = GetFileContents(baselineRelativeFileName, commit.Sha);
+                Usage[] usages = UsageData.Parse(XElement.Parse(fileContents)).Usages.NullAsEmpty().ToArray();
+                commit.PackageVersionCount = usages.Count();
+                commit.PackageCount = usages.GroupBy(i => i.PackageIdentity.Id).Select(grp => grp.First()).Count();
                 return commit;
             })
-            .Select(c => c.ToString())
-            .Aggregate((a, b) => a + '\n' + b);
+            .Select(c => c.ToString());
     
             Directory.CreateDirectory(Path.GetDirectoryName(OutputFilePath));
 
-            File.WriteAllText(OutputFilePath, data);
+            File.WriteAllLines(OutputFilePath, data);
 
             Log.LogMessage(
                 MessageImportance.High,
@@ -95,10 +85,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         /// <param name="relativeFilePath">The relative path (from the git root) to the file.</param>
         /// <param name="commitSha">The commit sha for the version of the file to get.</param>
         /// <returns>The contents of the specified file.</returns>
-        public string GetFileContents(string relativeFilePath, string commitSha)
+        private string GetFileContents(string relativeFilePath, string commitSha)
         {
             WebClient client = new WebClient();
-            var xmlString = client.DownloadString(String.Format("https://raw.githubusercontent.com/dotnet/source-build/{0}/{1}", commitSha, relativeFilePath.Replace('\\', '/')));
+            var xmlString = client.DownloadString($"https://raw.githubusercontent.com/dotnet/source-build/{commitSha}/{relativeFilePath.Replace('\\', '/')}");
             return xmlString;
         }
 
@@ -108,8 +98,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         /// <param name="workingDirectory">The working directory for the git command.</param>
         /// <param name="command">The git command to execute.</param>
         /// <returns>An array of the output lines of the git command.</returns>
-        public string[] ExecuteGitCommand(string workingDirectory, string command)
+        private string[] ExecuteGitCommand(string workingDirectory, string command)
         {
+            string[] returnData;
             Process _process = new Process();
             _process.StartInfo.FileName = "git";
             _process.StartInfo.Arguments = command;
@@ -117,8 +108,23 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             _process.StartInfo.RedirectStandardOutput = true;
             _process.StartInfo.UseShellExecute = false;
             _process.Start();
+            returnData = _process.StandardOutput.ReadToEnd().Split('\n');
             _process.WaitForExit();
-            return _process.StandardOutput.ReadToEnd().Split('\n');
+            return returnData;
+        }
+
+        private class Commit
+        {
+            public string Sha { get; set; }
+            public string Title { get; set; }
+            public DateTime CommitDate { get; set; }
+            public int PackageVersionCount { get; set; }
+            public int PackageCount { get; set; }
+
+            public override string ToString()
+            {
+                return $"{Sha}, {Title}, {CommitDate}, {PackageVersionCount}, {PackageCount}";
+            }
         }
     }
 }

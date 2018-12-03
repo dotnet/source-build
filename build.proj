@@ -133,9 +133,12 @@
   </Target>
 
   <Target Name="GeneratePrebuiltBurndownData">
-    <WriteUsageBurndownData RootDirectory = "$(ProjectDir)"
-                            PrebuiltBaselineFile = "$(BaselineDataFile)"
-                            OutputFilePath = "$(PrebuiltBurndownDataFile)" /> 
+    <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
+                            PrebuiltBaselineFile="$(OnlineBaselineDataFile)"
+                            OutputFilePath="$(OnlinePrebuiltBurndownDataFile)" />
+    <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
+                            PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
+                            OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
