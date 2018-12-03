@@ -199,7 +199,7 @@ echo "Initializing Arcade..."
 scriptroot=$__scriptpath/eng/common/ \
 DOTNET_INSTALL_DIR=$__DOTNET_PATH \
 DotNetBuildFromSource=true \
-$__scriptpath/eng/common/init-tools.sh
+$__scriptpath/eng/common/tools.sh
 
 echo "Done initializing Arcade."
 

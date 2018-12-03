@@ -2,7 +2,7 @@
 setlocal
 
 set INIT_TOOLS_LOG=%~dp0init-tools.log
-if [%PACKAGES_DIR%]==[] set PACKAGES_DIR=%~dp0packages\
+if [%PACKAGES_DIR%]==[] set PACKAGES_DIR=%~dp0packages/
 if [%TOOLRUNTIME_DIR%]==[] set TOOLRUNTIME_DIR=%~dp0Tools
 set DOTNET_PATH=%TOOLRUNTIME_DIR%\dotnetcli\
 if [%DOTNET_CMD%]==[] set DOTNET_CMD=%DOTNET_PATH%dotnet.exe
@@ -12,6 +12,7 @@ set BUILD_TOOLS_PATH=%PACKAGES_DIR%Microsoft.DotNet.BuildTools\%BUILDTOOLS_VERSI
 set INIT_TOOLS_RESTORE_PROJECT=%~dp0init-tools.msbuild
 set BUILD_TOOLS_SEMAPHORE_DIR=%TOOLRUNTIME_DIR%\%BUILDTOOLS_VERSION%
 set BUILD_TOOLS_SEMAPHORE=%BUILD_TOOLS_SEMAPHORE_DIR%\init-tools.completed
+set BUILD_TOOLS_ARCADE_SEMAPHORE=%TOOLRUNTIME_DIR%/%TOOLRUNTIME_DIR%\%BUILDTOOLS_VERSION%.init-tools.completed"
 
 :: if force option is specified then clean the tool runtime and build tools package directory to force it to get recreated
 if [%1]==[force] (
@@ -76,8 +77,8 @@ if NOT exist "%BUILD_TOOLS_PATH%init-tools.cmd" (
 set /p ILASMCOMPILER_VERSION=< "%~dp0tools-local\ILAsmVersion.txt"
 
 echo Initializing BuildTools...
-echo Running: "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" >> "%INIT_TOOLS_LOG%"
-call "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" >> "%INIT_TOOLS_LOG%"
+echo Running: "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" %PACKAGES_DIR% >> "%INIT_TOOLS_LOG%"
+call "%BUILD_TOOLS_PATH%init-tools.cmd" "%~dp0" "%DOTNET_CMD%" "%TOOLRUNTIME_DIR%" %PACKAGES_DIR% >> "%INIT_TOOLS_LOG%"
 set INIT_TOOLS_ERRORLEVEL=%ERRORLEVEL%
 if not [%INIT_TOOLS_ERRORLEVEL%]==[0] (
   echo ERROR: An error occured when trying to initialize the tools. 1>&2
@@ -85,10 +86,21 @@ if not [%INIT_TOOLS_ERRORLEVEL%]==[0] (
 )
 
 :: Create semaphore file
-echo Done initializing tools.
 if NOT exist "%BUILD_TOOLS_SEMAPHORE_DIR%" mkdir "%BUILD_TOOLS_SEMAPHORE_DIR%"
 echo Init-Tools.cmd completed for BuildTools Version: %BUILDTOOLS_VERSION% > "%BUILD_TOOLS_SEMAPHORE%"
+echo Init-Tools.cmd completed for BuildTools Version: %BUILDTOOLS_VERSION% > "%BUILD_TOOLS_ARCADE_SEMAPHORE%"
 exit /b 0
+
+echo Done initializing BuildTools.
+
+echo Initializing Arcade...
+set DOTNET_INSTALL_DIR=%DOTNET_PATH%
+set DotNetBuildFromSource=true
+powershell -ExecutionPolicy ByPass -NoProfile %~dp0eng\tools.ps1
+
+echo Done initializing Arcade.
+
+echo Done initializing tools.
 
 :error
 echo Please check the detailed log that follows. 1>&2
