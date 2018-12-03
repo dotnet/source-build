@@ -14,6 +14,7 @@ __ILASM_VERSION=$(cat "$__scriptpath/tools-local/ILAsmVersion.txt" | sed 's/\r$/
 __BUILD_TOOLS_PATH="$__PACKAGES_DIR/microsoft.dotnet.buildtools/$__BUILD_TOOLS_PACKAGE_VERSION/lib"
 __INIT_TOOLS_RESTORE_PROJECT="$__scriptpath/init-tools.msbuild"
 __BUILD_TOOLS_SEMAPHORE="$__TOOLRUNTIME_DIR/$__BUILD_TOOLS_PACKAGE_VERSION/init-tools.complete"
+__BUILD_TOOLS_ARCADE_SEMAPHORE="$__TOOLRUNTIME_DIR/${__BUILD_TOOLS_PACKAGE_VERSION}.init-tools.completed"
 
 if [ -e "$__BUILD_TOOLS_SEMAPHORE" ]; then
     echo "Tools are already initialized"
@@ -192,6 +193,7 @@ ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
 
 mkdir -p "$(dirname "$__BUILD_TOOLS_SEMAPHORE")" && touch "$__BUILD_TOOLS_SEMAPHORE"
+mkdir -p "$(dirname "$__BUILD_TOOLS_ARCADE_SEMAPHORE")" && touch "$__BUILD_TOOLS_ARCADE_SEMAPHORE"
 
 echo "Done initializing BuildTools."
 
