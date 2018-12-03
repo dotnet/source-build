@@ -56,6 +56,7 @@
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
     <!-- DotNetRoot is used by Arcade vs DotNetCoreSdkDir for BuildTools -->
     <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" />
 
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
