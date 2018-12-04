@@ -55,11 +55,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             {
                 var splitLine = commitLine.Split(',');
                 var commit = new Commit()
-                    {
-                        Sha = splitLine[0],
-                        Title = splitLine[1],
-                        CommitDate = DateTime.Parse(splitLine[2])
-                    };
+                {
+                    Sha = splitLine[0],
+                    Title = splitLine[1],
+                    CommitDate = DateTime.Parse(splitLine[2])
+                };
                 string fileContents = GetFileContents(baselineRelativeFileName, commit.Sha);
                 Usage[] usages = UsageData.Parse(XElement.Parse(fileContents)).Usages.NullAsEmpty().ToArray();
                 commit.PackageVersionCount = usages.Count();

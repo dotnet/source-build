@@ -77,7 +77,7 @@ jobs:
   - script: |
       set -x
       df -h
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) -e SOURCE_BUILD_SKIP_SUBMODULE_CHECK $(imageName) ./build.sh \
         /t:GeneratePrebuiltBurndownData
     displayName: Generate prebuilt burndown data
     condition: and(succeeded(), eq(variables['generatePrebuiltBurndown'], true))
