@@ -467,10 +467,6 @@
 
   <Target Name="ReportPrebuiltUsage">
     <PropertyGroup>
-      <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
-      <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(BaselineDataFile)offline.xml</BaselineDataFile>
-      <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(BaselineDataFile)online.xml</BaselineDataFile>
-
       <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
 

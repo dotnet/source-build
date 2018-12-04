@@ -4,6 +4,7 @@
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CopyReferenceOnlyPackages" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteUsageBurndownData" />
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -129,6 +130,15 @@
                     HashCatalogFilePath="$(PoisonReportDataFile)"
                     MarkerFileName="$(PoisonMarkerFile)"
                     PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
+  </Target>
+
+  <Target Name="GeneratePrebuiltBurndownData">
+    <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
+                            PrebuiltBaselineFile="$(OnlineBaselineDataFile)"
+                            OutputFilePath="$(OnlinePrebuiltBurndownDataFile)" />
+    <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
+                            PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
+                            OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">

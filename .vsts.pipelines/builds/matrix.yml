@@ -15,7 +15,7 @@ jobs:
     imageName: microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416
     reportPrebuiltLeaks: true
     matrix:
-      Production: {}
+      Production: { generatePrebuiltBurndown: true }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }

@@ -47,7 +47,7 @@
     <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
-    <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard1.5/</TasksBinDir>
+    <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
     <LeakDetectionTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/</LeakDetectionTasksBinDir>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
@@ -83,6 +83,8 @@
     <ProdConManifestFile>$(PackageReportDir)prodcon-build.xml</ProdConManifestFile>
     <PoisonedReportFile>$(PackageReportDir)poisoned.txt</PoisonedReportFile>
     <ConflictingPackageReportDir>$(BaseOutputPath)conflict-report/</ConflictingPackageReportDir>
+    <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
+    <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
     <!--
       Change ReferencePackagesBaseDir conditionally in offline build.
@@ -94,6 +96,11 @@
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
     <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>
+    <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
+    <OfflineBaselineDataFile>$(BaselineDataFile)offline.xml</OfflineBaselineDataFile>
+    <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>
+    <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(OfflineBaselineDataFile)</BaselineDataFile>
+    <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(OnlineBaselineDataFile)</BaselineDataFile>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->

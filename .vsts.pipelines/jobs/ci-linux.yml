@@ -6,6 +6,7 @@ parameters:
     name: Hosted Ubuntu 1604
   imageName: null
   reportPrebuiltLeaks: false
+  generatePrebuiltBurndown: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -30,9 +31,11 @@ jobs:
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
     reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
+    generatePrebuiltBurndown: ${{ parameters.generatePrebuiltBurndown }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
     tarballName: tarball_$(Build.BuildId)
+    SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
 
@@ -69,6 +72,16 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Build source-build
     timeoutInMinutes: 120
+
+  # Generate prebuilt burndown data
+  - script: |
+      set -x
+      df -h
+      $(docker.run) $(docker.src.map) $(docker.src.work) -e SOURCE_BUILD_SKIP_SUBMODULE_CHECK $(imageName) ./build.sh \
+        /t:GeneratePrebuiltBurndownData
+    displayName: Generate prebuilt burndown data
+    condition: and(succeeded(), eq(variables['generatePrebuiltBurndown'], true))
+    continueOnError: true
 
   # Run smoke tests. This is needed even in tarball legs to create the smoke-test-prereqs archive.
   - script: |
