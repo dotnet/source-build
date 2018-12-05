@@ -19,11 +19,11 @@
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
     <FlagParameterPrefix>-</FlagParameterPrefix>
-    <ArcadeBoolBuildArgPrefix>$</ArcadeBoolBuildArgPrefix>
+    <ArcadeFalseBoolBuildArg>0</ArcadeFalseBoolBuildArg>
   </PropertyGroup>
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <FlagParameterPrefix>--</FlagParameterPrefix>
-    <ArcadeBoolBuildArgPrefix></ArcadeBoolBuildArgPrefix>
+    <ArcadeFalseBoolBuildArg>false</ArcadeFalseBoolBuildArg>
   </PropertyGroup>
 
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
