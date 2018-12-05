@@ -1,0 +1,26 @@
+From 3ecd3a87295886d633c9a4faa81879746b6fad5f Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 5 Dec 2018 17:35:48 -0600
+Subject: [PATCH] Build Microsoft.NET.Sdk.IL in source-build
+
+---
+ src/.nuget/packages.builds | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/.nuget/packages.builds b/src/.nuget/packages.builds
+index 0f322d02e8..15e7f4022d 100644
+--- a/src/.nuget/packages.builds
++++ b/src/.nuget/packages.builds
+@@ -12,6 +12,9 @@
+ 
+   <ItemGroup Condition="'$(TargetsWindows)'=='true'">
+     <Project Include="Microsoft.TargetingPack.Private.CoreCLR\Microsoft.TargetingPack.Private.CoreCLR.pkgproj" />
++  </ItemGroup>
++
++  <ItemGroup Condition="'$(TargetsWindows)'=='true' OR '$(DotNetBuildFromSource)'=='true'">
+     <Project Include="Microsoft.NET.Sdk.IL\Microsoft.NET.Sdk.IL.pkgproj" />
+   </ItemGroup>
+ 
+-- 
+2.17.1.windows.2
+
