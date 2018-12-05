@@ -198,10 +198,10 @@ mkdir -p "$(dirname "$__BUILD_TOOLS_ARCADE_SEMAPHORE")" && touch "$__BUILD_TOOLS
 echo "Done initializing BuildTools."
 
 echo "Initializing Arcade..."
-scriptroot=$__scriptpath/eng/common/ \
-DOTNET_INSTALL_DIR=$__DOTNET_PATH \
-DotNetBuildFromSource=true \
-$__scriptpath/eng/common/tools.sh
+scriptroot="$__scriptpath/eng/common/" \
+    DOTNET_INSTALL_DIR="$__DOTNET_PATH" \
+    DotNetBuildFromSource=true \
+    "$__scriptpath/eng/common/tools.sh"
 
 echo "Done initializing Arcade."
 

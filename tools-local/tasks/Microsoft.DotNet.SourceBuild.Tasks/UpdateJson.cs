@@ -41,19 +41,23 @@ namespace Microsoft.DotNet.Build.Tasks
         private void UpdateAttribute(JToken jsonObj, string[] path, string newValue)
         {
             string pathItem = path[0];
-            if (jsonObj[pathItem] == null && SkipUpdateIfMissingKey)
+            if (jsonObj[pathItem] == null)
             {
-                return;
+                string message = $"Path item [{nameof(PathToAttribute)}] not found in json file.";
+                if (SkipUpdateIfMissingKey)
+                {
+                    Log.LogMessage(MessageImportance.Low, $"Skipping update: {message} {pathItem}");
+                    return;
+                }
+                throw new ArgumentException(message, pathItem);
             }
-            else if (jsonObj[pathItem] == null)
-            { 
-                throw new ArgumentException($"Path item [{nameof(PathToAttribute)}] not found in json file.", pathItem);
-            }
+
             if (path.Length == 1) 
             {
                 jsonObj[pathItem] = newValue;
                 return;
             }
+
             UpdateAttribute(jsonObj[pathItem], path.Skip(1).ToArray(), newValue);
         }
     }
