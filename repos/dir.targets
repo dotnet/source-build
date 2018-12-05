@@ -155,20 +155,16 @@
                             SourcePath="$(SourceBuiltPackagesPath)" />
   </Target>
 
-  <Target Name="UpdateCLIVersionInGlobalJson"
+  <Target Name="UpdateGlobalJsonVersions"
           BeforeTargets="Build"
           Condition="'$(GlobalJsonFile)' != ''">
-    <PropertyGroup>
-      <PathToSdkVersionAttribute Condition="'$(PathToSdkVersionAttribute)' == ''">sdk.version</PathToSdkVersionAttribute>
-    </PropertyGroup>
+    <ItemGroup>
+      <_PossibleCliVersionJsonPath Include="sdk.version" />
+      <_PossibleCliVersionJsonPath Include="tools.dotnet" />
+    </ItemGroup>
 
     <UpdateJson JsonFilePath="$(GlobalJsonFile)"
-                PathToAttribute="$(PathToSdkVersionAttribute)"
-                NewAttributeValue="$(SDK_VERSION)"
-                SkipUpdateIfMissingKey="true" />
-
-    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
-                PathToAttribute="tools.dotnet"
+                PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
                 NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
   </Target>
