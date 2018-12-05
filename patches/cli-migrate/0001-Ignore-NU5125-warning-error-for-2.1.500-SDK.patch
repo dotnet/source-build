@@ -1,0 +1,24 @@
+From f911a8c322d24fa78e09b4497868e6c962e80142 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 5 Dec 2018 09:55:37 -0600
+Subject: [PATCH] Ignore NU5125 warning/error for 2.1.500 SDK
+
+---
+ src/Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 692ae7c0..1ea22da6 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -11,6 +11,7 @@
+   <PropertyGroup>
+     <StrongNameKeyId>MicrosoftAspNet</StrongNameKeyId>
+     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
+   </PropertyGroup>
+ 
+   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+-- 
+2.17.1.windows.2
+
