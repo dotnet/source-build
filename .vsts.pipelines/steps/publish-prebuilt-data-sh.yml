@@ -17,3 +17,18 @@ steps:
     env:
       relativeBlobPath: ${{ parameters.relativeBlobPath }}
     condition: and(succeeded(), ne(variables['publish.blobStorage.accessToken'], ''), eq(variables['sb.tarball'], true))
+
+  - script: |
+      set -x
+      # Publish prebuilt data if burndown report was generated
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+        /t:PublishPrebuiltReportData \
+        "/p:RelativeBlobPath=$relativeBlobPath" \
+        /p:ContainerName=$(publish.blobStorage.container) \
+        /p:AzureAccountName=$(publish.blobStorage.account) \
+        /p:AzureAccessToken=$(publish.blobStorage.accessToken) \
+        /clp:v=D
+    displayName: ${{ format('Publish prebuilt report data ({0})', parameters.relativeBlobPath) }}
+    env:
+      relativeBlobPath: ${{ parameters.relativeBlobPath }}
+    condition: and(succeeded(), ne(variables['publish.blobStorage.accessToken'], ''), eq(variables['generatePrebuiltBurndown'], true))
