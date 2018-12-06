@@ -28,7 +28,7 @@ steps:
         /p:AzureAccountName=$(publish.blobStorage.account) \
         /p:AzureAccessToken=$(publish.blobStorage.accessToken) \
         /clp:v=D
-    displayName: ${{ format('Publish prebuilt report data ({0})', parameters.relativeBlobPath) }}
+    displayName: ${{ format('Publish prebuilt burndown data ({0})', parameters.relativeBlobPath) }}
     env:
       relativeBlobPath: ${{ parameters.relativeBlobPath }}
     condition: and(succeeded(), ne(variables['publish.blobStorage.accessToken'], ''), eq(variables['generatePrebuiltBurndown'], true))
