@@ -26,6 +26,8 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string NewAttributeValue { get; set; }
 
+        public bool SkipUpdateIfMissingKey { get; set; }
+
         public override bool Execute()
         {
             JObject jsonObj = JObject.Parse(File.ReadAllText(JsonFilePath));
@@ -39,15 +41,23 @@ namespace Microsoft.DotNet.Build.Tasks
         private void UpdateAttribute(JToken jsonObj, string[] path, string newValue)
         {
             string pathItem = path[0];
-            if (jsonObj[pathItem] == null) 
-            { 
-                throw new ArgumentException($"Path item [{nameof(PathToAttribute)}] not found in json file.", pathItem);
+            if (jsonObj[pathItem] == null)
+            {
+                string message = $"Path item [{nameof(PathToAttribute)}] not found in json file.";
+                if (SkipUpdateIfMissingKey)
+                {
+                    Log.LogMessage(MessageImportance.Low, $"Skipping update: {message} {pathItem}");
+                    return;
+                }
+                throw new ArgumentException(message, pathItem);
             }
+
             if (path.Length == 1) 
             {
                 jsonObj[pathItem] = newValue;
                 return;
             }
+
             UpdateAttribute(jsonObj[pathItem], path.Skip(1).ToArray(), newValue);
         }
     }

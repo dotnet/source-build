@@ -113,7 +113,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                         if (destination.EndsWith(".nuspec"))
                         {
                             var fileText = File.ReadAllText(destination);
-                            File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*.*\"/></files>\n</package>"));
+                            File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*\"/></files>\n</package>"));
                         }
                     }
                 }

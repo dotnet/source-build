@@ -2,6 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+
     <!-- OSX core-setup build always uses the portable RID, so override it -->
     <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
     <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
@@ -10,24 +12,41 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
 
     <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -buildArch=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -portable=$(OverridePortableBuild) </BuildArguments>
-    <BuildArguments>$(BuildArguments) -BuildTests=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) -PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) --</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack</BuildArguments>
+    <BuildArguments>$(BuildArguments) -SkipTests</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <!--
+      Disable node reuse (in the new/Arcade way) to avoid errors like this:
+
+      error MSB4062: The "Microsoft.CodeAnalysis.BuildTasks.Csc" task could not be loaded from the
+      assembly .../build/../tools/Microsoft.Build.Tasks.CodeAnalysis.dll. Assembly with same name
+      is already loaded
+    -->
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
-    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)</PackagesOutput>
+
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20181023-03</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ILSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
@@ -40,21 +59,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddRidToRuntimeJson" />
-
-  <Target Name="GenerateVersionFile"
-          BeforeTargets="Build"
-          Condition="'$(TargetOS)' != 'Windows_NT'">
-    <PropertyGroup>
-      <GenerateVersionFileCommand>$(ProjectDirectory)/build-managed.sh -OfficialBuildId=$(OfficialBuildId) -- /t:GenerateVersionSourceFile /p:GenerateVersionSourceFile=true</GenerateVersionFileCommand>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Generating version file with $(GenerateVersionFileCommand)" />
-
-    <Exec Command="$(GenerateVersionFileCommand) /bl:generateVersionFile.binlog $(RedirectRepoOutputToLog)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          WorkingDirectory="$(ProjectDirectory)" />
-
-  </Target>
 
   <Target Name="UpdateRuntimeGraph"
           BeforeTargets="Build"

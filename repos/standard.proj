@@ -4,8 +4,16 @@
 
   <PropertyGroup>
     <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <!--
+      Disable node reuse (in the new/Arcade way) to avoid errors like this:
+
+      error MSB4062: The "Microsoft.CodeAnalysis.BuildTasks.Csc" task could not be loaded from the
+      assembly .../build/../tools/Microsoft.Build.Tasks.CodeAnalysis.dll. Assembly with same name
+      is already loaded
+    -->
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
@@ -14,7 +22,23 @@
     <VersionSeedDate>2017-07-19</VersionSeedDate>
     <OfficialBuildId>20170719-03</OfficialBuildId>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- standard spawns new MSBuild processes so this needs to be an environment
+         variable instead of a property argument -->
+    <EnvironmentVariables Include="ToolsDir=$(ToolsDir)" />
+  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

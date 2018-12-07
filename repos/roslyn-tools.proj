@@ -4,10 +4,16 @@
   <PropertyGroup>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <UsesRepoToolset>true</UsesRepoToolset>
-    <BuiltToolPackageId>$(RepoToolsetPackageId)</BuiltToolPackageId>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
+
+  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
+    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BuiltSdkPackageOverride Include="@(RepoToolsetSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />

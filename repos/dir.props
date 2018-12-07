@@ -10,14 +10,20 @@
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
     <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
     <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>
-    <RepoToolsetPackageId>RoslynTools.RepoToolset</RepoToolsetPackageId>
   </PropertyGroup>
 
   <PropertyGroup>
     <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
     <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
-    <FlagParameterPrefix Condition="'$(OS)' == 'Windows_NT'">-</FlagParameterPrefix>
-    <FlagParameterPrefix Condition="'$(OS)' != 'Windows_NT'">--</FlagParameterPrefix>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
+    <FlagParameterPrefix>-</FlagParameterPrefix>
+    <ArcadeFalseBoolBuildArg>0</ArcadeFalseBoolBuildArg>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <FlagParameterPrefix>--</FlagParameterPrefix>
+    <ArcadeFalseBoolBuildArg>false</ArcadeFalseBoolBuildArg>
   </PropertyGroup>
 
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
@@ -54,6 +60,9 @@
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+    <!-- DotNetRoot is used by Arcade vs DotNetCoreSdkDir for BuildTools -->
+    <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" />
 
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
@@ -70,4 +79,9 @@
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <RepoToolsetSdkOverride Include="RoslynTools.RepoToolset" Group="REPO_TOOLSET" />
+    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" />
+    <ILSdkOverride Include="Microsoft.NET.Sdk.IL" Group="IL" />
+  </ItemGroup>
 </Project>

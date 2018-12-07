@@ -1,0 +1,29 @@
+From ac05e491719caa3b7dc2dfcce9c48f0d1221e90e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 17 Nov 2018 15:49:56 -0600
+Subject: [PATCH] Force CoreFX to use source-build's BuildTools
+
+---
+ eng/Tools.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index e20a3716e1..7725dec5cf 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -40,10 +40,10 @@
+   <Target Name="InitTools" AfterTargets="Restore">
+ 
+     <PropertyGroup>
+-      <ToolsDir>$(RepoRoot)Tools</ToolsDir>
++      <ToolsDir Condition="'$(ToolsDir)' == ''">$(RepoRoot)Tools</ToolsDir>
+       <BuildToolsSemaphore>$(ToolsDir)/$(BuildToolsPackageVersion).init-tools.completed</BuildToolsSemaphore>
+       <PackagesDir>$(NuGetPackageRoot)/</PackagesDir>
+-      <BuildToolsPackageDir>$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
++      <BuildToolsPackageDir Condition="'$(BuildToolsPackageDir)' == ''">$(PackagesDir)$(BuildToolsPackage)/$(BuildToolsPackageVersion)/lib/</BuildToolsPackageDir>
+       <CmdExt>cmd</CmdExt>
+       <CmdExt Condition="'$(OS)' != 'Windows_NT'">sh</CmdExt>
+       <DotNetRoot Condition="'$(DotNetRoot)' == ''">$(RepoRoot).dotnet\</DotNetRoot>
+-- 
+2.17.1.windows.2
+

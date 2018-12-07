@@ -27,6 +27,12 @@
     <MicrosoftNETSdkRazorPackageVersion>2.1.0</MicrosoftNETSdkRazorPackageVersion>
   </PropertyGroup>
 
+  <!-- Package versions used as toolsets -->
+  <PropertyGroup>
+    <BuildToolsPackage>microsoft.dotnet.buildtools</BuildToolsPackage>
+    <BuildToolsPackageVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)BuildToolsVersion.txt').Trim())</BuildToolsPackageVersion>
+  </PropertyGroup>
+
   <!-- Build stabilization properties as passed in by ProdCon. -->
   <PropertyGroup>
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
