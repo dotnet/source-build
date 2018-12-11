@@ -1,0 +1,27 @@
+From 8dcc5e5e5b093262778465f4f57cf36577dfd08e Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 11 Dec 2018 12:17:13 -0600
+Subject: [PATCH] Use prebuilt as reference package
+
+The new version of Microsoft.CodeAnalysis.CSharp doesn't support
+netstandard1.6 anymore, so keep using the checked-in version as ref.
+---
+ .../Microsoft.DotNet.ProjectJsonMigration.csproj                | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.ProjectJsonMigration/Microsoft.DotNet.ProjectJsonMigration.csproj b/src/Microsoft.DotNet.ProjectJsonMigration/Microsoft.DotNet.ProjectJsonMigration.csproj
+index 08e86b22..c5b4de14 100644
+--- a/src/Microsoft.DotNet.ProjectJsonMigration/Microsoft.DotNet.ProjectJsonMigration.csproj
++++ b/src/Microsoft.DotNet.ProjectJsonMigration/Microsoft.DotNet.ProjectJsonMigration.csproj
+@@ -11,7 +11,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Microsoft.DotNet.Cli.Utils" Version="$(MicrosoftDotNetCliUtilsVersion)" />
+-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpVersion)" />
++    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.1.0" />
+     <PackageReference Include="NuGet.Packaging.Core" Version="$(NuGetPackagingCoreVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+     <PackageReference Include="System.Collections.Specialized" Version="$(SystemCollectionsSpecializedVersion)" />
+-- 
+2.17.1.windows.2
+

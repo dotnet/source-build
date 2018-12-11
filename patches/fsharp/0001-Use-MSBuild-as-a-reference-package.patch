@@ -1,0 +1,41 @@
+From fab7e82b0add0b921f81763984a05ba0cd389350 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 12 Dec 2018 12:30:41 -0600
+Subject: [PATCH] Use MSBuild as a reference package
+
+Don't use source-built MSBuild: it no longer supports netstandard2.0.
+---
+ src/buildfromsource/targets/PackageVersions.props | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/src/buildfromsource/targets/PackageVersions.props b/src/buildfromsource/targets/PackageVersions.props
+index 1186f2bf3..e60dec2b2 100644
+--- a/src/buildfromsource/targets/PackageVersions.props
++++ b/src/buildfromsource/targets/PackageVersions.props
+@@ -22,10 +22,6 @@
+     <SystemValueTuplePackageVersion>4.4.0</SystemValueTuplePackageVersion>
+ 
+     <!-- other packages -->
+-    <MicrosoftBuildPackageVersion>15.1.548</MicrosoftBuildPackageVersion>
+-    <MicrosoftBuildFrameworkPackageVersion>15.1.548</MicrosoftBuildFrameworkPackageVersion>
+-    <MicrosoftBuildTasksCorePackageVersion>15.1.548</MicrosoftBuildTasksCorePackageVersion>
+-    <MicrosoftBuildUtilitiesCorePackageVersion>15.1.548</MicrosoftBuildUtilitiesCorePackageVersion>
+     <MicrosoftWin32RegistryPackageVersion>4.3.0</MicrosoftWin32RegistryPackageVersion>
+ 
+   </PropertyGroup>
+@@ -33,4 +29,12 @@
+   <!-- dependency uptake version overrides -->
+   <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != '' AND Exists('$(DotNetPackageVersionPropsPath)')" />
+ 
++  <!-- Package versions needed as reference assmblies that should not be taken from source-build. -->
++  <PropertyGroup>
++    <MicrosoftBuildPackageVersion>15.1.548</MicrosoftBuildPackageVersion>
++    <MicrosoftBuildFrameworkPackageVersion>15.1.548</MicrosoftBuildFrameworkPackageVersion>
++    <MicrosoftBuildTasksCorePackageVersion>15.1.548</MicrosoftBuildTasksCorePackageVersion>
++    <MicrosoftBuildUtilitiesCorePackageVersion>15.1.548</MicrosoftBuildUtilitiesCorePackageVersion>
++  </PropertyGroup>
++
+ </Project>
+-- 
+2.17.1.windows.2
+
