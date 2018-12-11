@@ -1,0 +1,40 @@
+From 77fdf8dde8f9dd3e17c4b6b05c44b1f78674ec34 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 12 Dec 2018 10:39:16 -0600
+Subject: [PATCH] Exclude test projects from source-build
+
+Arcade didn't seem to carry over the logic to set ExcludeFromSourceBuild
+to true when IsTestProject is set. A fix would likely be in Arcade.
+---
+ TestAssets/Directory.Build.props | 4 ++++
+ test/Directory.Build.props       | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/TestAssets/Directory.Build.props b/TestAssets/Directory.Build.props
+index 905549edc..f6c63df4e 100644
+--- a/TestAssets/Directory.Build.props
++++ b/TestAssets/Directory.Build.props
+@@ -1,3 +1,7 @@
+ <Project>
+   <!-- Empty Directory.Build.props file to prevent test asset projects from picking up the repo's Directory.Build.props' -->
++
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
+ </Project>
+diff --git a/test/Directory.Build.props b/test/Directory.Build.props
+index 406c4f8c1..62d043078 100644
+--- a/test/Directory.Build.props
++++ b/test/Directory.Build.props
+@@ -4,4 +4,8 @@
+   <PropertyGroup>
+     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
+   </PropertyGroup>
++
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
+ </Project>
+-- 
+2.17.1.windows.2
+

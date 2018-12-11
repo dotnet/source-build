@@ -1,0 +1,23 @@
+From f82a7f840034712f980b5e2e25cb185656755d6d Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 12 Dec 2018 11:37:28 -0600
+Subject: [PATCH] Suppress "Publish" target
+
+---
+ src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
+index 260c8c2..706989c 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
+@@ -18,5 +18,6 @@
+   <Target Name="Build"/>
+   <Target Name="Test"/>
+   <Target Name="Pack"/>
++  <Target Name="Publish"/>
+ 
+ </Project>
+-- 
+2.17.1.windows.2
+

@@ -1,0 +1,43 @@
+From 5f428d6ea7077c112b36d562a6d277a5511e9a30 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 12 Dec 2018 11:41:20 -0600
+Subject: [PATCH] Add repo-specific target emptying file
+
+---
+ eng/Empty.targets | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 eng/Empty.targets
+
+diff --git a/eng/Empty.targets b/eng/Empty.targets
+new file mode 100644
+index 000000000..54cfba7dd
+--- /dev/null
++++ b/eng/Empty.targets
+@@ -0,0 +1,24 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- All Rights Reserved. Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
++<Project DefaultTargets="Build">
++
++  <!--
++    Import this file to suppress all targets while allowing the project to participate in the build.
++    Workaround for https://github.com/dotnet/sdk/issues/2071.
++    
++    Arcade has a default set of targets to clear. This file adds additional ones specific to this repository.
++    
++    The targets defined here are not sufficient for the project to be open in Visual Studio without issues though.    
++  -->
++
++  <Target Name="PrepareTests"/>
++  <Target Name="CreateTestAssetPackageNuPkgs"/>
++  <Target Name="CopyDirectoryBuildTestDependencies"/>
++  <Target Name="PrecompileScript"/>
++  <Target Name="WriteExpectedVersion"/>
++  <Target Name="WriteExpectedTargetFrameworkMoniker"/>
++  <Target Name="CreateNupkgFromSource"/>
++  <Target Name="CreateNupkgWithDifferentCasingFromSource"/>
++  <Target Name="CreateNupkgWithShimFromSource"/>
++
++</Project>
+-- 
+2.17.1.windows.2
+

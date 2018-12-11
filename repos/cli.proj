@@ -2,47 +2,36 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- CLI will always use the portable core-setup build for OSX anyway.  Turning this on for
-         an OSX build will make it try to use linux-x64 instead of osx-64.  -->
-    <UsePortableLinuxSharedFramework>$(PortableBuild)</UsePortableLinuxSharedFramework>
-    <UsePortableLinuxSharedFramework Condition="'$(TargetOS)' == 'OSX'">false</UsePortableLinuxSharedFramework>
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
 
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
-
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
-    <BuildCommandArgs>--stage0 $(DotNetCliToolDir) $(RuntimeArg)</BuildCommandArgs>
+
+    <BuildCommandArgs>--pack $(RuntimeArg)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(RuntimeArg)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
       See https://github.com/dotnet/sdk/issues/1512#issuecomment-377082883
     -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:NETCoreAppMaximumVersion=99.9</BuildCommandArgs>
-
-    <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
-
-    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
-
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
-
-    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
-
     <BuildCommandArgs>$(BuildCommandArgs) /v:detailed</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackagesOutput>$(ProjectDirectory)bin/2/packages/</PackagesOutput>
-    <TarBallOutput>$(PackagesOutput)</TarBallOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
 
-    <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
-    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAllPackageVersion" Version="$(MicrosoftAspNetCoreAllPackageVersion)" />
@@ -51,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="application-insights" />
     <RepositoryReference Include="aspnet-razor" />
     <RepositoryReference Include="cli-migrate" />
@@ -69,9 +59,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
-    <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
-
     <!--
       Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
       parameter, it is lost during the restore call.
@@ -87,22 +74,33 @@
     <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
   </ItemGroup>
 
-  <!-- Inject the ProdConFeed into NuGet.config to pick up AspNetCore packages.
-       See https://github.com/dotnet/source-build/issues/561
+  <!--
+    Forces CLI projects to use the source-built Microsoft.NETCore.App package. This lets CLI build
+    netcoreapp3.0 projects even though 3.0.0 doesn't exist yet: we can use e.g. 3.0.0-preview.
+
+    The CLI repo normally downloads a 3.0 toolset, which ships with a 3.0 NETCore.App and a built-in
+    workaround to use that to build netcoreapp3.0. Source-build forces a 2.1 toolset (N-1) which
+    doesn't know about our source-built 3.0 NETCore.App, so we need to work around this ourselves.
+
+    RuntimeFrameworkVersion sets the version of NETCore.App used by *any* target framework. When
+    using this workaround we might not be able to build any netcoreapp2.1 etc. projects within the
+    same command.
   -->
-  <Target Name="AddProdConFeed" BeforeTargets="Build" DependsOnTargets="GetProdConBlobFeedUrl">
-    <PropertyGroup>
-      <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
-      <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
-      <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
+  <Target Name="UseCoreSetupNETCoreAppPackage"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <SourceBuiltNETCoreAppFile
+        Include="$(SourceBuiltPackagesPath)Microsoft.NETCore.App.*.nupkg"
+        Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
+    </ItemGroup>
 
-      <NugetConfigTargetsContents>$([System.IO.File]::ReadAllText('$(NugetConfigTargetsFile)'))</NugetConfigTargetsContents>
-    </PropertyGroup>
+    <ReadNuGetPackageInfos PackagePaths="@(SourceBuiltNETCoreAppFile)">
+      <Output TaskParameter="PackageInfoItems" ItemName="_SourceBuiltNETCoreAppFilePackageInfo" />
+    </ReadNuGetPackageInfos>
 
-    <WriteLinesToFile File="$(NugetConfigTargetsFile)"
-                      Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
-                      Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
-                      Overwrite="true" />
+    <ItemGroup>
+      <EnvironmentVariables Include="RuntimeFrameworkVersion=%(_SourceBuiltNETCoreAppFilePackageInfo.PackageVersion)" />
+    </ItemGroup>
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
