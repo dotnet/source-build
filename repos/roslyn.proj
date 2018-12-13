@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" />
+    <EnvironmentVariables Include="SourceRevisionId=$(GitCommitHash)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
