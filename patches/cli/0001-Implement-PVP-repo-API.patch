@@ -1,0 +1,28 @@
+From f6bd9e985499c212d4e6c2b63b89f75547f5ae17 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 11 Dec 2018 14:36:29 -0600
+Subject: [PATCH] Implement PVP repo API
+
+This is most likely temporary until we have a way to change dependencies
+using Arcade, or Arcade supports the repo API itself.
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 9029775d9..870d9fee4 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -47,6 +47,9 @@
+     <NUnit3TemplatesVersion>1.5.1</NUnit3TemplatesVersion>
+     <CLI_NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</CLI_NETStandardLibraryNETFrameworkVersion>
+   </PropertyGroup>
++  <!-- Override isolated build dependency versions with versions from Repo API. -->
++  <Import Project="$(DotNetPackageVersionPropsPath)"
++          Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+   <PropertyGroup>
+     <RestoreSources>
+       $(RestoreSources);
+-- 
+2.17.1.windows.2
+

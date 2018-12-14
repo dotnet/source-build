@@ -7,6 +7,7 @@
     <OutputVersionArgs>/p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
 
     <BuildCommandArgs>--pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PackageProjectUrl=https://github.com/dotnet/sdk</BuildCommandArgs>
 
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
@@ -15,13 +16,16 @@
 
     <OrchestratedManifestBuildName>dotnet/sdk</OrchestratedManifestBuildName>
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
-    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,11 +33,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="nuget-client" />
-    <RepositoryReference Include="roslyn-tools" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

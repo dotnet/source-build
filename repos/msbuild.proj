@@ -3,26 +3,25 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <!-- Override value from commit to match expected build. -->
-    <OfficialBuildId>20180426.1</OfficialBuildId>
     <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
 
-    <OutputVersionArgs>/p:PackageVersion=15.9.0-preview-000008</OutputVersionArgs>
-    <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.9.8</OutputVersionArgs>
+    <OutputVersionArgs>/p:PackageVersion=16.0.0-preview.225</OutputVersionArgs>
+    <!-- Set assembly version. Otherwise, defaults to 1.0.0 because we don't have nerdbank versioning. -->
+    <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.1.0</OutputVersionArgs>
     <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
-    <OutputVersionArgs>$(OutputVersionArgs) /p:PB_VersionStamp="preview"</OutputVersionArgs>
-    <OutputVersionArgs>$(OutputVersionArgs) /p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
 
     <BuildCommandArgs>build -DotNetBuildFromSource</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -bootstraponly</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -skiptests</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:GitHeadSha=$(GitCommitHash)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+
+    <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.Config</NuGetConfigFile>
+
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
     <!--
@@ -40,6 +39,42 @@
     <RepositoryReference Include="roslyn-tools" />
     <RepositoryReference Include="roslyn" />
   </ItemGroup>
+
+  <!--
+    Begin workaround: https://github.com/dotnet/source-build/issues/933
+
+    The CentralPackageVersions SDK isn't actually source-built. We get it as a text-only prebuilt,
+    but the NuGet resolver seems flaky so we're using our resolver instead. We only have access to
+    the nupkg ahead of time when building a tarball, so only enable this workaround then.
+  -->
+  <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
+    <CentralPackageVersionsSdkOverride Include="Microsoft.Build.CentralPackageVersions" Group="CENTRAL_PACKAGE_VERSIONS" />
+    <UseSourceBuiltSdkOverride Include="@(CentralPackageVersionsSdkOverride)" />
+  </ItemGroup>
+
+  <Target Name="ExtractCentralPackageVersionsSdkPackage"
+          BeforeTargets="SetSourceBuiltSdkOverrides"
+          Condition="'$(OfflineBuild)' == 'true'">
+    <ItemGroup>
+      <_CentralVersionsToolPackage
+        Include="$(ReferencePackagesDir)%(CentralPackageVersionsSdkOverride.Identity)*.nupkg"
+        Id="%(CentralPackageVersionsSdkOverride.Identity)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <CentralVersionsSdkDir>$(ToolPackageExtractDir)%(_CentralVersionsToolPackage.Id)/</CentralVersionsSdkDir>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Setting up SDK package for UseSourceBuiltSdkOverride: %(_CentralVersionsToolPackage.Filename)" />
+
+    <ZipFileExtractToDirectory
+      SourceArchive="@(_CentralVersionsToolPackage)"
+      DestinationDirectory="$(CentralVersionsSdkDir)"
+      OverwriteDestination="true" />
+  </Target>
+  <!--
+    End workaround: https://github.com/dotnet/source-build/issues/933
+  -->
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

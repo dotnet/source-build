@@ -1,0 +1,39 @@
+From ce592d3abe1c41c8c4613691206b62d799e27b40 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 17 Jul 2018 12:08:25 -0500
+Subject: [PATCH] Fix DotnetCliInternalVersion naming
+
+Version properties should end in PackageVersion to be overridden by PVP.
+---
+ build/DependencyVersions.props | 2 +-
+ src/tool_cli/tool_cli.csproj   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/DependencyVersions.props b/build/DependencyVersions.props
+index e5e1c482f..667db12d7 100644
+--- a/build/DependencyVersions.props
++++ b/build/DependencyVersions.props
+@@ -2,7 +2,7 @@
+ <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <DotNetCoreSdkLKGVersion>3.0.100-preview-009722</DotNetCoreSdkLKGVersion>
+-    <DotnetCliInternalVersion>3.0.100-preview.18578.3</DotnetCliInternalVersion>
++    <DotnetCliInternalPackageVersion>3.0.100-preview.18578.3</DotnetCliInternalPackageVersion>
+     <MicrosoftNETSdkPackageVersion>3.0.100-preview.18578.2</MicrosoftNETSdkPackageVersion>
+     <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
+     <MicrosoftBuildPackageVersion>16.0.0-preview.225</MicrosoftBuildPackageVersion>
+diff --git a/src/tool_cli/tool_cli.csproj b/src/tool_cli/tool_cli.csproj
+index 43c6cf930..6f33f16f7 100644
+--- a/src/tool_cli/tool_cli.csproj
++++ b/src/tool_cli/tool_cli.csproj
+@@ -9,6 +9,6 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.DotNet.Cli.Runtime" Version="$(DotnetCliInternalVersion)" />
++    <PackageReference Include="Microsoft.DotNet.Cli.Runtime" Version="$(DotnetCliInternalPackageVersion)" />
+   </ItemGroup>
+ </Project>
+-- 
+2.17.1.windows.2
+

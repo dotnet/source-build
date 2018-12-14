@@ -1,4 +1,4 @@
-From 724b6ef044040525509e9992520f8695c2f5e8d3 Mon Sep 17 00:00:00 2001
+From 47f7927504aa8c368bc71eff54dbdcc1b751da9c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 7 Nov 2018 00:55:00 -0600
 Subject: [PATCH] Use runtime framework version produced by source-build
@@ -15,17 +15,17 @@ Subject: [PATCH] Use runtime framework version produced by source-build
  8 files changed, 9 insertions(+), 2 deletions(-)
 
 diff --git a/build/DependencyVersions.props b/build/DependencyVersions.props
-index 0b7e4f5a5..ba8ce7aa7 100644
+index 667db12d7..9d18a40ce 100644
 --- a/build/DependencyVersions.props
 +++ b/build/DependencyVersions.props
 @@ -1,7 +1,7 @@
  <?xml version="1.0" encoding="utf-8"?>
  <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <PropertyGroup>
--    <DotNetCoreSdkLKGVersion>3.0.100-preview-009718</DotNetCoreSdkLKGVersion>
+-    <DotNetCoreSdkLKGVersion>3.0.100-preview-009722</DotNetCoreSdkLKGVersion>
 +    <DotNetCoreSdkLKGVersion>2.1.403</DotNetCoreSdkLKGVersion>
-    <DotnetCliInternalVersion>3.0.100-alpha1-00000001-01</DotnetCliInternalVersion>
-     <MicrosoftNETSdkPackageVersion>3.0.100-preview.18554.1</MicrosoftNETSdkPackageVersion>
+     <DotnetCliInternalPackageVersion>3.0.100-preview.18578.3</DotnetCliInternalPackageVersion>
+     <MicrosoftNETSdkPackageVersion>3.0.100-preview.18578.2</MicrosoftNETSdkPackageVersion>
      <MicrosoftNETBuildExtensionsPackageVersion>$(MicrosoftNETSdkPackageVersion)</MicrosoftNETBuildExtensionsPackageVersion>
 diff --git a/build_projects/dotnet-cli-build/dotnet-cli-build.csproj b/build_projects/dotnet-cli-build/dotnet-cli-build.csproj
 index c85420dfb..7d7cfba91 100644
@@ -40,7 +40,7 @@ index c85420dfb..7d7cfba91 100644
      <OutputPath>bin\$(Configuration)</OutputPath>
      <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81</AssetTargetFallback>
 diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
-index fbea24ceb..132bcac09 100644
+index d2ab1144c..5a348e91d 100644
 --- a/src/redist/redist.csproj
 +++ b/src/redist/redist.csproj
 @@ -4,6 +4,7 @@
@@ -118,5 +118,5 @@ index 71a8c46dc..e0644332d 100644
    </PropertyGroup>
  </Project>
 -- 
-2.18.0
+2.17.1.windows.2
 
