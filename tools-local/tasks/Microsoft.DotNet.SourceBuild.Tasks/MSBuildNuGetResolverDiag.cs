@@ -1,11 +1,11 @@
 ﻿// Copied based on the commit in the 2.1.403 resolver DLL through ildasm.
 // https://github.com/NuGet/NuGet.Client/blob/6007570d88/src/NuGet.Core/Microsoft.Build.NuGetSdkResolver/NuGetSdkResolver.cs
+// Changes have been made since--track via git.
 
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.Build.Framework;
-using NuGet.Commands;
 using NuGet.Configuration;
 using NuGet.Credentials;
 using NuGet.Packaging;
@@ -15,8 +15,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Build.NuGetSdkResolver
+namespace Microsoft.DotNet.SourceBuild.Tasks
 {
     /// <summary>
     /// Represents a NuGet-based SDK resolver.  It is very important that this class does not reference any NuGet assemblies
@@ -24,13 +26,13 @@ namespace Microsoft.Build.NuGetSdkResolver
     /// Newtonsoft.Json if a global.json is found and it contains the msbuild-sdks section and a few NuGet assemblies to parse
     /// a version.  The remaining NuGet assemblies are then loaded to do a restore.
     /// </summary>
-    public sealed class NuGetSdkResolver : SdkResolver
+    public sealed class NuGetSdkResolverDiag : SdkResolver
     {
         private static readonly Lazy<bool> DisableNuGetSdkResolver = new Lazy<bool>(() =>
-            Environment.GetEnvironmentVariable("MSBUILDDISABLENUGETSDKRESOLVER") == "1");
+            Environment.GetEnvironmentVariable("MSBUILDDISABLENUGETSDKRESOLVERDIAG") == "1");
 
         /// <inheritdoc />
-        public override string Name => nameof(NuGetSdkResolver);
+        public override string Name => nameof(NuGetSdkResolverDiag);
 
         /// <inheritdoc />
         public override int Priority => 2500;
@@ -157,14 +159,26 @@ namespace Microsoft.Build.NuGetSdkResolver
                                 {
                                     // This should never happen because we were told the package was successfully installed.
                                     // If we can't find it, we probably did something wrong with the NuGet API
-                                    errors.Add(string.Format(CultureInfo.CurrentCulture, Strings.CouldNotFindInstalledPackage, sdk));
+                                    errors.Add(string.Format(CultureInfo.CurrentCulture, "Strings.CouldNotFindInstalledPackage", sdk));
                                 }
                             }
                             else
                             {
                                 // This should never happen because we were told the restore succeeded.
                                 // If we can't find the package from GetAllInstalled(), we probably did something wrong with the NuGet API
-                                errors.Add(string.Format(CultureInfo.CurrentCulture, Strings.PackageWasNotInstalled, sdk, sdk.Name));
+                                errors.Add(string.Format(CultureInfo.CurrentCulture, "Strings.PackageWasNotInstalled", sdk, sdk.Name));
+
+                                errors.Add($"Success: {result.Success}");
+
+                                errors.Add(
+                                    "All installed:\n" +
+                                    string.Join("\n", result.GetAllInstalled()));
+
+                                errors.Add(
+                                    "All unresolved:\n" +
+                                    string.Join("\n", result.GetAllUnresolved()));
+
+                                errors.Add($"Result as JSON: {JObject.FromObject(result).ToString(Formatting.Indented)}");
                             }
                         }
                     }
