@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks
@@ -17,9 +18,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// SOURCE_BUILD_SDK_ID_EXAMPLE=Your.Sdk.Example
     ///   ID of the SDK nuget package to override.
     /// 
-    /// SOURCE_BUILD_SDK_DIR_EXAMPLE=/git/repo/bin/extracted/Your.Sdk.Example/sdk/
-    ///   Directory where the Sdk.props/Sdk.targets files are located. The override SDK package
-    ///   should be extracted to a directory: this is the "sdk" dir within that directory.
+    /// SOURCE_BUILD_SDK_DIR_EXAMPLE=/git/repo/bin/extracted/Your.Sdk.Example/
+    ///   Directory where the sdk/Sdk.props and/or sdk/Sdk.targets files are located. This should be
+    ///   the directory where the override SDK package is extracted.
     /// 
     /// SOURCE_BUILD_SDK_VERSION_EXAMPLE=1.0.0-source-built
     ///   (Optional) Version of the SDK package to use. This is informational.
@@ -90,11 +91,20 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 {
                     LogMessage($"Overriding {sdkDescription} with '{match.Group}'");
 
-                    return factory.IndicateSuccess(match.Dir, match.Version);
+                    return factory.IndicateSuccess(match.SdkDir, match.Version);
                 }
             }
 
             return factory.IndicateFailure(unresolvableReasons.Select(r => $"[{Name}] {r}"));
+        }
+
+        /// <summary>
+        /// Takes a directory path (not ending in a separator) and determines if it is the "sdk"
+        /// directory inside a SDK package with a case-insensitive comparison.
+        /// </summary>
+        private static bool IsSdkDirectory(string path)
+        {
+            return Path.GetFileName(path).Equals("sdk", StringComparison.OrdinalIgnoreCase);
         }
 
         private class SourceBuiltSdkOverride
@@ -125,12 +135,19 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                         version = "1.0.0-source-built";
                     }
 
+                    string sdkDir = null;
+                    if (!string.IsNullOrEmpty(dir))
+                    {
+                        sdkDir = Directory.EnumerateDirectories(dir).FirstOrDefault(IsSdkDirectory);
+                    }
+
                     return new SourceBuiltSdkOverride
                     {
                         Group = group,
                         Id = id,
                         Version = version,
-                        Dir = dir
+                        Dir = dir,
+                        SdkDir = sdkDir,
                     };
                 }
                 return null;
@@ -156,6 +173,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             /// </summary>
             public string Dir { get; set; }
 
+            /// <summary>
+            /// Directory where the Sdk.props/Sdk.targets files are found, inside Dir.
+            /// </summary>
+            public string SdkDir { get; set; }
+
             public override string ToString() => $"'{Group}' for '{Id}/{Version}' at '{Dir}'";
 
             public IEnumerable<string> GetValidationErrors()
@@ -167,6 +189,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 if (string.IsNullOrEmpty(Dir))
                 {
                     yield return $"'{EnvDir}{Group}' not specified.";
+                }
+                else if (string.IsNullOrEmpty(SdkDir))
+                {
+                    yield return $"Didn't find any 'sdk' directory in SDK package dir '{Dir}'";
                 }
             }
         }
