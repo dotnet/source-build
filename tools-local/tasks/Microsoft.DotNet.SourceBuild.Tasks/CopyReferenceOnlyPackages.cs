@@ -131,7 +131,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
         }
 
-
         /// <summary>
         /// Quick binary file detection.  If file contains double null in the first 512 characters
         /// chances are high that it is binary.  This is only used when files have no extensions.
@@ -153,6 +152,5 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             }
             return false;
         }
-
     }
 }
