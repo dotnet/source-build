@@ -14,7 +14,6 @@
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
     <SourceBuildMSBuildSdkResolverPath>$(DotNetSdkResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdkResolverPath>
-    <NuGetSdkResolverDiagPath>$(DotNetSdkResolversDir)SourceBuild.NuGetSdkResolverDiag\SourceBuild.NuGetSdkResolverDiag.dll</NuGetSdkResolverDiagPath>
   </PropertyGroup>
 
   <Target Name="Build"
@@ -32,8 +31,6 @@
   <Target Name="InstallSourceBuildSdkResolver">
     <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
           DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
-    <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
-          DestinationFiles="$(NuGetSdkResolverDiagPath)" />
   </Target>
 
   <Target Name="BuildTasks">

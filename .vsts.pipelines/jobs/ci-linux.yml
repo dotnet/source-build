@@ -73,34 +73,11 @@ jobs:
     displayName: Build source-build
     timeoutInMinutes: 120
 
-  # Generate prebuilt burndown data
-  - script: |
-      set -x
-      df -h
-      $(docker.run) $(docker.src.map) $(docker.src.work) -e SOURCE_BUILD_SKIP_SUBMODULE_CHECK $(imageName) ./build.sh \
-        /t:GeneratePrebuiltBurndownData
-    displayName: Generate prebuilt burndown data
-    condition: and(succeeded(), eq(variables['generatePrebuiltBurndown'], true))
-    continueOnError: true
-
-  # Run smoke tests. This is needed even in tarball legs to create the smoke-test-prereqs archive.
-  - script: |
-      set -x
-      df -h
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
-        /t:RunSmokeTest \
-        /p:Configuration=$(sb.configuration) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-    displayName: Run smoke-test
-
   # Create tarball.
   - script: |
       set -x
       df -h
       args="--skip-build"
-      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
-        args="$args --enable-leak-detection"
-      fi
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         $args
@@ -111,17 +88,8 @@ jobs:
   - script: |
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
-        smokeTestPackages="$(tarballName)/prebuilt/smoke-test-packages"
-        # smokeTestPackages is a package cache, with redundant data and unnecessary structure. E.g.
-        # $smokeTestPackages/name/version/name.version.nupkg <- We want this.
-        # $smokeTestPackages/name/version/lib/net46/name.dll <- This is already in the nupkg.
-        # This find moves the nupkg files into $smokeTestPackages:
-        find "$smokeTestPackages" -iname "*.nupkg" -exec mv {} "$smokeTestPackages" \;
-        # This find removes all non-nupkg files, which are not wanted:
-        find "$smokeTestPackages" -not -iname "*.nupkg" -delete
         # Make one .tar.gz for build, another for extras necessary to smoke test:
-        tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
-        tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
+        tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"'
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
@@ -132,10 +100,6 @@ jobs:
       networkArg=
       if [ "$(sb.tarballOffline)" = "true" ]; then
         networkArg="--network=none"
-      fi
-      poisonArg=
-      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
-        poisonArg="/p:EnablePoison=true"
       fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
         /p:Configuration=$(sb.configuration) \
