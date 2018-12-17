@@ -31,6 +31,7 @@
   <Target Name="InstallSourceBuildSdkResolver">
     <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
           DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
+    <RemoveDir Directories="$(DotNetSdkResolversDir)Microsoft.Build.NuGetSdkResolver" />
   </Target>
 
   <Target Name="BuildTasks">
