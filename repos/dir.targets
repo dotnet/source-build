@@ -34,7 +34,6 @@
     <DependencyVersionInputRepoApiImplemented Condition="'$(DependencyVersionInputRepoApiImplemented)' == ''">$(RepoApiImplemented)</DependencyVersionInputRepoApiImplemented>
     <SourceOverrideRepoApiImplemented Condition="'$(SourceOverrideRepoApiImplemented)' == ''">$(RepoApiImplemented)</SourceOverrideRepoApiImplemented>
     <OutputPlacementRepoApiImplemented Condition="'$(OutputPlacementRepoApiImplemented)' == ''">$(RepoApiImplemented)</OutputPlacementRepoApiImplemented>
-    <LogVerbosityRepoApiImplemented Condition="'$(LogVerbosityRepoApiImplemented)' == ''">$(RepoApiImplemented)</LogVerbosityRepoApiImplemented>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' != 'true'">
@@ -56,10 +55,6 @@
   <!-- Output placement arguments -->
   <PropertyGroup Condition="'$(OutputPlacementRepoApiImplemented)' == 'true'">
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
-  </PropertyGroup>
-  <!-- Logging arguments -->
-  <PropertyGroup Condition="'$(LogVerbosityRepoApiImplemented)' == 'true'">
-    <RepoApiArgs>$(RepoApiArgs) /v:$(LogVerbosity)</RepoApiArgs>
   </PropertyGroup>
 
   <Import Project="$(ProjectDirectory)dependencies.props"
