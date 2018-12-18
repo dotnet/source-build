@@ -76,7 +76,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-      <PatchCommand>git apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
+      <PatchCommand>git --work-tree=$(ProjectDirectory) apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
     </PropertyGroup>
 
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
