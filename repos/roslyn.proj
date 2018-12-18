@@ -49,6 +49,7 @@
       <RestoreArgs>restore</RestoreArgs>
       <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">$(RestoreArgs) --disable-parallel</RestoreArgs>
       <RestoreArgs>$(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) /v:$(LogVerbosity)</RestoreArgs>
       <RestoreArgs>$(RestoreArgs) $(RedirectRepoOutputToLog)</RestoreArgs>
     </PropertyGroup>
 
@@ -87,6 +88,7 @@
       <PublishCommandArgs>$(PublishCommandArgs) /p:TargetFramework=netcoreapp2.0</PublishCommandArgs>
       <PublishCommandArgs>$(PublishCommandArgs) /t:PublishWithoutBuilding</PublishCommandArgs>
       <PublishCommandArgs>$(PublishCommandArgs) /bl:publish.binlog</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /v:$(LogVerbosity)</PublishCommandArgs>
     </PropertyGroup>
 
     <Exec Command="$(DotnetToolCommand) $(PublishCommandArgs) %(PublishWithoutBuildingProject.Identity) $(RedirectRepoOutputToLog)"
@@ -102,6 +104,7 @@
       <PackCommandArgs>$(PackCommandArgs) -p:PackageOutputPath=$(PackagesOutput)</PackCommandArgs>
       <PackCommandArgs>$(PackCommandArgs) -p:NuGetPackageKind=release</PackCommandArgs>
       <PackCommandArgs>$(PackCommandArgs) /bl:pack.binlog</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /v:$(LogVerbosity)</PackCommandArgs>
     </PropertyGroup>
 
     <Exec Command="$(DotnetToolCommand) $(PackCommandArgs) -p:NuspecFile=%(NuSpecFiles.Identity) $(RedirectRepoOutputToLog)"
