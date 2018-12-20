@@ -49,7 +49,7 @@
   -->
   <Target Name="CopyAndDisassembleReferenceOnlyPackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(ArchiveDownloadedPackages)' == 'true' and '$(OS)' != 'Windows_NT'">
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"

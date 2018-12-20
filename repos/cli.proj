@@ -18,7 +18,7 @@
     -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:NETCoreAppMaximumVersion=99.9</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /v:detailed</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 

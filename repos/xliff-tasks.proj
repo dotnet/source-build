@@ -4,7 +4,7 @@
   <PropertyGroup>
     <BuildCommandArgs>pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)src\XliffTasks\XliffTasks.csproj</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /v:normal</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /flp:Verbosity=Diag</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
