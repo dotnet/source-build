@@ -32,6 +32,7 @@
       <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(NuGetClientBuildNumber)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
     </PropertyGroup>
 
     <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"
@@ -49,6 +50,7 @@
       <PackCommand>$(PackCommand) /p:PackageOutputPath=$(PackagesOutput)</PackCommand>
       <PackCommand>$(PackCommand) /p:NoPackageAnalysis=true</PackCommand>
       <PackCommand>$(PackCommand) /flp:v=detailed</PackCommand>
+      <PackCommand>$(PackCommand) /v:$(LogVerbosity)</PackCommand>
       <PackCommand>$(PackCommand) /bl:pack.binlog</PackCommand>
       <PackCommand>$(PackCommand) $(RedirectRepoOutputToLog)</PackCommand>
     </PropertyGroup>
