@@ -11,7 +11,7 @@ The scripts are supported on Windows, macOS and Linux. The scripts are based on 
 This repo uses submodules so remember on fresh clones or when updating/switching branches to run
 
 ```
-git submodule update --init --recursive
+git submodule update --init --recursive --jobs $(nproc)
 ```
 
 ### Building
