@@ -19,7 +19,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// </summary>
     public class CopyReferenceOnlyPackages : Task
     {
-        private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd" };
+        private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd", ".a" };
         private static readonly string[] pathsToExclude = { "testdata" };
         private static readonly string refPath = string.Concat(Path.DirectorySeparatorChar, "ref", Path.DirectorySeparatorChar);
 
@@ -53,14 +53,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         [Required]
         public string DestinationDir { get; set; }
 
-        /// <summary>
-        /// Enumerate all files in a directory and its sub-directories.
-        /// </summary>
-        private static IEnumerable<string> EnumerateAllFiles(string path, string searchPattern)
-        {
-            return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
-        }
-
         public override bool Execute()
         {
             DateTime startTime = DateTime.Now;
@@ -69,14 +61,17 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 .Where(nupkgFilePath =>
                 {
                     // Get all files in the nupkg path and normalize directory separators
-                    var nupkgFiles = EnumerateAllFiles(Path.GetDirectoryName(nupkgFilePath), "*.*").ToArray();
+                    var nupkgFiles = EnumerateAllFiles(Path.GetDirectoryName(nupkgFilePath), "*").ToArray();
 
                     // Do not include directories that contain exes, shared object files, OSX dynamic libraries
-                    // or profiling data
+                    // or profiling data.  Also remove binaries with no extension.
                     if (nupkgFiles
                         .Any(
                             file => extensionsToExclude.Contains(Path.GetExtension(file)) 
-                            || pathsToExclude.Any(path => file.Contains(path))))
+                            || pathsToExclude.Any(path => file.Contains(path))
+                            || (Path.GetExtension(file) == "" && IsBinaryFile(file))
+                            )
+                        )
                     {
                         return false;
                     }
@@ -93,7 +88,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             Directory.CreateDirectory(IdentifiedPackagesDir);
             foreach (var dir in referenceOnlyPackageDirectories)
             {
-                foreach (var file in EnumerateAllFiles(dir, "*.*"))
+                foreach (var file in EnumerateAllFiles(dir, "*"))
                 {
                     if (file.EndsWith(".nupkg")) 
                     {
@@ -113,7 +108,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                         if (destination.EndsWith(".nuspec"))
                         {
                             var fileText = File.ReadAllText(destination);
-                            File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*.*\"/></files>\n</package>"));
+                            File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*\"/></files>\n</package>"));
                         }
                     }
                 }
@@ -128,5 +123,34 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             return !Log.HasLoggedErrors;
         }
 
+        /// <summary>
+        /// Enumerate all files in a directory and its sub-directories.
+        /// </summary>
+        private static IEnumerable<string> EnumerateAllFiles(string path, string searchPattern)
+        {
+            return Directory.EnumerateFiles(path, searchPattern, SearchOption.AllDirectories);
+        }
+
+        /// <summary>
+        /// Quick binary file detection.  If file contains double null in the first 512 characters
+        /// chances are high that it is binary.  This is only used when files have no extensions.
+        /// </summary>
+        private static bool IsBinaryFile(string filePath)
+        {
+            int ch1 = ' ', ch2 = ' ';
+            int charCount = 512;
+            using (StreamReader stream = new StreamReader(new FileStream(filePath, FileMode.Open)))
+            {
+                while ((ch1 = stream.Read()) != -1 && charCount-- > 0)
+                {
+                    if (ch1 == '\0' && ch2 == '\0')
+                    {
+                        return true;
+                    }
+                    ch2 = ch1;
+                }
+            }
+            return false;
+        }
     }
 }
