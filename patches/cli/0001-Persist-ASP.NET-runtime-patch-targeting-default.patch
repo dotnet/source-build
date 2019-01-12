@@ -17,7 +17,7 @@ index ebfb1fb6d..ce7f3c174 100644
 @@ -240,3 +240,6 @@ Copyright (c) .NET Foundation. All rights reserved.
 +
 +    <!-- If true, always target the latest ASP.NET Core runtime by default -->
-+    <TargetLatestAspNetCoreRuntimePatch Condition="'$(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
++    <TargetLatestAspNetCoreRuntimePatch Condition="'%24(TargetLatestAspNetCoreRuntimePatch)' == ''">$(DefaultTargetLatestAspNetCoreRuntimePatch)</TargetLatestAspNetCoreRuntimePatch>
    </PropertyGroup>
    <ItemGroup>
      @(ImplicitPackageVariable->'<ImplicitPackageReferenceVersion Include="%(Identity)" TargetFrameworkVersion="%(TargetFrameworkVersion)" DefaultVersion="%(DefaultVersion)" LatestVersion="%(LatestVersion)"/>', '%0A    ')
