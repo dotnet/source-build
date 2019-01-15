@@ -1,0 +1,27 @@
+diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
+index 5189fb295..3a1e4d4d9 100644
+--- a/build/MSBuildExtensions.targets
++++ b/build/MSBuildExtensions.targets
+@@ -241,6 +241,22 @@ Copyright (c) .NET Foundation. All rights reserved.
+   <ItemGroup>
+     @(ImplicitPackageVariable->'<ImplicitPackageReferenceVersion Include="%(Identity)" TargetFrameworkVersion="%(TargetFrameworkVersion)" DefaultVersion="%(DefaultVersion)" LatestVersion="%(LatestVersion)"/>', '%0A    ')
+   </ItemGroup>
++
++  <!--
++     source-build does not include the ASP.NET Core shared frameworks.
++     Applications built on source-build need to use the latest version of
++     ASP.NET Core to pick up the security fixes. See
++     https://github.com/dotnet/source-build/issues/942 for more information.
++   -->
++  <ItemGroup>
++    <ImplicitPackageReferenceVersion Update="Microsoft.AspNetCore.App">
++      <DefaultVersion>%25(LatestVersion)</DefaultVersion>
++    </ImplicitPackageReferenceVersion>
++    <ImplicitPackageReferenceVersion Update="Microsoft.AspNetCore.All">
++      <DefaultVersion>%25(LatestVersion)</DefaultVersion>
++    </ImplicitPackageReferenceVersion>
++  </ItemGroup>
++
+ </Project>
+ ]]>
+     </BundledVersionsPropsContent>
