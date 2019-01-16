@@ -9,7 +9,8 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PackageProjectUrl=https://github.com/dotnet/source-build</BuildCommandArgs>
 
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <!-- TODO: remove /warnaserror:0 (https://github.com/dotnet/arcade/issues/1373) -->
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs) /warnaserror:0</BuildCommand>
 
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
