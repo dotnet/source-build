@@ -1,20 +1,19 @@
-From 64a4ac06a32d99633b6f7060bd3d21ba0c4717be Mon Sep 17 00:00:00 2001
-From: Davis Goodin <dagood@microsoft.com>
-Date: Fri, 11 Jan 2019 18:16:25 -0600
-Subject: [PATCH] Default to latest ASP.NET Core version
+From 1df9607604375c2000f79484ac09170605395eea Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 24 Jan 2019 13:07:40 -0600
+Subject: [PATCH] Transfer patch from CLI.
 
-Set Microsoft.AspNetCore.App/All DefaultVersion to its LatestVersion.
 ---
  build/MSBuildExtensions.targets | 8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index 35d53b8f1..6aac24023 100644
+index 81d3b1c4e..61bd3b927 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -244,6 +244,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-   <ItemGroup>
-     @(ImplicitPackageVariable->'<ImplicitPackageReferenceVersion Include="%(Identity)" TargetFrameworkVersion="%(TargetFrameworkVersion)" DefaultVersion="%(DefaultVersion)" LatestVersion="%(LatestVersion)"/>', '%0A    ')
+@@ -167,6 +167,14 @@ Copyright (c) .NET Foundation. All rights reserved.
+                               TargetingPackVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+                               />
    </ItemGroup>
 +  <ItemGroup>
 +    <ImplicitPackageReferenceVersion Update="Microsoft.AspNetCore.App">
@@ -28,5 +27,5 @@ index 35d53b8f1..6aac24023 100644
  ]]>
      </BundledVersionsPropsContent>
 -- 
-2.20.1.windows.1
+2.18.0
 
