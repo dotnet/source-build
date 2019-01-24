@@ -16,6 +16,7 @@
       <!-- Re-assign EnlistmentRoot property so output directories end up under src/application-insights -->
       <BuildCommandArgs>$(BuildCommandArgs) /p:EnlistmentRoot=$(ProjectDirectory)/src</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) /p:RelativeOutputPathBase=</BuildCommandArgs>
+      <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
     </PropertyGroup>
 

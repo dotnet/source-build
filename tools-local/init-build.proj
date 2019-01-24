@@ -52,7 +52,7 @@
       Using the MSBuild task here would cause, for example, GIT_COMMIT EnvironmentVariables items to
       be created that don't contain any commit, and they would stick around until the real build.
     -->
-    <Exec Command="$(DotNetCliToolDir)dotnet msbuild /v:Quiet /nologo $(MSBuildThisFileFullPath) /t:CreateGitInfoProps" />
+    <Exec Command="$(DotNetCliToolDir)dotnet msbuild /v:$(LogVerbosity) /nologo $(MSBuildThisFileFullPath) /t:CreateGitInfoProps" />
   </Target>
 
   <Target Name="CreateGitInfoProps" DependsOnTargets="GetRepoProjects">
