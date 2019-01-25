@@ -17,20 +17,20 @@
     <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
   </PropertyGroup>
 
+  <!-- Package versions used as toolsets -->
+  <PropertyGroup>
+    <BuildToolsPackage>microsoft.dotnet.buildtools</BuildToolsPackage>
+    <BuildToolsPackageVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)BuildToolsVersion.txt').Trim())</BuildToolsPackageVersion>
+  </PropertyGroup>
+
   <!--
     Packages built by ProdCon, but not source-build. These are included as prebuilts, or embedded in
     the product as version strings to be used by the SDK to fetch extra content.
   -->
   <PropertyGroup>
-    <MicrosoftAspNetCoreAllPackageVersion>2.1.0</MicrosoftAspNetCoreAllPackageVersion>
-    <MicrosoftAspNetCoreAppPackageVersion>2.1.0</MicrosoftAspNetCoreAppPackageVersion>
-    <MicrosoftNETSdkRazorPackageVersion>2.1.0</MicrosoftNETSdkRazorPackageVersion>
-  </PropertyGroup>
-
-  <!-- Package versions used as toolsets -->
-  <PropertyGroup>
-    <BuildToolsPackage>microsoft.dotnet.buildtools</BuildToolsPackage>
-    <BuildToolsPackageVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)BuildToolsVersion.txt').Trim())</BuildToolsPackageVersion>
+    <MicrosoftAspNetCoreAllPackageVersion>2.2.1</MicrosoftAspNetCoreAllPackageVersion>
+    <MicrosoftAspNetCoreAppPackageVersion>2.2.1</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftNETSdkRazorPackageVersion>2.2.0</MicrosoftNETSdkRazorPackageVersion>
   </PropertyGroup>
 
   <!-- Build stabilization properties as passed in by ProdCon. -->
