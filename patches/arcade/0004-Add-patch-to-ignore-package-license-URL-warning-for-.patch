@@ -1,0 +1,24 @@
+From 799ed9aefd3a069f88f617c4ed6573d2da898eeb Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 27 Jan 2019 13:30:11 -0600
+Subject: [PATCH] Add patch to ignore package license URL warning for arcade.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 5df99645..15c54b4a 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -6,6 +6,7 @@
+     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+     <DebugType>embedded</DebugType>
+     <DebugSymbols>true</DebugSymbols>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
+ 
+     <!--
+       Tools and packages produced by this repository support infrastructure and are not shipping on NuGet or via any other official channel.
+-- 
+2.18.0
+
