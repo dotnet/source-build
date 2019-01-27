@@ -260,7 +260,11 @@
     <ItemGroup>
       <EnvironmentVariables Condition="'$(NUGET_PACKAGES)'!=''" Include="NUGET_PACKAGES=$(NUGET_PACKAGES)" />
     </ItemGroup>
-    <Exec Command="$(BuildCommand) /v:$(LogVerbosity) $(RepoApiArgs) $(RedirectRepoOutputToLog)"
+    <PropertyGroup>
+      <FullCommand Condition="'$(LogVerbosityOptOut)' != 'true'">$(BuildCommand) /v:$(LogVerbosity) $(RepoApiArgs) $(RedirectRepoOutputToLog)</FullCommand>
+      <FullCommand Condition="'$(LogVerbosityOptOut)' == 'true'">$(BuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)</FullCommand>
+    </PropertyGroup>
+    <Exec Command="$(FullCommand)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />

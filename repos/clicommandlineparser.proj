@@ -6,6 +6,9 @@
     <BuildCommandArgs>$(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) $(FlagParameterPrefix)restore</BuildCommandArgs>
 
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
