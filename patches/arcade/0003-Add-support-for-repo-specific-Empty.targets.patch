@@ -1,4 +1,4 @@
-From b7a624db1984d998d556803f98adf0e39b013bb2 Mon Sep 17 00:00:00 2001
+From b4c0374c30f9bdb17d4b250bb9d0dfd2025a192f Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 12 Dec 2018 11:37:14 -0600
 Subject: [PATCH] Add support for repo-specific Empty.targets
@@ -8,7 +8,7 @@ Subject: [PATCH] Add support for repo-specific Empty.targets
  1 file changed, 1 insertion(+)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/sdk/Sdk.targets b/src/Microsoft.DotNet.Arcade.Sdk/sdk/Sdk.targets
-index d0181a5..0921b96 100644
+index 59695c03..c83c3d45 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/sdk/Sdk.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/sdk/Sdk.targets
 @@ -27,4 +27,5 @@
@@ -18,5 +18,5 @@ index d0181a5..0921b96 100644
 +  <Import Project="$(RepositoryEngineeringDir)Empty.targets" Condition="Exists('$(RepositoryEngineeringDir)Empty.targets') and !$(_SuppressSdkImports) and $(_SuppressAllTargets)"/>
  </Project>
 -- 
-2.17.1.windows.2
+2.18.0
 
