@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <BuildNumber>2115911</BuildNumber>
     <PackageDateTime>20181014</PackageDateTime>
     <PackageBuildQuality>beta4</PackageBuildQuality>
@@ -10,14 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <MSBuildProperties Include="Configuration=$(Configuration)" />
     <MSBuildProperties Include="COMMIT_HASH=$(GitCommitHash)" />
     <MSBuildProperties Include="COMMIT_COUNT=$(BuildNumber)" />
     <MSBuildProperties Include="BUILD_NUMBER=$(BuildNumber)" />
     <MSBuildProperties Include="PackageDateTime=$(PackageDateTime)" />
     <MSBuildProperties Include="PackageBuildQuality=$(PackageBuildQuality)" />
     <MSBuildProperties Include="PB_SKIPTESTS=true" />
-    <MSBuildProperties Include="TargetFramework=netcoreapp2.1" />
     <MSBuildProperties Include="CoreOnly=true" />
     <MSBuildProperties Include="SourceLinkCreate=false" />
   </ItemGroup>
@@ -26,36 +24,19 @@
     <RepositoryReference Include="clicommandlineparser" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <BuildCommandArgs>--publish --pack</BuildCommandArgs>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) @(MSBuildProperties->'/p:%(Identity)', ' ')</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="RepoBuild">
-    <PropertyGroup>
-      <BuildCommandArgs>/t:GetReady /t:Restore /t:Build /t:Pack</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) @(MSBuildProperties->'/p:%(Identity)', ' ')</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)build/CoreBuild.proj</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
-    </PropertyGroup>
-
-    <Exec Command="$(DotnetToolCommand) msbuild $(BuildCommandArgs)"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)"
-          IgnoreStandardErrorWarningFormat="true" />
-
-    <!-- The templates are built to a different folder than the packages, copy them into the packages folder. -->
-    <ItemGroup>
-      <AdditionalTemplatePackages Include="$(ProjectDirectory)/artifacts/templates/*.nupkg" />
-
-      <!--
-        Don't include the Test templates in source-build: they are now coming from another repo, so
-        without this line we would build the wrong version and force CLI to use it. Instead, allow
-        CLI to bring them in as text-only prebuilt.
-      -->
-      <AdditionalTemplatePackages Remove="$(ProjectDirectory)/artifacts/templates/Microsoft.DotNet.Test.ProjectTemplates.*.nupkg" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(AdditionalTemplatePackages)"
-          DestinationFolder="$(PackagesOutput)" />
-  </Target>
 </Project>
