@@ -1,0 +1,26 @@
+From cbc3bf5c76ebe92c09fb666d5626371bfeccfa33 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 28 Jan 2019 08:31:53 -0600
+Subject: [PATCH] Don't append description from source information because we
+ don't have it in source-build.
+
+---
+ eng/targets/Imports.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/targets/Imports.targets b/eng/targets/Imports.targets
+index 82739ed1b7..9792fbc64c 100644
+--- a/eng/targets/Imports.targets
++++ b/eng/targets/Imports.targets
+@@ -188,7 +188,7 @@
+   <Target Name="_AppendCommonPackageDescription" 
+           BeforeTargets="InitializeStandardNuspecProperties;GenerateNuspec" 
+           DependsOnTargets="InitializeSourceControlInformation"
+-          Condition="'$(IsPackable)' == 'true'">
++          Condition="'$(IsPackable)' == 'true' and '$(DotNetBuildFromSource)' != 'true'">
+     <PropertyGroup>
+       <PackageDescription>
+       $(PackageDescription)
+-- 
+2.18.0
+
