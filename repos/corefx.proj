@@ -11,15 +11,18 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
 
-    <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack</BuildArguments>
-    <BuildArguments>$(BuildArguments) -SkipTests</BuildArguments>
+    <BuildArguments>--configuration $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:SkipTests=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildArguments>$(BuildCommandArgs) -v $(LogVerbosity)</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
