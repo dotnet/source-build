@@ -1,0 +1,24 @@
+From 181d3a3da8849a7ee308bf605ef55db40f5d8f5a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 27 Jan 2019 21:29:02 -0600
+Subject: [PATCH] Add patch to fix PackageUrl warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index ac97d37..aab5c6f 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -2,6 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
++    <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
+   </PropertyGroup>
+ 
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+-- 
+2.18.0
+
