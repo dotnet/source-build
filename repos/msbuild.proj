@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
 
     <OutputVersionArgs>/p:PackageVersion=16.0.0-preview.225</OutputVersionArgs>
     <!-- Set assembly version. Otherwise, defaults to 1.0.0 because we don't have nerdbank versioning. -->
