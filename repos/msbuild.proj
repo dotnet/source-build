@@ -10,14 +10,17 @@
     <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.1.0</OutputVersionArgs>
     <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
 
-    <BuildCommandArgs>build -DotNetBuildFromSource</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -skiptests</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>--build --publish --pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetBuildFromSource=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetCoreSdkDir=$(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
 
-    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
