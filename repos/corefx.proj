@@ -22,7 +22,7 @@
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildCommandArgs) -v $(LogVerbosity)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -v $(LogVerbosity)</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
@@ -37,7 +37,7 @@
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20181023-03</OfficialBuildId>
