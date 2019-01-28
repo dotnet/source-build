@@ -6,6 +6,7 @@
     <CoreSdkVersion>2.0.0-preview3-20170728-1</CoreSdkVersion>
 
     <BuildCommandArgs>$(BuildCommandArgs) --publish --pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SkipTests=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
 
