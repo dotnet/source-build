@@ -5,8 +5,12 @@
     <WebSdkVersion>2.0.0-rel-20170629-588</WebSdkVersion>
     <CoreSdkVersion>2.0.0-preview3-20170728-1</CoreSdkVersion>
 
-    <BuildCommandArgs>/p:SkipTests=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --publish --pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SkipTests=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
