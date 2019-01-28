@@ -16,6 +16,9 @@
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
 
+    <!-- all repos that build with arcade currently have a warning about including RestoreSources twice -->
+    <BuildCommandArgs>$(BuildCommandArgs) --warnAsError false</BuildCommandArgs>
+
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
