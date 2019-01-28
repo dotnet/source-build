@@ -1,0 +1,27 @@
+From e69546005e62a32cffaaacadd05bd30f2d12d2a7 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 28 Jan 2019 06:47:06 -0600
+Subject: [PATCH] Disable sourcelink.
+
+---
+ Directory.Build.props | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index d7042790ef..84555ed0c1 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -2,5 +2,10 @@
+ <Project>
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+   <Import Project="eng\targets\Settings.props" />
++  <PropertyGroup>
++    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
++    <EnableSourceLink>false</EnableSourceLink>
++    <DeterministicSourcePaths>false</DeterministicSourcePaths>
++  </PropertyGroup>
+ </Project>
+ 
+-- 
+2.18.0
+
