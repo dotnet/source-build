@@ -15,7 +15,9 @@
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:SkipTests=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
@@ -23,6 +25,7 @@
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) -v $(LogVerbosity)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
