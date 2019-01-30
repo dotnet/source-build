@@ -24,6 +24,7 @@
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
 
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
