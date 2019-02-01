@@ -5,10 +5,11 @@
   <PropertyGroup>
     <BuildArguments>--publish --pack</BuildArguments>
     <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:Projects=$(ProjectDirectory)build.proj</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildArguments) -v $(LogVerbosity)</BuildArguments>
+    <BuildArguments>$(BuildArguments) --verbosity $(LogVerbosity)</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
