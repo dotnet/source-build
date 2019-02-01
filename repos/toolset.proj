@@ -5,7 +5,7 @@
   <PropertyGroup>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
 
     <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
@@ -36,8 +36,6 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <!-- This project builds zips, not NuGet packages. -->
     <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
-
-    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -53,6 +51,15 @@
                           Condition="'$(UseStableVersions)' == 'true'" />
 
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
+
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <ItemGroup>
