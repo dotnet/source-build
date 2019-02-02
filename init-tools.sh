@@ -68,11 +68,29 @@ execute_with_retry() {
 
 if [ ! -e "$__DOTNET_PATH" ]; then
     if [ -z "${__DOTNET_PKG:-}" ]; then
-        if [ "$(uname -m | grep "i[3456]86")" = "i686" ]; then
-            echo "Warning: build not supported on 32 bit Unix"
-        fi
+        CPUName=$(uname -m)
 
-        __PKG_ARCH=x64
+        case $CPUName in
+            i386|i486|i586|i686)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=x86
+            ;;
+            x86_64|amd64)
+            __PKG_ARCH=x64
+            ;;
+            armv7l)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=arm
+            ;;
+            aarch64)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=arm64
+            ;;
+            *)
+            echo "Warning: Unknown CPU $CPUName detected, configuring as if for x64"
+            __PKG_ARCH=x64
+            ;;
+        esac
 
         OSName=$(uname -s)
         case $OSName in
