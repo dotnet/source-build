@@ -25,6 +25,6 @@ namespace Microsoft.DotNet.Build.Tasks
         //   dotnet-toolset-internal-rhel.7-x64.2.0.0-preview2-25401.tar.gz
         //   dotnet-toolset-langpack-2.0.0-rhel.7-x64.tar.gz
         // the "semver" capture would be 2.0.0-preview2-25401 in this case.
-        protected override string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+(-[0-9]+(-[0-9]+)?)?)?)";
+        protected override string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(\.[A-Za-z0-9]+(-[0-9]+(\.[0-9]+)?)?)?)";
     }
 }
