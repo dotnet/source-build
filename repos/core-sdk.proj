@@ -28,7 +28,7 @@
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
