@@ -3,12 +3,14 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
+    <OfficialBuildId>20190117.14</OfficialBuildId>
+
     <!--
       Normally this is generated from OfficialBuildId, but after a release, we tend to have access
       to the package version, not the official build id. Here, directly apply package version.
     -->
-    <VersionSuffixDateStamp>63505</VersionSuffixDateStamp>
-    <VersionSuffixBuildOfTheDay>3</VersionSuffixBuildOfTheDay>
+    <VersionSuffixDateStamp>19067</VersionSuffixDateStamp>
+    <VersionSuffixBuildOfTheDay>14</VersionSuffixBuildOfTheDay>
 
     <BuildCommandArgs>pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
