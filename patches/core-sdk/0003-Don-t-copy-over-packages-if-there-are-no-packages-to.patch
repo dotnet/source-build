@@ -1,0 +1,25 @@
+From e8917fd3acf838431220b23fa4f3b74583de77ae Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 4 Feb 2019 08:49:39 -0600
+Subject: [PATCH] Don't copy over packages if there are no packages to copy.
+
+---
+ src/redist/targets/LayoutTool.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/LayoutTool.csproj b/src/redist/targets/LayoutTool.csproj
+index 9808a9682..1d08913dc 100644
+--- a/src/redist/targets/LayoutTool.csproj
++++ b/src/redist/targets/LayoutTool.csproj
+@@ -9,7 +9,7 @@
+     <PackageReference Include="$(PackageToRestore)" Version="$(PackageVersionToRestore)" />
+   </ItemGroup>
+ 
+-  <Target Name="LayoutTool" DependsOnTargets="Restore">
++  <Target Name="LayoutTool" DependsOnTargets="Restore" Condition="'$(PackageToRestore)' != ''">
+ 
+     <PropertyGroup>
+       <RestoredToolRoot>$([System.IO.Path]::GetFullPath('$(NuGetPackageRoot)/$(PackageToRestore)/$(PackageVersionToRestore)'))</RestoredToolRoot>
+-- 
+2.18.0
+
