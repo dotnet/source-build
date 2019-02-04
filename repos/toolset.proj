@@ -5,7 +5,7 @@
   <PropertyGroup>
     <OfficialBuildId>20190125.5</OfficialBuildId>
 
-    <BuildCommandArgs>--pack --publish --ci</BuildCommandArgs>
+    <BuildCommandArgs>--pack --ci</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
