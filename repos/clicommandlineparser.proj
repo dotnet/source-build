@@ -6,6 +6,7 @@
 
     <!-- In Windows -restore is already passed by default by build.cmd to build.ps1 -->
     <BuildCommandArgs>$(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --projects $(ProjectDirectory)CommandLine.sln</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) $(FlagParameterPrefix)restore</BuildCommandArgs>
 
     <!-- CliCommandLineParser takes -v instead of /v -->
