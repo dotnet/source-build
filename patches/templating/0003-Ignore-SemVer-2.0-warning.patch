@@ -1,0 +1,25 @@
+From c424c8832687f874b80d814ee13b84a2e78919f9 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 6 Feb 2019 13:05:46 -0600
+Subject: [PATCH] Ignore SemVer 2.0 warning.
+
+---
+ .../Microsoft.TemplateEngine.Cli.Localization.csproj            | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.TemplateEngine.Cli.Localization/Microsoft.TemplateEngine.Cli.Localization.csproj b/src/Microsoft.TemplateEngine.Cli.Localization/Microsoft.TemplateEngine.Cli.Localization.csproj
+index 3374bb20..4458e0d8 100644
+--- a/src/Microsoft.TemplateEngine.Cli.Localization/Microsoft.TemplateEngine.Cli.Localization.csproj
++++ b/src/Microsoft.TemplateEngine.Cli.Localization/Microsoft.TemplateEngine.Cli.Localization.csproj
+@@ -8,7 +8,7 @@
+         <EnableDefaultItems>False</EnableDefaultItems>
+         <DisabledWarnings>CS2008</DisabledWarnings>
+         <IsPackable>true</IsPackable>
+-        <NoWarn>2008;NU5125</NoWarn>
++        <NoWarn>2008;NU5125;NU5105</NoWarn>
+         <PackageId>Microsoft.TemplateEngine.Cli.Localization</PackageId>
+     </PropertyGroup>
+ 
+-- 
+2.18.0
+
