@@ -8,6 +8,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)publish</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PackageProjectUrl=https://github.com/dotnet/source-build</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PreReleaseVersionLabel=source-built</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
