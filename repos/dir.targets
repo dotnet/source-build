@@ -167,10 +167,10 @@
                 PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
                 NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
-    <!-- we always produce an arcade with version 1.0.0-source-built -->
+    <!-- we always produce an arcade with version 1.0.0-dev -->
     <UpdateJson JsonFilePath="$(GlobalJsonFile)"
                 PathToAttribute="msbuild-sdks.Microsoft\.DotNet\.Arcade\.Sdk"
-                NewAttributeValue="1.0.0-source-built"
+                NewAttributeValue="1.0.0-dev"
                 SkipUpdateIfMissingKey="true"
                 Condition="'$(RepositoryName)' != 'arcade'" />
   </Target>
