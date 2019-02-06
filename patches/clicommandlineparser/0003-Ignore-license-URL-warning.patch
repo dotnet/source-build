@@ -1,21 +1,21 @@
-From ad8f74f5c9dc590838d2ec40b84aae52b6f5bf18 Mon Sep 17 00:00:00 2001
+From 4bca2a0623117c27eee4e00a59e2d4666f82c6c0 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Sun, 27 Jan 2019 21:29:02 -0600
-Subject: [PATCH] Add patch to fix PackageUrl warning.
+Date: Wed, 6 Feb 2019 13:26:18 -0600
+Subject: [PATCH] Ignore license URL warning.
 
 ---
  Directory.Build.props | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index ac97d37..aab5c6f 100644
+index aab5c6f..88bbdf9 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -2,6 +2,7 @@
- <Project>
+@@ -3,6 +3,7 @@
    <PropertyGroup>
      <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
-+    <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
+     <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
    </PropertyGroup>
  
    <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
