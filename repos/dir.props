@@ -64,6 +64,7 @@
     <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
     <!-- _InitializeDotNetCli is used by websdk and templating to decide whether to init the SDK -->
     <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="_InitializeToolset=$(ProjectDir)Tools/source-built/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(RepositoryName)' != 'arcade'" />
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" />
 
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
