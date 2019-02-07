@@ -44,6 +44,10 @@
     <EnvironmentVariables Include="SourceRevisionId=$(GitCommitHash)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
