@@ -5,8 +5,8 @@
   <PropertyGroup>
     <BuildArguments>--publish --pack</BuildArguments>
     <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:Projects=$(ProjectDirectory)build.proj</BuildArguments>
+    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) --projects $(ProjectDirectory)build.proj</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) --verbosity $(LogVerbosity)</BuildArguments>
