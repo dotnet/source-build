@@ -44,6 +44,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
 
