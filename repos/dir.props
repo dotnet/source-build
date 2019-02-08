@@ -80,6 +80,10 @@
          of compilers which cause assembly load errors.  
          See https://github.com/dotnet/source-build/issues/541 -->
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
+
+    <!-- some repos do this in a separate process -->
+    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" />
   </ItemGroup>
 
   <ItemGroup>
