@@ -1,24 +1,44 @@
-From f911a8c322d24fa78e09b4497868e6c962e80142 Mon Sep 17 00:00:00 2001
+From a08046c3f421be54b3d235680837df151c8cf00c Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 5 Dec 2018 09:55:37 -0600
 Subject: [PATCH] Ignore NU5125 warning/error for 2.1.500 SDK
 
 ---
- src/Directory.Build.props | 1 +
- 1 file changed, 1 insertion(+)
+ src/Directory.Build.props | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 src/Directory.Build.props
 
 diff --git a/src/Directory.Build.props b/src/Directory.Build.props
-index 692ae7c0..1ea22da6 100644
---- a/src/Directory.Build.props
+new file mode 100644
+index 00000000..1ea22da6
+--- /dev/null
 +++ b/src/Directory.Build.props
-@@ -11,6 +11,7 @@
-   <PropertyGroup>
-     <StrongNameKeyId>MicrosoftAspNet</StrongNameKeyId>
-     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+@@ -0,0 +1,25 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
++<Project>
++
++  <PropertyGroup>
++    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)..\Directory.Build.props</MSBuildAllProjects>
++  </PropertyGroup>
++
++  <Import Project="..\Directory.Build.props" />
++
++  <PropertyGroup>
++    <StrongNameKeyId>MicrosoftAspNet</StrongNameKeyId>
++    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 +    <NoWarn>$(NoWarn);NU5125</NoWarn>
-   </PropertyGroup>
- 
-   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
++  </PropertyGroup>
++
++  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
++    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
++  </PropertyGroup>
++
++  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
++    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
++  </PropertyGroup>
++
++</Project>
 -- 
-2.17.1.windows.2
+2.18.0
 
