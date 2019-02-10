@@ -1,0 +1,25 @@
+From 2e0e7e3387c3b6f9a6937070bed510b8ea73bb7c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 10 Feb 2019 00:02:59 -0600
+Subject: [PATCH] Don't include packages we don't restore for xplat.
+
+---
+ build/common.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/common.targets b/build/common.targets
+index 17f771199..7cb4eeb44 100644
+--- a/build/common.targets
++++ b/build/common.targets
+@@ -37,7 +37,7 @@
+     <DocumentationFile Condition=" '$(DocumentationFile)' == '' AND '$(GenerateDocumentationFile)' == 'true' AND '$(IsNetCoreProject)' != 'true' ">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+   </PropertyGroup>
+ 
+-  <ImportGroup Condition=" '$(PackProject)' == 'true' ">
++  <ImportGroup Condition=" '$(PackProject)' == 'true' and '$(IsXPlat)' != 'true' ">
+       <Import Project="$(NuGetBuildTasksPackTargets)" />
+   </ImportGroup>
+ 
+-- 
+2.18.0
+
