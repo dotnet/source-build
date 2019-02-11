@@ -1,0 +1,32 @@
+From da148b07e599aa8a805507e49343d5fc5c0efd2b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 11 Feb 2019 12:56:51 -0600
+Subject: [PATCH] Consolidate Newtonsoft.Json versions.
+
+---
+ src/dotnet/dotnet.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index c0ccb8e09..9c35c404b 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -59,7 +59,7 @@
+     <ProjectReference Include="../Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
++    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+     <PackageReference Include="System.Text.Encoding.CodePages" Version="4.4.0" />
+     <PackageReference Include="Microsoft.ApplicationInsights" Version="2.0.0" />
+     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
+@@ -81,4 +81,4 @@
+   <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
+     <PackageReference Include="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+
