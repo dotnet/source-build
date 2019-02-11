@@ -1,0 +1,107 @@
+From 28d6c4f27c08ec02eed999e1c9d371d739a437b7 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 11 Feb 2019 16:40:54 -0600
+Subject: [PATCH] Disable signing.
+
+---
+ .../Microsoft.DotNet.Cli.Sln.Internal.csproj                  | 4 ++--
+ .../Microsoft.DotNet.Cli.Utils.csproj                         | 4 ++--
+ .../Microsoft.DotNet.Configurer.csproj                        | 4 ++--
+ .../Microsoft.DotNet.InternalAbstractions.csproj              | 4 ++--
+ .../Microsoft.DotNet.MSBuildSdkResolver.csproj                | 4 ++--
+ src/dotnet/dotnet.csproj                                      | 4 ++--
+ 6 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj b/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
+index 4d70d0056..8a551a6d1 100644
+--- a/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
++++ b/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
+@@ -6,8 +6,8 @@
+     <DebugType>portable</DebugType>
+     <AssemblyName>Microsoft.DotNet.Cli.Sln.Internal</AssemblyName>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+index d7d81035e..d7ae78a0d 100644
+--- a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
++++ b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+@@ -6,8 +6,8 @@
+     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">$(CliTargetFramework)</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj b/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
+index 6745ae02d..b99ab3b74 100644
+--- a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
++++ b/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
+@@ -4,8 +4,8 @@
+     <TargetFramework>$(CliTargetFramework)</TargetFramework>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
+     <RepositoryType>git</RepositoryType>
+     <DefineConstants Condition="'$(IncludeAspNetCoreRuntime)' == 'false'">$(DefineConstants);EXCLUDE_ASPNETCORE</DefineConstants>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj b/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
+index 103c81432..bb4e3f1a9 100644
+--- a/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
++++ b/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
+@@ -6,8 +6,8 @@
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
+     <RepositoryType>git</RepositoryType>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
+diff --git a/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj b/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+index e34122ca8..06921295f 100644
+--- a/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
++++ b/src/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+@@ -8,8 +8,8 @@
+     <RuntimeIdentifiers Condition="'$(OS)' == 'Windows_NT'">win-x86;win-x64</RuntimeIdentifiers>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition="'$(OS)' != 'Windows_NT'">false</PublicSign>
+     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+     <PublishDir>$(SdkResolverOutputDirectory)</PublishDir>
+     <IsPackable>true</IsPackable>
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index 9c35c404b..911d047bf 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -4,8 +4,8 @@
+     <AssemblyName>dotnet</AssemblyName>
+     <OutputType>Exe</OutputType>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>true</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
++    <SignAssembly>false</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
+     <AssetTargetFallback>dotnet5.4</AssetTargetFallback>
+     <RootNamespace>Microsoft.DotNet.Cli</RootNamespace>
+     <DefineConstants Condition="'$(IncludeAspNetCoreRuntime)' == 'false'">$(DefineConstants);EXCLUDE_ASPNETCORE</DefineConstants>
+-- 
+2.18.0
+
