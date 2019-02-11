@@ -1,4 +1,4 @@
-From 160e7985174ba70bc123f042b84454775ed11088 Mon Sep 17 00:00:00 2001
+From 25d451e540a1f26b4007a4265ced013f33599c80 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 10 Feb 2019 17:55:21 -0600
 Subject: [PATCH] Fix InternalsVisibleTo generation.
@@ -8,7 +8,7 @@ Subject: [PATCH] Fix InternalsVisibleTo generation.
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
-index eb730bcf..5e022c30 100644
+index eb730bcf..eb63f0fd 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
 @@ -20,7 +20,8 @@
@@ -17,7 +17,7 @@ index eb730bcf..5e022c30 100644
          <_Parameter1 Condition="'%(InternalsVisibleTo.Key)' != ''">%(InternalsVisibleTo.Identity), PublicKey=%(InternalsVisibleTo.Key)</_Parameter1>
 -        <_Parameter1 Condition="'%(InternalsVisibleTo.Key)' == ''">%(InternalsVisibleTo.Identity), PublicKey=$(PublicKey)</_Parameter1>
 +        <_Parameter1 Condition="'%(InternalsVisibleTo.Key)' == '' and '$(PublicKey)' != ''">%(InternalsVisibleTo.Identity), PublicKey=$(PublicKey)</_Parameter1>
-+        <_Parameter1 Condition="'%(PublicKey)' == ''">%(InternalsVisibleTo.Identity)</_Parameter1>
++        <_Parameter1 Condition="'$(PublicKey)' == ''">%(InternalsVisibleTo.Identity)</_Parameter1>
        </_InternalsVisibleToAttribute>
      </ItemGroup>
    </Target>
