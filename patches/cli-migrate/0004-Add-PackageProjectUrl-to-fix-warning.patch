@@ -1,0 +1,23 @@
+From 1537d0abda669096d06a38c15a5ebbd1b8f43c45 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 11 Feb 2019 10:05:37 -0600
+Subject: [PATCH] Add PackageProjectUrl to fix warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index bc1d3652..964b5685 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -11,5 +11,6 @@
+     <DebugType>embedded</DebugType>
+     <DebugSymbols>true</DebugSymbols>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
++    <PackageProjectUrl>https://github.com/dotnet/cli-migrate</PackageProjectUrl>
+   </PropertyGroup>
+ </Project>
+-- 
+2.18.0
+
