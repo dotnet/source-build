@@ -79,7 +79,7 @@
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Runtime.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/netstandard.dll" />
       <!-- Microsoft.AspNet.App DLLs that include .resource files -->
-      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)microsoft.aspnet.app/*" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)microsoft.aspnet.app/**/*.dll" />
     </ItemGroup>
     <!-- End Temporary workaround -->
 
