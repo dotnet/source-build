@@ -78,4 +78,9 @@
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
                          Rid="$(TargetRid)-$(Platform)" />
   </Target>
+
+  <Target Name="DebugTesting" BeforeTargets="Build">
+    <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
+          EnvironmentVariables="@(EnvironmentVariables)" />
+  </Target>
 </Project>
