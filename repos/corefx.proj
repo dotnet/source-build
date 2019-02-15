@@ -25,8 +25,8 @@
     <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildArguments) -v $(LogVerbosity)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
