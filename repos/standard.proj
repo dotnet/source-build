@@ -3,10 +3,10 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildArguments>($FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
+    <BuildArguments>$(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
-    <BuildArguments>$(BuildArguments) (FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
