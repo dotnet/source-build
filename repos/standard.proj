@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildArguments>--publish --pack</BuildArguments>
+    <BuildArguments>--pack</BuildArguments>
     <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) -bl</BuildArguments>
     <BuildArguments>$(BuildArguments) --projects $(ProjectDirectory)build.proj</BuildArguments>
