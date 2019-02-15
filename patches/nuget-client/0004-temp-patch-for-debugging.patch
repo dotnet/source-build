@@ -1,0 +1,30 @@
+From 6c2f4daa4de020a11858c3a9233bbc34471654f6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 15 Feb 2019 10:22:01 -0600
+Subject: [PATCH] temp patch for debugging
+
+---
+ src/NuGet.Core/NuGet.Packaging/MinClientVersionUtility.cs | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Core/NuGet.Packaging/MinClientVersionUtility.cs b/src/NuGet.Core/NuGet.Packaging/MinClientVersionUtility.cs
+index f84aae503..2298a174b 100644
+--- a/src/NuGet.Core/NuGet.Packaging/MinClientVersionUtility.cs
++++ b/src/NuGet.Core/NuGet.Packaging/MinClientVersionUtility.cs
+@@ -80,11 +80,12 @@ public static NuGetVersion GetNuGetClientVersion()
+             if (_clientVersion == null)
+             {
+                 var versionString = ClientVersionUtility.GetNuGetAssemblyVersion();
++                Console.WriteLine($"parsing {versionString} for version info");
+ 
+                 NuGetVersion clientVersion;
+                 if (!NuGetVersion.TryParse(versionString, out clientVersion))
+                 {
+-                    throw new InvalidOperationException(Strings.UnableToParseClientVersion);
++                    throw new InvalidOperationException($"Can't parse {versionString} as a version");
+                 }
+ 
+                 // Remove pre-release info from the version and return a stable version.
+-- 
+2.18.0
+
