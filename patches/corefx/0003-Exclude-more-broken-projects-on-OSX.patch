@@ -1,0 +1,24 @@
+From 661594ecf73b3e657c949bbdbe402e07d3a82bca Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 15 Feb 2019 11:53:38 -0600
+Subject: [PATCH] Exclude more broken projects on OSX.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 4af9201f35..b288da803e 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -426,6 +426,7 @@
+   -->
+   <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildTests)' != 'true'">
+     <ProjectExclusions Include="$(SourceDir)CoreFx.Private.TestUtilities/**/*.csproj" />
++    <ProjectExclusions Condition="'$(OSGroup)' == 'OSX'" Include="$(SourceDir)System.Runtime.CompilerServices.Unsafe/**/*.*proj" />
+   </ItemGroup>
+ 
+   <!-- Properties related to multi-file mode for ILC tests -->
+-- 
+2.18.0
+
