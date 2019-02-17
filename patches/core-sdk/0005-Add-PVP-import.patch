@@ -1,0 +1,26 @@
+From 446ed4902a4dabd9b1da248e07987ff5a39e3435 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 17 Feb 2019 08:31:22 -0600
+Subject: [PATCH] Add PVP import
+
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 02a506fe8..2a13dddff 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -56,6 +56,9 @@
+     <MicrosoftNETTestSdkVersion>15.8.0</MicrosoftNETTestSdkVersion>
+     <MicrosoftSourceLinkVersion>1.0.0-beta2-18618-05</MicrosoftSourceLinkVersion>
+   </PropertyGroup>
++
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
++
+   <PropertyGroup>
+     <RestoreSources>
+       $(RestoreSources);
+-- 
+2.18.0
+

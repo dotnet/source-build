@@ -1,0 +1,26 @@
+From 5e6af72da2bb499e3b2502657a9562039de80df4 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 17 Feb 2019 08:30:37 -0600
+Subject: [PATCH] Add PVP import.
+
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 3dbd3e4ad..517086c60 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -38,6 +38,9 @@
+     <MicrosoftDotNetCliUtilsPackageVersion>2.2.100-refac-20180613-1</MicrosoftDotNetCliUtilsPackageVersion>
+     <XliffTasksPackageVersion>0.2.0-beta-000042</XliffTasksPackageVersion>
+   </PropertyGroup>
++
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
++
+   <PropertyGroup>
+     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+     <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
+-- 
+2.18.0
+
