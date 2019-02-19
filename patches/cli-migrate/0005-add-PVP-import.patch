@@ -1,0 +1,27 @@
+From 9f168894870ea6979e97bfcbc3690327f45f82e5 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 17 Feb 2019 09:45:05 -0600
+Subject: [PATCH] add PVP import
+
+---
+ eng/Versions.props | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 209759aa..3a60213b 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -26,6 +26,10 @@
+     <SystemDiagnosticsProcessVersion>4.3.0</SystemDiagnosticsProcessVersion>
+     <SystemReflectionTypeExtensionsVersion>4.3.0</SystemReflectionTypeExtensionsVersion>
+   </PropertyGroup>
++
++<Import Project="$(DotNetPackageVersionPropsPath)"
++        Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <PropertyGroup>
+     <RestoreSources>
+       $(RestoreSources);
+-- 
+2.18.0
+

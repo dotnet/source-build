@@ -3,8 +3,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildArguments>-$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+    <BuildArguments>$(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
@@ -15,14 +20,14 @@
     -->
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
     <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
     <OfficialBuildId>20170719-03</OfficialBuildId>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <PackagesOutput>$(ProjectDirectory)/bin/packages/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 

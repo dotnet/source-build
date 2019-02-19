@@ -2,12 +2,22 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <OfficialBuildId>20190124.1</OfficialBuildId>
+
     <!-- In Windows -restore is already passed by default by build.cmd to build.ps1 -->
     <BuildCommandArgs>$(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --projects $(ProjectDirectory)CommandLine.sln</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) $(FlagParameterPrefix)restore</BuildCommandArgs>
+
+    <!-- CliCommandLineParser takes -v instead of /v -->
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
 
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SignAssembly=false</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
@@ -17,10 +27,13 @@
     <OrchestratedManifestBuildName>dotnet/CliCommandLineParser</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>

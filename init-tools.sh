@@ -5,11 +5,13 @@ __init_tools_log="$__scriptpath/init-tools.log"
 __PACKAGES_DIR="$__scriptpath/packages"
 __TOOLRUNTIME_DIR="$__scriptpath/Tools"
 __DOTNET_PATH="$__TOOLRUNTIME_DIR/dotnetcli"
+__DOTNET3_PATH="$__TOOLRUNTIME_DIR/dotnetcli3"
 __DOTNET_CMD="$__DOTNET_PATH/dotnet"
 if [ -z "${__BUILDTOOLS_SOURCE:-}" ]; then __BUILDTOOLS_SOURCE=https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json; fi
 export __BUILDTOOLS_USE_CSPROJ=true
 __BUILD_TOOLS_PACKAGE_VERSION=$(cat "$__scriptpath/BuildToolsVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 __DOTNET_TOOLS_VERSION=$(cat "$__scriptpath/DotnetCLIVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+__DOTNET3_TOOLS_VERSION=$(cat "$__scriptpath/Dotnet3CLIVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 __ILASM_VERSION=$(cat "$__scriptpath/tools-local/ILAsmVersion.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 __BUILD_TOOLS_PATH="$__PACKAGES_DIR/microsoft.dotnet.buildtools/$__BUILD_TOOLS_PACKAGE_VERSION/lib"
 __INIT_TOOLS_RESTORE_PROJECT="$__scriptpath/init-tools.msbuild"
@@ -116,6 +118,7 @@ if [ ! -e "$__DOTNET_PATH" ]; then
         esac
 
         __DOTNET_PKG=dotnet-sdk-${__DOTNET_TOOLS_VERSION}-$__PKG_RID-$__PKG_ARCH
+        __DOTNET3_PKG=dotnet-sdk-${__DOTNET3_TOOLS_VERSION}-$__PKG_RID-$__PKG_ARCH
     fi
     mkdir -p "$__DOTNET_PATH"
 
@@ -140,6 +143,30 @@ if [ ! -e "$__DOTNET_PATH" ]; then
         tar -xf "$__DOTNET_PATH/dotnet.tar"
     }
     execute_with_retry install_dotnet_cli >> "$__init_tools_log" 2>&1
+
+    mkdir -p "$__DOTNET3_PATH"
+
+    echo "Installing dotnet 3.0 preview1 cli..."
+    __DOTNET3_LOCATION="https://dotnetcli.azureedge.net/dotnet/Sdk/${__DOTNET3_TOOLS_VERSION}/${__DOTNET3_PKG}.tar.gz"
+
+    install_dotnet3_cli() {
+        if [[ -z "${DotNet3BootstrapCliTarPath-}" ]]; then
+            echo "Installing '${__DOTNET3_LOCATION}' to '$__DOTNET3_PATH/dotnet.tar'"
+            rm -rf -- "$__DOTNET3_PATH/*"
+            # curl has HTTPS CA trust-issues less often than wget, so lets try that first.
+            if command -v curl > /dev/null; then
+                curl --retry 10 -sSL --create-dirs -o $__DOTNET3_PATH/dotnet.tar ${__DOTNET3_LOCATION}
+            else
+                wget -q -O $__DOTNET3_PATH/dotnet.tar ${__DOTNET3_LOCATION}
+            fi
+        else
+            echo "Copying '$DotNet3BootstrapCliTarPath' to '$__DOTNET3_PATH/dotnet.tar'"
+            cp $DotNet3BootstrapCliTarPath $__DOTNET3_PATH/dotnet.tar
+        fi
+        cd "$__DOTNET3_PATH"
+        tar -xf "$__DOTNET3_PATH/dotnet.tar"
+    }
+    execute_with_retry install_dotnet3_cli >> "$__init_tools_log" 2>&1
 
     cd "$__scriptpath"
 fi

@@ -3,24 +3,34 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/$(Configuration)/packages</PackagesOutput>
+    <OfficialBuildId>20190124.3</OfficialBuildId>
 
-    <OutputVersionArgs>/p:PackageVersion=16.0.0-preview.225</OutputVersionArgs>
+    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
+
+    <OutputVersionArgs>/p:PackageVersion=16.0.0-preview.385</OutputVersionArgs>
     <!-- Set assembly version. Otherwise, defaults to 1.0.0 because we don't have nerdbank versioning. -->
     <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.1.0</OutputVersionArgs>
     <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
 
-    <BuildCommandArgs>build -DotNetBuildFromSource</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -skiptests</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>--build --publish --pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetBuildFromSource=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetCoreSdkDir=$(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --projects $(ProjectDirectory)MSBuild.SourceBuild.sln</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
 
-    <BuildCommand>$(ProjectDirectory)build/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <!-- all repos that build with arcade currently have a warning about including RestoreSources twice -->
+    <BuildCommandArgs>$(BuildCommandArgs) --warnAsError false</BuildCommandArgs>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
-    <NuGetConfigFile>$(ProjectDirectory)/NuGet.Config</NuGetConfigFile>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
 
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -29,10 +39,13 @@
     <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(RepoToolsetSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(CentralVersionsSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>

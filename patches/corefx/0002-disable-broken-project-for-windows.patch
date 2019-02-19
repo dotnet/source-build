@@ -1,0 +1,25 @@
+From 641220a08c91c85eab91da6938057b32c9dfbc8c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 15 Feb 2019 10:33:28 -0600
+Subject: [PATCH] disable broken project for windows
+
+---
+ .../src/System.Runtime.CompilerServices.Unsafe.ilproj           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj b/src/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
+index b54fabba45..e091b94c7b 100644
+--- a/src/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
++++ b/src/System.Runtime.CompilerServices.Unsafe/src/System.Runtime.CompilerServices.Unsafe.ilproj
+@@ -19,7 +19,7 @@
+ 
+   <Target Name="AddResourcesFileToIlasm" 
+           BeforeTargets="CoreCompile" 
+-          Condition="'$(OS)'=='Windows_NT'"
++          Condition="'$(OS)'=='Windows_NT' and '$(DotNetBuildFromSource)' != 'true'"
+           Inputs="$(ContractOutputPath)/$(MSBuildProjectName).dll"
+           Outputs="$(IntermediateOutputPath)$(MSBuildProjectName).ref.res.obj">
+     <ItemGroup>
+-- 
+2.18.0
+

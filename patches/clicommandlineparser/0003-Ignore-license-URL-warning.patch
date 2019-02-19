@@ -1,0 +1,24 @@
+From 4bca2a0623117c27eee4e00a59e2d4666f82c6c0 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 6 Feb 2019 13:26:18 -0600
+Subject: [PATCH] Ignore license URL warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index aab5c6f..88bbdf9 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -3,6 +3,7 @@
+   <PropertyGroup>
+     <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
+     <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
+   </PropertyGroup>
+ 
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+-- 
+2.18.0
+

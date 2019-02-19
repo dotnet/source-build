@@ -62,6 +62,9 @@
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
     <!-- DotNetRoot is used by Arcade vs DotNetCoreSdkDir for BuildTools -->
     <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
+    <!-- _InitializeDotNetCli is used by websdk and templating to decide whether to init the SDK -->
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Include="_InitializeToolset=$(ProjectDir)Tools/source-built/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(RepositoryName)' != 'arcade'" />
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" />
 
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
@@ -77,11 +80,16 @@
          of compilers which cause assembly load errors.  
          See https://github.com/dotnet/source-build/issues/541 -->
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
+
+    <!-- some repos do this in a separate process -->
+    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" />
   </ItemGroup>
 
   <ItemGroup>
     <RepoToolsetSdkOverride Include="RoslynTools.RepoToolset" Group="REPO_TOOLSET" />
-    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" />
+    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="1.0.0-dev"/>
     <ILSdkOverride Include="Microsoft.NET.Sdk.IL" Group="IL" />
+    <CentralVersionsSdkOverride Include="Microsoft.Build.CentralPackageVersions" Group="CENTRAL_VERSIONS" Version="2.0.1"/>
   </ItemGroup>
 </Project>

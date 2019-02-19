@@ -1,0 +1,54 @@
+From 1111f7e034f2849259a593e545d8e8086aa1efb1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 29 Jan 2019 15:47:30 -0600
+Subject: [PATCH] Don't overwrite PVP versions.
+
+---
+ eng/Versions.props | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 92b6c73999..4a6ee0b5c8 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -16,22 +16,22 @@
+   </PropertyGroup>
+   <PropertyGroup>
+     <!-- Arcade dependencies -->
+-    <MicrosoftDotNetApiCompatPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetApiCompatPackageVersion>
+-    <MicrosoftDotNetSourceRewriterPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetSourceRewriterPackageVersion>
+-    <MicrosoftDotNetCodeAnalysisPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetCodeAnalysisPackageVersion>
+-    <MicrosoftDotNetGenAPIPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetGenAPIPackageVersion>
+-    <MicrosoftDotNetGenFacadesPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetGenFacadesPackageVersion>
+-    <MicrosoftDotNetXUnitExtensionsPackageVersion>2.4.0-beta.19072.5</MicrosoftDotNetXUnitExtensionsPackageVersion>
+-    <MicrosoftDotNetBuildTasksPackagingPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetBuildTasksPackagingPackageVersion>
+-    <MicrosoftDotNetCoreFxTestingPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetCoreFxTestingPackageVersion>
+-    <MicrosoftDotNetBuildTasksConfigurationPackageVersion>1.0.0-beta.19072.5</MicrosoftDotNetBuildTasksConfigurationPackageVersion>
+-    <MicrosoftDotNetBuildTasksFeedPackageVersion>2.2.0-beta.19072.5</MicrosoftDotNetBuildTasksFeedPackageVersion>
++    <MicrosoftDotNetApiCompatPackageVersion Condition="'$(MicrosoftDotNetApiCompatPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetApiCompatPackageVersion>
++    <MicrosoftDotNetSourceRewriterPackageVersion Condition="'$(MicrosoftDotNetSourceRewriterPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetSourceRewriterPackageVersion>
++    <MicrosoftDotNetCodeAnalysisPackageVersion Condition="'$(MicrosoftDotNetCodeAnalysisPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetCodeAnalysisPackageVersion>
++    <MicrosoftDotNetGenAPIPackageVersion Condition="'$(MicrosoftDotNetGenAPIPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetGenAPIPackageVersion>
++    <MicrosoftDotNetGenFacadesPackageVersion Condition="'$(MicrosoftDotNetGenFacadesPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetGenFacadesPackageVersion>
++    <MicrosoftDotNetXUnitExtensionsPackageVersion Condition="'$(MicrosoftDotNetXUnitExtensionsPackageVersion)' == ''">2.4.0-beta.19072.5</MicrosoftDotNetXUnitExtensionsPackageVersion>
++    <MicrosoftDotNetBuildTasksPackagingPackageVersion Condition="'$(MicrosoftDotNetBuildTasksPackagingPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetBuildTasksPackagingPackageVersion>
++    <MicrosoftDotNetCoreFxTestingPackageVersion Condition="'$(MicrosoftDotNetCoreFxTestingPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetCoreFxTestingPackageVersion>
++    <MicrosoftDotNetBuildTasksConfigurationPackageVersion Condition="'$(MicrosoftDotNetBuildTasksConfigurationPackageVersion)' == ''">1.0.0-beta.19072.5</MicrosoftDotNetBuildTasksConfigurationPackageVersion>
++    <MicrosoftDotNetBuildTasksFeedPackageVersion Condition="'$(MicrosoftDotNetBuildTasksFeedPackageVersion)' == ''">2.2.0-beta.19072.5</MicrosoftDotNetBuildTasksFeedPackageVersion>
+     <!-- Core-setup dependencies -->
+-    <MicrosoftNETCoreAppPackageVersion>3.0.0-preview-27321-5</MicrosoftNETCoreAppPackageVersion>
+-    <MicrosoftNETCoreDotNetHostPackageVersion>3.0.0-preview-27321-5</MicrosoftNETCoreDotNetHostPackageVersion>
+-    <MicrosoftNETCoreDotNetHostPolicyPackageVersion>3.0.0-preview-27321-5</MicrosoftNETCoreDotNetHostPolicyPackageVersion>
++    <MicrosoftNETCoreAppPackageVersion Condition="'$(MicrosoftNETCoreAppPackageVersion)' == ''">3.0.0-preview-27321-5</MicrosoftNETCoreAppPackageVersion>
++    <MicrosoftNETCoreDotNetHostPackageVersion Condition="'$(MicrosoftNETCoreDotNetHostPackageVersion)' == ''">3.0.0-preview-27321-5</MicrosoftNETCoreDotNetHostPackageVersion>
++    <MicrosoftNETCoreDotNetHostPolicyPackageVersion Condition="'$(MicrosoftNETCoreDotNetHostPolicyPackageVersion)' == ''">3.0.0-preview-27321-5</MicrosoftNETCoreDotNetHostPolicyPackageVersion>
+     <!-- Coreclr dependencies -->
+-    <MicrosoftNETCoreILAsmPackageVersion>3.0.0-preview-27322-72</MicrosoftNETCoreILAsmPackageVersion>
+-    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion>3.0.0-preview-27322-72</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
++    <MicrosoftNETCoreILAsmPackageVersion Condition="'$(MicrosoftNETCoreILAsmPackageVersion)' == ''">3.0.0-preview-27322-72</MicrosoftNETCoreILAsmPackageVersion>
++    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion Condition="'$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)' == ''">3.0.0-preview-27322-72</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+   </PropertyGroup>
+ </Project>
+-- 
+2.18.0
+

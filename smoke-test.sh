@@ -169,12 +169,6 @@ function doCommand() {
             else
                 "${dotnetCmd}" $newArgs >> "$logFile" 2>&1
             fi
-            # XXX temporary workaround XXX
-            # this is a temporary workaround before templates are updated to use netcoreapp3.0.
-            # see issue https://github.com/dotnet/source-build/issues/635 for more details.
-            echo "WARNING: Changing netcoreapp2.2 to netcoreapp3.0 in project file." | tee -a "$logFile"
-            sed -i.bak 's/netcoreapp2\.2/netcoreapp3.0/g' *.*proj
-            # XXX temporary workaround XXX
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
                 "${dotnetCmd}" $1 &
@@ -366,9 +360,8 @@ SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packag
 # XXX temporary workaround XXX
 # This is a temporary workaround to disable tests that will fail until ASP.NET packages are updated.
 # See https://github.com/dotnet/source-build/issues/635 for more details.
-echo "WARNING: Setting excludeWebTests and excludeOnlineTests to disable known-failing tests." | tee -a "$logFile"
+echo "WARNING: Setting excludeWebTests to disable known-failing tests." | tee -a "$logFile"
 excludeWebTests=true
-excludeOnlineTests=true
 # XXX temporary workaround XXX
 
 # Run all tests, local restore sources first, online restore sources second

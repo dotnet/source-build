@@ -3,9 +3,11 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</BuildCommandArgs>
+    <OfficialBuildId>20190125.5</OfficialBuildId>
+
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) --stage0 $(DotNetCliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
 
     <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
@@ -18,16 +20,22 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeAdditionalSharedFrameworks=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=$(PortableBuild)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <PackagesOutput>$(ProjectDirectory)bin/2/$(PackageOutputRid)/packages/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <TarBallOutput>$(PackagesOutput)</TarBallOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
+    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
 
     <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
     <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
@@ -36,6 +44,10 @@
     <!-- This project builds zips, not NuGet packages. -->
     <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="newtonsoft-json" />
@@ -66,43 +78,18 @@
                   is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
+
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
-
-  <Target Name="AddProdConFeed" BeforeTargets="Build">
-    <PropertyGroup>
-      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
-
-      <NugetConfigTargetsFile>$(ProjectDirectory)build\NugetConfigFile.targets</NugetConfigTargetsFile>
-      <ReplacementEndMark>&lt;/ItemGroup&gt;</ReplacementEndMark>
-      <InsertItemLine>&lt;NugetConfigPrivateFeeds Include="$(ProdConBlobFeedUrl)" /&gt;$(ReplacementEndMark)</InsertItemLine>
-
-      <NugetConfigTargetsContents>$([System.IO.File]::ReadAllText('$(NugetConfigTargetsFile)'))</NugetConfigTargetsContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(NugetConfigTargetsFile)"
-                      Lines="$(NugetConfigTargetsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
-                      Condition="! $(NugetConfigTargetsContents.Contains('$(InsertItemLine)'))"
-                      Overwrite="true" />
-  </Target>
-
-  <!-- Ignore this error in the CLI build, which doesn't seem to happen in ProdCon:
-      error NU5104: A stable release of a package should not have a prerelease dependency. Either
-      modify the version spec of dependency "NuGet.Frameworks [4.7.0-rtm.5156, )" or update the
-      version field in the nuspec.  -->
-  <Target Name="AddNoWarnNU5104ByDefault" BeforeTargets="Build">
-    <PropertyGroup>
-      <BuildDefaultsFile>$(ProjectDirectory)build\BuildDefaults.props</BuildDefaultsFile>
-      <ReplacementEndMark>&lt;/NoWarn&gt;</ReplacementEndMark>
-      <InsertItemLine>;NU5104$(ReplacementEndMark)</InsertItemLine>
-
-      <BuildDefaultsPropsContents>$([System.IO.File]::ReadAllText('$(BuildDefaultsFile)'))</BuildDefaultsPropsContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(BuildDefaultsFile)"
-                      Lines="$(BuildDefaultsPropsContents.Replace('$(ReplacementEndMark)', '$(InsertItemLine)'))"
-                      Condition="! $(BuildDefaultsPropsContents.Contains('$(InsertItemLine)'))"
-                      Overwrite="true" />
-  </Target>
 
   <Target Name="CopyTarBall" AfterTargets="CopyPackage">
     <ItemGroup>

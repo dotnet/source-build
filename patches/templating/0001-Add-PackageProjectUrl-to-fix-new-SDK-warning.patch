@@ -1,0 +1,24 @@
+From 5caaffdd29dfffe7568ff1057d3fad0995ac8364 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 28 Jan 2019 14:49:40 -0600
+Subject: [PATCH] Add PackageProjectUrl to fix new SDK warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 2e486440..33a2132f 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -18,6 +18,7 @@
+ 
+   <PropertyGroup Label="Package and Assembly Metadata">
+     <Product>Microsoft ASP.NET Core</Product>
++    <PackageProjectUrl>https://github.com/dotnet/templating</PackageProjectUrl>
+   </PropertyGroup>
+ 
+   <PropertyGroup Label="Warning Suppressions">
+-- 
+2.18.0
+

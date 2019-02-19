@@ -1,18 +1,18 @@
-From 1df9607604375c2000f79484ac09170605395eea Mon Sep 17 00:00:00 2001
+From 10644df7862cfa66c59a1263e7d0bd7bbada5d9f Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 24 Jan 2019 13:07:40 -0600
 Subject: [PATCH] Transfer patch from CLI.
 
 ---
- build/MSBuildExtensions.targets | 8 ++++++++
+ src/redist/targets/GenerateBundledVersions.targets | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index 81d3b1c4e..61bd3b927 100644
---- a/build/MSBuildExtensions.targets
-+++ b/build/MSBuildExtensions.targets
-@@ -167,6 +167,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-                               TargetingPackVersion="$(MicrosoftAspNetCoreAppPackageVersion)"
+diff --git a/src/redist/targets/GenerateBundledVersions.targets b/src/redist/targets/GenerateBundledVersions.targets
+index 39f560647..7320b2eda 100644
+--- a/src/redist/targets/GenerateBundledVersions.targets
++++ b/src/redist/targets/GenerateBundledVersions.targets
+@@ -229,6 +229,14 @@ Copyright (c) .NET Foundation. All rights reserved.
+                               RuntimePackRuntimeIdentifiers="@(AspNetCoreRuntimePackRids, '%3B')"
                                />
    </ItemGroup>
 +  <ItemGroup>

@@ -32,7 +32,12 @@ namespace Microsoft.DotNet.Build.Tasks
         {
             JObject jsonObj = JObject.Parse(File.ReadAllText(JsonFilePath));
 
-            UpdateAttribute(jsonObj, PathToAttribute.Split('.'), NewAttributeValue);
+            string[] escapedPathToAttributeParts = PathToAttribute.Replace("\\.", "\x1F").Split('.');
+            for (int i = 0; i < escapedPathToAttributeParts.Length; ++i)
+            {
+                escapedPathToAttributeParts[i] = escapedPathToAttributeParts[i].Replace("\x1F", ".");
+            }
+            UpdateAttribute(jsonObj, escapedPathToAttributeParts, NewAttributeValue);
 
             File.WriteAllText(JsonFilePath, jsonObj.ToString());
             return true;
