@@ -5,9 +5,9 @@
     for which dotnet/versions commit was last used to update the dependency.
   -->
   <PropertyGroup>
-    <ProdConCurrentRef>f0d6b15f16e4b25f37ba90da2f157dedca95dd5b</ProdConCurrentRef>
-    <CoreClrCurrentRef>1dbfe089b5c3537799927f6541185a8c1fd0adef</CoreClrCurrentRef>
-    <BuildToolsCurrentRef>1dbfe089b5c3537799927f6541185a8c1fd0adef</BuildToolsCurrentRef>
+    <ProdConCurrentRef>ac61a8c9e47e4fd7a4907170ddc45da0f7e8d888</ProdConCurrentRef>
+    <CoreClrCurrentRef>ac61a8c9e47e4fd7a4907170ddc45da0f7e8d888</CoreClrCurrentRef>
+    <BuildToolsCurrentRef>ac61a8c9e47e4fd7a4907170ddc45da0f7e8d888</BuildToolsCurrentRef>
   </PropertyGroup>
 
   <!-- Package dependency verification/auto-upgrade configuration. -->
@@ -22,9 +22,9 @@
     the product as version strings to be used by the SDK to fetch extra content.
   -->
   <PropertyGroup>
-    <MicrosoftAspNetCoreAllPackageVersion>2.1.8</MicrosoftAspNetCoreAllPackageVersion>
-    <MicrosoftAspNetCoreAppPackageVersion>2.1.8</MicrosoftAspNetCoreAppPackageVersion>
-    <MicrosoftNETSdkRazorPackageVersion>2.1.2</MicrosoftNETSdkRazorPackageVersion>
+    <MicrosoftAspNetCoreAllPackageVersion>2.1.9</MicrosoftAspNetCoreAllPackageVersion>
+    <MicrosoftAspNetCoreAppPackageVersion>2.1.9</MicrosoftAspNetCoreAppPackageVersion>
+    <MicrosoftNETSdkRazorPackageVersion>2.2.0</MicrosoftNETSdkRazorPackageVersion>
   </PropertyGroup>
 
   <!-- Build stabilization properties as passed in by ProdCon. -->
@@ -50,7 +50,7 @@
 
     <DependencyInfo Include="ProdCon" Condition="'$(UpdateFromManifestFile)' == ''">
       <DependencyType>Orchestrated build</DependencyType>
-      <BasePath>build-info/dotnet/product/cli/release/2.1.6</BasePath>
+      <BasePath>build-info/dotnet/product/cli/release/2.1.9</BasePath>
       <CurrentRef>$(ProdConCurrentRef)</CurrentRef>
       <VersionsRepoOwner>dotnet</VersionsRepoOwner>
       <VersionsRepo>versions</VersionsRepo>
