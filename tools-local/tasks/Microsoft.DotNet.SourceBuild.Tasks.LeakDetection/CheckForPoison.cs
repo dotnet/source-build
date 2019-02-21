@@ -103,6 +103,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             ".png",
             ".props",
             ".psmdcp",
+            ".scss",
             ".svg",
             ".targets",
             ".ts",
@@ -196,8 +197,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         {
             // skip some common files that get copied verbatim from nupkgs - LICENSE, _._, etc as well as
             // file types that we never care about - text files, .gitconfig, etc.
-            if (FileNamesToSkip.Any(f => Path.GetFileName(fileToCheck).ToLowerInvariant() == f) ||
-                FileExtensionsToSkip.Any(e => Path.GetExtension(fileToCheck).ToLowerInvariant() == e))
+            if (FileNamesToSkip.Any(f => Path.GetFileName(fileToCheck).ToLowerInvariant() == f.ToLowerInvariant()) ||
+                FileExtensionsToSkip.Any(e => Path.GetExtension(fileToCheck).ToLowerInvariant() == e.ToLowerInvariant()))
             {
                 return null;
             }
