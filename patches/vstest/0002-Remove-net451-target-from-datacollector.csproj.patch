@@ -1,0 +1,24 @@
+From d5f51c6871ce4fc3810656ad7e132806b5e771fd Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 21 Feb 2019 23:05:02 +0000
+Subject: [PATCH] Remove net451 target from datacollector.csproj
+
+---
+ src/datacollector/datacollector.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/datacollector/datacollector.csproj b/src/datacollector/datacollector.csproj
+index 267de80..84417ae 100644
+--- a/src/datacollector/datacollector.csproj
++++ b/src/datacollector/datacollector.csproj
+@@ -10,6 +10,7 @@
+   <PropertyGroup>
+     <AssemblyName>datacollector</AssemblyName>
+     <TargetFrameworks>netcoreapp1.0;netcoreapp2.0;net451</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp1.0;netcoreapp2.0</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
+     <OutputType>Exe</OutputType>
+-- 
+1.8.3.1
+
