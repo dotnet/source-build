@@ -1,4 +1,4 @@
-From dfe28f2b2cfbe8878e637a51a79ab55f8dd41ed7 Mon Sep 17 00:00:00 2001
+From d2609347aa91d0ef25388562ce4805748b4796cd Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 13 Jun 2018 09:46:43 -0500
 Subject: [PATCH] Persist ASP.NET runtime patch targeting default
@@ -11,13 +11,13 @@ https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
  1 file changed, 8 insertions(+)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index a85966295..448c3a27e 100644
+index 5ea081651..1ea4735ee 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -196,6 +196,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">1.0.14</LatestPatchVersionForNetCore1_0>
-     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">1.1.11</LatestPatchVersionForNetCore1_1>
-     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">2.0.9</LatestPatchVersionForNetCore2_0>
+@@ -202,6 +202,14 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(LatestPatchVersionForNetCore1_0)</LatestPatchVersionForNetCore1_0>
+     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(LatestPatchVersionForNetCore1_1)</LatestPatchVersionForNetCore1_1>
+     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(LatestPatchVersionForNetCore2_0)</LatestPatchVersionForNetCore2_0>
 +
 +    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
 +         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
