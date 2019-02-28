@@ -17,7 +17,7 @@ index 32d6dc8..6dd4702 100644
        <PrivateAssets>All</PrivateAssets>
      </PackageReference>
 -	<PackageReference Include="Pdb2Pdb">
-+	<PackageReference Include="Pdb2Pdb" Condition=" '$(DotNetBuildFromSource)' == 'true' ">
++	<PackageReference Include="Pdb2Pdb" Condition=" '$(DotNetBuildFromSource)' != 'true' ">
        <Version>1.1.0-beta1-62316-01</Version>
        <PrivateAssets>All</PrivateAssets>
      </PackageReference>
@@ -26,7 +26,7 @@ index 32d6dc8..6dd4702 100644
        <PrivateAssets>All</PrivateAssets>
      </PackageReference>
 -    <PackageReference Include="Microsoft.VisualStudio.CUIT">
-+    <PackageReference Include="Microsoft.VisualStudio.CUIT" Condition=" '$(DotNetBuildFromSource)' == 'true' ">
++    <PackageReference Include="Microsoft.VisualStudio.CUIT" Condition=" '$(DotNetBuildFromSource)' != 'true' ">
        <Version>$(TestPlatformExternalsVersion)</Version>
        <PrivateAssets>All</PrivateAssets>
      </PackageReference>
