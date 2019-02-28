@@ -1,0 +1,35 @@
+From 5805270372569205bef66a64ebc5e863593e0ee5 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 28 Feb 2019 17:42:27 +0000
+Subject: [PATCH] Conditionally include new dependencies to remove when
+ building from source.
+
+---
+ src/package/external/external.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/package/external/external.csproj b/src/package/external/external.csproj
+index 32d6dc8..6dd4702 100644
+--- a/src/package/external/external.csproj
++++ b/src/package/external/external.csproj
+@@ -45,7 +45,7 @@
+       <Version>2.0.2</Version>
+       <PrivateAssets>All</PrivateAssets>
+     </PackageReference>
+-	<PackageReference Include="Pdb2Pdb">
++	<PackageReference Include="Pdb2Pdb" Condition=" '$(DotNetBuildFromSource)' == 'true' ">
+       <Version>1.1.0-beta1-62316-01</Version>
+       <PrivateAssets>All</PrivateAssets>
+     </PackageReference>
+@@ -68,7 +68,7 @@
+       <Version>$(TestPlatformExternalsVersion)</Version>
+       <PrivateAssets>All</PrivateAssets>
+     </PackageReference>
+-    <PackageReference Include="Microsoft.VisualStudio.CUIT">
++    <PackageReference Include="Microsoft.VisualStudio.CUIT" Condition=" '$(DotNetBuildFromSource)' == 'true' ">
+       <Version>$(TestPlatformExternalsVersion)</Version>
+       <PrivateAssets>All</PrivateAssets>
+     </PackageReference>
+-- 
+1.8.3.1
+
