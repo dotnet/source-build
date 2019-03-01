@@ -34,6 +34,13 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
 
+    <!-- These are the versions used for self-contained apps.  They are currently updated manually in dependencies.props for each release. -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNETCoreAppLatestVersion1_0=$(MicrosoftNETCoreAppLatestVersion1_0)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNETCoreAppLatestVersion1_1=$(MicrosoftNETCoreAppLatestVersion1_1)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNETCoreAppLatestVersion2_1=$(MicrosoftNETCoreAppLatestVersion2_1)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftAspNetCoreAppLatestVersion2_1=$(MicrosoftAspNetCoreAppLatestVersion2_1)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftAspNetCoreAllLatestVersion2_1=$(MicrosoftAspNetCoreAllLatestVersion2_1)</BuildCommandArgs>
+
     <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
 
