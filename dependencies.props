@@ -27,6 +27,14 @@
     <MicrosoftNETSdkRazorPackageVersion>2.2.0</MicrosoftNETSdkRazorPackageVersion>
   </PropertyGroup>
 
+  <!-- versions used for self-contained published apps by the final product.
+       These currently need to be manually updated each release, using the latest
+       shipped 1.0 and 1.1 version numbers.  -->
+  <PropertyGroup>
+    <LatestPatchVersionForNetCore1_0>1.0.15</LatestPatchVersionForNetCore1_0>
+    <LatestPatchVersionForNetCore1_1>1.1.12</LatestPatchVersionForNetCore1_1>
+  </PropertyGroup>
+
   <!-- Build stabilization properties as passed in by ProdCon. -->
   <PropertyGroup>
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
