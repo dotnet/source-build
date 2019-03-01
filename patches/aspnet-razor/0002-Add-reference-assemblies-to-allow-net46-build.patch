@@ -1,0 +1,40 @@
+From 3981984734d2733ac690055e22b581f867c2a481 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 24 Oct 2018 12:42:27 -0500
+Subject: [PATCH] Add reference assemblies to allow net46 build
+
+---
+ build/sources.props                                        | 1 +
+ src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj | 4 ++++
+ 2 files changed, 5 insertions(+)
+
+diff --git a/build/sources.props b/build/sources.props
+index 02efac45..677ae724 100644
+--- a/build/sources.props
++++ b/build/sources.props
+@@ -9,6 +9,7 @@
+       https://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json;
+       https://dotnet.myget.org/F/aspnetcore-tools/api/v3/index.json;
+       https://dotnet.myget.org/F/msbuild/api/v3/index.json;
++      https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json;
+       https://dotnet.myget.org/F/roslyn/api/v3/index.json;
+       https://vside.myget.org/F/vssdk/api/v3/index.json;
+       https://vside.myget.org/F/vsmac/api/v3/index.json
+diff --git a/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+index a835c5d0..51df9d45 100644
+--- a/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
++++ b/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+@@ -23,6 +23,10 @@
+     <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" PrivateAssets="All" />
+   </ItemGroup>
+ 
++  <ItemGroup>
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-003" PrivateAssets="all" />
++  </ItemGroup>
++
+    <ItemGroup>
+     <SignedPackageFile Include="$(TargetPath)" PackagePath="tasks/$(TargetFramework)/$(TargetFileName)" Certificate="$(AssemblySigningCertName)" />
+   </ItemGroup>
+-- 
+2.17.1.windows.2
+
