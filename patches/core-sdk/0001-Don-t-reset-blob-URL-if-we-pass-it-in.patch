@@ -1,4 +1,4 @@
-From 9a21b81fd5f652474f52a86d84af7d4f834f6d13 Mon Sep 17 00:00:00 2001
+From 09ced68394d7ba8466bb5d103450d6ec0440db96 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 2 Feb 2019 16:34:04 -0600
 Subject: [PATCH] Don't reset blob URL if we pass it in.
@@ -8,7 +8,7 @@ Subject: [PATCH] Don't reset blob URL if we pass it in.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 3a8152d7e..f4e3278a1 100644
+index 931a8a5f3..3ce515141 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
 @@ -8,7 +8,7 @@
@@ -18,8 +18,8 @@ index 3a8152d7e..f4e3278a1 100644
 -      <CoreSetupBlobRootUrl>https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
 +      <CoreSetupBlobRootUrl Condition="'$(CoreSetupBlobRootUrl)' == ''">https://dotnetcli.azureedge.net/dotnet/</CoreSetupBlobRootUrl>
        <DotnetExtensionsBlobRootUrl Condition="'$(DotnetExtensionsBlobRootUrl)' == ''">https://dotnetcli.blob.core.windows.net/dotnet/</DotnetExtensionsBlobRootUrl>
+       <DotnetToolsetBlobRootUrl Condition="'$(DotnetToolsetBlobRootUrl)' == ''">https://dotnetfeed.blob.core.windows.net/dotnet-toolset/</DotnetToolsetBlobRootUrl>
        
-       <CoreSetupRid>$(HostRid)</CoreSetupRid>
 -- 
 2.18.0
 
