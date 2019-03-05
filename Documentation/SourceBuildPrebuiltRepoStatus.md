@@ -13,7 +13,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [cli][880] | Nick Guerra | ![ns] Not Started | 8 | 19 |
 | [clicommandlineparser][976] | Nick Guerra | ![pl] Planned | 3 | 5 |
 | [cli-migrate][881] | Nick Guerra | ![ns] Not Started | 6 | 7 |
-| [common][882] | Nate McMaster | ![pl] Planned | - |3 |
+| [common][882] | Nate McMaster | ![pl] Planned | - | 3 |
 | [coreclr][883] | Russ Keldorph | ![ns] Not Started | - | 9 |
 | [corefx][884] | Jeremy Barton | ![ns] Not Started | 2 | 24 |
 | [core-sdk][972] | Nick Guerra | ![ns] Not Started | 5 | 11 |
@@ -79,3 +79,11 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 [896]: https://github.com/dotnet/source-build/issues/896
 [897]: https://github.com/dotnet/source-build/issues/897
 [899]: https://github.com/dotnet/source-build/issues/899
+
+**Prebuilts**
+
+Prebuilts are dependencies that a repo has on binary files that are not built from source.  All packages included in the distro are built by the distro and the source requirements are inclusive of build tools and build dependencies. The default position for inclusion in a distro is no pre-built binaries though there are proper exceptional cases to bootstrap builds.
+
+**Patches**
+
+Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch
