@@ -137,4 +137,8 @@
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
   </Target>
 
+  <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
+    <Exec Command="$(DotNetCliToolDir)dotnet build tools-local/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
+  </Target>
+
 </Project>
