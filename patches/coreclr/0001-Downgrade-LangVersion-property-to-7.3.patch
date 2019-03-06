@@ -1,21 +1,22 @@
-From ac1090a68083e80f92865425b8114a3c65f0568c Mon Sep 17 00:00:00 2001
+From e1b5688e1f869ff9943c0898a1fe1149746ab7e7 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 6 Mar 2019 14:11:30 -0600
-Subject: [PATCH] Remove unneeded LangVersion property.
+Subject: [PATCH] Downgrade LangVersion property to 7.3.
 
 ---
- dir.props | 1 -
- 1 file changed, 1 deletion(-)
+ dir.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/dir.props b/dir.props
-index 03f13974e6..e5f39a77b5 100644
+index 03f13974e6..a04b4faca7 100644
 --- a/dir.props
 +++ b/dir.props
-@@ -5,7 +5,6 @@
+@@ -5,7 +5,7 @@
    <Import Project="dir.common.props" />
  
    <PropertyGroup>
 -    <LangVersion>8.0</LangVersion>
++    <LangVersion>7.3</LangVersion>
      <UseSharedCompilation>true</UseSharedCompilation>
    </PropertyGroup>
    
