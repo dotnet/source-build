@@ -206,6 +206,7 @@
       <SmokeTestCommand>$(SmokeTestCommand) --projectOutput</SmokeTestCommand>
       <SmokeTestCommand>$(SmokeTestCommand) --configuration $(Configuration)</SmokeTestCommand>
       <SmokeTestCommand>$(SmokeTestCommand) --archiveRestoredPackages</SmokeTestCommand>
+      <SmokeTestCommand>$(SmokeTestCommand) --runtime-id $(TargetRid)</SmokeTestCommand>
 
       <!-- Dev certs don't work on this platform. -->
       <SmokeTestCommand Condition="'$(TargetOS)' == 'OSX'">$(SmokeTestCommand) --excludeWebHttpsTests</SmokeTestCommand>
