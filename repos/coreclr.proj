@@ -14,8 +14,6 @@
 
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
-    <BuildArguments>$(BuildArguments) --</BuildArguments>
-
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
