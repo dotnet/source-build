@@ -3,7 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
-    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
@@ -12,6 +11,8 @@
     <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
          Additionally, Linux builds are portable by default and only have a switch to turn it off -->
     <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
+
+    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
     <BuildArguments>$(BuildArguments) --</BuildArguments>
 
