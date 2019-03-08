@@ -28,7 +28,6 @@ testingHome="$testingDir/home"
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
 smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
-ridPart=""
 
 function usage() {
     echo ""
@@ -47,7 +46,6 @@ function usage() {
     echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
     echo "  --prodConBlobFeedUrl <url>     override the prodcon blob feed specified in ProdConFeed.txt, removing it if empty"
     echo "  --archiveRestoredPackages      capture all restored packages to $archivedPackagesDir"
-    echo "  --runtime-id <rid>             use the specified RID when testing"
     echo "environment:"
     echo "  prodConBlobFeedUrl    override the prodcon blob feed specified in ProdConFeed.txt, removing it if empty"
     echo ""
@@ -110,10 +108,6 @@ while :; do
         --archiverestoredpackages)
             archiveRestoredPackages=true
             ;;
-        --runtime-id)
-            shift
-            ridPart="-r $1"
-            ;;
         *)
             echo "Unrecognized argument '$1'"
             usage
@@ -167,12 +161,6 @@ function doCommand() {
             break
         fi
 
-        cmd="$1"
-
-        if [ "$1" == "run" ]; then
-            cmd="$cmd $ridPart"
-        fi
-
         echo "    running $1" | tee -a "$logFile"
 
         if [ "$1" == "new" ]; then
@@ -183,9 +171,9 @@ function doCommand() {
             fi
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $cmd &
+                "${dotnetCmd}" $1 &
             else
-                "${dotnetCmd}" $cmd >> "$logFile" 2>&1 &
+                "${dotnetCmd}" $1 >> "$logFile" 2>&1 &
             fi
             webPid=$!
             killCommand="pkill -SIGTERM -P $webPid"
@@ -204,9 +192,9 @@ function doCommand() {
             echo "    terminated with exit code $?" | tee -a "$logFile"
         else
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $cmd | tee -a "$logFile"
+                "${dotnetCmd}" $1 | tee -a "$logFile"
             else
-                "${dotnetCmd}" $cmd >> "$logFile" 2>&1
+                "${dotnetCmd}" $1 >> "$logFile" 2>&1
             fi
         fi
         if [ $? -eq 0 ]; then
@@ -372,8 +360,9 @@ SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packag
 # XXX temporary workaround XXX
 # This is a temporary workaround to disable tests that will fail until ASP.NET packages are updated.
 # See https://github.com/dotnet/source-build/issues/635 for more details.
-echo "WARNING: Setting excludeWebTests to disable known-failing tests." | tee -a "$logFile"
+echo "WARNING: Setting excludeWebTests and excludeOnlineTests to disable known-failing tests." | tee -a "$logFile"
 excludeWebTests=true
+excludeOnlineTests=true
 # XXX temporary workaround XXX
 
 # Run all tests, local restore sources first, online restore sources second
@@ -396,7 +385,6 @@ fi
 
 if [ "$excludeOnlineTests" == "false" ]; then
     resetCaches
-    ridPart=""
     # Setup NuGet.Config to use online restore sources
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"

@@ -38,7 +38,6 @@ jobs:
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
-    rid: ${{ parameters.rid }}
 
   steps:
   - template: ../steps/docker-cleanup-linux.yml
@@ -151,15 +150,11 @@ jobs:
   - script: |
       set -x
       df -h
-      if [ "$(rid)" != "" ]; then
-        ridArg="--runtime-id $(rid)"
-      fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
         --minimal \
         --projectOutput \
         --configuration $(sb.configuration) \
         --prodConBlobFeedUrl ''
-        $(ridArg)
     displayName: Run smoke-test in tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
