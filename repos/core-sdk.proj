@@ -14,8 +14,10 @@
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
 
-    <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
+    <!-- Consume the source-built Core-Setup. This line must be removed to source-build core-sdk without source-building Core-Setup first. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
+    <!-- location to pick up the toolset binaries from.  This must be removed to source-build core-sdk without building toolset first -->
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotnetToolsetBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
 
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
