@@ -4,6 +4,7 @@ IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 export SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+export SDK3_VERSION=$(cat $SCRIPT_ROOT/Dotnet3CLIVersion.txt)
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"
