@@ -138,7 +138,7 @@
   </Target>
 
   <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
-    <Exec Command="$(DotNetCliToolDir)dotnet build tools-local/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
+    <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
   </Target>
 
 </Project>
