@@ -21,7 +21,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildTasks;BuildDarc;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
