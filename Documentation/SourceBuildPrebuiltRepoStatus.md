@@ -9,28 +9,28 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [application-insights][900] | Sergey Kanzhelev | ![pl] Planned | - | 4 |
-| [arcade][970] | Mark Wilke | ![pl] Planned | 6 | 15 |
+| [arcade][970] | Mark Wilke | ![ot] On Track | 6 | 15 |
 | [cli][880] | Nick Guerra | ![ns] Not Started | 8 | 19 |
-| [clicommandlineparser][976] | Nick Guerra | ![pl] Planned | 3 | 5 |
-| [cli-migrate][881] | Nick Guerra | ![ns] Not Started | 6 | 7 |
+| [clicommandlineparser][976] | Nick Guerra | ![ot] On Track | 3 | 5 |
+| [cli-migrate][881] | Nick Guerra | ![ot] On Track | 6 | 7 |
 | [common][882] | Nate McMaster | ![pl] Planned | - | 3 |
 | [coreclr][883] | Russ Keldorph | ![ns] Not Started | - | 9 |
 | [corefx][884] | Jeremy Barton | ![ns] Not Started | 2 | 24 |
-| [core-sdk][972] | Nick Guerra | ![ns] Not Started | 5 | 11 |
+| [core-sdk][972] | Nick Guerra | ![pl] Planned | 5 | 11 |
 | [core-setup][885] | Davis Goodin | ![pl] Planned | 2 | 25 |
 | [fsharp][886] | Brett Forsgren | ![ns] Not Started | 1 | 23 |
 | [linker][887] | ??? | ![ns] Not Started | 2 | 4 |
 | [msbuild][888] | Rainer Sigwald / Livar Cunha | ![ns] Not Started | 3 | 23 |
-| [newtonsoft-json][889] | Chris Rummel | ![ns] Not Started | 1 | 14 |
+| [newtonsoft-json][889] | Chris Rummel | ![pl] Planned | 1 | 14 |
 | [nuget-client][890] | Rob Relyea | ![ns] Not Started | 4 | 10 |
 | [roslyn][891] | Jared Parsons / Fred Silberberg | ![ns] Not Started | 1 | 18 |
 | [roslyn-tools][892] | Tomas Matousek | ![ns] Not Started | 1 | 4 |
-| [sdk][893] | Nick Guerra | ![ns] Not Started | - | 10 |
+| [sdk][893] | Nick Guerra | ![pl] Planned | - | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 8 |
 | [standard][894] | Jeremy Barton | ![ns] Not Started | 2 | 6 |
 | templating | Mike Lorbetske | ![cp] Complete | 3 | - |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
-| [toolset][973] | Nick Guerra | ![ns] Not Started | 4 | 12 |
+| [toolset][973] | Nick Guerra | ![pl] Planned | 4 | 12 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
 | [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ns] Not Started | 2 | 41 |
 | [websdk][897] | Mike Lorbetske | ![ns] Not Started | 2 | 10 |
@@ -51,6 +51,14 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 [ot]: https://img.icons8.com/office/16/000000/gps-device.png
 [ar]: https://img.icons8.com/office/16/000000/high-risk.png
 [cp]: https://img.icons8.com/office/16/000000/checked.png
+
+**Prebuilts**
+
+Prebuilts are dependencies that a repo has on binary files that are not built from source.  All packages included in the distro are built by the distro and the source requirements are inclusive of build tools and build dependencies. The default position for inclusion in a distro is no pre-built binaries though there are proper exceptional cases to bootstrap builds.
+
+**Patches**
+
+Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch
 
 [startOfIssuesList]: https://dummy
 [900]: https://github.com/dotnet/source-build/issues/900
@@ -79,11 +87,3 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 [896]: https://github.com/dotnet/source-build/issues/896
 [897]: https://github.com/dotnet/source-build/issues/897
 [899]: https://github.com/dotnet/source-build/issues/899
-
-**Prebuilts**
-
-Prebuilts are dependencies that a repo has on binary files that are not built from source.  All packages included in the distro are built by the distro and the source requirements are inclusive of build tools and build dependencies. The default position for inclusion in a distro is no pre-built binaries though there are proper exceptional cases to bootstrap builds.
-
-**Patches**
-
-Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch
