@@ -1,0 +1,37 @@
+From e0c38ef8824125572ce445445f2f47475034a20e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 27 Jan 2019 13:37:14 -0600
+Subject: [PATCH] Remove one more project that doesn't work.
+
+---
+ Arcade.sln | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/Arcade.sln b/Arcade.sln
+index 6379e51..1b5182f 100644
+--- a/Arcade.sln
++++ b/Arcade.sln
+@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.CodeAnalys
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Build.Tasks.Configuration", "src\Microsoft.DotNet.Build.Tasks.Configuration\src\Microsoft.DotNet.Build.Tasks.Configuration.csproj", "{357E3759-EAF2-4F9C-918E-64F801DE3B57}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.SourceRewriter", "src\Microsoft.DotNet.SourceRewriter\Microsoft.DotNet.SourceRewriter.csproj", "{464D41D0-D1C4-4D3C-BD43-28A2B4260EFF}"
+-EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -92,6 +90,11 @@ Global
+ 		{BA4250FD-9258-4469-A16D-48A0CAF5A2F8} = {C53DD924-C212-49EA-9BC4-1827421361EF}
+ 		{DC0D0EE5-1C0C-4D3E-BA0B-D6A59717DA94} = {6BE49638-F842-4329-BE8A-30C0F30CCAA5}
+ 	EndGlobalSection
++	GlobalSection(SolutionProperties) = preSolution
++		HideSolutionNode = FALSE
++	EndGlobalSection
++	GlobalSection(NestedProjects) = preSolution
++	EndGlobalSection
+ 	GlobalSection(ExtensibilityGlobals) = postSolution
+ 		SolutionGuid = {32B9C883-432E-4FC8-A1BF-090EB033DD5B}
+ 	EndGlobalSection
+-- 
+1.8.3.1
+
