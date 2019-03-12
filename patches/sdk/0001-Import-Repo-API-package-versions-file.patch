@@ -1,0 +1,28 @@
+From c1385af9db69ca015b65eaf74e4cd80cad99fa2b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 12 Mar 2019 16:49:40 -0500
+Subject: [PATCH] Import Repo API package versions file.
+
+---
+ eng/Versions.props | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index db9f5828..2519fff2 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -36,6 +36,11 @@
+     <MicrosoftDotNetCliUtilsVersion>2.0.0</MicrosoftDotNetCliUtilsVersion>
+     <MicrosoftNETTestSdkVersion>15.0.0</MicrosoftNETTestSdkVersion>
+   </PropertyGroup>
++
++  <!-- Override isolated build dependency versions with versions from Repo API. -->
++  <Import Project="$(DotNetPackageVersionPropsPath)"
++          Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <PropertyGroup>
+     <RestoreSources>
+       $(RestoreSources);
+-- 
+2.18.0
+
