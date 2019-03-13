@@ -7,6 +7,8 @@
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:EnableSourceControlManagerQueries=false</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
@@ -25,10 +27,11 @@
     <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <VersionSeedDate>2017-07-19</VersionSeedDate>
-    <OfficialBuildId>20170719-03</OfficialBuildId>
+    <OfficialBuildId>20190224.1</OfficialBuildId>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>

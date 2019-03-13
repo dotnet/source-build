@@ -2,6 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <!-- OSX toolset and core-sdk build portable on OSX so we have to here too -->
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+
     <BuildArguments>-ConfigurationGroup=$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) -SkipTests=true</BuildArguments>
@@ -9,14 +13,14 @@
     <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:OutputRid=$(TargetRid)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(VersionStamp)"</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
-    <OfficialBuildId>20190124.5</OfficialBuildId>
+    <OfficialBuildId>20190303.5</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>

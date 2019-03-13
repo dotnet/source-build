@@ -1,4 +1,4 @@
-From 33b2754efabde0a3aad66c6d6cb7201528aa36bc Mon Sep 17 00:00:00 2001
+From 6b5471884e66d470506dfebc1d1e5e7576a3a4ca Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 4 Feb 2019 15:46:21 -0600
 Subject: [PATCH] Update SDK version and fix SDK directory.
@@ -9,20 +9,19 @@ Subject: [PATCH] Update SDK version and fix SDK directory.
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index a5228b6b..de2e7aac 100644
+index 93d810a7..691dbfac 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -38,7 +38,7 @@
- 
+@@ -29,6 +29,6 @@
+   </PropertyGroup>
    <!-- Toolset Dependencies -->
    <PropertyGroup>
 -    <DotNetCliVersion>2.1.401</DotNetCliVersion>
 +    <DotNetCliVersion>2.1.503</DotNetCliVersion>
-     <VSWhereVersion>2.2.7</VSWhereVersion>
    </PropertyGroup>
- 
+ </Project>
 diff --git a/src/MSBuild.Bootstrap/MSBuild.Bootstrap.csproj b/src/MSBuild.Bootstrap/MSBuild.Bootstrap.csproj
-index 20bf70fc..0f828cb4 100644
+index 20bf70fc..39406e43 100644
 --- a/src/MSBuild.Bootstrap/MSBuild.Bootstrap.csproj
 +++ b/src/MSBuild.Bootstrap/MSBuild.Bootstrap.csproj
 @@ -20,7 +20,7 @@
@@ -30,7 +29,7 @@ index 20bf70fc..0f828cb4 100644
      <!-- This file is needed so the dotnet CLI knows how to map preview SDK versions to tfms (because tfms do not have preview information on them) -->
      <!-- This is because according to semver, 2.1.0-preview is not >= 2.1.0 -->
 -    <Content Include="$(RepoRoot).dotnet\sdk\$(DotNetCliVersion)\Microsoft.NETCoreSdk.BundledVersions.props" CopyToOutputDirectory="PreserveNewest" />
-+    <Content Include="$(DotNetRoot)sdk\$(DotNetCliVersion)\Microsoft.NETCoreSdk.BundledVersions.props" CopyToOutputDirectory="PreserveNewest" />
++    <Content Include="$(DotNetRoot)\sdk\$(DotNetCliVersion)\Microsoft.NETCoreSdk.BundledVersions.props" CopyToOutputDirectory="PreserveNewest" />
    </ItemGroup>
  
    <ItemGroup Condition="'$(MonoBuild)' == 'true'">

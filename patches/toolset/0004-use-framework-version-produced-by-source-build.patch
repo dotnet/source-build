@@ -1,4 +1,4 @@
-From f58e7e81ce0c4203fb0922c91e195e5a56fd2ddf Mon Sep 17 00:00:00 2001
+From 1431eeeaf39adf4070818f697cdf4d0870f658a1 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 17 Feb 2019 09:52:13 -0600
 Subject: [PATCH] use framework version produced by source-build
@@ -19,7 +19,7 @@ index 0d64f6d4b..16dae4c82 100644
      <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
      <AssetTargetFallback>dotnet5.4</AssetTargetFallback>
      <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-+    <RuntimeFrameworkVersion>3.0.0-preview-27324-5</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>3.0.0-preview-27503-5</RuntimeFrameworkVersion>
    </PropertyGroup>
  
    <Import Project="targets\BuildToolsetTasks.targets" />
@@ -31,19 +31,19 @@ index 4fcb9a995..9fc612069 100644
      <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
      <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
      <AssetTargetFallback>dotnet5.4</AssetTargetFallback>
-+    <RuntimeFrameworkVersion>3.0.0-preview-27324-5</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>3.0.0-preview-27503-5</RuntimeFrameworkVersion>
    </PropertyGroup>
  
    <ItemGroup>
 diff --git a/src/tool_fsharp/tool_fsc.csproj b/src/tool_fsharp/tool_fsc.csproj
-index 6decbdd8a..154dedce4 100644
+index b96af3294..7b4a118be 100644
 --- a/src/tool_fsharp/tool_fsc.csproj
 +++ b/src/tool_fsharp/tool_fsc.csproj
 @@ -2,6 +2,7 @@
    <PropertyGroup>
      <TargetFramework>$(ToolsetTargetFramework)</TargetFramework>
      <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
-+    <RuntimeFrameworkVersion>3.0.0-preview-27324-5</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>3.0.0-preview-27503-5</RuntimeFrameworkVersion>
    </PropertyGroup>
    
    <ItemGroup>
@@ -55,7 +55,7 @@ index 2e6609437..0b06dde26 100644
      <TargetFramework>$(ToolsetTargetFramework)</TargetFramework>
      <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
      <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
-+    <RuntimeFrameworkVersion>3.0.0-preview-27324-5</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>3.0.0-preview-27503-5</RuntimeFrameworkVersion>
    </PropertyGroup>
  
    <ItemGroup>
@@ -67,7 +67,7 @@ index c240e6a2e..f53e5ec1a 100644
      <TargetFramework>$(ToolsetTargetFramework)</TargetFramework>
      <GenerateRuntimeConfigurationFiles>false</GenerateRuntimeConfigurationFiles>
      <CopyBuildOutputToPublishDirectory>false</CopyBuildOutputToPublishDirectory>
-+    <RuntimeFrameworkVersion>3.0.0-preview-27324-5</RuntimeFrameworkVersion>
++    <RuntimeFrameworkVersion>3.0.0-preview-27503-5</RuntimeFrameworkVersion>
    </PropertyGroup>
  
    <ItemGroup>
