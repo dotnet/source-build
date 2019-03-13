@@ -1,0 +1,37 @@
+From cb43c94dd406dd55bd07c27b09a41d073397e360 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 12 Mar 2019 16:49:40 -0500
+Subject: [PATCH] Consolidate NuGet versions.
+
+---
+ eng/Versions.props | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index db9f5828..7c36a236 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -16,7 +16,7 @@
+     <MicrosoftExtensionsDependencyModelVersion>2.1.0-preview2-26306-03</MicrosoftExtensionsDependencyModelVersion>
+     <NETStandardLibraryNETFrameworkVersion>2.0.1-servicing-26011-01</NETStandardLibraryNETFrameworkVersion>
+     <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
+-    <NuGetBuildTasksPackVersion>5.0.0-rtm.5821</NuGetBuildTasksPackVersion>
++    <NuGetBuildTasksPackVersion>5.0.0-preview1.5754</NuGetBuildTasksPackVersion>
+     <NuGetPackagingVersion>$(NuGetBuildTasksPackVersion)</NuGetPackagingVersion>
+     <NuGetProjectModelVersion>$(NuGetBuildTasksPackVersion)</NuGetProjectModelVersion>
+     <PlatformAbstractionsVersion>2.0.0</PlatformAbstractionsVersion>
+@@ -36,6 +36,11 @@
+     <MicrosoftDotNetCliUtilsVersion>2.0.0</MicrosoftDotNetCliUtilsVersion>
+     <MicrosoftNETTestSdkVersion>15.0.0</MicrosoftNETTestSdkVersion>
+   </PropertyGroup>
++
++  <!-- Override isolated build dependency versions with versions from Repo API. -->
++  <Import Project="$(DotNetPackageVersionPropsPath)"
++          Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <PropertyGroup>
+     <RestoreSources>
+       $(RestoreSources);
+-- 
+2.18.0
+
