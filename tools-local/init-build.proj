@@ -21,7 +21,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildTasks;BuildDarc;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -135,6 +135,10 @@
     </ItemGroup>
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltPackages)" CatalogOutputFilePath="$(PoisonReportDataFile)" MarkerFileName="$(PoisonMarkerFile)" />
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
+  </Target>
+
+  <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
+    <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
   </Target>
 
 </Project>

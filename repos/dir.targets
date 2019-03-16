@@ -322,6 +322,7 @@
     <ItemGroup>
       <_ToolPackage
         Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.symbols.nupkg"
         Id="%(BuiltSdkPackageOverride.Identity)" />
     </ItemGroup>
 
