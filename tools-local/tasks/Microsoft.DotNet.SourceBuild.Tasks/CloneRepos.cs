@@ -54,6 +54,19 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             };
             var p = Process.Start(psi);
             p.WaitForExit();
+            if (p.ExitCode != 0)
+            {
+                return false;
+            }
+            psi = new ProcessStartInfo
+            {
+                FileName = "git",
+                Arguments = $"submodule update --init --recursive",
+                CreateNoWindow = true,
+                WorkingDirectory = path,
+            };
+            p = Process.Start(psi);
+            p.WaitForExit();
             return p.ExitCode == 0;
         }
 
@@ -78,8 +91,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         private static IEnumerable<RepoSpec> ReadSpecFile(string filePath)
         {
             var doc = XDocument.Load(filePath);
-            foreach (var dep in doc.Element("Dependencies").Element("ToolsetDependencies").Elements("Depedency").Concat(doc.Element("Dependencies").Element("ProductDependencies").Elements("Dependency")))
+            foreach (var dep in doc.Element("Dependencies").Element("ToolsetDependencies").Elements("Dependency").Concat(doc.Element("Dependencies").Element("ProductDependencies").Elements("Dependency")))
             {
+                if (!string.IsNullOrWhiteSpace(dep.Element("SkipClone")?.Value) && dep.Element("SkipClone").Value.ToLowerInvariant() == "true")
+                {
+                    continue;
+                }
                 if (!string.IsNullOrWhiteSpace(dep.Element("RepoName")?.Value))
                 {
                     yield return new RepoSpec(dep.Element("Uri").Value, dep.Element("RepoName").Value, dep.Element("Sha").Value);
