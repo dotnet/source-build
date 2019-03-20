@@ -9,6 +9,7 @@
   <Import Project="$(ToolsDir)IL.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CloneRepos" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
 
   <PropertyGroup>
@@ -21,7 +22,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildTasks;BuildDarc;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildTasks;BuildDarc;FetchSources;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -139,6 +140,10 @@
 
   <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
     <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
+  </Target>
+
+  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'">
+    <CloneRepos SourceRoot="$(SubmoduleDirectory)" SpecFile="$(MSBuildThisFileDirectory)../eng/Version.Details.xml" />
   </Target>
 
 </Project>
