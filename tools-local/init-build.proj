@@ -143,7 +143,7 @@
   </Target>
 
   <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'">
-    <CloneRepos SourceRoot="$(SubmoduleDirectory)" SpecFile="$(MSBuildThisFileDirectory)../eng/Version.Details.xml" />
+    <CloneRepos SourceRoot="$(ClonedSubmoduleDirectory)" SpecFile="$(MSBuildThisFileDirectory)../eng/Version.Details.xml" />
   </Target>
 
 </Project>

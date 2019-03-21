@@ -50,6 +50,7 @@
 
   <PropertyGroup>
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
+    <ClonedSubmoduleDirectory Condition="'$(ClonedSubmoduleDirectory)' == ''">$(BaseOutputPath)src/</ClonedSubmoduleDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
     <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
