@@ -6,11 +6,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks
 {
-    public class CloneRepos : Task
+    public class CloneRepos : Microsoft.Build.Utilities.Task
     {
         [Required]
         public string SourceRoot { get; set; }
@@ -22,70 +23,75 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
         {
             EnsureGit();
 
-            foreach (var d in ReadSpecFile(SpecFile))
+            Parallel.ForEach(ReadSpecFile(SpecFile), async d =>
             {
-                var cloneSuccess = CloneRepo(d.Url, Path.Combine(SourceRoot, d.Name));
+                var cloneSuccess = await CloneRepo(d.Url, Path.Combine(SourceRoot, d.Name));
                 if (!cloneSuccess)
                 {
                     Log.LogError($"Cloning {d.Url} into {Path.Combine(SourceRoot, d.Name)} failed.");
                 }
-                var checkoutSuccess = CheckoutRepo(Path.Combine(SourceRoot, d.Name), d.Hash);
+                var checkoutSuccess = await CheckoutRepo(Path.Combine(SourceRoot, d.Name), d.Hash);
                 if (!checkoutSuccess)
                 {
                     Log.LogError($"Checking out {d.Hash} in repo {Path.Combine(SourceRoot, d.Name)} failed.");
                 }
-                if (!cloneSuccess || !checkoutSuccess)
-                {
-                    break;
-                }
-            }
+            });
 
             return !Log.HasLoggedErrors;
         }
 
-        private bool CheckoutRepo(string path, string hash)
+        private async Task<bool> RunExternalGitCommand(string args, string workingDir = null)
         {
+            workingDir = workingDir ?? Environment.CurrentDirectory;
             var psi = new ProcessStartInfo
             {
                 FileName = "git",
-                Arguments = $"checkout {hash}",
+                Arguments = args,
                 CreateNoWindow = true,
-                WorkingDirectory = path,
+                WorkingDirectory = workingDir,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
             };
+            Log.LogCommandLine($"{psi.FileName} {psi.Arguments}");
             var p = Process.Start(psi);
             p.WaitForExit();
-            if (p.ExitCode != 0)
+            if (p.ExitCode == 0)
             {
+                Log.LogMessage("git command", null, null, null, 0, 0, 0, 0, MessageImportance.Low, await p.StandardOutput.ReadToEndAsync());
+                return true;
+            }
+            else
+            {
+                Log.LogError("git command", p.ExitCode, null, null, 0, 0, 0, 0, $"command {psi.FileName} {psi.Arguments} in directory {psi.WorkingDirectory} failed.  Command output follows:");
+                Log.LogError(await p.StandardOutput.ReadToEndAsync());
+                Log.LogError(await p.StandardError.ReadToEndAsync());
                 return false;
             }
-            psi = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = $"submodule update --init --recursive",
-                CreateNoWindow = true,
-                WorkingDirectory = path,
-            };
-            p = Process.Start(psi);
-            p.WaitForExit();
-            return p.ExitCode == 0;
         }
 
-        private bool CloneRepo(string url, string path)
+        private async Task<bool> CheckoutRepo(string path, string hash)
         {
-            var psi = new ProcessStartInfo
-            {
-                FileName = "git",
-                Arguments = $"clone --recursive {url} {path}",
-                CreateNoWindow = true,
-            };
-            var p = Process.Start(psi);
-            p.WaitForExit();
-            return p.ExitCode == 0;
+            return await RunExternalGitCommand($"checkout {hash}") &&
+                   await RunExternalGitCommand($"submodule update --init --recursive");
         }
 
-        private static void EnsureGit()
+        private async Task<bool> CloneRepo(string url, string path)
         {
+            return await RunExternalGitCommand($"clone --recursive {url} {path}");
+        }
 
+        private async void EnsureGit()
+        {
+            try
+            {
+                var gitExists = await RunExternalGitCommand("--version");
+            }
+            catch (Exception e)
+            {
+                Log.LogError("git does not appear to be installed or working.  See error message for details.");
+                Log.LogErrorFromException(e, true, true, null);
+                throw;
+            }
         }
 
         private static IEnumerable<RepoSpec> ReadSpecFile(string filePath)
