@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <RepositoryName Condition="'$(RepositoryName)' == ''">$(MSBuildProjectName)</RepositoryName>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(ClonedSubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">release/2.0.0</RepositoryBranch>
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
