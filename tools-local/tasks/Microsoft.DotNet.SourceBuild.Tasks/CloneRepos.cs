@@ -28,7 +28,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             Directory.CreateDirectory(SourceRoot);
             Directory.CreateDirectory(GitRoot);
 
-            Parallel.ForEach(ReadSpecFile(SpecFile), async d =>
+            Parallel.ForEach(ReadSpecFile(SpecFile), d =>
             {
                 var force = false;
                 if (Directory.Exists(Path.Combine(GitRoot, d.Name + ".git")))
@@ -58,7 +58,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                     Log.LogMessage(MessageImportance.High, $"Done cloning {d.Url} to {Path.Combine(SourceRoot, d.Name)}");
                 }
 
-                var checkoutSuccess = await CheckoutRepo(Path.Combine(SourceRoot, d.Name), d.Hash, force);
+                var checkoutSuccess = CheckoutRepo(Path.Combine(SourceRoot, d.Name), d.Hash, force).Result;
                 if (!checkoutSuccess)
                 {
                     Log.LogError($"Checking out {d.Hash} in repo {Path.Combine(SourceRoot, d.Name)} failed.");
@@ -68,7 +68,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             return !Log.HasLoggedErrors;
         }
 
-        private async Task<bool> RunExternalGitCommand(string args, string workingDir = null)
+        private async Task<(bool Success, string StdOut, string StdErr)> RunExternalGitCommand(string args, string workingDir = null)
         {
             Log.LogMessage(MessageImportance.High, $"Beginning git command {args} in {workingDir}");
             workingDir = workingDir ?? Environment.CurrentDirectory;
@@ -91,40 +91,41 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             if (p.ExitCode == 0)
             {
                 Log.LogMessage(MessageImportance.High, $"Should be logging content: {stdOut}");
+                Log.LogMessage(MessageImportance.High, $"Should be logging content: {stdErr}");
                 Log.LogMessage("git command", null, null, null, 0, 0, 0, 0, MessageImportance.Low, stdOut);
-                return true;
+                return (true, stdOut, stdErr);
             }
             else
             {
                 Log.LogError("git command", p.ExitCode, null, null, 0, 0, 0, 0, $"command {psi.FileName} {psi.Arguments} in directory {psi.WorkingDirectory} failed.  Command output follows:");
                 Log.LogError(stdOut);
                 Log.LogError(stdErr);
-                return false;
+                return (false, stdOut, stdErr);
             }
         }
 
         private async Task<bool> CheckoutRepo(string path, string hash, bool force = false)
         {
             var forceArg = force ? "-f" : "";
-            return await RunExternalGitCommand($"checkout {forceArg} {hash}", path) &&
-                   await RunExternalGitCommand($"submodule update --init --recursive", path);
+            return (await RunExternalGitCommand($"checkout {forceArg} {hash}", path)).Success &&
+                   (await RunExternalGitCommand($"submodule update --init --recursive", path)).Success;
         }
 
         private async Task<bool> CloneRepo(string url, string gitRoot, string sourceRoot, string repoName)
         {
-            return await RunExternalGitCommand($"clone --separate-git-dir={gitRoot}/{repoName}.git --recursive {url} {sourceRoot}/{repoName}");
+            return (await RunExternalGitCommand($"clone --separate-git-dir={gitRoot}/{repoName}.git --recursive {url} {sourceRoot}/{repoName}")).Success;
         }
 
         private async Task<bool> FetchRepo(string url, string path)
         {
-            return await RunExternalGitCommand($"fetch {url}", path);
+            return (await RunExternalGitCommand($"fetch {url}", path)).Success;
         }
 
         private async void EnsureGit()
         {
             try
             {
-                var gitExists = await RunExternalGitCommand("--version");
+                var gitExists = (await RunExternalGitCommand("--version")).Success;
             }
             catch (Exception e)
             {
