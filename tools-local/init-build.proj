@@ -139,11 +139,15 @@
   </Target>
 
   <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
     <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
   <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <CloneRepos SourceRoot="$(ClonedSubmoduleDirectory)" GitRoot="$(ClonedSubmoduleGitRootDirectory)" SpecFile="$(MSBuildThisFileDirectory)../eng/Version.Details.xml" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
 </Project>
