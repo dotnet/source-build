@@ -107,7 +107,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                 // check if the repo has the commit we're looking for
                 if ((await RunExternalGitCommand($"cat-file -e {spec.Hash}^{{commit}}", path)).Success)
                 {
-                    mergeBase = (await RunExternalGitCommand($"git merge-base HEAD {spec.Hash}", path)).StdOut;
+                    mergeBase = (await RunExternalGitCommand($"merge-base HEAD {spec.Hash}", path)).StdOut;
                     Log.LogMessage(MessageImportance.High, $"got merge base ({mergeBase})");
                 }
                 if (string.IsNullOrWhiteSpace(setting) || setting == "prompt" || setting == "warn")
@@ -155,9 +155,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             var path = Path.Combine(sourceRoot, name);
 
             // staged changes and unstaged modifications
-            var dirty = !(await RunExternalGitCommand($"git diff-index --quiet HEAD --", path)).Success;
+            var dirty = !(await RunExternalGitCommand($"diff-index --quiet HEAD --", path)).Success;
             // untracked list
-            var untracked = (await RunExternalGitCommand($"git ls-files --others --exclude-standard", path)).StdOut;
+            var untracked = (await RunExternalGitCommand($"ls-files --others --exclude-standard", path)).StdOut;
 
             if (dirty || !string.IsNullOrWhiteSpace(untracked))
             {
