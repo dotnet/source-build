@@ -28,7 +28,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [sdk][893] | Nick Guerrera | ![pl] Planned | 1 | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
 | [standard][894] | Jeremy Barton | ![ns] Not Started | - | 15 |
-| templating | Mike Lorbetske | ![cp] Complete | 3 | - | Repo removed
+| [templating][895] | Mike Lorbetske | ![ns] Not Started | 3 | - |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 14 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
@@ -80,6 +80,7 @@ Patches are created in source-build when a repo's code doesn't build as-is. Patc
 [892]: https://github.com/dotnet/source-build/issues/892
 [893]: https://github.com/dotnet/source-build/issues/893
 [894]: https://github.com/dotnet/source-build/issues/894
+[895]: https://github.com/dotnet/source-build/issues/895
 [975]: https://github.com/dotnet/source-build/issues/975
 [971]: https://github.com/dotnet/source-build/issues/971
 [973]: https://github.com/dotnet/source-build/issues/973
