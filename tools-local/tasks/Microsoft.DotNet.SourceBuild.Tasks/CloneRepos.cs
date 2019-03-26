@@ -255,7 +255,18 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
 
         private char ReadKeyWithRetry(string prompt, char[] allowedAnswers)
         {
-            throw new NotImplementedException();
+            var answer = '\0';
+            bool first = true;
+            while (!allowedAnswers.Any(c => char.ToLower(c) == answer))
+            {
+                if (!first)
+                {
+                    Console.WriteLine($"{answer} is not a valid response.");
+                }
+                Console.Write(prompt);
+                answer = char.ToLower(Console.ReadKey().KeyChar);
+            }
+            return answer;
         }
 
         private async Task<(bool Success, string StdOut, string StdErr)> RunExternalGitCommand(string args, string workingDir = null)
