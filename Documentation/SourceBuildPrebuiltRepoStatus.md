@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-03-16
+Last source-build Build Date: 2019-03-18
 
-Last updated: 2019-03-19
+Last updated: 2019-03-26
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -10,7 +10,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [application-insights][900] | Sergey Kanzhelev | ![ot] On Track | - | 4 |
 | [arcade][970] | Mark Wilke | ![ot] On Track | 6 | 15 |
-| [cli][880] | Nick Guerra | ![ns] Not Started | 8 | 19 |
+| [cli][880] | Nick Guerra | ![ot] On Track | 8 | 19 |
 | [clicommandlineparser][976] | Nick Guerra | ![ot] On Track | 3 | 5 |
 | [cli-migrate][881] | Nick Guerra | ![ot] On Track | 6 | 7 |
 | [common][882] | Nate McMaster | ![pl] Planned | - | 3 |
