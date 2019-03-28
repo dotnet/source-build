@@ -15,7 +15,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 6 | 7 |
 | [common][882] | Nate McMaster | ![pl] Planned | - | 3 |
 | [coreclr][883] | Russ Keldorph | ![ot] On Track | - | 9 |
-| [corefx][884] | Jeremy Barton | ![ot] On Track | 3 | 26 |
+| [corefx][884] | Eric St. John | ![ot] On Track | 3 | 26 |
 | [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 11 |
 | [core-setup][885] | Davis Goodin | ![pl] Planned | 2 | 25 |
 | [fsharp][886] | Brett Forsgren | ![ns] Not Started | 7 | 25 |
@@ -27,7 +27,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![pl] Planned | 1 | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
-| [standard][894] | Jeremy Barton | ![ot] On Track | - | 15 |
+| [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
 | [templating][895] | Mike Lorbetske | ![ns] Not Started | 3 | - |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 14 |
