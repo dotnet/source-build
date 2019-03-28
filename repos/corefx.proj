@@ -13,7 +13,9 @@
 
     <BuildArguments>$(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:SkipTests=true</BuildArguments>
+    <BuildArguments Condition="'$(RunTests)' == 'true'">$(BuildArguments) -test</BuildArguments>
+    <BuildArguments Condition="'$(RunTests)' != 'true'">$(BuildArguments) /p:SkipTests=true</BuildArguments>
+    <BuildArguments Condition="'$(RunTests)' != 'true'">$(BuildArguments) /p:BuildTests=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
