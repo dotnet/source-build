@@ -38,7 +38,7 @@ Cons:
 - We have to be careful about cross-contaminating package feeds during the builds.
 
 ## Store and download packages in later builds
-During each build, we would save source-built packages off in an Azure account or NuGet feed.  During later builds, we would restore these packages and use them in builds later in the dependency tree.  In this scenario, the packages are more akin to build intermediate files and not final products.
+During each build, we would save source-built packages off in an Azure account or NuGet feed.  During later builds, we would restore these packages and use them in builds later in the dependency tree.  We can store the packages in multiple formats; nupkgs for us or RPM/Debs to allow distro maintainers to save the packages and reuse them.
 
 Pros:
 - Improved build times.
@@ -51,18 +51,6 @@ Cons:
 - Need internet access during the production dev and daily builds.
 - Need to carry required packages in a tarball or to an N+1 build (could be nupkg, tar.gz, RPM, deb).
 - Probably does not satisfy requirements for no prebuilt binaries.
-
-## Publish official source-built packages
-We would publish actual source-built RPM/deb/etc packages during the build for use during future builds.  This is like the store-and-download solution, but allows for distro maintainers to use our produced packages instead of having to rebuild every repo-sha included in a release, which be an additional set of all repos for each servicing release.
-
-Pros:
-- Cuts down on build times while still keeping full source-built-ness.
-- Convenient for distro maintainers and possibly end-users.
-
-Cons:
-- No infrastructure to do this currently.
-- Have to coordinate with each distro.
-- Have to solve bootstrapping problem sooner rather than later for these to be valid packages per distro policy.
 
 # Proposed Solution
 Hybrid approach: we will enable storing and retrieving packages, but allow building multiple versions of each repo completely from source.  Daily builds and dev builds will mostly use the stored packages approach while release builds will use the completely-built-from-source approach.  Doing multiple versions of repos only for release builds should cut down on the numbers of builds that are done many times since these builds should be mostly coherent except for servicing considerations.
@@ -81,6 +69,6 @@ Allow consuming packages from the package storage.  This can either be a master 
 
 # Appendix
 ## Storage format proposal
-- dotnetcli source-build container
-- make a new source-built-packages folder
-- under this, use the format {repo}/{hash}/{version}/{package}
+- Use AzDo build storage
+- Use a source-build BAR channel
+- Channel runs a release pipeline to upload to internal or external storage as appropriate
