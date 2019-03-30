@@ -1,4 +1,4 @@
-From d2609347aa91d0ef25388562ce4805748b4796cd Mon Sep 17 00:00:00 2001
+From 3f9e2fc33d74da5d0b72137879e6e7fefe08a9db Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 13 Jun 2018 09:46:43 -0500
 Subject: [PATCH] Persist ASP.NET runtime patch targeting default
@@ -7,17 +7,23 @@ Let the CLI build take a default value for TargetLatestAspNetCoreRuntimePatch in
 
 https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
 ---
- build/MSBuildExtensions.targets | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ build/MSBuildExtensions.targets | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index 5ea081651..1ea4735ee 100644
+index 73b6f88a2..6fc609c30 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -202,6 +202,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(LatestPatchVersionForNetCore1_0)</LatestPatchVersionForNetCore1_0>
-     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(LatestPatchVersionForNetCore1_1)</LatestPatchVersionForNetCore1_1>
-     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(LatestPatchVersionForNetCore2_0)</LatestPatchVersionForNetCore2_0>
+@@ -199,9 +199,17 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <DefaultPatchVersionForAspNetCoreApp2_1>$(_DefaultPatchVersionForAspNetCoreApp2_1)</DefaultPatchVersionForAspNetCoreApp2_1>
+ 
+     <!-- Latest patch versions for each minor version of .NET Core -->
+-    <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(MicrosoftNETCoreAppLatestVersion1_0)</LatestPatchVersionForNetCore1_0>
+-    <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(MicrosoftNETCoreAppLatestVersion1_1)</LatestPatchVersionForNetCore1_1>
+-    <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(MicrosoftNETCoreAppLatestVersion2_0)</LatestPatchVersionForNetCore2_0>
++    <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(LatestPatchVersionForNetCore1_0)</LatestPatchVersionForNetCore1_0>
++    <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(LatestPatchVersionForNetCore1_1)</LatestPatchVersionForNetCore1_1>
++    <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(LatestPatchVersionForNetCore2_0)</LatestPatchVersionForNetCore2_0>
 +
 +    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
 +         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
