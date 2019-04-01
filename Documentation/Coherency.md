@@ -50,7 +50,6 @@ Cons:
 - Have to be very careful to not contaminate the storage with prebuilt packages.
 - Need internet access during the production dev and daily builds.
 - Need to carry required packages in a tarball or to an N+1 build (could be nupkg, tar.gz, RPM, deb).
-- Probably does not satisfy requirements for no prebuilt binaries.
 
 # Proposed Solution
 Hybrid approach: we will enable storing and retrieving packages, but allow building multiple versions of each repo completely from source.  Daily builds and dev builds will mostly use the stored packages approach while release builds will use the completely-built-from-source approach.  Doing multiple versions of repos only for release builds should cut down on the numbers of builds that are done many times since these builds should be mostly coherent except for servicing considerations.
@@ -72,3 +71,4 @@ Allow consuming packages from the package storage.  This can either be a master 
 - Use AzDo build storage
 - Use a source-build BAR channel
 - Channel runs a release pipeline to upload to internal or external storage as appropriate
+- Build numbers are significant to us so we will have to hold on to a manifest or similar with those.
