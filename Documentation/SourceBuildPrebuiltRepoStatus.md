@@ -27,7 +27,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![pl] Planned | 1 | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
-| [standard][894] | Jeremy Barton | ![ot] On Track | - | 15 |
+| [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
 | [templating][895] | Mike Lorbetske | ![ns] Not Started | 3 | - |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 14 |
