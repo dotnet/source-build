@@ -28,12 +28,12 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [sdk][893] | Nick Guerrera | ![pl] Planned | 1 | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
 | [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
-| [templating][895] | Mike Lorbetske | ![ns] Not Started | 3 | - |
+| [templating][895] | Vijay Ramakrishnan | ![ns] Not Started | 3 | - |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 14 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
 | [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ns] Not Started | 2 | 41 |
-| [websdk][897] | Mike Lorbetske | ![ns] Not Started | 2 | 10 |
+| [websdk][897] | Vijay Ramakrishnan | ![ns] Not Started | 2 | 10 |
 | [xliff-tasks][899] | Tom Meschter | ![pl] Planned | - | 2 |
 
 <br/>
