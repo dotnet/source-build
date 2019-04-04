@@ -1,0 +1,24 @@
+From fa9883258d8683c571098fe8b344694bd29af3b5 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 4 Apr 2019 18:25:20 +0000
+Subject: [PATCH] Include VersionTools in source-build
+
+---
+ src/Microsoft.DotNet.VersionTools/Directory.Build.props | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.VersionTools/Directory.Build.props b/src/Microsoft.DotNet.VersionTools/Directory.Build.props
+index 06bcb13..8bc0bcb 100644
+--- a/src/Microsoft.DotNet.VersionTools/Directory.Build.props
++++ b/src/Microsoft.DotNet.VersionTools/Directory.Build.props
+@@ -5,7 +5,6 @@
+ 
+   <!-- Don't include VersionTools in source-build until we find a reason to use it. -->
+   <PropertyGroup>
+-    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+ </Project>
+-- 
+1.8.3.1
+
