@@ -7,11 +7,16 @@
     <UsesRepoToolset>true</UsesRepoToolset>
     <BuiltToolPackageId>$(RepoToolsetPackageId)</BuiltToolPackageId>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <BuiltSdkPackageOverride Include="@(RepoToolsetSdkOverride)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

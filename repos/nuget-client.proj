@@ -6,7 +6,7 @@
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientBuildNumber>5839</NuGetClientBuildNumber>
+    <NuGetClientBuildNumber>5867</NuGetClientBuildNumber>
     <RepoApiImplemented>false</RepoApiImplemented>
     <!--
       This repo is not currently built in ProdCon
@@ -20,6 +20,7 @@
     <EnvironmentVariables Include="NUGET_PFX_PATH=$(NuGetKeyFilePath)" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="common" />
+    <RepositoryReference Include="core-setup" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

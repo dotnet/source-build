@@ -6,8 +6,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -r $(TargetRid)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -v 15.9.0</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -vs preview-20180807-05</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -v 16.0.1</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
@@ -19,6 +18,7 @@
   <ItemGroup>
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="standard" />
   </ItemGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

@@ -1,0 +1,131 @@
+From 1f0ca983a7d630cc79f59acfe54e35b7961a4d67 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 29 Mar 2019 15:45:09 -0500
+Subject: [PATCH] Revert "Use a static verison of nuget.build.tasks.pack, use
+ licenseexpression (#2574)"
+
+This reverts commit ea26726da070f12ffe7c006499696d303bbd063d.
+---
+ .nuget/packages.config                                                | 1 -
+ build/common.project.props                                            | 1 -
+ build/common.targets                                                  | 4 ----
+ build/config.props                                                    | 2 +-
+ .../NuGet.PackageManagement.UI/NuGet.PackageManagement.UI.csproj      | 3 +++
+ .../NuGet.PackageManagement.VisualStudio.csproj                       | 1 +
+ .../NuGet.SolutionRestoreManager.Interop.csproj                       | 3 +++
+ src/NuGet.Clients/NuGet.VisualStudio/NuGet.VisualStudio.csproj        | 3 +++
+ 8 files changed, 11 insertions(+), 7 deletions(-)
+
+diff --git a/.nuget/packages.config b/.nuget/packages.config
+index 81c05bc..9ebed93 100644
+--- a/.nuget/packages.config
++++ b/.nuget/packages.config
+@@ -18,6 +18,5 @@
+   <package id="MicroBuild.Core" version="0.2.0" targetFramework="net45" />
+   <package id="NuGetValidator" version="2.0.1" targetFramework="net461" />
+   <package id="XunitXml.TestLogger" version="2.0.0" />
+-  <package id="NuGet.Build.Tasks.Pack" version="4.9.2" />
+   <package id="Microsoft.DotNet.Build.Tasks.Feed" version="2.1.0-prerelease-02419-02" />   <!-- For the .NET Core orchestrated build.-->
+ </packages>
+\ No newline at end of file
+diff --git a/build/common.project.props b/build/common.project.props
+index dbcfe8e..a55ced1 100644
+--- a/build/common.project.props
++++ b/build/common.project.props
+@@ -30,7 +30,6 @@
+     <XunitConsoleExePath>$(SolutionPackagesFolder)xunit.runner.console.2.3.1\tools\net452\xunit.console.x86.exe</XunitConsoleExePath>
+     <ILMergeExePath>$(SolutionPackagesFolder)ILMerge.3.0.21\tools\net452\ILMerge.exe</ILMergeExePath>
+     <XunitXmlLoggerDirectory>$(SolutionPackagesFolder)XunitXml.TestLogger.2.0.0\build\_common</XunitXmlLoggerDirectory>
+-    <NuGetBuildTasksPackTargets>$(SolutionPackagesFolder)NuGet.Build.Tasks.Pack.4.9.2\build\NuGet.Build.Tasks.Pack.targets</NuGetBuildTasksPackTargets>
+     <EnlistmentRoot>$(RepositoryRootDirectory)</EnlistmentRoot>
+     <EnlistmentRootSrc>$(RepositoryRootDirectory)src</EnlistmentRootSrc>
+     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(RepositoryRootDirectory)</SolutionDir>
+diff --git a/build/common.targets b/build/common.targets
+index 43700b9..3633e5b 100644
+--- a/build/common.targets
++++ b/build/common.targets
+@@ -37,10 +37,6 @@
+     <DocumentationFile Condition=" '$(DocumentationFile)' == '' AND '$(GenerateDocumentationFile)' == 'true' AND '$(IsNetCoreProject)' != 'true' ">$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+   </PropertyGroup>
+ 
+-  <ImportGroup Condition=" '$(PackProject)' == 'true' ">
+-      <Import Project="$(NuGetBuildTasksPackTargets)" />
+-  </ImportGroup>
+-
+   <!-- Test Projects -->
+   <ImportGroup Condition=" '$(TestProject)' == 'true' ">
+     <Import Project="test.targets" />
+diff --git a/build/config.props b/build/config.props
+index 6a612f5..61afeff 100644
+--- a/build/config.props
++++ b/build/config.props
+@@ -42,7 +42,7 @@
+   <PropertyGroup>
+     <Authors>Microsoft</Authors>
+     <PackageProjectUrl>https://aka.ms/nugetprj</PackageProjectUrl>
+-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
++    <PackageLicenseUrl>https://aka.ms/nugetlicense</PackageLicenseUrl>
+     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+     <RepositoryType>git</RepositoryType>
+     <RepositoryUrl>https://github.com/NuGet/NuGet.Client</RepositoryUrl>
+diff --git a/src/NuGet.Clients/NuGet.PackageManagement.UI/NuGet.PackageManagement.UI.csproj b/src/NuGet.Clients/NuGet.PackageManagement.UI/NuGet.PackageManagement.UI.csproj
+index 2e5a3fd..37897ca 100644
+--- a/src/NuGet.Clients/NuGet.PackageManagement.UI/NuGet.PackageManagement.UI.csproj
++++ b/src/NuGet.Clients/NuGet.PackageManagement.UI/NuGet.PackageManagement.UI.csproj
+@@ -532,6 +532,9 @@
+       <SubType>Designer</SubType>
+     </Content>
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="4.8.0" PrivateAssets="all" />
++  </ItemGroup>
+   <PropertyGroup>
+     <IncludeContentInPack>false</IncludeContentInPack>
+   </PropertyGroup>
+diff --git a/src/NuGet.Clients/NuGet.PackageManagement.VisualStudio/NuGet.PackageManagement.VisualStudio.csproj b/src/NuGet.Clients/NuGet.PackageManagement.VisualStudio/NuGet.PackageManagement.VisualStudio.csproj
+index 8eecbf6..d0d5f2b 100644
+--- a/src/NuGet.Clients/NuGet.PackageManagement.VisualStudio/NuGet.PackageManagement.VisualStudio.csproj
++++ b/src/NuGet.Clients/NuGet.PackageManagement.VisualStudio/NuGet.PackageManagement.VisualStudio.csproj
+@@ -291,6 +291,7 @@
+     <PackageReference Include="VSLangProj110" Version="11.0.61030" />
+     <PackageReference Include="VSLangProj2" Version="7.0.5000" />
+     <PackageReference Include="VSLangProj157" Version="15.7.0" />
++    <PackageReference Include="NuGet.Build.Tasks.Pack" Version="4.8.0" PrivateAssets="all" />
+   </ItemGroup>
+   <Import Project="$(BuildCommonDirectory)common.targets" />
+   <Import Project="$(BuildCommonDirectory)embedinterop.targets" />
+diff --git a/src/NuGet.Clients/NuGet.SolutionRestoreManager.Interop/NuGet.SolutionRestoreManager.Interop.csproj b/src/NuGet.Clients/NuGet.SolutionRestoreManager.Interop/NuGet.SolutionRestoreManager.Interop.csproj
+index 8e07f44..0359212 100644
+--- a/src/NuGet.Clients/NuGet.SolutionRestoreManager.Interop/NuGet.SolutionRestoreManager.Interop.csproj
++++ b/src/NuGet.Clients/NuGet.SolutionRestoreManager.Interop/NuGet.SolutionRestoreManager.Interop.csproj
+@@ -9,9 +9,12 @@
+     <PackProject>true</PackProject>
+     <IncludeInVsix>true</IncludeInVsix>
+     <authors>Microsoft</authors>
++    <PackageLicenseUrl>https://aka.ms/nugetlicense</PackageLicenseUrl>
++    <PackageProjectUrl>https://aka.ms/nugetprj</PackageProjectUrl>
+     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+     <AssemblyDescription>APIs for invoking NuGet Restore Manager in Visual Studio.</AssemblyDescription>
+     <Description>APIs for invoking NuGet Restore Manager in Visual Studio.</Description>
++    <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/NuGet.Clients/NuGet.VisualStudio/NuGet.VisualStudio.csproj b/src/NuGet.Clients/NuGet.VisualStudio/NuGet.VisualStudio.csproj
+index 3b7accf..5caf9fb 100644
+--- a/src/NuGet.Clients/NuGet.VisualStudio/NuGet.VisualStudio.csproj
++++ b/src/NuGet.Clients/NuGet.VisualStudio/NuGet.VisualStudio.csproj
+@@ -17,7 +17,10 @@
+     <Guid>228F7591-2777-47D7-B81D-FEADFC71CEB5</Guid>
+     <ComVisible>false</ComVisible>
+     <authors>Microsoft</authors>
++    <PackageLicenseUrl>https://aka.ms/nugetlicense</PackageLicenseUrl>
++    <PackageProjectUrl>https://aka.ms/nugetprj</PackageProjectUrl>
+     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
++    <copyright>&#169; Microsoft Corporation. All rights reserved.</copyright>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+

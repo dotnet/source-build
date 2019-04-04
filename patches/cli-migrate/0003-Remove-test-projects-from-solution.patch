@@ -1,0 +1,76 @@
+From 01880929b7482ad109ce87d09b093677c3c1cf93 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 3 Apr 2019 13:22:57 -0500
+Subject: [PATCH] Remove test projects from solution.
+
+---
+ cli-migrate.sln | 37 -------------------------------------
+ 1 file changed, 37 deletions(-)
+
+diff --git a/cli-migrate.sln b/cli-migrate.sln
+index 805b6a2..834013d 100644
+--- a/cli-migrate.sln
++++ b/cli-migrate.sln
+@@ -7,20 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.ProjectJso
+ EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{01A43CEF-4BC2-4A92-B4E6-9F89017CBB1B}"
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Tools.MigrateCommand", "src\Microsoft.DotNet.Tools.MigrateCommand\Microsoft.DotNet.Tools.MigrateCommand.csproj", "{51609A15-7C27-4623-BFD5-22C43AD9A573}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-migrate.Tests", "src\Tests\dotnet-migrate.Tests\dotnet-migrate.Tests.csproj", "{2CAECF0E-ECC5-4B70-835E-08DF1775E39E}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Cli.Build.Framework", "src\Tests\Microsoft.DotNet.Cli.Build.Framework\Microsoft.DotNet.Cli.Build.Framework.csproj", "{EF09417A-293B-47C9-A359-D43F54177F6D}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.ProjectJsonMigration.Tests", "src\Tests\Microsoft.DotNet.ProjectJsonMigration.Tests\Microsoft.DotNet.ProjectJsonMigration.Tests.csproj", "{109C903E-19E1-4543-A4A8-26FED2C0BAD1}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.TestFramework", "src\Tests\Microsoft.DotNet.TestFramework\Microsoft.DotNet.TestFramework.csproj", "{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Tools.Tests.Utilities", "src\Tests\Microsoft.DotNet.Tools.Tests.Utilities\Microsoft.DotNet.Tools.Tests.Utilities.csproj", "{5D0AF901-0413-4740-BE4E-1C19217B43CD}"
+-EndProject
+ Global
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -35,26 +23,6 @@ Global
+ 		{51609A15-7C27-4623-BFD5-22C43AD9A573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{51609A15-7C27-4623-BFD5-22C43AD9A573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{51609A15-7C27-4623-BFD5-22C43AD9A573}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{2CAECF0E-ECC5-4B70-835E-08DF1775E39E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{2CAECF0E-ECC5-4B70-835E-08DF1775E39E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{2CAECF0E-ECC5-4B70-835E-08DF1775E39E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{2CAECF0E-ECC5-4B70-835E-08DF1775E39E}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{EF09417A-293B-47C9-A359-D43F54177F6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{EF09417A-293B-47C9-A359-D43F54177F6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{EF09417A-293B-47C9-A359-D43F54177F6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{EF09417A-293B-47C9-A359-D43F54177F6D}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{109C903E-19E1-4543-A4A8-26FED2C0BAD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{109C903E-19E1-4543-A4A8-26FED2C0BAD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{109C903E-19E1-4543-A4A8-26FED2C0BAD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{109C903E-19E1-4543-A4A8-26FED2C0BAD1}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{5D0AF901-0413-4740-BE4E-1C19217B43CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{5D0AF901-0413-4740-BE4E-1C19217B43CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{5D0AF901-0413-4740-BE4E-1C19217B43CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{5D0AF901-0413-4740-BE4E-1C19217B43CD}.Release|Any CPU.Build.0 = Release|Any CPU
+ 	EndGlobalSection
+ 	GlobalSection(SolutionProperties) = preSolution
+ 		HideSolutionNode = FALSE
+@@ -62,11 +30,6 @@ Global
+ 	GlobalSection(NestedProjects) = preSolution
+ 		{713E4D16-B61F-489A-BE64-1DBE603543B3} = {01A43CEF-4BC2-4A92-B4E6-9F89017CBB1B}
+ 		{51609A15-7C27-4623-BFD5-22C43AD9A573} = {01A43CEF-4BC2-4A92-B4E6-9F89017CBB1B}
+-		{2CAECF0E-ECC5-4B70-835E-08DF1775E39E} = {0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}
+-		{EF09417A-293B-47C9-A359-D43F54177F6D} = {0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}
+-		{109C903E-19E1-4543-A4A8-26FED2C0BAD1} = {0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}
+-		{BC6811D7-45FC-41B2-ADFF-E51A0A715CF1} = {0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}
+-		{5D0AF901-0413-4740-BE4E-1C19217B43CD} = {0ADA9CD6-EB8D-4761-A943-CFADD5541B4A}
+ 	EndGlobalSection
+ 	GlobalSection(ExtensibilityGlobals) = postSolution
+ 		SolutionGuid = {05E6E36D-00EF-4F7A-9FBC-8305BF434F76}
+-- 
+1.8.3.1
+

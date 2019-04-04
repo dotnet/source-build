@@ -1,0 +1,79 @@
+From 00c85d8dd51bf26455cf18837d1a99742202d750 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 2 Apr 2019 14:44:15 -0500
+Subject: [PATCH] Disable hash matching.
+
+---
+ src/Compilers/Core/MSBuildTask/ManagedCompiler.cs | 2 +-
+ src/Compilers/Server/VBCSCompiler/Connection.cs   | 8 ++++----
+ src/Compilers/Shared/BuildClient.cs               | 2 +-
+ src/Compilers/Shared/BuildServerConnection.cs     | 8 ++++----
+ 4 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/src/Compilers/Core/MSBuildTask/ManagedCompiler.cs b/src/Compilers/Core/MSBuildTask/ManagedCompiler.cs
+index 604bd2d..c7e68db 100644
+--- a/src/Compilers/Core/MSBuildTask/ManagedCompiler.cs
++++ b/src/Compilers/Core/MSBuildTask/ManagedCompiler.cs
+@@ -610,7 +610,7 @@ private int HandleResponse(BuildResponse response, string pathToTool, string res
+                     return base.ExecuteTool(pathToTool, responseFileCommands, commandLineCommands);
+ 
+                 case BuildResponse.ResponseType.IncorrectHash:
+-                    LogErrorOutput("Roslyn compiler server reports different hash version than build task.");
++                    //LogErrorOutput("Roslyn compiler server reports different hash version than build task.");
+                     return base.ExecuteTool(pathToTool, responseFileCommands, commandLineCommands);
+ 
+                 case BuildResponse.ResponseType.Rejected:
+diff --git a/src/Compilers/Server/VBCSCompiler/Connection.cs b/src/Compilers/Server/VBCSCompiler/Connection.cs
+index b4b60f1..29197eb 100644
+--- a/src/Compilers/Server/VBCSCompiler/Connection.cs
++++ b/src/Compilers/Server/VBCSCompiler/Connection.cs
+@@ -109,10 +109,10 @@ protected virtual void ValidateBuildRequest(BuildRequest request)
+                 {
+                     return await HandleMismatchedVersionRequest(cancellationToken).ConfigureAwait(false);
+                 }
+-                else if (!string.Equals(request.CompilerHash, BuildProtocolConstants.GetCommitHash(), StringComparison.OrdinalIgnoreCase))
+-                {
+-                    return await HandleIncorrectHashRequest(cancellationToken).ConfigureAwait(false);
+-                }
++                //else if (!string.Equals(request.CompilerHash, BuildProtocolConstants.GetCommitHash(), StringComparison.OrdinalIgnoreCase))
++                //{
++                //    return await HandleIncorrectHashRequest(cancellationToken).ConfigureAwait(false);
++                //}
+                 else if (IsShutdownRequest(request))
+                 {
+                     return await HandleShutdownRequest(cancellationToken).ConfigureAwait(false);
+diff --git a/src/Compilers/Shared/BuildClient.cs b/src/Compilers/Shared/BuildClient.cs
+index a278feb..3222f04 100644
+--- a/src/Compilers/Shared/BuildClient.cs
++++ b/src/Compilers/Shared/BuildClient.cs
+@@ -198,7 +198,7 @@ public Task<RunCompilationResult> RunCompilationAsync(IEnumerable<string> origin
+                     }
+ 
+                 case BuildResponse.ResponseType.MismatchedVersion:
+-                case BuildResponse.ResponseType.IncorrectHash:
++                //case BuildResponse.ResponseType.IncorrectHash:
+                 case BuildResponse.ResponseType.Rejected:
+                 case BuildResponse.ResponseType.AnalyzerInconsistency:
+                     // Build could not be completed on the server.
+diff --git a/src/Compilers/Shared/BuildServerConnection.cs b/src/Compilers/Shared/BuildServerConnection.cs
+index 496bb75..5213868 100644
+--- a/src/Compilers/Shared/BuildServerConnection.cs
++++ b/src/Compilers/Shared/BuildServerConnection.cs
+@@ -116,10 +116,10 @@ internal static bool IsCompilerServerSupported(string tempPath)
+             }
+ 
+             // early check for the build hash. If we can't find it something is wrong; no point even trying to go to the server
+-            if (string.IsNullOrWhiteSpace(BuildProtocolConstants.GetCommitHash()))
+-            {
+-                return new IncorrectHashBuildResponse();
+-            }
++            //if (string.IsNullOrWhiteSpace(BuildProtocolConstants.GetCommitHash()))
++            //{
++            //    return new IncorrectHashBuildResponse();
++            //}
+ 
+             var clientDir = buildPaths.ClientDirectory;
+             var timeoutNewProcess = timeoutOverride ?? TimeOutMsNewProcess;
+-- 
+1.8.3.1
+

@@ -158,10 +158,15 @@
   <Target Name="UpdateCLIVersionInGlobalJson"
           BeforeTargets="Build"
           Condition="'$(GlobalJsonFile)' != ''">
+    <ItemGroup>
+      <_PossibleCliVersionJsonPath Include="sdk.version" />
+      <_PossibleCliVersionJsonPath Include="tools.dotnet" />
+    </ItemGroup>
 
     <UpdateJson JsonFilePath="$(GlobalJsonFile)"
-                PathToAttribute="sdk.version"
-                NewAttributeValue="$(SDK_VERSION)" />
+                PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
+                NewAttributeValue="$(SDK_VERSION)"
+                SkipUpdateIfMissingKey="true" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
@@ -253,7 +258,11 @@
     <ItemGroup>
       <EnvironmentVariables Condition="'$(NUGET_PACKAGES)'!=''" Include="NUGET_PACKAGES=$(NUGET_PACKAGES)" />
     </ItemGroup>
-    <Exec Command="$(BuildCommand) /v:$(LogVerbosity) $(RepoApiArgs) $(RedirectRepoOutputToLog)"
+    <PropertyGroup>
+      <FullCommand Condition="'$(LogVerbosityOptOut)' != 'true'">$(BuildCommand) /v:$(LogVerbosity) $(RepoApiArgs) $(RedirectRepoOutputToLog)</FullCommand>
+      <FullCommand Condition="'$(LogVerbosityOptOut)' == 'true'">$(BuildCommand) $(RepoApiArgs) $(RedirectRepoOutputToLog)</FullCommand>
+    </PropertyGroup>
+    <Exec Command="$(FullCommand)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
@@ -307,18 +316,16 @@
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
-          Condition="'$(BuiltToolPackageId)' != ''">
+          Condition="'@(BuiltSdkPackageOverride)' != ''">
     <ItemGroup>
-      <_AllSourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg" />
-      <_ToolPackage Include="@(_AllSourceBuiltPackages)"
-                    Condition="$([System.String]::new('%(Filename)').StartsWith('$(BuiltToolPackageId)'))" />
+      <_ToolPackage
+        Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.symbols.nupkg"
+        Id="%(BuiltSdkPackageOverride.Identity)" />
     </ItemGroup>
 
-    <Error Text="Expected single package matching '$(BuiltToolPackageId)', found: @(_ToolPackage)"
-           Condition="'@(_ToolPackage->Count())' != '1'" />
-
     <ZipFileExtractToDirectory SourceArchive="@(_ToolPackage)"
-                               DestinationDirectory="$(ToolPackageExtractDir)$(BuiltToolPackageId)\"
+                               DestinationDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)\"
                                OverwriteDestination="true" />
   </Target>
 
@@ -388,18 +395,13 @@
          DestinationFolder="$(ProjectDirectory)" />
   </Target>
 
-  <!--
-    Repo toolset users must use the source-built toolset, but the repo toolset build itself can only
-    consume itself source-built in a tarball (offline) build.
-  -->
-  <Target Name="BootstrapRoslynToolsRepoToolset"
+  <Target Name="SetSourceBuiltSdkOverrides"
           BeforeTargets="Build"
-          Condition="'$(UsesRepoToolset)' == 'true' AND
-                     ('$(BuiltToolPackageId)' != '$(RepoToolsetPackageId)' OR '$(OfflineBuild)' == 'true')">
+          Condition="'@(UseSourceBuiltSdkOverride)' != ''">
     <ItemGroup>
-      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_PACKAGE_DIR=$(ToolPackageExtractDir)$(RepoToolsetPackageId)\" />
-      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_DIR=$(ToolPackageExtractDir)$(RepoToolsetPackageId)\sdk\" />
-      <EnvironmentVariables Include="RESOLVE_REPO_TOOLSET_SDK_VERSION=1.0.0-source-built" />
+      <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Identity)" />
+      <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Version)" />
+      <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
     </ItemGroup>
   </Target>
 

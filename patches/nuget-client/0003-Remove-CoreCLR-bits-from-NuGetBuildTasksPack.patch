@@ -1,0 +1,26 @@
+From a3b26f56a3b5625d39f7e6b225c4af304e5f0ccb Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 1 Apr 2019 17:26:18 -0500
+Subject: [PATCH] Remove CoreCLR bits from NuGet.Build.Tasks.Pack.
+
+---
+ src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+index 221b036..2e21e7e 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+@@ -176,9 +176,6 @@
+       <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)**\NuGet*.resources.dll">
+         <PackagePath>CoreCLR/</PackagePath>
+       </TfmSpecificPackageFile>
+-      <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)**\*.dll" Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">
+-        <PackagePath>CoreCLR/</PackagePath>
+-      </TfmSpecificPackageFile>
+     </ItemGroup>    
+   </Target>
+ 
+-- 
+1.8.3.1
+
