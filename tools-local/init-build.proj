@@ -9,7 +9,6 @@
   <Import Project="$(ToolsDir)IL.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CloneRepos" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
 
   <PropertyGroup>
@@ -146,7 +145,7 @@
 
   <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
-    <CloneRepos SourceRoot="$(ClonedSubmoduleDirectory)" GitRoot="$(ClonedSubmoduleGitRootDirectory)" SpecFile="$(MSBuildThisFileDirectory)../eng/Version.Details.xml" />
+    <Exec Command="$(DotNetCliToolDir)dotnet $(DarcDll) clone --repos-folder $(ClonedSubmoduleDirectory)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
