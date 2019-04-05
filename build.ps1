@@ -1,3 +1,9 @@
+[CmdletBinding(PositionalBinding=$false)]
+Param(
+  [switch] $test,
+  [Parameter(ValueFromRemainingArguments=$true)][String[]]$captured_args
+)
+
 Set-StrictMode -version 2.0
 $ErrorActionPreference = "Stop"
 
@@ -25,7 +31,7 @@ $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
 $env:SDK_VERSION = $SdkVersion
 
-if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
+if (-NOT $test -and ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false"))
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
 }
@@ -41,6 +47,9 @@ Exec-Block { & "$SCRIPT_ROOT\init-tools.cmd" } | Out-Host
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
-$captured_args = $args
+if ($test)
+{
+	$captured_args += "/t:RunTests"
+}
 
 Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m $captured_args } | Out-Host

@@ -12,6 +12,12 @@
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
   </Target>
 
+  <Target Name="RunTests" DependsOnTargets="">
+    <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
+
+    <MSBuild Projects="repos\$(RootRepoTests).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
+  </Target>
+
   <Target Name="CreateRootRepoFile" AfterTargets="PrepareOutput">
     <WriteLinesToFile Lines="$(RootRepo)" File="$(BaseIntermediatePath)rootrepo.txt" Overwrite="True" />
   </Target>

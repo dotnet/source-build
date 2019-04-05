@@ -56,10 +56,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
-    <RepositoryReference Include="linker" />
-    <RepositoryReference Include="coreclr" />
-    <RepositoryReference Include="standard" />
+    <RepositoryReference Include="arcade" Condition="'$(RunTests)' != 'true'" />
+    <RepositoryReference Include="linker" Condition="'$(RunTests)' != 'true'" />
+    <RepositoryReference Include="coreclr" Condition="'$(RunTests)' != 'true'" />
+    <RepositoryReference Include="standard" Condition="'$(RunTests)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>
