@@ -1,4 +1,4 @@
-From a187604f6d92552344bc4f18683f7cdf28804ab2 Mon Sep 17 00:00:00 2001
+From 83d9cbffdd20cf0ee1abee86cf84b3a1028173c9 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 31 Mar 2019 00:34:18 -0500
 Subject: [PATCH] Skip warning for licenseUrl.
@@ -8,13 +8,13 @@ Subject: [PATCH] Skip warning for licenseUrl.
  1 file changed, 1 insertion(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 964b568..778a50f 100644
+index b1d15db..785547b 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -12,5 +12,6 @@
-     <DebugSymbols>true</DebugSymbols>
-     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
-     <PackageProjectUrl>https://github.com/dotnet/cli-migrate</PackageProjectUrl>
+@@ -4,5 +4,6 @@
+   <PropertyGroup>
+     <RepositoryUrl>https://github.com/dotnet/cli-migrate</RepositoryUrl>
+     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
 +    <NoWarn>$(NoWarn);NU5125</NoWarn>
    </PropertyGroup>
  </Project>

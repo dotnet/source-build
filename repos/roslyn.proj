@@ -3,27 +3,15 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190220.5</OfficialBuildId>
+    <NuGetPackageVersion>2.10.0-beta2-63410-10</NuGetPackageVersion>
+    <BuildNumber>20180426.3</BuildNumber>
 
-    <!--
-      Normally this is generated from OfficialBuildId, but after a release, we tend to have access
-      to the package version, not the official build id. Here, directly apply package version.
-    -->
-    <VersionSuffixDateStamp>19120</VersionSuffixDateStamp>
-    <VersionSuffixBuildOfTheDay>05</VersionSuffixBuildOfTheDay>
-
-    <BuildCommandArgs>pack</BuildCommandArgs>
+    <BuildCommandArgs>build</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)/SourceBuild.sln</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /nr:false</BuildCommandArgs>
-
-    <!-- Versioning args. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:VersionSuffixDateStamp=$(VersionSuffixDateStamp)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:VersionSuffixBuildOfTheDay=$(VersionSuffixBuildOfTheDay)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:ContinuousIntegrationBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNumber=$(BuildNumber)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /bl:build.binlog</BuildCommandArgs>
 
     <!--
       Work around https://github.com/dotnet/sourcelink/issues/91:
@@ -31,37 +19,100 @@
     -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
 
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+
+    <PackagesOutput>$(ProjectDirectory)/Binaries/packages</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <LogVerbosityOptOut>true</LogVerbosityOptOut>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackProjects Include="$(ProjectDirectory)SourceBuild.sln" />
-    <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <RepositoryReference Include="arcade" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <EnvironmentVariables Include="NUGET_PACKAGE_VERSION=$(NuGetPackageVersion)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="RepoBuild">
-    <Exec Command="$(DotNetToolCommand) $(BuildCommandArgs) %(PackProjects.Identity) /bl:%(PackProjects.FileName).binlog $(RedirectRepoOutputToLog)"
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="FixPathSeparator" />
+
+  <ItemGroup>
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.CSharp.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Common.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.Compilers.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.CodeAnalysis.VisualBasic.nuspec" />
+    <NuSpecFiles Include="$(ProjectDirectory)/src/NuGet/Microsoft.NETCore.Compilers.nuspec" />
+  </ItemGroup>
+
+  <Target Name="Restore" BeforeTargets="Build">
+    <PropertyGroup>
+      <RestoreArgs>restore</RestoreArgs>
+      <RestoreArgs Condition="'$(OS)' != 'Windows_NT'">$(RestoreArgs) --disable-parallel</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) $(ProjectDirectory)/SourceBuild.sln</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) /v:$(LogVerbosity)</RestoreArgs>
+      <RestoreArgs>$(RestoreArgs) $(RedirectRepoOutputToLog)</RestoreArgs>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring 'roslyn'" />
+
+    <Exec Command="$(DotnetToolCommand) $(RestoreArgs)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Restoring 'roslyn'...done" />
+  </Target>
+
+  <Target Name="FixNuSpecFilePathSeparators" BeforeTargets="Build">
+    <FixPathSeparator NuSpecFiles="@(NuSpecFiles)" />
+  </Target>
+
+  <Target Name="Package" AfterTargets="Build">
+    <ItemGroup>
+      <!--
+        "Publish the CoreClr projects (CscCore and VbcCore) and dependencies for later NuGet packaging."
+        https://github.com/dotnet/roslyn/blob/94e73792cfec399f8e1ab3e9246703cbddabbcd4/build/scripts/build.ps1#L280-L288
+      -->
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\CSharp\csc\csc.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\VisualBasic\vbc\vbc.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" />
+      <PublishWithoutBuildingProject Include="$(ProjectDirectory)src\Compilers\Core\MSBuildTask\MSBuildTask.csproj" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'" />
+
+    <!-- Publish MSBuild project so that Microsoft.NETCore.Compilers.nuspec can find runtimes. -->
+    <PropertyGroup>
+      <PublishCommandArgs>msbuild</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /p:Configuration=$(Configuration)</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /p:TargetFramework=netcoreapp2.0</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /t:PublishWithoutBuilding</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /bl:publish.binlog</PublishCommandArgs>
+      <PublishCommandArgs>$(PublishCommandArgs) /v:$(LogVerbosity)</PublishCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) $(PublishCommandArgs) %(PublishWithoutBuildingProject.Identity) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
+
+    <PropertyGroup>
+      <PackCommandArgs>pack --no-build</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) $(ProjectDirectory)/src/NuGet/NuGetProjectPackUtil.csproj</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:Configuration=$(Configuration)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:NuspecBasePath=$(ProjectDirectory)/Binaries/$(Configuration)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:PackageOutputPath=$(PackagesOutput)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) -p:NuGetPackageKind=release</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /bl:pack.binlog</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /v:$(LogVerbosity)</PackCommandArgs>
+    </PropertyGroup>
+
+    <Exec Command="$(DotnetToolCommand) $(PackCommandArgs) -p:NuspecFile=%(NuSpecFiles.Identity) $(RedirectRepoOutputToLog)"
+          WorkingDirectory="$(ProjectDirectory)"
+          EnvironmentVariables="@(EnvironmentVariables)"
+          IgnoreStandardErrorWarningFormat="true" />
+
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging 'roslyn'...done" />
   </Target>
 
 </Project>
