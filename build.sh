@@ -13,6 +13,7 @@ fi
 
 test=false
 args=""
+separator=""
 
 while [[ $# > 0 ]]
 do
@@ -20,14 +21,15 @@ do
   case "$opt" in
     -test)
       test=true
-      args+="/t:RunTests "
+      args+="${separator}/t:RunTests"
       shift
       ;;
     *)
-      args+="$1 "
+      args+="${separator}$1"
       shift
       ;;
   esac
+  separator=" "
 done
 
 if [ "$test" == "false" ] && [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
