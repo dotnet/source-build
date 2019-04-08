@@ -11,7 +11,26 @@ if [ -z "${HOME:-}" ]; then
     mkdir "$HOME"
 fi
 
-if [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
+test=false
+args=""
+
+while [[ $# > 0 ]]
+do
+  opt="$(echo "$1" | awk '{print tolower($0)}')"
+  case "$opt" in
+    -test)
+      test=true
+      args+="/t:RunTests "
+      shift
+      ;;
+    *)
+      args+="$1 "
+      shift
+      ;;
+  esac
+done
+
+if [ "$test" == "false" ] && [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
   source "$SCRIPT_ROOT/check-submodules.sh"
 fi
 
@@ -27,5 +46,5 @@ SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
 
 set -x
 
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl /flp:v=diag /clp:v=m "$@"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl /flp:v=diag /clp:v=m "$args"
 
