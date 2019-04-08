@@ -55,7 +55,7 @@
     <UseSourceBuiltSdkOverride Condition="'$(TargetOS)' != 'OSX'" Include="@(ILSdkOverride)" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(RunTests)' != 'true'">
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
