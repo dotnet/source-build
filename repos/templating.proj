@@ -7,7 +7,7 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <OutputVersionArgs>/p:BUILD_BUILDNUMBER=$(OfficialBuildId)</OutputVersionArgs>
 
-    <BuildCommandArgs>--pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommandArgs>
+    <BuildCommandArgs>--restore --pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PackageProjectUrl=https://github.com/dotnet/sdk</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PackSpecific=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
@@ -26,6 +26,10 @@
 
   <ItemGroup>
     <RepositoryReference Include="clicommandlineparser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
