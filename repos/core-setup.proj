@@ -34,6 +34,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="CommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 
