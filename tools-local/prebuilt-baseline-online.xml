@@ -22,6 +22,7 @@
     <Dir>src/roslyn/</Dir>
     <Dir>src/sdk/</Dir>
     <Dir>src/standard/</Dir>
+    <Dir>src/templating/</Dir>
     <Dir>src/toolset/</Dir>
     <Dir>src/vstest/</Dir>
     <Dir>src/websdk/</Dir>
@@ -127,11 +128,10 @@
     <Usage Id="Microsoft.DotNet.Build.Tasks.Packaging" Version="1.0.0-beta.19125.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.BuildTools" Version="3.0.0-preview1-03715-01" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.BuildTools.CoreCLR" Version="1.0.4-prerelease" />
+    <Usage Id="Microsoft.DotNet.Cli.CommandLine" Version="0.1.1-alpha-167" />
     <Usage Id="Microsoft.DotNet.Cli.CommandLine" Version="0.1.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.Cli.Utils" Version="1.0.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.CodeAnalysis" Version="1.0.0-beta.19125.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.DotNet.Common.ProjectTemplates.3.0" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.CoreFxTesting" Version="1.0.0-beta.19115.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.19115.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.19125.2" IsDirectDependency="true" />
@@ -151,6 +151,7 @@
     <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates" Version="3.0.0-preview3-19153-02" IsDirectDependency="true" />
     <Usage Id="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="3.0.0-preview3-27504-2" IsDirectDependency="true" />
     <Usage Id="Microsoft.Dotnet.Wpf.ProjectTemplates" Version="3.0.0-preview3-27504-2" IsDirectDependency="true" />
+    <Usage Id="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <Usage Id="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.1" />
     <Usage Id="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
@@ -250,14 +251,6 @@
     <Usage Id="Microsoft.TargetingPack.Private.WinRT" Version="1.0.5" IsDirectDependency="true" />
     <Usage Id="Microsoft.TeamFoundation.DistributedTask.Common.Contracts" Version="16.138.0-preview" />
     <Usage Id="Microsoft.TeamFoundationServer.Client" Version="16.138.0-preview" />
-    <Usage Id="Microsoft.TemplateEngine.Abstractions" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.TemplateEngine.Cli" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.TemplateEngine.Cli.Localization" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.TemplateEngine.Core" Version="1.0.2-beta5.19066.2" />
-    <Usage Id="Microsoft.TemplateEngine.Core.Contracts" Version="1.0.2-beta5.19066.2" />
-    <Usage Id="Microsoft.TemplateEngine.Edge" Version="1.0.2-beta5.19066.2" />
-    <Usage Id="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.TemplateEngine.Utils" Version="1.0.2-beta5.19066.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.VisualBasic" Version="10.0.1" />
     <Usage Id="Microsoft.VisualBasic" Version="10.1.0" />
     <Usage Id="Microsoft.VisualStudio.CUIT" Version="15.8.0-preview-1831095" IsDirectDependency="true" />
@@ -372,9 +365,13 @@
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetAppHost" Version="2.0.0" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetAppHost" Version="2.1.0" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetAppHost" Version="3.0.0-preview4-27413-11" Rid="linux-x64" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.ILAsm" Version="3.0.0-preview3-27422-72" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHost" Version="3.0.0-preview4-27413-11" Rid="linux-x64" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.ILDAsm" Version="3.0.0-preview3-27422-72" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.0.0" Rid="linux-x64" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.Jit" Version="3.0.0-preview3-27422-72" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.1.0" Rid="linux-x64" />
+    <Usage Id="runtime.linux-x64.Microsoft.NETCore.Runtime.CoreCLR" Version="3.0.0-preview3-27422-72" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHostPolicy" Version="3.0.0-preview4-27413-11" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHostResolver" Version="2.0.0" Rid="linux-x64" />
     <Usage Id="runtime.linux-x64.Microsoft.NETCore.DotNetHostResolver" Version="2.1.0" Rid="linux-x64" />
@@ -395,10 +392,24 @@
     <Usage Id="runtime.native.System.IO.Compression" Version="4.1.0" />
     <Usage Id="runtime.native.System.IO.Compression" Version="4.3.0" />
     <Usage Id="runtime.native.System.Net.Http" Version="4.0.1" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.App" Version="2.0.0" Rid="osx-x64" />
     <Usage Id="runtime.native.System.Net.Http" Version="4.3.0" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.App" Version="2.1.7" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetAppHost" Version="2.0.0" Rid="osx-x64" />
     <Usage Id="runtime.native.System.Net.Security" Version="4.0.1" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetAppHost" Version="3.0.0-preview4-27413-11" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetHost" Version="3.0.0-preview4-27413-11" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetHostPolicy" Version="2.0.0" Rid="osx-x64" />
     <Usage Id="runtime.native.System.Net.Security" Version="4.3.0" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetHostPolicy" Version="3.0.0-preview4-27413-11" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetHostResolver" Version="2.0.0" Rid="osx-x64" />
     <Usage Id="runtime.native.System.Security.Cryptography" Version="4.0.0" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.DotNetHostResolver" Version="3.0.0-preview4-27413-11" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.ILAsm" Version="3.0.0-preview1-26623-01" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.ILDAsm" Version="3.0.0-preview1-26623-01" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.Jit" Version="3.0.0-preview1-26623-01" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.NETCore.Runtime.CoreCLR" Version="3.0.0-preview1-26623-01" Rid="osx-x64" />
+    <Usage Id="runtime.osx-x64.Microsoft.Private.CoreFx.NETCoreApp" Version="4.6.0-preview3.19128.7" Rid="osx-x64" />
     <Usage Id="runtime.native.System.Security.Cryptography" Version="4.0.1" />
     <Usage Id="runtime.native.System.Security.Cryptography.Apple" Version="4.3.0" />
     <Usage Id="runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" />
