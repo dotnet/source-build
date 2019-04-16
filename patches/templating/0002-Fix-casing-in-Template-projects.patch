@@ -1,0 +1,95 @@
+From 4c55ae00fa503d3cf82766a2a5044ea0ed7b5228 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 10 Apr 2019 11:26:12 +0000
+Subject: [PATCH] Fix casing in template projects
+
+---
+ .../Microsoft.DotNet.Common.ItemTemplates.csproj                        | 2 +-
+ .../Microsoft.DotNet.Common.ProjectTemplates.1.x.csproj                 | 2 +-
+ .../Microsoft.DotNet.Common.ProjectTemplates.2.0.csproj                 | 2 +-
+ .../Microsoft.DotNet.Common.ProjectTemplates.2.1.csproj                 | 2 +-
+ .../Microsoft.DotNet.Common.ProjectTemplates.2.2.csproj                 | 2 +-
+ .../Microsoft.DotNet.Common.ProjectTemplates.3.0.csproj                 | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/template_feed/Microsoft.DotNet.Common.ItemTemplates/Microsoft.DotNet.Common.ItemTemplates.csproj b/template_feed/Microsoft.DotNet.Common.ItemTemplates/Microsoft.DotNet.Common.ItemTemplates.csproj
+index c817fea..f9133a2 100644
+--- a/template_feed/Microsoft.DotNet.Common.ItemTemplates/Microsoft.DotNet.Common.ItemTemplates.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ItemTemplates/Microsoft.DotNet.Common.ItemTemplates.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.1.x/Microsoft.DotNet.Common.ProjectTemplates.1.x.csproj b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.1.x/Microsoft.DotNet.Common.ProjectTemplates.1.x.csproj
+index 6d42d63..49ef111 100644
+--- a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.1.x/Microsoft.DotNet.Common.ProjectTemplates.1.x.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.1.x/Microsoft.DotNet.Common.ProjectTemplates.1.x.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.0/Microsoft.DotNet.Common.ProjectTemplates.2.0.csproj b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.0/Microsoft.DotNet.Common.ProjectTemplates.2.0.csproj
+index e3de0b3..7fc122b 100644
+--- a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.0/Microsoft.DotNet.Common.ProjectTemplates.2.0.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.0/Microsoft.DotNet.Common.ProjectTemplates.2.0.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.1/Microsoft.DotNet.Common.ProjectTemplates.2.1.csproj b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.1/Microsoft.DotNet.Common.ProjectTemplates.2.1.csproj
+index 00ab23d..968d430 100644
+--- a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.1/Microsoft.DotNet.Common.ProjectTemplates.2.1.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.1/Microsoft.DotNet.Common.ProjectTemplates.2.1.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.2/Microsoft.DotNet.Common.ProjectTemplates.2.2.csproj b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.2/Microsoft.DotNet.Common.ProjectTemplates.2.2.csproj
+index 0b84e02..511bc39 100644
+--- a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.2/Microsoft.DotNet.Common.ProjectTemplates.2.2.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.2.2/Microsoft.DotNet.Common.ProjectTemplates.2.2.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.3.0/Microsoft.DotNet.Common.ProjectTemplates.3.0.csproj b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.3.0/Microsoft.DotNet.Common.ProjectTemplates.3.0.csproj
+index e9afc4d..f806038 100644
+--- a/template_feed/Microsoft.DotNet.Common.ProjectTemplates.3.0/Microsoft.DotNet.Common.ProjectTemplates.3.0.csproj
++++ b/template_feed/Microsoft.DotNet.Common.ProjectTemplates.3.0/Microsoft.DotNet.Common.ProjectTemplates.3.0.csproj
+@@ -21,7 +21,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(SrcDir)GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+-- 
+1.8.3.1
+

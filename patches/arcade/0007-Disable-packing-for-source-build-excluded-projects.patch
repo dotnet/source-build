@@ -1,0 +1,28 @@
+From 7ba8c291076e1a71307644eb364f7a2f545fa18d Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 9 Apr 2019 19:00:28 +0000
+Subject: [PATCH] Disable packing for source build excluded projects
+
+---
+ src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
+index 3fde207..246eea9 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Empty.targets
+@@ -13,6 +13,11 @@
+     The targets defined here are not sufficient for the project to be open in Visual Studio without issues though.    
+   -->
+ 
++  <PropertyGroup>
++    <!-- Skip importing NuGet Pack targets which are imported from the Microsoft.NET.Sdk targets -->
++    <ImportNuGetBuildTasksPackTargetsFromSdk>false</ImportNuGetBuildTasksPackTargetsFromSdk>
++  </PropertyGroup>
++
+   <Target Name="_IsProjectRestoreSupported"/>
+   <Target Name="Restore"/>
+   <Target Name="Build"/>
+-- 
+1.8.3.1
+

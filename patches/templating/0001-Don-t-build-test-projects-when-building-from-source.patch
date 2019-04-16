@@ -1,0 +1,27 @@
+From b1a05aa259a760f0c71fac5ab5470dad697c80e7 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 9 Apr 2019 18:57:31 +0000
+Subject: [PATCH] Don't build test projects when building from source
+
+---
+ test/Directory.Build.props | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 test/Directory.Build.props
+
+diff --git a/test/Directory.Build.props b/test/Directory.Build.props
+new file mode 100644
+index 0000000..f330554
+--- /dev/null
++++ b/test/Directory.Build.props
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
++<Project>
++  <Import Project="..\Directory.Build.props" />
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
++</Project>
+-- 
+1.8.3.1
+
