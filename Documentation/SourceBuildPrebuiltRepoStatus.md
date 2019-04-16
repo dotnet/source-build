@@ -1,39 +1,39 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-02-21
+Last source-build Build Date: 2019-04-12
 
-Last updated: 2019-03-12
+Last updated: 2019-04-16
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
-| [application-insights][900] | Sergey Kanzhelev | ![pl] Planned | - | 4 |
+| [application-insights][900] | Sergey Kanzhelev | ![ot] On Track | - | - |
 | [arcade][970] | Mark Wilke | ![ot] On Track | 6 | 15 |
-| [cli][880] | Nick Guerra | ![ns] Not Started | 8 | 19 |
-| [clicommandlineparser][976] | Nick Guerra | ![ot] On Track | 3 | 5 |
-| [cli-migrate][881] | Nick Guerra | ![ot] On Track | 6 | 7 |
-| [common][882] | Nate McMaster | ![pl] Planned | - | 3 |
-| [coreclr][883] | Russ Keldorph | ![ns] Not Started | - | 9 |
-| [corefx][884] | Jeremy Barton | ![ns] Not Started | 2 | 24 |
-| [core-sdk][972] | Nick Guerra | ![pl] Planned | 5 | 11 |
-| [core-setup][885] | Davis Goodin | ![pl] Planned | 2 | 25 |
-| [fsharp][886] | Brett Forsgren | ![ns] Not Started | 1 | 23 |
-| [linker][887] | ??? | ![ns] Not Started | 2 | 4 |
-| [msbuild][888] | Rainer Sigwald / Livar Cunha | ![ns] Not Started | 3 | 23 |
-| [newtonsoft-json][889] | Chris Rummel | ![pl] Planned | 1 | 14 |
+| [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 14 |
+| [clicommandlineparser][976] | Nick Guerrera | ![ot] On Track | 3 | 5 |
+| [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 6 | 7 |
+| [common][882] | Nate McMaster | ![ot] On Track | - | 1 |
+| [coreclr][883] | Russ Keldorph | ![ot] On Track | - | 6 |
+| [corefx][884] | Eric St. John | ![ot] On Track | 3 | 26 |
+| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 11 |
+| [core-setup][885] | Davis Goodin | ![pl] Planned | 2 | 19 |
+| [fsharp][886] | Brett Forsgren | ![ot] On Track | 7 | 19 |
+| [linker][887] | Dan Seefeldt | ![ot] On Track | 2 | 4 |
+| [msbuild][888] | Nick Guerrera | ![ns] Not Started | 4 | 21 |
+| [newtonsoft-json][889] | Chris Rummel | ![ot] On Track | 1 | 7 |
 | [nuget-client][890] | Rob Relyea | ![ns] Not Started | 4 | 10 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ns] Not Started | 1 | 18 |
-| [roslyn-tools][892] | Tomas Matousek | ![ns] Not Started | 1 | 4 |
-| [sdk][893] | Nick Guerra | ![pl] Planned | - | 10 |
-| [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 8 |
-| [standard][894] | Jeremy Barton | ![ns] Not Started | 2 | 6 |
-| templating | Mike Lorbetske | ![cp] Complete | 3 | - |
-| [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 7 |
-| [toolset][973] | Nick Guerra | ![pl] Planned | 4 | 12 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 18 |
+| [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
+| [sdk][893] | Nick Guerrera | ![ot] On Track | 1 | 10 |
+| [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
+| [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
+| [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 3 | 9 |
+| [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 6 |
+| [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 13 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ns] Not Started | 2 | 41 |
-| [websdk][897] | Mike Lorbetske | ![ns] Not Started | 2 | 10 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ns] Not Started | 2 | 38 |
+| [websdk][897] | Vijay Ramakrishnan | ![pl] Planned | 2 | 10 |
 | [xliff-tasks][899] | Tom Meschter | ![pl] Planned | - | 2 |
 
 <br/>
@@ -80,6 +80,7 @@ Patches are created in source-build when a repo's code doesn't build as-is. Patc
 [892]: https://github.com/dotnet/source-build/issues/892
 [893]: https://github.com/dotnet/source-build/issues/893
 [894]: https://github.com/dotnet/source-build/issues/894
+[895]: https://github.com/dotnet/source-build/issues/895
 [975]: https://github.com/dotnet/source-build/issues/975
 [971]: https://github.com/dotnet/source-build/issues/971
 [973]: https://github.com/dotnet/source-build/issues/973
