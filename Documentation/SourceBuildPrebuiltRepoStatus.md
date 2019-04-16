@@ -8,7 +8,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
-| [application-insights][900] | Sergey Kanzhelev | ![ot] On Track | - | - |
+| [application-insights][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [arcade][970] | Mark Wilke | ![ot] On Track | 6 | 15 |
 | [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 14 |
 | [clicommandlineparser][976] | Nick Guerrera | ![ot] On Track | 3 | 5 |
