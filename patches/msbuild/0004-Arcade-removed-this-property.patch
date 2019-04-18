@@ -1,25 +1,26 @@
-From 37a09e947718331709982762aafe723ec65a86bd Mon Sep 17 00:00:00 2001
+From 80d262b279d0e45d49089826fe4bcb0c54f7da24 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 14 Mar 2019 13:56:48 -0500
 Subject: [PATCH] Arcade removed this property.
 
 ---
- eng/Packages.props | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ eng/Packages.props | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Packages.props b/eng/Packages.props
-index bbf36312..12f5b4d9 100644
+index f3411843..2f38455b 100644
 --- a/eng/Packages.props
 +++ b/eng/Packages.props
-@@ -1,6 +1,7 @@
+@@ -1,6 +1,8 @@
  <Project>
  
    <PropertyGroup>
 +      <MicrosoftNetCompilersVersion>2.8.0</MicrosoftNetCompilersVersion>
-       <MicrosoftNETCoreCompilersVersion>2.10.0</MicrosoftNETCoreCompilersVersion>
-       <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">4.8.0-rtm.5362</NuGetPackageVersion>
++      <MicrosoftNETCoreCompilersVersion>2.10.0</MicrosoftNETCoreCompilersVersion>
+       <NuGetPackageVersion Condition="'$(NuGetPackageVersion)' == ''">4.9.0-rtm.5658</NuGetPackageVersion>
        <NuGetBuildTasksVersion Condition="'$(NuGetBuildTasksVersion)' == ''">$(NuGetPackageVersion)</NuGetBuildTasksVersion>
-@@ -56,4 +57,4 @@
+       <NuGetCommandsVersion Condition="'$(NuGetCommandsVersion)' == ''">$(NuGetPackageVersion)</NuGetCommandsVersion>
+@@ -54,4 +56,4 @@
      <GlobalPackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.15" PrivateAssets="All" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'" />
    </ItemGroup>
  

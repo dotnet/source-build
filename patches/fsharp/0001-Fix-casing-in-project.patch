@@ -1,0 +1,24 @@
+From e86366dbd792286c069b92c7446f72c89eada92c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 7 Mar 2019 14:22:27 -0600
+Subject: [PATCH] Fix casing in project.
+
+---
+ src/fsharp/fsc/fsc.fsproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
+index 8ddb082c5..5846c5424 100644
+--- a/src/fsharp/fsc/fsc.fsproj
++++ b/src/fsharp/fsc/fsc.fsproj
+@@ -22,6 +22,7 @@
+       <Link>fscmain.fs</Link>
+     </Compile>
+     <None Include="app.config" />
++    <None Include="$(FSharpSourcesRoot)\fsharp\fsc\app.config" />
+     <None Include="..\..\windows\default.win32manifest">
+       <Link>default.win32manifest</Link>
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+-- 
+2.18.0
+

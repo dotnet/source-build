@@ -1,4 +1,4 @@
-From 1431eeeaf39adf4070818f697cdf4d0870f658a1 Mon Sep 17 00:00:00 2001
+From e9c00fa111cebecf5474bd1524772b6141416ae1 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 17 Feb 2019 09:52:13 -0600
 Subject: [PATCH] use framework version produced by source-build
@@ -12,7 +12,7 @@ Subject: [PATCH] use framework version produced by source-build
  5 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
-index 0d64f6d4b..16dae4c82 100644
+index 0d64f6d4b..ab1162efb 100644
 --- a/src/redist/redist.csproj
 +++ b/src/redist/redist.csproj
 @@ -5,6 +5,7 @@
@@ -24,7 +24,7 @@ index 0d64f6d4b..16dae4c82 100644
  
    <Import Project="targets\BuildToolsetTasks.targets" />
 diff --git a/src/tool_cli/tool_cli.csproj b/src/tool_cli/tool_cli.csproj
-index 4fcb9a995..9fc612069 100644
+index 4fcb9a995..0b76e1467 100644
 --- a/src/tool_cli/tool_cli.csproj
 +++ b/src/tool_cli/tool_cli.csproj
 @@ -5,6 +5,7 @@
@@ -36,7 +36,7 @@ index 4fcb9a995..9fc612069 100644
  
    <ItemGroup>
 diff --git a/src/tool_fsharp/tool_fsc.csproj b/src/tool_fsharp/tool_fsc.csproj
-index b96af3294..7b4a118be 100644
+index b96af3294..85547c014 100644
 --- a/src/tool_fsharp/tool_fsc.csproj
 +++ b/src/tool_fsharp/tool_fsc.csproj
 @@ -2,6 +2,7 @@
@@ -48,7 +48,7 @@ index b96af3294..7b4a118be 100644
    
    <ItemGroup>
 diff --git a/src/tool_msbuild/tool_msbuild.csproj b/src/tool_msbuild/tool_msbuild.csproj
-index 2e6609437..0b06dde26 100644
+index 2e6609437..365b1ccaa 100644
 --- a/src/tool_msbuild/tool_msbuild.csproj
 +++ b/src/tool_msbuild/tool_msbuild.csproj
 @@ -4,6 +4,7 @@
@@ -60,7 +60,7 @@ index 2e6609437..0b06dde26 100644
  
    <ItemGroup>
 diff --git a/src/tool_nuget/tool_nuget.csproj b/src/tool_nuget/tool_nuget.csproj
-index c240e6a2e..f53e5ec1a 100644
+index c240e6a2e..d80763a88 100644
 --- a/src/tool_nuget/tool_nuget.csproj
 +++ b/src/tool_nuget/tool_nuget.csproj
 @@ -4,9 +4,10 @@

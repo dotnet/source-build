@@ -1,4 +1,4 @@
-From d438b2ff6ae4b90424267f8c46f72d25349af76d Mon Sep 17 00:00:00 2001
+From bb04d13a7f89e40d657c7e3bb92ebda147206fcd Mon Sep 17 00:00:00 2001
 From: Eugene Rozenfeld <erozen@microsoft.com>
 Date: Tue, 4 Apr 2017 23:27:47 -0700
 Subject: [PATCH] Add an option to use reflection heuristics during marking
@@ -24,16 +24,16 @@ linker invocation.
 https://github.com/dotnet/source-build/issues/777 tracks removing this patch.
 ---
  .../MarkStepWithReflectionHeuristics.cs       | 98 +++++++++++++++++++
- linker/Linker/Driver.cs                       | 22 +++++
- linker/Mono.Linker.csproj                     |  1 +
+ src/linker/Linker/Driver.cs                   | 22 +++++
+ src/linker/Mono.Linker.csproj                 |  1 +
  3 files changed, 121 insertions(+)
- create mode 100644 linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
+ create mode 100644 src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
 
-diff --git a/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs b/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
+diff --git a/src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs b/src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
 new file mode 100644
 index 0000000..3cb98b1
 --- /dev/null
-+++ b/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
++++ b/src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
 @@ -0,0 +1,98 @@
 +using System;
 +using System.Collections;
@@ -133,11 +133,11 @@ index 0000000..3cb98b1
 +		}
 +	}
 +}
-diff --git a/linker/Linker/Driver.cs b/linker/Linker/Driver.cs
-index 8a380db..0d6a9f6 100644
---- a/linker/Linker/Driver.cs
-+++ b/linker/Linker/Driver.cs
-@@ -232,6 +232,10 @@ namespace Mono.Linker {
+diff --git a/src/linker/Linker/Driver.cs b/src/linker/Linker/Driver.cs
+index 3cca83a..b5e014a 100644
+--- a/src/linker/Linker/Driver.cs
++++ b/src/linker/Linker/Driver.cs
+@@ -310,6 +310,10 @@ namespace Mono.Linker {
  					case 'v':
  						context.KeepMembersForDebugger = bool.Parse (GetParam ());
  						break;
@@ -148,7 +148,7 @@ index 8a380db..0d6a9f6 100644
  					default:
  						Usage ("Unknown option: `" + token [1] + "'");
  						break;
-@@ -340,6 +344,15 @@ namespace Mono.Linker {
+@@ -452,6 +456,15 @@ namespace Mono.Linker {
  			return assemblies;
  		}
  
@@ -164,10 +164,10 @@ index 8a380db..0d6a9f6 100644
  
  		AssemblyAction ParseAssemblyAction (string s)
  		{
-@@ -399,6 +412,15 @@ namespace Mono.Linker {
- 			Console.WriteLine ("   -b                  Generate debug symbols for each linked module (true or false)");
- 			Console.WriteLine ("   -g                  Generate a new unique guid for each linked module (true or false)");
- 			Console.WriteLine ("   -v                  Keep members needed by debugger (true or false)");
+@@ -540,6 +553,15 @@ namespace Mono.Linker {
+ 			Console.WriteLine ("  --dependencies-file <path> Specify the dependencies output. Defaults to 'output/linker-dependencies.xml.gz'");
+ 			Console.WriteLine ("  --dump-dependencies        Dump dependencies for the linker analyzer tool");
+ 			Console.WriteLine ("  --reduced-tracing          Reduces dependency output related to assemblies that will not be modified");
 +			Console.WriteLine ("   -h                  List of reflection heuristics separated with a comma.");
 +			Console.WriteLine ("                       Supported heuristics:");
 +			Console.WriteLine ("                         LdtokenTypeMethods:   mark all methods of types whose token is used");
@@ -177,14 +177,14 @@ index 8a380db..0d6a9f6 100644
 +			Console.WriteLine ("                         InstanceConstructors: mark all instance constructors in types");
 +			Console.WriteLine ("                                               where an instance member has been marked but");
 +			Console.WriteLine ("                                               none of the instance constructors have been marked");
- 			Console.WriteLine ("   -l                  List of i18n assemblies to copy to the output directory");
- 			Console.WriteLine ("                         separated with a comma: none,all,cjk,mideast,other,rare,west");
- 			Console.WriteLine ("                         default is all");
-diff --git a/linker/Mono.Linker.csproj b/linker/Mono.Linker.csproj
-index d328491..4e8f143 100644
---- a/linker/Mono.Linker.csproj
-+++ b/linker/Mono.Linker.csproj
-@@ -70,6 +70,7 @@
+ 			Console.WriteLine ("");
+ 
+ 			Environment.Exit (1);
+diff --git a/src/linker/Mono.Linker.csproj b/src/linker/Mono.Linker.csproj
+index 7ade313..b3cc8ad 100644
+--- a/src/linker/Mono.Linker.csproj
++++ b/src/linker/Mono.Linker.csproj
+@@ -71,6 +71,7 @@
      <Compile Include="Linker.Steps\IStep.cs" />
      <Compile Include="Linker.Steps\LoadReferencesStep.cs" />
      <Compile Include="Linker.Steps\MarkStep.cs" />
@@ -193,5 +193,5 @@ index d328491..4e8f143 100644
      <Compile Include="Linker.Steps\ResolveFromXApiStep.cs" />
      <Compile Include="Linker.Steps\ResolveFromAssemblyStep.cs" />
 -- 
-2.17.1.windows.2
+2.18.0
 
