@@ -1,0 +1,25 @@
+From b106b767cc6fe3e55dc0f80e9dd649fe7523b0de Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Apr 2019 14:27:10 -0500
+Subject: [PATCH] Add PackageProjectUrl for new SDK warning.
+
+---
+ Directory.Build.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index d7042790ef..22f66589a8 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -2,5 +2,8 @@
+ <Project>
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+   <Import Project="eng\targets\Settings.props" />
++  <PropertyGroup>
++    <PackageProjectUrl>https://github.com/dotnet/roslyn</PackageProjectUrl>
++  </PropertyGroup>
+ </Project>
+ 
+-- 
+2.18.0
+
