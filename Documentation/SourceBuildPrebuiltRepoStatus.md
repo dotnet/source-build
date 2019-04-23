@@ -1,15 +1,15 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-04-12
+Last source-build Build Date: 2019-04-18
 
-Last updated: 2019-04-16
+Last updated: 2019-04-23
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [application-insights][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 6 | 15 |
+| [arcade][970] | Mark Wilke | ![ot] On Track | 7 | 15 |
 | [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 14 |
 | [clicommandlineparser][976] | Nick Guerrera | ![ot] On Track | 3 | 5 |
 | [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 6 | 7 |
@@ -28,7 +28,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 1 | 10 |
 | [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
 | [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
-| [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 3 | 9 |
+| [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 4 | 9 |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 6 |
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 13 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
