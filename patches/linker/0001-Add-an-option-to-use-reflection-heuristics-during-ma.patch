@@ -101,7 +101,7 @@ index 0000000..3cb98b1
 +							hasMarkedInstanceMember = true;
 +						}
 +
-+						if (IsInstanceConstructor (method)) {
++						if (method.IsInstanceConstructor()) {
 +							hasMarkedConstructors = true;
 +						}
 +
@@ -122,7 +122,7 @@ index 0000000..3cb98b1
 +					}
 +
 +					if (hasMarkedInstanceMember) {
-+						MarkMethodsIf (type.Methods, IsInstanceConstructor);
++						MarkMethodsIf (type.Methods, (m) => m.IsInstanceConstructor());
 +					}
 +				}
 +
