@@ -1,0 +1,28 @@
+From ef19ad57f404e31d0998fb373219178c0b243869 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 24 Apr 2019 18:12:23 -0500
+Subject: [PATCH] Allow separate tool and SDK directories.
+
+---
+ init-tools.sh | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/init-tools.sh b/init-tools.sh
+index cacf9e454d..ef4b14ca35 100755
+--- a/init-tools.sh
++++ b/init-tools.sh
+@@ -25,6 +25,11 @@ if [ -e "$__TOOLRUNTIME_DIR" ]; then rm -rf -- "$__TOOLRUNTIME_DIR"; fi
+ if [ -d "${DotNetBuildToolsDir:-}" ]; then
+     echo "Using tools from '$DotNetBuildToolsDir'."
+     ln -s "$DotNetBuildToolsDir" "$__TOOLRUNTIME_DIR"
++fi
++
++if [ -d "${DotNetCoreSdkDir:-}" ]; then
++    echo "Using .NET SDK from '$DotNetCoreSdkDir'."
++    ln -s "$DotNetCoreSdkDir" "$__DOTNET_PATH"
+ 
+     if [ ! -e "$__DOTNET_CMD" ]; then
+         echo "ERROR: Ensure that $DotNetBuildToolsDir contains the .NET Core SDK at $__DOTNET_PATH"
+-- 
+2.18.0
+
