@@ -7,8 +7,8 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)publish</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:PackageProjectUrl=https://github.com/dotnet/source-build</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
