@@ -22,10 +22,13 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+
+    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="clicommandlineparser" />
+    <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
   <ItemGroup>
