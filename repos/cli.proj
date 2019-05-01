@@ -32,7 +32,7 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
@@ -82,6 +82,17 @@
 
     <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
     <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
+
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <!--
