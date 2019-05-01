@@ -34,6 +34,7 @@ if [ -e /.dockerenv ]; then
     if [ -e /etc/os-release ]; then
         source /etc/os-release
         if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
+            printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
             apt-get update
             apt-get install -y language-pack-en-base
             localedef -c -i en_US -f UTF-8 en_US.UTF-8
