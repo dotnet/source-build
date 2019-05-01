@@ -23,9 +23,9 @@
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
 
-    <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
+    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="xliff-tasks" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="newtonsoft-json" />
