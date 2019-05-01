@@ -1,0 +1,26 @@
+From a1e6b2deb612b939f3f149400ce02f6239d7044a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 1 May 2019 05:36:35 -0500
+Subject: [PATCH] Hardcode version until we fix Arcade.
+
+---
+ build/build.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/build.props b/build/build.props
+index d0f317f..3f65f68 100644
+--- a/build/build.props
++++ b/build/build.props
+@@ -13,6 +13,6 @@
+     <SignAssembly>true</SignAssembly>
+     <PublicSign Condition="'$(OS)' != 'Windows_NT'">true</PublicSign>
+     <CommitCount Condition="'$(CommitCount)' == ''">0</CommitCount>
+-    <Version>$([System.String]::Format('0.2.0-beta-{0:000000}', $([MSBuild]::Add(0, $(CommitCount)))))</Version>
++    <Version>0.2.0-beta-63004-01</Version>
+   </PropertyGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+
