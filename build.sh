@@ -33,7 +33,7 @@ if [ -e /.dockerenv ]; then
     fi
     if [ -e /etc/os-release ]; then
         source /etc/os-release
-        if [[ "$ID" -eq "debian" || "$ID" -eq "ubuntu" ]]; then
+        if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
             apt-get update
             apt-get install -y language-pack-en-base
             localedef -c -i en_US -f UTF-8 en_US.UTF-8
