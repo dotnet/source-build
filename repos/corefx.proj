@@ -12,7 +12,7 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
 
     <BuildArguments>$(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:SkipTests=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
