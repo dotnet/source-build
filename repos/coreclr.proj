@@ -13,6 +13,7 @@
     <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
 
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 

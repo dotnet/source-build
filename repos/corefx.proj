@@ -22,7 +22,7 @@
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
-    <BuildArguments Condition="'$(TargetOS)' == 'Windows_NT'">$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'OSX'">$(BuildArguments) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(OverrideTargetRid)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
