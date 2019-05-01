@@ -86,7 +86,7 @@ if not [%INIT_TOOLS_ERRORLEVEL%]==[0] (
 )
 
 REM CoreCLR expects this and has no way to pass in the dotnetcli director
-mklink /j "%DOTNET_PATH%" "%TOOLRUNTIME_DIR%\.dotnet"
+mklink /j "%TOOLRUNTIME_DIR%\.dotnet" "%DOTNET_PATH%"
 
 :: Create semaphore file
 if NOT exist "%BUILD_TOOLS_SEMAPHORE_DIR%" mkdir "%BUILD_TOOLS_SEMAPHORE_DIR%"
