@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks
 {
@@ -108,6 +109,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                         if (destination.EndsWith(".nuspec"))
                         {
                             var fileText = File.ReadAllText(destination);
+                            if (fileText.ToLowerInvariant().Contains("</license>") && fileText.ToLowerInvariant().Contains("</licenseurl>"))
+                            {
+                               var licenseRegex = new Regex(@"<license.*</license>", RegexOptions.IgnoreCase);
+                               fileText = licenseRegex.Replace(fileText, "");
+                            }
                             File.WriteAllText(destination, fileText.Replace("</package>", "<files><file src=\".\\**\\*\"/></files>\n</package>"));
                         }
                     }
