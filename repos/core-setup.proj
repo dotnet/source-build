@@ -2,12 +2,14 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- core-setup can build portable now but otherwise always builds 10.12 -->
+    <!-- core-sdk always wants a portable runtime on OSX -->
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX' and '$(PortableBuild)' != 'true'">osx.10.12-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OverridePortable>$(PortableBuild)</OverridePortable>
+    <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
 
     <BuildArguments>-ConfigurationGroup=$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments>$(BuildArguments) -SkipTests=true</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
