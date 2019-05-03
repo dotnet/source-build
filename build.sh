@@ -47,5 +47,7 @@ fi
 
 set -x
 
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl /flp:v=diag /clp:v=m "$@"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:arcadeBuild.binlog /p:RootRepo=arcade /flp:v=diag /clp:v=m "$@"
+pkill dotnet
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binglog /flp:v=diag /clp:v=m "$@"
 
