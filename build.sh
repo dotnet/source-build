@@ -47,7 +47,10 @@ fi
 
 set -x
 
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:arcadeBuild.binlog /p:RootRepo=arcade /flp:v=diag /clp:v=m "$@"
-pkill dotnet
+# if we are not running a RootRepo or specific target already, build Arcade first separately
+if ! [[ "$@" =~ "RootRepo" || "$@" =~ "/t:" ]]; then
+    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade ${MSBUILD_ARGUMENTS[@]} "$@" /p:FailOnPrebuiltBaselineError=false
+    pkill dotnet
+fi
 $CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binlog /flp:v=diag /clp:v=m "$@"
 
