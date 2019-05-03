@@ -62,11 +62,6 @@ fi
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
 # if we are not running a RootRepo or specific target already, build Arcade first separately
 if ! [[ "$@" =~ "RootRepo" || "$@" =~ "/t:" ]]; then
-    mkdir -p $SCRIPT_ROOT/packages/bootstrap/microsoft.dotnet.arcade.sdk/1.0.0-dev
-    pushd $SCRIPT_ROOT/packages/bootstrap/microsoft.dotnet.arcade.sdk/1.0.0-dev
-    unzip -o $SCRIPT_ROOT/prebuilt/source-built/Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.nupkg
-    chmod -R u+r .
-    popd
     $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade ${MSBUILD_ARGUMENTS[@]} "$@" /p:FailOnPrebuiltBaselineError=false
     pkill dotnet
 fi
