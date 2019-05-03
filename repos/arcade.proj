@@ -34,6 +34,10 @@
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
     <EnvironmentVariables Include="useInstalledDotNetCli=false" />
+
+    <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->
+    <EnvironmentVariables Remove="DotNetUseShippingVersions=true" />
+    <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -41,10 +45,11 @@
   </ItemGroup>
 
   <PropertyGroup>
+    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19161.14</ArcadeBootstrapVersion>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(OfflineBuild)' != 'true'">
+  <ItemGroup>
     <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
          This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
     <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
