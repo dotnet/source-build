@@ -47,6 +47,8 @@
   <PropertyGroup>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19161.14</ArcadeBootstrapVersion>
+    <ArcadeBootstrapPath Condition="'$(OfflineBuild)' == 'true'">$(PackagesDir)bootstrap/microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)</ArcadeBootstrapPath>
+    <ArcadeBootstrapPath Condition="'$(OfflineBuild)' != 'true'">$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)</ArcadeBootstrapPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,7 +56,7 @@
          This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
     <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
     <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(ArcadeBootstrapPath)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
