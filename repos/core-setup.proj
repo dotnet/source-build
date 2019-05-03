@@ -42,6 +42,10 @@
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />

@@ -28,6 +28,10 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
   <!-- Extract this package into packages dir, because repos assume it's restored as a tool. -->
   <Target Name="ExtractLinkerPackageToCache"
           AfterTargets="Package">
