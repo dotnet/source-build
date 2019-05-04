@@ -62,8 +62,8 @@ fi
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
 # if we are not running a RootRepo or specific target already, build Arcade first separately
 if ! [[ "$@" =~ "RootRepo" || "$@" =~ "/t:" ]]; then
-    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade ${MSBUILD_ARGUMENTS[@]} "$@" /p:FailOnPrebuiltBaselineError=false /p:SkipReportPrebuiltUsage=true
-    pkill dotnet
+    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade ${MSBUILD_ARGUMENTS[@]} "$@" /p:FailOnPrebuiltBaselineError=false /p:SkipReportPrebuiltUsage=true || true
+    pkill dotnet || true
     $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@" /p:SkipPatches=true
 else
     $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"
