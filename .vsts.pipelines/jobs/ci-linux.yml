@@ -140,7 +140,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
-        /p:FailOnPrebuiltBaselineError=false \
+        /p:FailOnPrebuiltBaselineError=true \
         $poisonArg
     displayName: Build tarball
     timeoutInMinutes: 120
