@@ -38,5 +38,33 @@ REF_PACKAGE_SOURCE="$SCRIPT_ROOT/reference-packages/packages"
     exit 1
 )
 
+# If running in Docker, make sure we have the UTF-8 locale or builds will error out.
+if [ -e /.dockerenv ]; then
+    if [ "$EUID" -ne "0" ]; then
+        echo "error: in docker but not root, so can't fix locale"
+        exit 1
+    fi
+    if [ -e /etc/os-release ]; then
+        source /etc/os-release
+        # work around a bad /etc/apt/sources.list in the image
+        if [[ "$ID" == "debian" ]]; then
+            printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
+        fi
+        if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
+            apt-get update
+            apt-get install -y locales
+            localedef -c -i en_US -f UTF-8 en_US.UTF-8
+        fi
+    fi
+fi
+
+
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
-$CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"
+# if we are not running a RootRepo or specific target already, build Arcade first separately
+if ! [[ "$@" =~ "RootRepo" || "$@" =~ "/t:" ]]; then
+    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade ${MSBUILD_ARGUMENTS[@]} "$@" /p:FailOnPrebuiltBaselineError=false /p:SkipReportPrebuiltUsage=true || true
+    pkill dotnet || true
+    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@" /p:SkipPatches=true
+else
+    $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"
+fi

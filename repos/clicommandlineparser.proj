@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <OfficialBuildId>20190227.1</OfficialBuildId>
+    <OfficialBuildId>20190408.1</OfficialBuildId>
 
     <!-- In Windows -restore is already passed by default by build.cmd to build.ps1 -->
     <BuildCommandArgs>$(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
@@ -28,7 +28,7 @@
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
 
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
+    <!--<RepositoryReference Include="arcade" />-->
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

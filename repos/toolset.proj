@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190304.4</OfficialBuildId>
+    <OfficialBuildId>20190416.9</OfficialBuildId>
 
     <BuildCommandArgs>--pack --ci</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
@@ -31,7 +31,7 @@
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/Shipping/</ToolsetZipOutputDir>
+    <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/NonShipping/</ToolsetZipOutputDir>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>

@@ -85,6 +85,9 @@ if not [%INIT_TOOLS_ERRORLEVEL%]==[0] (
   goto :error
 )
 
+REM CoreCLR expects this and has no way to pass in the dotnetcli director
+mklink /j "%TOOLRUNTIME_DIR%\.dotnet" "%DOTNET_PATH%"
+
 :: Create semaphore file
 if NOT exist "%BUILD_TOOLS_SEMAPHORE_DIR%" mkdir "%BUILD_TOOLS_SEMAPHORE_DIR%"
 echo Init-Tools.cmd completed for BuildTools Version: %BUILDTOOLS_VERSION% > "%BUILD_TOOLS_SEMAPHORE%"

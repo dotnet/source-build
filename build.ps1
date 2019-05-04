@@ -43,4 +43,9 @@ $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
 $captured_args = $args
 
+if (-Not ($captured_args.Contains("/t:") -or $captured_args.Contains("RootRepo")))
+{
+  Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m /p:RootRepo=arcade $captured_args } | Out-Host
+  taskkill /f /im dotnet.exe
+}
 Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m $captured_args } | Out-Host

@@ -1,17 +1,17 @@
-From 25d451e540a1f26b4007a4265ced013f33599c80 Mon Sep 17 00:00:00 2001
+From 51f8aa8e8332e6c8cc8f40bed28008261fe991fa Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 10 Feb 2019 17:55:21 -0600
 Subject: [PATCH] Fix InternalsVisibleTo generation.
 
 ---
- .../tools/GenerateInternalsVisibleTo.targets                 | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../tools/GenerateInternalsVisibleTo.targets                   | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
-index eb730bcf..eb63f0fd 100644
+index cad55ca3..bf41fafc 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/GenerateInternalsVisibleTo.targets
-@@ -20,7 +20,8 @@
+@@ -15,7 +15,8 @@
      <ItemGroup>
        <_InternalsVisibleToAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
          <_Parameter1 Condition="'%(InternalsVisibleTo.Key)' != ''">%(InternalsVisibleTo.Identity), PublicKey=%(InternalsVisibleTo.Key)</_Parameter1>
@@ -21,13 +21,6 @@ index eb730bcf..eb63f0fd 100644
        </_InternalsVisibleToAttribute>
      </ItemGroup>
    </Target>
-@@ -45,4 +46,4 @@
-     </WriteCodeFragment>
-   </Target>
- 
--</Project>
-\ No newline at end of file
-+</Project>
 -- 
 2.18.0
 

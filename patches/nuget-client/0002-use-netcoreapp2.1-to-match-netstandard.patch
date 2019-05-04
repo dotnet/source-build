@@ -1,4 +1,4 @@
-From 06dc2336dfa30824f685e7309e0fb88912e3f297 Mon Sep 17 00:00:00 2001
+From 238762367427d2a6ce18e1b1c63d68731e9d0a50 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 17 Feb 2019 17:01:24 -0600
 Subject: [PATCH] use netcoreapp2.1 to match netstandard
@@ -8,7 +8,7 @@ Subject: [PATCH] use netcoreapp2.1 to match netstandard
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
-index ff89cae4c..98974b6b6 100644
+index 221b0360d..d458a0492 100644
 --- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
 +++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
 @@ -3,7 +3,7 @@
@@ -20,7 +20,7 @@ index ff89cae4c..98974b6b6 100644
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <AssemblyName>NuGet.Build.Tasks.Pack</AssemblyName>
      <RootNamespace>$(AssemblyName)</RootNamespace>
-@@ -38,7 +38,7 @@
+@@ -39,7 +39,7 @@
      <Reference Include="Microsoft.Build.Framework" Pack="false" />
    </ItemGroup>
  
@@ -29,7 +29,7 @@ index ff89cae4c..98974b6b6 100644
      <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildPackageVersion)" />
      <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildPackageVersion)" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
-@@ -165,7 +165,7 @@
+@@ -166,7 +166,7 @@
          <PackagePath>Desktop/</PackagePath>
        </TfmSpecificPackageFile>
      </ItemGroup>

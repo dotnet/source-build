@@ -2,19 +2,23 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)/BuildFromSource/Release/bin</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <BuildRevision>181017</BuildRevision>
-    <BuildCommand>$(ProjectDirectory)/src/buildfromsource$(ShellExtension)</BuildCommand>
+    <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
+
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <!-- This repo is not currently built in ProdCon -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <OfficialBuildId>20190131.4</OfficialBuildId>
+    <OfficialBuildId>20190417.1</OfficialBuildId>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
   </PropertyGroup>
-
-  <!-- Auto-detect the root NuGet.Config, but also update the build-from-source-specific one. -->
-  <ItemGroup>
-    <NuGetConfigFiles Include="$(ProjectDirectory)/src/buildfromsource/NuGet.config" />
-  </ItemGroup>
 
   <PropertyGroup>
     <PathListSeparator>:</PathListSeparator>
@@ -32,6 +36,12 @@
 
   <ItemGroup>
     <RepositoryReference Include="core-setup" />
+    <RepositoryReference Include="msbuild" />
+    <RepositoryReference Include="xliff-tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

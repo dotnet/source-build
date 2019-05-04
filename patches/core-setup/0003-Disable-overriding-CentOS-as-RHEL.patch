@@ -1,0 +1,26 @@
+From a2ade6ead1935c32eab59c7ca1cc08fde62c0472 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 1 May 2019 11:18:23 -0500
+Subject: [PATCH] Disable overriding CentOS as RHEL.
+
+---
+ src/corehost/build.sh | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/corehost/build.sh b/src/corehost/build.sh
+index f64b6b62..556de2be 100755
+--- a/src/corehost/build.sh
++++ b/src/corehost/build.sh
+@@ -21,9 +21,6 @@ init_rid_plat()
+         __rid_plat=""
+         if [ -e /etc/os-release ]; then
+             source /etc/os-release
+-            if [[ "$ID" == "centos" ]]; then
+-                ID="rhel"
+-            fi
+             if [[ "$ID" == "rhel" ]]; then
+                 # remove the last version number
+                 VERSION_ID=${VERSION_ID%.*}
+-- 
+2.18.0
+
