@@ -7,9 +7,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CopiedCoreSetupFilesPath>core-setup-copied/</CopiedCoreSetupFilesPath>
+    <CoreSetupPlatformAbstractionsPath>$(ClonedSubmoduleDirectory)core-setup/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
     <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Platform.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)RuntimeEnvironment.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Darwin.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Unix.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/NativeMethods.Windows.cs" />
+    <Compile Include="$(CoreSetupPlatformAbstractionsPath)Native/PlatformApis.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build">
