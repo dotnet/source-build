@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190304.1</OfficialBuildId>
+    <OfficialBuildId>20190409.7</OfficialBuildId>
 
     <!--
       Normally this is generated from OfficialBuildId, but after a release, we tend to have access
@@ -23,6 +23,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:ContinuousIntegrationBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
 
     <!--
       Work around https://github.com/dotnet/sourcelink/issues/91:
@@ -39,6 +40,7 @@
   <ItemGroup>
     <PackProjects Include="$(ProjectDirectory)SourceBuild.sln" />
     <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj" />
+    <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +48,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
+    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="xliff-tasks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

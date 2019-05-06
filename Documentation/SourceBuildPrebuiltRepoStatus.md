@@ -1,38 +1,38 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-04-18
+Last source-build Build Date: 2019-05-02
 
-Last updated: 2019-04-23
+Last updated: 2019-05-03
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [application-insights][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 7 | 15 |
-| [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 14 |
+| [arcade][970] | Mark Wilke | ![ot] On Track | 7 | 12 |
+| [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 12 |
 | [clicommandlineparser][976] | Nick Guerrera | ![ot] On Track | 3 | 5 |
 | [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 6 | 7 |
 | [common][882] | Nate McMaster | ![ot] On Track | - | 1 |
-| [coreclr][883] | Russ Keldorph | ![ot] On Track | - | 6 |
+| [coreclr][883] | Russ Keldorph | ![ot] On Track | - | 4 |
 | [corefx][884] | Eric St. John | ![ot] On Track | 3 | 26 |
-| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 11 |
-| [core-setup][885] | Davis Goodin | ![pl] Planned | 2 | 19 |
-| [fsharp][886] | Brett Forsgren | ![ot] On Track | 7 | 19 |
-| [linker][887] | Dan Seefeldt | ![ot] On Track | 2 | 4 |
-| [msbuild][888] | Nick Guerrera | ![ns] Not Started | 4 | 21 |
-| [newtonsoft-json][889] | Chris Rummel | ![ot] On Track | 1 | 7 |
-| [nuget-client][890] | Rob Relyea | ![ns] Not Started | 4 | 10 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 18 |
+| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 10 |
+| [core-setup][885] | Davis Goodin | ![ot] On Track | 2 | 12 |
+| [fsharp][886] | Brett Forsgren | ![ot] On Track | 7 | 12 |
+| [linker][887] | Dan Seefeldt | ![ot] On Track | 2 | 3 |
+| [msbuild][888] | Nick Guerrera | ![ns] Not Started | 4 | 15 |
+| [newtonsoft-json][889] | Chris Rummel | ![ot] On Track | 1 | 1 |
+| [nuget-client][890] | Rob Relyea | ![ns] Not Started | 4 | 8 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 17 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 1 | 10 |
-| [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 6 |
+| [source-build-infra][975] | Dan Seefeldt | ![pl] Planned | - | 4 |
 | [standard][894] | Eric St. John | ![ot] On Track | - | 15 |
-| [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 4 | 9 |
-| [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 6 |
-| [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 13 |
+| [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 4 | 8 |
+| [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 4 |
+| [toolset][973] | Nick Guerrera | ![pl] Planned | 4 | 12 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ns] Not Started | 2 | 38 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 20 |
 | [websdk][897] | Vijay Ramakrishnan | ![pl] Planned | 2 | 10 |
 | [xliff-tasks][899] | Tom Meschter | ![pl] Planned | - | 2 |
 

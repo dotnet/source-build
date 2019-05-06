@@ -3,11 +3,11 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190219.1</OfficialBuildId>
+    <OfficialBuildId>20190406.2</OfficialBuildId>
 
     <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
 
-    <OutputVersionArgs>/p:PackageVersion=16.0.0-preview.385</OutputVersionArgs>
+    <OutputVersionArgs>/p:PackageVersion=16.0.461</OutputVersionArgs>
     <!-- Set assembly version. Otherwise, defaults to 1.0.0 because we don't have nerdbank versioning. -->
     <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.1.0</OutputVersionArgs>
     <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
@@ -49,7 +49,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="arcade" />
+    <!--<RepositoryReference Include="arcade" />-->
     <RepositoryReference Include="roslyn" />
   </ItemGroup>
 

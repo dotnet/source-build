@@ -236,6 +236,8 @@ ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
 "$__scriptpath/Tools/crossgen.sh" "$__scriptpath/Tools"
 
+# CoreCLR expects this and has no way to pass in the dotnetcli directory
+ln -s $__DOTNET_PATH $__TOOLRUNTIME_DIR/.dotnet
 
 mkdir -p "$(dirname "$__BUILD_TOOLS_SEMAPHORE")" && touch "$__BUILD_TOOLS_SEMAPHORE"
 mkdir -p "$(dirname "$__BUILD_TOOLS_ARCADE_SEMAPHORE")" && touch "$__BUILD_TOOLS_ARCADE_SEMAPHORE"
