@@ -2,7 +2,7 @@
 
 Last source-build Build Date: 2019-05-06
 
-Last updated: 2019-05-06
+Last updated: 2019-05-07
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -13,7 +13,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 1 |
 | [clicommandlineparser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 7 | 1 |
-| [common][882] | Nate McMaster | ![ot] On Track | - | - |
+| [common][882] | Nate McMaster | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [coreclr][883] | Russ Keldorph | ![ot] On Track | 1 | 4 |
 | [corefx][884] | Eric St. John | ![ot] On Track | 1 | 12 |
 | [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 5 |
@@ -21,7 +21,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [fsharp][886] | Brett Forsgren | ![ot] On Track | 1 | 8 |
 | [linker][887] | Dan Seefeldt | ![ot] On Track | 1 | 2 |
 | [msbuild][888] | Nick Guerrera | ![ns] Not Started | 3 | 7 |
-| [newtonsoft-json][889] | Chris Rummel | ![ot] On Track | 1 | - |
+| [newtonsoft-json][889] | Chris Rummel | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [nuget-client][890] | Rob Relyea | ![ns] Not Started | 2 | 8 |
 | [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 16 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
