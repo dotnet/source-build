@@ -1,11 +1,12 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-05-06
+Last source-build Build Date: 2019-05-09
 
-Last updated: 2019-05-07
+Last updated: 2019-05-10
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
+<!--TrackingTable-->
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [application-insights][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
@@ -18,9 +19,9 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [corefx][884] | Eric St. John | ![ot] On Track | 1 | 12 |
 | [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 5 |
 | [core-setup][885] | Davis Goodin | ![ot] On Track | 4 | 12 |
-| [fsharp][886] | Brett Forsgren | ![ot] On Track | 1 | 8 |
+| [fsharp][886] | Brett Forsgren | ![ot] On Track | - | 8 |
 | [linker][887] | Dan Seefeldt | ![ot] On Track | 1 | 2 |
-| [msbuild][888] | Nick Guerrera | ![ns] Not Started | 3 | 7 |
+| [msbuild][888] | Nick Guerrera | ![pl] Planned | 3 | 7 |
 | [newtonsoft-json][889] | Chris Rummel | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [nuget-client][890] | Rob Relyea | ![ns] Not Started | 2 | 8 |
 | [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 16 |
@@ -54,6 +55,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 
 <br/>
 
+<!--RepoCommitsAndDates-->
 | Repo | Latest Commit | Commit Date
 | --- | --- | ---
 application-insights | 53b80940842204f78708a538628288ff5d741a1d | 2017-12-21
@@ -66,7 +68,7 @@ core-sdk | 118dd862c853ff39694449ac303f5d8ef7d11b24 | 2019-04-16
 core-setup | ee54d4cbd2b305eadf6f341bdc9d4abccdb50559 | 2019-04-16
 coreclr | d833cacabd67150fe3a2405845429a0ba1b72c12 | 2019-04-12
 corefx | dc522ef97fac72e64cd74825b7ef497f82af4624 | 2019-04-12
-fsharp | a3d6e55c4ca80ec85563e67954096dbafd953761 | 2019-04-16
+fsharp | d4e68aef7fa3507d38dd7fe4eca287fc40dd46ce | 2019-04-17
 linker | 1b3d8bc8eb5dd3678dd91eb08157c885336aaea0 | 2019-03-14
 msbuild | d004974104fde202e633b3c97e0ece3287aa62f9 | 2019-04-05
 newtonsoft-json | e43dae94c26f0c30e9095327a3a9eac87193923d | 2018-05-31
@@ -88,7 +90,7 @@ Prebuilts are dependencies that a repo has on binary files that are not built fr
 
 Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch
 
-[startOfIssuesList]: https://dummy
+<!--StartOfIssuesList-->
 [900]: https://github.com/dotnet/source-build/issues/900
 [970]: https://github.com/dotnet/source-build/issues/970
 [880]: https://github.com/dotnet/source-build/issues/880
