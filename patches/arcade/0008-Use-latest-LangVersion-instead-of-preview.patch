@@ -1,0 +1,25 @@
+From 6eae63198946c4b8c8762c900ec20abceedd8593 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 9 May 2019 16:58:33 -0500
+Subject: [PATCH 8/8] Use latest LangVersion instead of preview.
+
+---
+ .../Microsoft.DotNet.Arcade.Sdk.csproj                          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
+index 40eee44b..8e28cc3c 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
++++ b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
+@@ -2,7 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+-    <LangVersion>preview</LangVersion>
++    <LangVersion>latest</LangVersion>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+ 
+-- 
+2.18.0
+

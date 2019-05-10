@@ -1,17 +1,17 @@
-From bf5ec8682bbbaf9e476501d0ddad85d357c33ef9 Mon Sep 17 00:00:00 2001
+From 4689d4bd1c602cb48709575a0302ed91b84b50df Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 2 May 2019 01:38:21 -0500
-Subject: [PATCH] Remove SignCheck projects - Wix dependency.
+Subject: [PATCH 4/8] Remove SignCheck projects - Wix dependency.
 
 ---
- Arcade.sln | 28 ----------------------------
- 1 file changed, 28 deletions(-)
+ Arcade.sln | 30 ------------------------------
+ 1 file changed, 30 deletions(-)
 
 diff --git a/Arcade.sln b/Arcade.sln
-index b571d36b..04082cdc 100644
+index 808fb179..ef310a0c 100644
 --- a/Arcade.sln
 +++ b/Arcade.sln
-@@ -40,12 +40,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.GenAPI", "
+@@ -41,12 +41,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.GenAPI", "
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.ApiCompat", "src\Microsoft.DotNet.ApiCompat\Microsoft.DotNet.ApiCompat.csproj", "{9E406363-CFB1-4851-AEE9-9DEF98A7F814}"
  EndProject
@@ -24,7 +24,7 @@ index b571d36b..04082cdc 100644
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinShimmer", "src\WinShimmer\WinShimmer.csproj", "{39C3FC42-21E8-40BF-AE3F-CB9C4CC226D7}"
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Build.Tasks.Packaging", "src\Microsoft.DotNet.Build.Tasks.Packaging\src\Microsoft.DotNet.Build.Tasks.Packaging.csproj", "{EFC8C541-1DC4-40DA-B6E5-FBF44F6DD8BC}"
-@@ -292,26 +286,6 @@ Global
+@@ -293,26 +287,6 @@ Global
  		{9E406363-CFB1-4851-AEE9-9DEF98A7F814}.Release|x64.Build.0 = Release|Any CPU
  		{9E406363-CFB1-4851-AEE9-9DEF98A7F814}.Release|x86.ActiveCfg = Release|Any CPU
  		{9E406363-CFB1-4851-AEE9-9DEF98A7F814}.Release|x86.Build.0 = Release|Any CPU
@@ -51,12 +51,14 @@ index b571d36b..04082cdc 100644
  		{39C3FC42-21E8-40BF-AE3F-CB9C4CC226D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{39C3FC42-21E8-40BF-AE3F-CB9C4CC226D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{39C3FC42-21E8-40BF-AE3F-CB9C4CC226D7}.Debug|x64.ActiveCfg = Debug|Any CPU
-@@ -486,8 +460,6 @@ Global
+@@ -487,10 +461,6 @@ Global
  		{FF9DA4D9-3A84-441B-8AAE-B73B6D1EE8B3} = {BB99CE55-AD68-484A-9474-B8BACED247AB}
  		{697EB593-3277-4C43-B8F3-C578E21B051B} = {BB99CE55-AD68-484A-9474-B8BACED247AB}
  		{4FA6B420-53A3-4956-9C02-8649A720A9F5} = {BB99CE55-AD68-484A-9474-B8BACED247AB}
 -		{AF298985-511F-476A-8F62-79908BE8DF01} = {A704E5B2-86A4-4D4F-902D-C10EA18C12DF}
 -		{39B69A56-43E9-480D-9A60-8E0917795FE8} = {A704E5B2-86A4-4D4F-902D-C10EA18C12DF}
+-		{F23ED302-7451-4D40-85C3-FACFCF884661} = {C53DD924-C212-49EA-9BC4-1827421361EF}
+-		{BA4250FD-9258-4469-A16D-48A0CAF5A2F8} = {C53DD924-C212-49EA-9BC4-1827421361EF}
  		{5ED29E38-A65D-4123-BFED-799ADA885F08} = {86AEE6AF-16D7-47FD-8D3E-6B87B249208D}
  		{DC0D0EE5-1C0C-4D3E-BA0B-D6A59717DA94} = {6BE49638-F842-4329-BE8A-30C0F30CCAA5}
  		{3CCA947D-B466-4481-BC78-43CE98A8A3A7} = {80888CDA-37DC-4061-AF5F-7237BF16A320}
