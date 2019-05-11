@@ -1,17 +1,17 @@
-From 3780014b17760e5f86ca90de6a198b1d146913ad Mon Sep 17 00:00:00 2001
+From ad98a9a7da384dd450fec95b59071be8d8beba9b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 25 Apr 2019 19:01:08 -0500
-Subject: [PATCH 1/8] Remove projects that fail to build in source-build.
+Subject: [PATCH] Remove projects that fail to build in source-build.
 
 ---
  Arcade.sln | 14 --------------
  1 file changed, 14 deletions(-)
 
 diff --git a/Arcade.sln b/Arcade.sln
-index 9d465c62..c8c96e69 100644
+index 3d8b9ca5..8e5357db 100644
 --- a/Arcade.sln
 +++ b/Arcade.sln
-@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
+@@ -2,8 +2,6 @@
  # Visual Studio 15
  VisualStudioVersion = 15.0.28307.271
  MinimumVisualStudioVersion = 10.0.40219.1
@@ -20,7 +20,7 @@ index 9d465c62..c8c96e69 100644
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.DotNet.Helix", "Microsoft.DotNet.Helix", "{6BE49638-F842-4329-BE8A-30C0F30CCAA5}"
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Helix.Sdk", "src\Microsoft.DotNet.Helix\Sdk\Microsoft.DotNet.Helix.Sdk.csproj", "{86DC4DC7-DCEE-44AC-A7E3-B6D5A909422C}"
-@@ -105,18 +103,6 @@ Global
+@@ -108,18 +106,6 @@ Global
  		Release|x86 = Release|x86
  	EndGlobalSection
  	GlobalSection(ProjectConfigurationPlatforms) = postSolution
