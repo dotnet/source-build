@@ -160,8 +160,8 @@
       <!-- required so Darc doesn't throw an error for missing auth -->
       <DarcCloneArguments>$(DarcCloneArguments) --azdev-pat bogus</DarcCloneArguments>
       <DarcCloneArguments>$(DarcCloneArguments) --github-pat bogus</DarcCloneArguments>
-      <!-- depth 1 should be sufficient for us since we explictly declare all our dependencies -->
-      <DarcCloneArguments>$(DarcCloneArguments) --depth 1</DarcCloneArguments>
+      <!-- depth 0 should be sufficient for us since we explictly declare all our dependencies -->
+      <DarcCloneArguments>$(DarcCloneArguments) --depth 0</DarcCloneArguments>
       <DarcCloneArguments>$(DarcCloneArguments) --debug</DarcCloneArguments>
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
