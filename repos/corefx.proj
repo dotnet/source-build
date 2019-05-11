@@ -88,6 +88,6 @@
   <Target Name="DebugTesting" BeforeTargets="Build">
     <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="pkill csc.dll" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="sh -c 'pkill csc.dll || true'" EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>
