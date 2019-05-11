@@ -10,7 +10,6 @@
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)publish</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
@@ -30,6 +29,7 @@
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
