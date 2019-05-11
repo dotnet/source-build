@@ -81,6 +81,9 @@
     <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
     <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
 
+    <!-- Output Roslyn logs to allow debugging compiler errors -->
+    <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
+
     <!-- Turn off node reuse for source build because repos use conflicting versions 
          of compilers which cause assembly load errors.  
          See https://github.com/dotnet/source-build/issues/541 -->
