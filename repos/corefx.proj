@@ -88,11 +88,11 @@
   <Target Name="DebugTesting" BeforeTargets="Build">
     <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -c 'ps -eav'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Exec Command="sh -c 'ps -AF'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PreKillOutput" />
     </Exec>
-    <Exec Command="sh -c 'ps -e | grep &quot;dotnet&quot; | awk &quot;{print %241}&quot; | xargs kill || true'" EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -c 'ps -eav'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Exec Command="sh -c 'ps -Af | grep &quot;dotnet&quot; | awk &quot;{print %242}&quot; | xargs kill || true'" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="sh -c 'ps -AF'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PostKillOutput" />
     </Exec>
     <Message Importance="High" Text="Prekill process: $(PreKillOutput)" />
