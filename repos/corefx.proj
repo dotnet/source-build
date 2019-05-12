@@ -91,7 +91,7 @@
     <Exec Command="sh -c 'ps -eav'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PreKillOutput" />
     </Exec>
-    <Exec Command="sh -c 'ps -e | grep "dotnet" | awk "{print %241}" | xargs kill || true'" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="sh -c 'ps -e | grep &quot;dotnet&quot; | awk &quot;{print %241}&quot; | xargs kill || true'" EnvironmentVariables="@(EnvironmentVariables)" />
     <Exec Command="sh -c 'ps -eav'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PostKillOutput" />
     </Exec>
