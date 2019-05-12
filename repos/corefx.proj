@@ -88,7 +88,7 @@
   <Target Name="DebugTesting" BeforeTargets="Build">
     <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -c 'ps -Af'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Exec Command="sh -c 'ps -Af | grep &quot;dotnet&quot;'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="AllProcOutput" />
     </Exec>
     <Message Importance="High" Text="Allprocoutput: $(AllProcOutput)" />
