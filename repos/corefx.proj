@@ -88,19 +88,18 @@
   <Target Name="DebugTesting" BeforeTargets="Build">
     <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
           EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -c &quot;ps -Af | grep -i VBCSCompiler | awk '{print \&quot;0 \&quot; \%240 \&quot; 1 \&quot; \%241 \&quot; 2 \&quot; \%242 \&quot; 3 \&quot; \%243 \&quot; 4 \&quot; %244}'&quot;" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Exec Command="sh -xc &quot;ps -Af | grep -i VBCSCompiler | awk '{print \&quot;0 \&quot; \%240 \&quot; 1 \&quot; \%241 \&quot; 2 \&quot; \%242 \&quot; 3 \&quot; \%243 \&quot; 4 \&quot; %244}'&quot;" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="AllProcOutput" />
     </Exec>
     <Message Importance="High" Text="Allprocoutput: $(AllProcOutput)" />
-    <Message Importance="High" Text="Running kill commind: sh -c 'ps -Af | grep -i &quot;VBCSCompiler&quot; | awk &quot;{print \%242}&quot; | xargs kill || true'" />
-    <Exec Command="sh -c 'ps -Af | grep -i VBCSCompiler | awk &quot;{print \%242}&quot;'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Exec Command="sh -xc 'ps -Af | grep -i VBCSCompiler | | grep -v grep | awk &quot;{print \%242}&quot;'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PreKillOutput" />
     </Exec>
-    <Exec Command="sh -c 'ps -Af | grep -i &quot;VBCSCompiler&quot; | awk &quot;{print \%242}&quot; | xargs kill || true'" EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -c 'ps -Af'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
+    <Message Importance="High" Text="Prekill process: $(PreKillOutput)" />
+    <Exec Command="sh -xc 'ps -Af | grep -i &quot;VBCSCompiler&quot; | | grep -v grep | awk &quot;{print \%242}&quot; | xargs kill'" EnvironmentVariables="@(EnvironmentVariables)" />
+    <Exec Command="sh -xc 'ps -Af | grep -i VBCSCompiler | | grep -v grep | awk &quot;{print \%242}&quot;'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
       <Output TaskParameter="ConsoleOutput" PropertyName="PostKillOutput" />
     </Exec>
-    <Message Importance="High" Text="Prekill process: $(PreKillOutput)" />
     <Message Importance="High" Text="Postkill process: $(PostKillOutput)" />
   </Target>
 </Project>
