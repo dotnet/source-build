@@ -80,6 +80,12 @@
 
     <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
     <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
+    <EnvironmentVariables Include="MSBUILDDEBUGCOMM=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGSCHEDULER=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGFORCECACHING=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGEXPANSION=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUG=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGEVALUATION=1" />
 
     <!-- Output Roslyn logs to allow debugging compiler errors -->
     <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
