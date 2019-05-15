@@ -31,6 +31,12 @@ $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
 $env:SDK_VERSION = $SdkVersion
 
+$key = Get-Item -LiteralPath Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control -ErrorAction SilentlyContinue
+if ($key.GetValue('ContainerType', $null) -ne $null)
+{
+    $env:DotNetRunningInDocker = 1
+}
+
 if (-NOT $test -and ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false"))
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
