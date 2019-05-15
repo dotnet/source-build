@@ -59,12 +59,12 @@
   </Target>
 
   <Target Name="CreateGitInfoProps" DependsOnTargets="GetRepoProjects">
-    <MSBuild Projects="@(RepoProjects)" Targets="CreateGitInfoProps" BuildInParallel="$(BuildInParallel)" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="@(RepoProjects)" Targets="CreateGitInfoProps" BuildInParallel="$(BuildInParallel)" Properties="MSBUILDDISABLENODEREUSE=1" />
   </Target>
 
   <Target Name="ApplyPatches" DependsOnTargets="GetRepoProjects">
     <Message Text="Applying patches only" />
-    <MSBuild Projects="@(RepoProjects)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="@(RepoProjects)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" Properties="MSBUILDDISABLENODEREUSE=1" />
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
