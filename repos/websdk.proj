@@ -16,6 +16,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:SkipTests=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
