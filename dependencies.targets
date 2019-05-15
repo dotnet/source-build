@@ -15,7 +15,7 @@
       Evaluate the dependency properties of each repo project. Use MSBuildSourceProjectFile as the
       join key to make one combined item for each project with all available metadata.
     -->
-    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOrchestratedManifestBuildName">
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOrchestratedManifestBuildName" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1">
       <Output TaskParameter="TargetOutputs" ItemName="OrchestratedManifestBuildNames" />
     </MSBuild>
     <ItemGroup>
@@ -25,7 +25,7 @@
         KeepMetadata="MSBuildSourceProjectFile" />
     </ItemGroup>
 
-    <MSBuild Projects="@(RepoProjectFile)" Targets="GetProjectDirectory">
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetProjectDirectory" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1">
       <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
     </MSBuild>
     <ItemGroup>
@@ -35,7 +35,7 @@
         KeepMetadata="MSBuildSourceProjectFile" />
     </ItemGroup>
 
-    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOfficialBuildId">
+    <MSBuild Projects="@(RepoProjectFile)" Targets="GetOfficialBuildId" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1">
       <Output TaskParameter="TargetOutputs" ItemName="OfficialBuildIds" />
     </MSBuild>
     <ItemGroup>

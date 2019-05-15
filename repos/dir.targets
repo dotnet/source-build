@@ -68,7 +68,7 @@
       <_DependentProject Include="@(RepositoryReference -> '%(Identity).proj')" />
     </ItemGroup>
 
-    <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
+    <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1" />
   </Target>
 
   <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'">
@@ -469,7 +469,7 @@
     <Message Importance="High" Text="Finding project directories..." />
 
     <MSBuild Projects="@(AllRepoProjects)"
-             Targets="GetProjectDirectory">
+             Targets="GetProjectDirectory" EnvironmentVariables="MSBUILDDISABLENODEREUSE=1">
       <Output TaskParameter="TargetOutputs" ItemName="ProjectDirectories" />
     </MSBuild>
   </Target>

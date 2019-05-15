@@ -50,9 +50,9 @@ set -x
 
 # if we are not running a RootRepo or specific target already, build Arcade first separately
 if ! [[ "$@" =~ "RootRepo" || "$@" =~ "/t:" ]]; then
-    $CLIPATH/dotnet $SDKPATH/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade "$@" /p:FailOnPrebuiltBaselineError=false
+    $CLIPATH/dotnet $SDKPATH/MSBuild.dll /bl:arcadeBuild.binlog $SCRIPT_ROOT/build.proj /p:RootRepo=arcade "$@" /p:FailOnPrebuiltBaselineError=false /nodeReuse:false
     # some systems don't have pkill - this is 'pkill dotnet'
     ps -e | grep 'dotnet' | awk '{print $1}' | xargs kill || true
 fi
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binlog /flp:v=diag /clp:v=m "$@"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binlog /flp:v=diag /clp:v=m "$@" /nodeReuse:false
 
