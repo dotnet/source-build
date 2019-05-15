@@ -98,8 +98,10 @@
     <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitCommitHash=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
-    <EnvironmentVariables Include="SourceRevisionId=$(GitCommitHash)" />
-    <EnvironmentVariables Include="RepositoryCommit=$(GitCommitHash)" />
+    <EnvironmentVariables Include="SourceRevisionId=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
+    <EnvironmentVariables Include="SourceRevisionId=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
+    <EnvironmentVariables Include="RepositoryCommit=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
+    <EnvironmentVariables Include="RepositoryCommit=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="RepositoryUrl=https://github.com/dotnet/source-build" />
   </ItemGroup>
