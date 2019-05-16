@@ -10,7 +10,7 @@
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
 
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" Properties="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
   </Target>
 
   <Target Name="CreateRootRepoFile" AfterTargets="PrepareOutput">
@@ -28,11 +28,10 @@
     <MakeDir Directories="$(LocalBlobStorageRoot)" />
     <MakeDir Directories="$(MSBuildDebugPathTargetDir)" />
     <MakeDir Directories="$(RoslynDebugPathTargetDir)" />
-    <MakeDir Directories="$(ClonedSubmoduleDirectory)" />
   </Target>
 
   <Target Name="InitBuild">
-    <MSBuild Projects="tools-local/init-build.proj" Properties="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="tools-local/init-build.proj" />
   </Target>
 
   <Target Name="Clean">
@@ -180,7 +179,7 @@
   <Target Name="ReportPrebuiltUsage"
           AfterTargets="Build"
           Condition="'$(SkipReportPrebuiltUsage)' != 'true'">
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" Properties="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="WritePrebuiltUsageData;ReportPrebuiltUsage" />
   </Target>
 
   <!--
@@ -190,7 +189,7 @@
     XMLs based on the info put in bin/.
   -->
   <Target Name="RewritePrebuiltUsageReport">
-    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" Properties="MSBUILDDISABLENODEREUSE=1" />
+    <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
   </Target>
 
   <Target Name="ReportPoisonUsage"
