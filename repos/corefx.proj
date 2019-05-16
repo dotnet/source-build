@@ -59,7 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
@@ -85,17 +85,4 @@
                          Rid="$(TargetRid)-$(Platform)" />
   </Target>
 
-  <Target Name="DebugTesting" BeforeTargets="Build">
-    <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -xc 'ps -Af | grep -v grep'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="PreKillOutput" />
-    </Exec>
-    <Message Importance="High" Text="Prekill process: @(PreKillOutput)" />
-    <Exec Command="sh -xc 'ps -Af | grep -i dotnet | grep -v build.proj | grep -v grep | awk &quot;{print \%242}&quot; | xargs kill'" EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="sh -xc 'ps -Af | grep -v grep'" EnvironmentVariables="@(EnvironmentVariables)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="PostKillOutput" />
-    </Exec>
-    <Message Importance="High" Text="Postkill process: @(PostKillOutput)" />
-  </Target>
 </Project>

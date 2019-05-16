@@ -38,11 +38,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(PreferredHash)" />
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="xliff-tasks" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="msbuild" />

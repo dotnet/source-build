@@ -13,7 +13,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
@@ -40,7 +39,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
-    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(PreferredHash)" />
     <EnvironmentVariables Include="useInstalledDotNetCli=false" />
 
     <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->

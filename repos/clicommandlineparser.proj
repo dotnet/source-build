@@ -24,7 +24,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <BuildCommandArgs>$(BuildCommandArgs) /p:SignAssembly=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
@@ -44,11 +43,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(PreferredHash)" />
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

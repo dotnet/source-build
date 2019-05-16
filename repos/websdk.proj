@@ -15,7 +15,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SkipTests=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
@@ -37,7 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 

@@ -66,8 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->

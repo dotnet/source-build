@@ -28,7 +28,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
 
     <!--
       Work around https://github.com/dotnet/sourcelink/issues/91:
@@ -53,7 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 

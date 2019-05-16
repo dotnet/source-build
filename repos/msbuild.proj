@@ -19,7 +19,6 @@
     <BuildCommandArgs>--build --publish --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetBuildFromSource=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetCoreSdkDir=$(DotNetCliToolDir)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:RepositoryCommit=$(PreferredHash)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --projects $(ProjectDirectory)MSBuild.SourceBuild.sln</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
@@ -54,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
