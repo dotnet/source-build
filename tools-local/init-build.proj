@@ -147,6 +147,7 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <PropertyGroup>
       <DarcCloneArguments>clone</DarcCloneArguments>
+      <DarcCloneArguments>$(DarcCloneArguments) --repos-folder $(ClonedSubmoduleDirectory)</DarcCloneArguments>
       <DarcCloneArguments>$(DarcCloneArguments) --git-dir-folder $(ClonedSubmoduleGitRootDirectory)</DarcCloneArguments>
       <DarcCloneArguments>$(DarcCloneArguments) --include-toolset</DarcCloneArguments>
       <IgnoredRepos/>
@@ -164,7 +165,8 @@
       <DarcCloneArguments>$(DarcCloneArguments) --debug</DarcCloneArguments>
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
-    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ClonedSubmoduleDirectory)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)'" />
+    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
