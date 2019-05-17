@@ -93,12 +93,12 @@ git submodule foreach --quiet --recursive '
         git --work-tree="$TARBALL_SUBMODULE_PATH" checkout -- .
     fi'
 
-# Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all."
+# Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
 ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup"
 "$SCRIPT_ROOT/Tools/dotnetcli/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 # then delete the master copies - we only need the specific hashes
 pushd "$TARBALL_ROOT/src"
-find "$PWD" -maxdepth 1 -type d | grep -v "$PWD\$" | grep -v '\.' | xargs rm -rf
+find "$PWD" -maxdepth 1 -type d | grep -v reference-assemblies | grep -v netcorecli-fsc | grep -v "$PWD\$" | grep -v '\.' | xargs rm -rf
 popd
 # Newtonsoft.Json and NuGet.Client are the odd ones out
 rm -rf "$TARBALL_ROOT/src/NuGet.Client" "$TARBALL_ROOT/src/Newtonsoft.Json"
