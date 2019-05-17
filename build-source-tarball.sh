@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -xeuo pipefail
+set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
