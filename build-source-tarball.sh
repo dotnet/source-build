@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -xeuo pipefail
 IFS=$'\n\t'
 
 usage() {
@@ -98,10 +98,10 @@ ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;ht
 "$SCRIPT_ROOT/Tools/dotnetcli/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 # then delete the master copies - we only need the specific hashes
 pushd "$TARBALL_ROOT/src"
-find "$PWD" -maxdepth 1 -type d | grep -v "$PWD/src\$" | grep -v '\.' | xargs rm -rf
-# and NuGet.Client is the odd one out
-rm -rf "$TARBALL_ROOT/src/NuGet.Client"
+find "$PWD" -maxdepth 1 -type d | grep -v "$PWD\$" | grep -v '\.' | xargs rm -rf
 popd
+# Newtonsoft.Json and NuGet.Client are the odd ones out
+rm -rf "$TARBALL_ROOT/src/NuGet.Client" "$TARBALL_ROOT/src/Newtonsoft.Json"
 
 echo 'Removing binaries from tarball src...'
 find $TARBALL_ROOT/src \( -type f \( \
