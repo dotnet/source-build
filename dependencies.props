@@ -39,6 +39,11 @@
     <VersionStamp Condition="'$(VersionStamp)' == ''">preview4</VersionStamp>
   </PropertyGroup>
 
+  <!-- leak detection code is tied to the version of Linker that we use, so define it here once -->
+  <PropertyGroup>
+    <LinkerPreferredVersion>1b3d8bc8eb5dd3678dd91eb08157c885336aaea0</LinkerPreferredVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <!-- Get ILAsm tool version from CoreCLR. -->
     <RemoteDependencyBuildInfo Include="CoreClr">
