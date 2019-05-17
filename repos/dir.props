@@ -5,7 +5,8 @@
   <PropertyGroup>
     <RepositoryName Condition="'$(RepositoryName)' == ''">$(MSBuildProjectName)</RepositoryName>
     <SourceDirectory Condition="'$(SourceDirectory)' == ''">$(RepositoryName)</SourceDirectory>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(ClonedSubmoduleDirectory)$(SourceDirectory).$(PreferredHash)/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == '' and '$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)$(SourceDirectory).$(PreferredHash)/</ProjectDirectory>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == '' and '$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)$(SourceDirectory).$(PreferredHash)/</ProjectDirectory>
     <RepositoryOrganization Condition="'$(RepostioryOrganization)' == ''">dotnet</RepositoryOrganization>
     <RepositoryBranch Condition="'$(RepositoryBranch)' == ''">release/2.0.0</RepositoryBranch>
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>

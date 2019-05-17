@@ -59,6 +59,7 @@ fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
@@ -91,6 +92,16 @@ git submodule foreach --quiet --recursive '
     else
         git --work-tree="$TARBALL_SUBMODULE_PATH" checkout -- .
     fi'
+
+# Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all."
+ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup"
+"$SCRIPT_ROOT/Tools/dotnetcli/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
+# then delete the master copies - we only need the specific hashes
+pushd "$TARBALL_ROOT/src"
+find "$PWD" -maxdepth 1 -type d | grep -v "$PWD/src\$" | grep -v '\.' | xargs rm -rf
+# and NuGet.Client is the odd one out
+rm -rf "$TARBALL_ROOT/src/NuGet.Client"
+popd
 
 echo 'Removing binaries from tarball src...'
 find $TARBALL_ROOT/src \( -type f \( \
