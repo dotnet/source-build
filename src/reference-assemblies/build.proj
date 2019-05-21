@@ -8,6 +8,6 @@
   <Target Name="Restore" />
   <Target Name="Build">
     <Copy SourceFiles="$(MSBuildProjectDirectory)/_._" DestinationFolder="$(IntermediatePath)reference-assemblies/" />
-    <MSBuild Projects="@(AllProjects)" Targets="Build" BuildInParallel="false" />
+    <MSBuild Projects="@(AllProjects)" Targets="Build" BuildInParallel="true" />
   </Target>
 </Project>
