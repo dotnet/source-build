@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredHash>ee54d4cbd2b305eadf6f341bdc9d4abccdb50559</PreferredHash>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <!-- core-sdk always wants a portable runtime on OSX -->
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
@@ -37,8 +42,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="CommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
+    <EnvironmentVariables Include="LatestCommit=$(PreferredHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 

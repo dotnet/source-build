@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredHash>4217db4a23ffd15abb3771d635b66162994fb9e4</PreferredHash>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)publish</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
@@ -22,8 +27,10 @@
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
 
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +39,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
-    <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GIT_COMMIT=$(PreferredHash)" />
     <EnvironmentVariables Include="useInstalledDotNetCli=false" />
 
     <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->
@@ -46,7 +53,7 @@
 
   <PropertyGroup>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19161.14</ArcadeBootstrapVersion>
+    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19270.2</ArcadeBootstrapVersion>
   </PropertyGroup>
 
   <ItemGroup>

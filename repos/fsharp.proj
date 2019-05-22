@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredHash>d4e68aef7fa3507d38dd7fe4eca287fc40dd46ce</PreferredHash>
+    <SourceDirectory>visualfsharp</SourceDirectory>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <OfficialBuildId>20190418.1</OfficialBuildId>
 
@@ -17,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
   </ItemGroup>
 
   <ItemGroup>

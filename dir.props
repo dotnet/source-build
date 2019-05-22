@@ -50,6 +50,8 @@
 
   <PropertyGroup>
     <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
+    <ClonedSubmoduleDirectory Condition="'$(ClonedSubmoduleDirectory)' == ''">$(BaseOutputPath)src/</ClonedSubmoduleDirectory>
+    <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
     <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
@@ -77,6 +79,7 @@
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
+    <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
     <!-- Dir where git info is generated during online builds. -->
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->

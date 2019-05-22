@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredHash>dc522ef97fac72e64cd74825b7ef497f82af4624</PreferredHash>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
 
@@ -54,7 +59,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--<RepositoryReference Include="arcade" />-->
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
@@ -80,8 +85,4 @@
                          Rid="$(TargetRid)-$(Platform)" />
   </Target>
 
-  <Target Name="DebugTesting" BeforeTargets="Build">
-    <Exec Command="sed -i.bak 's/-QUIET//g' $(ToolsDir)source-built/Microsoft.NET.Sdk.IL/targets/Microsoft.NET.Sdk.IL.targets"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
 </Project>
