@@ -59,6 +59,7 @@ fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+SDK3_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
