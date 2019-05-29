@@ -1,14 +1,14 @@
-From 1dc072b3a766542dc3af3c8f9974912e33ee9a26 Mon Sep 17 00:00:00 2001
+From c7f8431bdfecfa42068f9799eaaffa96868c3d5b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 29 May 2019 15:23:48 -0500
 Subject: [PATCH 9/9] Revert to using Newtonsoft.Json.
 
 ---
- src/dotnet/ToolManifest/ToolManifestEditor.cs | 129 ++----------------
- 1 file changed, 13 insertions(+), 116 deletions(-)
+ src/dotnet/ToolManifest/ToolManifestEditor.cs | 131 ++----------------
+ 1 file changed, 14 insertions(+), 117 deletions(-)
 
 diff --git a/src/dotnet/ToolManifest/ToolManifestEditor.cs b/src/dotnet/ToolManifest/ToolManifestEditor.cs
-index 38ee22ad0..f1a80e429 100644
+index 38ee22ad0..337112182 100644
 --- a/src/dotnet/ToolManifest/ToolManifestEditor.cs
 +++ b/src/dotnet/ToolManifest/ToolManifestEditor.cs
 @@ -10,7 +10,8 @@
@@ -39,7 +39,7 @@ index 38ee22ad0..f1a80e429 100644
          }
  
          public (List<ToolManifestPackage> content, bool isRoot)
-@@ -141,79 +142,12 @@ public ToolManifestEditor(IFileSystem fileSystem = null, IDangerousFileDetector
+@@ -141,82 +142,15 @@ public ToolManifestEditor(IFileSystem fileSystem = null, IDangerousFileDetector
  
          private SerializableLocalToolsManifest DeserializeLocalToolsManifest(FilePath possibleManifest)
          {
@@ -121,7 +121,11 @@ index 38ee22ad0..f1a80e429 100644
 +                    });
              }
              catch (Exception e) when (
-                 e is JsonReaderException)
+-                e is JsonReaderException)
++                e is Newtonsoft.Json.JsonReaderException)
+             {
+                 throw new ToolManifestException(string.Format(LocalizableStrings.JsonParsingError,
+                     possibleManifest.Value, e.Message));
 @@ -329,6 +263,7 @@ private SerializableLocalToolsManifest DeserializeLocalToolsManifest(FilePath po
              }
          }
