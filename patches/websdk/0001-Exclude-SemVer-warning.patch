@@ -1,0 +1,24 @@
+From 0f4cb7b0cfcc185759ccc31dcd27ba72644d12d5 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 29 May 2019 14:38:39 -0500
+Subject: [PATCH] Exclude SemVer warning.
+
+---
+ Directory.Build.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 196118d..0f80e64 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -21,6 +21,6 @@
+       Suppress a warning about upcoming deprecation of PackageLicenseUrl. When embedding licenses are supported,
+       replace PackageLicenseUrl with PackageLicenseExpression.
+     -->
+-    <NoWarn>$(NoWarn);NU5125</NoWarn>
++    <NoWarn>$(NoWarn);NU5125;NU5105</NoWarn>
+   </PropertyGroup>
+ </Project>
+-- 
+2.18.0
+
