@@ -8,22 +8,23 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190529.9</OfficialBuildId>
+    <OfficialBuildId>20190529.7</OfficialBuildId>
 
     <BuildCommandArgs/>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <UpdateJsonToV3Sdk>true</UpdateJsonToV3Sdk>
+    <OutputPlacementRepoApiImplemented>true</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="core-setup" />
   </ItemGroup>
 
   <ItemGroup>
