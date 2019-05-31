@@ -1,3 +1,9 @@
+[CmdletBinding(PositionalBinding=$false)]
+Param(
+  [switch] $test,
+  [Parameter(ValueFromRemainingArguments=$true)][String]$captured_args
+)
+
 Set-StrictMode -version 2.0
 $ErrorActionPreference = "Stop"
 
@@ -53,5 +59,13 @@ $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
 $captured_args = $args
+if ($test)
+{
+    if (-not ($captured_args -eq $null) -and ($captured_args.Length > 0))
+    {
+        $captured_args += " "
+    }   
+    $captured_args += "/t:RunTests"
+}
 
 Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m $captured_args } | Out-Host
