@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" InitialTargets="PrepareOutput" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="dir.props" />
+  <Import Project="eng/Versions.props" Condition="'$(OfflineBuild)' != 'true'" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="CopyReferenceOnlyPackages" />
@@ -166,6 +167,17 @@
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
     <RemoveDir Directories="$(IldasmTempOutputPath)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
+  </Target>
+
+  <Target Name="DownloadSourceBuildReferencePackages"
+          AfterTargets="Build"
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+    <DownloadFile 
+          SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
+          DestinationFolder="$(ReferencePackagesTarballDir)" />
+    <MakeDir Directories="$(ReferencePackagesDir)" />
+    <Exec Command="tar -xzf $(ReferencePackagesTarballDir)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
+          WorkingDirectory="$(ReferencePackagesDir)" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->

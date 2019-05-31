@@ -1,4 +1,4 @@
-From 7a07c76af4ed21853ae35fe78e3336e0ffab466c Mon Sep 17 00:00:00 2001
+From 90993071f83186e788b8f69b7845d30a86666009 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 28 Jan 2019 12:17:38 -0600
 Subject: [PATCH] Disable warning for multiple includes of
@@ -9,17 +9,19 @@ Subject: [PATCH] Disable warning for multiple includes of
  1 file changed, 3 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 5275e5d2..47684e2e 100644
+index 4ba15762..5f4b3ec9 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -1,4 +1,7 @@
- ﻿<Project>
+@@ -1,6 +1,9 @@
+ ﻿<?xml version="1.0" encoding="utf-8"?>
+ <Project>
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 +   <PropertyGroup>
 +     <NoWarn>$(NoWarn);MSB4011</NoWarn>
 +   </PropertyGroup>
  
-   <PropertyGroup>
-     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+   <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
+     <Copyright>$(CopyrightNetFoundation)</Copyright>
 -- 
 2.18.0
 

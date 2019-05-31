@@ -137,6 +137,7 @@ find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {}
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/reference-packages
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 

@@ -6,7 +6,8 @@
 #   Offline: The leg produces a tarball then builds it offline. Network disconnected using Docker.
 
 parameters:
-  windowsPoolName: dotnet-external-temp
+  windowsPoolName: NetCorePublic-Pool
+  windowsQueueName: buildpool.windows.10.amd64.vs2017.open
 
 jobs:
 - template: ../jobs/ci-linux.yml
@@ -57,6 +58,7 @@ jobs:
     job: windows
     pool:
       name: ${{ parameters.windowsPoolName }}
+      queue: ${{ parameters.windowsQueueName }}
     scriptPrefix: ''
     scriptSuffix: .cmd
     setupWindows: true

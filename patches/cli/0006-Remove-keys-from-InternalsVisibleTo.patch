@@ -1,4 +1,4 @@
-From 4fb1a6af00d41b70ff92934519c210c8dc5f11f5 Mon Sep 17 00:00:00 2001
+From de608999883b71884204de6ad8849e3c743c3965 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 11 Feb 2019 18:10:46 -0600
 Subject: [PATCH] Remove keys from InternalsVisibleTo.
@@ -9,10 +9,10 @@ Subject: [PATCH] Remove keys from InternalsVisibleTo.
  .../Properties/Properties.cs                  |  4 +-
  .../Properties/Properties.cs                  | 28 +++++++-------
  .../InternalsVisibleToTests.cs                |  2 +-
- src/dotnet/Properties/AssemblyInfo.cs         | 37 +++++++++----------
+ src/dotnet/Properties/AssemblyInfo.cs         | 38 +++++++++----------
  .../Properties/Properties.cs                  |  8 ++--
  .../Properties/Properties.cs                  | 14 +++----
- 8 files changed, 60 insertions(+), 63 deletions(-)
+ 8 files changed, 60 insertions(+), 64 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Cli.Sln.Internal/Properties/AssemblyInfo.cs b/src/Microsoft.DotNet.Cli.Sln.Internal/Properties/AssemblyInfo.cs
 index cf963d250..bb361ff5a 100644
@@ -122,10 +122,10 @@ index f767ffc2b..7c7bc8d3c 100644
 -[assembly: InternalsVisibleTo("Microsoft.DotNet.MSBuildSdkResolver.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f33a29044fa9d740c9b3213a93e57c84b472c84e0b8a0e1ae48e67a9f8f6de9d5f7f3d52ac23e48ac51801f1dc950abe901da34d2a9e3baadb141a17c77ef3c565dd5ee5054b91cf63bb3c6ab83f72ab3aafe93d0fc3c2348b764fafb0b1c0733de51459aeab46580384bf9d74c4e28164b7cde247f891ba07891c9d872ad2bb")]
 +[assembly: InternalsVisibleTo("Microsoft.DotNet.MSBuildSdkResolver.Tests")]
 diff --git a/src/dotnet/Properties/AssemblyInfo.cs b/src/dotnet/Properties/AssemblyInfo.cs
-index 4348ace1f..d8ed37f6c 100644
+index 8747040ba..d8ed37f6c 100644
 --- a/src/dotnet/Properties/AssemblyInfo.cs
 +++ b/src/dotnet/Properties/AssemblyInfo.cs
-@@ -5,22 +5,21 @@
+@@ -5,23 +5,21 @@
  using System.Runtime.CompilerServices;
  
  [assembly: AssemblyMetadataAttribute("Serviceable", "True")]
@@ -148,6 +148,7 @@ index 4348ace1f..d8ed37f6c 100644
 -[assembly: InternalsVisibleTo("Microsoft.DotNet.ShellShim.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f33a29044fa9d740c9b3213a93e57c84b472c84e0b8a0e1ae48e67a9f8f6de9d5f7f3d52ac23e48ac51801f1dc950abe901da34d2a9e3baadb141a17c77ef3c565dd5ee5054b91cf63bb3c6ab83f72ab3aafe93d0fc3c2348b764fafb0b1c0733de51459aeab46580384bf9d74c4e28164b7cde247f891ba07891c9d872ad2bb")]
 -[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7")]
 -[assembly: InternalsVisibleTo("Microsoft.DotNet.CommandFactory.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f33a29044fa9d740c9b3213a93e57c84b472c84e0b8a0e1ae48e67a9f8f6de9d5f7f3d52ac23e48ac51801f1dc950abe901da34d2a9e3baadb141a17c77ef3c565dd5ee5054b91cf63bb3c6ab83f72ab3aafe93d0fc3c2348b764fafb0b1c0733de51459aeab46580384bf9d74c4e28164b7cde247f891ba07891c9d872ad2bb")]
+-[assembly: InternalsVisibleTo("Microsoft.DotNet.Cli.Telemetry.PersistenceChannel.Tests, PublicKey=0024000004800000940000000602000000240000525341310004000001000100f33a29044fa9d740c9b3213a93e57c84b472c84e0b8a0e1ae48e67a9f8f6de9d5f7f3d52ac23e48ac51801f1dc950abe901da34d2a9e3baadb141a17c77ef3c565dd5ee5054b91cf63bb3c6ab83f72ab3aafe93d0fc3c2348b764fafb0b1c0733de51459aeab46580384bf9d74c4e28164b7cde247f891ba07891c9d872ad2bb")]
 +[assembly: InternalsVisibleTo("dotnet.Tests")]
 +[assembly: InternalsVisibleTo("dotnet-add-package.Tests")]
 +[assembly: InternalsVisibleTo("dotnet-add-reference.Tests")]

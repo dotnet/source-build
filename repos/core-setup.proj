@@ -2,12 +2,14 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <!-- OSX toolset and core-sdk build portable on OSX so we have to here too -->
+    <!-- core-sdk always wants a portable runtime on OSX -->
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OverridePortable>$(PortableBuild)</OverridePortable>
+    <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
 
     <BuildArguments>-ConfigurationGroup=$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -PortableBuild=$(PortableBuild)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments>$(BuildArguments) -SkipTests=true</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) --</BuildArguments>
@@ -20,7 +22,7 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
-    <OfficialBuildId>20190303.5</OfficialBuildId>
+    <OfficialBuildId>20190415.11</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
@@ -30,11 +32,18 @@
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="CommitCount=$(GitCommitCount)" />
+    <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

@@ -13,13 +13,15 @@
     <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
 
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:CheckCDefines=false</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <OfficialBuildId>20190222.72</OfficialBuildId>
+    <OfficialBuildId>20190412.72</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +30,7 @@
 
   <ItemGroup>
     <RepositoryReference Include="linker" />
+    <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
   <ItemGroup>
