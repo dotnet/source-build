@@ -1,0 +1,24 @@
+From 1fce327212725148ccacebfee47922957992be42 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 31 May 2019 11:02:11 -0500
+Subject: [PATCH 2/2] Exclude test projects from source-build.
+
+---
+ test/Directory.Build.props | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 test/Directory.Build.props
+
+diff --git a/test/Directory.Build.props b/test/Directory.Build.props
+new file mode 100644
+index 0000000..583a96c
+--- /dev/null
++++ b/test/Directory.Build.props
+@@ -0,0 +1,5 @@
++<Project>
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
++</Project>
+-- 
+2.18.0
+
