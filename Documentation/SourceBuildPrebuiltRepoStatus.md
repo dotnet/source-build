@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-05-23
+Last source-build Build Date: 2019-05-31
 
-Last updated: 2019-05-28
+Last updated: 2019-05-31
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -22,7 +22,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [linker][887] | Dan Seefeldt | ![ot] On Track | 1 | 2 |
 | [msbuild][888] | Nick Guerrera | ![pl] Planned | 3 | 7 |
 | [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [NuGet.Client][890] | Rob Relyea | ![pl] Planned | 2 | 5 |
+| [NuGet.Client][890] | Rob Relyea | ![pl] Planned | 2 | 1 |
 | [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 16 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 2 |
@@ -33,7 +33,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [toolset][973] | Nick Guerrera | ![pl] Planned | 5 | 3 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
 | [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 4 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 20 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 7 |
 | [websdk][897] | Vijay Ramakrishnan | ![pl] Planned | 3 | 7 |
 | [xliff-tasks][899] | Tom Meschter | ![pl] Planned | 1 | 2 |
 
