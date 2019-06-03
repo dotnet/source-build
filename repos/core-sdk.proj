@@ -7,7 +7,7 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>fix me</OfficialBuildId>
+    <OfficialBuildId>20190426.15</OfficialBuildId>
 
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
@@ -66,7 +66,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitCommitCount=1" />
+    <EnvironmentVariables Include="GitCommitCount=11568" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 
