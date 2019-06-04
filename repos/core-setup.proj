@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>ee54d4cbd2b305eadf6f341bdc9d4abccdb50559</PreferredHash>
+    <PreferredHash>61f30f5a23af498908cadd9cc282d4d67d71f522</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
@@ -27,10 +27,12 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
-    <OfficialBuildId>20190415.11</OfficialBuildId>
+    <OfficialBuildId>20190426.15</OfficialBuildId>
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
+
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>

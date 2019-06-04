@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>1b3d8bc8eb5dd3678dd91eb08157c885336aaea0</PreferredHash>
+    <PreferredHash>c09c490012b1e11cf6d52a6c6a486d4dc5f401bc</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190314.1</OfficialBuildId>
+    <OfficialBuildId>20190418.1</OfficialBuildId>
 
     <!-- Package version is pinned to what CoreFX expects because CoreFX doesn't take an override property. -->
     <ILLinkTasksPackageId>ILLink.Tasks</ILLinkTasksPackageId>
@@ -20,12 +20,12 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:ILLinkBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
 
-    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(DotNet3CliToolDir)dotnet $(BuildCommandArgs)</BuildCommand>
 
     <BuildPackagesCommandArgs>pack /bl:pack.binlog</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Version=$(ILLinkTasksPackageVersion)</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
-    <BuildPackagesCommand>$(DotnetToolCommand) $(BuildPackagesCommandArgs)</BuildPackagesCommand>
+    <BuildPackagesCommand>$(DotNet3CliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
 
     <PackagesOutput>$(ProjectDirectory)src/ILLink.Tasks/bin/nupkgs</PackagesOutput>
 
@@ -35,6 +35,19 @@
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <!-- Extract this package into packages dir, because repos assume it's restored as a tool. -->
