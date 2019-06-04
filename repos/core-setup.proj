@@ -31,6 +31,8 @@
 
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
+
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>
