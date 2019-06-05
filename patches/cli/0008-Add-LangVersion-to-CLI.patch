@@ -1,0 +1,25 @@
+From 468dcc8efdae2c97186b76ef5df5a734eb387495 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 1 May 2019 07:12:01 -0500
+Subject: [PATCH] Add LangVersion to CLI.
+
+---
+ Directory.Build.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 1d1252966..789f9f12b 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -37,6 +37,8 @@ tools\TestAssetsDependencies\TestAssetsDependencies.csproj
+     <TestCaptureOutput>false</TestCaptureOutput>
+ 
+     <IsShippingPackage>false</IsShippingPackage>
++
++    <LangVersion>Latest</LangVersion>
+   </PropertyGroup>
+   
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+-- 
+2.18.0
+

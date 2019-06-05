@@ -16,7 +16,7 @@
   <Choose>
     <When Condition="'$(OS)' == 'Windows_NT'">
       <ItemGroup>
-        <RepositoryReference Include="core-setup" />
+        <RepositoryReference Include="corefx" />
       </ItemGroup>
     </When>
     <When Condition="$(Platform.Contains('arm'))">
@@ -46,7 +46,7 @@
         <RepositoryReference Include="websdk" />
         <RepositoryReference Include="coreclr" />
 
-        <!--<RepositoryReference Include="templating" />-->
+        <RepositoryReference Include="templating" />
 
         <!-- Tier 3 -->
 

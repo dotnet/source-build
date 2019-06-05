@@ -1,0 +1,45 @@
+From f7c33eb7129c990cdafb3ff1f4b65cf567cc7823 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 24 Apr 2019 18:12:23 -0500
+Subject: [PATCH] Allow separate tool and SDK directories.
+
+---
+ init-tools.cmd | 5 +++++
+ init-tools.sh  | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/init-tools.cmd b/init-tools.cmd
+index f7f7ff9395..1216615b4f 100644
+--- a/init-tools.cmd
++++ b/init-tools.cmd
+@@ -30,6 +30,11 @@ if exist "%TOOLRUNTIME_DIR%" rmdir /S /Q "%TOOLRUNTIME_DIR%"
+ if exist "%DotNetBuildToolsDir%" (
+   echo Using tools from '%DotNetBuildToolsDir%'.
+   mklink /j "%TOOLRUNTIME_DIR%" "%DotNetBuildToolsDir%"
++)
++
++if exist "%DotNetCoreSdkDir%" (
++  echo Using SDK from '%DotNetCoreSdkDir%'.
++  mklink /j "%DOTNET_PATH%" "%DotNetCoreSdkDir%"
+ 
+   if not exist "%DOTNET_CMD%" (
+     echo ERROR: Ensure that '%DotNetBuildToolsDir%' contains the .NET Core SDK at '%DOTNET_PATH%'
+diff --git a/init-tools.sh b/init-tools.sh
+index cacf9e454d..ef4b14ca35 100755
+--- a/init-tools.sh
++++ b/init-tools.sh
+@@ -25,6 +25,11 @@ if [ -e "$__TOOLRUNTIME_DIR" ]; then rm -rf -- "$__TOOLRUNTIME_DIR"; fi
+ if [ -d "${DotNetBuildToolsDir:-}" ]; then
+     echo "Using tools from '$DotNetBuildToolsDir'."
+     ln -s "$DotNetBuildToolsDir" "$__TOOLRUNTIME_DIR"
++fi
++
++if [ -d "${DotNetCoreSdkDir:-}" ]; then
++    echo "Using .NET SDK from '$DotNetCoreSdkDir'."
++    ln -s "$DotNetCoreSdkDir" "$__DOTNET_PATH"
+ 
+     if [ ! -e "$__DOTNET_CMD" ]; then
+         echo "ERROR: Ensure that $DotNetBuildToolsDir contains the .NET Core SDK at $__DOTNET_PATH"
+-- 
+2.18.0
+

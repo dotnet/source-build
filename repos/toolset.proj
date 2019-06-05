@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredHash>a63c2959705e3c01a6c4088aa97bd2690f741fb5</PreferredHash>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190304.4</OfficialBuildId>
+    <OfficialBuildId>20190427.7</OfficialBuildId>
 
     <BuildCommandArgs>--pack --ci</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
@@ -31,7 +35,7 @@
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
-    <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/Shipping/</ToolsetZipOutputDir>
+    <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/NonShipping/</ToolsetZipOutputDir>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
@@ -52,8 +56,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitInfoCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" />
+    <EnvironmentVariables Include="GitCommitCount=1" />
+    <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
     <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />

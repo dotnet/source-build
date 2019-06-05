@@ -140,7 +140,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
             else
             {
-                Log.LogError($"No leaked files found in output.  Either something is broken or it is the future and we have fixed all leaks - please verify and remove this error if so (and default {nameof(FailOnPoisonFound)} to true).");
+                //Log.LogError($"No leaked files found in output.  Either something is broken or it is the future and we have fixed all leaks - please verify and remove this error if so (and default {nameof(FailOnPoisonFound)} to true).");
                 return false;
             }
 

@@ -1,30 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <PreferredHash>c09c490012b1e11cf6d52a6c6a486d4dc5f401bc</PreferredHash>
+  </PropertyGroup>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <PropertyGroup>
+    <OfficialBuildId>20190418.1</OfficialBuildId>
+
     <!-- Package version is pinned to what CoreFX expects because CoreFX doesn't take an override property. -->
     <ILLinkTasksPackageId>ILLink.Tasks</ILLinkTasksPackageId>
     <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
 
     <BuildCommandArgs>restore /bl:restore.binlog</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)corebuild/integration/linker.sln</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)illink.sln</BuildCommandArgs>
 
     <!-- These are intended to be auto-detected via NuGetRestoreTargets, but it doesn't seem to work. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:ILLinkBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:NetStandard=true</BuildCommandArgs>
 
-    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(DotNet3CliToolDir)dotnet $(BuildCommandArgs)</BuildCommand>
 
     <BuildPackagesCommandArgs>pack /bl:pack.binlog</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Version=$(ILLinkTasksPackageVersion)</BuildPackagesCommandArgs>
-    <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)corebuild/integration/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
-    <BuildPackagesCommand>$(DotnetToolCommand) $(BuildPackagesCommandArgs)</BuildPackagesCommand>
+    <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
+    <BuildPackagesCommand>$(DotNet3CliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
 
-    <PackagesOutput>$(ProjectDirectory)corebuild/integration/bin/nupkgs</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)src/ILLink.Tasks/bin/nupkgs</PackagesOutput>
 
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
+  </ItemGroup>
 
   <!-- Extract this package into packages dir, because repos assume it's restored as a tool. -->
   <Target Name="ExtractLinkerPackageToCache"
@@ -44,7 +68,7 @@
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->
   <Target Name="ReplaceNuspecDllIncludeLines" BeforeTargets="Build" Condition="'$(TargetOS)' != 'Windows_NT'">
     <PropertyGroup>
-      <LinkerTasksNuspecFile>$(ProjectDirectory)corebuild/integration/ILLink.Tasks/ILLink.Tasks.nuspec</LinkerTasksNuspecFile>
+      <LinkerTasksNuspecFile>$(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.nuspec</LinkerTasksNuspecFile>
       <NuspecFileContents>
         <![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">

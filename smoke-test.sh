@@ -9,6 +9,9 @@ VERSION_PREFIX=3.0
 DEV_CERTS_VERSION_DEFAULT=2.1.0-rtm-30762
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/bin/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 
+export DOTNET_CLI_TELEMETRY_OPTOUT=1
+export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
+
 projectOutput=false
 keepProjects=false
 dotnetDir=""
