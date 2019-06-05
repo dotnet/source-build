@@ -23,8 +23,6 @@
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
-    <BuildCommandArgs>$(BuildCommandArgs) /p:SignAssembly=false</BuildCommandArgs>
-
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
