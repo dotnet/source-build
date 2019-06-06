@@ -36,7 +36,13 @@
   <!-- Build stabilization properties as passed in by ProdCon. -->
   <PropertyGroup>
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
-    <VersionStamp Condition="'$(VersionStamp)' == ''">preview4</VersionStamp>
+    <VersionStamp Condition="'$(VersionStamp)' == ''">preview5</VersionStamp>
+  </PropertyGroup>
+
+  <!-- leak detection code is tied to the version of Linker that we use, so define it here once -->
+  <PropertyGroup>
+    <LinkerPreferredVersion>c09c490012b1e11cf6d52a6c6a486d4dc5f401bc</LinkerPreferredVersion>
+    <CoreSetupPreferredVersion>61f30f5a23af498908cadd9cc282d4d67d71f522</CoreSetupPreferredVersion>
   </PropertyGroup>
 
   <ItemGroup>

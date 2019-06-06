@@ -1,28 +1,28 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-05-06
+Last source-build Build Date: 2019-05-31
 
-Last updated: 2019-05-07
+Last updated: 2019-05-31
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
+<!--TrackingTable-->
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
-| [application-insights][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [arcade][970] | Mark Wilke | ![ot] On Track | 7 | 7 |
 | [cli][880] | Nick Guerrera | ![ot] On Track | 8 | 1 |
-| [clicommandlineparser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
+| [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 7 | 1 |
 | [common][882] | Nate McMaster | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [coreclr][883] | Russ Keldorph | ![ot] On Track | 1 | 4 |
 | [corefx][884] | Eric St. John | ![ot] On Track | 1 | 12 |
-| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 5 |
+| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 4 |
 | [core-setup][885] | Davis Goodin | ![ot] On Track | 4 | 12 |
-| [fsharp][886] | Brett Forsgren | ![ot] On Track | 1 | 8 |
 | [linker][887] | Dan Seefeldt | ![ot] On Track | 1 | 2 |
-| [msbuild][888] | Nick Guerrera | ![ns] Not Started | 3 | 7 |
-| [newtonsoft-json][889] | Chris Rummel | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [nuget-client][890] | Rob Relyea | ![ns] Not Started | 2 | 8 |
+| [msbuild][888] | Nick Guerrera | ![pl] Planned | 3 | 7 |
+| [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
+| [NuGet.Client][890] | Rob Relyea | ![pl] Planned | 2 | 1 |
 | [roslyn][891] | Jared Parsons / Fred Silberberg | ![pl] Planned | 2 | 16 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 2 |
@@ -30,9 +30,10 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [standard][894] | Eric St. John | ![ot] On Track | - | 2 |
 | [templating][895] | Vijay Ramakrishnan | ![pl] Planned | 3 | 3 |
 | [Tools][974] | Dan Seefeldt | ![pl] Planned | - | 4 |
-| [toolset][973] | Nick Guerrera | ![pl] Planned | 5 | 4 |
+| [toolset][973] | Nick Guerrera | ![pl] Planned | 5 | 3 |
 | [tools-local tasks][971] | Dan Seefeldt | ![pl] Planned | - | 2 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 20 |
+| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 4 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 7 |
 | [websdk][897] | Vijay Ramakrishnan | ![pl] Planned | 3 | 7 |
 | [xliff-tasks][899] | Tom Meschter | ![pl] Planned | 1 | 2 |
 
@@ -54,28 +55,30 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 
 <br/>
 
+<!--RepoCommitsAndDates-->
 | Repo | Latest Commit | Commit Date
 | --- | --- | ---
-application-insights | 53b80940842204f78708a538628288ff5d741a1d | 2017-12-21
+ApplicationInsights-dotnet | 53b80940842204f78708a538628288ff5d741a1d | 2017-12-21
 arcade | 4217db4a23ffd15abb3771d635b66162994fb9e4 | 2019-04-05
 cli | 204f425b6f061d0b8a01faf46f762ecf71436f68 | 2019-04-12
 cli-migrate | 37e3a01aa1df320a286b0a858876f9994fb6bb18 | 2019-01-24
-clicommandlineparser | 0e89c2116ad28e404ba56c14d1c3f938caa25a01 | 2019-04-08
+cliCommandLineParser | 0e89c2116ad28e404ba56c14d1c3f938caa25a01 | 2019-04-08
 common | 6e37cdfe96ac8b06a923242120169fafacd720e6 | 2018-11-02
 core-sdk | 118dd862c853ff39694449ac303f5d8ef7d11b24 | 2019-04-16
-core-setup | ee54d4cbd2b305eadf6f341bdc9d4abccdb50559 | 2019-04-16
+core-setup | 1ac29fa4fed3f5658864593e9b649238f52f3748 | 2019-05-28
 coreclr | d833cacabd67150fe3a2405845429a0ba1b72c12 | 2019-04-12
 corefx | dc522ef97fac72e64cd74825b7ef497f82af4624 | 2019-04-12
-fsharp | a3d6e55c4ca80ec85563e67954096dbafd953761 | 2019-04-16
 linker | 1b3d8bc8eb5dd3678dd91eb08157c885336aaea0 | 2019-03-14
 msbuild | d004974104fde202e633b3c97e0ece3287aa62f9 | 2019-04-05
-newtonsoft-json | e43dae94c26f0c30e9095327a3a9eac87193923d | 2018-05-31
-nuget-client | 27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703 | 2019-03-29
-roslyn | 01f3eb103049e2c93e0516c7d50908031deaca74 | 2019-04-09
+Newtonsoft.Json | e43dae94c26f0c30e9095327a3a9eac87193923d | 2018-05-31
+NuGet.Client | ec48ee474965d3d5f41ed7e5b4199af79868351a | 2019-05-24
+roslyn | 01b1d8c2d56ef142429b8cf7f04291666c81a98d | 2019-05-28
 sdk | 814b7898f9908a88f62706331cf56f1ecc9745eb | 2019-04-10
+source-build-reference-packages | 4c0cb49e977ff4a1308875f9c4c3dcb2a5869cb6 | 2019-05-23
 standard | 8ef5ada20b5343b0cb9e7fd577341426dab76cd8 | 2019-04-08
 templating | 0fd9a865045026041f2ea4942eb8c91782193078 | 2019-04-08
 toolset | 3165b2579582b6b44aef768c01c3cc9ff4f0bc17 | 2019-04-16
+visualfsharp | 14e5082c190681056c247dd27862b9583be5f253 | 2019-05-26
 vstest | df96f832f28de9798bf3a1b2d6b7933439e00ae4 | 2018-08-07
 websdk | b55d4f4cf22bee7ec9a2ca5f49d54ebf6ee67e83 | 2019-04-16
 xliff-tasks | 27d43b762aa6dac3a0a6ba48fe55000942d75c1c | 2017-06-23
@@ -88,7 +91,7 @@ Prebuilts are dependencies that a repo has on binary files that are not built fr
 
 Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch
 
-[startOfIssuesList]: https://dummy
+<!--StartOfIssuesList-->
 [900]: https://github.com/dotnet/source-build/issues/900
 [970]: https://github.com/dotnet/source-build/issues/970
 [880]: https://github.com/dotnet/source-build/issues/880

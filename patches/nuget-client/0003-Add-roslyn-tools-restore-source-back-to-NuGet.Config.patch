@@ -1,0 +1,24 @@
+From ca04e064de412d8c433d0f633cece2c0f6e360fd Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 30 May 2019 16:28:34 +0000
+Subject: [PATCH] Add roslyn-tools restore source back to NuGet.Config
+
+---
+ NuGet.Config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/NuGet.Config b/NuGet.Config
+index 15b7a41..62b0878 100644
+--- a/NuGet.Config
++++ b/NuGet.Config
+@@ -7,6 +7,7 @@
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet-buildtools" value="https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json" />
+     <add key="dotnet-roslyn" value="https://dotnet.myget.org/F/roslyn/api/v3/index.json" />
++    <add key="roslyn-tools" value="https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json" />
+     <add key="cps" value="https://vside.myget.org/F/devcore/api/v3/index.json" />
+     <add key="dotnet-msbuild" value="https://dotnet.myget.org/F/msbuild/api/v3/index.json" />
+   </packageSources>
+-- 
+1.8.3.1
+
