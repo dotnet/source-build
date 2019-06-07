@@ -1,0 +1,37 @@
+From baa413235836e3378db37e133856850f550a10c0 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 22 May 2019 19:25:49 -0500
+Subject: [PATCH] Add PackageLicenseExpression.
+
+---
+ Directory.Build.props     | 1 +
+ src/Directory.Build.props | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 5275e5d2..f37c06c0 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -37,6 +37,7 @@
+     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkId=624683</PackageProjectUrl>
+     <PackageIconUrl>https://go.microsoft.com/fwlink/?linkid=825694</PackageIconUrl>
+     <PackageTags>MSBuild</PackageTags>
++    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+ 
+     <TargetMSBuildToolsVersion>Current</TargetMSBuildToolsVersion>
+   </PropertyGroup>
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 4419cd18..7147481b 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -56,7 +56,6 @@
+     <GenAPIAdditionalParameters>$(GenAPIAdditionalParameters) -excludeAttributesList:&quot;$(RepoRoot)ref\ExcludeAttributeList.txt&quot;</GenAPIAdditionalParameters>
+     <GenAPIAdditionalParameters>$(GenAPIAdditionalParameters) -headerFile:&quot;$(RepoRoot)ref\LicenseHeader.txt&quot;</GenAPIAdditionalParameters>
+ 
+-    <PackageLicenseUrl>http://go.microsoft.com/fwlink/?LinkId=329770</PackageLicenseUrl>
+     <PackageProjectUrl>http://go.microsoft.com/fwlink/?LinkId=624683</PackageProjectUrl>
+     <PackageIconUrl>https://go.microsoft.com/fwlink/?linkid=825694</PackageIconUrl>
+ 
+-- 
+2.18.0
+

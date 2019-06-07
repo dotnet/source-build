@@ -16,7 +16,7 @@
   <Choose>
     <When Condition="'$(OS)' == 'Windows_NT'">
       <ItemGroup>
-        <RepositoryReference Include="core-setup" />
+        <RepositoryReference Include="corefx" />
       </ItemGroup>
     </When>
     <When Condition="$(Platform.Contains('arm'))">
@@ -27,7 +27,7 @@
     <Otherwise>
       <ItemGroup>
         <!-- Toolsets -->
-        <!--<RepositoryReference Include="arcade" />-->
+        <RepositoryReference Include="arcade" />
 
         <!-- Tier 1 -->
         <RepositoryReference Include="application-insights" />

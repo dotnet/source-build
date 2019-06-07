@@ -1,0 +1,208 @@
+From c7f8431bdfecfa42068f9799eaaffa96868c3d5b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 29 May 2019 15:23:48 -0500
+Subject: [PATCH 9/9] Revert to using Newtonsoft.Json.
+
+---
+ src/dotnet/ToolManifest/ToolManifestEditor.cs | 131 ++----------------
+ 1 file changed, 14 insertions(+), 117 deletions(-)
+
+diff --git a/src/dotnet/ToolManifest/ToolManifestEditor.cs b/src/dotnet/ToolManifest/ToolManifestEditor.cs
+index 38ee22ad0..337112182 100644
+--- a/src/dotnet/ToolManifest/ToolManifestEditor.cs
++++ b/src/dotnet/ToolManifest/ToolManifestEditor.cs
+@@ -10,7 +10,8 @@
+ using Microsoft.DotNet.Cli.Utils;
+ using Microsoft.DotNet.ToolPackage;
+ using Microsoft.Extensions.EnvironmentAbstractions;
+-using System.Text.Json.Serialization;
++using Newtonsoft.Json;
++using Newtonsoft.Json.Serialization;
+ using NuGet.Frameworks;
+ using NuGet.Versioning;
+ using System.Text.Json;
+@@ -82,7 +83,7 @@ public ToolManifestEditor(IFileSystem fileSystem = null, IDangerousFileDetector
+                     Commands = toolCommandNames.Select(c => c.Value).ToArray()
+                 });
+ 
+-            _fileSystem.File.WriteAllText(manifest.Value, deserializedManifest.ToJson());
++            _fileSystem.File.WriteAllText(manifest.Value, JsonConvert.SerializeObject(deserializedManifest, Formatting.Indented));
+         }
+ 
+         public void Edit(
+@@ -115,7 +116,7 @@ public ToolManifestEditor(IFileSystem fileSystem = null, IDangerousFileDetector
+                 throw new ArgumentException($"Manifest {manifest.Value} does not contain package id '{packageId}'.");
+             }
+ 
+-            _fileSystem.File.WriteAllText(manifest.Value, deserializedManifest.ToJson());
++            _fileSystem.File.WriteAllText(manifest.Value, JsonConvert.SerializeObject(deserializedManifest, Formatting.Indented));
+         }
+ 
+         public (List<ToolManifestPackage> content, bool isRoot)
+@@ -141,82 +142,15 @@ public ToolManifestEditor(IFileSystem fileSystem = null, IDangerousFileDetector
+ 
+         private SerializableLocalToolsManifest DeserializeLocalToolsManifest(FilePath possibleManifest)
+         {
+-            var serializableLocalToolsManifest = new SerializableLocalToolsManifest();
+             try
+             {
+-                using (Stream jsonStream = _fileSystem.File.OpenRead(possibleManifest.Value))
+-                using (JsonDocument doc = JsonDocument.Parse(jsonStream))
+-                {
+-                    JsonElement root = doc.RootElement;
+-
+-                    if (root.TryGetInt32Value(JsonPropertyVersion, out var version))
++                return JsonConvert.DeserializeObject<SerializableLocalToolsManifest>(_fileSystem.File.ReadAllText(possibleManifest.Value), new JsonSerializerSettings
+                     {
+-                        serializableLocalToolsManifest.Version = version;
+-                    }
+-
+-                    if (root.TryGetBooleanValue(JsonPropertyIsRoot, out var isRoot))
+-                    {
+-                        serializableLocalToolsManifest.IsRoot = isRoot;
+-                    }
+-
+-                    if (root.TryGetProperty(JsonPropertyTools, out var tools))
+-                    {
+-                        serializableLocalToolsManifest.Tools =
+-                            new List<SerializableLocalToolSinglePackage>();
+-
+-                        if (tools.Type != JsonValueType.Object)
+-                        {
+-                            throw new ToolManifestException(
+-                                string.Format(LocalizableStrings.UnexpectedTypeInJson,
+-                                    JsonValueType.Object.ToString(),
+-                                    JsonPropertyTools));
+-                        }
+-
+-                        foreach (var toolJson in tools.EnumerateObject())
+-                        {
+-                            var serializableLocalToolSinglePackage = new SerializableLocalToolSinglePackage();
+-                            serializableLocalToolSinglePackage.PackageId = toolJson.Name;
+-                            if (toolJson.Value.TryGetStringValue(JsonPropertyVersion, out var versionJson))
+-                            {
+-                                serializableLocalToolSinglePackage.Version = versionJson;
+-                            }
+-
+-                            var commands = new List<string>();
+-                            if (toolJson.Value.TryGetProperty(JsonPropertyCommands, out var commandsJson))
+-                            {
+-                                if (commandsJson.Type != JsonValueType.Array)
+-                                {
+-                                    throw new ToolManifestException(
+-                                        string.Format(LocalizableStrings.UnexpectedTypeInJson,
+-                                            JsonValueType.Array.ToString(),
+-                                            JsonPropertyCommands));
+-                                }
+-
+-                                foreach (var command in commandsJson.EnumerateArray())
+-                                {
+-                                    if (command.Type != JsonValueType.String)
+-                                    {
+-                                        throw new ToolManifestException(
+-                                            string.Format(LocalizableStrings.UnexpectedTypeInJson,
+-                                                JsonValueType.String.ToString(),
+-                                                "command"));
+-                                    }
+-
+-                                    commands.Add(command.GetString());
+-                                }
+-
+-                                serializableLocalToolSinglePackage.Commands = commands.ToArray();
+-                            }
+-
+-                            serializableLocalToolsManifest.Tools.Add(serializableLocalToolSinglePackage);
+-                        }
+-                    }
+-                }
+-
+-                return serializableLocalToolsManifest;
++                        MissingMemberHandling = MissingMemberHandling.Ignore
++                    });
+             }
+             catch (Exception e) when (
+-                e is JsonReaderException)
++                e is Newtonsoft.Json.JsonReaderException)
+             {
+                 throw new ToolManifestException(string.Format(LocalizableStrings.JsonParsingError,
+                     possibleManifest.Value, e.Message));
+@@ -329,6 +263,7 @@ private SerializableLocalToolsManifest DeserializeLocalToolsManifest(FilePath po
+             }
+         }
+ 
++        [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+         private class SerializableLocalToolSinglePackage
+         {
+             public string PackageId { get; set; }
+@@ -351,55 +286,17 @@ private static bool CommandNamesEqual(ToolCommandName[] left, ToolCommandName[]
+             return left.SequenceEqual(right);
+         }
+ 
++        [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
+         private class SerializableLocalToolsManifest
+         {
++            [DefaultValue(1)]
++            [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+             public int? Version { get; set; }
+ 
+             public bool? IsRoot { get; set; }
+ 
++            [JsonProperty(Required = Required.Always)]
+             public List<SerializableLocalToolSinglePackage> Tools { get; set; }
+-
+-            public string ToJson()
+-            {
+-                var arrayBufferWriter = new ArrayBufferWriter<byte>();
+-                using (var writer = new Utf8JsonWriter(arrayBufferWriter, new JsonWriterOptions { Indented = true }))
+-                {
+-
+-                    writer.WriteStartObject();
+-
+-                    if (Version.HasValue)
+-                    {
+-                        writer.WriteNumber(propertyName: JsonPropertyVersion, value: Version.Value);
+-                    }
+-
+-                    if (IsRoot.HasValue)
+-                    {
+-                        writer.WriteBoolean(JsonPropertyIsRoot, IsRoot.Value);
+-                    }
+-
+-                    writer.WriteStartObject(JsonPropertyTools);
+-
+-                    foreach (var tool in Tools)
+-                    {
+-                        writer.WriteStartObject(tool.PackageId);
+-                        writer.WriteString(JsonPropertyVersion, tool.Version);
+-                        writer.WriteStartArray(JsonPropertyCommands);
+-                        foreach (var toolCommandName in tool.Commands)
+-                        {
+-                            writer.WriteStringValue(toolCommandName);
+-                        }
+-
+-                        writer.WriteEndArray();
+-                        writer.WriteEndObject();
+-                    }
+-
+-                    writer.WriteEndObject();
+-                    writer.WriteEndObject();
+-                    writer.Flush();
+-
+-                    return Encoding.UTF8.GetString(arrayBufferWriter.WrittenMemory.ToArray());
+-                }
+-            }
+         }
+ 
+         public void Remove(FilePath manifest, PackageId packageId)
+@@ -433,7 +330,7 @@ public void Remove(FilePath manifest, PackageId packageId)
+ 
+             _fileSystem.File.WriteAllText(
+                            manifest.Value,
+-                           serializableLocalToolsManifest.ToJson());
++                           JsonConvert.SerializeObject(serializableLocalToolsManifest, Formatting.Indented));
+         }
+     }
+ }
+-- 
+2.18.0
+
