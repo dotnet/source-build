@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>4895a06c0dcc5d13f75dd55bdce83f7792d72ba4</PreferredHash>
+    <PreferredHash>08136a667d1a30c242f40731b3b0b299e4167220</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
+    <BuildArguments>$(BuildArguments) -ignoreWarnings</BuildArguments>
+    <BuildArguments>$(BuildArguments) -skipgenerateversion</BuildArguments>
+    <BuildArguments>$(BuildArguments) -warnaserror:0</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
@@ -20,6 +23,7 @@
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:CheckCDefines=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
@@ -27,7 +31,12 @@
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OfficialBuildId>20190422.75</OfficialBuildId>
+
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+    <PackagesOutput>$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg</PackagesOutput>
   </PropertyGroup>
+
+<Target Name="DebugStuff" AfterTargets="Build"> <Message Importance="High" Text="package output dir: $(PackagesOutput)" /> </Target>
 
   <ItemGroup>
     <BuiltSdkPackageOverride Include="@(ILSdkOverride)" />

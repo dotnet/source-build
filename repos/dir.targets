@@ -328,14 +328,25 @@
           Condition="'@(BuiltSdkPackageOverride)' != ''">
     <ItemGroup>
       <_ToolPackage
+        Condition="'%(BuiltSdkPackageOverride.Version)' == ''"
         Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.nupkg"
         Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.symbols.nupkg"
         Id="%(BuiltSdkPackageOverride.Identity)" />
+      <_ToolPackage
+        Condition="'%(BuiltSdkPackageOverride.Version)' != ''"
+        Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity).%(BuiltSdkPackageOverride.Version).nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity).%(BuiltSdkPackageOverride.Version).symbols.nupkg"
+        Id="%(BuiltSdkPackageOverride.Identity)" />
     </ItemGroup>
 
-    <ZipFileExtractToDirectory SourceArchive="@(_ToolPackage)"
+    <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
                                DestinationDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)\"
                                OverwriteDestination="true" />
+    <ItemGroup>
+      <ExtractedToolFiles Include="$(ToolPackageExtractDir)%(_ToolPackage.Id)/**/*netcore*/*.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
   </Target>
 
   <Target Name="EnsurePackagesCreated"

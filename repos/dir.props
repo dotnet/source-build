@@ -56,21 +56,24 @@
     <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetToolPath=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetTool=$(DotNetCliToolDir)dotnet" />
-    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" />
+    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' != 'arcade'" />
+    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/source-build/" Condition="'$(RepositoryName)' == 'arcade'" />
     <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
     <!-- New env-var names to replace the ones above over time -->
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" />
+    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' == 'arcade'" />
+    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/source-built" Condition="'$(RepositoryName)' != 'arcade'" />
     <!-- DotNetRoot is used by Arcade vs DotNetCoreSdkDir for BuildTools -->
     <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DOTNET_HOST_PATH=$(DotNetCliToolDir)dotnet" />
     <!-- _InitializeDotNetCli is used by websdk and templating to decide whether to init the SDK -->
     <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="_InitializeToolset=$(ProjectDir)Tools/source-built/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(RepositoryName)' != 'arcade'" />
-    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" />
+    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" Condition="'$(RepositoryName)' == 'arcade'" />
+    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)source-built" Condition="'$(RepositoryName)' != 'arcade'" />
 
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
@@ -113,6 +116,7 @@
 
   <ItemGroup>
     <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="1.0.0-dev"/>
+    <ArcadePackagingOverride Include="Microsoft.DotNet.Build.Tasks.Packaging" Group="ARCADE_PACKAGING" Version="1.0.0-dev"/>
     <ILSdkOverride Include="Microsoft.NET.Sdk.IL" Group="IL" />
     <CentralVersionsSdkOverride Include="Microsoft.Build.CentralPackageVersions" Group="CENTRAL_VERSIONS" Version="2.0.1"/>
   </ItemGroup>

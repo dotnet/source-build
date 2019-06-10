@@ -22,6 +22,11 @@ export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
 source "$SCRIPT_ROOT/init-tools.sh"
 
+mkdir $SCRIPT_ROOT/Tools/source-built
+cp -r $SCRIPT_ROOT/Tools/ /tmp
+mv /tmp/Tools /tmp/source-built
+mv /tmp/source-built $SCRIPT_ROOT/Tools/
+
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
 SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
 

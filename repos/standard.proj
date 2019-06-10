@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <BuildArguments>$(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
+    <BuildArguments>$(BuildArguments) --warnAsError false</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>

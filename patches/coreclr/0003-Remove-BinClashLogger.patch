@@ -1,0 +1,40 @@
+From d76e89c574283a408a6721df9c722a355c9feca1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 8 Jun 2019 21:50:54 -0500
+Subject: [PATCH 3/3] Remove BinClashLogger.
+
+---
+ build.sh | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/build.sh b/build.sh
+index a24bd89070..7ddd794690 100755
+--- a/build.sh
++++ b/build.sh
+@@ -256,7 +256,6 @@ build_native()
+         if [ $__SkipGenerateVersion == 0 ]; then
+             pwd
+             "$__ProjectRoot/dotnet.sh" msbuild /nologo /verbosity:minimal /clp:Summary \
+-                                       /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll\;LogFile=binclash.log \
+                                        /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true \
+                                        /p:UsePartialNGENOptimization=false /maxcpucount \
+                                        "$__ProjectDir/build.proj" /p:GenerateVersionSourceFile=true /t:GenerateVersionSourceFile /p:NativeVersionSourceFile=$__versionSourceFile \
+@@ -440,7 +439,6 @@ build_CoreLib()
+     fi
+ 
+     $__ProjectRoot/dotnet.sh msbuild /nologo /verbosity:minimal /clp:Summary \
+-                             /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll\;LogFile=binclash.log \
+                              /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true \
+                              /p:UsePartialNGENOptimization=false /maxcpucount \
+                              $__ProjectDir/build.proj \
+@@ -504,7 +502,6 @@ generate_NugetPackages()
+     echo "ROOTFS_DIR is "$ROOTFS_DIR
+     # Build the packages
+     $__ProjectRoot/dotnet.sh msbuild /nologo /verbosity:minimal /clp:Summary \
+-                             /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll\;LogFile=binclash.log \
+                              /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true \
+                              /p:UsePartialNGENOptimization=false /maxcpucount \
+                              $__SourceDir/.nuget/packages.builds \
+-- 
+2.18.0
+
