@@ -1,0 +1,34 @@
+From 28f0779675da39333b3027df9b5d1b1b5f6c0dc5 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 9 Jun 2019 20:19:22 -0500
+Subject: [PATCH] Feed project automatically tries to publish.
+
+---
+ eng/Tools.props | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 79a3e0b949..7f4c35e47e 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -25,7 +25,6 @@
+     <PackageReference Include="Microsoft.DotNet.ApiCompat" Version="$(MicrosoftDotNetApiCompatPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.GenAPI" Version="$(MicrosoftDotNetGenApiPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.GenFacades" Version="$(MicrosoftDotNetGenFacadesPackageVersion)" />
+-    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Packaging" Version="$(MicrosoftDotNetBuildTasksPackagingPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.CoreFxTesting" Version="$(MicrosoftDotNetCoreFxTestingPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Configuration" Version="$(MicrosoftDotNetBuildTasksConfigurationPackageVersion)" />
+@@ -38,6 +37,9 @@
+ 
+   <!-- excluded from source build -->
+   <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
++    <!-- publishing -->
++    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" />
++
+     <!-- Symbol publishing -->
+     <PackageReference Include="$(PublishSymbolsPackage)" Version="$(PublishSymbolsPackageVersion)" />
+ 
+-- 
+2.18.0
+
