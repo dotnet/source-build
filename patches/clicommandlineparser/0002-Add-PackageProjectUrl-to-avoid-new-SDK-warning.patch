@@ -1,0 +1,23 @@
+From cd857a323cb65a9b9f79088a4d577762656e8a51 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 5 Mar 2019 15:52:32 -0600
+Subject: [PATCH] Add PackageProjectUrl to avoid new SDK warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 3df9d46..d15f138 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -11,5 +11,6 @@
+     <IsShippingPackage>false</IsShippingPackage>
+     <DebugType>embedded</DebugType>
+     <DebugSymbols>true</DebugSymbols>
++    <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
+   </PropertyGroup>
+ </Project>
+-- 
+2.18.0
+

@@ -1,0 +1,23 @@
+From efd331b94c458f26cac7f0e40ffad836aefb6f58 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 5 Mar 2019 16:06:33 -0600
+Subject: [PATCH] Ignore LicenseUrl warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index d15f138..d4d084e 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -12,5 +12,6 @@
+     <DebugType>embedded</DebugType>
+     <DebugSymbols>true</DebugSymbols>
+     <PackageProjectUrl>https://github.com/dotnet/clicommandlineparser</PackageProjectUrl>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
+   </PropertyGroup>
+ </Project>
+-- 
+2.18.0
+
