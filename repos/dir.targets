@@ -164,9 +164,16 @@
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
     </ItemGroup>
 
-    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
+    <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' != 'true'"
+                JsonFilePath="$(GlobalJsonFile)"
                 PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
                 NewAttributeValue="$(SDK_VERSION)"
+                SkipUpdateIfMissingKey="true" />
+
+    <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' == 'true'"
+                JsonFilePath="$(GlobalJsonFile)"
+                PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
+                NewAttributeValue="$(SDK3_VERSION)"
                 SkipUpdateIfMissingKey="true" />
   </Target>
 

@@ -4,8 +4,10 @@ IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 CLI_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+CLI3_VERSION=$(cat $SCRIPT_ROOT/Dotnet3CLIVersion.txt)
 CLI_ROOT="$SCRIPT_ROOT/Tools/dotnetcli"
 export SDK_VERSION=$CLI_VERSION
+export SDK3_VERSION=$CLI3_VERSION
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
