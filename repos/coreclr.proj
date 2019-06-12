@@ -36,8 +36,6 @@
     <PackagesOutput>$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg</PackagesOutput>
   </PropertyGroup>
 
-<Target Name="DebugStuff" AfterTargets="Build"> <Message Importance="High" Text="package output dir: $(PackagesOutput)" /> </Target>
-
   <ItemGroup>
     <BuiltSdkPackageOverride Include="@(ILSdkOverride)" />
   </ItemGroup>
