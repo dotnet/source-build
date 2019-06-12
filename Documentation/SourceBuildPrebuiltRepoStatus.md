@@ -153,19 +153,18 @@ xliff-tasks/0001-Hardcode-version-until-we-fix-Arcade.patch | Build | SourceBuil
 
 
 **Repo BAR status**
+
 The Build Asset Registry is used to inform source-build about what version of each repo we want to build.  Publishing to BAR is simple for Arcade repos.  We also have an example build that publishes to BAR without Arcade: https://github.com/dotnet/source-build-reference-packages/blob/master/eng/common/templates/job/publish-build-assets.yml.
 
 Not publishing to BAR, not planning to be:
-- application-insights (not owned close to us)
+- application-insights (not owned by us and doesn't change often)
 - aspnet/common (obsolete)
-- cliCommandLineParser (obsolete)
 - newtonsoft-json (not owned by us)
 
 Not on Arcade or BAR:
 - VSTest
 
 On Arcade but not BAR:
-- websdk (https://github.com/aspnet/websdk/issues/703)
 - xliff-tasks (https://github.com/dotnet/xliff-tasks/issues/114)
 
 
