@@ -27,7 +27,7 @@ source "$SCRIPT_ROOT/init-tools.sh"
 # We don't build BuildTools, so we copy the existing BuildTools into the source-built folder so it can live with Arcade.
 # This source-built folder is only used during the build and thrown away after that, so there's no rish of contaminating
 # the shipping product with BuildTools binaries.
-if [[ ! -d "$SCRIPT_ROOT/Tools/source-build" ]]; then
+if [[ ! -d "$SCRIPT_ROOT/Tools/source-built" ]]; then
     mkdir "$SCRIPT_ROOT/Tools/source-built"
     cp -r "$SCRIPT_ROOT/Tools" /tmp/
     mv /tmp/Tools /tmp/source-built/
