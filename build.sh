@@ -29,9 +29,9 @@ source "$SCRIPT_ROOT/init-tools.sh"
 # the shipping product with BuildTools binaries.
 if [[ ! -d "$SCRIPT_ROOT/Tools/source-build" ]]; then
     mkdir "$SCRIPT_ROOT/Tools/source-built"
-    cp -r "$SCRIPT_ROOT/Tools/" /tmp/
-    mv /tmp/Tools/ /tmp/source-built/
-    mv /tmp/source-built/ "$SCRIPT_ROOT/Tools/"
+    cp -r "$SCRIPT_ROOT/Tools" /tmp/
+    mv /tmp/Tools /tmp/source-built/
+    mv /tmp/source-built "$SCRIPT_ROOT/Tools/"
 fi
 
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"

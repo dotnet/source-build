@@ -23,7 +23,7 @@ function Exec-Block([scriptblock]$cmd) {
 
 $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
-$SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "Dotnet3CLIVersion.txt")
+$Sdk3Version = Get-Content (Join-Path $SCRIPT_ROOT "Dotnet3CLIVersion.txt")
 $env:SDK_VERSION = $SdkVersion
 $env:SDK3_VERSION = $Sdk3Version
 
