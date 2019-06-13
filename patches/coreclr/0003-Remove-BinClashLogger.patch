@@ -1,12 +1,70 @@
-From d76e89c574283a408a6721df9c722a355c9feca1 Mon Sep 17 00:00:00 2001
+From 065f4a46755713f1672a167ca1fca5acec394134 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 8 Jun 2019 21:50:54 -0500
 Subject: [PATCH 3/3] Remove BinClashLogger.
 
 ---
- build.sh | 3 ---
- 1 file changed, 3 deletions(-)
+ build-packages.cmd | 1 -
+ build.cmd          | 5 -----
+ build.sh           | 3 ---
+ 3 files changed, 9 deletions(-)
 
+diff --git a/build-packages.cmd b/build-packages.cmd
+index 1fa93ebda7..42ea47a27b 100644
+--- a/build-packages.cmd
++++ b/build-packages.cmd
+@@ -40,7 +40,6 @@ if NOT '%ERRORLEVEL%' == '0' exit /b 1
+ 
+ call %__ProjectDir%/dotnet.cmd msbuild /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+   /p:__BuildOS=Windows_NT /flp:v=detailed;Append;LogFile=build-packages.log^
+-  /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+   /p:PortableBuild=true %__ProjectDir%\src\.nuget\packages.builds^
+   /p:FilterToOSGroup=Windows_NT %__MSBuildArgs% %unprocessedArgs%
+ if NOT [!ERRORLEVEL!]==[0] (
+diff --git a/build.cmd b/build.cmd
+index e9669ca36a..e91df7384c 100644
+--- a/build.cmd
++++ b/build.cmd
+@@ -367,7 +367,6 @@ REM ============================================================================
+ @if defined _echo @echo on
+ 
+ call %__ProjectDir%\dotnet.cmd msbuild /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+-  /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+   /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true^
+   /p:UsePartialNGENOptimization=false /maxcpucount^
+   %__ProjectDir%\build.proj /t:GenerateVersionHeader /p:GenerateVersionHeader=true /p:NativeVersionHeaderFile="%__RootBinDir%\obj\_version.h"^
+@@ -506,7 +505,6 @@ if %__BuildCrossArchNative% EQU 1 (
+     set __Logging=!_MsbuildLog! !__MsbuildWrn! !__MsbuildErr!
+ 
+     call %__ProjectDir%\cmake_msbuild.cmd /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+-      /l:BinClashLogger,Tools/net46/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+       /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true^
+       /p:UsePartialNGENOptimization=false /maxcpucount^
+       %__CrossCompIntermediatesDir%\install.vcxproj^
+@@ -594,7 +592,6 @@ if %__BuildNative% EQU 1 (
+     set __Logging=!__MsbuildLog! !__MsbuildWrn! !__MsbuildErr!
+ 
+     call %__ProjectDir%\cmake_msbuild.cmd /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+-      /l:BinClashLogger,Tools/net46/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+       /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true^
+       /p:UsePartialNGENOptimization=false /maxcpucount %__IntermediatesDir%\install.vcxproj^
+       !__Logging! /p:Configuration=%__BuildType% /p:Platform=%__BuildArch% %__CommonMSBuildArgs% /m:2 %__UnprocessedBuildArgs%
+@@ -653,7 +650,6 @@ if %__BuildCoreLib% EQU 1 (
+         set __Logging=!__MsbuildLog! !__MsbuildWrn! !__MsbuildErr!
+ 
+         call %__ProjectDir%\dotnet.cmd msbuild /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+-          /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+           /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true^
+           /p:UsePartialNGENOptimization=false /maxcpucount^
+           %__ProjectDir%\build.proj^
+@@ -865,7 +861,6 @@ if %__BuildPackages% EQU 1 (
+ 
+     REM The conditions as to what to build are captured in the builds file.
+     call %__ProjectDir%\dotnet.cmd msbuild /nologo /verbosity:minimal /clp:Summary /nodeReuse:false^
+-      /l:BinClashLogger,Tools/Microsoft.DotNet.Build.Tasks.dll;LogFile=binclash.log^
+       /p:RestoreDefaultOptimizationDataPackage=false /p:PortableBuild=true^
+       /p:UsePartialNGENOptimization=false /maxcpucount^
+       %__SourceDir%\.nuget\packages.builds^
 diff --git a/build.sh b/build.sh
 index a24bd89070..7ddd794690 100755
 --- a/build.sh
