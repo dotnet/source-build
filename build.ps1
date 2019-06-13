@@ -45,10 +45,9 @@ Exec-Block { & "$SCRIPT_ROOT\init-tools.cmd" } | Out-Host
 # This source-built folder is only used during the build and thrown away after that, so there's no rish of contaminating
 # the shipping product with BuildTools binaries.
 if (-Not (Test-Path "$SCRIPT_ROOT\Tools\source-built")) {
-  Copy-Item "$SCRIPT_ROOT\Tools" (Join-Path $env:TEMP "source-built")
+  Copy-Item -Recurse "$SCRIPT_ROOT\Tools" (Join-Path $env:TEMP "source-built")
   Move-Item (Join-Path $env:TEMP "source-built") "$SCRIPT_ROOT\Tools"
 }
-gci -recurse "$SCRIPT_ROOT" | Out-File "$SCRIPT_ROOT\files.log"
 
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
