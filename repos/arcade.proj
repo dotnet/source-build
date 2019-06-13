@@ -7,7 +7,8 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190418.7</OfficialBuildId>
+    <!-- don't pass an official build ID for tarball build so we can stick with 1.0.0-dev version when bootstrapping -->
+    <OfficialBuildId Condition="'$(OfflineBuild)' != 'true'">20190418.7</OfficialBuildId>
 
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
@@ -63,9 +64,9 @@
   <ItemGroup>
     <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
          This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
 
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
