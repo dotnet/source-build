@@ -117,6 +117,7 @@ cp $SCRIPT_ROOT/*.props $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.targets $TARBALL_ROOT/
 cp $SCRIPT_ROOT/init-tools.msbuild $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
+cp $SCRIPT_ROOT/Dotnet3CLIVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/BuildToolsVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
