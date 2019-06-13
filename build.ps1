@@ -48,6 +48,7 @@ if (-Not (Test-Path "$SCRIPT_ROOT\Tools\source-built")) {
   Copy-Item "$SCRIPT_ROOT\Tools" (Join-Path $env:TEMP "source-built")
   Move-Item (Join-Path $env:TEMP "source-built") "$SCRIPT_ROOT\Tools"
 }
+gci -recurse "$SCRIPT_ROOT" | Out-File "$SCRIPT_ROOT\files.log"
 
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
