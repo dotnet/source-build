@@ -13,7 +13,7 @@
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceControlManagerQueries=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError:0</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
