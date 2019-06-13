@@ -8,7 +8,7 @@
 
   <PropertyGroup>
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
-    <BuildArguments>$(BuildArguments) -ignoreWarnings</BuildArguments>
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -ignoreWarnings</BuildArguments>
     <BuildArguments>$(BuildArguments) -skipgenerateversion</BuildArguments>
     <BuildArguments>$(BuildArguments) -warnaserror:0</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
