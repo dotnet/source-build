@@ -103,6 +103,8 @@
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
 
     <!-- some repos do this in a separate process -->
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" Condition="'$(OfficialBuildId)' != ''"/>
+    <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" Condition="'$(OfficialBuildId)' != ''"/>
     <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitCommitHash=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
