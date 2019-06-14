@@ -105,8 +105,8 @@
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
 
     <!-- some repos do this in a separate process -->
-    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" Condition="'$(OfficialBuildId)' != ''"/>
-    <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" Condition="'$(OfficialBuildId)' != ''"/>
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" />
     <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitCommitHash=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
@@ -116,6 +116,7 @@
     <EnvironmentVariables Include="RepositoryCommit=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="RepositoryUrl=https://github.com/dotnet/source-build" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
   </ItemGroup>
 
   <ItemGroup>

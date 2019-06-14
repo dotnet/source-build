@@ -19,12 +19,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
 
-    <!--
-      Work around https://github.com/dotnet/sourcelink/issues/91:
-      error : SourceRoot items must include at least one top-level (not nested) item when DeterministicSourcePaths is true
-    -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
-
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
