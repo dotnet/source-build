@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>5e7ce5b394f3477bb0a485a4b761b7742e95be37</PreferredHash>
+    <PreferredHash>7f634f2ba11e256580392f3e67a57e2761d44ea7</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190418.7</OfficialBuildId>
+    <!-- don't pass an official build ID for tarball build so we can stick with 1.0.0-dev version when bootstrapping -->
+    <OfficialBuildId Condition="'$(OfflineBuild)' != 'true'">20190418.7</OfficialBuildId>
 
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
@@ -27,6 +28,7 @@
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <UpdateGlobalJsonToV3Sdk>true</UpdateGlobalJsonToV3Sdk>
 
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
@@ -37,6 +39,7 @@
 
   <ItemGroup>
     <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadePackagingOverride)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,15 +58,26 @@
 
   <PropertyGroup>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19270.2</ArcadeBootstrapVersion>
+    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19306.12</ArcadeBootstrapVersion>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
          This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

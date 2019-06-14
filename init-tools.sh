@@ -234,7 +234,7 @@ echo "Making all .sh files executable under Tools."
 ls "$__scriptpath/Tools/"*.sh | xargs chmod +x
 ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
-"$__scriptpath/Tools/crossgen.sh" "$__scriptpath/Tools"
+BUILDTOOLS_CROSSGEN_FEED=https://api.nuget.org/v3/index.json "$__scriptpath/Tools/crossgen.sh" "$__scriptpath/Tools" "$NATIVE_TOOLS_RID" "netcoreapp2.2"
 
 # CoreCLR expects this and has no way to pass in the dotnetcli directory
 ln -s $__DOTNET_PATH $__TOOLRUNTIME_DIR/.dotnet

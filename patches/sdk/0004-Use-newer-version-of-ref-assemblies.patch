@@ -1,0 +1,25 @@
+From 06e1038c6b50a52b72ddee8f3de2d2492aa3be18 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 12 Jun 2019 09:39:36 -0500
+Subject: [PATCH 4/4] Use newer version of ref assemblies.
+
+---
+ eng/Versions.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index d2f6f644..f0432887 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -29,7 +29,7 @@
+   <!-- Get .NET Framework reference assemblies from NuGet packages -->
+   <PropertyGroup>
+     <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+-    <MicrosoftNetFrameworkReferenceAssembliesVersion>1.0.0-alpha-5</MicrosoftNetFrameworkReferenceAssembliesVersion>
++    <MicrosoftNetFrameworkReferenceAssembliesVersion>1.0.0-preview.1</MicrosoftNetFrameworkReferenceAssembliesVersion>
+   </PropertyGroup>
+   <!-- Test Dependencies -->
+   <PropertyGroup>
+-- 
+2.18.0
+
