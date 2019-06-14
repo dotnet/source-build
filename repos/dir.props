@@ -80,7 +80,9 @@
 
     <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
     <EnvironmentVariables Include="PB_VersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
+    <EnvironmentVariables Include="PreReleaseVersionLabel=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
+    <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
 
     <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
     <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
