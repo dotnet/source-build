@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>402060be01b134aea1546d3cc3a779ff4d651c5d</PreferredHash>
+    <PreferredHash>ea406627f919daa1d8da7daabe2d1f6619d2ad72</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
@@ -11,8 +11,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -r $(TargetRid)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -v 15.9.0</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -vs preview-20180807-05</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -v 16.0.1</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
