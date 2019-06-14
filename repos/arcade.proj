@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>57bba546297b18acaf9893455fe44e6d03052b40</PreferredHash>
+    <PreferredHash>671bfe2954fe2e0fc2052cb0ee59cbfe9e5e8801</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
     <!-- don't pass an official build ID for tarball build so we can stick with 1.0.0-dev version when bootstrapping -->
-    <OfficialBuildId Condition="'$(OfflineBuild)' != 'true'">20190614.2</OfficialBuildId>
+    <OfficialBuildId Condition="'$(OfflineBuild)' != 'true'">20190614.13</OfficialBuildId>
 
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
