@@ -23,8 +23,6 @@
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:CheckCDefines=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
-<!--    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) $(FlagParameterPrefix)warnaserror $(ArcadeFalseBoolBuildArg)</BuildArguments>
-    <BuildArguments Condition="'$(OS)' == 'Windows_NT'">$(BuildArguments) $(FlagParameterPrefix)warnaserror:0</BuildArguments>-->
     <BuildArguments>$(BuildArguments) -warnaserror:0</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
