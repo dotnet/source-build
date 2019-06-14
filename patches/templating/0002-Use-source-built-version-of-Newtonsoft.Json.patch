@@ -1,14 +1,14 @@
-From 339bf4fd9064d73b548970b9b7a17e1d8d98e2a1 Mon Sep 17 00:00:00 2001
+From 7ccf5d7e3753f081e0b893a55bbacfaac4d99e0b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 1 May 2019 03:12:50 -0500
-Subject: [PATCH] Use source-built version of Newtonsoft.Json.
+Subject: [PATCH 2/2] Use source-built version of Newtonsoft.Json.
 
 ---
  Directory.Build.targets | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.targets b/Directory.Build.targets
-index af3d3a47..a49eb827 100644
+index 88795ce7..74c8f402 100644
 --- a/Directory.Build.targets
 +++ b/Directory.Build.targets
 @@ -1,5 +1,7 @@
@@ -19,9 +19,9 @@ index af3d3a47..a49eb827 100644
      <ItemGroup>
          <PackageReference Update="System.Diagnostics.Process" Version="4.3.0" />
          <PackageReference Update="System.IO.Compression" Version="4.3.0" />
-@@ -10,7 +12,7 @@
+@@ -9,7 +11,7 @@
+ 
          <PackageReference Update="Microsoft.DotNet.Cli.CommandLine" Version="0.1.1-alpha-167" />
-         <PackageReference Update="Microsoft.Extensions.CommandLineUtils" Version="1.1.0" />
          <PackageReference Update="Microsoft.NET.Test.Sdk" Version="15.8.0" />
 -        <PackageReference Update="Newtonsoft.Json" Version="10.0.3" />
 +        <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
