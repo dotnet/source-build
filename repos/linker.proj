@@ -23,6 +23,7 @@
     <BuildCommand>$(DotNet3CliToolDir)dotnet $(BuildCommandArgs)</BuildCommand>
 
     <BuildPackagesCommandArgs>pack /bl:pack.binlog</BuildPackagesCommandArgs>
+    <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Configuration=illink_$(Configuration)</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Version=$(ILLinkTasksPackageVersion)</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
     <BuildPackagesCommand>$(DotNet3CliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
