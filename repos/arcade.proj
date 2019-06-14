@@ -51,23 +51,6 @@
     <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->
     <EnvironmentVariables Remove="DotNetUseShippingVersions=true" />
     <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
-
-    <!-- reset SDK location variables to use 3.0 SDK override -->
-    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetToolPath=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetTool=$(DotNetCliToolDir)dotnet" />
-    <EnvironmentVariables Remove="DOTNET_HOST_PATH=$(DotNetCliToolDir)dotnet" />
-    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
-
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetToolPath=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetTool=$(DotNet3CliToolDir)dotnet" />
-    <EnvironmentVariables Include="DOTNET_HOST_PATH=$(DotNet3CliToolDir)dotnet" />
-    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <PropertyGroup>
