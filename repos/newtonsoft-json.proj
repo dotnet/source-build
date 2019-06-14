@@ -34,22 +34,5 @@
           IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
-  <Target Name="ClearNonSourceBuildCachedPackages" AfterTargets="Build">
-    <Exec Command="sh -c 'rm -rf $(PackagesDir)/newtonsoft.json $(PackagesDir)/newtonsoft.json.bson'"
-          WorkingDirectory="$(ProjectDirectory)" />
-    <ItemGroup>
-      <PackageFiles Include="$(PackagesDir)/newtonsoft*" />
-    </ItemGroup>
-
-
-
-    <Message Importance="High" Text="Package files remaining: @(PackageFiles)" />
-  </Target>
-
-  <!--This is a workaround dependency and is not a real one. It was added so that arcade could use the newtonsoft its compatible with and other projects can use the newer newtonsoft version-->
-  <ItemGroup>
-    <RepositoryReference Include="arcade" />
-  </ItemGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
