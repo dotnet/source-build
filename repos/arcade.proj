@@ -52,10 +52,6 @@
     <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
   </ItemGroup>
 
-  <ItemGroup>
-    <RepositoryReference Include="newtonsoft-json" />
-  </ItemGroup>
-
   <PropertyGroup>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
     <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19306.12</ArcadeBootstrapVersion>

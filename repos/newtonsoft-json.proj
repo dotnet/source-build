@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>e43dae94c26f0c30e9095327a3a9eac87193923d</PreferredHash>
+    <PreferredHash>252b0a02a539d144a246267010b91870c86744e8</PreferredHash>
     <SourceDirectory>Newtonsoft.Json</SourceDirectory>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
+  <ItemGroup>
+    <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3bnetstandard1.3%3bnetstandard2.0" />
+  </ItemGroup>   
+ 
   <PropertyGroup>
     <NuGetConfigFile>$(ProjectDirectory)/Src/NuGet.Config</NuGetConfigFile>
     <NewtonsoftJsonKeyFilePath>$(KeysDir)Newtonsoft.Json.snk</NewtonsoftJsonKeyFilePath>
     <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
-    <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.Dotnet.csproj</NewtonsoftJsonProjectPath>
+    <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.csproj</NewtonsoftJsonProjectPath>
     <DotnetToolCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotnetToolCommandArguments>
     <BuildCommand>$(DotnetToolCommand) build $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildCommand>
     <BuildPackagesCommand>$(DotnetToolCommand) pack $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildPackagesCommand>
@@ -24,11 +28,28 @@
   </PropertyGroup>
 
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
-    <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) /v:$(LogVerbosity) $(RedirectRepoOutputToLog)"
+    <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) /v:$(LogVerbosity) /bl $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
   </Target>
+
+  <Target Name="ClearNonSourceBuildCachedPackages" AfterTargets="Build">
+    <Exec Command="sh -c 'rm -rf $(PackagesDir)/newtonsoft.json $(PackagesDir)/newtonsoft.json.bson'"
+          WorkingDirectory="$(ProjectDirectory)" />
+    <ItemGroup>
+      <PackageFiles Include="$(PackagesDir)/newtonsoft*" />
+    </ItemGroup>
+
+
+
+    <Message Importance="High" Text="Package files remaining: @(PackageFiles)" />
+  </Target>
+
+  <!--This is a workaround dependency and is not a real one. It was added so that arcade could use the newtonsoft its compatible with and other projects can use the newer newtonsoft version-->
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
+  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
