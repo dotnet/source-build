@@ -6,19 +6,22 @@
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
-
+  
+  <!--The Library Frameworks was added to environment variables so as to override the frameworks in newtonsoft csproj-->
+  <!--The semicolons were added with encoding so as to avoid conflicts in MSBuild shell-->
   <ItemGroup>
-    <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3bnetstandard1.3%3bnetstandard2.0" />
+    <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3Bnetstandard1.3%3Bnetstandard2.0" />
+    <RepositoryReference Include="arcade" />
   </ItemGroup>   
- 
+
   <PropertyGroup>
     <NuGetConfigFile>$(ProjectDirectory)/Src/NuGet.Config</NuGetConfigFile>
     <NewtonsoftJsonKeyFilePath>$(KeysDir)Newtonsoft.Json.snk</NewtonsoftJsonKeyFilePath>
     <NewtonsoftJsonDirectory>$(ProjectDirectory)/Src/Newtonsoft.Json/</NewtonsoftJsonDirectory>
     <NewtonsoftJsonProjectPath>$(NewtonsoftJsonDirectory)Newtonsoft.Json.csproj</NewtonsoftJsonProjectPath>
     <DotnetToolCommandArguments>"/p:DotnetOnly=true" "/p:Configuration=$(Configuration)" "/p:AssemblyOriginatorKeyFile=$(NewtonsoftJsonKeyFilePath)" "/p:SignAssembly=true" "/p:PublicSign=true" "/p:TreatWarningsAsErrors=false" "/p:AdditionalConstants=SIGNED"</DotnetToolCommandArguments>
-    <BuildCommand>$(DotnetToolCommand) build $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildCommand>
-    <BuildPackagesCommand>$(DotnetToolCommand) pack $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</BuildPackagesCommand>
+    <BuildCommand>$(DotnetToolCommand) build $(NewtonsoftJsonProjectPath) /bl:restore.binlog $(DotnetToolCommandArguments)</BuildCommand>
+    <BuildPackagesCommand>$(DotnetToolCommand) pack $(NewtonsoftJsonProjectPath) /bl:restore.binlog $(DotnetToolCommandArguments)</BuildPackagesCommand>
     <CleanCommand>$(DotnetToolCommand) clean $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments)</CleanCommand>
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
