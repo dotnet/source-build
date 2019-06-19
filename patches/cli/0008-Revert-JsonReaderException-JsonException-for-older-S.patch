@@ -1,0 +1,54 @@
+From 659cf50d315b167dd2d609d326843f4ad1f45a43 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 17 Jun 2019 18:46:55 -0500
+Subject: [PATCH 8/8] Revert JsonReaderException -> JsonException for older SDK
+ version.
+
+---
+ src/dotnet/ToolManifest/ToolManifestEditor.cs                   | 2 +-
+ src/dotnet/ToolPackage/LocalToolsResolverCache.cs               | 2 +-
+ .../commands/dotnet-run/LaunchSettings/LaunchSettingsManager.cs | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/dotnet/ToolManifest/ToolManifestEditor.cs b/src/dotnet/ToolManifest/ToolManifestEditor.cs
+index 55c8fb599..38ee22ad0 100644
+--- a/src/dotnet/ToolManifest/ToolManifestEditor.cs
++++ b/src/dotnet/ToolManifest/ToolManifestEditor.cs
+@@ -216,7 +216,7 @@ private SerializableLocalToolsManifest DeserializeLocalToolsManifest(FilePath po
+                 return serializableLocalToolsManifest;
+             }
+             catch (Exception e) when (
+-                e is JsonException)
++                e is JsonReaderException)
+             {
+                 throw new ToolManifestException(string.Format(LocalizableStrings.JsonParsingError,
+                     possibleManifest.Value, e.Message));
+diff --git a/src/dotnet/ToolPackage/LocalToolsResolverCache.cs b/src/dotnet/ToolPackage/LocalToolsResolverCache.cs
+index ba4c9eca8..160652f27 100644
+--- a/src/dotnet/ToolPackage/LocalToolsResolverCache.cs
++++ b/src/dotnet/ToolPackage/LocalToolsResolverCache.cs
+@@ -99,7 +99,7 @@ private CacheRow[] GetCacheTable(string packageCacheFile)
+                 cacheTable =
+                     JsonSerializer.Parse<CacheRow[]>(_fileSystem.File.ReadAllText(packageCacheFile));
+             }
+-            catch (JsonException)
++            catch (JsonReaderException)
+             {
+                 // if file is corrupted, treat it as empty since it is not the source of truth
+             }
+diff --git a/src/dotnet/commands/dotnet-run/LaunchSettings/LaunchSettingsManager.cs b/src/dotnet/commands/dotnet-run/LaunchSettings/LaunchSettingsManager.cs
+index 0e03bb34e..06f0bff10 100644
+--- a/src/dotnet/commands/dotnet-run/LaunchSettings/LaunchSettingsManager.cs
++++ b/src/dotnet/commands/dotnet-run/LaunchSettings/LaunchSettingsManager.cs
+@@ -87,7 +87,7 @@ public static LaunchSettingsApplyResult TryApplyLaunchSettings(string launchSett
+                     return provider.TryApplySettings(profileObject, ref command);
+                 }
+             }
+-            catch (JsonException ex)
++            catch (JsonReaderException ex)
+             {
+                 return new LaunchSettingsApplyResult(false, string.Format(LocalizableStrings.DeserializationExceptionMessage, ex.Message));
+             }
+-- 
+2.18.0
+

@@ -15,7 +15,7 @@
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
 
-    <BuildCommandArgs>--pack $(RuntimeArg)</BuildCommandArgs>
+    <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RuntimeArg)</BuildCommandArgs>
 
@@ -27,9 +27,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
-
-    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
 
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
