@@ -10,7 +10,8 @@
   <!--The Library Frameworks was added to environment variables so as to override the frameworks in newtonsoft csproj-->
   <!--The semicolons were added with encoding so as to avoid conflicts in MSBuild shell-->
   <ItemGroup>
-    <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3Bnetstandard1.3%3Bnetstandard2.0" />
+    <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3Bnetstandard1.3%3Bnetstandard2.0" />a
+    <!--This is a fake repo reference to slightly tweak build ordering so that arcade builds before newtonsoft. Although this tweak is temporary. dtd 06/19/2019-->
     <RepositoryReference Include="arcade" />
   </ItemGroup>   
 
