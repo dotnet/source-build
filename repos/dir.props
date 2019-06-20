@@ -63,6 +63,7 @@
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="AddDotnetfeedProjectSource=false" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' == 'arcade'" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/source-built" Condition="'$(RepositoryName)' != 'arcade'" />
