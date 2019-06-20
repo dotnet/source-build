@@ -1,0 +1,24 @@
+From ba0062877b5fb46fac5a26f6b5d9e753be0af6d8 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 07:26:25 -0500
+Subject: [PATCH 2/2] Exclude XUnit project from source-build.
+
+---
+ external/test-runtime/XUnit.Runtime.depproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/external/test-runtime/XUnit.Runtime.depproj b/external/test-runtime/XUnit.Runtime.depproj
+index fb9c74afa1..d3e93f0f65 100644
+--- a/external/test-runtime/XUnit.Runtime.depproj
++++ b/external/test-runtime/XUnit.Runtime.depproj
+@@ -27,6 +27,7 @@
+     <Language Condition="'$(Language)' == ''">c#</Language>
+     <!-- Don't warn if some dependencies were rolled forward -->
+     <NoWarn>$(NoWarn);NU1603;NU1701</NoWarn>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.18.0
+
