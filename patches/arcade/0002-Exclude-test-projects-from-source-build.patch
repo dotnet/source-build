@@ -1,0 +1,37 @@
+From b2f01547573972f936888313e7ed9ce9152eb45a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 00:53:35 -0500
+Subject: [PATCH 2/2] Exclude test projects from source-build.
+
+---
+ .../Microsoft.DotNet.Build.Tasks.Configuration.Tests.csproj      | 1 +
+ .../tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj    | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Configuration/tests/Microsoft.DotNet.Build.Tasks.Configuration.Tests.csproj b/src/Microsoft.DotNet.Build.Tasks.Configuration/tests/Microsoft.DotNet.Build.Tasks.Configuration.Tests.csproj
+index 66a524e6..1f6b8456 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Configuration/tests/Microsoft.DotNet.Build.Tasks.Configuration.Tests.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Configuration/tests/Microsoft.DotNet.Build.Tasks.Configuration.Tests.csproj
+@@ -3,6 +3,7 @@
+     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+     <LangVersion>Latest</LangVersion>
+     <SignAssembly>false</SignAssembly>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
+index 1f42a095..6700f0ad 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
+@@ -4,6 +4,7 @@
+     <LangVersion>Latest</LangVersion>
+     <SignAssembly>false</SignAssembly>
+     <NoWarn>xUnit2013</NoWarn>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <Content Include="packageIndex.json" CopyToOutputDirectory="Always"/>
+-- 
+2.18.0
+

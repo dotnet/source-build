@@ -1,0 +1,24 @@
+From 30cee3ebfcbe7a690e01cb29ce38992a1c2f8c58 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 00:55:37 -0500
+Subject: [PATCH 5/5] Exclude test project from source-build
+
+---
+ test/EndToEnd/EndToEnd.Tests.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test/EndToEnd/EndToEnd.Tests.csproj b/test/EndToEnd/EndToEnd.Tests.csproj
+index f6a90b401..17b63aa20 100644
+--- a/test/EndToEnd/EndToEnd.Tests.csproj
++++ b/test/EndToEnd/EndToEnd.Tests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+     <TargetFramework>$(CoreSdkTargetFramework)</TargetFramework>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.18.0
+
