@@ -1,0 +1,25 @@
+From a9a1adb7c53704bce6973324eb0bd9a61b1dc573 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 18 Jun 2019 15:23:57 -0500
+Subject: [PATCH 3/5] JsonException -> JsonReaderException for old SDK version.
+
+---
+ src/Configuration/Config.Json/src/JsonConfigurationProvider.cs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Configuration/Config.Json/src/JsonConfigurationProvider.cs b/src/Configuration/Config.Json/src/JsonConfigurationProvider.cs
+index a82466e38..e04e43afc 100644
+--- a/src/Configuration/Config.Json/src/JsonConfigurationProvider.cs
++++ b/src/Configuration/Config.Json/src/JsonConfigurationProvider.cs
+@@ -29,7 +29,7 @@ public override void Load(Stream stream)
+             {
+                 Data = JsonConfigurationFileParser.Parse(stream);
+             }
+-            catch (JsonException e)
++            catch (Exception e)
+             {
+                 throw new FormatException(Resources.Error_JSONParseError, e);
+             }
+-- 
+2.21.0
+
