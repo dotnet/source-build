@@ -19,7 +19,9 @@
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <UpdateGlobalJsonToV3Sdk>true</UpdateGlobalJsonToV3Sdk>
-    <OutputPlacementRepoApiImplemented>true</OutputPlacementRepoApiImplemented>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
@@ -49,6 +51,13 @@
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
+
+  <Target Name="SetOutputList" AfterTargets="Build" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
