@@ -25,6 +25,28 @@
 -noclass System.Net.Security.Tests.ServerAsyncAuthenticateTest
 -nomethod System.Net.Security.Tests.CertificateValidationClientServer.CertificateValidationClientServer_EndToEnd_Ok
 
+# System.Net.Sockets.Tests
+-noclass System.Net.Sockets.Tests.DualModeAccept
+-noclass System.Net.Sockets.Tests.DualModeAcceptAsync
+-noclass System.Net.Sockets.Tests.DualModeConnectToIPAddress
+-nomethod System.Net.Sockets.Tests.DualModeConnectToIPEndPoint.ConnectV6IPEndPointToV6Host_Success
+-nomethod System.Net.Sockets.Tests.DualModeConnectToIPEndPoint.ConnectV6IPEndPointToDualHost_Success
+-nomethod System.Net.Sockets.Tests.DualModeConnectToIPAddressArray.DualModeConnect_IPAddressListToHost_Success
+-noclass System.Net.Sockets.Tests.DualModeBeginAccept
+-noclass System.Net.Sockets.Tests.DualModeBeginConnectToIPAddress
+-noclass System.Net.Sockets.Tests.DualModeConnectToDnsEndPoint
+-noclass System.Net.Sockets.Tests.SendPacketsAsync
+-noclass System.Net.Sockets.Tests.DualModeBeginConnectToIPEndPoint
+-nomethod System.Net.Sockets.Tests.DualModeBind.BindV6IPEndPoint_Success
+-noclass System.Net.Sockets.Tests.DualModeConnectAsync
+-nomethod System.Net.Sockets.Tests.TcpClientTest.Connect_Dual_Success
+-nomethod System.Net.Sockets.Tests.ArgumentValidation.Socket_Connect_IPv6AddressAsStringHost_Supported
+-nomethod System.Net.Sockets.Tests.ArgumentValidation.Socket_ConnectAsync_IPv6AddressAsStringHost_Supported
+-nomethod System.Net.Sockets.Tests.DualModeConnectToHostString.DualModeConnect_LoopbackDnsToHost_Helper
+
 # System.Runtime.Loader.Tests
 -nomethod System.Runtime.Loader.Tests.DefaultLoadContextTests.LoadInDefaultContext
+
+# System.Security.Cryptography.X509Certificates.Tests
+-nomethod System.Security.Cryptography.X509Certificates.Tests.X509StoreTests.X509Store_MachineStoreLoadSkipsInvalidFiles
 
