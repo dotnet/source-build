@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-06-14
+Last source-build Build Date: 2019-06-23
 
-Last updated: 2019-06-18
+Last updated: 2019-06-24
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -10,32 +10,32 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 4 | 15 |
-| [cli][880] | Nick Guerrera | ![cp] Complete | 8 | - | All direct-dependency prebuilts removed.
+| [arcade][970] | Mark Wilke | ![ot] On Track | 2 | 10 |
+| [cli][880] | Nick Guerrera | ![bn] Bounced | 8 | 2 | 
 | [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
-| [cli-migrate][881] | Nick Guerrera | ![ot] On Track | 7 | 1 |
+| [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
 | [common][882] | Nate McMaster | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [coreclr][883] | Russ Keldorph | ![ot] On Track | 3 | 1 |
-| [corefx][884] | Eric St. John | ![ot] On Track | 1 | 10 |
-| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 5 | 4 |
-| [core-setup][885] | Davis Goodin | ![ot] On Track | 4 | 10 |
-| [linker][887] | Dan Seefeldt | ![ot] On Track | 2 | 2 |
-| [msbuild][888] | Nick Guerrera | ![ot] On Track | 3 | 9 |
-| [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 3 | 2 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 3 | 18 |
+| [coreclr][883] | Russ Keldorph | ![ot] On Track | 6 | 1 |
+| [corefx][884] | Eric St. John | ![ot] On Track | 2 | 9 |
+| [core-sdk][972] | Nick Guerrera | ![ot] On Track | 6 | 4 |
+| [core-setup][885] | Davis Goodin | ![ot] On Track | 5 | 9 |
+| [linker][887] | Dan Seefeldt | ![ot] On Track | 4 | 1 |
+| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 7 |
+| [Newtonsoft.Json][889] | Chris Rummel | ![bn] Bounced | - | 2 | 
+| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 7 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 14 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
-| [sdk][893] | Nick Guerrera | ![ot] On Track | 4 | 2 |
+| [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 3 |
 | [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 4 |
-| [standard][894] | Eric St. John | ![ot] On Track | 1 | 2 |
-| [templating][895] | Vijay Ramakrishnan | ![ot] On Track | 3 | 3 |
+| [standard][894] | Eric St. John | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
+| [templating][895] | Vijay Ramakrishnan | ![ot] On Track | 2 | 2 |
 | [Tools][974] | Dan Seefeldt | ![ot] On Track | - | 4 |
-| [toolset][973] | Nick Guerrera | ![ot] On Track | 1 | 4 |
-| [tools-local tasks][971] | Dan Seefeldt | ![ot] On Track | - | 2 |
-| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 5 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 2 | 7 |
-| [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 7 |
-| [xliff-tasks][899] | Tom Meschter | ![ot] On Track | 1 | 2 |
+| [toolset][973] | Nick Guerrera | ![ot] On Track | 2 | 4 |
+| [tools-local tasks][971] | Dan Seefeldt | ![ot] On Track | - | 1 |
+| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 4 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 3 | 8 |
+| [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 8 |
+| [xliff-tasks][899] | Tom Meschter | ![ot] On Track | - | 2 |
 
 <br/>
 
@@ -46,12 +46,14 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | ![ot] On Track | Engineers are working through issues to remove prebuilts |
 | ![ar] At Risk  | Prebuilt removal tasks not on track for completion or blocked |
 | ![cp] Complete | All prebuilts removed |
+| ![bn] Bounced | Previously complete, but new prebuilts have emerged |
 
 [ns]: https://img.icons8.com/office/16/000000/medium-risk.png
 [pl]: https://img.icons8.com/office/16/000000/gantt-chart.png
 [ot]: https://img.icons8.com/office/16/000000/gps-device.png
 [ar]: https://img.icons8.com/office/16/000000/high-risk.png
 [cp]: https://img.icons8.com/office/16/000000/checked.png
+[bn]: https://img.icons8.com/office/16/000000/return--v2.png
 
 <br/>
 
@@ -59,29 +61,28 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | Repo | Latest Commit | Commit Date
 | --- | --- | ---
 ApplicationInsights-dotnet | 53b80940842204f78708a538628288ff5d741a1d | 2017-12-21
-arcade | 7f634f2ba11e256580392f3e67a57e2761d44ea7 | 2019-06-11
-cli | 25e4d0da1b94e04ff54f8aca8d459ed39ee77450 | 2019-04-27
-cli-migrate | 37e3a01aa1df320a286b0a858876f9994fb6bb18 | 2019-01-24
+arcade | 2b0830b8cc561f327e4e1b10b6e21a188b9ecee6 | 2019-06-13
+cli | 99151dfa08364242d93c861568abaf044e134d8c | 2019-06-04
 cliCommandLineParser | 0e89c2116ad28e404ba56c14d1c3f938caa25a01 | 2019-04-08
 common | 6e37cdfe96ac8b06a923242120169fafacd720e6 | 2018-11-02
-core-sdk | b487ff10aafb8b58eaa2b78a236b1e97999d7a22 | 2019-04-28
-core-setup | 0298b805eaa286192865be92ec351e7a74b177af | 2019-06-18
-coreclr | 08136a667d1a30c242f40731b3b0b299e4167220 | 2019-05-05
-corefx | ec1b46cd8d2cae3d238bbcc3b204246f432d7ea6 | 2019-05-08
-linker | c09c490012b1e11cf6d52a6c6a486d4dc5f401bc | 2019-04-18
-msbuild | 62fb89029dac66f73a5ca52363fd11b36f12190b | 2019-04-23
-Newtonsoft.Json | e43dae94c26f0c30e9095327a3a9eac87193923d | 2018-05-31
-NuGet.Client | 10c6fc8eeee07637c6c97b0ce08ab211ff502c0f | 2019-05-23
-roslyn | 79b8271f65609b23e0c0ee1babed6862b7c5ed56 | 2019-04-16
-sdk | 7af4517bbcf17b000889c1077ef5976f2b6350ea | 2019-04-25
-source-build-reference-packages | 04ffdfd0a3b192a90a75b2199869c9327d51c798 | 2019-06-13
-standard | 5eee83eaa61eff38f470dc690218bebf73f46e23 | 2019-04-22
-templating | e854a58b469c2b4a660fc6e448657d1dd8e40ab9 | 2019-04-19
-toolset | a63c2959705e3c01a6c4088aa97bd2690f741fb5 | 2019-04-28
-visualfsharp | d1cc85ed116e037fe6e38fc270f9c47c72185806 | 2019-04-19
-vstest | 402060be01b134aea1546d3cc3a779ff4d651c5d | 2019-05-16
-websdk | caf15dc7949fcfd249f33db1f7027da8fa78fc8b | 2019-04-27
-xliff-tasks | 27d43b762aa6dac3a0a6ba48fe55000942d75c1c | 2017-06-23
+core-sdk | be3f0c1a03f80492d45396c9f5b855b10a8a0b79 | 2019-06-07
+core-setup | 730e8c6700dacfcb2e68a69227233010407edc3d | 2019-06-24
+coreclr | 48431cc037776ca359de36bf71bda8c154cc2aa9 | 2019-05-09
+corefx | a28176b5ec68b6da1472934fe9493790d1665cae | 2019-05-14
+linker | 15b5a5f682a3f3345f473b655d51940bdd8fd1a8 | 2019-05-31
+msbuild | d635043bd5f9f856422369fb2d222ee8f1ea57b7 | 2019-05-28
+Newtonsoft.Json | cac0690ad133c5e166ce5642dc71175791404fad | 2019-06-19
+NuGet.Client | 27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703 | 2019-03-29
+roslyn | 58a4b1e79aea28115e66b06f850c83a3f1fcb6d3 | 2019-05-31
+sdk | 9a92095d8ad0112291573385dc8f67adfdfe9322 | 2019-06-03
+source-build-reference-packages | 6831be6a0dd4d03316da79d5da96657e50e51582 | 2019-06-20
+standard | 034dbc3c88aa1663fbbc6a22a3563c8a2c99d604 | 2019-05-31
+templating | 3f2e65dd99395dfb5741d943158243bc77c4ac80 | 2019-06-03
+toolset | bb3ce585b563e3c6e647923b30e07308dca0fd19 | 2019-06-07
+visualfsharp | 42526fe359672a05fd562dc16a91a43d0fe047a7 | 2019-05-03
+vstest | ea406627f919daa1d8da7daabe2d1f6619d2ad72 | 2019-03-04
+websdk | a6579163ec0020f52efa2b2bc15803be46a1d034 | 2019-06-07
+xliff-tasks | 173ee3bd61c9549557eefa3cfb718bdef157cb87 | 2019-05-02
 
 **Prebuilts**
 
