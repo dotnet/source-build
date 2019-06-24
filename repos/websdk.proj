@@ -29,13 +29,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="WebSdkVersion=$(WebSdkVersion)" />
-    <EnvironmentVariables Include="CoreSdkVersion=$(CoreSdkVersion)" />
-    <!-- Ensure Azure DevOps' BUILD_BUILDNUMBER isn't picked up by providing our own custom build number. -->
-    <EnvironmentVariables Include="PackageBuildNumber=1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="aspnet-xdt" />
     <RepositoryReference Include="newtonsoft-json" />
