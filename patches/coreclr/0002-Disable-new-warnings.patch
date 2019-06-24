@@ -1,7 +1,7 @@
-From 24cd4443b265ad3b8081e1f61f538a2518d83f53 Mon Sep 17 00:00:00 2001
+From d3f04af39c771cfad99cbb8531f4b82dbff577a8 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 7 Jun 2019 18:02:11 -0500
-Subject: [PATCH 2/3] Disable new warnings.
+Subject: [PATCH 2/5] Disable new warnings.
 
 ---
  Directory.Build.props                                    | 1 +
@@ -9,29 +9,29 @@ Subject: [PATCH 2/3] Disable new warnings.
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 5c40264f65..85194d265f 100644
+index 1b43fd479a..b67125006b 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -12,5 +12,6 @@
+@@ -15,5 +15,6 @@
    <PropertyGroup>
      <!-- Enables Strict mode for Roslyn compiler -->
      <Features>strict</Features>
-+    <NoWarn>$(NoWarn);CS8604;CS8622</NoWarn>
++    <NoWarn>$(NoWarn);CS8604;CS8622;CS8632</NoWarn>
    </PropertyGroup>
  </Project>
 diff --git a/src/System.Private.CoreLib/System.Private.CoreLib.csproj b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
-index f1b8b6f24c..cccef61405 100644
+index 9219d638f0..2e1d067420 100644
 --- a/src/System.Private.CoreLib/System.Private.CoreLib.csproj
 +++ b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
-@@ -27,7 +27,7 @@
-     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-     <!-- Remove BCL0020 once https://github.com/dotnet/arcade/pull/2158 is available 
-          Remove CS8608 once https://github.com/dotnet/roslyn/issues/23268 is resolved -->
--    <NoWarn>649,1573,1591,0419,BCL0020,CS8609</NoWarn>
-+    <NoWarn>649,1573,1591,0419,BCL0020,CS8609,CS8604,CS8622</NoWarn>
-     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
-     <SignAssembly>true</SignAssembly>
-     <DelaySign>true</DelaySign>
+@@ -52,7 +52,7 @@
+     <HighEntropyVA>true</HighEntropyVA>
+     <ErrorReport>prompt</ErrorReport>
+     <WarningLevel>4</WarningLevel>
+-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
++    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+     <!-- Remove CS8608 once https://github.com/dotnet/roslyn/issues/23268 is resolved -->
+     <NoWarn>649,1573,1591,0419,3021,CS8609</NoWarn>
+     <NullableContextOptions>enable</NullableContextOptions>
 -- 
 2.18.0
 

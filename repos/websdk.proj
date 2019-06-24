@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>caf15dc7949fcfd249f33db1f7027da8fa78fc8b</PreferredHash>
+    <PreferredHash>a6579163ec0020f52efa2b2bc15803be46a1d034</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190427.2</OfficialBuildId>
-    <WebSdkVersion>2.0.0-rel-20170629-588</WebSdkVersion>
-    <CoreSdkVersion>2.0.0-preview3-20170728-1</CoreSdkVersion>
+    <OfficialBuildId>20190607.3</OfficialBuildId>
 
     <BuildCommandArgs>$(BuildCommandArgs) --publish --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
@@ -31,19 +29,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="WebSdkVersion=$(WebSdkVersion)" />
-    <EnvironmentVariables Include="CoreSdkVersion=$(CoreSdkVersion)" />
-    <!-- Ensure Azure DevOps' BUILD_BUILDNUMBER isn't picked up by providing our own custom build number. -->
-    <EnvironmentVariables Include="PackageBuildNumber=1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

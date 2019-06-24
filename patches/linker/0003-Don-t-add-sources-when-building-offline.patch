@@ -1,0 +1,38 @@
+From 84310035445253cb8068fffc110b8a9e63c36554 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 14:33:10 -0500
+Subject: [PATCH 3/3] Don't add sources when building offline.
+
+---
+ NuGet.config       | 1 +
+ eng/Versions.props | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index fa9925a..5c526a5 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -1,6 +1,7 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <configuration>
+   <packageSources>
++    <clear/>
+     <!-- nuget-build is necessary for the integration package to
+          depend on the same NuGet package that the sdk uses -->
+     <add key="nuget-build" value="https://dotnet.myget.org/F/nuget-build/api/v3/index.json" />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 4593f38..16a5c20 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -12,7 +12,7 @@
+     <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+-    <RestoreSources>
++    <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">
+       $(RestoreSources);
+       https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json
+     </RestoreSources>
+-- 
+2.18.0
+

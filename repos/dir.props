@@ -63,6 +63,7 @@
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
+    <EnvironmentVariables Include="AddDotnetfeedProjectSource=false" Condition="'$(OfflineBuild)' == 'true'" />
     <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' == 'arcade'" />
     <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/source-built" Condition="'$(RepositoryName)' != 'arcade'" />
@@ -80,7 +81,9 @@
 
     <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
     <EnvironmentVariables Include="PB_VersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
+    <EnvironmentVariables Include="PreReleaseVersionLabel=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
+    <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
 
     <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
     <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
@@ -103,6 +106,8 @@
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
 
     <!-- some repos do this in a separate process -->
+    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" />
     <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitCommitHash=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
@@ -112,6 +117,7 @@
     <EnvironmentVariables Include="RepositoryCommit=$(PreferredHash)" Condition="'$(PreferredHash)' != ''" />
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="RepositoryUrl=https://github.com/dotnet/source-build" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
   </ItemGroup>
 
   <ItemGroup>

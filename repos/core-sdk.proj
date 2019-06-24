@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>b487ff10aafb8b58eaa2b78a236b1e97999d7a22</PreferredHash>
+    <PreferredHash>be3f0c1a03f80492d45396c9f5b855b10a8a0b79</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190426.15</OfficialBuildId>
+    <OfficialBuildId>20190607.9</OfficialBuildId>
+    <GitCommitCount>12264</GitCommitCount>
 
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
@@ -66,7 +67,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitCommitCount=11568" />
+    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 

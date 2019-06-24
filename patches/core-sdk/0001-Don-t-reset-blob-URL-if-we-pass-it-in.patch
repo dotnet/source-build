@@ -1,14 +1,14 @@
-From bf1cbd5d561fd520cd73de9b6df3bc037fa54124 Mon Sep 17 00:00:00 2001
+From 9958d89f1cdc23ee8c216f4bbba19aef47de2b82 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 2 Feb 2019 16:34:04 -0600
-Subject: [PATCH 1/5] Don't reset blob URL if we pass it in.
+Subject: [PATCH 1/4] Don't reset blob URL if we pass it in.
 
 ---
  src/redist/targets/GenerateLayout.targets | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 50b4e54c8..552ee6646 100644
+index ca2bf1373..1d1dea9d4 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
 @@ -8,7 +8,8 @@

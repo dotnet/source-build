@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>25e4d0da1b94e04ff54f8aca8d459ed39ee77450</PreferredHash>
+    <PreferredHash>99151dfa08364242d93c861568abaf044e134d8c</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190427.2</OfficialBuildId>
+    <OfficialBuildId>20190604.3</OfficialBuildId>
 
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
@@ -15,7 +15,7 @@
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
 
-    <BuildCommandArgs>--pack $(RuntimeArg)</BuildCommandArgs>
+    <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RuntimeArg)</BuildCommandArgs>
 
@@ -27,9 +27,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
-
-    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
 
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
@@ -58,7 +55,6 @@
   <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="application-insights" />
-    <RepositoryReference Include="cli-migrate" />
     <RepositoryReference Include="clicommandlineparser" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="corefx" />

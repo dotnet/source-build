@@ -1,0 +1,24 @@
+From fb8e403948ea01301f76984f2147dcc2225a2b5b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 00:54:37 -0500
+Subject: [PATCH] Exclude test project from source-build.
+
+---
+ test/Publish/Tasks/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test/Publish/Tasks/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj b/test/Publish/Tasks/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
+index 17c682c..97871a4 100644
+--- a/test/Publish/Tasks/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
++++ b/test/Publish/Tasks/Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj
+@@ -3,6 +3,7 @@
+     <TargetFrameworks>net46;netcoreapp3.0</TargetFrameworks>
+     <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp3.0</TargetFrameworks>
+     <AssemblyName>Microsoft.NET.Sdk.Publish.Tasks.Tests</AssemblyName>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   
+   <ItemGroup>
+-- 
+2.18.0
+

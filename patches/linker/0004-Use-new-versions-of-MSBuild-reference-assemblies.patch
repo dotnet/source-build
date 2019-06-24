@@ -1,0 +1,27 @@
+From 9343053da36f863b80e55e66f7123a28c141fe65 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 23 Jun 2019 15:26:13 -0500
+Subject: [PATCH 4/4] Use new versions of MSBuild reference assemblies.
+
+---
+ eng/Versions.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 16a5c20..3e03eed 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -8,8 +8,8 @@
+     <MicrosoftNetCoreIlasmPackageVersion>3.0.0-preview4-27520-71</MicrosoftNetCoreIlasmPackageVersion>
+     <!-- These should match the SDK version at https://github.com/dotnet/sdk/blob/master/eng/Versions.props -->
+     <SystemReflectionMetadataVersion>1.5.0</SystemReflectionMetadataVersion>
+-    <MicrosoftBuildFrameworkVersion>15.4.8</MicrosoftBuildFrameworkVersion>
+-    <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
++    <MicrosoftBuildFrameworkVersion>15.7.179</MicrosoftBuildFrameworkVersion>
++    <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+     <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">
+-- 
+2.18.0
+
