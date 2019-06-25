@@ -33,24 +33,10 @@ namespace Microsoft.DotNet.Build.Tasks
             XDocument d = XDocument.Load(NuGetConfigFile);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
             XElement toAdd = new XElement("add", new XAttribute("key", SourceName), new XAttribute("value", SourcePath));
-            XElement clear = new XElement("clear");
+            XElement clearTag = new XElement("clear");
 
             XElement exisitingSourceBuildElement = packageSourcesElement.Descendants().FirstOrDefault(e => e.Name == "add" && e.Attribute(XName.Get("key")).Value == SourceName);
             XElement lastClearElement = packageSourcesElement.Descendants().LastOrDefault(e => e.Name == "clear");
-
-            Console.WriteLine("-----------------------------TEST-----------------------------");            
-            Console.WriteLine(exisitingSourceBuildElement);
-            Console.WriteLine(lastClearElement);
-            Console.WriteLine(toAdd);
-            Console.WriteLine(packageSourcesElement);
-            Console.WriteLine("local clear -->> ", clear);
-
-
-
-            // if(packageSourcesElement != null && lastClearElement == null)
-            // {
-            //     packageSourcesElement.AddFirst(clear);
-            // }
 
             if (exisitingSourceBuildElement != null)
             {
@@ -63,6 +49,7 @@ namespace Microsoft.DotNet.Build.Tasks
             else
             {
                 packageSourcesElement.AddFirst(toAdd);
+                packageSourcesElement.AddFirst(clearTag);
             }
 
             using (FileStream fs = new FileStream(NuGetConfigFile, FileMode.Create, FileAccess.ReadWrite))
