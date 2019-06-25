@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-06-23
+Last source-build Build Date: 2019-06-25
 
-Last updated: 2019-06-24
+Last updated: 2019-06-25
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -16,26 +16,26 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
 | [common][882] | Nate McMaster | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [coreclr][883] | Russ Keldorph | ![ot] On Track | 6 | 1 |
-| [corefx][884] | Eric St. John | ![ot] On Track | 2 | 9 |
+| [corefx][884] | Eric St. John | ![ot] On Track | 2 | 8 |
 | [core-sdk][972] | Nick Guerrera | ![ot] On Track | 6 | 4 |
 | [core-setup][885] | Davis Goodin | ![ot] On Track | 5 | 9 |
 | [linker][887] | Dan Seefeldt | ![ot] On Track | 4 | 1 |
-| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 7 |
-| [Newtonsoft.Json][889] | Chris Rummel | ![bn] Bounced | - | 2 | 
-| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 7 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 14 |
+| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 5 |
+| [Newtonsoft.Json][889] | Chris Rummel | ![bn] Bounced | - | 1 | 
+| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 5 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 12 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 3 |
 | [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 4 |
 | [standard][894] | Eric St. John | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [templating][895] | Vijay Ramakrishnan | ![ot] On Track | 2 | 2 |
+| [templating][895] | Vijay Ramakrishnan | ![ot] On Track | 2 | 1 |
 | [Tools][974] | Dan Seefeldt | ![ot] On Track | - | 4 |
 | [toolset][973] | Nick Guerrera | ![ot] On Track | 2 | 4 |
 | [tools-local tasks][971] | Dan Seefeldt | ![ot] On Track | - | 1 |
-| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 4 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 3 | 8 |
-| [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 8 |
-| [xliff-tasks][899] | Tom Meschter | ![ot] On Track | - | 2 |
+| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 3 |
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![pl] Planned | 3 | 6 |
+| [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 5 |
+| [xliff-tasks][899] | Tom Meschter | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 
 <br/>
 
