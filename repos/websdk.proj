@@ -26,7 +26,7 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
 
-    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
