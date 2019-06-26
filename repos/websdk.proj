@@ -26,6 +26,9 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
 
+    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 
@@ -40,6 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
+
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
