@@ -33,7 +33,13 @@ $Sdk3Version = Get-Content (Join-Path $SCRIPT_ROOT "Dotnet3CLIVersion.txt")
 $env:SDK_VERSION = $SdkVersion
 $env:SDK3_VERSION = $Sdk3Version
 
-if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
+$key = Get-Item -LiteralPath Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control -ErrorAction SilentlyContinue
+if ($key.GetValue('ContainerType', $null) -ne $null)
+{
+    $env:DotNetRunningInDocker = 1
+}
+
+if (-NOT $test -and ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false"))
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
 }
@@ -58,7 +64,6 @@ if (-Not (Test-Path "$SCRIPT_ROOT\Tools\source-built")) {
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
-$captured_args = $args
 if ($test)
 {
     if (-not ($captured_args -eq $null) -and ($captured_args.Length > 0))
