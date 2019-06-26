@@ -24,14 +24,18 @@
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
+    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
+
+    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
-    <!-- placeholder - the real dependency here is on AspNetCore but we don't build that yet -->
     <RepositoryReference Include="aspnet-extensions" />
+    <RepositoryReference Include="aspnet-xdt" />
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
 
@@ -40,6 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
+
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
