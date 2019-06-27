@@ -33,6 +33,10 @@
   <Target Name="InitBuild">
     <MSBuild Projects="tools-local/init-build.proj" />
   </Target>
+  
+  <Target Name="Clone">
+    <MSBuild Projects="tools-local/init-build.proj" Targets="FetchSources" />
+  </Target>
 
   <Target Name="Clean">
     <RemoveDir Directories="$(BaseOutputPath)" />
