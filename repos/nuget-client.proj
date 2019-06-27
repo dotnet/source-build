@@ -38,6 +38,7 @@
       <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:RestoreAdditionalProjectSources=https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandBase>
     </PropertyGroup>
