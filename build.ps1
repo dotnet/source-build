@@ -1,7 +1,7 @@
 [CmdletBinding(PositionalBinding=$false)]
 Param(
   [switch] $test,
-  [Parameter(ValueFromRemainingArguments=$true)][String]$captured_args
+  [Parameter(ValueFromRemainingArguments=$true)][String[]]$captured_args
 )
 
 Set-StrictMode -version 2.0
@@ -66,10 +66,6 @@ $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
 if ($test)
 {
-    if (-not ($captured_args -eq $null) -and ($captured_args.Length > 0))
-    {
-        $captured_args += " "
-    }   
     $captured_args += "/t:RunTests"
 }
 
