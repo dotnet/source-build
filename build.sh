@@ -16,24 +16,16 @@ if grep -q /docker/ "/proc/1/cgroup"; then
 fi
 
 test=false
-args=""
-separator=""
 
-while [[ $# > 0 ]]
-do
-  opt="$(echo "$1" | awk '{print tolower($0)}')"
-  case "$opt" in
-    -test)
-      test=true
-      args+="${separator}/t:RunTests"
-      shift
-      ;;
-    *)
-      args+="${separator}$1"
-      shift
-      ;;
+for arg do
+  shift
+  opt="${arg,,}"
+  case $opt in
+    (-test) set -- "$@" "/t:RunTests"
+            test=true
+            ;;
+       (*) set -- "$@" "$arg" ;;
   esac
-  separator=" "
 done
 
 if [ "$test" == "false" ] && [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
@@ -84,5 +76,5 @@ fi
 
 set -x
 
-$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binlog /flp:v=diag /clp:v=m "$args"
+$CLIPATH/dotnet $SDKPATH/MSBuild.dll $SCRIPT_ROOT/build.proj /bl:build.binlog /flp:v=diag /clp:v=m "$@"
 
