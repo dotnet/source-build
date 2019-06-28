@@ -1,0 +1,24 @@
+From 3d2c9551f79be23b288c7dd823e65ea81e97a6e6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 20 Jun 2019 01:19:36 -0500
+Subject: [PATCH 4/5] Exclude two non-shipping projects from source-build.
+
+---
+ .../src/Microsoft.Extensions.Logging.Analyzers.csproj            | 1 +
+ 1 files changed, 1 insertions(+)
+
+diff --git a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+index 0198da33a..d358b96e7 100644
+--- a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
++++ b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+@@ -4,6 +4,7 @@
+     <TargetFramework>netcoreapp2.0</TargetFramework>
+     <IsPackable>true</IsPackable>
+     <IsShipping>false</IsShipping>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+ 
+     <!-- Subject to change: see https://github.com/dotnet/designs/pull/50 -->
+-- 
+2.21.0
+
