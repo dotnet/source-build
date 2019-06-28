@@ -51,6 +51,7 @@
 
     <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
     <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
+    <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentExternalRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentExternalRestoreSources>
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <!-- This project builds zips, not NuGet packages. -->
@@ -72,7 +73,7 @@
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
-    <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
+    <EnvironmentVariables Include="RestoreAdditionalProjectSources=$(EnvironmentExternalRestoreSources)" />
 
     <!-- Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
       parameter, it is lost during the restore call.  -->
