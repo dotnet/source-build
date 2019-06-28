@@ -3,6 +3,7 @@
   <ProjectDirectories>
     <Dir>src/ApplicationInsights-dotnet.53b80940842204f78708a538628288ff5d741a1d/</Dir>
     <Dir>src/arcade.2b0830b8cc561f327e4e1b10b6e21a188b9ecee6/</Dir>
+    <Dir>src/Extensions.54d51a340698b6883dd3e47be372c07e0acf75bc/</Dir>
     <Dir>src/xdt.1309c534c1988bc0e46aad551883aa132d9a4796/</Dir>
     <Dir>src/cli.99151dfa08364242d93c861568abaf044e134d8c/</Dir>
     <Dir>src/cliCommandLineParser.0e89c2116ad28e404ba56c14d1c3f938caa25a01/</Dir>
@@ -133,18 +134,13 @@
     <Usage Id="Microsoft.AspNetCore.Mvc.Analyzers" Version="3.0.0-preview6.19307.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.AspNetCore.Mvc.Api.Analyzers" Version="3.0.0-preview6.19307.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build" Version="16.0.0-preview.256+g4517c80649" />
-    <Usage Id="Microsoft.Build.Framework" Version="15.1.548" IsDirectDependency="true" />
-    <Usage Id="Microsoft.Build.Framework" Version="15.1.1012" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Framework" Version="15.6.85" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Framework" Version="16.0.0-preview.256+g4517c80649" />
     <Usage Id="Microsoft.Build.Localization" Version="16.2.0-preview-19278-01" />
     <Usage Id="Microsoft.Build.Runtime" Version="16.0.0-preview.256+g4517c80649" />
-    <Usage Id="Microsoft.Build.Tasks.Core" Version="15.1.548" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.1.1012" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.7.179" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="16.0.0-preview.256+g4517c80649" />
-    <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.548" />
-    <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.1012" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.7.179" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="16.0.0-preview.256+g4517c80649" />
     <Usage Id="Microsoft.Cci" Version="4.0.0-rc3-24214-00" IsDirectDependency="true" />
@@ -197,6 +193,7 @@
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-5" IsDirectDependency="true" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net40" Version="1.0.0-alpha-5" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net40" Version="1.0.0-preview.2" />
+    <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0-preview.2" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-alpha-004" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-alpha-5" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-preview.2" />
@@ -341,11 +338,13 @@
     <Usage Id="runtime.win7.System.Private.Uri" Version="4.3.0" Rid="win7" />
     <Usage Id="StyleCop.Analyzers" Version="1.0.1" IsDirectDependency="true" />
     <Usage Id="System.Buffers" Version="4.4.0" />
+    <Usage Id="System.Buffers" Version="4.5.0" />
     <Usage Id="System.CodeDom" Version="4.4.0" />
     <Usage Id="System.Collections.Immutable" Version="1.4.0" />
     <Usage Id="System.Collections.Immutable" Version="1.5.0" />
     <Usage Id="System.ComponentModel" Version="4.3.0" />
     <Usage Id="System.ComponentModel.Annotations" Version="4.1.0" />
+    <Usage Id="System.ComponentModel.Annotations" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.ComponentModel.Primitives" Version="4.3.0" />
     <Usage Id="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <Usage Id="System.Composition.AttributedModel" Version="1.0.31" />
@@ -361,41 +360,50 @@
     <Usage Id="System.Data.Common" Version="4.3.0" />
     <Usage Id="System.Data.SqlClient" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.Diagnostics.Contracts" Version="4.3.0" />
+    <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.6.0-preview6.19303.8" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="System.Diagnostics.EventLog" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Diagnostics.StackTrace" Version="4.0.1" />
     <Usage Id="System.IO.FileSystem.Watcher" Version="4.0.0" />
     <Usage Id="System.IO.MemoryMappedFiles" Version="4.0.0" />
     <Usage Id="System.IO.UnmanagedMemoryStream" Version="4.0.1" />
     <Usage Id="System.Linq.Expressions" Version="4.1.1" />
-    <Usage Id="System.Linq.Parallel" Version="4.0.1" />
     <Usage Id="System.Linq.Parallel" Version="4.3.0" />
     <Usage Id="System.Linq.Queryable" Version="4.0.1" />
     <Usage Id="System.Memory" Version="4.5.0" />
     <Usage Id="System.Memory" Version="4.5.1" IsDirectDependency="true" />
     <Usage Id="System.Memory" Version="4.5.2" />
+    <Usage Id="System.Memory" Version="4.5.3" />
     <Usage Id="System.Net.Http" Version="4.1.2" />
     <Usage Id="System.Net.NameResolution" Version="4.0.0" />
     <Usage Id="System.Net.NameResolution" Version="4.3.0" />
     <Usage Id="System.Net.Security" Version="4.0.1" />
     <Usage Id="System.Numerics.Vectors" Version="4.1.1" />
     <Usage Id="System.Numerics.Vectors" Version="4.4.0" />
+    <Usage Id="System.Numerics.Vectors" Version="4.5.0" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.3.0" />
     <Usage Id="System.Private.Uri" Version="4.3.0" />
     <Usage Id="System.Reflection.DispatchProxy" Version="4.0.1" />
     <Usage Id="System.Reflection.Metadata" Version="1.5.0" IsDirectDependency="true" />
     <Usage Id="System.Reflection.Metadata" Version="1.6.0" />
-    <Usage Id="System.Resources.Reader" Version="4.0.0" />
-    <Usage Id="System.Resources.Writer" Version="4.0.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" />
+    <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Runtime.Serialization.Json" Version="4.3.0" />
-    <Usage Id="System.Runtime.Serialization.Xml" Version="4.1.1" />
+    <Usage Id="System.Security.AccessControl" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Security.Cryptography.Cng" Version="4.5.0" IsDirectDependency="true" />
+    <Usage Id="System.Security.Cryptography.Cng" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.5.0" IsDirectDependency="true" />
     <Usage Id="System.Security.Cryptography.Pkcs" Version="4.5.0" IsDirectDependency="true" />
+    <Usage Id="System.Security.Cryptography.Pkcs" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.3.0" />
+    <Usage Id="System.Security.Cryptography.Xml" Version="4.6.0-preview6.19303.8" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="System.Security.Permissions" Version="4.6.0-preview6.19303.8" />
+    <Usage Id="System.Security.Principal.Windows" Version="4.6.0-preview6.19303.8" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.3.0" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.4.0" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.5.1" />
+    <Usage Id="System.Text.Encodings.Web" Version="4.6.0-preview6.19303.8" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="System.Text.Json" Version="4.6.0-preview6.19303.8" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="System.Threading.Overlapped" Version="4.0.1" />
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.5.24" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.2" />
