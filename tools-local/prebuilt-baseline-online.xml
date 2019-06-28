@@ -17,6 +17,7 @@
     <Dir>bin/src/msbuild.d635043bd5f9f856422369fb2d222ee8f1ea57b7/</Dir>
     <Dir>src/netcorecli-fsc/</Dir>
     <Dir>bin/src/Newtonsoft.Json.cac0690ad133c5e166ce5642dc71175791404fad/</Dir>
+    <Dir>bin/src/Newtonsoft.Json.e43dae94c26f0c30e9095327a3a9eac87193923d/</Dir>
     <Dir>bin/src/NuGet.Client.27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703/</Dir>
     <Dir>bin/src/roslyn.58a4b1e79aea28115e66b06f850c83a3f1fcb6d3/</Dir>
     <Dir>bin/src/sdk.9a92095d8ad0112291573385dc8f67adfdfe9322/</Dir>
@@ -100,7 +101,7 @@
     <Usage Id="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.8.2" />
     <Usage Id="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.8.2" />
     <Usage Id="Microsoft.CodeQuality.Analyzers" Version="2.6.2-beta2" IsDirectDependency="true" />
-    <Usage Id="Microsoft.CSharp" Version="4.0.1" />
+    <Usage Id="Microsoft.CSharp" Version="4.0.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.CSharp" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.CSharp" Version="4.5.0" />
     <Usage Id="Microsoft.DiaSymReader.Native" Version="1.7.0" IsDirectDependency="true" />
@@ -233,7 +234,6 @@
     <Usage Id="NETStandard.Library" Version="2.0.1" />
     <Usage Id="NETStandard.Library" Version="2.0.3" />
     <Usage Id="NETStandard.Library.NETFramework" Version="2.0.1-servicing-26011-01" IsDirectDependency="true" />
-    <Usage Id="Newtonsoft.Json" Version="9.0.1" />
     <Usage Id="Newtonsoft.Json" Version="10.0.3" IsDirectDependency="true" />
     <Usage Id="Newtonsoft.Json" Version="11.0.2" IsDirectDependency="true" />
     <Usage Id="Newtonsoft.Json.Bson" Version="1.0.1" />
@@ -422,7 +422,7 @@
     <Usage Id="System.Buffers" Version="4.4.0" />
     <Usage Id="System.CodeDom" Version="4.4.0" />
     <Usage Id="System.Collections" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Collections" Version="4.0.11" />
+    <Usage Id="System.Collections" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Collections" Version="4.3.0" />
     <Usage Id="System.Collections.Concurrent" Version="4.0.12" />
     <Usage Id="System.Collections.Concurrent" Version="4.3.0" />
@@ -466,7 +466,7 @@
     <Usage Id="System.Diagnostics.Contracts" Version="4.0.1" />
     <Usage Id="System.Diagnostics.Contracts" Version="4.3.0" />
     <Usage Id="System.Diagnostics.Debug" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Diagnostics.Debug" Version="4.0.11" />
+    <Usage Id="System.Diagnostics.Debug" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Diagnostics.Debug" Version="4.3.0" />
     <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.0.0" />
     <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
@@ -485,17 +485,17 @@
     <Usage Id="System.Diagnostics.TraceSource" Version="4.3.0" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.3.0" />
-    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" />
+    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Dynamic.Runtime" Version="4.3.0" />
     <Usage Id="System.Globalization" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Globalization" Version="4.0.11" />
+    <Usage Id="System.Globalization" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Globalization" Version="4.3.0" />
     <Usage Id="System.Globalization.Calendars" Version="4.0.1" />
     <Usage Id="System.Globalization.Calendars" Version="4.3.0" />
     <Usage Id="System.Globalization.Extensions" Version="4.0.1" />
     <Usage Id="System.Globalization.Extensions" Version="4.3.0" />
     <Usage Id="System.IO" Version="4.1.0-rc2-24027" />
-    <Usage Id="System.IO" Version="4.1.0" />
+    <Usage Id="System.IO" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.IO" Version="4.3.0" />
     <Usage Id="System.IO.Compression" Version="4.1.0" />
     <Usage Id="System.IO.Compression" Version="4.3.0" />
@@ -511,10 +511,10 @@
     <Usage Id="System.IO.Pipes.AccessControl" Version="4.3.0" />
     <Usage Id="System.IO.UnmanagedMemoryStream" Version="4.0.1" />
     <Usage Id="System.Linq" Version="4.1.0-rc2-24027" />
-    <Usage Id="System.Linq" Version="4.1.0" />
+    <Usage Id="System.Linq" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Linq" Version="4.3.0" />
     <Usage Id="System.Linq.Expressions" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Linq.Expressions" Version="4.1.0" />
+    <Usage Id="System.Linq.Expressions" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Linq.Expressions" Version="4.1.1" />
     <Usage Id="System.Linq.Expressions" Version="4.3.0" />
     <Usage Id="System.Linq.Parallel" Version="4.0.1" />
@@ -543,14 +543,14 @@
     <Usage Id="System.Numerics.Vectors" Version="4.1.1" />
     <Usage Id="System.Numerics.Vectors" Version="4.4.0" />
     <Usage Id="System.ObjectModel" Version="4.0.12-rc2-24027" />
-    <Usage Id="System.ObjectModel" Version="4.0.12" />
+    <Usage Id="System.ObjectModel" Version="4.0.12" IsDirectDependency="true" />
     <Usage Id="System.ObjectModel" Version="4.3.0" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.1.1" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.3.0" />
     <Usage Id="System.Private.Uri" Version="4.0.1" />
     <Usage Id="System.Private.Uri" Version="4.3.0" />
     <Usage Id="System.Reflection" Version="4.1.0-rc2-24027" />
-    <Usage Id="System.Reflection" Version="4.1.0" />
+    <Usage Id="System.Reflection" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Reflection" Version="4.3.0" />
     <Usage Id="System.Reflection.DispatchProxy" Version="4.0.1" />
     <Usage Id="System.Reflection.Emit" Version="4.0.1-rc2-24027" />
@@ -563,7 +563,7 @@
     <Usage Id="System.Reflection.Emit.Lightweight" Version="4.0.1" />
     <Usage Id="System.Reflection.Emit.Lightweight" Version="4.3.0" />
     <Usage Id="System.Reflection.Extensions" Version="4.0.1-rc2-24027" />
-    <Usage Id="System.Reflection.Extensions" Version="4.0.1" />
+    <Usage Id="System.Reflection.Extensions" Version="4.0.1" IsDirectDependency="true" />
     <Usage Id="System.Reflection.Extensions" Version="4.3.0" />
     <Usage Id="System.Reflection.Metadata" Version="1.3.0" />
     <Usage Id="System.Reflection.Metadata" Version="1.4.1" />
@@ -578,17 +578,17 @@
     <Usage Id="System.Reflection.TypeExtensions" Version="4.3.0" />
     <Usage Id="System.Resources.Reader" Version="4.0.0" />
     <Usage Id="System.Resources.ResourceManager" Version="4.0.1-rc2-24027" />
-    <Usage Id="System.Resources.ResourceManager" Version="4.0.1" />
+    <Usage Id="System.Resources.ResourceManager" Version="4.0.1" IsDirectDependency="true" />
     <Usage Id="System.Resources.ResourceManager" Version="4.3.0" />
     <Usage Id="System.Resources.Writer" Version="4.0.0" />
     <Usage Id="System.Runtime" Version="4.1.0-rc2-24027" />
-    <Usage Id="System.Runtime" Version="4.1.0" />
+    <Usage Id="System.Runtime" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime" Version="4.3.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
     <Usage Id="System.Runtime.Extensions" Version="4.1.0-rc2-24027" />
-    <Usage Id="System.Runtime.Extensions" Version="4.1.0" />
+    <Usage Id="System.Runtime.Extensions" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.Extensions" Version="4.3.0" />
     <Usage Id="System.Runtime.Handles" Version="4.0.1" />
     <Usage Id="System.Runtime.Handles" Version="4.3.0" />
@@ -638,24 +638,24 @@
     <Usage Id="System.Security.Principal.Windows" Version="4.3.0" />
     <Usage Id="System.Security.Principal.Windows" Version="4.4.1" />
     <Usage Id="System.Text.Encoding" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Text.Encoding" Version="4.0.11" />
+    <Usage Id="System.Text.Encoding" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Text.Encoding" Version="4.3.0" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.0.1" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.3.0" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.4.0" />
     <Usage Id="System.Text.Encoding.CodePages" Version="4.5.1" />
-    <Usage Id="System.Text.Encoding.Extensions" Version="4.0.11" />
+    <Usage Id="System.Text.Encoding.Extensions" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Text.Encoding.Extensions" Version="4.3.0" />
     <Usage Id="System.Text.Encodings.Web" Version="4.5.0" />
-    <Usage Id="System.Text.RegularExpressions" Version="4.1.0" />
+    <Usage Id="System.Text.RegularExpressions" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Text.RegularExpressions" Version="4.3.0" />
     <Usage Id="System.Threading" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Threading" Version="4.0.11" />
+    <Usage Id="System.Threading" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Threading" Version="4.3.0" />
     <Usage Id="System.Threading.Overlapped" Version="4.0.1" />
     <Usage Id="System.Threading.Overlapped" Version="4.3.0" />
     <Usage Id="System.Threading.Tasks" Version="4.0.11-rc2-24027" />
-    <Usage Id="System.Threading.Tasks" Version="4.0.11" />
+    <Usage Id="System.Threading.Tasks" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Threading.Tasks" Version="4.3.0" />
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.5.24" />
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.6.0" />
@@ -673,9 +673,9 @@
     <Usage Id="System.Threading.Timer" Version="4.3.0" />
     <Usage Id="System.ValueTuple" Version="4.3.0" />
     <Usage Id="System.ValueTuple" Version="4.4.0" />
-    <Usage Id="System.Xml.ReaderWriter" Version="4.0.11" />
+    <Usage Id="System.Xml.ReaderWriter" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Xml.ReaderWriter" Version="4.3.0" />
-    <Usage Id="System.Xml.XDocument" Version="4.0.11" />
+    <Usage Id="System.Xml.XDocument" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Xml.XDocument" Version="4.3.0" />
     <Usage Id="System.Xml.XmlDocument" Version="4.0.1" />
     <Usage Id="System.Xml.XmlDocument" Version="4.3.0" IsDirectDependency="true" />
@@ -690,3 +690,4 @@
     <Usage Id="YamlDotNet.Signed" Version="5.3.0" IsDirectDependency="true" />
   </Usages>
 </UsageData>
+
