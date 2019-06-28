@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
+    <EnvironmentVariables Include="RestoreAdditionalProjectSources=$(EnvironmentRestoreSources)" />
 
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
