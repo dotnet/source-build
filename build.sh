@@ -19,7 +19,7 @@ test=false
 
 for arg do
   shift
-  opt="${arg,,}"
+  opt="$(echo "$arg" | awk '{print tolower($0)}')"
   case $opt in
     (-test) set -- "$@" "/t:RunTests"
             test=true
