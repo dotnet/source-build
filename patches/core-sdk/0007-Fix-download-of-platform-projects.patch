@@ -1,0 +1,57 @@
+From 1b1397ff1c13f9a79981b2d1e3da733cbe8d125b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 28 Jun 2019 14:09:15 -0500
+Subject: [PATCH 7/7] Fix download of platform projects. This is a selective
+ cherry-pick from https://github.com/dotnet/core-sdk/pull/2667.
+
+---
+ src/redist/targets/DownloadPackage.csproj | 14 +++++++-------
+ src/redist/targets/GenerateLayout.targets |  2 +-
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/redist/targets/DownloadPackage.csproj b/src/redist/targets/DownloadPackage.csproj
+index 618f9c510..cd7a799a3 100644
+--- a/src/redist/targets/DownloadPackage.csproj
++++ b/src/redist/targets/DownloadPackage.csproj
+@@ -1,4 +1,4 @@
+-<Project  DefaultTargets="Restore">
++<Project DefaultTargets="Restore">
+   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+@@ -7,13 +7,13 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="$(PackageToRestore)" Version="$(PackageVersionToRestore)" />
++    <PackageDownload Include="$(PackageToRestore)" Version="[$(PackageVersionToRestore)]" />
+   </ItemGroup>
+-  
++
+   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
+ 
+-  <!-- Workaround newer sdk preventing us from downloading Microsoft.AspNetCore.App via PackageReference above. -->
+-  <Target Name="UpdateAspNetToFrameworkReference" />
+-  <!-- Workaround: prevents a downgrade error for arm* legs from 'ResolveAppHosts' -->
+-  <Target Name="ResolveFrameworkReferences" />
++  <!-- Eliminate any package references injected by arcade, we only want to download a single package -->
++  <ItemGroup>
++    <PackageReference Remove="@(PackageReference)" />
++  </ItemGroup>
+ </Project>
+diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
+index 94a522633..c39adc4ed 100644
+--- a/src/redist/targets/GenerateLayout.targets
++++ b/src/redist/targets/GenerateLayout.targets
+@@ -359,7 +359,7 @@
+   <Target Name="LayoutAppHostTemplate" DependsOnTargets="RunResolvePackageDependencies">
+     
+     <PropertyGroup>
+-      <NETCoreDotNetAppHostPackageName>Microsoft.NETCore.DotNetAppHost</NETCoreDotNetAppHostPackageName>
++      <NETCoreDotNetAppHostPackageName>Microsoft.NETCore.App.Host.$(SharedFrameworkRid)</NETCoreDotNetAppHostPackageName>
+       <AppHostRestorePath>$(IntermediateOutputPath)AppHostRestore\</AppHostRestorePath>
+       <AppHostTemplatePath>$(SdkOutputDirectory)AppHostTemplate</AppHostTemplatePath>
+     </PropertyGroup>
+-- 
+2.18.0
+
