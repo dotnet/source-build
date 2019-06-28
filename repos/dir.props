@@ -97,6 +97,9 @@
     <EnvironmentVariables Include="MSBUILDEMITSOLUTION=1" />
     <EnvironmentVariables Include="MSBUILDLOGVERBOSERARSEARCHRESULTS=1" />
 
+    <!-- NuGet parallel restore seems to fail more often -->
+    <EnvironmentVariables Include="RestoreDisableParallel=true" />
+
     <!-- Output Roslyn logs to allow debugging compiler errors -->
     <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
 
