@@ -1,18 +1,18 @@
-From b0d692fbd061ac27f56cb5c7df3f5677d4658cdd Mon Sep 17 00:00:00 2001
+From d1200d5c7e460b4b16fe414e4a457e23b21edd4f Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Thu, 20 Jun 2019 19:13:31 +0000
-Subject: [PATCH] Enable inclusion of CoreFx.Private.TestUtilities project in
- source-build
+Subject: [PATCH 2/3] Enable inclusion of CoreFx.Private.TestUtilities project
+ in source-build
 
 ---
  Directory.Build.props | 11 ++++++++++-
  1 file changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index c804e8f..5111ffc 100644
+index 20f6a94..111ff61 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -414,11 +414,20 @@
+@@ -415,11 +415,20 @@
      <VersionFileForPackages Condition="'$(VersionFileForPackages)' == ''">$(ArtifactsObjDir)version.txt</VersionFileForPackages>
    </PropertyGroup>
  
@@ -35,5 +35,5 @@ index c804e8f..5111ffc 100644
    </ItemGroup>
  
 -- 
-1.8.3.1
+2.7.4
 
