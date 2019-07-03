@@ -1,0 +1,115 @@
+From 4a051438d29bd96ede45069031462522313ed1bc Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Tue, 2 Jul 2019 16:43:39 +0000
+Subject: [PATCH] Exclude test projects.
+
+---
+ .../Microsoft.Build.Tasks.Git.UnitTests.csproj                   | 1 +
+ .../Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj          | 1 +
+ .../Microsoft.SourceLink.Common.UnitTests.csproj                 | 1 +
+ .../Microsoft.SourceLink.Git.IntegrationTests.csproj             | 1 +
+ .../Microsoft.SourceLink.GitHub.UnitTests.csproj                 | 1 +
+ .../Microsoft.SourceLink.GitLab.UnitTests.csproj                 | 1 +
+ .../Microsoft.SourceLink.Tfs.Git.UnitTests.csproj                | 1 +
+ .../Microsoft.SourceLink.Vsts.Git.UnitTests.csproj               | 1 +
+ 8 files changed, 8 insertions(+)
+
+diff --git a/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj b/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj
+index 5cd629a..afefd2e 100644
+--- a/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj
++++ b/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\Microsoft.Build.Tasks.Git\Microsoft.Build.Tasks.Git.csproj" />
+diff --git a/src/SourceLink.Bitbucket.Git.UnitTests/Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj b/src/SourceLink.Bitbucket.Git.UnitTests/Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj
+index caa3a43..9cc7675 100644
+--- a/src/SourceLink.Bitbucket.Git.UnitTests/Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj
++++ b/src/SourceLink.Bitbucket.Git.UnitTests/Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SourceLink.Bitbucket.Git\Microsoft.SourceLink.Bitbucket.Git.csproj" />
+diff --git a/src/SourceLink.Common.UnitTests/Microsoft.SourceLink.Common.UnitTests.csproj b/src/SourceLink.Common.UnitTests/Microsoft.SourceLink.Common.UnitTests.csproj
+index e94aa50..f599d54 100644
+--- a/src/SourceLink.Common.UnitTests/Microsoft.SourceLink.Common.UnitTests.csproj
++++ b/src/SourceLink.Common.UnitTests/Microsoft.SourceLink.Common.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="..\Common\GetSourceLinkUrlGitTask.cs" Link="Common\GetSourceLinkUrlGitTask.cs" />
+diff --git a/src/SourceLink.Git.IntegrationTests/Microsoft.SourceLink.Git.IntegrationTests.csproj b/src/SourceLink.Git.IntegrationTests/Microsoft.SourceLink.Git.IntegrationTests.csproj
+index efc7ea5..d68e67e 100644
+--- a/src/SourceLink.Git.IntegrationTests/Microsoft.SourceLink.Git.IntegrationTests.csproj
++++ b/src/SourceLink.Git.IntegrationTests/Microsoft.SourceLink.Git.IntegrationTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <PackageReference Include="LibGit2Sharp" Version="$(LibGit2SharpVersion)" />
+diff --git a/src/SourceLink.GitHub.UnitTests/Microsoft.SourceLink.GitHub.UnitTests.csproj b/src/SourceLink.GitHub.UnitTests/Microsoft.SourceLink.GitHub.UnitTests.csproj
+index 78fc15d..c6b4e1a 100644
+--- a/src/SourceLink.GitHub.UnitTests/Microsoft.SourceLink.GitHub.UnitTests.csproj
++++ b/src/SourceLink.GitHub.UnitTests/Microsoft.SourceLink.GitHub.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SourceLink.GitHub\Microsoft.SourceLink.GitHub.csproj" />
+diff --git a/src/SourceLink.GitLab.UnitTests/Microsoft.SourceLink.GitLab.UnitTests.csproj b/src/SourceLink.GitLab.UnitTests/Microsoft.SourceLink.GitLab.UnitTests.csproj
+index f0bbc70..3a3baf9 100644
+--- a/src/SourceLink.GitLab.UnitTests/Microsoft.SourceLink.GitLab.UnitTests.csproj
++++ b/src/SourceLink.GitLab.UnitTests/Microsoft.SourceLink.GitLab.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SourceLink.GitLab\Microsoft.SourceLink.GitLab.csproj" />
+diff --git a/src/SourceLink.Tfs.Git.UnitTests/Microsoft.SourceLink.Tfs.Git.UnitTests.csproj b/src/SourceLink.Tfs.Git.UnitTests/Microsoft.SourceLink.Tfs.Git.UnitTests.csproj
+index 03826ca..638d245 100644
+--- a/src/SourceLink.Tfs.Git.UnitTests/Microsoft.SourceLink.Tfs.Git.UnitTests.csproj
++++ b/src/SourceLink.Tfs.Git.UnitTests/Microsoft.SourceLink.Tfs.Git.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SourceLink.Tfs.Git\Microsoft.SourceLink.Tfs.Git.csproj" />
+diff --git a/src/SourceLink.Vsts.Git.UnitTests/Microsoft.SourceLink.Vsts.Git.UnitTests.csproj b/src/SourceLink.Vsts.Git.UnitTests/Microsoft.SourceLink.Vsts.Git.UnitTests.csproj
+index a14fb04..15f4894 100644
+--- a/src/SourceLink.Vsts.Git.UnitTests/Microsoft.SourceLink.Vsts.Git.UnitTests.csproj
++++ b/src/SourceLink.Vsts.Git.UnitTests/Microsoft.SourceLink.Vsts.Git.UnitTests.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup>
+     <ProjectReference Include="..\SourceLink.Vsts.Git\Microsoft.SourceLink.Vsts.Git.csproj" />
+-- 
+2.21.0
+

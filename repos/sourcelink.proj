@@ -11,6 +11,7 @@
     <OfficialBuildId>20190623.1</OfficialBuildId>
 
     <BuildCommandArgs/>
+    <BuildCommandArgs>$(BuildCommandArgs) --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
@@ -19,11 +20,14 @@
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
   </PropertyGroup>
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="xliff-tasks" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="newtonsoft-json901" />
   </ItemGroup>
 
   <ItemGroup>
