@@ -15,9 +15,10 @@ index 5ea081651..1ea4735ee 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
 @@ -202,6 +202,14 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(LatestPatchVersionForNetCore1_0)</LatestPatchVersionForNetCore1_0>
-     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(LatestPatchVersionForNetCore1_1)</LatestPatchVersionForNetCore1_1>
-     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(LatestPatchVersionForNetCore2_0)</LatestPatchVersionForNetCore2_0>
+     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(MicrosoftNETCoreAppLatestVersion1_0)</LatestPatchVersionForNetCore1_0>
+     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(MicrosoftNETCoreAppLatestVersion1_1)</LatestPatchVersionForNetCore1_1>
+     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(MicrosoftNETCoreAppLatestVersion2_0)</LatestPatchVersionForNetCore2_0>
+
 +
 +    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
 +         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
