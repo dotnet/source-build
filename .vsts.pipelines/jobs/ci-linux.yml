@@ -93,6 +93,14 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run smoke-test
 
+  # Run unit tests that we support.
+  - script: |
+      set -x
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+        -test \
+        /p:Configuration=$(sb.configuration) \
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+
   # Create tarball.
   - script: |
       set -x
