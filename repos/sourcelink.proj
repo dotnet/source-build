@@ -10,13 +10,13 @@
     <OfficialBuildId>20190623.1</OfficialBuildId>
 
     <BuildCommandArgs/>
-    <BuildCommandArgs>$(BuildCommandArgs) --pack</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)binaryLog</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
-    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <NuGetConfigFile>$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
@@ -28,8 +28,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
-         This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
+    <!-- bootstrap our version of sourcelink using the version of bootstrap Arcade that source-build retrieves.
+         This prevents getting into a dependency loop of sourcelink needing Arcade to build and vice-versa.  -->
     <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
     <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
     <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
