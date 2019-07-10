@@ -7,6 +7,7 @@ parameters:
   imageName: null
   reportPrebuiltLeaks: false
   generatePrebuiltBurndown: false
+  runUnitTests: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -101,6 +102,7 @@ jobs:
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run unit tests
+    condition: and(succeeded(), eq(variables['runUnitTests'], true))
 
   # Create tarball.
   - script: |
