@@ -1,14 +1,28 @@
-From da25df507ba424fb8c3f04a26a761f3de996d08d Mon Sep 17 00:00:00 2001
+From 0e8580817ea127c2c2a36540eabe6d0d81f4124b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 20 Jun 2019 07:26:25 -0500
-Subject: [PATCH 3/3] Exclude XUnit project from source-build.
+Subject: [PATCH 3/4] Exclude XUnit project from source-build.
 
 ---
+ external/dir.proj                           | 2 +-
  external/test-runtime/XUnit.Runtime.depproj | 1 +
- 1 file changed, 1 insertion(+)
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/external/dir.proj b/external/dir.proj
+index cb86099dbf..35d181d610 100644
+--- a/external/dir.proj
++++ b/external/dir.proj
+@@ -13,7 +13,7 @@
+     <Project Include="netfx/netfx.depproj" />
+     <Project Include="runtime/runtime.depproj" />
+     <Project Include="tools/tools.depproj" />
+-    <Project Include="test-runtime/XUnit.Runtime.depproj"  Condition="'$(DotNetBuildFromSource)' != 'true'" />
++    <Project Include="test-runtime/XUnit.Runtime.depproj"  Condition="'$(IncludeTestUtils)' != 'false'" />
+     <Project Include="harvestPackages/harvestPackages.depproj" />
+     <Project Include="binplacePackages/binplacePackages.depproj" />
+     <Project Include="docs/docs.depproj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
 diff --git a/external/test-runtime/XUnit.Runtime.depproj b/external/test-runtime/XUnit.Runtime.depproj
-index fb9c74a..8a6d08e 100644
+index fb9c74afa1..8a6d08e53c 100644
 --- a/external/test-runtime/XUnit.Runtime.depproj
 +++ b/external/test-runtime/XUnit.Runtime.depproj
 @@ -27,6 +27,7 @@
@@ -20,5 +34,5 @@ index fb9c74a..8a6d08e 100644
  
    <ItemGroup>
 -- 
-2.7.4
+2.18.0
 
