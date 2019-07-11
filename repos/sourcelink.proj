@@ -30,9 +30,9 @@
   <ItemGroup>
     <!-- bootstrap our version of sourcelink using the version of bootstrap Arcade that source-build retrieves.
          This prevents getting into a dependency loop of sourcelink needing Arcade to build and vice-versa.  -->
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
   </ItemGroup>
 
   <ItemGroup>
