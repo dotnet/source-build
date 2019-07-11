@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-07-01
+Last source-build Build Date: 2019-07-10
 
-Last updated: 2019-07-02
+Last updated: 2019-07-10
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -10,7 +10,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 2 | 6 |
+| [arcade][970] | Mark Wilke | ![ot] On Track | 2 | 5 |
 | [cli][880] | Nick Guerrera | ![bn] Bounced | 8 | 2 | 
 | [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
@@ -18,22 +18,22 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [coreclr][883] | Russ Keldorph | ![ot] On Track | 6 | 1 |
 | [corefx][884] | Eric St. John | ![ot] On Track | 2 | 8 |
 | [core-sdk][972] | Nick Guerrera | ![ot] On Track | 6 | 2 |
-| [core-setup][885] | Davis Goodin | ![ot] On Track | 5 | 6 |
+| [core-setup][885] | Davis Goodin | ![ot] On Track | 5 | 5 |
 | [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| Extensions | Nate McMaster / John Luo | ![ns] Not Started | - | 9 | New repo added on 6/28
-| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 5 |
+| [Extensions][1132] | Nate McMaster / John Luo | ![ns] Not Started | - | 9 | New repo added on 6/28
+| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 3 |
 | [Newtonsoft.Json][889] | Chris Rummel | ![bn] Bounced | - | 1 | 
 | [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 4 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 12 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 10 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
-| [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 3 |
+| [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 1 |
 | [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 4 |
 | [standard][894] | Eric St. John | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [templating][895] | Vijay Ramakrishnan | ![ot] On Track | 2 | 1 |
 | [Tools][974] | Dan Seefeldt | ![ot] On Track | - | 4 |
 | [toolset][973] | Nick Guerrera | ![ot] On Track | 2 | 2 |
 | [tools-local tasks][971] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 3 |
+| [visualfsharp][886] | Brett Forsgren | ![ot] On Track | - | 1 |
 | [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ot] On Track | 3 | 5 |
 | [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 2 | 3 |
 | xdt | Nate McMaster / John Luo | ![cp] Complete | - | - | No direct-dependency prebuilts.
@@ -201,3 +201,4 @@ On Arcade but not BAR:
 [896]: https://github.com/dotnet/source-build/issues/896
 [897]: https://github.com/dotnet/source-build/issues/897
 [899]: https://github.com/dotnet/source-build/issues/899
+[1132]: https://github.com/dotnet/source-build/issues/1132
