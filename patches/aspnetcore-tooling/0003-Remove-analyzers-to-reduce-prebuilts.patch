@@ -1,4 +1,4 @@
-From 54d1f279223099edfa1cddbe31e0fff6ca7c6bc1 Mon Sep 17 00:00:00 2001
+From 31e3c0cf57f9e11a71da06c5e695d09880910e2f Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 11 Jul 2019 12:01:10 -0500
 Subject: [PATCH 3/3] Remove analyzers to reduce prebuilts.
@@ -8,10 +8,11 @@ Subject: [PATCH 3/3] Remove analyzers to reduce prebuilts.
  ...isualStudio.LanguageServices.Razor.ruleset | 105 ------------------
  ...rosoft.VisualStudio.LiveShare.Razor.csproj |   1 -
  ...osoft.VisualStudio.LiveShare.Razor.ruleset |  93 ----------------
- .../RazorDeveloperTools.csproj                |   1 -
+ ...crosoft.VisualStudio.RazorExtension.csproj |   1 -
+ .../RazorDeveloperTools.csproj                |   2 -
  ...lStudio.LanguageServices.Razor.Test.csproj |   1 -
  ...t.VisualStudio.LiveShare.Razor.Test.csproj |   3 +-
- 7 files changed, 1 insertion(+), 204 deletions(-)
+ 8 files changed, 1 insertion(+), 206 deletions(-)
  delete mode 100644 src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.ruleset
  delete mode 100644 src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.ruleset
 
@@ -251,8 +252,20 @@ index 3f14803c..00000000
 -  </Rules>
 -</RuleSet>
 \ No newline at end of file
+diff --git a/src/Razor/src/Microsoft.VisualStudio.RazorExtension/Microsoft.VisualStudio.RazorExtension.csproj b/src/Razor/src/Microsoft.VisualStudio.RazorExtension/Microsoft.VisualStudio.RazorExtension.csproj
+index 59938742..268885be 100644
+--- a/src/Razor/src/Microsoft.VisualStudio.RazorExtension/Microsoft.VisualStudio.RazorExtension.csproj
++++ b/src/Razor/src/Microsoft.VisualStudio.RazorExtension/Microsoft.VisualStudio.RazorExtension.csproj
+@@ -100,7 +100,6 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="$(MicrosoftVisualStudioComponentModelHostPackageVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="$(MicrosoftVisualStudioShell150PackageVersion)" />
+-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(MicrosoftVisualStudioSDKAnalyzersVersion)" PrivateAssets="all" />
+   </ItemGroup>
+ 
+   <PropertyGroup>
 diff --git a/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj b/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
-index 16e87494..061a968b 100644
+index 16e87494..3d205ff8 100644
 --- a/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
 +++ b/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
 @@ -1,7 +1,6 @@
@@ -263,6 +276,14 @@ index 16e87494..061a968b 100644
  
      <!-- Use the RoslynDev Experimental instance so we can mingle with local builds of Roslyn -->
      <VSSDKTargetPlatformRegRootSuffix>RoslynDev</VSSDKTargetPlatformRegRootSuffix>
+@@ -96,7 +95,6 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.VisualStudio.ComponentModelHost" Version="$(MicrosoftVisualStudioComponentModelHostPackageVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Shell.15.0" Version="$(MicrosoftVisualStudioShell150PackageVersion)" />
+-    <PackageReference Include="Microsoft.VisualStudio.SDK.Analyzers" Version="$(MicrosoftVisualStudioSDKAnalyzersVersion)" PrivateAssets="all" />
+   </ItemGroup>
+ 
+   <Target Name="_RemoveAnalyzers" BeforeTargets="CoreCompile">
 diff --git a/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj b/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj
 index 75df66c7..c7cc6b7f 100644
 --- a/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj
