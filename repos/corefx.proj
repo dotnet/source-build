@@ -56,6 +56,7 @@
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
     <UseSourceBuiltSdkOverride Condition="'$(TargetOS)' == 'Linux'" Include="@(ILSdkOverride)" />
   </ItemGroup>
 
