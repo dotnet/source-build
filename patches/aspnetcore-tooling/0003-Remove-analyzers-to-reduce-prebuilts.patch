@@ -1,0 +1,299 @@
+From 54d1f279223099edfa1cddbe31e0fff6ca7c6bc1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 11 Jul 2019 12:01:10 -0500
+Subject: [PATCH 3/3] Remove analyzers to reduce prebuilts.
+
+---
+ ...VisualStudio.LanguageServices.Razor.csproj |   1 -
+ ...isualStudio.LanguageServices.Razor.ruleset | 105 ------------------
+ ...rosoft.VisualStudio.LiveShare.Razor.csproj |   1 -
+ ...osoft.VisualStudio.LiveShare.Razor.ruleset |  93 ----------------
+ .../RazorDeveloperTools.csproj                |   1 -
+ ...lStudio.LanguageServices.Razor.Test.csproj |   1 -
+ ...t.VisualStudio.LiveShare.Razor.Test.csproj |   3 +-
+ 7 files changed, 1 insertion(+), 204 deletions(-)
+ delete mode 100644 src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.ruleset
+ delete mode 100644 src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.ruleset
+
+diff --git a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
+index 6ec21290..23c74a88 100644
+--- a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
++++ b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
+@@ -5,7 +5,6 @@
+     <Description>Razor is a markup syntax for adding server-side logic to web pages. This package contains the Razor design-time infrastructure for Visual Studio.</Description>
+     <EnableApiCheck>false</EnableApiCheck>
+     <RulesDirectory>..\Microsoft.NET.Sdk.Razor\build\netstandard2.0\Rules\</RulesDirectory>
+-    <CodeAnalysisRuleSet>Microsoft.VisualStudio.LanguageServices.Razor.ruleset</CodeAnalysisRuleSet>
+     <IsShipping>false</IsShipping>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+diff --git a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.ruleset b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.ruleset
+deleted file mode 100644
+index baeae54e..00000000
+--- a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.ruleset
++++ /dev/null
+@@ -1,105 +0,0 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
+-<RuleSet Name="Microsoft Managed Recommended Rules" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. It is recommended to include this rule set in any custom rule set you create for your projects." ToolsVersion="15.0">
+-  <Localization ResourceAssembly="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.dll" ResourceBaseName="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.Localized">
+-    <Name Resource="MinimumRecommendedRules_Name" />
+-    <Description Resource="MinimumRecommendedRules_Description" />
+-  </Localization>
+-  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+-    <Rule Id="CA1001" Action="Warning" />
+-    <Rule Id="CA1009" Action="Warning" />
+-    <Rule Id="CA1016" Action="Warning" />
+-    <Rule Id="CA1033" Action="Warning" />
+-    <Rule Id="CA1049" Action="Warning" />
+-    <Rule Id="CA1060" Action="Warning" />
+-    <Rule Id="CA1061" Action="Warning" />
+-    <Rule Id="CA1063" Action="Warning" />
+-    <Rule Id="CA1065" Action="Warning" />
+-    <Rule Id="CA1301" Action="Warning" />
+-    <Rule Id="CA1400" Action="Warning" />
+-    <Rule Id="CA1401" Action="Warning" />
+-    <Rule Id="CA1403" Action="Warning" />
+-    <Rule Id="CA1404" Action="Warning" />
+-    <Rule Id="CA1405" Action="Warning" />
+-    <Rule Id="CA1410" Action="Warning" />
+-    <Rule Id="CA1415" Action="Warning" />
+-    <Rule Id="CA1821" Action="Warning" />
+-    <Rule Id="CA1900" Action="Warning" />
+-    <Rule Id="CA1901" Action="Warning" />
+-    <Rule Id="CA2002" Action="Warning" />
+-    <Rule Id="CA2100" Action="Warning" />
+-    <Rule Id="CA2101" Action="Warning" />
+-    <Rule Id="CA2108" Action="Warning" />
+-    <Rule Id="CA2111" Action="Warning" />
+-    <Rule Id="CA2112" Action="Warning" />
+-    <Rule Id="CA2114" Action="Warning" />
+-    <Rule Id="CA2116" Action="Warning" />
+-    <Rule Id="CA2117" Action="Warning" />
+-    <Rule Id="CA2122" Action="Warning" />
+-    <Rule Id="CA2123" Action="Warning" />
+-    <Rule Id="CA2124" Action="Warning" />
+-    <Rule Id="CA2126" Action="Warning" />
+-    <Rule Id="CA2131" Action="Warning" />
+-    <Rule Id="CA2132" Action="Warning" />
+-    <Rule Id="CA2133" Action="Warning" />
+-    <Rule Id="CA2134" Action="Warning" />
+-    <Rule Id="CA2137" Action="Warning" />
+-    <Rule Id="CA2138" Action="Warning" />
+-    <Rule Id="CA2140" Action="Warning" />
+-    <Rule Id="CA2141" Action="Warning" />
+-    <Rule Id="CA2146" Action="Warning" />
+-    <Rule Id="CA2147" Action="Warning" />
+-    <Rule Id="CA2149" Action="Warning" />
+-    <Rule Id="CA2200" Action="Warning" />
+-    <Rule Id="CA2202" Action="Warning" />
+-    <Rule Id="CA2207" Action="Warning" />
+-    <Rule Id="CA2212" Action="Warning" />
+-    <Rule Id="CA2213" Action="Warning" />
+-    <Rule Id="CA2214" Action="Warning" />
+-    <Rule Id="CA2216" Action="Warning" />
+-    <Rule Id="CA2220" Action="Warning" />
+-    <Rule Id="CA2229" Action="Warning" />
+-    <Rule Id="CA2231" Action="Warning" />
+-    <Rule Id="CA2232" Action="Warning" />
+-    <Rule Id="CA2235" Action="Warning" />
+-    <Rule Id="CA2236" Action="Warning" />
+-    <Rule Id="CA2237" Action="Warning" />
+-    <Rule Id="CA2238" Action="Warning" />
+-    <Rule Id="CA2240" Action="Warning" />
+-    <Rule Id="CA2241" Action="Warning" />
+-    <Rule Id="CA2242" Action="Warning" />
+-  </Rules>
+-  <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
+-    <Rule Id="VSTHRD001" Action="Info" />
+-    <Rule Id="VSTHRD002" Action="Info" />
+-    <Rule Id="VSTHRD003" Action="Info" />
+-    <Rule Id="VSTHRD004" Action="Info" />
+-    <Rule Id="VSTHRD010" Action="Info" />
+-    <Rule Id="VSTHRD011" Action="Info" />
+-    <Rule Id="VSTHRD012" Action="Info" />
+-    <Rule Id="VSTHRD100" Action="Info" />
+-    <Rule Id="VSTHRD101" Action="Info" />
+-    <Rule Id="VSTHRD102" Action="Info" />
+-    <Rule Id="VSTHRD103" Action="Info" />
+-    <Rule Id="VSTHRD104" Action="Info" />
+-    <Rule Id="VSTHRD105" Action="Info" />
+-    <Rule Id="VSTHRD106" Action="Info" />
+-    <Rule Id="VSTHRD107" Action="Info" />
+-    <Rule Id="VSTHRD108" Action="Info" />
+-    <Rule Id="VSTHRD109" Action="Info" />
+-    <Rule Id="VSTHRD110" Action="Info" />
+-    <Rule Id="VSTHRD111" Action="Info" />
+-    <Rule Id="VSTHRD200" Action="Info" />
+-    <Rule Id="VSSDK005" Action="Info" />
+-  </Rules>
+-  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+-    <Rule Id="CA1507" Action="None" />
+-    <Rule Id="CA1707" Action="None" />
+-    <Rule Id="CA1810" Action="None" />
+-    <Rule Id="CA1812" Action="None" />
+-    <Rule Id="CA1819" Action="None" />
+-    <Rule Id="CA1825" Action="None" />
+-    <Rule Id="CA2007" Action="None" />
+-    <Rule Id="CA2211" Action="None" />
+-    <Rule Id="CA2227" Action="None" />
+-  </Rules>
+-</RuleSet>
+\ No newline at end of file
+diff --git a/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.csproj b/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.csproj
+index 5d6a6bf0..27522d69 100644
+--- a/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.csproj
++++ b/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.csproj
+@@ -4,7 +4,6 @@
+     <TargetFramework>net472</TargetFramework>
+     <Description>Razor is a markup syntax for adding server-side logic to web pages. This package contains the Visual Studio Live Share Razor infrastructure.</Description>
+     <EnableApiCheck>false</EnableApiCheck>
+-    <CodeAnalysisRuleSet>Microsoft.VisualStudio.LiveShare.Razor.ruleset</CodeAnalysisRuleSet>
+     <IsShipping>false</IsShipping>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+diff --git a/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.ruleset b/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.ruleset
+deleted file mode 100644
+index 3f14803c..00000000
+--- a/src/Razor/src/Microsoft.VisualStudio.LiveShare.Razor/Microsoft.VisualStudio.LiveShare.Razor.ruleset
++++ /dev/null
+@@ -1,93 +0,0 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
+-<RuleSet Name="Microsoft Managed Recommended Rules" Description="These rules focus on the most critical problems in your code, including potential security holes, application crashes, and other important logic and design errors. It is recommended to include this rule set in any custom rule set you create for your projects." ToolsVersion="15.0">
+-  <Localization ResourceAssembly="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.dll" ResourceBaseName="Microsoft.VisualStudio.CodeAnalysis.RuleSets.Strings.Localized">
+-    <Name Resource="MinimumRecommendedRules_Name" />
+-    <Description Resource="MinimumRecommendedRules_Description" />
+-  </Localization>
+-  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+-    <Rule Id="CA1001" Action="Warning" />
+-    <Rule Id="CA1009" Action="Warning" />
+-    <Rule Id="CA1016" Action="Warning" />
+-    <Rule Id="CA1033" Action="Warning" />
+-    <Rule Id="CA1049" Action="Warning" />
+-    <Rule Id="CA1060" Action="Warning" />
+-    <Rule Id="CA1061" Action="Warning" />
+-    <Rule Id="CA1063" Action="Warning" />
+-    <Rule Id="CA1065" Action="Warning" />
+-    <Rule Id="CA1301" Action="Warning" />
+-    <Rule Id="CA1400" Action="Warning" />
+-    <Rule Id="CA1401" Action="Warning" />
+-    <Rule Id="CA1403" Action="Warning" />
+-    <Rule Id="CA1404" Action="Warning" />
+-    <Rule Id="CA1405" Action="Warning" />
+-    <Rule Id="CA1410" Action="Warning" />
+-    <Rule Id="CA1415" Action="Warning" />
+-    <Rule Id="CA1821" Action="Warning" />
+-    <Rule Id="CA1900" Action="Warning" />
+-    <Rule Id="CA1901" Action="Warning" />
+-    <Rule Id="CA2002" Action="Warning" />
+-    <Rule Id="CA2100" Action="Warning" />
+-    <Rule Id="CA2101" Action="Warning" />
+-    <Rule Id="CA2108" Action="Warning" />
+-    <Rule Id="CA2111" Action="Warning" />
+-    <Rule Id="CA2112" Action="Warning" />
+-    <Rule Id="CA2114" Action="Warning" />
+-    <Rule Id="CA2116" Action="Warning" />
+-    <Rule Id="CA2117" Action="Warning" />
+-    <Rule Id="CA2122" Action="Warning" />
+-    <Rule Id="CA2123" Action="Warning" />
+-    <Rule Id="CA2124" Action="Warning" />
+-    <Rule Id="CA2126" Action="Warning" />
+-    <Rule Id="CA2131" Action="Warning" />
+-    <Rule Id="CA2132" Action="Warning" />
+-    <Rule Id="CA2133" Action="Warning" />
+-    <Rule Id="CA2134" Action="Warning" />
+-    <Rule Id="CA2137" Action="Warning" />
+-    <Rule Id="CA2138" Action="Warning" />
+-    <Rule Id="CA2140" Action="Warning" />
+-    <Rule Id="CA2141" Action="Warning" />
+-    <Rule Id="CA2146" Action="Warning" />
+-    <Rule Id="CA2147" Action="Warning" />
+-    <Rule Id="CA2149" Action="Warning" />
+-    <Rule Id="CA2200" Action="Warning" />
+-    <Rule Id="CA2202" Action="Warning" />
+-    <Rule Id="CA2207" Action="Warning" />
+-    <Rule Id="CA2212" Action="Warning" />
+-    <Rule Id="CA2213" Action="Warning" />
+-    <Rule Id="CA2214" Action="Warning" />
+-    <Rule Id="CA2216" Action="Warning" />
+-    <Rule Id="CA2220" Action="Warning" />
+-    <Rule Id="CA2229" Action="Warning" />
+-    <Rule Id="CA2231" Action="Warning" />
+-    <Rule Id="CA2232" Action="Warning" />
+-    <Rule Id="CA2235" Action="Warning" />
+-    <Rule Id="CA2236" Action="Warning" />
+-    <Rule Id="CA2237" Action="Warning" />
+-    <Rule Id="CA2238" Action="Warning" />
+-    <Rule Id="CA2240" Action="Warning" />
+-    <Rule Id="CA2241" Action="Warning" />
+-    <Rule Id="CA2242" Action="Warning" />
+-  </Rules>
+-  <Rules AnalyzerId="Microsoft.VisualStudio.Threading.Analyzers" RuleNamespace="Microsoft.VisualStudio.Threading.Analyzers">
+-    <Rule Id="VSTHRD001" Action="Info" />
+-    <Rule Id="VSTHRD002" Action="Info" />
+-    <Rule Id="VSTHRD003" Action="Info" />
+-    <Rule Id="VSTHRD004" Action="Info" />
+-    <Rule Id="VSTHRD010" Action="Info" />
+-    <Rule Id="VSTHRD011" Action="Info" />
+-    <Rule Id="VSTHRD012" Action="Info" />
+-    <Rule Id="VSTHRD100" Action="Info" />
+-    <Rule Id="VSTHRD101" Action="Info" />
+-    <Rule Id="VSTHRD102" Action="Info" />
+-    <Rule Id="VSTHRD103" Action="Info" />
+-    <Rule Id="VSTHRD104" Action="Info" />
+-    <Rule Id="VSTHRD105" Action="Info" />
+-    <Rule Id="VSTHRD106" Action="Info" />
+-    <Rule Id="VSTHRD107" Action="Info" />
+-    <Rule Id="VSTHRD108" Action="Info" />
+-    <Rule Id="VSTHRD109" Action="Info" />
+-    <Rule Id="VSTHRD110" Action="Info" />
+-    <Rule Id="VSTHRD111" Action="Info" />
+-    <Rule Id="VSTHRD200" Action="Info" />
+-  </Rules>
+-</RuleSet>
+\ No newline at end of file
+diff --git a/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj b/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
+index 16e87494..061a968b 100644
+--- a/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
++++ b/src/Razor/src/RazorDeveloperTools/RazorDeveloperTools.csproj
+@@ -1,7 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFramework>net472</TargetFramework>
+-    <CodeAnalysisRuleSet>..\Microsoft.VisualStudio.LanguageServices.Razor\Microsoft.VisualStudio.LanguageServices.Razor.ruleset</CodeAnalysisRuleSet>
+ 
+     <!-- Use the RoslynDev Experimental instance so we can mingle with local builds of Roslyn -->
+     <VSSDKTargetPlatformRegRootSuffix>RoslynDev</VSSDKTargetPlatformRegRootSuffix>
+diff --git a/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj b/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj
+index 75df66c7..c7cc6b7f 100644
+--- a/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj
++++ b/src/Razor/test/Microsoft.VisualStudio.LanguageServices.Razor.Test/Microsoft.VisualStudio.LanguageServices.Razor.Test.csproj
+@@ -7,7 +7,6 @@
+     <!-- The binding redirects are needed due to a conflict between the test host and Roslyn regarding System.Collections.Immutable -->
+     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+-    <CodeAnalysisRuleSet>..\..\src\Microsoft.VisualStudio.LanguageServices.Razor\Microsoft.VisualStudio.LanguageServices.Razor.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/Razor/test/Microsoft.VisualStudio.LiveShare.Razor.Test/Microsoft.VisualStudio.LiveShare.Razor.Test.csproj b/src/Razor/test/Microsoft.VisualStudio.LiveShare.Razor.Test/Microsoft.VisualStudio.LiveShare.Razor.Test.csproj
+index 40ae4d4a..126d9ba2 100644
+--- a/src/Razor/test/Microsoft.VisualStudio.LiveShare.Razor.Test/Microsoft.VisualStudio.LiveShare.Razor.Test.csproj
++++ b/src/Razor/test/Microsoft.VisualStudio.LiveShare.Razor.Test/Microsoft.VisualStudio.LiveShare.Razor.Test.csproj
+@@ -2,7 +2,6 @@
+ 
+   <PropertyGroup>
+     <TargetFramework>net472</TargetFramework>
+-    <CodeAnalysisRuleSet>..\..\src\Microsoft.VisualStudio.LiveShare.Razor\Microsoft.VisualStudio.LiveShare.Razor.ruleset</CodeAnalysisRuleSet>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -21,4 +20,4 @@
+     <PackageReference Include="Moq" Version="$(MoqPackageVersion)" />
+   </ItemGroup>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.21.0
+
