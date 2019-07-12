@@ -1,58 +1,88 @@
-From ca685478c6ce3e82d817110c7905be5e720ed099 Mon Sep 17 00:00:00 2001
+From 1f254a47c08ee24a62179e877f33fb43a2dad700 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Fri, 12 Jul 2019 13:03:59 -0500
+Date: Fri, 12 Jul 2019 13:03:36 -0500
 Subject: [PATCH 8/8] Revert "Add nullable annotations to
- System.Threading.Timer ref assembly (#38284)"
+ System.Threading.Overlapped ref (#38298)"
 
-This reverts commit c3f4524c785a226bae79cc82a96f7525460e2b5e.
+This reverts commit 5fa3d3b8f89302202091993681391c9b356755a7.
 ---
- .../ref/System.Threading.Timer.cs                    | 12 ++++++------
- .../ref/System.Threading.Timer.csproj                |  1 -
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ .../ref/System.Threading.Overlapped.cs        | 20 +++++++++----------
+ .../ref/System.Threading.Overlapped.csproj    |  1 -
+ 2 files changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/src/System.Threading.Timer/ref/System.Threading.Timer.cs b/src/System.Threading.Timer/ref/System.Threading.Timer.cs
-index 9f98ec7860..7f660bb086 100644
---- a/src/System.Threading.Timer/ref/System.Threading.Timer.cs
-+++ b/src/System.Threading.Timer/ref/System.Threading.Timer.cs
-@@ -10,20 +10,20 @@ namespace System.Threading
-     public sealed partial class Timer : System.MarshalByRefObject, System.IAsyncDisposable, System.IDisposable
+diff --git a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.cs b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.cs
+index 17c63ca250..d313d3246d 100644
+--- a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.cs
++++ b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.cs
+@@ -21,9 +21,9 @@ public partial class Overlapped
      {
-         public Timer(System.Threading.TimerCallback callback) { }
--        public Timer(System.Threading.TimerCallback callback, object? state, int dueTime, int period) { }
--        public Timer(System.Threading.TimerCallback callback, object? state, long dueTime, long period) { }
--        public Timer(System.Threading.TimerCallback callback, object? state, System.TimeSpan dueTime, System.TimeSpan period) { }
-+        public Timer(System.Threading.TimerCallback callback, object state, int dueTime, int period) { }
-+        public Timer(System.Threading.TimerCallback callback, object state, long dueTime, long period) { }
-+        public Timer(System.Threading.TimerCallback callback, object state, System.TimeSpan dueTime, System.TimeSpan period) { }
+         public Overlapped() { }
+         [System.ObsoleteAttribute("This constructor is not 64-bit compatible.  Use the constructor that takes an IntPtr for the event handle.  https://go.microsoft.com/fwlink/?linkid=14202")]
+-        public Overlapped(int offsetLo, int offsetHi, int hEvent, System.IAsyncResult? ar) { }
+-        public Overlapped(int offsetLo, int offsetHi, System.IntPtr hEvent, System.IAsyncResult? ar) { }
+-        public System.IAsyncResult? AsyncResult { get { throw null; } set { } }
++        public Overlapped(int offsetLo, int offsetHi, int hEvent, System.IAsyncResult ar) { }
++        public Overlapped(int offsetLo, int offsetHi, System.IntPtr hEvent, System.IAsyncResult ar) { }
++        public System.IAsyncResult AsyncResult { get { throw null; } set { } }
+         [System.ObsoleteAttribute("This property is not 64-bit compatible.  Use EventHandleIntPtr instead.  https://go.microsoft.com/fwlink/?linkid=14202")]
+         public int EventHandle { get { throw null; } set { } }
+         public System.IntPtr EventHandleIntPtr { get { throw null; } set { } }
+@@ -33,21 +33,21 @@ public partial class Overlapped
+         public unsafe static void Free(System.Threading.NativeOverlapped* nativeOverlappedPtr) { }
          [System.CLSCompliantAttribute(false)]
--        public Timer(System.Threading.TimerCallback callback, object? state, uint dueTime, uint period) { }
--        public static long ActiveCount { get { throw null; } }
-+        public Timer(System.Threading.TimerCallback callback, object state, uint dueTime, uint period) { }
-         public bool Change(int dueTime, int period) { throw null; }
-         public bool Change(long dueTime, long period) { throw null; }
-         public bool Change(System.TimeSpan dueTime, System.TimeSpan period) { throw null; }
+         [System.ObsoleteAttribute("This method is not safe.  Use Pack (iocb, userData) instead.  https://go.microsoft.com/fwlink/?linkid=14202")]
+-        public unsafe System.Threading.NativeOverlapped* Pack(System.Threading.IOCompletionCallback? iocb) { throw null; }
++        public unsafe System.Threading.NativeOverlapped* Pack(System.Threading.IOCompletionCallback iocb) { throw null; }
          [System.CLSCompliantAttribute(false)]
-         public bool Change(uint dueTime, uint period) { throw null; }
-+        public static long ActiveCount { get { throw null; } }
-         public void Dispose() { }
-         public bool Dispose(System.Threading.WaitHandle notifyObject) { throw null; }
-         public System.Threading.Tasks.ValueTask DisposeAsync() { throw null; }
+-        public unsafe System.Threading.NativeOverlapped* Pack(System.Threading.IOCompletionCallback? iocb, object? userData) { throw null; }
++        public unsafe System.Threading.NativeOverlapped* Pack(System.Threading.IOCompletionCallback iocb, object userData) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         public unsafe static System.Threading.Overlapped Unpack(System.Threading.NativeOverlapped* nativeOverlappedPtr) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         [System.ObsoleteAttribute("This method is not safe.  Use UnsafePack (iocb, userData) instead.  https://go.microsoft.com/fwlink/?linkid=14202")]
+-        public unsafe System.Threading.NativeOverlapped* UnsafePack(System.Threading.IOCompletionCallback? iocb) { throw null; }
++        public unsafe System.Threading.NativeOverlapped* UnsafePack(System.Threading.IOCompletionCallback iocb) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+-        public unsafe System.Threading.NativeOverlapped* UnsafePack(System.Threading.IOCompletionCallback? iocb, object? userData) { throw null; }
++        public unsafe System.Threading.NativeOverlapped* UnsafePack(System.Threading.IOCompletionCallback iocb, object userData) { throw null; }
      }
--    public delegate void TimerCallback(object? state);
-+    public delegate void TimerCallback(object state);
+     public sealed partial class PreAllocatedOverlapped : System.IDisposable
+     {
+         [System.CLSCompliantAttribute(false)]
+-        public PreAllocatedOverlapped(System.Threading.IOCompletionCallback callback, object? state, object? pinData) { }
++        public PreAllocatedOverlapped(System.Threading.IOCompletionCallback callback, object state, object pinData) { }
+         public void Dispose() { }
+         ~PreAllocatedOverlapped() { }
+     }
+@@ -56,7 +56,7 @@ public sealed partial class ThreadPoolBoundHandle : System.IDisposable
+         internal ThreadPoolBoundHandle() { }
+         public System.Runtime.InteropServices.SafeHandle Handle { get { throw null; } }
+         [System.CLSCompliantAttribute(false)]
+-        public unsafe System.Threading.NativeOverlapped* AllocateNativeOverlapped(System.Threading.IOCompletionCallback callback, object? state, object? pinData) { throw null; }
++        public unsafe System.Threading.NativeOverlapped* AllocateNativeOverlapped(System.Threading.IOCompletionCallback callback, object state, object pinData) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         public unsafe System.Threading.NativeOverlapped* AllocateNativeOverlapped(System.Threading.PreAllocatedOverlapped preAllocated) { throw null; }
+         public static System.Threading.ThreadPoolBoundHandle BindHandle(System.Runtime.InteropServices.SafeHandle handle) { throw null; }
+@@ -64,6 +64,6 @@ public sealed partial class ThreadPoolBoundHandle : System.IDisposable
+         [System.CLSCompliantAttribute(false)]
+         public unsafe void FreeNativeOverlapped(System.Threading.NativeOverlapped* overlapped) { }
+         [System.CLSCompliantAttribute(false)]
+-        public unsafe static object? GetNativeOverlappedState(System.Threading.NativeOverlapped* overlapped) { throw null; }
++        public unsafe static object GetNativeOverlappedState(System.Threading.NativeOverlapped* overlapped) { throw null; }
+     }
  }
-diff --git a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
-index 214b18b1b1..c4b58355e0 100644
---- a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
-+++ b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
-@@ -2,7 +2,6 @@
-   <PropertyGroup>
-     <ProjectGuid>{DC78B562-4F74-49C2-9766-3B65CD610CCC}</ProjectGuid>
+diff --git a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
+index 119cfce036..8d30d7d929 100644
+--- a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
++++ b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
+@@ -3,7 +3,6 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <ProjectGuid>{F71467DF-30C1-44A0-A15A-163CB5DB4E6E}</ProjectGuid>
      <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
 -    <Nullable>enable</Nullable>
    </PropertyGroup>
    <ItemGroup>
-     <Compile Include="System.Threading.Timer.cs" />
+     <Compile Include="System.Threading.Overlapped.cs" />
 -- 
 2.18.0
 
