@@ -1,0 +1,79 @@
+From a3f5d09ad16c2ed9ef69e1a91ea25662142118b1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 12 Jul 2019 13:03:13 -0500
+Subject: [PATCH 6/8] Revert "Add nullable annotations to
+ System.Runtime.Intrinsics ref assembly (#37944)"
+
+This reverts commit 550c5f5fcc9d5b552be749a1b0c49d6f31e38ade.
+---
+ .../ref/System.Runtime.Intrinsics.cs           | 18 +++++++++---------
+ .../ref/System.Runtime.Intrinsics.csproj       |  1 -
+ 2 files changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.cs b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.cs
+index eaba0e996e..d15538ccc4 100644
+--- a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.cs
++++ b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.cs
+@@ -109,12 +109,12 @@ public static partial class Vector128
+         private readonly int _dummyPrimitive;
+         public static int Count { get { throw null; } }
+         public static System.Runtime.Intrinsics.Vector128<T> Zero { get { throw null; } }
+-        public override bool Equals(object? obj) { throw null; }
++        public override bool Equals(object obj) { throw null; }
+         public bool Equals(System.Runtime.Intrinsics.Vector128<T> other) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public override string ToString() { throw null; }
+-        public string ToString(string? format) { throw null; }
+-        public string ToString(string? format, System.IFormatProvider? formatProvider) { throw null; }
++        public string ToString(string format) { throw null; }
++        public string ToString(string format, System.IFormatProvider formatProvider) { throw null; }
+     }
+     public static partial class Vector256
+     {
+@@ -216,12 +216,12 @@ public static partial class Vector256
+         private readonly int _dummyPrimitive;
+         public static int Count { get { throw null; } }
+         public static System.Runtime.Intrinsics.Vector256<T> Zero { get { throw null; } }
+-        public override bool Equals(object? obj) { throw null; }
++        public override bool Equals(object obj) { throw null; }
+         public bool Equals(System.Runtime.Intrinsics.Vector256<T> other) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public override string ToString() { throw null; }
+-        public string ToString(string? format) { throw null; }
+-        public string ToString(string? format, System.IFormatProvider? formatProvider) { throw null; }
++        public string ToString(string format) { throw null; }
++        public string ToString(string format, System.IFormatProvider formatProvider) { throw null; }
+     }
+     public static partial class Vector64
+     {
+@@ -295,12 +295,12 @@ public static partial class Vector64
+         private readonly int _dummyPrimitive;
+         public static int Count { get { throw null; } }
+         public static System.Runtime.Intrinsics.Vector64<T> Zero { get { throw null; } }
+-        public override bool Equals(object? obj) { throw null; }
++        public override bool Equals(object obj) { throw null; }
+         public bool Equals(System.Runtime.Intrinsics.Vector64<T> other) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public override string ToString() { throw null; }
+-        public string ToString(string? format) { throw null; }
+-        public string ToString(string? format, System.IFormatProvider? formatProvider) { throw null; }
++        public string ToString(string format) { throw null; }
++        public string ToString(string format, System.IFormatProvider formatProvider) { throw null; }
+     }
+ }
+ namespace System.Runtime.Intrinsics.X86
+diff --git a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
+index 69bb4c9357..878c747ee6 100644
+--- a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
++++ b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
+@@ -3,7 +3,6 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <ProjectGuid>{F9097917-AFA3-4E3E-A592-BFA2C483C7E2}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release</Configurations>
+-    <Nullable>enable</Nullable>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.Intrinsics.cs" />
+-- 
+2.18.0
+

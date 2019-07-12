@@ -1,0 +1,84 @@
+From fdba55c2d5baaa00f23ae2051425bf77d2da0666 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 12 Jul 2019 13:02:51 -0500
+Subject: [PATCH 5/8] Revert "Add nullable annotations to
+ System.Threading.Tasks ref assembly (#38265)"
+
+This reverts commit 3f94d610c133440eeb06f418540be6d8fd782ca0.
+---
+ .../ref/System.Threading.Tasks.cs             | 28 +++++++++----------
+ .../ref/System.Threading.Tasks.csproj         |  1 -
+ 2 files changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/src/System.Threading.Tasks/ref/System.Threading.Tasks.cs b/src/System.Threading.Tasks/ref/System.Threading.Tasks.cs
+index 583427859c..1ef7aeae0d 100644
+--- a/src/System.Threading.Tasks/ref/System.Threading.Tasks.cs
++++ b/src/System.Threading.Tasks/ref/System.Threading.Tasks.cs
+@@ -11,10 +11,10 @@ public partial class OperationCanceledException : System.SystemException
+     {
+         public OperationCanceledException() { }
+         protected OperationCanceledException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public OperationCanceledException(string? message) { }
+-        public OperationCanceledException(string? message, System.Exception? innerException) { }
+-        public OperationCanceledException(string? message, System.Exception? innerException, System.Threading.CancellationToken token) { }
+-        public OperationCanceledException(string? message, System.Threading.CancellationToken token) { }
++        public OperationCanceledException(string message) { }
++        public OperationCanceledException(string message, System.Exception innerException) { }
++        public OperationCanceledException(string message, System.Exception innerException, System.Threading.CancellationToken token) { }
++        public OperationCanceledException(string message, System.Threading.CancellationToken token) { }
+         public OperationCanceledException(System.Threading.CancellationToken token) { }
+         public System.Threading.CancellationToken CancellationToken { get { throw null; } }
+     }
+@@ -130,17 +130,17 @@ public partial class TaskCanceledException : System.OperationCanceledException
+     {
+         public TaskCanceledException() { }
+         protected TaskCanceledException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public TaskCanceledException(string? message) { }
+-        public TaskCanceledException(string? message, System.Exception? innerException) { }
+-        public TaskCanceledException(string? message, System.Exception? innerException, System.Threading.CancellationToken token) { }
+-        public TaskCanceledException(System.Threading.Tasks.Task? task) { }
+-        public System.Threading.Tasks.Task? Task { get { throw null; } }
++        public TaskCanceledException(string message) { }
++        public TaskCanceledException(string message, System.Exception innerException) { }
++        public TaskCanceledException(string message, System.Exception innerException, System.Threading.CancellationToken token) { }
++        public TaskCanceledException(System.Threading.Tasks.Task task) { }
++        public System.Threading.Tasks.Task Task { get { throw null; } }
+     }
+     public partial class TaskCompletionSource<TResult>
+     {
+         public TaskCompletionSource() { }
+-        public TaskCompletionSource(object? state) { }
+-        public TaskCompletionSource(object? state, System.Threading.Tasks.TaskCreationOptions creationOptions) { }
++        public TaskCompletionSource(object state) { }
++        public TaskCompletionSource(object state, System.Threading.Tasks.TaskCreationOptions creationOptions) { }
+         public TaskCompletionSource(System.Threading.Tasks.TaskCreationOptions creationOptions) { }
+         public System.Threading.Tasks.Task<TResult> Task { get { throw null; } }
+         public void SetCanceled() { }
+@@ -161,9 +161,9 @@ public static partial class TaskExtensions
+     public partial class TaskSchedulerException : System.Exception
+     {
+         public TaskSchedulerException() { }
+-        public TaskSchedulerException(System.Exception? innerException) { }
++        public TaskSchedulerException(System.Exception innerException) { }
+         protected TaskSchedulerException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public TaskSchedulerException(string? message) { }
+-        public TaskSchedulerException(string? message, System.Exception? innerException) { }
++        public TaskSchedulerException(string message) { }
++        public TaskSchedulerException(string message, System.Exception innerException) { }
+     }
+ }
+diff --git a/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj b/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
+index 2fba1adb28..0797d87d3f 100644
+--- a/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
++++ b/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
+@@ -2,7 +2,6 @@
+   <PropertyGroup>
+     <ProjectGuid>{27675CCE-B6F9-4E2F-9BF2-5E623173BD5C}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+-    <Nullable>enable</Nullable>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Tasks.cs" />
+-- 
+2.18.0
+

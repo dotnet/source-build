@@ -1,0 +1,58 @@
+From ca685478c6ce3e82d817110c7905be5e720ed099 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 12 Jul 2019 13:03:59 -0500
+Subject: [PATCH] Revert "Add nullable annotations to System.Threading.Timer
+ ref assembly (#38284)"
+
+This reverts commit c3f4524c785a226bae79cc82a96f7525460e2b5e.
+---
+ .../ref/System.Threading.Timer.cs                    | 12 ++++++------
+ .../ref/System.Threading.Timer.csproj                |  1 -
+ 2 files changed, 6 insertions(+), 7 deletions(-)
+
+diff --git a/src/System.Threading.Timer/ref/System.Threading.Timer.cs b/src/System.Threading.Timer/ref/System.Threading.Timer.cs
+index 9f98ec7860..7f660bb086 100644
+--- a/src/System.Threading.Timer/ref/System.Threading.Timer.cs
++++ b/src/System.Threading.Timer/ref/System.Threading.Timer.cs
+@@ -10,20 +10,20 @@ namespace System.Threading
+     public sealed partial class Timer : System.MarshalByRefObject, System.IAsyncDisposable, System.IDisposable
+     {
+         public Timer(System.Threading.TimerCallback callback) { }
+-        public Timer(System.Threading.TimerCallback callback, object? state, int dueTime, int period) { }
+-        public Timer(System.Threading.TimerCallback callback, object? state, long dueTime, long period) { }
+-        public Timer(System.Threading.TimerCallback callback, object? state, System.TimeSpan dueTime, System.TimeSpan period) { }
++        public Timer(System.Threading.TimerCallback callback, object state, int dueTime, int period) { }
++        public Timer(System.Threading.TimerCallback callback, object state, long dueTime, long period) { }
++        public Timer(System.Threading.TimerCallback callback, object state, System.TimeSpan dueTime, System.TimeSpan period) { }
+         [System.CLSCompliantAttribute(false)]
+-        public Timer(System.Threading.TimerCallback callback, object? state, uint dueTime, uint period) { }
+-        public static long ActiveCount { get { throw null; } }
++        public Timer(System.Threading.TimerCallback callback, object state, uint dueTime, uint period) { }
+         public bool Change(int dueTime, int period) { throw null; }
+         public bool Change(long dueTime, long period) { throw null; }
+         public bool Change(System.TimeSpan dueTime, System.TimeSpan period) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         public bool Change(uint dueTime, uint period) { throw null; }
++        public static long ActiveCount { get { throw null; } }
+         public void Dispose() { }
+         public bool Dispose(System.Threading.WaitHandle notifyObject) { throw null; }
+         public System.Threading.Tasks.ValueTask DisposeAsync() { throw null; }
+     }
+-    public delegate void TimerCallback(object? state);
++    public delegate void TimerCallback(object state);
+ }
+diff --git a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
+index 214b18b1b1..c4b58355e0 100644
+--- a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
++++ b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
+@@ -2,7 +2,6 @@
+   <PropertyGroup>
+     <ProjectGuid>{DC78B562-4F74-49C2-9766-3B65CD610CCC}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+-    <Nullable>enable</Nullable>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Timer.cs" />
+-- 
+2.18.0
+
