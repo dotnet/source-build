@@ -21,7 +21,7 @@
     <BuildArguments Condition="'$(RunTests)' != 'true' AND '$(PrepForTests)' != 'true'">$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack</BuildArguments>
     <BuildArguments Condition="'$(RunTests)' != 'true'">$(BuildArguments) /p:SkipTests=true</BuildArguments>
     <BuildArguments Condition="'$(PrepForTests)' == 'true'">$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build /p:IncludeTestUtils=true</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' == 'true'">$(BuildArguments) -buildtests -test /p:IncludeTestUtils=true</BuildArguments>
+    <BuildArguments Condition="'$(RunTests)' == 'true'">$(BuildArguments)  $(FlagParameterPrefix)restore -buildtests -test /p:IncludeTestUtils=true</BuildArguments>
     <BuildArguments Condition="'$(RunTests)' == 'true' AND '$(DotNetRunningInDocker)' == '1' AND '$(TargetOS)' == 'Linux'">$(BuildArguments) /p:TestRspFile=$(TestExclusionsDir)corefx/linux.docker.rsp</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
