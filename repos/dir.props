@@ -121,6 +121,8 @@
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="RepositoryUrl=https://github.com/dotnet/source-build" />
     <EnvironmentVariables Include="DeterministicSourcePaths=false" />
+    <!-- used in CoreFX -->
+    <EnvironmentVariables Include="DotNetSourceBuildIntermediatePath=$(IntermediatePath)" />
   </ItemGroup>
 
   <ItemGroup>
