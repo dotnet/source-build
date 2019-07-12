@@ -1,0 +1,140 @@
+From c601356f6d63aca05913d0f354cbc682b63c663e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 12 Jul 2019 14:26:44 -0500
+Subject: [PATCH 09/10] Revert "Add nullable annotations to
+ System.Threading.Thread ref assembly (#38236)"
+
+This reverts commit 44d305e2f0a312bb0506e0e1ef1fcafeb07b2bb1.
+---
+ .../ref/System.Threading.Thread.cs            | 33 +++++++++----------
+ .../ref/System.Threading.Thread.csproj        |  1 -
+ 2 files changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/src/System.Threading.Thread/ref/System.Threading.Thread.cs b/src/System.Threading.Thread/ref/System.Threading.Thread.cs
+index 7cc885a3b8..86569df04b 100644
+--- a/src/System.Threading.Thread/ref/System.Threading.Thread.cs
++++ b/src/System.Threading.Thread/ref/System.Threading.Thread.cs
+@@ -28,9 +28,9 @@ public sealed partial class CompressedStack : System.Runtime.Serialization.ISeri
+         public System.Threading.CompressedStack CreateCopy() { throw null; }
+         public static System.Threading.CompressedStack GetCompressedStack() { throw null; }
+         public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public static void Run(System.Threading.CompressedStack compressedStack, System.Threading.ContextCallback callback, object? state) { }
++        public static void Run(System.Threading.CompressedStack compressedStack, System.Threading.ContextCallback callback, object state) { }
+     }
+-    public delegate void ParameterizedThreadStart(object? obj);
++    public delegate void ParameterizedThreadStart(object obj);
+     public sealed partial class Thread : System.Runtime.ConstrainedExecution.CriticalFinalizerObject
+     {
+         public Thread(System.Threading.ParameterizedThreadStart start) { }
+@@ -40,19 +40,19 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+         [System.ObsoleteAttribute("The ApartmentState property has been deprecated.  Use GetApartmentState, SetApartmentState or TrySetApartmentState instead.", false)]
+         public System.Threading.ApartmentState ApartmentState { get { throw null; } set { } }
+         public System.Globalization.CultureInfo CurrentCulture { get { throw null; } set { } }
+-        public static System.Security.Principal.IPrincipal? CurrentPrincipal { get { throw null; } set { } }
++        public static System.Security.Principal.IPrincipal CurrentPrincipal { get { throw null; } set { } }
+         public static System.Threading.Thread CurrentThread { get { throw null; } }
+         public System.Globalization.CultureInfo CurrentUICulture { get { throw null; } set { } }
+-        public System.Threading.ExecutionContext? ExecutionContext { get { throw null; } }
++        public System.Threading.ExecutionContext ExecutionContext { get { throw null; } }
+         public bool IsAlive { get { throw null; } }
+         public bool IsBackground { get { throw null; } set { } }
+         public bool IsThreadPoolThread { get { throw null; } }
+         public int ManagedThreadId { get { throw null; } }
+-        public string? Name { get { throw null; } set { } }
++        public string Name { get { throw null; } set { } }
+         public System.Threading.ThreadPriority Priority { get { throw null; } set { } }
+         public System.Threading.ThreadState ThreadState { get { throw null; } }
+         public void Abort() { }
+-        public void Abort(object? stateInfo) { }
++        public void Abort(object stateInfo) { }
+         public static System.LocalDataStoreSlot AllocateDataSlot() { throw null; }
+         public static System.LocalDataStoreSlot AllocateNamedDataSlot(string name) { throw null; }
+         public static void BeginCriticalRegion() { }
+@@ -66,7 +66,7 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+         [System.ObsoleteAttribute("Thread.GetCompressedStack is no longer supported. Please use the System.Threading.CompressedStack class")]
+         public System.Threading.CompressedStack GetCompressedStack() { throw null; }
+         public static int GetCurrentProcessorId() { throw null; }
+-        public static object? GetData(System.LocalDataStoreSlot slot) { throw null; }
++        public static object GetData(System.LocalDataStoreSlot slot) { throw null; }
+         public static System.AppDomain GetDomain() { throw null; }
+         public static int GetDomainID() { throw null; }
+         public override int GetHashCode() { throw null; }
+@@ -82,12 +82,12 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+         public void SetApartmentState(System.Threading.ApartmentState state) { }
+         [System.ObsoleteAttribute("Thread.SetCompressedStack is no longer supported. Please use the System.Threading.CompressedStack class")]
+         public void SetCompressedStack(System.Threading.CompressedStack stack) { }
+-        public static void SetData(System.LocalDataStoreSlot slot, object? data) { }
++        public static void SetData(System.LocalDataStoreSlot slot, object data) { }
+         public static void Sleep(int millisecondsTimeout) { }
+         public static void Sleep(System.TimeSpan timeout) { }
+         public static void SpinWait(int iterations) { }
+         public void Start() { }
+-        public void Start(object? parameter) { }
++        public void Start(object parameter) { }
+         [System.ObsoleteAttribute("Thread.Suspend has been deprecated.  Please use other classes in System.Threading, such as Monitor, Mutex, Event, and Semaphore, to synchronize Threads or protect resources.  https://go.microsoft.com/fwlink/?linkid=14202", false)]
+         public void Suspend() { }
+         public bool TrySetApartmentState(System.Threading.ApartmentState state) { throw null; }
+@@ -97,8 +97,7 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+         public static int VolatileRead(ref int address) { throw null; }
+         public static long VolatileRead(ref long address) { throw null; }
+         public static System.IntPtr VolatileRead(ref System.IntPtr address) { throw null; }
+-        [return: System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("address")]
+-        public static object? VolatileRead(ref object? address) { throw null; }
++        public static object VolatileRead(ref object address) { throw null; }
+         [System.CLSCompliantAttribute(false)]
+         public static sbyte VolatileRead(ref sbyte address) { throw null; }
+         public static float VolatileRead(ref float address) { throw null; }
+@@ -116,7 +115,7 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+         public static void VolatileWrite(ref int address, int value) { }
+         public static void VolatileWrite(ref long address, long value) { }
+         public static void VolatileWrite(ref System.IntPtr address, System.IntPtr value) { }
+-        public static void VolatileWrite([System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute("value")] ref object? address, object? value) { }
++        public static void VolatileWrite(ref object address, object value) { }
+         [System.CLSCompliantAttribute(false)]
+         public static void VolatileWrite(ref sbyte address, sbyte value) { }
+         public static void VolatileWrite(ref float address, float value) { }
+@@ -133,7 +132,7 @@ public sealed partial class Thread : System.Runtime.ConstrainedExecution.Critica
+     public sealed partial class ThreadAbortException : System.SystemException
+     {
+         internal ThreadAbortException() { }
+-        public object? ExceptionState { get { throw null; } }
++        public object ExceptionState { get { throw null; } }
+     }
+     public partial class ThreadExceptionEventArgs : System.EventArgs
+     {
+@@ -145,8 +144,8 @@ public partial class ThreadInterruptedException : System.SystemException
+     {
+         public ThreadInterruptedException() { }
+         protected ThreadInterruptedException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public ThreadInterruptedException(string? message) { }
+-        public ThreadInterruptedException(string? message, System.Exception? innerException) { }
++        public ThreadInterruptedException(string message) { }
++        public ThreadInterruptedException(string message, System.Exception innerException) { }
+     }
+     public enum ThreadPriority
+     {
+@@ -179,7 +178,7 @@ public partial class ThreadStateException : System.SystemException
+     {
+         public ThreadStateException() { }
+         protected ThreadStateException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+-        public ThreadStateException(string? message) { }
+-        public ThreadStateException(string? message, System.Exception? innerException) { }
++        public ThreadStateException(string message) { }
++        public ThreadStateException(string message, System.Exception innerException) { }
+     }
+ }
+diff --git a/src/System.Threading.Thread/ref/System.Threading.Thread.csproj b/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
+index 65f79d510d..ec7fbd6f71 100644
+--- a/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
++++ b/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
+@@ -2,7 +2,6 @@
+   <PropertyGroup>
+     <ProjectGuid>{82D06A2D-008D-4A4A-A83D-FB7F04721C87}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+-    <Nullable>enable</Nullable>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Thread.cs" />
+-- 
+2.18.0
+
