@@ -1,0 +1,23 @@
+From f2a33eb20a6b4267468dfc502143f8dfa378e65a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 15 Jul 2019 18:14:15 -0500
+Subject: [PATCH] Add empty SourceLink target.
+
+---
+ Directory.Build.targets | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 11ba1109f5..0cef5b8ae7 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -2,4 +2,6 @@
+ <Project>
+   <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+   <Import Project="eng\targets\Imports.targets" />
++
++  <Target Name="InitializeSourceControlInformation" />
+ </Project>
+-- 
+2.21.0
+
