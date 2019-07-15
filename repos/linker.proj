@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>15b5a5f682a3f3345f473b655d51940bdd8fd1a8</PreferredHash>
+    <PreferredHash>3dd5e55dc9cb7a7c5eaa73aefc70c3655e75f97b</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190531.1</OfficialBuildId>
+    <OfficialBuildId>20190624.1</OfficialBuildId>
 
     <!-- Package version is pinned to what CoreFX expects because CoreFX doesn't take an override property. -->
     <ILLinkTasksPackageId>ILLink.Tasks</ILLinkTasksPackageId>
-    <ILLinkTasksPackageVersion>0.1.6-prerelease.19281.1</ILLinkTasksPackageVersion>
+    <ILLinkTasksPackageVersion>0.1.6-prerelease.19324.1</ILLinkTasksPackageVersion>
 
     <BuildCommandArgs>restore /bl:restore.binlog</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)illink.sln</BuildCommandArgs>
