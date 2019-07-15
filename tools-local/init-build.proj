@@ -101,6 +101,28 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
   </Target>
 
+
+  <Target Name="ExtractToolPackage"
+          DependsOnTargets="BuildTasks"
+          Condition="'@(OfflineBuild)' == 'true'">
+    <ItemGroup>
+      <_ToolPackage
+        Condition="'%(ArcadeSdkOverride.Version)' != ''"
+        Include="$(SourceBuiltPackagesPath)%(ArcadeSdkOverride.Identity).%(ArcadeSdkOverride.Version).nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%(ArcadeSdkOverride.Identity).%(ArcadeSdkOverride.Version).symbols.nupkg"
+        Id="%(ArcadeSdkOverride.Identity)" />
+    </ItemGroup>
+
+    <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
+                               DestinationDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)\"
+                               OverwriteDestination="true" />
+    <ItemGroup>
+      <ExtractedToolFiles Include="$(ToolPackageExtractDir)%(_ToolPackage.Id)/**/*netcore*/*.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
+  </Target>
+
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
       <Output PropertyName="TargetRid" TaskParameter="Rid" />
