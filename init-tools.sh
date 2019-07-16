@@ -14,6 +14,7 @@ __ILASM_VERSION=$(cat "$__scriptpath/tools-local/ILAsmVersion.txt" | sed 's/\r$/
 __BUILD_TOOLS_PATH="$__PACKAGES_DIR/microsoft.dotnet.buildtools/$__BUILD_TOOLS_PACKAGE_VERSION/lib"
 __INIT_TOOLS_RESTORE_PROJECT="$__scriptpath/init-tools.msbuild"
 __BUILD_TOOLS_SEMAPHORE="$__TOOLRUNTIME_DIR/$__BUILD_TOOLS_PACKAGE_VERSION/init-tools.complete"
+__BUILD_TOOLS_ARCADE_SEMAPHORE="$__TOOLRUNTIME_DIR/${__BUILD_TOOLS_PACKAGE_VERSION}.init-tools.completed"
 
 if [ -e "$__BUILD_TOOLS_SEMAPHORE" ]; then
     echo "Tools are already initialized"
@@ -67,11 +68,29 @@ execute_with_retry() {
 
 if [ ! -e "$__DOTNET_PATH" ]; then
     if [ -z "${__DOTNET_PKG:-}" ]; then
-        if [ "$(uname -m | grep "i[3456]86")" = "i686" ]; then
-            echo "Warning: build not supported on 32 bit Unix"
-        fi
+        CPUName=$(uname -m)
 
-        __PKG_ARCH=x64
+        case $CPUName in
+            i386|i486|i586|i686)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=x86
+            ;;
+            x86_64|amd64)
+            __PKG_ARCH=x64
+            ;;
+            armv7l)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=arm
+            ;;
+            aarch64)
+            echo "Warning: Unsupported CPU $CPUName detected, build not supported!"
+            __PKG_ARCH=arm64
+            ;;
+            *)
+            echo "Warning: Unknown CPU $CPUName detected, configuring as if for x64"
+            __PKG_ARCH=x64
+            ;;
+        esac
 
         OSName=$(uname -s)
         case $OSName in
@@ -188,6 +207,17 @@ ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
 
 mkdir -p "$(dirname "$__BUILD_TOOLS_SEMAPHORE")" && touch "$__BUILD_TOOLS_SEMAPHORE"
+mkdir -p "$(dirname "$__BUILD_TOOLS_ARCADE_SEMAPHORE")" && touch "$__BUILD_TOOLS_ARCADE_SEMAPHORE"
+
+echo "Done initializing BuildTools."
+
+echo "Initializing Arcade..."
+scriptroot="$__scriptpath/eng/common/" \
+    DOTNET_INSTALL_DIR="$__DOTNET_PATH" \
+    DotNetBuildFromSource=true \
+    "$__scriptpath/eng/common/tools.sh"
+
+echo "Done initializing Arcade."
 
 echo "Done initializing tools."
 
