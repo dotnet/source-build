@@ -105,6 +105,7 @@
   <Target Name="ExtractToolPackage"
           DependsOnTargets="BuildTasks"
           Condition="'@(OfflineBuild)' == 'true'">
+          <Message Importance="High" Text="Arcversion ->> $(ArcadeSdkOverride.Version)    SBPackPath ->> $(SourceBuiltPackagesPath)" />
     <ItemGroup>
       <_ToolPackage
         Condition="'%(ArcadeSdkOverride.Version)' != ''"
