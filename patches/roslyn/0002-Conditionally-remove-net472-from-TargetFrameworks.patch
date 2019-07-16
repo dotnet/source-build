@@ -1,0 +1,24 @@
+From fc2038dbdff596253877b16b27d98716f6cb3b9c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 16 Jul 2019 17:07:53 -0500
+Subject: [PATCH 2/2] Conditionally remove net472 from TargetFrameworks.
+
+---
+ .../Microsoft.Net.Compilers.Toolset.Package.csproj               | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+index 61d7c46b6b..27a8144394 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+ 
+     <IsPackable>true</IsPackable>
+     <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
+-- 
+2.21.0
+
