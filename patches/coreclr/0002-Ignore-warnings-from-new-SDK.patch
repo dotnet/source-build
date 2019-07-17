@@ -1,0 +1,39 @@
+From 1b90b957fa9f8c9da999261fc43847de13d55934 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 17 Jul 2019 14:22:08 -0500
+Subject: [PATCH 2/2] Ignore warnings from new SDK.
+
+---
+ Directory.Build.props                                    | 4 ++++
+ src/System.Private.CoreLib/System.Private.CoreLib.csproj | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index a8222e9855..66f2658d89 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -16,4 +16,8 @@
+     <!-- Enables Strict mode for Roslyn compiler -->
+     <Features>strict;nullablePublicOnly</Features>
+   </PropertyGroup>
++
++  <PropertyGroup>
++    <NoWarn>$(NoWarn),CS8604,CS8622,CS8632</NoWarn>
++  </ProperyGroup>
+ </Project>
+diff --git a/src/System.Private.CoreLib/System.Private.CoreLib.csproj b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+index 6b2b4e8875..4a3289fdf7 100644
+--- a/src/System.Private.CoreLib/System.Private.CoreLib.csproj
++++ b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+@@ -53,7 +53,7 @@
+     <HighEntropyVA>true</HighEntropyVA>
+     <ErrorReport>prompt</ErrorReport>
+     <WarningLevel>4</WarningLevel>
+-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
++    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+     <NoWarn>$(NoWarn);649,1573,1591,0419,3021</NoWarn>
+     <Nullable>enable</Nullable>
+ 
+-- 
+2.21.0
+
