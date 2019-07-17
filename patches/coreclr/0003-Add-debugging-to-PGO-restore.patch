@@ -1,0 +1,34 @@
+From 98aa5158d0f63a4d455b16500194f04ce6d87e72 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 17 Jul 2019 15:48:35 -0500
+Subject: [PATCH 3/3] Add debugging to PGO restore.
+
+---
+ build.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build.sh b/build.sh
+index f4a0a69561..93ed138a64 100755
+--- a/build.sh
++++ b/build.sh
+@@ -156,7 +156,7 @@ restore_optdata()
+         local IbcDataPackageVersionOutputFile="${__IntermediatesDir}/ibcoptdataversion.txt"
+ 
+         # Writes into ${PgoDataPackageVersionOutputFile}
+-        ${__ProjectDir}/dotnet.sh msbuild $OptDataProjectFilePath /t:DumpPgoDataPackageVersion ${__CommonMSBuildArgs} /p:PgoDataPackageVersionOutputFile=${PgoDataPackageVersionOutputFile} /nologo 2>&1 > /dev/null
++        ${__ProjectDir}/dotnet.sh msbuild $OptDataProjectFilePath /t:DumpPgoDataPackageVersion ${__CommonMSBuildArgs} /p:PgoDataPackageVersionOutputFile=${PgoDataPackageVersionOutputFile} /nologo /v:diag
+         if [ $? != 0 ] || [ ! -f "${PgoDataPackageVersionOutputFile}" ]; then
+             echo "Failed to get PGO data package version."
+             exit $?
+@@ -165,7 +165,7 @@ restore_optdata()
+         __PgoOptDataVersion=$(<"${PgoDataPackageVersionOutputFile}")
+ 
+         # Writes into ${IbcDataPackageVersionOutputFile}
+-        ${__ProjectDir}/dotnet.sh msbuild $OptDataProjectFilePath /t:DumpIbcDataPackageVersion ${__CommonMSBuildArgs} /p:IbcDataPackageVersionOutputFile=${IbcDataPackageVersionOutputFile} /nologo 2>&1 > /dev/null
++        ${__ProjectDir}/dotnet.sh msbuild $OptDataProjectFilePath /t:DumpIbcDataPackageVersion ${__CommonMSBuildArgs} /p:IbcDataPackageVersionOutputFile=${IbcDataPackageVersionOutputFile} /nologo /v:diag
+         if [ $? != 0 ] || [ ! -f "${IbcDataPackageVersionOutputFile}" ]; then
+             echo "Failed to get IBC data package version."
+             exit $?
+-- 
+2.21.0
+
