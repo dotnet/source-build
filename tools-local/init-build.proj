@@ -105,12 +105,10 @@
   <Target Name="ExtractToolPackage"
           DependsOnTargets="BuildTasks"
           Condition="'$(OfflineBuild)' == 'true'">
-          <Message Importance="High" Text="Arcversion ->> $(ArcadeSdkOverride.Version)    SBPackPath ->> $(SourceBuiltPackagesPath)" />
     <ItemGroup>
       <_ToolPackage
-        Condition="'%(ArcadeSdkOverride.Version)' != ''"
-        Include="$(SourceBuiltPackagesPath)%(ArcadeSdkOverride.Identity).%(ArcadeSdkOverride.Version).nupkg"
-        Exclude="$(SourceBuiltPackagesPath)%(ArcadeSdkOverride.Identity).%(ArcadeSdkOverride.Version).symbols.nupkg"
+        Include="$(SourceBuiltPackagesPath)%.1.0.0-dev.nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%.1.0.0-dev.symbols.nupkg"
         Id="%(ArcadeSdkOverride.Identity)" />
     </ItemGroup>
 
