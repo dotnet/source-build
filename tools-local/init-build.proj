@@ -107,16 +107,15 @@
           Condition="'$(OfflineBuild)' == 'true'">
     <ItemGroup>
       <_ToolPackage
-        Include="$(SourceBuiltPackagesPath)%.1.0.0-dev.nupkg"
-        Exclude="$(SourceBuiltPackagesPath)%.1.0.0-dev.symbols.nupkg"
-        Id="%(ArcadeSdkOverride.Identity)" />
+        Include="$(PrebuiltSourceBuiltPackagesPath).Microsoft.DotNet.Arcade.1.0.0-dev.nupkg"
+        Exclude="$(PrebuiltSourceBuiltPackagesPath).Microsoft.DotNet.Arcade.1.0.0-dev.symbols.nupkg"
     </ItemGroup>
 
     <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
-                               DestinationDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)\"
+                               DestinationDirectory="$(PackagesDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/"
                                OverwriteDestination="true" />
     <ItemGroup>
-      <ExtractedToolFiles Include="$(ToolPackageExtractDir)%(_ToolPackage.Id)/**/*netcore*/*.dll" />
+      <ExtractedToolFiles Include="$(PackagesDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/**/*netcore*/*.dll" />
     </ItemGroup>
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
