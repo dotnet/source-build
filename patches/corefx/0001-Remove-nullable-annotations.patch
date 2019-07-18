@@ -1,0 +1,95 @@
+From f56a6af93dfb8a988363afe59df203a4384ba2d1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 16:09:28 -0500
+Subject: [PATCH] Remove nullable annotations.
+
+---
+ .../System.Reflection.Emit.ILGeneration.cs    | 40 +++++++++----------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
+
+diff --git a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
+index d8657fb7b6..04b021bac2 100644
+--- a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
++++ b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
+@@ -9,10 +9,10 @@ namespace System.Reflection.Emit
+ {
+     public partial class CustomAttributeBuilder
+     {
+-        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object?[] constructorArgs) { }
+-        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object?[] constructorArgs, System.Reflection.FieldInfo[] namedFields, object[] fieldValues) { }
+-        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object?[] constructorArgs, System.Reflection.PropertyInfo[] namedProperties, object[] propertyValues) { }
+-        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object?[] constructorArgs, System.Reflection.PropertyInfo[] namedProperties, object[] propertyValues, System.Reflection.FieldInfo[] namedFields, object[] fieldValues) { }
++        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object[] constructorArgs) { }
++        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object[] constructorArgs, System.Reflection.FieldInfo[] namedFields, object[] fieldValues) { }
++        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object[] constructorArgs, System.Reflection.PropertyInfo[] namedProperties, object[] propertyValues) { }
++        public CustomAttributeBuilder(System.Reflection.ConstructorInfo con, object[] constructorArgs, System.Reflection.PropertyInfo[] namedProperties, object[] propertyValues, System.Reflection.FieldInfo[] namedFields, object[] fieldValues) { }
+     }
+     public partial class ILGenerator
+     {
+@@ -45,8 +45,8 @@ public partial class ILGenerator
+         public virtual void Emit(System.Reflection.Emit.OpCode opcode, float arg) { }
+         public virtual void Emit(System.Reflection.Emit.OpCode opcode, string str) { }
+         public virtual void Emit(System.Reflection.Emit.OpCode opcode, System.Type cls) { }
+-        public virtual void EmitCall(System.Reflection.Emit.OpCode opcode, System.Reflection.MethodInfo methodInfo, System.Type[]? optionalParameterTypes) { }
+-        public virtual void EmitCalli(System.Reflection.Emit.OpCode opcode, System.Reflection.CallingConventions callingConvention, System.Type? returnType, System.Type[]? parameterTypes, System.Type[]? optionalParameterTypes) { }
++        public virtual void EmitCall(System.Reflection.Emit.OpCode opcode, System.Reflection.MethodInfo methodInfo, System.Type[] optionalParameterTypes) { }
++        public virtual void EmitCalli(System.Reflection.Emit.OpCode opcode, System.Reflection.CallingConventions callingConvention, System.Type returnType, System.Type[] parameterTypes, System.Type[] optionalParameterTypes) { }
+         public virtual void EmitWriteLine(System.Reflection.Emit.LocalBuilder localBuilder) { }
+         public virtual void EmitWriteLine(System.Reflection.FieldInfo fld) { }
+         public virtual void EmitWriteLine(string value) { }
+@@ -59,7 +59,7 @@ public partial class ILGenerator
+     public readonly partial struct Label
+     {
+         private readonly int _dummyPrimitive;
+-        public override bool Equals(object? obj) { throw null; }
++        public override bool Equals(object obj) { throw null; }
+         public bool Equals(System.Reflection.Emit.Label obj) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public static bool operator ==(System.Reflection.Emit.Label a, System.Reflection.Emit.Label b) { throw null; }
+@@ -79,9 +79,9 @@ public partial class ParameterBuilder
+         public bool IsIn { get { throw null; } }
+         public bool IsOptional { get { throw null; } }
+         public bool IsOut { get { throw null; } }
+-        public virtual string? Name { get { throw null; } }
++        public virtual string Name { get { throw null; } }
+         public virtual int Position { get { throw null; } }
+-        public virtual void SetConstant(object? defaultValue) { }
++        public virtual void SetConstant(object defaultValue) { }
+         public void SetCustomAttribute(System.Reflection.ConstructorInfo con, byte[] binaryAttribute) { }
+         public void SetCustomAttribute(System.Reflection.Emit.CustomAttributeBuilder customBuilder) { }
+     }
+@@ -90,20 +90,20 @@ public sealed partial class SignatureHelper
+         internal SignatureHelper() { }
+         public void AddArgument(System.Type clsArgument) { }
+         public void AddArgument(System.Type argument, bool pinned) { }
+-        public void AddArgument(System.Type argument, System.Type[]? requiredCustomModifiers, System.Type[]? optionalCustomModifiers) { }
+-        public void AddArguments(System.Type[]? arguments, System.Type[][]? requiredCustomModifiers, System.Type[][]? optionalCustomModifiers) { }
++        public void AddArgument(System.Type argument, System.Type[] requiredCustomModifiers, System.Type[] optionalCustomModifiers) { }
++        public void AddArguments(System.Type[] arguments, System.Type[][] requiredCustomModifiers, System.Type[][] optionalCustomModifiers) { }
+         public void AddSentinel() { }
+-        public override bool Equals(object? obj) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetFieldSigHelper(System.Reflection.Module? mod) { throw null; }
++        public override bool Equals(object obj) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetFieldSigHelper(System.Reflection.Module mod) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public static System.Reflection.Emit.SignatureHelper GetLocalVarSigHelper() { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetLocalVarSigHelper(System.Reflection.Module? mod) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.CallingConventions callingConvention, System.Type? returnType) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.Module? mod, System.Reflection.CallingConventions callingConvention, System.Type? returnType) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.Module? mod, System.Type? returnType, System.Type[]? parameterTypes) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module? mod, System.Reflection.CallingConventions callingConvention, System.Type? returnType, System.Type[]? requiredReturnTypeCustomModifiers, System.Type[]? optionalReturnTypeCustomModifiers, System.Type[]? parameterTypes, System.Type[][]? requiredParameterTypeCustomModifiers, System.Type[][]? optionalParameterTypeCustomModifiers) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module? mod, System.Type? returnType, System.Type[]? parameterTypes) { throw null; }
+-        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module? mod, System.Type? returnType, System.Type[]? requiredReturnTypeCustomModifiers, System.Type[]? optionalReturnTypeCustomModifiers, System.Type[]? parameterTypes, System.Type[][]? requiredParameterTypeCustomModifiers, System.Type[][]? optionalParameterTypeCustomModifiers) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetLocalVarSigHelper(System.Reflection.Module mod) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.CallingConventions callingConvention, System.Type returnType) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.Module mod, System.Reflection.CallingConventions callingConvention, System.Type returnType) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetMethodSigHelper(System.Reflection.Module mod, System.Type returnType, System.Type[] parameterTypes) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module mod, System.Reflection.CallingConventions callingConvention, System.Type returnType, System.Type[] requiredReturnTypeCustomModifiers, System.Type[] optionalReturnTypeCustomModifiers, System.Type[] parameterTypes, System.Type[][] requiredParameterTypeCustomModifiers, System.Type[][] optionalParameterTypeCustomModifiers) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module mod, System.Type returnType, System.Type[] parameterTypes) { throw null; }
++        public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module mod, System.Type returnType, System.Type[] requiredReturnTypeCustomModifiers, System.Type[] optionalReturnTypeCustomModifiers, System.Type[] parameterTypes, System.Type[][] requiredParameterTypeCustomModifiers, System.Type[][] optionalParameterTypeCustomModifiers) { throw null; }
+         public byte[] GetSignature() { throw null; }
+         public override string ToString() { throw null; }
+     }
+-- 
+2.21.0
+
