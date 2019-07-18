@@ -10,7 +10,8 @@
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
-
+  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
+  
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
     <SourceBuildMSBuildSdkResolverPath>$(DotNetSdkResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdkResolverPath>
