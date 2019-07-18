@@ -1,4 +1,4 @@
-From 556b6342e1a7252b8995553135a33524be8ab8da Mon Sep 17 00:00:00 2001
+From 4b15e9664402570524094f57777022364c8de93c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 18 Jul 2019 02:57:57 -0500
 Subject: [PATCH 5/5] Revert "Turn on nullability for all of Corelib (#24497)"
@@ -317,7 +317,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../Generic/ICollectionDebugView.cs           |  1 +
  .../System/Collections/Generic/IComparer.cs   |  1 +
  .../System/Collections/Generic/IDictionary.cs |  3 +-
- .../Generic/IDictionaryDebugView.cs           |  1 +
+ .../Generic/IDictionaryDebugView.cs           |  3 +-
  .../System/Collections/Generic/IEnumerable.cs |  1 +
  .../System/Collections/Generic/IEnumerator.cs |  1 +
  .../Collections/Generic/IEqualityComparer.cs  |  1 +
@@ -907,7 +907,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../InvalidComObjectException.cs              |  1 +
  .../InvalidOleVariantTypeException.cs         |  1 +
  .../LCIDConversionAttribute.cs                |  1 +
- .../Runtime/InteropServices/Marshal.NoCom.cs  |  1 +
+ .../Runtime/InteropServices/Marshal.NoCom.cs  |  3 +-
  .../Runtime/InteropServices/Marshal.Unix.cs   |  1 +
  .../InteropServices/Marshal.Windows.cs        |  1 +
  .../System/Runtime/InteropServices/Marshal.cs |  3 +-
@@ -1443,7 +1443,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../src/System/WeakReference.CoreCLR.cs       |  9 +++++
  .../src/System/__Canon.cs                     |  1 +
  .../src/System/__ComObject.cs                 |  1 +
- 1438 files changed, 1518 insertions(+), 12 deletions(-)
+ 1438 files changed, 1520 insertions(+), 14 deletions(-)
  create mode 100644 src/System.Private.CoreLib/shared/System/Runtime/Serialization/DeserializationBlockedException.cs
 
 diff --git a/src/System.Private.CoreLib/Common/NotImplemented.cs b/src/System.Private.CoreLib/Common/NotImplemented.cs
@@ -5210,10 +5210,10 @@ index c87ed8381c..59894d06a9 100644
          // Interfaces are not serializable
          // The Item property provides methods to read and edit entries 
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs
-index 3168aa1bb1..cd25770fff 100644
+index 3168aa1bb1..fef3a44011 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs
 +++ b/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs
-@@ -2,6 +2,7 @@
+@@ -2,11 +2,12 @@
  // The .NET Foundation licenses this file to you under the MIT license.
  // See the LICENSE file in the project root for more information.
  
@@ -5221,6 +5221,12 @@ index 3168aa1bb1..cd25770fff 100644
  using System.Diagnostics;
  
  namespace System.Collections.Generic
+ {
+-    internal sealed class IDictionaryDebugView<K, V> where K : notnull
++    internal sealed class IDictionaryDebugView<K, V>
+     {
+         private readonly IDictionary<K, V> _dict;
+ 
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IEnumerable.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IEnumerable.cs
 index 5548ffc19d..d3ef9e86f7 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IEnumerable.cs
@@ -12341,7 +12347,7 @@ index 75f8fcfc91..87424e1188 100644
  {
      [AttributeUsage(AttributeTargets.Method, Inherited = false)]
 diff --git a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.NoCom.cs b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.NoCom.cs
-index 5cc6db3cb2..5dd96e955b 100644
+index 5cc6db3cb2..94b9980f9d 100644
 --- a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.NoCom.cs
 +++ b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.NoCom.cs
 @@ -2,6 +2,7 @@
@@ -12352,6 +12358,15 @@ index 5cc6db3cb2..5dd96e955b 100644
  using System.Diagnostics.CodeAnalysis;
  using System.Reflection;
  using System.Runtime.InteropServices.ComTypes;
+@@ -36,7 +37,7 @@ namespace System.Runtime.InteropServices
+         {
+         }
+ 
+-        public static IntPtr CreateAggregatedObject<T>(IntPtr pOuter, T o) where T : notnull
++        public static IntPtr CreateAggregatedObject<T>(IntPtr pOuter, T o)
+         {
+             throw new PlatformNotSupportedException(SR.PlatformNotSupported_ComInterop);
+         }
 diff --git a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.Unix.cs b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.Unix.cs
 index c0e9bd6d77..1156261e31 100644
 --- a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.Unix.cs
