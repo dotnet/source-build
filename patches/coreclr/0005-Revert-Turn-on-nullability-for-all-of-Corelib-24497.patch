@@ -1,4 +1,4 @@
-From 9bfd66f32d9556bc99877b7fc91df301dad7723f Mon Sep 17 00:00:00 2001
+From 556b6342e1a7252b8995553135a33524be8ab8da Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 18 Jul 2019 02:57:57 -0500
 Subject: [PATCH 5/5] Revert "Turn on nullability for all of Corelib (#24497)"
@@ -309,21 +309,21 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../System/Collections/DictionaryEntry.cs     |  1 +
  .../Collections/Generic/ArraySortHelper.cs    |  1 +
  .../System/Collections/Generic/Comparer.cs    |  1 +
- .../System/Collections/Generic/Dictionary.cs  |  1 +
+ .../System/Collections/Generic/Dictionary.cs  |  3 +-
  .../Collections/Generic/EqualityComparer.cs   |  1 +
  .../Collections/Generic/IAsyncEnumerable.cs   |  1 +
  .../Collections/Generic/IAsyncEnumerator.cs   |  1 +
  .../System/Collections/Generic/ICollection.cs |  1 +
  .../Generic/ICollectionDebugView.cs           |  1 +
  .../System/Collections/Generic/IComparer.cs   |  1 +
- .../System/Collections/Generic/IDictionary.cs |  1 +
+ .../System/Collections/Generic/IDictionary.cs |  3 +-
  .../Generic/IDictionaryDebugView.cs           |  1 +
  .../System/Collections/Generic/IEnumerable.cs |  1 +
  .../System/Collections/Generic/IEnumerator.cs |  1 +
  .../Collections/Generic/IEqualityComparer.cs  |  1 +
  .../System/Collections/Generic/IList.cs       |  1 +
  .../Generic/IReadOnlyCollection.cs            |  1 +
- .../Generic/IReadOnlyDictionary.cs            |  2 +
+ .../Generic/IReadOnlyDictionary.cs            |  4 +-
  .../Collections/Generic/IReadOnlyList.cs      |  1 +
  .../Generic/KeyNotFoundException.cs           |  1 +
  .../Collections/Generic/KeyValuePair.cs       |  1 +
@@ -910,7 +910,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../Runtime/InteropServices/Marshal.NoCom.cs  |  1 +
  .../Runtime/InteropServices/Marshal.Unix.cs   |  1 +
  .../InteropServices/Marshal.Windows.cs        |  1 +
- .../System/Runtime/InteropServices/Marshal.cs |  1 +
+ .../System/Runtime/InteropServices/Marshal.cs |  3 +-
  .../InteropServices/MarshalAsAttribute.cs     |  1 +
  .../MarshalDirectiveException.cs              |  1 +
  .../InteropServices/MemoryMarshal.Fast.cs     |  1 +
@@ -1182,7 +1182,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../shared/System/TimeZoneInfo.cs             |  1 +
  .../System/TimeZoneNotFoundException.cs       |  1 +
  .../shared/System/TimeoutException.cs         |  1 +
- .../shared/System/Tuple.cs                    |  1 +
+ .../shared/System/Tuple.cs                    |  3 +-
  .../shared/System/TupleExtensions.cs          |  1 +
  .../shared/System/Type.Enum.cs                |  1 +
  .../shared/System/Type.Helpers.cs             |  1 +
@@ -1229,7 +1229,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../Collections/Generic/Comparer.CoreCLR.cs   |  1 +
  .../Collections/Generic/ComparerHelpers.cs    |  1 +
  .../Generic/EqualityComparer.CoreCLR.cs       |  1 +
- .../ObjectModel/ReadOnlyDictionary.cs         |  1 +
+ .../ObjectModel/ReadOnlyDictionary.cs         |  3 +-
  .../src/System/Currency.cs                    |  1 +
  .../src/System/DateTime.Unix.CoreCLR.cs       |  1 +
  .../src/System/DateTime.Windows.CoreCLR.cs    |  1 +
@@ -1443,7 +1443,7 @@ This reverts commit 9773db1e7b1acb3ec75c9cc0e36bd62dcbacd6d5.
  .../src/System/WeakReference.CoreCLR.cs       |  9 +++++
  .../src/System/__Canon.cs                     |  1 +
  .../src/System/__ComObject.cs                 |  1 +
- 1438 files changed, 1512 insertions(+), 6 deletions(-)
+ 1438 files changed, 1518 insertions(+), 12 deletions(-)
  create mode 100644 src/System.Private.CoreLib/shared/System/Runtime/Serialization/DeserializationBlockedException.cs
 
 diff --git a/src/System.Private.CoreLib/Common/NotImplemented.cs b/src/System.Private.CoreLib/Common/NotImplemented.cs
@@ -5096,7 +5096,7 @@ index 80187beedf..642b595cdb 100644
  using System.Runtime.CompilerServices;
  using System.Runtime.Serialization;
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/Dictionary.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/Dictionary.cs
-index fc4d875289..e572a1a469 100644
+index fc4d875289..743a57ed82 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/Dictionary.cs
 +++ b/src/System.Private.CoreLib/shared/System/Collections/Generic/Dictionary.cs
 @@ -2,6 +2,7 @@
@@ -5107,6 +5107,15 @@ index fc4d875289..e572a1a469 100644
  using System.Diagnostics;
  using System.Diagnostics.CodeAnalysis;
  using System.Runtime.CompilerServices;
+@@ -34,7 +35,7 @@ namespace System.Collections.Generic
+     [DebuggerDisplay("Count = {Count}")]
+     [Serializable]
+     [TypeForwardedFrom("mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")]
+-    public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>, ISerializable, IDeserializationCallback where TKey : notnull
++    public class Dictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>, ISerializable, IDeserializationCallback
+     {
+         private struct Entry
+         {
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/EqualityComparer.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/EqualityComparer.cs
 index d62d03b193..8f1f6b5953 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/EqualityComparer.cs
@@ -5180,7 +5189,7 @@ index 064aa31ecd..a34cca2e43 100644
  using System.Diagnostics.CodeAnalysis;
  
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionary.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionary.cs
-index c87ed8381c..9417118985 100644
+index c87ed8381c..59894d06a9 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionary.cs
 +++ b/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionary.cs
 @@ -2,6 +2,7 @@
@@ -5191,6 +5200,15 @@ index c87ed8381c..9417118985 100644
  using System;
  using System.Diagnostics.CodeAnalysis;
  
+@@ -11,7 +12,7 @@ namespace System.Collections.Generic
+     // Keys can be any non-null object.  Values can be any object.
+     // You can look up a value in an IDictionary via the default indexed
+     // property, Items.
+-    public interface IDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>> where TKey : notnull
++    public interface IDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>
+     {
+         // Interfaces are not serializable
+         // The Item property provides methods to read and edit entries 
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs
 index 3168aa1bb1..cd25770fff 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IDictionaryDebugView.cs
@@ -5264,10 +5282,10 @@ index 9eea39de22..c86a4a3597 100644
  using System.Runtime.CompilerServices;
  
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyDictionary.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyDictionary.cs
-index af7ff0871d..400d970447 100644
+index af7ff0871d..b3c90fa90b 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyDictionary.cs
 +++ b/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyDictionary.cs
-@@ -2,6 +2,8 @@
+@@ -2,12 +2,14 @@
  // The .NET Foundation licenses this file to you under the MIT license.
  // See the LICENSE file in the project root for more information.
  
@@ -5276,6 +5294,13 @@ index af7ff0871d..400d970447 100644
  using System.Diagnostics.CodeAnalysis;
  
  namespace System.Collections.Generic
+ {
+     // Provides a read-only view of a generic dictionary.
+-    public interface IReadOnlyDictionary<TKey, TValue> : IReadOnlyCollection<KeyValuePair<TKey, TValue>> where TKey : notnull
++    public interface IReadOnlyDictionary<TKey, TValue> : IReadOnlyCollection<KeyValuePair<TKey, TValue>>
+     {
+         bool ContainsKey(TKey key);
+         bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value);
 diff --git a/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyList.cs b/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyList.cs
 index 7193805b06..6a1e9bbf09 100644
 --- a/src/System.Private.CoreLib/shared/System/Collections/Generic/IReadOnlyList.cs
@@ -12352,7 +12377,7 @@ index f4027d0f59..088c8d8deb 100644
  
  namespace System.Runtime.InteropServices
 diff --git a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.cs b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.cs
-index 705dd95e2a..6dfa1efb13 100644
+index 705dd95e2a..39a931a094 100644
 --- a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.cs
 +++ b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/Marshal.cs
 @@ -2,6 +2,7 @@
@@ -12363,6 +12388,15 @@ index 705dd95e2a..6dfa1efb13 100644
  using System.Security;
  using System.Reflection;
  using System.Runtime.CompilerServices;
+@@ -896,7 +897,7 @@ namespace System.Runtime.InteropServices
+             return GetFunctionPointerForDelegateInternal(d);
+         }
+ 
+-        public static IntPtr GetFunctionPointerForDelegate<TDelegate>(TDelegate d) where TDelegate : notnull
++        public static IntPtr GetFunctionPointerForDelegate<TDelegate>(TDelegate d)
+         {
+             return GetFunctionPointerForDelegate((Delegate)(object)d);
+         }
 diff --git a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/MarshalAsAttribute.cs b/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/MarshalAsAttribute.cs
 index ae142a4323..bf8bc04e4b 100644
 --- a/src/System.Private.CoreLib/shared/System/Runtime/InteropServices/MarshalAsAttribute.cs
@@ -15655,7 +15689,7 @@ index 3e96cb8e3c..7bb41e34f6 100644
  
  namespace System
 diff --git a/src/System.Private.CoreLib/shared/System/Tuple.cs b/src/System.Private.CoreLib/shared/System/Tuple.cs
-index 9c77f0245d..d4ccf3d464 100644
+index 9c77f0245d..103f0ef18a 100644
 --- a/src/System.Private.CoreLib/shared/System/Tuple.cs
 +++ b/src/System.Private.CoreLib/shared/System/Tuple.cs
 @@ -2,6 +2,7 @@
@@ -15666,6 +15700,15 @@ index 9c77f0245d..d4ccf3d464 100644
  using System.Collections;
  using System.Collections.Generic;
  using System.Diagnostics;
+@@ -1031,7 +1032,7 @@ namespace System
+ 
+     [Serializable]
+     [System.Runtime.CompilerServices.TypeForwardedFrom("mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")]
+-    public class Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> : IStructuralEquatable, IStructuralComparable, IComparable, ITupleInternal, ITuple where TRest : notnull
++    public class Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> : IStructuralEquatable, IStructuralComparable, IComparable, ITupleInternal, ITuple
+     {
+         private readonly T1 m_Item1; // Do not rename (binary serialization)
+         private readonly T2 m_Item2; // Do not rename (binary serialization)
 diff --git a/src/System.Private.CoreLib/shared/System/TupleExtensions.cs b/src/System.Private.CoreLib/shared/System/TupleExtensions.cs
 index 106a88a08b..bf1aa07f9b 100644
 --- a/src/System.Private.CoreLib/shared/System/TupleExtensions.cs
@@ -16227,7 +16270,7 @@ index ff967e3cbb..692b65a5bb 100644
  using System.Runtime.CompilerServices;
  using System.Diagnostics;
 diff --git a/src/System.Private.CoreLib/src/System/Collections/ObjectModel/ReadOnlyDictionary.cs b/src/System.Private.CoreLib/src/System/Collections/ObjectModel/ReadOnlyDictionary.cs
-index c1de2ae6e0..dcf148d608 100644
+index c1de2ae6e0..d3c9f669d9 100644
 --- a/src/System.Private.CoreLib/src/System/Collections/ObjectModel/ReadOnlyDictionary.cs
 +++ b/src/System.Private.CoreLib/src/System/Collections/ObjectModel/ReadOnlyDictionary.cs
 @@ -10,6 +10,7 @@
@@ -16238,6 +16281,15 @@ index c1de2ae6e0..dcf148d608 100644
  
  using System.Collections.Generic;
  using System.Diagnostics;
+@@ -20,7 +21,7 @@ namespace System.Collections.ObjectModel
+ {
+     [DebuggerTypeProxy(typeof(IDictionaryDebugView<,>))]
+     [DebuggerDisplay("Count = {Count}")]
+-    internal class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue> where TKey : notnull
++    internal class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDictionary, IReadOnlyDictionary<TKey, TValue>
+     {
+         private readonly IDictionary<TKey, TValue> m_dictionary;
+         private object? m_syncRoot;
 diff --git a/src/System.Private.CoreLib/src/System/Currency.cs b/src/System.Private.CoreLib/src/System/Currency.cs
 index c9e8dc030e..e306989e58 100644
 --- a/src/System.Private.CoreLib/src/System/Currency.cs
