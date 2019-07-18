@@ -112,13 +112,8 @@
     </ItemGroup>
 
     <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
-                               DestinationDirectory="$(PackagesDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/"
+                               DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/"
                                OverwriteDestination="true" />
-    <ItemGroup>
-      <ExtractedToolFiles Include="$(PackagesDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/**/*netcore*/*.dll" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)microsoft.dotnet.arcade.sdk/" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
