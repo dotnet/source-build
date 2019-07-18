@@ -118,7 +118,7 @@
       <ExtractedToolFiles Include="$(PackagesDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/**/*netcore*/*.dll" />
     </ItemGroup>
 
-    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
+    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)microsoft.dotnet.arcade.sdk/" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
