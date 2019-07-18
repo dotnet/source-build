@@ -1,0 +1,24 @@
+From f1b03d4caecd0358e8956707017022bb1092ab94 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 18:10:51 -0500
+Subject: [PATCH 2/2] Disable new warning.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index e09d79343b..515c0806f9 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -4,6 +4,7 @@
+     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+     <RepositoryEngineeringDir>$(RepoRoot)eng\</RepositoryEngineeringDir>
+     <RepositoryUrl>git://github.com/dotnet/corefx</RepositoryUrl>
++    <NoWarn>$(NoWarn),CS8597</NoWarn>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-- 
+2.18.0
+
