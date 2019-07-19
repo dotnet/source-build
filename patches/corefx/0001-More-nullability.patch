@@ -1,41 +1,41 @@
-From 8afe4414c0a7f09efbd19bf61bd803ec4b682913 Mon Sep 17 00:00:00 2001
+From 45c879caed7a0408a3eb3c26d586db004558298c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 18 Jul 2019 17:26:13 -0500
 Subject: [PATCH 1/2] More nullability.
 
 ---
- .../src/CoreLib/Internal/Runtime/CompilerServices/Unsafe.cs      | 1 +
- src/Common/src/CoreLib/Internal/Win32/RegistryKey.cs             | 1 +
- src/Common/src/CoreLib/System/Activator.RuntimeType.cs           | 1 +
- src/Common/src/CoreLib/System/Activator.cs                       | 1 +
- src/Common/src/CoreLib/System/AppContext.cs                      | 1 +
- src/Common/src/CoreLib/System/AppDomain.cs                       | 1 +
- src/Common/src/CoreLib/System/ArgumentOutOfRangeException.cs     | 1 +
- src/Common/src/CoreLib/System/Array.Enumerators.cs               | 1 +
- src/Common/src/CoreLib/System/Array.cs                           | 1 +
- src/Common/src/CoreLib/System/ArraySegment.cs                    | 1 +
- src/Common/src/CoreLib/System/AssemblyLoadEventHandler.cs        | 1 +
- src/Common/src/CoreLib/System/Attribute.cs                       | 1 +
- src/Common/src/CoreLib/System/Boolean.cs                         | 1 +
- src/Common/src/CoreLib/System/Buffers/StandardFormat.cs          | 1 +
- .../System/Buffers/TlsOverPerCoreLockedStacksArrayPool.cs        | 1 +
- src/Common/src/CoreLib/System/Byte.cs                            | 1 +
- src/Common/src/CoreLib/System/Char.cs                            | 1 +
- src/Common/src/CoreLib/System/CharEnumerator.cs                  | 1 +
- src/Common/src/CoreLib/System/Collections/ArrayList.cs           | 1 +
- src/Common/src/CoreLib/System/Collections/Comparer.cs            | 1 +
- src/Common/src/CoreLib/System/Collections/DictionaryEntry.cs     | 1 +
- .../src/CoreLib/System/Collections/Generic/ArraySortHelper.cs    | 1 +
- src/Common/src/CoreLib/System/Collections/Generic/Comparer.cs    | 1 +
- src/Common/src/CoreLib/System/Collections/Generic/Dictionary.cs  | 1 +
- .../src/CoreLib/System/Collections/Generic/EqualityComparer.cs   | 1 +
- src/Common/src/CoreLib/System/Collections/Generic/List.cs        | 1 +
- src/Common/src/CoreLib/System/Collections/Hashtable.cs           | 1 +
- .../ref/System.Reflection.Emit.ILGeneration.cs                   | 1 +
- .../ref/System.Reflection.Emit.Lightweight.cs                    | 1 +
- src/System.Reflection.Emit/ref/System.Reflection.Emit.cs         | 1 +
- src/System.Runtime/ref/System.Runtime.cs                         | 1 +
- 31 files changed, 31 insertions(+)
+ .../Internal/Runtime/CompilerServices/Unsafe.cs       |  1 +
+ src/Common/src/CoreLib/Internal/Win32/RegistryKey.cs  |  1 +
+ .../src/CoreLib/System/Activator.RuntimeType.cs       |  1 +
+ src/Common/src/CoreLib/System/Activator.cs            |  1 +
+ src/Common/src/CoreLib/System/AppContext.cs           |  1 +
+ src/Common/src/CoreLib/System/AppDomain.cs            |  1 +
+ .../src/CoreLib/System/ArgumentOutOfRangeException.cs |  1 +
+ src/Common/src/CoreLib/System/Array.Enumerators.cs    |  1 +
+ src/Common/src/CoreLib/System/Array.cs                |  1 +
+ src/Common/src/CoreLib/System/ArraySegment.cs         |  1 +
+ .../src/CoreLib/System/AssemblyLoadEventHandler.cs    |  1 +
+ src/Common/src/CoreLib/System/Attribute.cs            |  1 +
+ src/Common/src/CoreLib/System/Boolean.cs              |  1 +
+ .../src/CoreLib/System/Buffers/StandardFormat.cs      |  1 +
+ .../Buffers/TlsOverPerCoreLockedStacksArrayPool.cs    |  1 +
+ src/Common/src/CoreLib/System/Byte.cs                 |  1 +
+ src/Common/src/CoreLib/System/Char.cs                 |  1 +
+ src/Common/src/CoreLib/System/CharEnumerator.cs       |  1 +
+ .../src/CoreLib/System/Collections/ArrayList.cs       |  1 +
+ src/Common/src/CoreLib/System/Collections/Comparer.cs |  1 +
+ .../src/CoreLib/System/Collections/DictionaryEntry.cs |  1 +
+ .../System/Collections/Generic/ArraySortHelper.cs     |  1 +
+ .../CoreLib/System/Collections/Generic/Comparer.cs    |  1 +
+ .../CoreLib/System/Collections/Generic/Dictionary.cs  |  1 +
+ .../System/Collections/Generic/EqualityComparer.cs    |  1 +
+ .../src/CoreLib/System/Collections/Generic/List.cs    |  1 +
+ .../src/CoreLib/System/Collections/Hashtable.cs       |  1 +
+ .../ref/System.Reflection.Emit.ILGeneration.cs        |  1 +
+ .../ref/System.Reflection.Emit.Lightweight.cs         |  1 +
+ .../ref/System.Reflection.Emit.cs                     |  1 +
+ src/System.Runtime/ref/System.Runtime.cs              | 11 +----------
+ 31 files changed, 31 insertions(+), 10 deletions(-)
 
 diff --git a/src/Common/src/CoreLib/Internal/Runtime/CompilerServices/Unsafe.cs b/src/Common/src/CoreLib/Internal/Runtime/CompilerServices/Unsafe.cs
 index bbd7a74711..afbc70b9d7 100644
@@ -398,7 +398,7 @@ index 6674f061c4..a25d695a8a 100644
  {
      public sealed partial class AssemblyBuilder : System.Reflection.Assembly
 diff --git a/src/System.Runtime/ref/System.Runtime.cs b/src/System.Runtime/ref/System.Runtime.cs
-index d3886472d3..2e4ab9660a 100644
+index d3886472d3..d134aacc6e 100644
 --- a/src/System.Runtime/ref/System.Runtime.cs
 +++ b/src/System.Runtime/ref/System.Runtime.cs
 @@ -5,6 +5,7 @@
@@ -409,6 +409,56 @@ index d3886472d3..2e4ab9660a 100644
  namespace Microsoft.Win32.SafeHandles
  {
      public abstract partial class CriticalHandleMinusOneIsInvalid : System.Runtime.InteropServices.CriticalHandle
+@@ -2282,9 +2283,7 @@ public sealed partial class STAThreadAttribute : System.Attribute
+         public STAThreadAttribute() { }
+     }
+     public sealed partial class String : System.Collections.Generic.IEnumerable<char>, System.Collections.IEnumerable, System.ICloneable, System.IComparable, System.IComparable<string?>, System.IConvertible, 
+-#nullable disable
+         System.IEquatable<string>
+-#nullable restore
+     {
+         public static readonly string Empty;
+         [System.CLSCompliantAttribute(false)]
+@@ -2611,9 +2610,7 @@ public abstract partial class TimeZone
+         public virtual System.DateTime ToUniversalTime(System.DateTime time) { throw null; }
+     }
+     public sealed partial class TimeZoneInfo : System.Runtime.Serialization.IDeserializationCallback, System.Runtime.Serialization.ISerializable,
+-#nullable disable
+         System.IEquatable<System.TimeZoneInfo>
+-#nullable restore
+     {
+         internal TimeZoneInfo() { }
+         public System.TimeSpan BaseUtcOffset { get { throw null; } }
+@@ -2659,9 +2656,7 @@ public sealed partial class TimeZoneInfo : System.Runtime.Serialization.IDeseria
+         public string ToSerializedString() { throw null; }
+         public override string ToString() { throw null; }
+         public sealed partial class AdjustmentRule : System.Runtime.Serialization.IDeserializationCallback, System.Runtime.Serialization.ISerializable,
+-#nullable disable
+             System.IEquatable<System.TimeZoneInfo.AdjustmentRule>
+-#nullable restore
+         {
+             internal AdjustmentRule() { }
+             public System.DateTime DateEnd { get { throw null; } }
+@@ -3742,9 +3737,7 @@ public abstract partial class ValueType
+         public override string? ToString() { throw null; }
+     }
+     public sealed partial class Version : System.ICloneable, System.IComparable, System.IComparable<System.Version?>,
+-#nullable disable
+         System.IEquatable<System.Version>
+-#nullable restore
+     {
+         public Version() { }
+         public Version(int major, int minor) { }
+@@ -4916,9 +4909,7 @@ public partial class SortKey
+         public override string ToString() { throw null; }
+     }
+     public sealed partial class SortVersion :
+-#nullable disable
+         System.IEquatable<System.Globalization.SortVersion>
+-#nullable restore
+     {
+         public SortVersion(int fullVersion, System.Guid sortId) { }
+         public int FullVersion { get { throw null; } }
 -- 
 2.18.0
 
