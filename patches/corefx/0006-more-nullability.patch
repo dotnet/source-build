@@ -1,0 +1,40 @@
+From 0c7fdc8b2d3189d7e3ac8d2a3b2cdb3e605c5271 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Jul 2019 07:26:44 -0500
+Subject: [PATCH 6/6] more nullability
+
+---
+ src/System.Memory/ref/System.Memory.cs                        | 4 ++--
+ .../ref/System.Reflection.Emit.ILGeneration.cs                | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/System.Memory/ref/System.Memory.cs b/src/System.Memory/ref/System.Memory.cs
+index 51745be880..6077d5fe68 100644
+--- a/src/System.Memory/ref/System.Memory.cs
++++ b/src/System.Memory/ref/System.Memory.cs
+@@ -627,8 +627,8 @@ public static partial class MemoryMarshal
+         public static T Read<T>(System.ReadOnlySpan<byte> source) where T : struct { throw null; }
+         public static System.Collections.Generic.IEnumerable<T> ToEnumerable<T>(System.ReadOnlyMemory<T> memory) { throw null; }
+         public static bool TryGetArray<T>(System.ReadOnlyMemory<T> memory, out System.ArraySegment<T> segment) { throw null; }
+-        public static bool TryGetMemoryManager<T, TManager>(System.ReadOnlyMemory<T> memory, [System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] out TManager? manager) where TManager : System.Buffers.MemoryManager<T> { throw null; }
+-        public static bool TryGetMemoryManager<T, TManager>(System.ReadOnlyMemory<T> memory, [System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] out TManager? manager, out int start, out int length) where TManager : System.Buffers.MemoryManager<T> { throw null; }
++        public static bool TryGetMemoryManager<T, TManager>(System.ReadOnlyMemory<T> memory, [System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] out TManager manager) where TManager : System.Buffers.MemoryManager<T> { throw null; }
++        public static bool TryGetMemoryManager<T, TManager>(System.ReadOnlyMemory<T> memory, [System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] out TManager manager, out int start, out int length) where TManager : System.Buffers.MemoryManager<T> { throw null; }
+         public static bool TryGetString(System.ReadOnlyMemory<char> memory, [System.Diagnostics.CodeAnalysis.NotNullWhenAttribute(true)] out string? text, out int start, out int length) { throw null; }
+         public static bool TryRead<T>(System.ReadOnlySpan<byte> source, out T value) where T : struct { throw null; }
+         public static bool TryWrite<T>(System.Span<byte> destination, ref T value) where T : struct { throw null; }
+diff --git a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
+index c15d4b47c3..eb45a1e04d 100644
+--- a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
++++ b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.cs
+@@ -106,6 +106,6 @@ public sealed partial class SignatureHelper
+         public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module? mod, System.Type? returnType, System.Type[]? parameterTypes) { throw null; }
+         public static System.Reflection.Emit.SignatureHelper GetPropertySigHelper(System.Reflection.Module? mod, System.Type? returnType, System.Type[]? requiredReturnTypeCustomModifiers, System.Type[]? optionalReturnTypeCustomModifiers, System.Type[]? parameterTypes, System.Type[][]? requiredParameterTypeCustomModifiers, System.Type[][]? optionalParameterTypeCustomModifiers) { throw null; }
+         public byte[] GetSignature() { throw null; }
+-        public override string ToString() { throw null; }
++        public override string? ToString() { throw null; }
+     }
+ }
+-- 
+2.21.0
+
