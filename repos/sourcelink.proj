@@ -22,9 +22,14 @@
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19359.6</ArcadeBootstrapVersion>
+  <PropertyGroup Condition="'$(OfflineBuild)' != 'true'">
+    <ArcadeBootstrapVersion>1.0.0-beta.19359.6</ArcadeBootstrapVersion>
+    <ArcadeBootstrapDir>$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
+    <ArcadeBootstrapVersion>1.0.0-dev</ArcadeBootstrapVersion>
+    <ArcadeBootstrapDir>$(PackagesDir)</ArcadeBootstrapDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +37,7 @@
          This prevents getting into a dependency loop of sourcelink needing Arcade to build and vice-versa.  -->
     <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
     <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(ArcadeBootstrapDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
   </ItemGroup>
 
   <ItemGroup>
