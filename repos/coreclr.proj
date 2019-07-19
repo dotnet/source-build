@@ -26,7 +26,7 @@
     <BuildArguments>$(BuildArguments) /p:CheckCDefines=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackagesDir=$(PackagesDir)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
