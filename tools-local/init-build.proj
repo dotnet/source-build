@@ -108,8 +108,8 @@
           Condition="'$(OfflineBuild)' == 'true'">
     <ItemGroup>
       <_ToolPackage
-        Include="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.1.0.0-dev.Sdk.nupkg"
-        Exclude="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.1.0.0-dev.Sdk.symbols.nupkg" />
+        Include="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.nupkg"
+        Exclude="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.symbols.nupkg" />
     </ItemGroup>
 
     <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
