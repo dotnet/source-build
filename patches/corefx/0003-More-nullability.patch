@@ -1,0 +1,88 @@
+From 7279481510dcab8d82ab769e08813163496bab02 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 21:45:14 -0500
+Subject: [PATCH 3/3] More nullability.
+
+---
+ src/System.Runtime/ref/System.Runtime.cs | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/System.Runtime/ref/System.Runtime.cs b/src/System.Runtime/ref/System.Runtime.cs
+index d134aacc6e..ede6ef67b4 100644
+--- a/src/System.Runtime/ref/System.Runtime.cs
++++ b/src/System.Runtime/ref/System.Runtime.cs
+@@ -1196,7 +1196,7 @@ public partial class Exception : System.Runtime.Serialization.ISerializable
+         public virtual System.Exception GetBaseException() { throw null; }
+         public virtual void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+         public new System.Type GetType() { throw null; }
+-        public override string ToString() { throw null; }
++        public override string? ToString() { throw null; }
+     }
+     [System.ObsoleteAttribute("This type previously indicated an unspecified fatal error in the runtime. The runtime no longer raises this exception so this type is obsolete.")]
+     public sealed partial class ExecutionEngineException : System.SystemException
+@@ -1238,7 +1238,7 @@ public abstract partial class FormattableString : System.IFormattable
+         public abstract object?[] GetArguments();
+         public static string Invariant(System.FormattableString formattable) { throw null; }
+         string System.IFormattable.ToString(string? ignored, System.IFormatProvider? formatProvider) { throw null; }
+-        public override string ToString() { throw null; }
++        public override string? ToString() { throw null; }
+         public abstract string ToString(System.IFormatProvider? formatProvider);
+     }
+     public partial class FtpStyleUriParser : System.UriParser
+@@ -2635,7 +2635,7 @@ public sealed partial class TimeZoneInfo : System.Runtime.Serialization.IDeseria
+         public static System.TimeZoneInfo CreateCustomTimeZone(string id, System.TimeSpan baseUtcOffset, string? displayName, string? standardDisplayName, string? daylightDisplayName, System.TimeZoneInfo.AdjustmentRule[]? adjustmentRules) { throw null; }
+         public static System.TimeZoneInfo CreateCustomTimeZone(string id, System.TimeSpan baseUtcOffset, string? displayName, string? standardDisplayName, string? daylightDisplayName, System.TimeZoneInfo.AdjustmentRule[]? adjustmentRules, bool disableDaylightSavingTime) { throw null; }
+         public override bool Equals(object? obj) { throw null; }
+-        public bool Equals(System.TimeZoneInfo? other) { throw null; }
++        public bool Equals(System.TimeZoneInfo other) { throw null; }
+         public static System.TimeZoneInfo FindSystemTimeZoneById(string id) { throw null; }
+         public static System.TimeZoneInfo FromSerializedString(string source) { throw null; }
+         public System.TimeZoneInfo.AdjustmentRule[] GetAdjustmentRules() { throw null; }
+@@ -2654,7 +2654,7 @@ public sealed partial class TimeZoneInfo : System.Runtime.Serialization.IDeseria
+         void System.Runtime.Serialization.IDeserializationCallback.OnDeserialization(object? sender) { }
+         void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+         public string ToSerializedString() { throw null; }
+-        public override string ToString() { throw null; }
++        public override string? ToString() { throw null; }
+         public sealed partial class AdjustmentRule : System.Runtime.Serialization.IDeserializationCallback, System.Runtime.Serialization.ISerializable,
+             System.IEquatable<System.TimeZoneInfo.AdjustmentRule>
+         {
+@@ -2665,7 +2665,7 @@ public sealed partial class AdjustmentRule : System.Runtime.Serialization.IDeser
+             public System.TimeZoneInfo.TransitionTime DaylightTransitionEnd { get { throw null; } }
+             public System.TimeZoneInfo.TransitionTime DaylightTransitionStart { get { throw null; } }
+             public static System.TimeZoneInfo.AdjustmentRule CreateAdjustmentRule(System.DateTime dateStart, System.DateTime dateEnd, System.TimeSpan daylightDelta, System.TimeZoneInfo.TransitionTime daylightTransitionStart, System.TimeZoneInfo.TransitionTime daylightTransitionEnd) { throw null; }
+-            public bool Equals(System.TimeZoneInfo.AdjustmentRule? other) { throw null; }
++            public bool Equals(System.TimeZoneInfo.AdjustmentRule other) { throw null; }
+             public override int GetHashCode() { throw null; }
+             void System.Runtime.Serialization.IDeserializationCallback.OnDeserialization(object? sender) { }
+             void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) { }
+@@ -2914,7 +2914,7 @@ public partial class Tuple<T1, T2, T3, T4, T5, T6, T7> : System.Collections.IStr
+         int System.IComparable.CompareTo(object? obj) { throw null; }
+         public override string ToString() { throw null; }
+     }
+-    public partial class Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> : System.Collections.IStructuralComparable, System.Collections.IStructuralEquatable, System.IComparable, System.Runtime.CompilerServices.ITuple where TRest : notnull
++    public partial class Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> : System.Collections.IStructuralComparable, System.Collections.IStructuralEquatable, System.IComparable, System.Runtime.CompilerServices.ITuple where TRest
+     {
+         public Tuple(T1 item1, T2 item2, T3 item3, T4 item4, T5 item5, T6 item6, T7 item7, TRest rest) { }
+         public T1 Item1 { get { throw null; } }
+@@ -3944,7 +3944,7 @@ public partial interface IComparer<in T>
+     {
+         int Compare([System.Diagnostics.CodeAnalysis.AllowNullAttribute] T x, [System.Diagnostics.CodeAnalysis.AllowNullAttribute] T y);
+     }
+-    public partial interface IDictionary<TKey, TValue> : System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.IEnumerable where TKey : notnull
++    public partial interface IDictionary<TKey, TValue> : System.Collections.Generic.ICollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.IEnumerable
+     {
+         TValue this[TKey key] { get; set; }
+         System.Collections.Generic.ICollection<TKey> Keys { get; }
+@@ -3978,7 +3978,7 @@ public partial interface IReadOnlyCollection<out T> : System.Collections.Generic
+     {
+         int Count { get; }
+     }
+-    public partial interface IReadOnlyDictionary<TKey, TValue> : System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IReadOnlyCollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.IEnumerable where TKey : notnull
++    public partial interface IReadOnlyDictionary<TKey, TValue> : System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.Generic.IReadOnlyCollection<System.Collections.Generic.KeyValuePair<TKey, TValue>>, System.Collections.IEnumerable
+     {
+         TValue this[TKey key] { get; }
+         System.Collections.Generic.IEnumerable<TKey> Keys { get; }
+-- 
+2.18.0
+
