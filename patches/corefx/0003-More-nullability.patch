@@ -1,14 +1,14 @@
-From 7cdf5dc8b30684571bfd5d2dceed0fee9785679d Mon Sep 17 00:00:00 2001
+From 037d405e08d3027f4b3670ef813ba4c55faf6af4 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 18 Jul 2019 21:45:14 -0500
 Subject: [PATCH 3/3] More nullability.
 
 ---
- src/System.Runtime/ref/System.Runtime.cs | 166 +++++++++++------------
- 1 file changed, 83 insertions(+), 83 deletions(-)
+ src/System.Runtime/ref/System.Runtime.cs | 168 +++++++++++------------
+ 1 file changed, 84 insertions(+), 84 deletions(-)
 
 diff --git a/src/System.Runtime/ref/System.Runtime.cs b/src/System.Runtime/ref/System.Runtime.cs
-index d134aacc6e..3ea8b2f947 100644
+index d134aacc6e..4b76bc4b73 100644
 --- a/src/System.Runtime/ref/System.Runtime.cs
 +++ b/src/System.Runtime/ref/System.Runtime.cs
 @@ -98,7 +98,7 @@ public partial class AggregateException : System.Exception
@@ -509,6 +509,15 @@ index d134aacc6e..3ea8b2f947 100644
      }
      public abstract partial class ValueType
      {
+@@ -3754,7 +3754,7 @@ public sealed partial class Version : System.ICloneable, System.IComparable, Sys
+         public int CompareTo(object? version) { throw null; }
+         public int CompareTo(System.Version? value) { throw null; }
+         public override bool Equals(object? obj) { throw null; }
+-        public bool Equals(System.Version? obj) { throw null; }
++        public bool Equals(System.Version obj) { throw null; }
+         public override int GetHashCode() { throw null; }
+         public static bool operator ==(System.Version? v1, System.Version? v2) { throw null; }
+         public static bool operator >(System.Version? v1, System.Version? v2) { throw null; }
 @@ -3764,7 +3764,7 @@ public sealed partial class Version : System.ICloneable, System.IComparable, Sys
          public static bool operator <=(System.Version? v1, System.Version? v2) { throw null; }
          public static System.Version Parse(System.ReadOnlySpan<char> input) { throw null; }
