@@ -1,0 +1,104 @@
+From 577fdd302e61534421e1f00c9c7bf3645ebb0311 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Jul 2019 05:10:57 -0500
+Subject: [PATCH 5/5] More nullable
+
+---
+ Directory.Build.props                                       | 2 +-
+ .../ref/System.Collections.Concurrent.cs                    | 1 +
+ src/System.Collections/ref/System.Collections.cs            | 1 +
+ .../ref/System.Runtime.InteropServices.WindowsRuntime.cs    | 6 +++---
+ .../ref/System.Runtime.InteropServices.cs                   | 1 +
+ src/System.Threading/ref/System.Threading.cs                | 6 +++---
+ 6 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index c7761d4926..3b1e9e75e5 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -4,7 +4,7 @@
+     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+     <RepositoryEngineeringDir>$(RepoRoot)eng\</RepositoryEngineeringDir>
+     <RepositoryUrl>git://github.com/dotnet/corefx</RepositoryUrl>
+-    <NoWarn>$(NoWarn),CS8597,CS8632</NoWarn>
++    <NoWarn>$(NoWarn),CS8597,CS8632,CS8597</NoWarn>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+diff --git a/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.cs b/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.cs
+index 57a21d2c1a..fbccfb4a9c 100644
+--- a/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.cs
++++ b/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.cs
+@@ -5,6 +5,7 @@
+ // Changes to this file must follow the http://aka.ms/api-review process.
+ // ------------------------------------------------------------------------------
+ 
++#nullable enable
+ namespace System.Collections.Concurrent
+ {
+     public partial class BlockingCollection<T> : System.Collections.Generic.IEnumerable<T>, System.Collections.Generic.IReadOnlyCollection<T>, System.Collections.ICollection, System.Collections.IEnumerable, System.IDisposable
+diff --git a/src/System.Collections/ref/System.Collections.cs b/src/System.Collections/ref/System.Collections.cs
+index 690e2e3974..4c200c9236 100644
+--- a/src/System.Collections/ref/System.Collections.cs
++++ b/src/System.Collections/ref/System.Collections.cs
+@@ -5,6 +5,7 @@
+ // Changes to this file must follow the http://aka.ms/api-review process.
+ // ------------------------------------------------------------------------------
+ 
++#nullable enable
+ namespace System.Collections
+ {
+     public sealed partial class BitArray : System.Collections.ICollection, System.Collections.IEnumerable, System.ICloneable
+diff --git a/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.cs b/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.cs
+index 8c61a5fe55..3f82a9fd37 100644
+--- a/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.cs
++++ b/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.cs
+@@ -24,11 +24,11 @@ public partial struct EventRegistrationToken
+     public sealed partial class EventRegistrationTokenTable<T> where T : class
+     {
+         public EventRegistrationTokenTable() { }
+-        public T? InvocationList { get { throw null; } set { } }
+-        public System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken AddEventHandler(T? handler) { throw null; }
++        public T InvocationList { get { throw null; } set { } }
++        public System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken AddEventHandler(T handler) { throw null; }
+         public static System.Runtime.InteropServices.WindowsRuntime.EventRegistrationTokenTable<T> GetOrCreateEventRegistrationTokenTable(ref System.Runtime.InteropServices.WindowsRuntime.EventRegistrationTokenTable<T>? refEventTable) { throw null; }
+         public void RemoveEventHandler(System.Runtime.InteropServices.WindowsRuntime.EventRegistrationToken token) { }
+-        public void RemoveEventHandler(T? handler) { }
++        public void RemoveEventHandler(T handler) { }
+     }
+     public partial interface IActivationFactory
+     {
+diff --git a/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.cs b/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.cs
+index ce84b08f14..3f5bd926f9 100644
+--- a/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.cs
++++ b/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.cs
+@@ -5,6 +5,7 @@
+ // Changes to this file must follow the http://aka.ms/api-review process.
+ // ------------------------------------------------------------------------------
+ 
++#nullable enable
+ namespace System
+ {
+     public sealed partial class DataMisalignedException : System.SystemException
+diff --git a/src/System.Threading/ref/System.Threading.cs b/src/System.Threading/ref/System.Threading.cs
+index bd2c70f931..bae52aef42 100644
+--- a/src/System.Threading/ref/System.Threading.cs
++++ b/src/System.Threading/ref/System.Threading.cs
+@@ -178,11 +178,11 @@ public static partial class Interlocked
+     }
+     public static partial class LazyInitializer
+     {
+-        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T? target) where T : class { throw null; }
++        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T target) { throw null; }
+         public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.AllowNullAttribute] ref T target, ref bool initialized, [System.Diagnostics.CodeAnalysis.NotNullAttribute] ref object? syncLock) { throw null; }
+         public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.AllowNullAttribute] ref T target, ref bool initialized, [System.Diagnostics.CodeAnalysis.NotNullAttribute] ref object? syncLock, System.Func<T> valueFactory) { throw null; }
+-        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T? target, System.Func<T> valueFactory) where T : class { throw null; }
+-        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T? target, [System.Diagnostics.CodeAnalysis.NotNullAttribute] ref object? syncLock, System.Func<T> valueFactory) where T : class { throw null; }
++        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T target, System.Func<T> valueFactory) { throw null; }
++        public static T EnsureInitialized<T>([System.Diagnostics.CodeAnalysis.NotNullAttribute] ref T target, [System.Diagnostics.CodeAnalysis.NotNullAttribute] ref object? syncLock, System.Func<T> valueFactory) { throw null; }
+     }
+     public partial struct LockCookie
+     {
+-- 
+2.21.0
+
