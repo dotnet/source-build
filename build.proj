@@ -28,6 +28,8 @@
     <MakeDir Directories="$(LocalBlobStorageRoot)" />
     <MakeDir Directories="$(MSBuildDebugPathTargetDir)" />
     <MakeDir Directories="$(RoslynDebugPathTargetDir)" />
+    <MakeDir Condition="'$(OfflineBuild)' != 'true'" Directories="$(GeneratedSourcePathOnline)" />
+    <MakeDir Condition="'$(OfflineBuild)' == 'true'" Directories="$(GeneratedSourcePathOffline)" />
   </Target>
 
   <Target Name="InitBuild">
