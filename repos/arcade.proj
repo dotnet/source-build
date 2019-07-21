@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>2b0830b8cc561f327e4e1b10b6e21a188b9ecee6</PreferredHash>
+    <PreferredHash>8f3c22397990aeb20a88690b51dad4b33f21e7ff</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
@@ -40,6 +40,8 @@
 
   <ItemGroup>
     <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeConfigurationOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeCoreFxTestingOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadePackagingOverride)" />
   </ItemGroup>
 

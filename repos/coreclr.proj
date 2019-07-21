@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>48431cc037776ca359de36bf71bda8c154cc2aa9</PreferredHash>
+    <PreferredHash>ac4ab6c990d5ebee49dc03397a2e199241021f26</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
@@ -10,7 +10,9 @@
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -ignoreWarnings</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -skipgenerateversion</BuildArguments>
+    <BuildArguments>$(BuildArguments) -skipmanagedtools</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -skiprestore</BuildArguments>
+    <BuildArguments Condition="'$(OS)' == 'Windows_NT'">$(BuildArguments) -skiprestoreoptdata</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
@@ -24,14 +26,15 @@
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:CheckCDefines=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) -warnaserror:0</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PackagesDir=$(PackagesDir)</BuildArguments>
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <OfficialBuildId>20190510.71</OfficialBuildId>
+    <OfficialBuildId>20190627.2</OfficialBuildId>
 
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
     <PackagesOutput>$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg</PackagesOutput>
@@ -39,6 +42,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeConfigurationOverride)" />
     <BuiltSdkPackageOverride Include="@(ILSdkOverride)" />
   </ItemGroup>
 
@@ -49,6 +54,16 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
