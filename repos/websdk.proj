@@ -28,6 +28,7 @@
 
     <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>

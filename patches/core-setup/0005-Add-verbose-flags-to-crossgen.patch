@@ -1,0 +1,32 @@
+From d082d4272c10a5fb6b1951ace37fc6a4f14788e9 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 20 Jul 2019 13:22:14 -0500
+Subject: [PATCH 5/5] Add verbose flags to crossgen
+
+---
+ src/pkg/packaging-tools/framework.dependency.targets | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/pkg/packaging-tools/framework.dependency.targets b/src/pkg/packaging-tools/framework.dependency.targets
+index 2657807b..160b150d 100644
+--- a/src/pkg/packaging-tools/framework.dependency.targets
++++ b/src/pkg/packaging-tools/framework.dependency.targets
+@@ -300,6 +300,7 @@
+       <_crossGenArgs Include="-platform_assemblies_paths $(_crossgenPlatformAssemblies)" />
+       <_crossGenArgs Include="-Platform_Winmd_Paths $(_windowsWinMDDirectory)" Condition="'$(OsEnvironment)'=='Windows_NT'" />
+       <_crossGenArgs Include="-JITPath $(_jitPath)" />
++      <_crossGenArgs Include="-verbose" />
+     </ItemGroup>
+ 
+     <PropertyGroup>
+@@ -342,6 +343,7 @@
+       <_crossGenSymbolsArgs Include="-$(_crossGenSymbolsOptionName)" />
+       <_crossGenSymbolsArgs Include="$(_crossGenSymbolsOutputDirectory)" />
+       <_crossGenSymbolsArgs Include="%(_filesToCrossGen.CrossGenedPath)" />
++      <_crossGenSymbolsArgs Include="-verbose" />
+     </ItemGroup>
+ 
+     <MakeDir Directories="$(_crossGenIntermediatePath)" />
+-- 
+2.21.0
+
