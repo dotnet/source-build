@@ -1,0 +1,35 @@
+From 06332a0f6a8804e6ac299d26fb5967aeb42bb34d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 23 Jul 2019 12:57:21 -0500
+Subject: [PATCH 5/5] Exclude test projects from source-build.
+
+---
+ TestAssets/Directory.Build.props | 3 +++
+ test/Directory.Build.props       | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/TestAssets/Directory.Build.props b/TestAssets/Directory.Build.props
+index 905549edc..66cbf3614 100644
+--- a/TestAssets/Directory.Build.props
++++ b/TestAssets/Directory.Build.props
+@@ -1,3 +1,6 @@
+ <Project>
+   <!-- Empty Directory.Build.props file to prevent test asset projects from picking up the repo's Directory.Build.props' -->
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
+ </Project>
+diff --git a/test/Directory.Build.props b/test/Directory.Build.props
+index 406c4f8c1..b8995f951 100644
+--- a/test/Directory.Build.props
++++ b/test/Directory.Build.props
+@@ -3,5 +3,6 @@
+ 
+   <PropertyGroup>
+     <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ </Project>
+-- 
+2.21.0
+
