@@ -1,12 +1,29 @@
-From a2e48c103f1082ef9635d7c9630d05361d4afa76 Mon Sep 17 00:00:00 2001
+From 46e69a9a35d4ba7afc3589be4a77110b27d3edbf Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 23 Jul 2019 14:37:06 -0500
 Subject: [PATCH 6/6] Think we need to sign this.
 
 ---
+ .../Microsoft.DotNet.Cli.Utils.csproj                         | 4 ++--
  .../Microsoft.DotNet.Configurer.csproj                        | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../Microsoft.DotNet.InternalAbstractions.csproj              | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+index 714e8ec02..ce3ad7292 100644
+--- a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
++++ b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+@@ -6,8 +6,8 @@
+     <TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">$(CliTargetFramework)</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>false</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
++    <SignAssembly>true</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
+ 
 diff --git a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj b/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
 index b99ab3b74..6745ae02d 100644
 --- a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
@@ -22,6 +39,21 @@ index b99ab3b74..6745ae02d 100644
      <RepositoryType>git</RepositoryType>
      <DefineConstants Condition="'$(IncludeAspNetCoreRuntime)' == 'false'">$(DefineConstants);EXCLUDE_ASPNETCORE</DefineConstants>
      <IsPackable>true</IsPackable>
+diff --git a/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj b/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
+index bb4e3f1a9..103c81432 100644
+--- a/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
++++ b/src/Microsoft.DotNet.InternalAbstractions/Microsoft.DotNet.InternalAbstractions.csproj
+@@ -6,8 +6,8 @@
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>false</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
++    <SignAssembly>true</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+     <RepositoryType>git</RepositoryType>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
 -- 
 2.18.0
 
