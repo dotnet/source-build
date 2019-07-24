@@ -11,7 +11,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
   <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
-  
+
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
     <SourceBuildMSBuildSdkResolverPath>$(DotNetSdkResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdkResolverPath>
@@ -106,13 +106,7 @@
   <Target Name="ExtractToolPackage"
           DependsOnTargets="BuildTasks"
           Condition="'$(OfflineBuild)' == 'true'">
-    <ItemGroup>
-      <_ToolPackage
-        Include="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.nupkg"
-        Exclude="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.symbols.nupkg" />
-    </ItemGroup>
-
-    <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
+    <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.nupkg"
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/"
                                OverwriteDestination="true" />
   </Target>
