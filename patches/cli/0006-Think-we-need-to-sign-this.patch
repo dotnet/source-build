@@ -1,15 +1,31 @@
-From 2efa0bbf86da685b7a68480d6d2cb99bcaa01cb5 Mon Sep 17 00:00:00 2001
+From b46c80a798a9b8ff13692f64ae929ac1962f90e0 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 23 Jul 2019 14:37:06 -0500
 Subject: [PATCH 6/6] Think we need to sign this.
 
 ---
+ .../Microsoft.DotNet.Cli.Sln.Internal.csproj                  | 4 ++--
  .../Microsoft.DotNet.Cli.Utils.csproj                         | 4 ++--
  .../Microsoft.DotNet.Configurer.csproj                        | 4 ++--
  .../Microsoft.DotNet.InternalAbstractions.csproj              | 4 ++--
  src/dotnet/dotnet.csproj                                      | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
+diff --git a/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj b/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
+index 8a551a6d1..4d70d0056 100644
+--- a/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
++++ b/src/Microsoft.DotNet.Cli.Sln.Internal/Microsoft.DotNet.Cli.Sln.Internal.csproj
+@@ -6,8 +6,8 @@
+     <DebugType>portable</DebugType>
+     <AssemblyName>Microsoft.DotNet.Cli.Sln.Internal</AssemblyName>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+-    <SignAssembly>false</SignAssembly>
+-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">false</PublicSign>
++    <SignAssembly>true</SignAssembly>
++    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+     <IsPackable>true</IsPackable>
+   </PropertyGroup>
+ 
 diff --git a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
 index 714e8ec02..ce3ad7292 100644
 --- a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
