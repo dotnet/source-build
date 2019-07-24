@@ -75,7 +75,7 @@
   <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building reference-only assemblies." />
     <ItemGroup>
-      <IlSource Include="$(ReferencePackagesSourceDir)**/*.il" />
+      <IlSource Include="$(ReferencePackagesSourceDir)**/*.il" Exclude="$(ReferencePackagesSourceDir)**/System.Diagnostics.Contracts.il" />
       <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
     </ItemGroup>
 
