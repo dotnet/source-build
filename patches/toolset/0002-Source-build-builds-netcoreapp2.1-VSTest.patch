@@ -1,0 +1,25 @@
+From b1e30c335dd8377e1662f7460aeed74260cae8cc Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 24 Jul 2019 13:19:23 -0500
+Subject: [PATCH 2/2] Source-build builds netcoreapp2.1 VSTest.
+
+---
+ src/redist/targets/GenerateLayout.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
+index 9bb8ab7b0..9f5a62796 100644
+--- a/src/redist/targets/GenerateLayout.targets
++++ b/src/redist/targets/GenerateLayout.targets
+@@ -25,7 +25,7 @@
+   <Target Name="PublishTestCli"
+           BeforeTargets="Build">
+     <PropertyGroup>
+-      <TestCliNuGetDirectory>$(NuGetPackagesDir)/microsoft.testplatform.cli/$(MicrosoftTestPlatformCLIPackageVersion)/contentFiles/any/netcoreapp2.0/</TestCliNuGetDirectory>
++      <TestCliNuGetDirectory>$(NuGetPackagesDir)/microsoft.testplatform.cli/$(MicrosoftTestPlatformCLIPackageVersion)/contentFiles/any/netcoreapp2.1/</TestCliNuGetDirectory>
+     </PropertyGroup>
+     <ItemGroup>
+       <TestCliBitsToExclude Include="$(TestCliNuGetDirectory)NewtonSoft.Json.dll" />
+-- 
+2.18.0
+
