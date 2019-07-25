@@ -1,12 +1,13 @@
-From 99f3b1abcff41d0197bd03123799e4d349569bb0 Mon Sep 17 00:00:00 2001
+From 36631b6a78e157adc455be14009fb534e8e9be5f Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 25 Jul 2019 12:55:14 -0500
 Subject: [PATCH 9/9] More CoreCLR debugging
 
 ---
- build.cmd  | 18 ++++++++++++++++++
- dotnet.cmd |  2 +-
- 2 files changed, 19 insertions(+), 1 deletion(-)
+ build.cmd       | 18 ++++++++++++++++++
+ dotnet.cmd      |  2 +-
+ init-dotnet.cmd |  4 +++-
+ 3 files changed, 22 insertions(+), 2 deletions(-)
 
 diff --git a/build.cmd b/build.cmd
 index 280a2c51ab..1b025fdbf0 100644
@@ -93,6 +94,21 @@ index dc2dd4cdb2..78619d10b8 100644
  call "%~dp0\.dotnet\dotnet.exe" %*
  popd
  if NOT [%ERRORLEVEL%]==[0] (
+diff --git a/init-dotnet.cmd b/init-dotnet.cmd
+index ba8b68835f..345d7fd8fb 100644
+--- a/init-dotnet.cmd
++++ b/init-dotnet.cmd
+@@ -7,7 +7,9 @@ echo running: powershell -NoProfile -ExecutionPolicy unrestricted -Command %PS_D
+ powershell -NoProfile -ExecutionPolicy unrestricted -Command %PS_DOTNET_INSTALL_SCRIPT%
+ if exist "%DotNetCoreSdkDir%" (
+   echo Using SDK from '%DotNetCoreSdkDir%'.
+-  mklink /j "%~dp0.dotnet\" "%DotNetCoreSdkDir%"
++  if not exist "%~dp0.dotnet\" (
++    mklink /j "%~dp0.dotnet\" "%DotNetCoreSdkDir%"
++  )
+ )
+ if NOT [%ERRORLEVEL%] == [0] (
+   echo Failed to install dotnet using Arcade.
 -- 
 2.18.0
 
