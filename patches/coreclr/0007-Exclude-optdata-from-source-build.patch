@@ -1,0 +1,24 @@
+From e0f7aeb4e917b2c321d8ab5ce88e4a3e269b75cc Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 24 Jul 2019 23:33:09 -0500
+Subject: [PATCH 7/7] Exclude optdata from source-build
+
+---
+ src/.nuget/optdata/optdata.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/.nuget/optdata/optdata.csproj b/src/.nuget/optdata/optdata.csproj
+index 31fdb4a1fc..7abbb3193e 100644
+--- a/src/.nuget/optdata/optdata.csproj
++++ b/src/.nuget/optdata/optdata.csproj
+@@ -4,6 +4,7 @@
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+     <RuntimeIdentifiers>win7-x64;win7-x86;linux-x64</RuntimeIdentifiers>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.21.0
+
