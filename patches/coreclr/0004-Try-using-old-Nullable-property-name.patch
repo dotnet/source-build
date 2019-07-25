@@ -1,0 +1,24 @@
+From 907aeca28f3b010a038690dea7473e8683a5a605 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 17 Jul 2019 17:15:30 -0500
+Subject: [PATCH 4/5] Try using old Nullable property name.
+
+---
+ src/System.Private.CoreLib/System.Private.CoreLib.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/System.Private.CoreLib/System.Private.CoreLib.csproj b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+index 4a3289fdf7..92b252581d 100644
+--- a/src/System.Private.CoreLib/System.Private.CoreLib.csproj
++++ b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+@@ -56,6 +56,7 @@
+     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+     <NoWarn>$(NoWarn);649,1573,1591,0419,3021</NoWarn>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+ 
+     <!-- Ignore all previous constants since SPCL is sensitive to what is defined and the Sdk adds some by default -->
+     <DefineConstants>CORECLR;netcoreapp</DefineConstants>
+-- 
+2.21.0
+

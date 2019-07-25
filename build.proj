@@ -28,6 +28,8 @@
     <MakeDir Directories="$(LocalBlobStorageRoot)" />
     <MakeDir Directories="$(MSBuildDebugPathTargetDir)" />
     <MakeDir Directories="$(RoslynDebugPathTargetDir)" />
+    <MakeDir Condition="'$(OfflineBuild)' != 'true'" Directories="$(GeneratedSourcePathOnline)" />
+    <MakeDir Condition="'$(OfflineBuild)' == 'true'" Directories="$(GeneratedSourcePathOffline)" />
   </Target>
 
   <Target Name="InitBuild">
@@ -140,7 +142,9 @@
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/Microsoft.Extensions.Logging.Abstractions.Resource.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/Microsoft.Extensions.Options.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/Microsoft.Extensions.Primitives.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Diagnostics.Contracts.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.IO.Pipelines.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Memory.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Text.Encodings.Web.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Threading.Channels.dll" />
     </ItemGroup>

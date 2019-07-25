@@ -1,37 +1,39 @@
-From d3f04af39c771cfad99cbb8531f4b82dbff577a8 Mon Sep 17 00:00:00 2001
+From ded25b004b5b01e0626aaf7b28bd558faa39e460 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Fri, 7 Jun 2019 18:02:11 -0500
-Subject: [PATCH 2/5] Disable new warnings.
+Date: Wed, 17 Jul 2019 14:22:08 -0500
+Subject: [PATCH 2/5] Ignore warnings from new SDK.
 
 ---
- Directory.Build.props                                    | 1 +
+ Directory.Build.props                                    | 4 ++++
  src/System.Private.CoreLib/System.Private.CoreLib.csproj | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 1b43fd479a..b67125006b 100644
+index a8222e9855..5e79ea85b9 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -15,5 +15,6 @@
-   <PropertyGroup>
+@@ -16,4 +16,8 @@
      <!-- Enables Strict mode for Roslyn compiler -->
-     <Features>strict</Features>
-+    <NoWarn>$(NoWarn);CS8604;CS8622;CS8632</NoWarn>
+     <Features>strict;nullablePublicOnly</Features>
    </PropertyGroup>
++
++  <PropertyGroup>
++    <NoWarn>$(NoWarn),CS8604,CS8622,CS8632</NoWarn>
++  </PropertyGroup>
  </Project>
 diff --git a/src/System.Private.CoreLib/System.Private.CoreLib.csproj b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
-index 9219d638f0..2e1d067420 100644
+index 6b2b4e8875..4a3289fdf7 100644
 --- a/src/System.Private.CoreLib/System.Private.CoreLib.csproj
 +++ b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
-@@ -52,7 +52,7 @@
+@@ -53,7 +53,7 @@
      <HighEntropyVA>true</HighEntropyVA>
      <ErrorReport>prompt</ErrorReport>
      <WarningLevel>4</WarningLevel>
 -    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 +    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-     <!-- Remove CS8608 once https://github.com/dotnet/roslyn/issues/23268 is resolved -->
-     <NoWarn>649,1573,1591,0419,3021,CS8609</NoWarn>
-     <NullableContextOptions>enable</NullableContextOptions>
+     <NoWarn>$(NoWarn);649,1573,1591,0419,3021</NoWarn>
+     <Nullable>enable</Nullable>
+ 
 -- 
-2.18.0
+2.21.0
 

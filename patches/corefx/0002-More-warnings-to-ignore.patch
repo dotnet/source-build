@@ -1,0 +1,24 @@
+From e574a71068ba6f908d17d914ea1ae8c770bed172 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Jul 2019 12:50:11 -0500
+Subject: [PATCH 2/2] More warnings to ignore.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index e09d79343b..548820237c 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -4,6 +4,7 @@
+     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+     <RepositoryEngineeringDir>$(RepoRoot)eng\</RepositoryEngineeringDir>
+     <RepositoryUrl>git://github.com/dotnet/corefx</RepositoryUrl>
++    <NoWarn>$(NoWarn),CS8602,CS8608,CS8609,nullable</NoWarn>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-- 
+2.21.0
+
