@@ -1,0 +1,84 @@
+From c0752cc2fa38123ae3674fdad839b606529c9d57 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 25 Jul 2019 12:55:14 -0500
+Subject: [PATCH 9/9] More CoreCLR debugging
+
+---
+ build.cmd | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/build.cmd b/build.cmd
+index 280a2c51ab..1b025fdbf0 100644
+--- a/build.cmd
++++ b/build.cmd
+@@ -112,6 +112,7 @@ set __IbcMergeVersion=
+ set __Priority=
+ 
+ :Arg_Loop
++echo process arg %1
+ if "%1" == "" goto ArgsDone
+ 
+ if /i "%1" == "/?"     goto Usage
+@@ -157,6 +158,7 @@ if /i "%1" == "-Rebuild" (
+ )
+ 
+ 
++echo passthru before add: %__PassThroughArgs%
+ REM All arguments after this point will be passed through directly to build.cmd on nested invocations
+ REM using the "all" argument, and must be added to the __PassThroughArgs variable.
+ if [!__PassThroughArgs!]==[] (
+@@ -164,6 +166,7 @@ if [!__PassThroughArgs!]==[] (
+ ) else (
+     set __PassThroughArgs=%__PassThroughArgs% %1
+ )
++echo passthru after add: %__PassThroughArgs%
+ 
+ if /i "%1" == "-freebsdmscorlib"     (set __BuildNativeCoreLib=0&set __BuildNative=0&set __BuildTests=0&set __BuildPackages=0&set __BuildManagedTools=0&set __BuildOS=FreeBSD&set processedArgs=!processedArgs! %1&shift&goto Arg_Loop)
+ if /i "%1" == "-linuxmscorlib"       (set __BuildNativeCoreLib=0&set __BuildNative=0&set __BuildTests=0&set __BuildPackages=0&set __BuildManagedTools=0&set __BuildOS=Linux&set processedArgs=!processedArgs! %1&shift&goto Arg_Loop)
+@@ -220,6 +223,8 @@ if /i "%1" == "crossgenaltjit"      (set __CrossgenAltJit=%2&set processedArgs=!
+ REM TODO remove this once it's no longer used in buildpipeline
+ if /i "%1" == "--"                  (set processedArgs=!processedArgs! %1&shift&goto Arg_Loop)
+ 
++echo unprocessed args before add: %__UnprocessBuildArgs%
++echo args: %__args%
+ if [!processedArgs!]==[] (
+     set __UnprocessedBuildArgs=%__args%
+ ) else (
+@@ -229,7 +234,11 @@ if [!processedArgs!]==[] (
+     )
+ )
+ 
++echo unprocessed args after add: %__UnprocessBuildArgs%
++echo args: %__args%
++
+ :ArgsDone
++echo done processing args
+ 
+ @REM Special handling for -priority=N argument.
+ if defined __Priority (
+@@ -375,6 +384,7 @@ REM ===
+ REM === Restore optimization profile data
+ REM ===
+ REM =========================================================================================
++echo restore opt data?  %__RestoreOptData%
+ 
+ set OptDataProjectFilePath=%__ProjectDir%\src\.nuget\optdata\optdata.csproj
+ if %__RestoreOptData% EQU 1 (
+@@ -392,6 +402,14 @@ if %__RestoreOptData% EQU 1 (
+ set PgoDataPackageVersionOutputFile="%__IntermediatesDir%\optdataversion.txt"
+ set IbcDataPackageVersionOutputFile="%__IntermediatesDir%\ibcoptdataversion.txt"
+ 
++echo trying to build %OptDataProjectFilePath%
++if exist %OptDataProjectFilePath% (
++  echo file exists
++)
++if not exist %OptDataProjectFilePath% (
++  echo file missing
++)
++
+ REM Parse the optdata package versions out of msbuild so that we can pass them on to CMake
+ call "%__ProjectDir%\dotnet.cmd" msbuild "%OptDataProjectFilePath%" /t:DumpPgoDataPackageVersion /nologo %__CommonMSBuildArgs% /p:PgoDataPackageVersionOutputFile="!PgoDataPackageVersionOutputFile!" /v:diag
+ 
+-- 
+2.18.0
+
