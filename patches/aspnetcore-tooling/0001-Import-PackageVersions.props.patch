@@ -1,0 +1,24 @@
+From 89cefeb1b77b498f9383eb0b2442bc08a5899d60 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 27 Jun 2019 12:55:03 -0500
+Subject: [PATCH 1/2] Import PackageVersions.props.
+
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index d9bd6519..cc00f57e 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -131,4 +131,7 @@
+     <XunitAnalyzersPackageVersion>0.10.0</XunitAnalyzersPackageVersion>
+     <XunitVersion>2.4.1</XunitVersion>
+   </PropertyGroup>
++
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
++
+ </Project>
+-- 
+2.21.0
+
