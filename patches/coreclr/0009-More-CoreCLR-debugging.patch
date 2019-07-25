@@ -1,11 +1,12 @@
-From c0752cc2fa38123ae3674fdad839b606529c9d57 Mon Sep 17 00:00:00 2001
+From 99f3b1abcff41d0197bd03123799e4d349569bb0 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 25 Jul 2019 12:55:14 -0500
 Subject: [PATCH 9/9] More CoreCLR debugging
 
 ---
- build.cmd | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ build.cmd  | 18 ++++++++++++++++++
+ dotnet.cmd |  2 +-
+ 2 files changed, 19 insertions(+), 1 deletion(-)
 
 diff --git a/build.cmd b/build.cmd
 index 280a2c51ab..1b025fdbf0 100644
@@ -79,6 +80,19 @@ index 280a2c51ab..1b025fdbf0 100644
  REM Parse the optdata package versions out of msbuild so that we can pass them on to CMake
  call "%__ProjectDir%\dotnet.cmd" msbuild "%OptDataProjectFilePath%" /t:DumpPgoDataPackageVersion /nologo %__CommonMSBuildArgs% /p:PgoDataPackageVersionOutputFile="!PgoDataPackageVersionOutputFile!" /v:diag
  
+diff --git a/dotnet.cmd b/dotnet.cmd
+index dc2dd4cdb2..78619d10b8 100644
+--- a/dotnet.cmd
++++ b/dotnet.cmd
+@@ -21,7 +21,7 @@ if NOT [%ERRORLEVEL%]==[0] (
+ )
+ 
+ pushd %~dp0
+-echo Running: dotnet %*
++echo Running: %~dp0\.dotnet\dotnet.exe %*
+ call "%~dp0\.dotnet\dotnet.exe" %*
+ popd
+ if NOT [%ERRORLEVEL%]==[0] (
 -- 
 2.18.0
 
