@@ -28,12 +28,8 @@
     <MakeDir Directories="$(LocalBlobStorageRoot)" />
     <MakeDir Directories="$(MSBuildDebugPathTargetDir)" />
     <MakeDir Directories="$(RoslynDebugPathTargetDir)" />
-<<<<<<< HEAD
-    <MakeDir Directories="$(ArcadeBootstrapPackageDir)" />
-=======
     <MakeDir Condition="'$(OfflineBuild)' != 'true'" Directories="$(GeneratedSourcePathOnline)" />
     <MakeDir Condition="'$(OfflineBuild)' == 'true'" Directories="$(GeneratedSourcePathOffline)" />
->>>>>>> 5a8136f7e950124f23c8384e90f8a65811bf1e5e
   </Target>
 
   <Target Name="InitBuild">
