@@ -152,6 +152,9 @@ cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 
+# Copy generated source from bin to src/generatedSrc
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
+
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
 fi

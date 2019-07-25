@@ -1,7 +1,7 @@
-From e4b1127e8e9d6fe4df23ae398ae49a84deeeae41 Mon Sep 17 00:00:00 2001
+From a3db5879f727221bcb39a5b6332e226d7333d4d6 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 26 Jun 2019 10:40:36 -0500
-Subject: [PATCH 4/4] Exclude more projects from source-build.
+Subject: [PATCH 3/4] Exclude more projects from source-build.
 
 ---
  .../Async/src/Microsoft.DotNet.Analyzers.Async.csproj         | 1 +
@@ -22,13 +22,13 @@ index f438fdc49..8e404bfcb 100644
  
    <ItemGroup>
 diff --git a/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj b/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
-index 86ed4801b..b5e94d401 100644
+index 8603e7c47..ebb78f4ea 100644
 --- a/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
 +++ b/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
-@@ -4,6 +4,7 @@
-     <TargetFrameworks>netcoreapp3.0;net472</TargetFrameworks>
+@@ -5,6 +5,7 @@
      <PreserveCompilationContext>true</PreserveCompilationContext>
-     <TestGroupName>AsyncAnalyzers</TestGroupName>
+     <!-- Analyzers tests can't find netfx ref assemblies from a package -->
+     <UsingToolNetFrameworkReferenceAssemblies Condition="'$(OS)' == 'Windows_NT'">false</UsingToolNetFrameworkReferenceAssemblies>
 +    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
    </PropertyGroup>
  

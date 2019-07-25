@@ -1,0 +1,25 @@
+From ccdde555bd0caedf7a094f06b553d16380f1b27c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 20 Jul 2019 21:17:58 -0500
+Subject: [PATCH 6/6] Don't do partial ngen for source-build.
+
+---
+ src/pkg/packaging-tools/framework.dependency.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/pkg/packaging-tools/framework.dependency.targets b/src/pkg/packaging-tools/framework.dependency.targets
+index 160b150d..194b4246 100644
+--- a/src/pkg/packaging-tools/framework.dependency.targets
++++ b/src/pkg/packaging-tools/framework.dependency.targets
+@@ -308,7 +308,7 @@
+     </PropertyGroup>
+ 
+     <!-- Measurements show that doing partial crossgen on these assemblies captures a lot of the potential size saving. -->
+-    <PropertyGroup Condition="'$(OSGroup)' == 'Linux'">
++    <PropertyGroup Condition="'$(OSGroup)' == 'Linux' and '$(DotNetBuildFromSource)' != 'true'">
+       <_partialCrossgenFlag Condition="'%(_filesToCrossGen.FileName)' == 'System.ComponentModel.TypeConverter'">1</_partialCrossgenFlag>
+       <_partialCrossgenFlag Condition="'%(_filesToCrossGen.FileName)' == 'System.Linq.Expressions'">1</_partialCrossgenFlag>
+       <_partialCrossgenFlag Condition="'%(_filesToCrossGen.FileName)' == 'System.Private.Xml'">1</_partialCrossgenFlag>
+-- 
+2.21.0
+

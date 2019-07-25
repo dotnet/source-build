@@ -1,24 +1,51 @@
-From 66d3f81c214ede43f272b34426d3c70d55303e33 Mon Sep 17 00:00:00 2001
-From: Davis Goodin <dagood@microsoft.com>
-Date: Wed, 12 Dec 2018 10:39:16 -0600
-Subject: [PATCH 2/8] Exclude test projects from source-build
+From 519f849ded402d511cf87b99e5e44b3e8f764c6b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 23 Jul 2019 12:57:21 -0500
+Subject: [PATCH 5/6] Exclude test projects from source-build.
 
-Arcade didn't seem to carry over the logic to set ExcludeFromSourceBuild
-to true when IsTestProject is set. A fix would likely be in Arcade.
 ---
- Microsoft.DotNet.Cli.sln                      | 287 ------------------
- TestAssets/Directory.Build.props              |   4 +
+ Microsoft.DotNet.Cli.sln                      | 294 +-----------------
+ TestAssets/Directory.Build.props              |   3 +
  .../dotnet-dependency-context-test.csproj     |   1 +
- .../ArgumentsReflector.csproj                 |   1 +
- test/Directory.Build.props                    |   4 +
- .../SampleGlobalTool/consoledemo.csproj       |   3 +-
- 6 files changed, 12 insertions(+), 288 deletions(-)
+ test/Directory.Build.props                    |   1 +
+ 4 files changed, 6 insertions(+), 293 deletions(-)
 
 diff --git a/Microsoft.DotNet.Cli.sln b/Microsoft.DotNet.Cli.sln
-index 6b420fb5b..d1ea01f32 100644
+index a7cb2b258..d30782e32 100644
 --- a/Microsoft.DotNet.Cli.sln
 +++ b/Microsoft.DotNet.Cli.sln
-@@ -53,97 +53,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.InternalAb
+@@ -1,5 +1,4 @@
+-﻿
+-Microsoft Visual Studio Solution File, Format Version 12.00
++﻿Microsoft Visual Studio Solution File, Format Version 12.00
+ # Visual Studio Version 16
+ VisualStudioVersion = 16.0.28515.72
+ MinimumVisualStudioVersion = 10.0.40219.1
+@@ -10,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution
+ 		NuGet.Config = NuGet.Config
+ 	EndProjectSection
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{89905EC4-BC0F-443B-8ADF-691321F10108}"
+ 	ProjectSection(SolutionItems) = preProject
+ 		build\Branding.props = build\Branding.props
+@@ -35,14 +32,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "package", "package", "{FD7D
+ 		build\package\MSBuildExtensions.targets = build\package\MSBuildExtensions.targets
+ 	EndProjectSection
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{FF498306-2DE2-47F6-8C35-3CF0589CF2B8}"
+-	ProjectSection(SolutionItems) = preProject
+-		build\test\Empty.props = build\test\Empty.props
+-		build\test\Empty.targets = build\test\Empty.targets
+-		build\test\OverlaySdkOnLKG.targets = build\test\OverlaySdkOnLKG.targets
+-		build\test\TestPackageProjects.targets = build\test\TestPackageProjects.targets
+-	EndProjectSection
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet", "src\dotnet\dotnet.csproj", "{203F0362-DAFC-4679-A01E-7FBC331D8647}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Cli.Utils", "src\Microsoft.DotNet.Cli.Utils\Microsoft.DotNet.Cli.Utils.csproj", "{73ACEB34-D22C-43EA-87BE-EFC0E83D0126}"
+@@ -53,95 +42,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.InternalAb
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redist", "src\redist\redist.csproj", "{098D9321-1201-4974-A75E-F58EBCD98ACF}"
  EndProject
@@ -35,8 +62,6 @@ index 6b420fb5b..d1ea01f32 100644
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-build.Tests", "test\dotnet-build.Tests\dotnet-build.Tests.csproj", "{BBB5A4C8-CD2D-4A6A-9159-0FEAF84B745E}"
 -EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-help.Tests", "test\dotnet-help.Tests\dotnet-help.Tests.csproj", "{8AA88E83-6A98-4AD6-86EB-2ED4F6EDA17F}"
--EndProject
--Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-migrate.Tests", "test\dotnet-migrate.Tests\dotnet-migrate.Tests.csproj", "{726D2CB9-80E5-4496-9C86-910AC452C45E}"
 -EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-msbuild.Tests", "test\dotnet-msbuild.Tests\dotnet-msbuild.Tests.csproj", "{EF745C56-0350-4C42-AA22-86D592E1D8D5}"
 -EndProject
@@ -116,7 +141,7 @@ index 6b420fb5b..d1ea01f32 100644
  Global
  	GlobalSection(SolutionConfigurationPlatforms) = preSolution
  		Debug|Any CPU = Debug|Any CPU
-@@ -170,178 +88,14 @@ Global
+@@ -168,229 +77,28 @@ Global
  		{098D9321-1201-4974-A75E-F58EBCD98ACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{098D9321-1201-4974-A75E-F58EBCD98ACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{098D9321-1201-4974-A75E-F58EBCD98ACF}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -148,10 +173,6 @@ index 6b420fb5b..d1ea01f32 100644
 -		{8AA88E83-6A98-4AD6-86EB-2ED4F6EDA17F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 -		{8AA88E83-6A98-4AD6-86EB-2ED4F6EDA17F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 -		{8AA88E83-6A98-4AD6-86EB-2ED4F6EDA17F}.Release|Any CPU.Build.0 = Release|Any CPU
--		{726D2CB9-80E5-4496-9C86-910AC452C45E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
--		{726D2CB9-80E5-4496-9C86-910AC452C45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
--		{726D2CB9-80E5-4496-9C86-910AC452C45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
--		{726D2CB9-80E5-4496-9C86-910AC452C45E}.Release|Any CPU.Build.0 = Release|Any CPU
 -		{EF745C56-0350-4C42-AA22-86D592E1D8D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 -		{EF745C56-0350-4C42-AA22-86D592E1D8D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 -		{EF745C56-0350-4C42-AA22-86D592E1D8D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -295,7 +316,12 @@ index 6b420fb5b..d1ea01f32 100644
  	EndGlobalSection
  	GlobalSection(SolutionProperties) = preSolution
  		HideSolutionNode = FALSE
-@@ -354,50 +108,9 @@ Global
+ 	EndGlobalSection
+ 	GlobalSection(NestedProjects) = preSolution
+ 		{FD7D515A-D10F-4F49-B8AE-21CF7ED071AE} = {89905EC4-BC0F-443B-8ADF-691321F10108}
+-		{FF498306-2DE2-47F6-8C35-3CF0589CF2B8} = {89905EC4-BC0F-443B-8ADF-691321F10108}
+ 		{203F0362-DAFC-4679-A01E-7FBC331D8647} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
+ 		{73ACEB34-D22C-43EA-87BE-EFC0E83D0126} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
  		{ABB81DAE-0D26-483C-BE3B-0F9ACD812A62} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
  		{570950AD-A080-4F32-980C-F50E312910DF} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
  		{098D9321-1201-4974-A75E-F58EBCD98ACF} = {ED2FE3E2-F7E7-4389-8231-B65123F2076F}
@@ -306,7 +332,6 @@ index 6b420fb5b..d1ea01f32 100644
 -		{C3845C85-1F59-4552-BE52-32F513CE795F} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
 -		{BBB5A4C8-CD2D-4A6A-9159-0FEAF84B745E} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
 -		{8AA88E83-6A98-4AD6-86EB-2ED4F6EDA17F} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
--		{726D2CB9-80E5-4496-9C86-910AC452C45E} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
 -		{EF745C56-0350-4C42-AA22-86D592E1D8D5} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
 -		{87063BA1-454D-4433-ADF9-89C667275D62} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
 -		{07DD4AE1-5CF6-4EDB-AB29-31EB532F950F} = {17735A9D-BFD9-4585-A7CB-3208CA6EA8A7}
@@ -347,13 +372,12 @@ index 6b420fb5b..d1ea01f32 100644
  	GlobalSection(ExtensibilityGlobals) = postSolution
  		SolutionGuid = {B526D2CE-EE2D-4AD4-93EF-1867D90FF1F5}
 diff --git a/TestAssets/Directory.Build.props b/TestAssets/Directory.Build.props
-index 905549edc..f6c63df4e 100644
+index 905549edc..66cbf3614 100644
 --- a/TestAssets/Directory.Build.props
 +++ b/TestAssets/Directory.Build.props
-@@ -1,3 +1,7 @@
+@@ -1,3 +1,6 @@
  <Project>
    <!-- Empty Directory.Build.props file to prevent test asset projects from picking up the repo's Directory.Build.props' -->
-+
 +  <PropertyGroup>
 +    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 +  </PropertyGroup>
@@ -370,44 +394,17 @@ index efbfd90a3..2fa32cec8 100644
    </PropertyGroup>
  
    <ItemGroup>
-diff --git a/test/ArgumentsReflector/ArgumentsReflector.csproj b/test/ArgumentsReflector/ArgumentsReflector.csproj
-index f11319279..509432d04 100644
---- a/test/ArgumentsReflector/ArgumentsReflector.csproj
-+++ b/test/ArgumentsReflector/ArgumentsReflector.csproj
-@@ -4,6 +4,7 @@
-     <TargetFramework>$(CliTargetFramework)</TargetFramework>
-     <AssemblyName>ArgumentsReflector</AssemblyName>
-     <OutputType>Exe</OutputType>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-   </PropertyGroup>
- 
-   <ItemGroup>
 diff --git a/test/Directory.Build.props b/test/Directory.Build.props
-index 406c4f8c1..62d043078 100644
+index 406c4f8c1..b8995f951 100644
 --- a/test/Directory.Build.props
 +++ b/test/Directory.Build.props
-@@ -4,4 +4,8 @@
+@@ -3,5 +3,6 @@
+ 
    <PropertyGroup>
      <DisableImplicitFrameworkReferences>false</DisableImplicitFrameworkReferences>
-   </PropertyGroup>
-+
-+  <PropertyGroup>
 +    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
-+  </PropertyGroup>
- </Project>
-diff --git a/test/Microsoft.DotNet.ToolPackage.Tests/SampleGlobalTool/consoledemo.csproj b/test/Microsoft.DotNet.ToolPackage.Tests/SampleGlobalTool/consoledemo.csproj
-index 6270b7367..83cd6a6cb 100644
---- a/test/Microsoft.DotNet.ToolPackage.Tests/SampleGlobalTool/consoledemo.csproj
-+++ b/test/Microsoft.DotNet.ToolPackage.Tests/SampleGlobalTool/consoledemo.csproj
-@@ -10,5 +10,6 @@
-      <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
-      <EnableSourceLink>false</EnableSourceLink>
-      <DeterministicSourcePaths>false</DeterministicSourcePaths>
-+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
    </PropertyGroup>
--</Project>
-\ No newline at end of file
-+</Project>
+ </Project>
 -- 
 2.18.0
 
