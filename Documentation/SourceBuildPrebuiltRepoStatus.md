@@ -11,7 +11,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [arcade][970] | Mark Wilke | ![ot] On Track | 1 | 4 |
-| [AspNetCore-Tooling][1150] | John Luo | ![ns] Not Started | - | 1 | New repo added on 7/12
+| [AspNetCore-Tooling][1150] | John Luo | ![ot] On Track | - | 1 | New repo added on 7/12
 | [cli][880] | Nick Guerrera | ![cp] Complete | 5 | - |  All direct-dependency prebuilts removed.
 | [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
@@ -21,7 +21,7 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [core-sdk][972] | Nick Guerrera | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
 | [core-setup][885] | Davis Goodin | ![ot] On Track | 7 | 5 |
 | [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| [Extensions][1132] | Nate McMaster / John Luo | ![ns] Not Started | - | 7 | New repo added on 6/28
+| [Extensions][1132] | Nate McMaster / John Luo | ![ot] On Track | - | 7 | New repo added on 6/28
 | [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 5 |
 | [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 4 |
