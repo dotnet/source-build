@@ -1,25 +1,27 @@
-From b6bd50fc027991ef161119363949ca626af054dc Mon Sep 17 00:00:00 2001
+From e1f46ea5c6b8aa860a411c42d26d1a84ef3353fa Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 24 Apr 2019 18:12:23 -0500
-Subject: [PATCH 1/9] Allow separate tool and SDK directories.
+Subject: [PATCH 1/8] Allow separate tool and SDK directories.
 
 ---
- init-dotnet.cmd | 6 +++++-
+ init-dotnet.cmd | 8 +++++++-
  init-tools.cmd  | 5 +++++
  init-tools.sh   | 5 +++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/init-dotnet.cmd b/init-dotnet.cmd
-index ad70b4c42a..ba8b68835f 100644
+index ad70b4c42a..345d7fd8fb 100644
 --- a/init-dotnet.cmd
 +++ b/init-dotnet.cmd
-@@ -5,9 +5,13 @@ echo Installing dotnet using Arcade...
+@@ -5,9 +5,15 @@ echo Installing dotnet using Arcade...
  set PS_DOTNET_INSTALL_SCRIPT=". %~dp0eng\configure-toolset.ps1; . %~dp0eng\common\tools.ps1; InitializeBuildTool"
  echo running: powershell -NoProfile -ExecutionPolicy unrestricted -Command %PS_DOTNET_INSTALL_SCRIPT%
  powershell -NoProfile -ExecutionPolicy unrestricted -Command %PS_DOTNET_INSTALL_SCRIPT%
 +if exist "%DotNetCoreSdkDir%" (
 +  echo Using SDK from '%DotNetCoreSdkDir%'.
-+  mklink /j "%~dp0.dotnet\" "%DotNetCoreSdkDir%"
++  if not exist "%~dp0.dotnet\" (
++    mklink /j "%~dp0.dotnet\" "%DotNetCoreSdkDir%"
++  )
 +)
  if NOT [%ERRORLEVEL%] == [0] (
    echo Failed to install dotnet using Arcade.
