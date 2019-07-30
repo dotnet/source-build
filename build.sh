@@ -5,6 +5,12 @@ IFS=$'\n\t'
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 export SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 export SDK3_VERSION=$(cat $SCRIPT_ROOT/Dotnet3CLIVersion.txt)
+arcadeLine=`grep -m 1 'Microsoft\.DotNet\.Arcade\.Sdk' "$SCRIPT_ROOT/global.json"`
+pattern="\"Microsoft\.DotNet\.Arcade\.Sdk\" *: *\"(.*)\""
+if [[ $arcadeLine =~ $pattern ]]; then
+  export ARCADE_BOOTSTRAP_VERSION=${BASH_REMATCH[1]}
+fi
+echo "Found 2.x SDK $SDK_VERSION, 3.x SDK $SDK3_VERSION, Arcade bootstrap $ARCADE_BOOTSTRAP_VERSION"
 
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"

@@ -36,6 +36,9 @@
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
+
+    <!-- we need to use a prebuilt Arcade to build Arcade -->
+    <UseBootstrapArcade>true</UseBootstrapArcade>
   </PropertyGroup>
 
   <ItemGroup>
@@ -55,18 +58,30 @@
     <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
   </ItemGroup>
 
-  <PropertyGroup>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19359.6</ArcadeBootstrapVersion>
+  <ItemGroup>
+    <RepositoryReference Include="sourcelink" />
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(OfflineBuild)' != 'true'">
+    <ArcadeBootstrapVersion>$(ARCADE_BOOTSTRAP_VERSION)</ArcadeBootstrapVersion>
+    <ArcadeBootstrapDir>$(PackagesDir)</ArcadeBootstrapDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
+    <!-- stage1 Arcade is always built with a 1.0.0-dev version so this is consistent.  See also OfficialBuildId note above. -->
+    <ArcadeBootstrapVersion>1.0.0-dev</ArcadeBootstrapVersion>
+    <ArcadeBootstrapDir>$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
   </PropertyGroup>
 
   <ItemGroup>
     <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
          This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Condition="'$(OfflineBuild)' != 'true'" Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
+    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(ArcadeBootstrapDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+  </ItemGroup>
 
+  <ItemGroup>
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
