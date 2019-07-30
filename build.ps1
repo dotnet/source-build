@@ -30,8 +30,10 @@ function Exec-Block([scriptblock]$cmd) {
 $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
 $Sdk3Version = Get-Content (Join-Path $SCRIPT_ROOT "Dotnet3CLIVersion.txt")
+$GlobalJson = Get-Content (Join-Path $SCRIPT_ROOT "global.json") | ConvertFrom-Json
 $env:SDK_VERSION = $SdkVersion
 $env:SDK3_VERSION = $Sdk3Version
+$env:ARCADE_BOOTSTRAP_VERSION = $GlobalJson.'msbuild-sdks'.'Microsoft.DotNet.Arcade.Sdk'
 
 $key = Get-Item -LiteralPath Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control -ErrorAction SilentlyContinue
 if ($key.GetValue('ContainerType', $null) -ne $null)

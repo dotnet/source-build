@@ -1,0 +1,851 @@
+From 58d1733199e777b74bfbeb464d6991c299290b87 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Jul 2019 08:42:04 -0500
+Subject: [PATCH] Nullable -> NullableContexOptions?
+
+---
+ src/Common/src/CoreLib/System.Private.CoreLib.Shared.projitems | 1 +
+ .../tests/StaticTestGenerator/StaticTestGenerator.csproj       | 3 ++-
+ src/Microsoft.Bcl.HashCode/src/Microsoft.Bcl.HashCode.csproj   | 3 ++-
+ .../Microsoft.Diagnostics.Tracing.EventSource.Redist.csproj    | 3 ++-
+ src/System.Buffers/ref/System.Buffers.csproj                   | 3 ++-
+ .../ref/System.Collections.Concurrent.csproj                   | 3 ++-
+ .../src/System.Collections.Concurrent.csproj                   | 3 ++-
+ src/System.Collections/ref/System.Collections.csproj           | 3 ++-
+ src/System.Collections/src/System.Collections.csproj           | 3 ++-
+ .../ref/System.Diagnostics.Contracts.csproj                    | 3 ++-
+ .../ref/System.Diagnostics.Debug.csproj                        | 3 ++-
+ .../ref/System.Diagnostics.StackTrace.csproj                   | 1 +
+ .../src/System.Diagnostics.StackTrace.csproj                   | 1 +
+ .../ref/System.Diagnostics.Tools.csproj                        | 3 ++-
+ .../src/System.Diagnostics.Tools.csproj                        | 3 ++-
+ .../ref/System.Diagnostics.Tracing.csproj                      | 3 ++-
+ src/System.Memory/ref/System.Memory.csproj                     | 1 +
+ src/System.Memory/src/System.Memory.csproj                     | 3 ++-
+ src/System.Numerics.Vectors/ref/System.Numerics.Vectors.csproj | 1 +
+ src/System.Numerics.Vectors/src/System.Numerics.Vectors.csproj | 1 +
+ src/System.Private.Uri/src/System.Private.Uri.csproj           | 1 +
+ .../tests/UnitTests/System.Private.Uri.Unit.Tests.csproj       | 3 ++-
+ .../ref/System.Reflection.Emit.ILGeneration.csproj             | 3 ++-
+ .../ref/System.Reflection.Emit.Lightweight.csproj              | 3 ++-
+ src/System.Reflection.Emit/ref/System.Reflection.Emit.csproj   | 1 +
+ .../ref/System.Reflection.Primitives.csproj                    | 3 ++-
+ .../ref/System.Resources.ResourceManager.csproj                | 3 ++-
+ .../ref/System.Runtime.Extensions.csproj                       | 3 ++-
+ .../src/System.Runtime.Extensions.csproj                       | 1 +
+ .../ref/System.Runtime.InteropServices.WindowsRuntime.csproj   | 3 ++-
+ .../ref/System.Runtime.InteropServices.csproj                  | 3 ++-
+ .../src/System.Runtime.InteropServices.csproj                  | 1 +
+ .../ref/System.Runtime.Intrinsics.csproj                       | 1 +
+ src/System.Runtime.Loader/ref/System.Runtime.Loader.csproj     | 1 +
+ src/System.Runtime/ref/System.Runtime.csproj                   | 3 ++-
+ src/System.Runtime/src/System.Runtime.csproj                   | 1 +
+ .../ref/System.Security.Principal.csproj                       | 3 ++-
+ .../src/System.Security.Principal.csproj                       | 3 ++-
+ .../ref/System.Text.Encoding.Extensions.csproj                 | 3 ++-
+ .../ref/System.Threading.Overlapped.csproj                     | 3 ++-
+ src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj   | 3 ++-
+ src/System.Threading.Thread/ref/System.Threading.Thread.csproj | 3 ++-
+ src/System.Threading.Thread/src/System.Threading.Thread.csproj | 1 +
+ .../ref/System.Threading.ThreadPool.csproj                     | 3 ++-
+ src/System.Threading.Timer/ref/System.Threading.Timer.csproj   | 3 ++-
+ src/System.Threading/ref/System.Threading.csproj               | 3 ++-
+ src/System.Threading/src/System.Threading.csproj               | 3 ++-
+ 47 files changed, 80 insertions(+), 33 deletions(-)
+
+diff --git a/src/Common/src/CoreLib/System.Private.CoreLib.Shared.projitems b/src/Common/src/CoreLib/System.Private.CoreLib.Shared.projitems
+index 9090320517..2edb9ae1cb 100644
+--- a/src/Common/src/CoreLib/System.Private.CoreLib.Shared.projitems
++++ b/src/Common/src/CoreLib/System.Private.CoreLib.Shared.projitems
+@@ -9,6 +9,7 @@
+   </PropertyGroup>
+   <PropertyGroup>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <PropertyGroup>
+     <TargetsWindows Condition="'$(TargetsWindows)' != 'true'">false</TargetsWindows>
+diff --git a/src/Common/tests/StaticTestGenerator/StaticTestGenerator.csproj b/src/Common/tests/StaticTestGenerator/StaticTestGenerator.csproj
+index 403211ee0e..2367711018 100644
+--- a/src/Common/tests/StaticTestGenerator/StaticTestGenerator.csproj
++++ b/src/Common/tests/StaticTestGenerator/StaticTestGenerator.csproj
+@@ -8,6 +8,7 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <NoWarn />
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>Debug;Release</Configurations>
+   </PropertyGroup>
+   <PropertyGroup>
+@@ -24,4 +25,4 @@
+     <PackageReference Include="xunit.core" Version="2.4.1" />
+     <PackageReference Include="xunit.runner.utility" Version="2.4.1" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.Bcl.HashCode/src/Microsoft.Bcl.HashCode.csproj b/src/Microsoft.Bcl.HashCode/src/Microsoft.Bcl.HashCode.csproj
+index e99b1ecb3f..4aae8d14ba 100644
+--- a/src/Microsoft.Bcl.HashCode/src/Microsoft.Bcl.HashCode.csproj
++++ b/src/Microsoft.Bcl.HashCode/src/Microsoft.Bcl.HashCode.csproj
+@@ -6,6 +6,7 @@
+     <OmitResources>$(IsPartialFacadeAssembly)</OmitResources>
+     <Configurations>net461-Debug;net461-Release;netcoreapp-Debug;netcoreapp-Release;netcoreapp2.1-Debug;netcoreapp2.1-Release;netfx-Debug;netfx-Release;netstandard-Debug;netstandard-Release;netstandard2.1-Debug;netstandard2.1-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(IsPartialFacadeAssembly)' != 'true'">
+     <Compile Include="$(CommonPath)\CoreLib\System\HashCode.cs">
+@@ -20,4 +21,4 @@
+     <Reference Include="System.Runtime" />
+     <Reference Include="System.Resources.ResourceManager" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.Diagnostics.Tracing.EventSource.Redist/src/Microsoft.Diagnostics.Tracing.EventSource.Redist.csproj b/src/Microsoft.Diagnostics.Tracing.EventSource.Redist/src/Microsoft.Diagnostics.Tracing.EventSource.Redist.csproj
+index 91dae1bd04..5282295881 100644
+--- a/src/Microsoft.Diagnostics.Tracing.EventSource.Redist/src/Microsoft.Diagnostics.Tracing.EventSource.Redist.csproj
++++ b/src/Microsoft.Diagnostics.Tracing.EventSource.Redist/src/Microsoft.Diagnostics.Tracing.EventSource.Redist.csproj
+@@ -6,6 +6,7 @@
+     <DefineConstants>$(DefineConstants);NO_EVENTCOMMANDEXECUTED_SUPPORT;ES_BUILD_STANDALONE;FEATURE_MANAGED_ETW;PLATFORM_WINDOWS;INTERNAL_NULLABLE_ATTRIBUTES</DefineConstants>
+     <Configurations>net461-Windows_NT-Debug;net461-Windows_NT-Release;netfx-Windows_NT-Debug;netfx-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <PropertyGroup>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+@@ -34,4 +35,4 @@
+     <Reference Include="mscorlib" />
+     <Reference Include="System" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Buffers/ref/System.Buffers.csproj b/src/System.Buffers/ref/System.Buffers.csproj
+index 712772bd1f..02bb10fa79 100644
+--- a/src/System.Buffers/ref/System.Buffers.csproj
++++ b/src/System.Buffers/ref/System.Buffers.csproj
+@@ -6,6 +6,7 @@
+     <ProjectGuid>{11AE73F7-3532-47B9-8FF6-B4F22D76456C}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Buffers.cs" />
+@@ -13,4 +14,4 @@
+   <ItemGroup Condition="'$(TargetGroup)' == 'uap' OR '$(TargetGroup)' == 'netcoreapp'">
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.csproj b/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.csproj
+index 9388889614..4691ee8649 100644
+--- a/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.csproj
++++ b/src/System.Collections.Concurrent/ref/System.Collections.Concurrent.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{772CB0A7-3D45-4D3A-B975-671A1937C761}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Collections.Concurrent.cs" />
+@@ -11,4 +12,4 @@
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+     <ProjectReference Include="..\..\System.Threading.Tasks\ref\System.Threading.Tasks.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Collections.Concurrent/src/System.Collections.Concurrent.csproj b/src/System.Collections.Concurrent/src/System.Collections.Concurrent.csproj
+index 70c5dbcbb9..f62b74d584 100644
+--- a/src/System.Collections.Concurrent/src/System.Collections.Concurrent.csproj
++++ b/src/System.Collections.Concurrent/src/System.Collections.Concurrent.csproj
+@@ -5,6 +5,7 @@
+     <RootNamespace>System.Collections.Concurrent</RootNamespace>
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+@@ -33,4 +34,4 @@
+     <ProjectReference Include="..\..\System.Threading\src\System.Threading.csproj" />
+     <ProjectReference Include="..\..\System.Threading.Tasks\src\System.Threading.Tasks.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Collections/ref/System.Collections.csproj b/src/System.Collections/ref/System.Collections.csproj
+index a82f8a3e85..a25bcc6235 100644
+--- a/src/System.Collections/ref/System.Collections.csproj
++++ b/src/System.Collections/ref/System.Collections.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{C746D448-E7C3-4850-9CA7-D3F1FA49742F}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Collections.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Collections/src/System.Collections.csproj b/src/System.Collections/src/System.Collections.csproj
+index 86f36dcf2c..8a356c0409 100644
+--- a/src/System.Collections/src/System.Collections.csproj
++++ b/src/System.Collections/src/System.Collections.csproj
+@@ -6,6 +6,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <!-- Default configurations to help VS understand the options -->
+   <ItemGroup>
+@@ -46,4 +47,4 @@
+   <ItemGroup>
+     <ReferenceFromRuntime Include="System.Private.CoreLib" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Diagnostics.Contracts/ref/System.Diagnostics.Contracts.csproj b/src/System.Diagnostics.Contracts/ref/System.Diagnostics.Contracts.csproj
+index 71d2490639..8692361433 100644
+--- a/src/System.Diagnostics.Contracts/ref/System.Diagnostics.Contracts.csproj
++++ b/src/System.Diagnostics.Contracts/ref/System.Diagnostics.Contracts.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{5E0B1760-8753-467A-8B10-66B8994220DB}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Diagnostics.Contracts.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Diagnostics.Debug/ref/System.Diagnostics.Debug.csproj b/src/System.Diagnostics.Debug/ref/System.Diagnostics.Debug.csproj
+index e36cd70718..8e6e97668a 100644
+--- a/src/System.Diagnostics.Debug/ref/System.Diagnostics.Debug.csproj
++++ b/src/System.Diagnostics.Debug/ref/System.Diagnostics.Debug.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{2CBC7A79-EDF5-4552-B25D-8E32E367571E}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Diagnostics.Debug.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Diagnostics.StackTrace/ref/System.Diagnostics.StackTrace.csproj b/src/System.Diagnostics.StackTrace/ref/System.Diagnostics.StackTrace.csproj
+index 017ccb36ca..70e6d218df 100644
+--- a/src/System.Diagnostics.StackTrace/ref/System.Diagnostics.StackTrace.csproj
++++ b/src/System.Diagnostics.StackTrace/ref/System.Diagnostics.StackTrace.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{C38217EF-88F4-4D56-9F58-780BE1DDAFF6}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Diagnostics.StackTrace.cs" />
+diff --git a/src/System.Diagnostics.StackTrace/src/System.Diagnostics.StackTrace.csproj b/src/System.Diagnostics.StackTrace/src/System.Diagnostics.StackTrace.csproj
+index 85f84e60c9..180dcd6e3c 100644
+--- a/src/System.Diagnostics.StackTrace/src/System.Diagnostics.StackTrace.csproj
++++ b/src/System.Diagnostics.StackTrace/src/System.Diagnostics.StackTrace.csproj
+@@ -5,6 +5,7 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <!-- Disable 1685 (aka multiple type definitions) warning so it doesn't turn into an error -->
+     <NoWarn>$(NoWarn);1685</NoWarn>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+diff --git a/src/System.Diagnostics.Tools/ref/System.Diagnostics.Tools.csproj b/src/System.Diagnostics.Tools/ref/System.Diagnostics.Tools.csproj
+index 3cd5cd973b..2660502f2c 100644
+--- a/src/System.Diagnostics.Tools/ref/System.Diagnostics.Tools.csproj
++++ b/src/System.Diagnostics.Tools/ref/System.Diagnostics.Tools.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{F3970F2E-C118-42A8-8C37-C3B99961A9F6}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Diagnostics.Tools.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Diagnostics.Tools/src/System.Diagnostics.Tools.csproj b/src/System.Diagnostics.Tools/src/System.Diagnostics.Tools.csproj
+index b3decb7fb8..778c0afc4a 100644
+--- a/src/System.Diagnostics.Tools/src/System.Diagnostics.Tools.csproj
++++ b/src/System.Diagnostics.Tools/src/System.Diagnostics.Tools.csproj
+@@ -5,6 +5,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <DefineConstants>$(DefineConstants);SYSTEM_DIAGNOSTICS_TOOLS</DefineConstants>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+@@ -16,4 +17,4 @@
+   <ItemGroup>
+     <ReferenceFromRuntime Include="System.Private.CoreLib" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Diagnostics.Tracing/ref/System.Diagnostics.Tracing.csproj b/src/System.Diagnostics.Tracing/ref/System.Diagnostics.Tracing.csproj
+index c1274649f0..22c0f62026 100644
+--- a/src/System.Diagnostics.Tracing/ref/System.Diagnostics.Tracing.csproj
++++ b/src/System.Diagnostics.Tracing/ref/System.Diagnostics.Tracing.csproj
+@@ -6,6 +6,7 @@
+     <NoWarn>$(NoWarn);0067</NoWarn>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Diagnostics.Tracing.cs" />
+@@ -15,4 +16,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Memory/ref/System.Memory.csproj b/src/System.Memory/ref/System.Memory.csproj
+index e49442a9b3..46a45c8463 100644
+--- a/src/System.Memory/ref/System.Memory.csproj
++++ b/src/System.Memory/ref/System.Memory.csproj
+@@ -4,6 +4,7 @@
+     <ProjectGuid>{E883935B-D8FD-4FC9-A189-9D9E7F7EF550}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Memory.cs" />
+diff --git a/src/System.Memory/src/System.Memory.csproj b/src/System.Memory/src/System.Memory.csproj
+index 26352dd002..777b788647 100644
+--- a/src/System.Memory/src/System.Memory.csproj
++++ b/src/System.Memory/src/System.Memory.csproj
+@@ -4,6 +4,7 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <!-- ArrayBufferWriter is publicly exposed from the System.Memory ref and only it should define this constant as true.  -->
+     <DefineConstants>$(DefineConstants);MAKE_ABW_PUBLIC</DefineConstants>
+@@ -44,4 +45,4 @@
+   <ItemGroup>
+     <ReferenceFromRuntime Include="System.Private.CoreLib" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Numerics.Vectors/ref/System.Numerics.Vectors.csproj b/src/System.Numerics.Vectors/ref/System.Numerics.Vectors.csproj
+index 925e225b5e..210c9e96c1 100644
+--- a/src/System.Numerics.Vectors/ref/System.Numerics.Vectors.csproj
++++ b/src/System.Numerics.Vectors/ref/System.Numerics.Vectors.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{650277B5-9423-4ACE-BB54-2659995B21C7}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Numerics.Vectors.cs" />
+diff --git a/src/System.Numerics.Vectors/src/System.Numerics.Vectors.csproj b/src/System.Numerics.Vectors/src/System.Numerics.Vectors.csproj
+index 42b5ccdaa7..a8232c2aed 100644
+--- a/src/System.Numerics.Vectors/src/System.Numerics.Vectors.csproj
++++ b/src/System.Numerics.Vectors/src/System.Numerics.Vectors.csproj
+@@ -8,6 +8,7 @@
+     <DefineConstants Condition="'$(HasIntrinsics)'=='true'">$(DefineConstants);HAS_INTRINSICS</DefineConstants>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <!-- Shared -->
+   <ItemGroup>
+diff --git a/src/System.Private.Uri/src/System.Private.Uri.csproj b/src/System.Private.Uri/src/System.Private.Uri.csproj
+index 37a2eacec4..dc79547836 100644
+--- a/src/System.Private.Uri/src/System.Private.Uri.csproj
++++ b/src/System.Private.Uri/src/System.Private.Uri.csproj
+@@ -4,6 +4,7 @@
+     <AssemblyName>System.Private.Uri</AssemblyName>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/System.Private.Uri/tests/UnitTests/System.Private.Uri.Unit.Tests.csproj b/src/System.Private.Uri/tests/UnitTests/System.Private.Uri.Unit.Tests.csproj
+index 316d7660ac..1436afd447 100644
+--- a/src/System.Private.Uri/tests/UnitTests/System.Private.Uri.Unit.Tests.csproj
++++ b/src/System.Private.Uri/tests/UnitTests/System.Private.Uri.Unit.Tests.csproj
+@@ -6,6 +6,7 @@
+     <StringResourcesPath>../../src/Resources/Strings.resx</StringResourcesPath>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="Fakes\FakeUri.cs" />
+@@ -22,4 +23,4 @@
+     <Compile Include="..\..\src\System\IriHelper.cs" />
+     <Compile Include="..\..\src\System\UriEnumTypes.cs" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.csproj b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.csproj
+index 4c41bfd235..8115bea769 100644
+--- a/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.csproj
++++ b/src/System.Reflection.Emit.ILGeneration/ref/System.Reflection.Emit.ILGeneration.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{D8763A34-58C6-4229-AD75-6980EF382294}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Reflection.Emit.ILGeneration.cs" />
+@@ -14,4 +15,4 @@
+     <ProjectReference Include="..\..\System.Reflection\ref\System.Reflection.csproj" />
+     <ProjectReference Include="..\..\System.Reflection.Primitives\ref\System.Reflection.Primitives.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Reflection.Emit.Lightweight/ref/System.Reflection.Emit.Lightweight.csproj b/src/System.Reflection.Emit.Lightweight/ref/System.Reflection.Emit.Lightweight.csproj
+index 2a4793f1f0..0af7638e63 100644
+--- a/src/System.Reflection.Emit.Lightweight/ref/System.Reflection.Emit.Lightweight.csproj
++++ b/src/System.Reflection.Emit.Lightweight/ref/System.Reflection.Emit.Lightweight.csproj
+@@ -4,6 +4,7 @@
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;uap-Debug;uap-Release</Configurations>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Reflection.Emit.Lightweight.cs" />
+@@ -13,4 +14,4 @@
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" Condition="'$(TargetGroup)' != 'netstandard'" />
+     <ProjectReference Include="..\..\System.Reflection.Emit.ILGeneration\ref\System.Reflection.Emit.ILGeneration.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Reflection.Emit/ref/System.Reflection.Emit.csproj b/src/System.Reflection.Emit/ref/System.Reflection.Emit.csproj
+index dc151cc0aa..cc167c7308 100644
+--- a/src/System.Reflection.Emit/ref/System.Reflection.Emit.csproj
++++ b/src/System.Reflection.Emit/ref/System.Reflection.Emit.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{4FBD1556-7B96-414E-9EA4-85281956D60E}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Reflection.Emit.cs" />
+diff --git a/src/System.Reflection.Primitives/ref/System.Reflection.Primitives.csproj b/src/System.Reflection.Primitives/ref/System.Reflection.Primitives.csproj
+index b91d7bc469..2ef155a224 100644
+--- a/src/System.Reflection.Primitives/ref/System.Reflection.Primitives.csproj
++++ b/src/System.Reflection.Primitives/ref/System.Reflection.Primitives.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{F512184F-76E5-4AE5-8AB5-395AF9D18712}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Reflection.Primitives.cs" />
+@@ -11,4 +12,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Resources.ResourceManager/ref/System.Resources.ResourceManager.csproj b/src/System.Resources.ResourceManager/ref/System.Resources.ResourceManager.csproj
+index d18cb2d2c5..287e0c4295 100644
+--- a/src/System.Resources.ResourceManager/ref/System.Resources.ResourceManager.csproj
++++ b/src/System.Resources.ResourceManager/ref/System.Resources.ResourceManager.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{97CFE337-C57E-4B2E-B495-65B917E1282E}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Resources.ResourceManager.cs" />
+@@ -13,4 +14,4 @@
+     <ProjectReference Include="..\..\System.Reflection\ref\System.Reflection.csproj" />
+     <ProjectReference Include="..\..\System.Globalization\ref\System.Globalization.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Runtime.Extensions/ref/System.Runtime.Extensions.csproj b/src/System.Runtime.Extensions/ref/System.Runtime.Extensions.csproj
+index e20e538bf6..d5c6401ccc 100644
+--- a/src/System.Runtime.Extensions/ref/System.Runtime.Extensions.csproj
++++ b/src/System.Runtime.Extensions/ref/System.Runtime.Extensions.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{33B27785-02FD-4544-8E7D-EB802248BEC3}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.Extensions.cs" />
+@@ -12,4 +13,4 @@
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+     <ProjectReference Include="..\..\System.Security.Principal\ref\System.Security.Principal.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Runtime.Extensions/src/System.Runtime.Extensions.csproj b/src/System.Runtime.Extensions/src/System.Runtime.Extensions.csproj
+index 99d25646d6..0fab401152 100644
+--- a/src/System.Runtime.Extensions/src/System.Runtime.Extensions.csproj
++++ b/src/System.Runtime.Extensions/src/System.Runtime.Extensions.csproj
+@@ -8,6 +8,7 @@
+     <IncludeDllSafeSearchPathAttribute>true</IncludeDllSafeSearchPathAttribute>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System\AppDomainUnloadedException.cs" />
+diff --git a/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.csproj b/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.csproj
+index 4fcf8b7365..a1f25ba76d 100644
+--- a/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.csproj
++++ b/src/System.Runtime.InteropServices.WindowsRuntime/ref/System.Runtime.InteropServices.WindowsRuntime.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{DC485335-D0D7-4E28-9593-445B7B6BEFA7}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.InteropServices.WindowsRuntime.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.csproj b/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.csproj
+index feb3e2f71b..afa33bbfc3 100644
+--- a/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.csproj
++++ b/src/System.Runtime.InteropServices/ref/System.Runtime.InteropServices.csproj
+@@ -7,6 +7,7 @@
+     <ProjectGuid>{B17014F1-D902-417F-89B0-271204695831}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.InteropServices.cs" />
+@@ -18,4 +19,4 @@
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+     <ProjectReference Include="..\..\System.Runtime.Handles\ref\System.Runtime.Handles.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Runtime.InteropServices/src/System.Runtime.InteropServices.csproj b/src/System.Runtime.InteropServices/src/System.Runtime.InteropServices.csproj
+index 1d1cc85ce9..11fe8db97d 100644
+--- a/src/System.Runtime.InteropServices/src/System.Runtime.InteropServices.csproj
++++ b/src/System.Runtime.InteropServices/src/System.Runtime.InteropServices.csproj
+@@ -6,6 +6,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
+index 69bb4c9357..915e927f58 100644
+--- a/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
++++ b/src/System.Runtime.Intrinsics/ref/System.Runtime.Intrinsics.csproj
+@@ -4,6 +4,7 @@
+     <ProjectGuid>{F9097917-AFA3-4E3E-A592-BFA2C483C7E2}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.Intrinsics.cs" />
+diff --git a/src/System.Runtime.Loader/ref/System.Runtime.Loader.csproj b/src/System.Runtime.Loader/ref/System.Runtime.Loader.csproj
+index 388f5ea6c9..31fbde843f 100644
+--- a/src/System.Runtime.Loader/ref/System.Runtime.Loader.csproj
++++ b/src/System.Runtime.Loader/ref/System.Runtime.Loader.csproj
+@@ -6,6 +6,7 @@
+     <NoWarn>$(NoWarn);0067</NoWarn>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.Loader.cs" />
+diff --git a/src/System.Runtime/ref/System.Runtime.csproj b/src/System.Runtime/ref/System.Runtime.csproj
+index 6d33bf7962..61a99da7a6 100644
+--- a/src/System.Runtime/ref/System.Runtime.csproj
++++ b/src/System.Runtime/ref/System.Runtime.csproj
+@@ -8,9 +8,10 @@
+     <NoWarn>$(NoWarn);0809;0618</NoWarn>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Runtime.cs" />
+     <Compile Include="System.Runtime.Manual.cs" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Runtime/src/System.Runtime.csproj b/src/System.Runtime/src/System.Runtime.csproj
+index 8554e08344..66f33c1778 100644
+--- a/src/System.Runtime/src/System.Runtime.csproj
++++ b/src/System.Runtime/src/System.Runtime.csproj
+@@ -5,6 +5,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <!-- Compiler throws error if you try to use System.Void and instructs you to use void keyword instead. So we have manually added a typeforward for this type. -->  
+diff --git a/src/System.Security.Principal/ref/System.Security.Principal.csproj b/src/System.Security.Principal/ref/System.Security.Principal.csproj
+index 9ba43d934b..ed011c3d4c 100644
+--- a/src/System.Security.Principal/ref/System.Security.Principal.csproj
++++ b/src/System.Security.Principal/ref/System.Security.Principal.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{06ECBECD-4100-474D-8F3C-21A0F66A92A6}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Security.Principal.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Security.Principal/src/System.Security.Principal.csproj b/src/System.Security.Principal/src/System.Security.Principal.csproj
+index 1c026d1f0a..178ff939e3 100644
+--- a/src/System.Security.Principal/src/System.Security.Principal.csproj
++++ b/src/System.Security.Principal/src/System.Security.Principal.csproj
+@@ -5,6 +5,7 @@
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <!-- Default configurations to help VS understand the options -->
+@@ -15,4 +16,4 @@
+     <ProjectReference Include="..\..\System.Runtime\src\System.Runtime.csproj" />
+     <ReferenceFromRuntime Include="System.Private.CoreLib" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Text.Encoding.Extensions/ref/System.Text.Encoding.Extensions.csproj b/src/System.Text.Encoding.Extensions/ref/System.Text.Encoding.Extensions.csproj
+index bc4bf0c677..c7299c072e 100644
+--- a/src/System.Text.Encoding.Extensions/ref/System.Text.Encoding.Extensions.csproj
++++ b/src/System.Text.Encoding.Extensions/ref/System.Text.Encoding.Extensions.csproj
+@@ -4,6 +4,7 @@
+     <ProjectGuid>{45ED5323-5E2F-445F-B305-21B3044C87B6}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Text.Encoding.Extensions.cs" />
+@@ -12,4 +13,4 @@
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+     <ProjectReference Include="..\..\System.Text.Encoding\ref\System.Text.Encoding.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
+index 119cfce036..f00881485f 100644
+--- a/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
++++ b/src/System.Threading.Overlapped/ref/System.Threading.Overlapped.csproj
+@@ -4,6 +4,7 @@
+     <ProjectGuid>{F71467DF-30C1-44A0-A15A-163CB5DB4E6E}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Overlapped.cs" />
+@@ -11,4 +12,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj b/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
+index 2fba1adb28..0a84fc35f2 100644
+--- a/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
++++ b/src/System.Threading.Tasks/ref/System.Threading.Tasks.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{27675CCE-B6F9-4E2F-9BF2-5E623173BD5C}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Tasks.cs" />
+@@ -11,4 +12,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading.Thread/ref/System.Threading.Thread.csproj b/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
+index 65f79d510d..21843944ae 100644
+--- a/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
++++ b/src/System.Threading.Thread/ref/System.Threading.Thread.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{82D06A2D-008D-4A4A-A83D-FB7F04721C87}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Thread.cs" />
+@@ -13,4 +14,4 @@
+     <ProjectReference Include="..\..\System.Security.Principal\ref\System.Security.Principal.csproj" />
+     <ProjectReference Include="..\..\System.Threading\ref\System.Threading.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading.Thread/src/System.Threading.Thread.csproj b/src/System.Threading.Thread/src/System.Threading.Thread.csproj
+index e4a50ec3fc..102595c2af 100644
+--- a/src/System.Threading.Thread/src/System.Threading.Thread.csproj
++++ b/src/System.Threading.Thread/src/System.Threading.Thread.csproj
+@@ -5,6 +5,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <ProjectGuid>{06197EED-FF48-43F3-976D-463839D43E8C}</ProjectGuid>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/System.Threading.ThreadPool/ref/System.Threading.ThreadPool.csproj b/src/System.Threading.ThreadPool/ref/System.Threading.ThreadPool.csproj
+index e215f11b0a..4eafda982e 100644
+--- a/src/System.Threading.ThreadPool/ref/System.Threading.ThreadPool.csproj
++++ b/src/System.Threading.ThreadPool/ref/System.Threading.ThreadPool.csproj
+@@ -4,6 +4,7 @@
+     <ProjectGuid>{3A5A0D64-7796-4BC2-8288-4B04B97C4A70}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.ThreadPool.cs" />
+@@ -13,4 +14,4 @@
+     <ProjectReference Include="..\..\System.Runtime.Handles\ref\System.Runtime.Handles.csproj" />
+     <ProjectReference Include="..\..\System.Threading.Overlapped\ref\System.Threading.Overlapped.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
+index 214b18b1b1..d18fc2fde6 100644
+--- a/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
++++ b/src/System.Threading.Timer/ref/System.Threading.Timer.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{DC78B562-4F74-49C2-9766-3B65CD610CCC}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.Timer.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading/ref/System.Threading.csproj b/src/System.Threading/ref/System.Threading.csproj
+index 2d64d559cf..564b372f64 100644
+--- a/src/System.Threading/ref/System.Threading.csproj
++++ b/src/System.Threading/ref/System.Threading.csproj
+@@ -3,6 +3,7 @@
+     <ProjectGuid>{F59F13CA-829A-4D02-9A1D-E40E61257177}</ProjectGuid>
+     <Configurations>netcoreapp-Debug;netcoreapp-Release;uap-Debug;uap-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Threading.cs" />
+@@ -10,4 +11,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\..\System.Runtime\ref\System.Runtime.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/System.Threading/src/System.Threading.csproj b/src/System.Threading/src/System.Threading.csproj
+index 0504a26365..65794d286f 100644
+--- a/src/System.Threading/src/System.Threading.csproj
++++ b/src/System.Threading/src/System.Threading.csproj
+@@ -6,6 +6,7 @@
+     <IsPartialFacadeAssembly>true</IsPartialFacadeAssembly>
+     <Configurations>netcoreapp-Unix-Debug;netcoreapp-Unix-Release;netcoreapp-Windows_NT-Debug;netcoreapp-Windows_NT-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
+     <Nullable>enable</Nullable>
++    <NullableContextOptions>enable</NullableContextOptions>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System\Threading\Barrier.cs" />
+@@ -26,4 +27,4 @@
+   <ItemGroup>
+     <ReferenceFromRuntime Include="System.Private.CoreLib" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.21.0
+

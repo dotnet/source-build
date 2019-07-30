@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>be3f0c1a03f80492d45396c9f5b855b10a8a0b79</PreferredHash>
+    <PreferredHash>6348f1068ae4e6cb5766670d3351f3421429e27a</PreferredHash>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190607.9</OfficialBuildId>
-    <GitCommitCount>12264</GitCommitCount>
+    <OfficialBuildId>20190718.3</OfficialBuildId>
+    <GitCommitCount>12821</GitCommitCount>
 
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
@@ -17,6 +17,7 @@
     <!-- core-sdk always wants to build portable on OSX -->
     <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
 
     <!-- Consume the source-built Core-Setup. This line must be removed to source-build core-sdk without source-building Core-Setup first. -->
@@ -62,7 +63,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- placeholder - the real dependency here is on AspNetCore but we don't build that yet -->
+    <RepositoryReference Include="aspnet-extensions" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="toolset" />
   </ItemGroup>
 

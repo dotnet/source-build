@@ -27,8 +27,6 @@
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <!-- this is built in the Arcade build and will not produce packages in the main build -->
-    <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
   </PropertyGroup>
 
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">

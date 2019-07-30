@@ -1,0 +1,23 @@
+From 8145c4dac36e265d8764fbd9d5e4227d5e6265bf Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 13:07:00 -0500
+Subject: [PATCH 6/6] Add empty SourceLink target.
+
+---
+ Directory.Build.targets | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 4e17687cb9..74bc9e52e3 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -10,4 +10,6 @@
+     <InformationalVersion>$(ProductVersion)</InformationalVersion>
+     <InformationalVersion Condition="'$(VersionSuffix)' != ''">$(InformationalVersion)-$(VersionSuffix)</InformationalVersion>
+   </PropertyGroup>
++
++  <Target Name="InitializeSourceControlInformationFromSourceControlManager" />
+ </Project>
+-- 
+2.21.0
+

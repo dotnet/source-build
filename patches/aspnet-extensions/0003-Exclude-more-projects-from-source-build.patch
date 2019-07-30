@@ -1,0 +1,53 @@
+From a3db5879f727221bcb39a5b6332e226d7333d4d6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 26 Jun 2019 10:40:36 -0500
+Subject: [PATCH 3/4] Exclude more projects from source-build.
+
+---
+ .../Async/src/Microsoft.DotNet.Analyzers.Async.csproj         | 1 +
+ .../Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj  | 1 +
+ src/Logging/Logging.Analyzers/Directory.Build.props           | 4 ++++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj b/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
+index f438fdc49..8e404bfcb 100644
+--- a/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
++++ b/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
+@@ -17,6 +17,7 @@
+     <PackageTags>analyzers;async</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>false</IsShipping>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj b/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
+index 8603e7c47..ebb78f4ea 100644
+--- a/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
++++ b/src/Analyzers/Async/test/Microsoft.DotNet.Analyzers.Async.Tests.csproj
+@@ -5,6 +5,7 @@
+     <PreserveCompilationContext>true</PreserveCompilationContext>
+     <!-- Analyzers tests can't find netfx ref assemblies from a package -->
+     <UsingToolNetFrameworkReferenceAssemblies Condition="'$(OS)' == 'Windows_NT'">false</UsingToolNetFrameworkReferenceAssemblies>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/Logging/Logging.Analyzers/Directory.Build.props b/src/Logging/Logging.Analyzers/Directory.Build.props
+index eef045ad3..627533dd9 100644
+--- a/src/Logging/Logging.Analyzers/Directory.Build.props
++++ b/src/Logging/Logging.Analyzers/Directory.Build.props
+@@ -1,6 +1,10 @@
+ ﻿<Project>
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)..\, Directory.Build.props))\Directory.Build.props" />
+ 
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
++
+   <ItemGroup>
+     <Reference Include="Microsoft.CodeAnalysis.Common" PrivateAssets="All" />
+     <Reference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="All" />
+-- 
+2.21.0
+

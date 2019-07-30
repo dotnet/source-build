@@ -59,6 +59,7 @@ fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+SDK3_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
@@ -150,6 +151,9 @@ mkdir -p $TARBALL_ROOT/reference-packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+
+# Copy generated source from bin to src/generatedSrc
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
