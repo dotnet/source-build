@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>6348f1068ae4e6cb5766670d3351f3421429e27a</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190718.3</OfficialBuildId>
-    <GitCommitCount>12821</GitCommitCount>
-
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
@@ -71,8 +64,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->

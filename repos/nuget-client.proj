@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703</PreferredHash>
     <SourceDirectory>NuGet.Client</SourceDirectory>
   </PropertyGroup>
 
@@ -12,7 +11,6 @@
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientBuildNumber>5921</NuGetClientBuildNumber>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <!--
@@ -20,7 +18,6 @@
     <OrchestratedManifestBuildName>nuget.client</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <OfficialBuildId>296</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -39,7 +36,7 @@
       <BuildCommandBase>$(BuildCommandBase) /p:VisualStudioVerion=15.0</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(NuGetClientBuildNumber)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
     </PropertyGroup>
 

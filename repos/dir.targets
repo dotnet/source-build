@@ -3,7 +3,6 @@
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
@@ -83,46 +82,6 @@
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
           WorkingDirectory="$(ProjectDirectory)"
           Condition="'@(PatchesToApply)' != ''" />
-  </Target>
-
-  <Target Name="CreateGitInfoProps"
-          Condition="'$(OfflineBuild)' != 'true' AND Exists('$(ProjectDirectory).git')">
-    <Exec Command="git rev-parse HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
-    </Exec>
-    <Exec Command="git rev-list --count HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitLogFormatArg>--format=</GitLogFormatArg>
-      <!-- Escape the % with another % on Windows. -->
-      <GitLogFormatArg Condition="'$(OS)' == 'Windows_NT'">$(GitLogFormatArg)%25</GitLogFormatArg>
-      <GitLogFormatArg>$(GitLogFormatArg)%25cd</GitLogFormatArg>
-    </PropertyGroup>
-
-    <Exec Command="git log -1 $(GitLogFormatArg) --date=short" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitDate" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitInfoFileContents>
-        <![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- $(RepositoryName) submodule information. -->
-    <GitCommitHash>$(GitCommitHash)</GitCommitHash>
-    <GitCommitCount>$(GitCommitCount)</GitCommitCount>
-    <GitCommitDate>$(GitCommitDate)</GitCommitDate>
-  </PropertyGroup>
-</Project>
-]]>
-      </GitInfoFileContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(OutputGitInfoPropsFile)"
-                      Lines="$(GitInfoFileContents)"
-                      Overwrite="true" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"

@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>7f41a7da0404eeb740b6d06ee74d70a7bdc25aec</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190716.11</OfficialBuildId>
-    <GitCommitCount>11183</GitCommitCount>
-
     <BuildCommandArgs>--pack --ci</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
@@ -56,9 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
-
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
     <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
 
