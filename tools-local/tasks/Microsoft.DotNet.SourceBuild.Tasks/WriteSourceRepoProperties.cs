@@ -65,6 +65,7 @@ namespace Microsoft.DotNet.Build.Tasks
             content.AppendLine("  <PropertyGroup>");
             content.AppendLine($"    <GitCommitHash>{dependency.Sha}</GitCommitHash>");
             content.AppendLine($"    <GitCommitCount>{commitCount}</GitCommitCount>");
+            content.AppendLine($"    <GitCommitDate>{GetCommitDate(repoGitDir, dependency.Sha)}</GitCommitDate>");
             content.AppendLine($"    <OfficialBuildId>{officialBuildId}</OfficialBuildId>");
             content.AppendLine($"    <PreReleaseLabel>{releaseLabel}</PreReleaseLabel>");
             content.AppendLine("  </PropertyGroup>");
@@ -127,6 +128,11 @@ namespace Microsoft.DotNet.Build.Tasks
         private static string GetCommitCount(string gitDir, string hash)
         {
             return RunGitCommand($"rev-list --count {hash}", gitDir: gitDir);
+        }
+
+        private static string GetCommitDate(string gitDir, string hash)
+        {
+            return RunGitCommand($"log -1 --format=%cd --date=short", gitDir: gitDir);
         }
 
         private static string RunGitCommand(string command, string workTree = null, string gitDir = null)
