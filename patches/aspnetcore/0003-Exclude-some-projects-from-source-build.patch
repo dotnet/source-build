@@ -1,0 +1,24 @@
+From c781c87ad72a050d291acd4b8b7eeead56a24f16 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 01:34:30 -0500
+Subject: [PATCH 3/4] Exclude some projects from source-build.
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index cfa26c654b..742784c5e5 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -21,6 +21,7 @@
+     <IsSampleProject Condition="$(RepoRelativeProjectDir.Contains('sample'))">true</IsSampleProject>
+     <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
+     <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
++    <ExcludeFromSourceBuild Condition="'$(IsSampleProject') == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true'">true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <Import Project="eng\FlakyTests.BeforeArcade.props" />
+-- 
+2.21.0
+
