@@ -41,17 +41,25 @@ namespace Microsoft.DotNet.Build.Tasks
 
             foreach(var dep in versionDetails.ToolsetDependencies.Concat(versionDetails.ProductDependencies))
             {
+                Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Starting dependency {dep.ToString()}");
                 var repoPath = DeriveRepoPath(SourceDirPath, dep.Uri, dep.Sha);
                 var repoGitDir = DeriveRepoGitDirPath(GitDirPath, dep.Uri);
-                WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                WriteSourceBuildMetadata(SourceBuildMetadataPath, repoGitDir, dep);
-                if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                try
                 {
-                    HandleSubmodules(repoPath, repoGitDir, dep);
+                    WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
+                    WriteSourceBuildMetadata(SourceBuildMetadataPath, repoGitDir, dep);
+                    if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                    {
+                        HandleSubmodules(repoPath, repoGitDir, dep);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.LogErrorFromException(e, true, true, null);
                 }
             }
 
-            return false;
+            return !Log.HasLoggedErrors;
         }
 
         private static void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency)
