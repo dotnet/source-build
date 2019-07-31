@@ -15,7 +15,7 @@ index cfa26c654b..742784c5e5 100644
      <IsSampleProject Condition="$(RepoRelativeProjectDir.Contains('sample'))">true</IsSampleProject>
      <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
      <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
-+    <ExcludeFromSourceBuild Condition="'$(IsSampleProject') == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true'">true</ExcludeFromSourceBuild>
++    <ExcludeFromSourceBuild Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true'">true</ExcludeFromSourceBuild>
    </PropertyGroup>
  
    <Import Project="eng\FlakyTests.BeforeArcade.props" />
