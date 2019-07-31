@@ -5,6 +5,7 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.SourceBuild.Tasks.Models;
+using NuGet.Versioning;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -17,9 +18,6 @@ namespace Microsoft.DotNet.Build.Tasks
 {
     public class WriteSourceRepoProperties : Task
     {
-        [Required]
-        public string DependencyGraphPath { get; set; }
-
         [Required]
         public string VersionDetailsPath { get; set; }
 
@@ -41,14 +39,12 @@ namespace Microsoft.DotNet.Build.Tasks
                 versionDetails = (VersionDetails)serializer.Deserialize(stream);
             }
 
-            var dependencyGraph = FlatDependencyGraph.ReadFile(DependencyGraphPath);
-
             foreach(var dep in versionDetails.ToolsetDependencies.Concat(versionDetails.ProductDependencies))
             {
                 var repoPath = DeriveRepoPath(SourceDirPath, dep.Uri, dep.Sha);
                 var repoGitDir = DeriveRepoGitDirPath(GitDirPath, dep.Uri);
                 WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                WriteSourceBuildMetadata(SourceBuildMetadataPath, repoGitDir, dep, dependencyGraph);
+                WriteSourceBuildMetadata(SourceBuildMetadataPath, repoGitDir, dep);
                 if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
                 {
                     HandleSubmodules(repoPath, repoGitDir, dep);
@@ -58,19 +54,60 @@ namespace Microsoft.DotNet.Build.Tasks
             return false;
         }
 
-        private static void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency, FlatDependencyGraph graph)
+        private static void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency)
         {
             var propsPath = Path.Combine(sourceBuildMetadataPath, $"{GetRepoNameOrDefault(dependency)}.props");
+            var commitCount = GetCommitCount(repoGitDir, dependency.Sha);
+            var (officialBuildId, releaseLabel) = GetVersionInfo(dependency.Version, commitCount);
             var content = new StringBuilder();
             content.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
             content.AppendLine("<Project>");
             content.AppendLine("  <PropertyGroup>");
             content.AppendLine($"    <GitCommitHash>{dependency.Sha}</GitCommitHash>");
-            content.AppendLine($"    <GitCommitCount>{GetCommitCount(repoGitDir, dependency.Sha)}</GitCommitCount>");
-            content.AppendLine($"    <OfficialBuildId>{graph.Dependencies.SingleOrDefault(d => d.Repo.ToLowerInvariant() == dependency.Uri.ToLowerInvariant())?.BuildNumber ?? "unknown"}</OfficialBuildId>");
+            content.AppendLine($"    <GitCommitCount>{commitCount}</GitCommitCount>");
+            content.AppendLine($"    <OfficialBuildId>{officialBuildId}</OfficialBuildId>");
+            content.AppendLine($"    <PreReleaseLabel>{releaseLabel}</PreReleaseLabel>");
             content.AppendLine("  </PropertyGroup>");
             content.AppendLine("</Project>");
             File.WriteAllText(propsPath, content.ToString());
+        }
+
+        private static (string, string) GetVersionInfo(string version, string commitCount)
+        {
+            var nugetVersion = new NuGetVersion(version);
+
+            if (!string.IsNullOrWhiteSpace(nugetVersion.Release))
+            {
+                var releaseParts = nugetVersion.Release.Split('-', '.');
+                if (releaseParts.Length == 2)
+                {
+                    if (releaseParts[1].TrimStart('0') == commitCount)
+                    {
+                        // core-sdk does this - OfficialBuildId is only used for their fake package and not in anything shipped
+                        return (DateTime.Now.ToString("yyyyMMdd.1"), releaseParts[0]);
+                    }
+                    else
+                    {
+                        // NuGet does this - arbitrary build IDs
+                        return (releaseParts[1], releaseParts[0]);
+                    }
+                }
+                else if (releaseParts.Length == 3)
+                {
+                    if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
+                    {
+                        return ($"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", releaseParts[0]);
+                    }
+                }
+            }
+            else
+            {
+                // finalized version number (x.y.z) - probably not our code
+                // VSTest, Application Insights, Newtonsoft.Json do this
+                return (DateTime.Now.ToString("yyyyMMdd.1"), string.Empty);
+            }
+
+            throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
         }
 
         private static object GetRepoNameOrDefault(Dependency dependency)
