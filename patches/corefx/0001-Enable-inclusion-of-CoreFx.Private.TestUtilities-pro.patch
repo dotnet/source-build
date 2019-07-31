@@ -1,0 +1,39 @@
+From 46f9c82e5c271f304d376a3a24d778bfa3e92977 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 20 Jun 2019 19:13:31 +0000
+Subject: [PATCH 1/2] Enable inclusion of CoreFx.Private.TestUtilities project
+ in source-build
+
+---
+ Directory.Build.props | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index e09d793..f77ebd9 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -343,11 +343,20 @@
+     <UAPTestSharedFrameworkPath>$(TestHostRootPath)UAPLayout</UAPTestSharedFrameworkPath>
+   </PropertyGroup>
+ 
++  <!-- 
++    Controls inclusion/exclusion of CoreFx TestUtilities project.
++    Allows overriding from the calling process, i.e. source-build test run.
++  -->
++  <PropertyGroup>
++    <IncludeTestUtils Condition="('$(IncludeTestUtils)' == '' and '$(DotNetBuildFromSource)' != 'true') or '$(BuildTests)' == 'true'">true</IncludeTestUtils>
++    <IncludeTestUtils Condition="'$(IncludeTestUtils)' == ''">false</IncludeTestUtils>
++  </PropertyGroup>
++
+   <!--
+     Remove test-only dependencies during source-build: disable project that brings in XUnit.Runtime
+     dependencies through 'ReferenceFromRuntime' property.
+   -->
+-  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildTests)' != 'true'">
++  <ItemGroup Condition="'$(IncludeTestUtils)' != 'true'">
+     <ProjectExclusions Include="$(SourceDir)CoreFx.Private.TestUtilities/**/*.csproj" />
+   </ItemGroup>
+   <!-- AOT only asset that we currently don't support. -->
+-- 
+1.8.3.1
+

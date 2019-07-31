@@ -1,0 +1,24 @@
+From c306bc6ae2254ceb151ad2367db847dc79b9c395 Mon Sep 17 00:00:00 2001
+From: "Nikola Milosavljevic (CLR)" <nikolam@microsoft.com>
+Date: Mon, 1 Jul 2019 16:27:56 -0700
+Subject: [PATCH 2/2] Fix _runtimeOSFamily property
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index f77ebd9..c9b4fa0 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -138,6 +138,7 @@
+   <PropertyGroup>
+     <_runtimeOSVersionIndex>$(RuntimeOS.IndexOfAny(".-0123456789"))</_runtimeOSVersionIndex>
+     <_runtimeOSFamily Condition="'$(_runtimeOSVersionIndex)' != '-1'">$(RuntimeOS.SubString(0, $(_runtimeOSVersionIndex)))</_runtimeOSFamily>
++    <_runtimeOSFamily Condition="'$(_runtimeOSFamily)' == ''">$(RuntimeOS)</_runtimeOSFamily>
+     <_portableOS>linux</_portableOS>
+     <_portableOS Condition="'$(RuntimeOS)' == 'linux-musl'">linux-musl</_portableOS>
+     <_portableOS Condition="'$(_runtimeOSFamily)' == 'win' OR '$(OSGroup)' == 'Windows_NT'">win</_portableOS>
+-- 
+1.8.3.1
+
