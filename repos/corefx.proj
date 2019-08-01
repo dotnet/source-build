@@ -48,7 +48,7 @@
       assembly .../build/../tools/Microsoft.Build.Tasks.CodeAnalysis.dll. Assembly with same name
       is already loaded
     -->
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(FlagParameterPrefix)ci $(ArcadeFalseBoolBuildArg)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse  $(ArcadeFalseBoolBuildArg) $(FlagParameterPrefix)ci</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
