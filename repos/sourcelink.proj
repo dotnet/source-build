@@ -7,6 +7,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)binaryLog</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)ci</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -19,23 +20,8 @@
     <UseBootstrapArcade>true</UseBootstrapArcade>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(OfflineBuild)' != 'true'">
-    <ArcadeBootstrapVersion>$(ARCADE_BOOTSTRAP_VERSION)</ArcadeBootstrapVersion>
-    <ArcadeBootstrapDir>$(PackagesDir)</ArcadeBootstrapDir>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-    <!-- stage1 Arcade is always built with a 1.0.0-dev version so this is consistent -->
-    <ArcadeBootstrapVersion>1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapDir>$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
-  </PropertyGroup>
-
   <ItemGroup>
-    <!-- bootstrap our version of sourcelink using the version of bootstrap Arcade that source-build retrieves.
-         This prevents getting into a dependency loop of sourcelink needing Arcade to build and vice-versa.  -->
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(ArcadeBootstrapDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeBootstrapSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>
