@@ -39,11 +39,17 @@ namespace Microsoft.DotNet.Build.Tasks
                 versionDetails = (VersionDetails)serializer.Deserialize(stream);
             }
 
+            var allRepoProps = new StringBuilder();
+            allRepoProps.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            allRepoProps.AppendLine("<Project>");
+            allRepoProps.AppendLine("  <PropertyGroup>");
+
             foreach(var dep in versionDetails.ToolsetDependencies.Concat(versionDetails.ProductDependencies))
             {
                 Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Starting dependency {dep.ToString()}");
                 var repoPath = DeriveRepoPath(SourceDirPath, dep.Uri, dep.Sha);
                 var repoGitDir = DeriveRepoGitDirPath(GitDirPath, dep.Uri);
+                var repoName = GetRepoNameOrDefault(dep);
                 try
                 {
                     WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
@@ -52,12 +58,20 @@ namespace Microsoft.DotNet.Build.Tasks
                     {
                         HandleSubmodules(repoPath, repoGitDir, dep);
                     }
+                    allRepoProps.AppendLine($"    <{repoName}GitCommitHash>{dep.Sha}</{repoName}GitCommitHash>");
+                    allRepoProps.AppendLine($"    <{repoName}OutputPackageVersion>{dep.Version}</{repoName}OutputPackageVersion>");
                 }
                 catch (Exception e)
                 {
                     Log.LogErrorFromException(e, true, true, null);
                 }
             }
+
+            allRepoProps.AppendLine("  </PropertyGroup>");
+            allRepoProps.AppendLine("</Project>");
+            var allRepoPropsPath = Path.Combine(SourceBuildMetadataPath, "AllRepoVersions.props");
+            Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Writing all repo versions to {allRepoPropsPath}");
+            File.WriteAllText(allRepoPropsPath, allRepoProps.ToString());
 
             return !Log.HasLoggedErrors;
         }
@@ -76,7 +90,7 @@ namespace Microsoft.DotNet.Build.Tasks
             content.AppendLine($"    <GitCommitDate>{GetCommitDate(repoGitDir, dependency.Sha)}</GitCommitDate>");
             content.AppendLine($"    <OfficialBuildId>{officialBuildId}</OfficialBuildId>");
             content.AppendLine($"    <OutputPackageVersion>{dependency.Version}</OutputPackageVersion>");
-            content.AppendLine($"    <PreReleaseLabel>{releaseLabel}</PreReleaseLabel>");
+            content.AppendLine($"    <PreReleaseVersionLabel>{releaseLabel}</PreReleaseVersionLabel>");
             content.AppendLine("  </PropertyGroup>");
             content.AppendLine("</Project>");
             File.WriteAllText(propsPath, content.ToString());

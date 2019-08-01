@@ -5,11 +5,15 @@
   <PropertyGroup>
     <RepositoryName Condition="'$(RepositoryName)' == ''">$(MSBuildProjectName)</RepositoryName>
     <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
+    <ProductionAllRepoPropsFile>$(GitInfoOutputDir)AllRepoVersions.props</ProductionAllRepoPropsFile>
     <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
+    <OfflineAllRepoPropsFile>$(GitInfoOfflineDir)AllRepoVersions.props</OfflineAllRepoPropsFile>
   </PropertyGroup>
 
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
   <Import Project="$(OfflineGitInfoPropsFile)" Condition="Exists('$(OfflineGitInfoPropsFile)')" />
+  <Import Project="$(ProductionAllRepoPropsFile)" Condition="Exists('$(ProductionAllRepoPropsFile)')" />
+  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <PropertyGroup>
     <SourceDirectory Condition="'$(SourceDirectory)' == ''">$(RepositoryName)</SourceDirectory>
@@ -113,16 +117,16 @@
     <EnvironmentVariables Include="RepositoryCommit=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
-    <EnvironmentVariables Include="PreReleaseLabel=$(PreReleaseLabel)" />
+    <EnvironmentVariables Include="PreReleaseVersionLabel=$(PreReleaseVersionLabel)" />
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="DeterministicSourcePaths=true" />
   </ItemGroup>
 
   <ItemGroup>
-    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="1.0.0-dev"/>
-    <ArcadeConfigurationOverride Include="Microsoft.DotNet.Build.Tasks.Configuration" Group="ARCADE_CONFIGURATION" Version="1.0.0-dev"/>
-    <ArcadeCoreFxTestingOverride Include="Microsoft.DotNet.CoreFxTesting" Group="ARCADE_COREFX_TESTING" Version="1.0.0-dev"/>
-    <ArcadePackagingOverride Include="Microsoft.DotNet.Build.Tasks.Packaging" Group="ARCADE_PACKAGING" Version="1.0.0-dev"/>
+    <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(arcadeOutputPackageVersion)"/>
+    <ArcadeConfigurationOverride Include="Microsoft.DotNet.Build.Tasks.Configuration" Group="ARCADE_CONFIGURATION" Version="$(arcadeOutputPackageVersion)"/>
+    <ArcadeCoreFxTestingOverride Include="Microsoft.DotNet.CoreFxTesting" Group="ARCADE_COREFX_TESTING" Version="$(arcadeOutputPackageVersion)"/>
+    <ArcadePackagingOverride Include="Microsoft.DotNet.Build.Tasks.Packaging" Group="ARCADE_PACKAGING" Version="$(arcadeOutputPackageVersion)"/>
     <ILSdkOverride Include="Microsoft.NET.Sdk.IL" Group="IL" />
     <MsBuildTraversalSdkOverride Include="Microsoft.Build.Traversal" Group="MSBUILD_TRAVERSAL" Version="2.0.2"/>
   </ItemGroup>
