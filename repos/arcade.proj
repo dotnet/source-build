@@ -3,11 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <!-- using a dev version here lets us use "1.0.0-dev" as the Arcade version everywhere after building it.
-         We will probably fix this with the automatic build uptake work.
-    <OfficialBuildId>20190614.15</OfficialBuildId>
-    -->
-
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
@@ -47,10 +42,6 @@
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
     <EnvironmentVariables Include="useInstalledDotNetCli=false" />
-
-    <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->
-    <EnvironmentVariables Remove="DotNetUseShippingVersions=true" />
-    <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
   </ItemGroup>
 
   <ItemGroup>
@@ -63,8 +54,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-    <!-- stage1 Arcade is always built with a 1.0.0-dev version so this is consistent.  See also OfficialBuildId note above. -->
-    <ArcadeBootstrapVersion>1.0.0-dev</ArcadeBootstrapVersion>
+    <ArcadeBootstrapVersion>$(OutputPackageVersion)</ArcadeBootstrapVersion>
     <ArcadeBootstrapDir>$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
   </PropertyGroup>
 

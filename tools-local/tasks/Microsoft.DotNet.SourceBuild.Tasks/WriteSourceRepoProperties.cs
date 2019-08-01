@@ -75,6 +75,7 @@ namespace Microsoft.DotNet.Build.Tasks
             content.AppendLine($"    <GitCommitCount>{commitCount}</GitCommitCount>");
             content.AppendLine($"    <GitCommitDate>{GetCommitDate(repoGitDir, dependency.Sha)}</GitCommitDate>");
             content.AppendLine($"    <OfficialBuildId>{officialBuildId}</OfficialBuildId>");
+            content.AppendLine($"    <OutputPackageVersion>{dependency.Version}</OutputPackageVersion>");
             content.AppendLine($"    <PreReleaseLabel>{releaseLabel}</PreReleaseLabel>");
             content.AppendLine("  </PropertyGroup>");
             content.AppendLine("</Project>");
