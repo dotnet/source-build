@@ -6,6 +6,7 @@
     <BuildCommandArgs>--restore --build --pack --publish</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:FSharpSourceBuild=true</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 

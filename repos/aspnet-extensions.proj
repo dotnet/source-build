@@ -10,6 +10,7 @@
     <BuildCommandArgs/>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>

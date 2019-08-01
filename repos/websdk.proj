@@ -7,6 +7,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SkipTests=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <!-- NuGet semver warning triggers even when ignored for some reason? -->
     <BuildCommandArgs>$(BuildCommandArgs) --warnAsError false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>

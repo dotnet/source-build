@@ -17,7 +17,7 @@
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(VersionStamp)"</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(PreReleaseVersionLabel)"</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
