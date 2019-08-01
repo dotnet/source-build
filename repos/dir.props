@@ -81,9 +81,6 @@
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
 
-    <EnvironmentVariables Include="PackageVersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
-    <EnvironmentVariables Include="PB_VersionStamp=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
-    <EnvironmentVariables Include="PreReleaseVersionLabel=$(VersionStamp)" Condition="'$(VersionStamp)' != ''" />
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
     <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
 
@@ -118,6 +115,8 @@
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="PreReleaseVersionLabel=$(PreReleaseVersionLabel)" />
+    <EnvironmentVariables Include="PackageVersionStamp=$(PreReleaseVersionLabel)" />
+    <EnvironmentVariables Include="PB_VersionStamp=$(PreReleaseVersionLabel)" />
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="DeterministicSourcePaths=true" />
   </ItemGroup>
