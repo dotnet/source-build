@@ -1,7 +1,7 @@
-From fc63bfb5f3cd16f7f5a072c0dff5e8d25139ff64 Mon Sep 17 00:00:00 2001
+From 4502fe6c4a2feab95daa7d1fc56b9a0bc6533021 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 31 May 2019 11:02:11 -0500
-Subject: [PATCH 2/2] Exclude test projects from source-build.
+Subject: [PATCH 2/4] Exclude test projects from source-build.
 
 ---
  illink.sln                 | 62 --------------------------------------
@@ -10,10 +10,10 @@ Subject: [PATCH 2/2] Exclude test projects from source-build.
  create mode 100644 test/Directory.Build.props
 
 diff --git a/illink.sln b/illink.sln
-index 43e0685..4abee20 100644
+index 59062e7..3ae11fb 100644
 --- a/illink.sln
 +++ b/illink.sln
-@@ -14,16 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILLink.CustomSteps", "src\I
+@@ -12,16 +12,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker", "src\linker\M
  EndProject
  Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ILLink.Tasks", "src\ILLink.Tasks\ILLink.Tasks.csproj", "{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}"
  EndProject
@@ -30,7 +30,7 @@ index 43e0685..4abee20 100644
  Global
  	GlobalSection(SolutionConfigurationPlatforms) = preSolution
  		Debug|Any CPU = Debug|Any CPU
-@@ -109,54 +99,6 @@ Global
+@@ -95,54 +85,6 @@ Global
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x64.Build.0 = Release|Any CPU
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x86.ActiveCfg = Release|Any CPU
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x86.Build.0 = Release|Any CPU
@@ -85,7 +85,7 @@ index 43e0685..4abee20 100644
  	EndGlobalSection
  	GlobalSection(SolutionProperties) = preSolution
  		HideSolutionNode = FALSE
-@@ -165,9 +107,5 @@ Global
+@@ -151,9 +93,5 @@ Global
  		SolutionGuid = {E43A3901-42B0-48CA-BB36-5CD40A99A6EE}
  	EndGlobalSection
  	GlobalSection(NestedProjects) = preSolution
@@ -107,5 +107,5 @@ index 0000000..583a96c
 +  </PropertyGroup>
 +</Project>
 -- 
-2.18.0
+2.21.0
 
