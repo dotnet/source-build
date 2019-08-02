@@ -29,8 +29,6 @@
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' != 'true' AND '$(PrepForTests)' != 'true'">$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' == 'true' OR '$(PrepForTests)' == 'true'">$(BuildArguments) /p:EnableVSTestReferences=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' != 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</BuildArguments>
