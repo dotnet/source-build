@@ -1,0 +1,39 @@
+From a21c55e9e44aafde9c3ec1002d55231ece2c4e6e Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 30 Jul 2019 19:01:34 +0000
+Subject: [PATCH] Fix name of Microsoft.DotNet.Cli.CommandLine version property
+
+---
+ Directory.Build.targets | 2 +-
+ eng/Versions.props      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 657b954..9720449 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -9,7 +9,7 @@
+         <PackageReference Update="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+         <PackageReference Update="System.Runtime.Loader" Version="4.3.0" />
+ 
+-        <PackageReference Update="Microsoft.DotNet.Cli.CommandLine" Version="$(DotNetCliCommandLineVersion)" />
++        <PackageReference Update="Microsoft.DotNet.Cli.CommandLine" Version="$(MicrosoftDotNetCliCommandLinePackageVersion)" />
+         <PackageReference Update="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+         <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
+         <PackageReference Update="xunit" Version="2.3.1" />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index f9abb75..32153c9 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -9,7 +9,7 @@
+     <PreReleaseVersionLabel>preview7</PreReleaseVersionLabel>
+     <PackSpecific Condition="'$(OS)' != 'Windows_NT'">true</PackSpecific>
+     <NewtonsoftJsonPackageVersion>10.0.3</NewtonsoftJsonPackageVersion>
+-    <DotNetCliCommandLineVersion>0.1.1-alpha-167</DotNetCliCommandLineVersion>
++    <MicrosoftDotNetCliCommandLinePackageVersion>0.1.1-alpha-167</MicrosoftDotNetCliCommandLinePackageVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+     <RestoreSources>
+-- 
+1.8.3.1
+
