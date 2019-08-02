@@ -9,16 +9,18 @@
     <OverridePortable>$(PortableBuild)</OverridePortable>
     <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
 
-    <BuildArguments>-ConfigurationGroup=$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -PortableBuild=$(OverridePortable)</BuildArguments>
-    <BuildArguments>$(BuildArguments) -SkipTests=true</BuildArguments>
+    <BuildArguments>--restore --build --pack</BuildArguments>
+    <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) --</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(PreReleaseVersionLabel)"</BuildArguments>
-    <BuildArguments>$(BuildArguments) /bl</BuildArguments>
+
+    <LogVerbosityOptOut>true</LogVerbosityOptOut>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
