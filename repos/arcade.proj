@@ -7,7 +7,6 @@
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
@@ -34,7 +33,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <BuiltSdkPackageOverride Include="@(ArcadeBootstrapSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadeConfigurationOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadeCoreFxTestingOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadePackagingOverride)" />

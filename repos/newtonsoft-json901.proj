@@ -20,6 +20,11 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
+  </ItemGroup>
+
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) /v:$(LogVerbosity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"

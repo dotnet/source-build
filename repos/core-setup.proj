@@ -30,6 +30,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="newtonsoft-json" />

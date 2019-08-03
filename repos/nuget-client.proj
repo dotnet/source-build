@@ -21,8 +21,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
+
     <EnvironmentVariables Include="MS_PFX_PATH=$(NuGetKeyFilePath)" />
     <EnvironmentVariables Include="NUGET_PFX_PATH=$(NuGetKeyFilePath)" />
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="common" />
   </ItemGroup>

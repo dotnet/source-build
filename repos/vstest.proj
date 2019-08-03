@@ -17,6 +17,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>

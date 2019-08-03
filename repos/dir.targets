@@ -389,7 +389,8 @@
     <ItemGroup>
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Identity)" />
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Version)" />
-      <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' != ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Location)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' == ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
     </ItemGroup>
   </Target>
 

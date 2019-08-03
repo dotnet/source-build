@@ -18,7 +18,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
     <EnvironmentVariables Include="Configuration=$(Configuration)" />
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

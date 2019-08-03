@@ -121,8 +121,16 @@
     <EnvironmentVariables Include="DeterministicSourcePaths=true" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <ArcadeBootstrapDir Condition="'$(OfflineBuild)' != 'true'">$(PackagesDir)</ArcadeBootstrapDir>
+    <ArcadeBootstrapDir Condition="'$(OfflineBuild)' == 'true'">$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
+    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">$(ARCADE_BOOTSTRAP_VERSION)</ArcadeBootstrapVersion>
+    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">$(arcadeOutputPackageVersion)</ArcadeBootstrapVersion>
+  </PropertyGroup>
+
   <ItemGroup>
     <ArcadeSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(arcadeOutputPackageVersion)"/>
+    <ArcadeBootstrapSdkOverride Include="Microsoft.DotNet.Arcade.Sdk" Group="ARCADE" Version="$(ArcadeBootstrapVersion)" Location="$(ArcadeBootstrapDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
     <ArcadeConfigurationOverride Include="Microsoft.DotNet.Build.Tasks.Configuration" Group="ARCADE_CONFIGURATION" Version="$(arcadeOutputPackageVersion)"/>
     <ArcadeCoreFxTestingOverride Include="Microsoft.DotNet.CoreFxTesting" Group="ARCADE_COREFX_TESTING" Version="$(arcadeOutputPackageVersion)"/>
     <ArcadePackagingOverride Include="Microsoft.DotNet.Build.Tasks.Packaging" Group="ARCADE_PACKAGING" Version="$(arcadeOutputPackageVersion)"/>

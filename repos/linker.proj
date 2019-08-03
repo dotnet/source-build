@@ -34,6 +34,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
+
     <!-- reset SDK location variables to use 3.0 SDK override -->
     <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />

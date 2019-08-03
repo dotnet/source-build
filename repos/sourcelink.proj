@@ -7,7 +7,6 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)binaryLog</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)ci</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -21,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <BuiltSdkPackageOverride Include="@(ArcadeBootstrapSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>
