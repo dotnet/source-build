@@ -50,6 +50,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 var repoPath = DeriveRepoPath(SourceDirPath, dep.Uri, dep.Sha);
                 var repoGitDir = DeriveRepoGitDirPath(GitDirPath, dep.Uri);
                 var repoName = GetRepoNameOrDefault(dep);
+                var safeRepoName = repoName.Replace("-", "");
                 try
                 {
                     WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
@@ -58,8 +59,8 @@ namespace Microsoft.DotNet.Build.Tasks
                     {
                         HandleSubmodules(repoPath, repoGitDir, dep);
                     }
-                    allRepoProps.AppendLine($"    <{repoName}GitCommitHash>{dep.Sha}</{repoName}GitCommitHash>");
-                    allRepoProps.AppendLine($"    <{repoName}OutputPackageVersion>{dep.Version}</{repoName}OutputPackageVersion>");
+                    allRepoProps.AppendLine($"    <{safeRepoName}GitCommitHash>{dep.Sha}</{safeRepoName}GitCommitHash>");
+                    allRepoProps.AppendLine($"    <{safeRepoName}OutputPackageVersion>{dep.Version}</{safeRepoName}OutputPackageVersion>");
                 }
                 catch (Exception e)
                 {
@@ -134,7 +135,7 @@ namespace Microsoft.DotNet.Build.Tasks
             throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
         }
 
-        private static object GetRepoNameOrDefault(Dependency dependency)
+        private static string GetRepoNameOrDefault(Dependency dependency)
         {
             if (dependency.RepoName != null)
             {
