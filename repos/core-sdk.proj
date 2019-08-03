@@ -86,17 +86,6 @@
                   is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
-
-    <!-- reset SDK location variables to use 3.0 SDK override -->
-    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
-
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <Target Name="CopyTarBall" AfterTargets="CopyPackage">
