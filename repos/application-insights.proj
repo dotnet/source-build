@@ -12,6 +12,19 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!-- reset SDK location variables to use 3.0 SDK override -->
+    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
+    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
+
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
   <Target Name="RepoBuild">
