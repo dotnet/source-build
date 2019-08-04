@@ -3,10 +3,12 @@
   <PropertyGroup>
     <!-- Don't try to import the target info file when building this project -->
     <GeneratingStaticPropertiesFile>true</GeneratingStaticPropertiesFile>
+    <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
   </PropertyGroup>
   <Import Project="..\dir.props" />
   <Import Project="$(ToolsDir)Packaging.targets" />
   <Import Project="$(ToolsDir)IL.targets" />
+  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteSourceRepoProperties" />
