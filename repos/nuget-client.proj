@@ -67,13 +67,4 @@
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
   </Target>
-
-  <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
-    <Exec Command="git submodule init"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="git submodule update"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-  </Target>
 </Project>
