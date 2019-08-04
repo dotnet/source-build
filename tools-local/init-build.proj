@@ -95,8 +95,8 @@
   <Target Name="ExtractToolPackage"
           DependsOnTargets="BuildTasks"
           Condition="'$(OfflineBuild)' == 'true'">
-    <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.1.0.0-dev.nupkg"
-                               DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/1.0.0-dev/"
+    <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(arcadeOutputPackageVersion).nupkg"
+                               DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(arcadeOutputPackageVersion)/"
                                OverwriteDestination="true" />
   </Target>
 
