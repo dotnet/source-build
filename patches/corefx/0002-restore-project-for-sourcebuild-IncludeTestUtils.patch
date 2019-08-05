@@ -1,0 +1,26 @@
+From 4c61e09cd448347edea547c00c57988a846dc557 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 5 Aug 2019 18:21:28 +0000
+Subject: [PATCH 2/2] restore project for sourcebuild&&IncludeTestUtils
+
+---
+ build.proj | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build.proj b/build.proj
+index 0711f6f..38f11c9 100644
+--- a/build.proj
++++ b/build.proj
+@@ -22,7 +22,8 @@
+       <_RestoreProjects Include="external\dir.proj" Build="true" />
+     </ItemGroup>
+     
+-    <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
++    <!--When Building from source and including test utils then ref and src projects are to be restored-->
++    <ItemGroup Condition="('$(DotNetBuildFromSource)' != 'true') or '$(IncludeTestUtils)' == 'true'">
+       <_RestoreProjects Include="$(SourceDir)tests.proj" Build="false" />
+       <!-- Remove when ref and src project restore is enabled. -->
+       <_RestoreProjects Include="$(SourceDir)CoreFx.Private.TestUtilities\ref\CoreFx.Private.TestUtilities.csproj" Build="false" />
+-- 
+1.8.3.1
+
