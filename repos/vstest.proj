@@ -7,7 +7,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -r $(TargetRid)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -v 16.1.1</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -v $(vstestOutputPackageVersion)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
