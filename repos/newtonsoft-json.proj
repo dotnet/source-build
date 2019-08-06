@@ -10,9 +10,6 @@
   <!--The semicolons were added with encoding so as to avoid conflicts in MSBuild shell-->
   <ItemGroup>
     <EnvironmentVariables Include="LibraryFrameworks=netstandard1.0%3Bnetstandard1.3%3Bnetstandard2.0" />
-    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
-
     <!--This is a fake repo reference to slightly tweak build ordering so that arcade builds before newtonsoft. Although this tweak is temporary. dtd 06/19/2019-->
     <RepositoryReference Include="arcade" />
   </ItemGroup>   
@@ -29,6 +26,7 @@
     <PackagesOutput>$(NewtonsoftJsonDirectory)bin/$(Configuration)/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
   <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">

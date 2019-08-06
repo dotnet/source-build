@@ -10,12 +10,8 @@
     <PackagesOutput>$(ProjectDirectory)/bin/$(Configuration)</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
-  </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 

@@ -118,7 +118,8 @@
     <EnvironmentVariables Include="PackageVersionStamp=$(PreReleaseVersionLabel)" />
     <EnvironmentVariables Include="PB_VersionStamp=$(PreReleaseVersionLabel)" />
     <EnvironmentVariables Include="RepositoryType=Git" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=true" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=true" Condition="'$(DeterministicBuildOptOut)' != 'true'" />
+    <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -27,12 +27,8 @@
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
 
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
-  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />

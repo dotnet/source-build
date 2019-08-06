@@ -15,13 +15,12 @@
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
     <EnvironmentVariables Include="Configuration=$(Configuration)" />
-    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

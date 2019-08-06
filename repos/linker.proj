@@ -27,15 +27,11 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Remove="DeterministicSourcePaths=true" />
-    <EnvironmentVariables Include="DeterministicSourcePaths=false" />
   </ItemGroup>
 
   <!-- Extract this package into packages dir, because repos assume it's restored as a tool. -->
