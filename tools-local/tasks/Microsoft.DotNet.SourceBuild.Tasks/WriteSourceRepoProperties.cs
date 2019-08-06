@@ -3,11 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.Build.Framework;
+using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
 using Microsoft.DotNet.SourceBuild.Tasks.Models;
 using NuGet.Versioning;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -19,48 +20,45 @@ namespace Microsoft.DotNet.Build.Tasks
     public class WriteSourceRepoProperties : Task
     {
         [Required]
-        public string VersionDetailsPath { get; set; }
+        public string VersionDetailsFile { get; set; }
 
         [Required]
-        public string GitDirPath { get; set; }
+        public string ClonedSubmoduleGitRootDirectory { get; set; }
 
         [Required]
-        public string SourceDirPath { get; set; }
+        public string ClonedSubmoduleDirectory { get; set; }
 
         [Required]
-        public string SourceBuildMetadataPath { get; set; }
+        public string SourceBuildMetadataDir { get; set; }
 
         public override bool Execute()
         {
             var serializer = new XmlSerializer(typeof(VersionDetails));
             VersionDetails versionDetails = null;
-            using (var stream = File.OpenRead(VersionDetailsPath))
+            using (var stream = File.OpenRead(VersionDetailsFile))
             {
                 versionDetails = (VersionDetails)serializer.Deserialize(stream);
             }
 
-            var allRepoProps = new StringBuilder();
-            allRepoProps.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            allRepoProps.AppendLine("<Project>");
-            allRepoProps.AppendLine("  <PropertyGroup>");
+            var allRepoProps = new Dictionary<string, string>();
 
-            foreach(var dep in versionDetails.ToolsetDependencies.Concat(versionDetails.ProductDependencies))
+            foreach (var dep in versionDetails.ToolsetDependencies.Concat(versionDetails.ProductDependencies))
             {
                 Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Starting dependency {dep.ToString()}");
-                var repoPath = DeriveRepoPath(SourceDirPath, dep.Uri, dep.Sha);
-                var repoGitDir = DeriveRepoGitDirPath(GitDirPath, dep.Uri);
-                var repoName = GetRepoNameOrDefault(dep);
-                var safeRepoName = repoName.Replace("-", "");
+                string repoPath = DeriveRepoPath(ClonedSubmoduleDirectory, dep.Uri, dep.Sha);
+                string repoGitDir = DeriveRepoGitDirPath(ClonedSubmoduleGitRootDirectory, dep.Uri);
+                string repoName = GetRepoNameOrDefault(dep);
+                string safeRepoName = repoName.Replace("-", "");
                 try
                 {
                     WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                    WriteSourceBuildMetadata(SourceBuildMetadataPath, repoGitDir, dep);
+                    WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
                     if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
                     {
                         HandleSubmodules(repoPath, repoGitDir, dep);
                     }
-                    allRepoProps.AppendLine($"    <{safeRepoName}GitCommitHash>{dep.Sha}</{safeRepoName}GitCommitHash>");
-                    allRepoProps.AppendLine($"    <{safeRepoName}OutputPackageVersion>{dep.Version}</{safeRepoName}OutputPackageVersion>");
+                    allRepoProps[$"{safeRepoName}GitCommitHash"] = dep.Sha;
+                    allRepoProps[$"{safeRepoName}OutputPackageVersion"] = dep.Version;
                 }
                 catch (Exception e)
                 {
@@ -68,37 +66,44 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
             }
 
-            allRepoProps.AppendLine("  </PropertyGroup>");
-            allRepoProps.AppendLine("</Project>");
-            var allRepoPropsPath = Path.Combine(SourceBuildMetadataPath, "AllRepoVersions.props");
+            string allRepoPropsPath = Path.Combine(SourceBuildMetadataDir, "AllRepoVersions.props");
             Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Writing all repo versions to {allRepoPropsPath}");
             File.WriteAllText(allRepoPropsPath, allRepoProps.ToString());
+            WritePropsFile(allRepoPropsPath, allRepoProps);
 
             return !Log.HasLoggedErrors;
         }
 
-        private static void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency)
+        private void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency)
         {
-            var propsPath = Path.Combine(sourceBuildMetadataPath, $"{GetRepoNameOrDefault(dependency)}.props");
-            var commitCount = GetCommitCount(repoGitDir, dependency.Sha);
-            var (officialBuildId, releaseLabel) = GetVersionInfo(dependency.Version, commitCount);
-            var content = new StringBuilder();
-            content.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-            content.AppendLine("<Project>");
-            content.AppendLine("  <PropertyGroup>");
-            content.AppendLine($"    <GitCommitHash>{dependency.Sha}</GitCommitHash>");
-            content.AppendLine($"    <GitCommitCount>{commitCount}</GitCommitCount>");
-            content.AppendLine($"    <GitCommitDate>{GetCommitDate(repoGitDir, dependency.Sha)}</GitCommitDate>");
-            content.AppendLine($"    <OfficialBuildId>{officialBuildId}</OfficialBuildId>");
-            content.AppendLine($"    <OutputPackageVersion>{dependency.Version}</OutputPackageVersion>");
-            content.AppendLine($"    <PreReleaseVersionLabel>{releaseLabel}</PreReleaseVersionLabel>");
-            content.AppendLine("  </PropertyGroup>");
-            content.AppendLine("</Project>");
-            File.WriteAllText(propsPath, content.ToString());
+            string propsPath = Path.Combine(sourceBuildMetadataPath, $"{GetRepoNameOrDefault(dependency)}.props");
+            string commitCount = GetCommitCount(repoGitDir, dependency.Sha);
+            DerivedVersion derivedVersion = GetVersionInfo(dependency.Version, commitCount);
+            var repoProps = new Dictionary<string, string>
+            {
+                ["GitCommitHash"] = dependency.Sha,
+                ["GitCommitCount"] = commitCount,
+                ["GitCommitDate"] = GetCommitDate(repoGitDir, dependency.Sha),
+                ["OfficialBuildId"] = derivedVersion.OfficialBuildId,
+                ["OutputPackageVersion"] = dependency.Version,
+                ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel
+            };
+            WritePropsFile(propsPath, repoProps);
         }
 
-        private static (string, string) GetVersionInfo(string version, string commitCount)
+
+        /// <summary>
+        /// Reverse a version in the Arcade style (https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets#L18)
+        /// back to an OfficialBuildId + ReleaseLabel which we can then supply to get the same resulting version number.
+        /// </summary>
+        /// <param name="version">The complete version, e.g. 1.0.0-beta1-19720.5</param>
+        /// <param name="commitCount">The current commit count of the repo.  This is used for some repos that do not use the standard versioning scheme.</param>
+        /// <returns></returns>
+        private static DerivedVersion GetVersionInfo(string version, string commitCount)
         {
+            // https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/Documentation/CorePackages/Versioning.md#L114
+            const int PatchDateBase = 19000;
+
             var nugetVersion = new NuGetVersion(version);
 
             if (!string.IsNullOrWhiteSpace(nugetVersion.Release))
@@ -109,19 +114,30 @@ namespace Microsoft.DotNet.Build.Tasks
                     if (releaseParts[1].TrimStart('0') == commitCount)
                     {
                         // core-sdk does this - OfficialBuildId is only used for their fake package and not in anything shipped
-                        return (DateTime.Now.ToString("yyyyMMdd.1"), releaseParts[0]);
+                        return new DerivedVersion { OfficialBuildId = DateTime.Now.ToString("yyyyMMdd.1"), PreReleaseVersionLabel = releaseParts[0] };
                     }
                     else
                     {
                         // NuGet does this - arbitrary build IDs
-                        return (releaseParts[1], releaseParts[0]);
+                        return new DerivedVersion { OfficialBuildId = releaseParts[1], PreReleaseVersionLabel = releaseParts[0] };
                     }
                 }
                 else if (releaseParts.Length == 3)
                 {
                     if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
                     {
-                        return ($"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", releaseParts[0]);
+                        // Good until 2025.  Original versioning scheme will also have to change by this point.
+                        if (datePart > 25000)
+                        {
+                            // this is a patch number rather than a short date: https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets#L43
+                            int revision = datePart % 100;
+                            int intermediateShortDate = ((datePart - revision) / 100) + PatchDateBase;
+                            return new DerivedVersion {  OfficialBuildId = $"20{((intermediateShortDate / 1000))}{((intermediateShortDate % 1000) / 50):D2}{(intermediateShortDate % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        }
+                        else
+                        {
+                            return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        }
                     }
                 }
             }
@@ -129,7 +145,7 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 // finalized version number (x.y.z) - probably not our code
                 // VSTest, Application Insights, Newtonsoft.Json do this
-                return (DateTime.Now.ToString("yyyyMMdd.1"), string.Empty);
+                return new DerivedVersion { OfficialBuildId = DateTime.Now.ToString("yyyyMMdd.1"), PreReleaseVersionLabel = string.Empty };
             }
 
             throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
@@ -149,17 +165,27 @@ namespace Microsoft.DotNet.Build.Tasks
             return repoUrl.Substring(repoUrl.LastIndexOf("/") + 1);
         }
 
-        private static string GetCommitCount(string gitDir, string hash)
+        private string GetCommitCount(string gitDir, string hash)
         {
             return RunGitCommand($"rev-list --count {hash}", gitDir: gitDir);
         }
 
-        private static string GetCommitDate(string gitDir, string hash)
+        private string GetCommitDate(string gitDir, string hash)
         {
-            return RunGitCommand($"log -1 --format=%cd --date=short", gitDir: gitDir);
+            return RunGitCommand($"log -1 --format=%cd --date=short {hash}", gitDir: gitDir);
         }
 
-        private static string RunGitCommand(string command, string workTree = null, string gitDir = null)
+        private IEnumerable<SubmoduleInfo> GetSubmoduleInfo(string gitModulesFilePath)
+        {
+            string submoduleProps = RunGitCommand($"config --file={gitModulesFilePath} --list");
+            var submodulePathRegex = new Regex(@"submodule\.(?<submoduleName>.*)\.path=(?<submodulePath>.*)");
+            foreach (Match m in submodulePathRegex.Matches(submoduleProps))
+            {
+                yield return new SubmoduleInfo { Name = m.Groups["submoduleName"].Value, Path = m.Groups["submodulePath"].Value };
+            }
+        }
+
+        private string RunGitCommand(string command, string workTree = null, string gitDir = null)
         {
             // Windows Git requires these to be before the command
             if (workTree != null)
@@ -170,16 +196,21 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 command = $"--git-dir={gitDir} {command}";
             }
-            var psi = new ProcessStartInfo { FileName = "git", Arguments = command, RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false, CreateNoWindow = true };
-            var p = new Process { StartInfo = psi };
-            p.Start();
-            var output = p.StandardOutput.ReadToEnd();
-            var error = p.StandardError.ReadToEnd();
-            p.WaitForExit();
-            if (p.ExitCode != 0)
+
+            var exec = new Exec
             {
-                throw new InvalidOperationException($"git command {command} failed with exit code {p.ExitCode} and error {error ?? "<blank>"}");
+                BuildEngine = BuildEngine,
+                Command = $"git {command}",
+                LogStandardErrorAsError = true,
+                ConsoleToMSBuild = true,
+            };
+
+            if (!exec.Execute() || exec.ExitCode != 0)
+            {
+                string error = string.Join(Environment.NewLine, exec.ConsoleOutput.Select(o => o.ItemSpec));
+                throw new InvalidOperationException($"git command '{command}' failed with exit code {exec.ExitCode} and error {error ?? "<blank>"}");
             }
+            string output = string.Join(Environment.NewLine, exec.ConsoleOutput.Select(o => o.ItemSpec));
             return output.Trim();
         }
 
@@ -193,27 +224,16 @@ namespace Microsoft.DotNet.Build.Tasks
             return Path.Combine(gitDirPath, $"{repoUrl.Substring(repoUrl.LastIndexOf("/") + 1)}.git");
         }
 
-        private static void HandleSubmodules(string sourceDirPath, string gitDirPath, Dependency dependency)
+        private void HandleSubmodules(string sourceDirPath, string gitDirPath, Dependency dependency)
         {
             var gitModulesPath = Path.Combine(sourceDirPath, ".gitmodules");
-            var gitModules = File.ReadAllText(gitModulesPath);
-            // This is a fun one.
-            // Start with header [submodule "name"]
-            // Then we have any number of parameters we don't care about, like
-            //      branch = release/3.0
-            //      url = https://example.com/project.git
-            // Then we have the one we do care about:
-            //      path = some/file/path
-            // Then we have possibly more stuff we don't care about.
-            // And finally we non-consuming anchor to either the next submodule header "[" or the end of the input so we stop capturing.
-            var gitModuleRegex = new Regex(@"\[\s*submodule\s+""(?<submoduleName>.+?)""\](\s+\w+\s*=\s*(.+?)\s)*?\s+path\s*=\s*(?<submodulePath>.+?)\s(\w+\s*=\s*(.+?)\s)*?(?=(\[|$))", RegexOptions.Singleline);
-            foreach (Match m in gitModuleRegex.Matches(gitModules))
+            foreach (SubmoduleInfo submodule in GetSubmoduleInfo(gitModulesPath))
             {
-                HandleSubmodule(sourceDirPath, gitDirPath, dependency.Sha, m.Groups["submoduleName"].Value, m.Groups["submodulePath"].Value.Trim());
+                WriteGitCommitMarkerFileForSubmodule(sourceDirPath, gitDirPath, dependency.Sha, submodule.Name, submodule.Path);
             }
         }
 
-        private static void HandleSubmodule(string sourceDirPath, string gitDirPath, string parentRepoSha, string submoduleName, string submodulePath)
+        private void WriteGitCommitMarkerFileForSubmodule(string sourceDirPath, string gitDirPath, string parentRepoSha, string submoduleName, string submodulePath)
         {
             var submoduleSha = GetSubmoduleCommit(gitDirPath, parentRepoSha, submodulePath);
             var headDirectory = Path.Combine(sourceDirPath, ".git", "modules", submoduleName);
@@ -245,7 +265,7 @@ namespace Microsoft.DotNet.Build.Tasks
             return Path.Combine(sourceDirPath, $"{repoUrl.Substring(repoUrl.LastIndexOf("/") + 1)}.{hash}");
         }
 
-        private static string GetSubmoduleCommit(string gitDirPath, string parentRepoSha, string submodulePath)
+        private string GetSubmoduleCommit(string gitDirPath, string parentRepoSha, string submodulePath)
         {
             var gitObjectList = RunGitCommand($"ls-tree {parentRepoSha} {submodulePath}", gitDir: gitDirPath);
             var submoduleRegex = new Regex(@"\d{6}\s+commit\s+(?<submoduleSha>[a-fA-F0-9]{40})\s+(.+)");
@@ -255,6 +275,33 @@ namespace Microsoft.DotNet.Build.Tasks
                 throw new InvalidDataException($"Couldn't find a submodule commit in {gitObjectList} for {submodulePath}");
             }
             return submoduleMatch.Groups["submoduleSha"].Value;
+        }
+
+        private static void WritePropsFile(string filePath, Dictionary<string, string> properties)
+        {
+            var content = new StringBuilder();
+            content.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            content.AppendLine("<Project>");
+            content.AppendLine("  <PropertyGroup>");
+            foreach (var propName in properties.Keys.OrderBy(k => k))
+            {
+                content.AppendLine($"    <{propName}>{properties[propName]}</{propName}");
+            }
+            content.AppendLine("  </PropertyGroup>");
+            content.AppendLine("</Project>");
+            File.WriteAllText(filePath, content.ToString());
+        }
+
+        private class DerivedVersion
+        {
+            internal string OfficialBuildId { get; set; }
+            internal string PreReleaseVersionLabel { get; set; }
+        }
+
+        private class SubmoduleInfo
+        {
+            internal string Name { get; set; }
+            internal string Path { get; set; }
         }
     }
 }
