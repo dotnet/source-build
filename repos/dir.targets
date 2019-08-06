@@ -14,6 +14,7 @@
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteBuildOutputProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WritePackageUsageData" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceProps" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteRestoreSourceAndVersionProps" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteUsageReports" />
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
@@ -31,10 +32,11 @@
 
   <PropertyGroup>
     <DependencyVersionInputRepoApiImplemented Condition="'$(DependencyVersionInputRepoApiImplemented)' == ''">$(RepoApiImplemented)</DependencyVersionInputRepoApiImplemented>
+    <SourceOverrideRepoApiImplemented Condition="'$(SourceOverrideRepoApiImplemented)' == ''">$(RepoApiImplemented)</SourceOverrideRepoApiImplemented>
     <OutputPlacementRepoApiImplemented Condition="'$(OutputPlacementRepoApiImplemented)' == ''">$(RepoApiImplemented)</OutputPlacementRepoApiImplemented>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' != 'true'">
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.config')">$(ProjectDirectory)NuGet.config</NuGetConfigFile>
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)NuGet.Config')">$(ProjectDirectory)NuGet.Config</NuGetConfigFile>
     <NuGetConfigFile Condition="'$(NuGetConfigFile)' == '' and Exists('$(ProjectDirectory)src\NuGet.config')">$(ProjectDirectory)src\NuGet.config</NuGetConfigFile>
@@ -44,6 +46,11 @@
   <!-- Dependency version input arguments -->
   <PropertyGroup Condition="'$(DependencyVersionInputRepoApiImplemented)' == 'true'">
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</RepoApiArgs>
+  </PropertyGroup>
+  <!-- Source override arguments -->
+  <PropertyGroup Condition="'$(SourceOverrideRepoApiImplemented)' == 'true'">
+    <RepoApiArgs>$(RepoApiArgs) /p:DotNetRestoreSourcePropsPath=$(RestoreSourcePropsPath)</RepoApiArgs>
+    <RepoApiArgs Condition="'$(OfflineBuild)' == 'true'">$(RepoApiArgs) /p:DotNetBuildOffline=true</RepoApiArgs>
   </PropertyGroup>
   <!-- Output placement arguments -->
   <PropertyGroup Condition="'$(OutputPlacementRepoApiImplemented)' == 'true'">
@@ -183,6 +190,24 @@
 
     <Warning Text="Detected packages in the cache that should be source-built, but contents don't match. See $(_ReportDir) for usage details:" />
     <Warning Text="%(ConflictingPackageInfos.PackageId)/%(ConflictingPackageInfos.PackageVersion) : %(ConflictingPackageInfos.WarningMessage)" />
+  </Target>
+
+  <Target Name="CreateCombinedRestoreSourceAndVersionProps"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
+      <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
+      <PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
+                                      Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
+      <_AdditionalAssetDirs Include="$(SourceBuiltToolsetDir)" Condition="Exists('$(SourceBuiltToolsetDir)')" />
+    </ItemGroup>
+    <WriteRestoreSourceAndVersionProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
+                                       ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
+                                       AdditionalAssetDirs="@(_AdditionalAssetDirs)"
+                                       RestoreSources="@(_DotNetRestoreSources)"
+                                       OutputPath="$(RestoreSourcePropsPath)" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="BuildRepoReferences">
