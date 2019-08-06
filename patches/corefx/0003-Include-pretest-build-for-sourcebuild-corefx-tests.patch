@@ -1,0 +1,25 @@
+From 30fadf4972899801b6476aa4c1e671966f1a0424 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Tue, 6 Aug 2019 19:21:43 +0000
+Subject: [PATCH 3/3] Include pretest build for sourcebuild corefx tests
+
+---
+ src/dirs.proj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/dirs.proj b/src/dirs.proj
+index fbe8e15..7a4c6ca 100644
+--- a/src/dirs.proj
++++ b/src/dirs.proj
+@@ -13,7 +13,7 @@
+     <Project Include="src.builds" />
+     <Project Include="shims\manual\*.csproj" />
+     <Project Include="shims\ApiCompat.proj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+-    <Project Include="pretest.builds" Condition="'$(DotNetBuildFromSource)' != 'true'" />
++    <Project Include="pretest.builds" Condition="('$(DotNetBuildFromSource)' != 'true') or '$(IncludeTestUtils)' == 'true'" />
+   </ItemGroup>
+ 
+   <!-- Don't build System.Text.Encodings.Web tools as part of build; they're intended to be run manually. -->
+-- 
+1.8.3.1
+
