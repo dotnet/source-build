@@ -7,9 +7,6 @@
   <Import Project="..\dir.props" />
   <Import Project="$(ToolsDir)Packaging.targets" />
   <Import Project="$(ToolsDir)IL.targets" />
-  <PropertyGroup>
-    <OfflineAllRepoPropsFile>$(GitInfoOfflineDir)AllRepoVersions.props</OfflineAllRepoPropsFile>
-  </PropertyGroup>
   <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />

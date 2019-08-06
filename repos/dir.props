@@ -4,10 +4,6 @@
 
   <PropertyGroup>
     <RepositoryName Condition="'$(RepositoryName)' == ''">$(MSBuildProjectName)</RepositoryName>
-    <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
-    <ProductionAllRepoPropsFile>$(GitInfoOutputDir)AllRepoVersions.props</ProductionAllRepoPropsFile>
-    <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
-    <OfflineAllRepoPropsFile>$(GitInfoOfflineDir)AllRepoVersions.props</OfflineAllRepoPropsFile>
   </PropertyGroup>
 
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
