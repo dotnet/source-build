@@ -68,7 +68,6 @@ namespace Microsoft.DotNet.Build.Tasks
 
             string allRepoPropsPath = Path.Combine(SourceBuildMetadataDir, "AllRepoVersions.props");
             Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Writing all repo versions to {allRepoPropsPath}");
-            File.WriteAllText(allRepoPropsPath, allRepoProps.ToString());
             WritePropsFile(allRepoPropsPath, allRepoProps);
 
             return !Log.HasLoggedErrors;
@@ -151,18 +150,34 @@ namespace Microsoft.DotNet.Build.Tasks
             throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
         }
 
+        private static string GetDefaultRepoNameFromUrl(string repoUrl)
+        {
+            if (repoUrl.EndsWith(".git"))
+            {
+                repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
+            }
+            return repoUrl.Substring(repoUrl.LastIndexOf("/") + 1);
+        }
+
         private static string GetRepoNameOrDefault(Dependency dependency)
         {
             if (dependency.RepoName != null)
             {
                 return dependency.RepoName;
             }
-            var repoUrl = dependency.Uri;
-            if (repoUrl.EndsWith(".git"))
-            {
-                repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
-            }
-            return repoUrl.Substring(repoUrl.LastIndexOf("/") + 1);
+            return GetDefaultRepoNameFromUrl(dependency.Uri);
+        }
+
+        private static string DeriveRepoGitDirPath(string gitDirPath, string repoUrl)
+        {
+            return Path.Combine(gitDirPath, $"{GetDefaultRepoNameFromUrl(repoUrl)}.git");
+        }
+
+        private static string DeriveRepoPath(string sourceDirPath, string repoUrl, string hash)
+        {
+            // hash could actually be a branch or tag, make it filename-safe
+            hash = hash.Replace('/', '-').Replace('\\', '-').Replace('?', '-').Replace('*', '-').Replace(':', '-').Replace('|', '-').Replace('"', '-').Replace('<', '-').Replace('>', '-');
+            return Path.Combine(sourceDirPath, $"{GetDefaultRepoNameFromUrl(repoUrl)}.{hash}");
         }
 
         private string GetCommitCount(string gitDir, string hash)
@@ -214,16 +229,6 @@ namespace Microsoft.DotNet.Build.Tasks
             return output.Trim();
         }
 
-        private static string DeriveRepoGitDirPath(string gitDirPath, string repoUrl)
-        {
-            if (repoUrl.EndsWith(".git"))
-            {
-                repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
-            }
-
-            return Path.Combine(gitDirPath, $"{repoUrl.Substring(repoUrl.LastIndexOf("/") + 1)}.git");
-        }
-
         private void HandleSubmodules(string sourceDirPath, string gitDirPath, Dependency dependency)
         {
             var gitModulesPath = Path.Combine(sourceDirPath, ".gitmodules");
@@ -253,17 +258,6 @@ namespace Microsoft.DotNet.Build.Tasks
             File.WriteAllText(fakeGitConfigPath, $"[remote \"origin\"]{Environment.NewLine}url = \"{repoUrl}\"");
         }
 
-        private static string DeriveRepoPath(string sourceDirPath, string repoUrl, string hash)
-        {
-            if (repoUrl.EndsWith(".git"))
-            {
-                repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
-            }
-
-            // hash could actually be a branch or tag, make it filename-safe
-            hash = hash.Replace('/', '-').Replace('\\', '-').Replace('?', '-').Replace('*', '-').Replace(':', '-').Replace('|', '-').Replace('"', '-').Replace('<', '-').Replace('>', '-');
-            return Path.Combine(sourceDirPath, $"{repoUrl.Substring(repoUrl.LastIndexOf("/") + 1)}.{hash}");
-        }
 
         private string GetSubmoduleCommit(string gitDirPath, string parentRepoSha, string submodulePath)
         {
@@ -285,7 +279,7 @@ namespace Microsoft.DotNet.Build.Tasks
             content.AppendLine("  <PropertyGroup>");
             foreach (var propName in properties.Keys.OrderBy(k => k))
             {
-                content.AppendLine($"    <{propName}>{properties[propName]}</{propName}");
+                content.AppendLine($"    <{propName}>{properties[propName]}</{propName}>");
             }
             content.AppendLine("  </PropertyGroup>");
             content.AppendLine("</Project>");
