@@ -9,12 +9,13 @@
     <OverridePortable>$(PortableBuild)</OverridePortable>
     <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
 
-    <BuildArguments>--restore --build --pack</BuildArguments>
+    <BuildArguments>--restore --build</BuildArguments>
     <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(PreReleaseVersionLabel)"</BuildArguments>
 
@@ -30,6 +31,7 @@
 
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
+    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
   </PropertyGroup>
 
   <ItemGroup>

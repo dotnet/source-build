@@ -1,0 +1,24 @@
+From 1cc0f98a7afd3dd49a95ea8f4a31f80f6805f75c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 4 Aug 2019 21:28:18 -0500
+Subject: [PATCH 2/2] Try ExcludeFromSourceBuild in windowsdesktop
+
+---
+ src/pkg/projects/windowsdesktop/src/windowsdesktop.depproj | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/pkg/projects/windowsdesktop/src/windowsdesktop.depproj b/src/pkg/projects/windowsdesktop/src/windowsdesktop.depproj
+index 06214bd4..d8308082 100644
+--- a/src/pkg/projects/windowsdesktop/src/windowsdesktop.depproj
++++ b/src/pkg/projects/windowsdesktop/src/windowsdesktop.depproj
+@@ -1,4 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
+ 
+   <ItemGroup>
+     <PackageReference Include="Microsoft.DotNet.Wpf.DncEng" Version="$(MicrosoftDotNetWpfDncEngPackageVersion)" />
+-- 
+2.21.0
+
