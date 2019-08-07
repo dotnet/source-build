@@ -9,6 +9,7 @@ using Microsoft.DotNet.SourceBuild.Tasks.Models;
 using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -100,9 +101,6 @@ namespace Microsoft.DotNet.Build.Tasks
         /// <returns></returns>
         private static DerivedVersion GetVersionInfo(string version, string commitCount)
         {
-            // https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/Documentation/CorePackages/Versioning.md#L114
-            const int PatchDateBase = 19000;
-
             var nugetVersion = new NuGetVersion(version);
 
             if (!string.IsNullOrWhiteSpace(nugetVersion.Release))
@@ -123,7 +121,12 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
                 else if (releaseParts.Length == 3)
                 {
-                    if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
+                    // VSTest uses full dates for the first part of their preview build numbers
+                    if (DateTime.TryParseExact(releaseParts[1], "yyyyMMdd", new CultureInfo("en-US"), DateTimeStyles.AssumeLocal, out DateTime fullDate))
+                    {
+                        return new DerivedVersion { OfficialBuildId = $"{releaseParts[1]}.{releaseParts[2]}", PreReleaseVersionLabel = releaseParts[0] };
+                    }
+                    else if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
                     {
                         // Good until 2025.  Original versioning scheme will also have to change by this point.
                         if (datePart > 25000)
