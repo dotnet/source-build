@@ -11,7 +11,6 @@
 
     <BuildArguments>--restore --build</BuildArguments>
     <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) --ci</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) -TargetArchitecture=$(Platform) -DisableCrossgen=true -CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>

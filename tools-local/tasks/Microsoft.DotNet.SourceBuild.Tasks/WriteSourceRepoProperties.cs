@@ -101,9 +101,6 @@ namespace Microsoft.DotNet.Build.Tasks
         /// <returns></returns>
         private static DerivedVersion GetVersionInfo(string version, string commitCount)
         {
-            // https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/Documentation/CorePackages/Versioning.md#L114
-            const int PatchDateBase = 19000;
-
             var nugetVersion = new NuGetVersion(version);
 
             if (!string.IsNullOrWhiteSpace(nugetVersion.Release))
@@ -134,10 +131,12 @@ namespace Microsoft.DotNet.Build.Tasks
                         // Good until 2025.  Original versioning scheme will also have to change by this point.
                         if (datePart > 25000)
                         {
-                            // this is a patch number rather than a short date: https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets#L43
-                            int revision = datePart % 100;
-                            int intermediateShortDate = ((datePart - revision) / 100) + PatchDateBase;
-                            return new DerivedVersion {  OfficialBuildId = $"20{((intermediateShortDate / 1000))}{((intermediateShortDate % 1000) / 50):D2}{(intermediateShortDate % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                            // this is an old BuildTools-style version: https://github.com/dotnet/buildtools/blob/6736870b84e06b75e7df32bb84d442db1b2afa10/src/Microsoft.DotNet.Build.Tasks/GenerateCurrentVersion.cs#L119
+                            var compareDate = new DateTime(1996, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+                            int months = datePart / 100;
+                            int days = datePart % 100;
+                            DateTime buildDate = compareDate.AddMonths(months).AddDays(days - 1);
+                            return new DerivedVersion { OfficialBuildId = $"{buildDate.ToString("yyyyMMdd")}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
                         }
                         else
                         {
