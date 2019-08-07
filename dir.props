@@ -19,6 +19,8 @@
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
     <!-- some repos, e.g. toolset, require a 3.0 preview SDK to build -->
     <DotNet3CliToolDir>$(ProjectDir)Tools/dotnetcli3/</DotNet3CliToolDir>
+    <!-- different casing here matches BuildTools property -->
+    <Dotnet3ToolCommand>$(DotNet3CliToolDir)dotnet</Dotnet3ToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
@@ -87,6 +89,10 @@
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->
     <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
+    <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
+    <ProductionAllRepoPropsFile>$(GitInfoOutputDir)AllRepoVersions.props</ProductionAllRepoPropsFile>
+    <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
+    <OfflineAllRepoPropsFile>$(GitInfoOfflineDir)AllRepoVersions.props</OfflineAllRepoPropsFile>
     <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
