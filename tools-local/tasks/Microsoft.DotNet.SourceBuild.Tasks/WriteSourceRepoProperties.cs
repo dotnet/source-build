@@ -128,20 +128,7 @@ namespace Microsoft.DotNet.Build.Tasks
                     }
                     else if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
                     {
-                        // Good until 2025.  Original versioning scheme will also have to change by this point.
-                        if (datePart > 25000)
-                        {
-                            // this is an old BuildTools-style version: https://github.com/dotnet/buildtools/blob/6736870b84e06b75e7df32bb84d442db1b2afa10/src/Microsoft.DotNet.Build.Tasks/GenerateCurrentVersion.cs#L119
-                            var compareDate = new DateTime(1996, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-                            int months = datePart / 100;
-                            int days = datePart % 100;
-                            DateTime buildDate = compareDate.AddMonths(months).AddDays(days - 1);
-                            return new DerivedVersion { OfficialBuildId = $"{buildDate.ToString("yyyyMMdd")}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
-                        }
-                        else
-                        {
-                            return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
-                        }
+                        return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
                     }
                 }
             }
