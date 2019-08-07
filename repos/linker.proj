@@ -5,7 +5,6 @@
   <PropertyGroup>
     <!-- Package version is pinned to what CoreFX expects because CoreFX doesn't take an override property. -->
     <ILLinkTasksPackageId>ILLink.Tasks</ILLinkTasksPackageId>
-    <ILLinkTasksPackageVersion>0.1.6-prerelease.19379.2</ILLinkTasksPackageVersion>
 
     <BuildCommandArgs>restore /bl:restore.binlog</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(ProjectDirectory)illink.sln</BuildCommandArgs>
@@ -18,7 +17,7 @@
 
     <BuildPackagesCommandArgs>pack /bl:pack.binlog</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Configuration=illink_$(Configuration)</BuildPackagesCommandArgs>
-    <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Version=$(ILLinkTasksPackageVersion)</BuildPackagesCommandArgs>
+    <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) /p:Version=$(OutputPackageVersion)</BuildPackagesCommandArgs>
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
     <BuildPackagesCommand>$(DotNet3CliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
 
@@ -38,14 +37,14 @@
   <Target Name="ExtractLinkerPackageToCache"
           AfterTargets="Package">
     <PropertyGroup>
-      <ILLinkTasksPackageFile>$(PackagesOutput)/$(ILLinkTasksPackageId).$(ILLinkTasksPackageVersion).nupkg</ILLinkTasksPackageFile>
+      <ILLinkTasksPackageFile>$(PackagesOutput)/$(ILLinkTasksPackageId).$(OutputPackageVersion).nupkg</ILLinkTasksPackageFile>
       <ILLinkTasksPackageIdToLower>$(ILLinkTasksPackageId.ToLowerInvariant())</ILLinkTasksPackageIdToLower>
     </PropertyGroup>
 
     <Message Importance="high" Text="Extracting $(ILLinkTasksPackageFile) to package cache..." />
 
     <ZipFileExtractToDirectory SourceArchive="$(ILLinkTasksPackageFile)"
-                               DestinationDirectory="$(PackagesDir)$(ILLinkTasksPackageIdToLower)/$(ILLinkTasksPackageVersion)/"
+                               DestinationDirectory="$(PackagesDir)$(ILLinkTasksPackageIdToLower)/$(OutputPackageVersion)/"
                                OverwriteDestination="true" />
   </Target>
 

@@ -15,6 +15,8 @@
       <Uri>https://github.com/dotnet/sourcelink</Uri>
       <Sha>51310e65e75010467993f793e1739d1a1dad50c5</Sha>
     </Dependency>
+    <!-- this is pinned to work around https://github.com/dotnet/arcade/issues/3518 -->
+    <!-- if XDT is updated before that issue is fixed, this should be updated.  After the issue is fixed, it should be unpinned.  -->
     <Dependency Name="Microsoft.Web.Xdt" Version="3.0.0" CoherentParentDependency="Microsoft.NET.Sdk.Web" Pinned="true">
       <Uri>https://github.com/aspnet/xdt</Uri>
       <Sha>c01a538851a8ab1a1fbeb2e6243f391fff7587b4</Sha>
@@ -82,6 +84,7 @@
       <Sha>53b80940842204f78708a538628288ff5d741a1d</Sha>
       <RepoName>application-insights</RepoName>
     </Dependency>
+    <!-- once https://github.com/dotnet/arcade/issues/3099 is fixed this should have a coherency parent. -->
     <Dependency Name="XliffTasks" Version="1.0.0-beta.19252.1">
       <Uri>https://github.com/dotnet/xliff-tasks</Uri>
       <Sha>173ee3bd61c9549557eefa3cfb718bdef157cb87</Sha>
