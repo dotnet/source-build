@@ -9,6 +9,7 @@ using Microsoft.DotNet.SourceBuild.Tasks.Models;
 using NuGet.Versioning;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -100,9 +101,6 @@ namespace Microsoft.DotNet.Build.Tasks
         /// <returns></returns>
         private static DerivedVersion GetVersionInfo(string version, string commitCount)
         {
-            // https://github.com/dotnet/arcade/blob/fb92b14d8cd07cf44f8f7eefa8ac58d7ffd05f3f/Documentation/CorePackages/Versioning.md#L114
-            const int PatchDateBase = 19000;
-
             var nugetVersion = new NuGetVersion(version);
 
             if (!string.IsNullOrWhiteSpace(nugetVersion.Release))
@@ -123,22 +121,14 @@ namespace Microsoft.DotNet.Build.Tasks
                 }
                 else if (releaseParts.Length == 3)
                 {
-                    if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
+                    // VSTest uses full dates for the first part of their preview build numbers
+                    if (DateTime.TryParseExact(releaseParts[1], "yyyyMMdd", new CultureInfo("en-US"), DateTimeStyles.AssumeLocal, out DateTime fullDate))
                     {
-                        // Good until 2025.  Original versioning scheme will also have to change by this point.
-                        if (datePart > 25000)
-                        {
-                            // this is an old BuildTools-style version: https://github.com/dotnet/buildtools/blob/6736870b84e06b75e7df32bb84d442db1b2afa10/src/Microsoft.DotNet.Build.Tasks/GenerateCurrentVersion.cs#L119
-                            var compareDate = new DateTime(1996, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-                            int months = datePart / 100;
-                            int days = datePart % 100;
-                            DateTime buildDate = compareDate.AddMonths(months).AddDays(days - 1);
-                            return new DerivedVersion { OfficialBuildId = $"{buildDate.ToString("yyyyMMdd")}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
-                        }
-                        else
-                        {
-                            return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
-                        }
+                        return new DerivedVersion { OfficialBuildId = $"{releaseParts[1]}.{releaseParts[2]}", PreReleaseVersionLabel = releaseParts[0] };
+                    }
+                    else if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
+                    {
+                        return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
                     }
                 }
             }
