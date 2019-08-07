@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>4da6ee6450e4dd43ef8c05925fec22d9ac3892f3</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
@@ -21,18 +17,17 @@
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(VersionStamp)"</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(PreReleaseVersionLabel)"</BuildArguments>
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
-    <OfficialBuildId>20190712.14</OfficialBuildId>
-
     <!-- Need to set $(PackagesOutput) so WriteVersions writes the versions file for cli, until cli respects auto-dependency flow -->
     <PackagesOutput>$(SourceBuiltPackagesPath)</PackagesOutput>
 
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
   <ItemGroup>
@@ -42,11 +37,6 @@
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="LatestCommit=$(PreferredHash)" />
-    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 
   <ItemGroup>

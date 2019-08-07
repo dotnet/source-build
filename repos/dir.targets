@@ -3,7 +3,6 @@
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
@@ -85,46 +84,6 @@
           Condition="'@(PatchesToApply)' != ''" />
   </Target>
 
-  <Target Name="CreateGitInfoProps"
-          Condition="'$(OfflineBuild)' != 'true' AND Exists('$(ProjectDirectory).git')">
-    <Exec Command="git rev-parse HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
-    </Exec>
-    <Exec Command="git rev-list --count HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitLogFormatArg>--format=</GitLogFormatArg>
-      <!-- Escape the % with another % on Windows. -->
-      <GitLogFormatArg Condition="'$(OS)' == 'Windows_NT'">$(GitLogFormatArg)%25</GitLogFormatArg>
-      <GitLogFormatArg>$(GitLogFormatArg)%25cd</GitLogFormatArg>
-    </PropertyGroup>
-
-    <Exec Command="git log -1 $(GitLogFormatArg) --date=short" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitDate" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitInfoFileContents>
-        <![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- $(RepositoryName) submodule information. -->
-    <GitCommitHash>$(GitCommitHash)</GitCommitHash>
-    <GitCommitCount>$(GitCommitCount)</GitCommitCount>
-    <GitCommitDate>$(GitCommitDate)</GitCommitDate>
-  </PropertyGroup>
-</Project>
-]]>
-      </GitInfoFileContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(OutputGitInfoPropsFile)"
-                      Lines="$(GitInfoFileContents)"
-                      Overwrite="true" />
-  </Target>
-
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
           Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''">
@@ -163,12 +122,6 @@
       <_PossibleCliVersionJsonPath Include="sdk.version" />
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
     </ItemGroup>
-
-    <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' != 'true'"
-                JsonFilePath="$(GlobalJsonFile)"
-                PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
-                NewAttributeValue="$(SDK_VERSION)"
-                SkipUpdateIfMissingKey="true" />
 
     <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' == 'true'"
                 JsonFilePath="$(GlobalJsonFile)"
@@ -430,7 +383,8 @@
     <ItemGroup>
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Identity)" />
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Version)" />
-      <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' != ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Location)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' == ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
     </ItemGroup>
   </Target>
 

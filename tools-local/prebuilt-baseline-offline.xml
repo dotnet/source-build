@@ -23,6 +23,7 @@
     <Dir>src/NuGet.Client.27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703/</Dir>
     <Dir>src/roslyn.c91adff42c488aef2c2c532a7b053fb55e0c16ea/</Dir>
     <Dir>src/sdk.78b8210cf94a9d516de694815ce746e84ab21545/</Dir>
+    <Dir>src/sourcelink.51310e65e75010467993f793e1739d1a1dad50c5/</Dir>
     <Dir>src/standard.a9422da6ed91b413019ef93051613c5f03801d64/</Dir>
     <Dir>src/templating.98b3cf626437e671f0f4d216a8b208f1ce36008c/</Dir>
     <Dir>src/toolset.7f41a7da0404eeb740b6d06ee74d70a7bdc25aec/</Dir>
@@ -47,6 +48,7 @@
     <PackageIdentity Id="Microsoft.Build.Tasks.Git" Version="1.0.0-beta2-19351-01" />
     <PackageIdentity Id="Microsoft.CSharp" Version="4.5.0" />
     <PackageIdentity Id="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19359.6" />
+    <PackageIdentity Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.19326.44" />
     <PackageIdentity Id="Microsoft.DotNet.SwaggerGenerator.MSBuild" Version="1.0.0-beta.19359.6" />
     <PackageIdentity Id="Microsoft.Extensions.Configuration" Version="2.1.1" />
     <PackageIdentity Id="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.1" />
@@ -160,11 +162,9 @@
     <Usage Id="Microsoft.CodeAnalysis.Workspaces.Common" Version="2.8.2" />
     <Usage Id="Microsoft.CSharp" Version="4.0.0" />
     <Usage Id="Microsoft.DiaSymReader.Native" Version="1.7.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19251.6" />
     <Usage Id="Microsoft.DotNet.BuildTools" Version="3.0.0-preview4-04104-01" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.BuildTools.CoreCLR" Version="1.0.4-prerelease" />
     <Usage Id="Microsoft.DotNet.Cli.CommandLine" Version="0.1.1-alpha-167" />
-    <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.19326.44" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="1.0.3" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0-preview2-26306-03" />
     <Usage Id="Microsoft.Extensions.DependencyModel" Version="1.0.3" IsDirectDependency="true" />
@@ -396,7 +396,6 @@
     <Usage Id="System.Net.WebSockets" Version="4.3.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.1.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.1.1" />
-    <Usage Id="System.Numerics.Vectors" Version="4.5.0" />
     <Usage Id="System.Numerics.Vectors.WindowsRuntime" Version="4.0.0" />
     <Usage Id="System.ObjectModel" Version="4.0.10" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.3.0" />
@@ -432,8 +431,6 @@
     <Usage Id="System.Security.AccessControl" Version="4.6.0-preview7.19362.9" />
     <Usage Id="System.Security.Claims" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.Cng" Version="4.6.0-preview7.19362.9" />
-    <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.5.1" IsDirectDependency="true" />
-    <Usage Id="System.Security.Cryptography.Pkcs" Version="4.5.2" IsDirectDependency="true" />
     <Usage Id="System.Security.Cryptography.Pkcs" Version="4.6.0-preview7.19362.9" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.3.0" />
