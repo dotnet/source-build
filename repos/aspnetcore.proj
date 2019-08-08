@@ -64,8 +64,8 @@
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishToolsetBinaries>
     <Message Text="Published ASP.NET runtime version $(PublishedVersion)" Importance="High" />
-    <Copy SourceFiles="@(ExtraAspNetFiles)" DestinationFolder="$(SourceBuildAspNetCoreRuntime)$(PublishedVersion)" Condition="'@(ExtraAspNetFiles)' != ''" />
-    <Message Text="Published extra ASP.NET files @(ExtraAspNetFiles) to $(SourceBuildAspNetCoreRuntime)$(PublishedVersion)" Importance="High" />
+    <Copy SourceFiles="@(ExtraAspNetFiles)" DestinationFolder="$(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Condition="'@(ExtraAspNetFiles)' != ''" />
+    <Message Text="Published extra ASP.NET files @(ExtraAspNetFiles) to $(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Importance="High" />
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
