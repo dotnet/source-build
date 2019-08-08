@@ -7,8 +7,6 @@
 
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:OSName=$(OSNameOverride)</BuildCommandArgs>
-    <!-- ASP.NET always builds portable -->
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:AspNetCoreSharedFxArchiveRid=linux-x64</BuildCommandArgs>
     <!-- core-sdk always wants to build portable on OSX -->
     <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
