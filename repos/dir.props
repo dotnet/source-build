@@ -69,6 +69,7 @@
     <EnvironmentVariables Include="DOTNET_HOST_PATH=$(DotNet3CliToolDir)dotnet" />
     <!-- _InitializeDotNetCli is used by websdk and templating to decide whether to init the SDK -->
     <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
+    <EnvironmentVariables Include="_DotNetInstallDir=$(DotNet3CliToolDir)" />
     <EnvironmentVariables Include="_InitializeToolset=$(ProjectDir)Tools/source-built/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(UseBootstrapArcade)' != 'true'" />
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" Condition="'$(RepositoryName)' == 'arcade'" />
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)source-built" Condition="'$(RepositoryName)' != 'arcade'" />
