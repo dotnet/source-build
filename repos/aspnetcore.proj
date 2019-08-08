@@ -56,6 +56,7 @@
   <Target Name="PublishBinaries" AfterTargets="Build">
     <ItemGroup>
       <AspNetTarballs Include="$(TarballOutputDir)aspnetcore-*.tar.gz" />
+      <ExtraAspNetFiles Include="$(TarballOutputDir)*.version" />
     </ItemGroup>
     <Message Importance="High" Text="Publishing @(AspNetTarballs) from $(TarballOutputDir) to $(SourceBuiltAspNetCoreRuntime){version}/" />
     <PublishToolsetBinaries Binaries="@(AspNetTarballs)"
@@ -63,6 +64,8 @@
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishToolsetBinaries>
     <Message Text="Published ASP.NET runtime version $(PublishedVersion)" Importance="High" />
+    <Copy SourceFiles="@(ExtraAspNetFiles)" DestinationFolder="$(SourceBuildAspNetCoreRuntime)$(PublishedVersion)" Condition="'@(ExtraAspNetFiles)' != ''" />
+    <Message Text="Published extra ASP.NET files @(ExtraAspNetFiles) to $(SourceBuildAspNetCoreRuntime)$(PublishedVersion)" Importance="High" />
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
