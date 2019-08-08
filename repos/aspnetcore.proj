@@ -18,6 +18,7 @@
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <TarballOutputDir>$(ProjectDirectory)artifacts/installers/$(Configuration)/</TarballOutputDir>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
 
@@ -49,6 +50,20 @@
   <ItemGroup>
     <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
   </ItemGroup>
+
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishToolsetBinaries" />
+
+  <Target Name="PublishBinaries" AfterTargets="Build">
+    <ItemGroup>
+      <AspNetTarballs Include="$(TarballOutputDir)aspnetcore-*.tar.gz" />
+    </ItemGroup>
+    <Message Importance="High" Text="Publishing @(AspNetTarballs) from $(TarballOutputDir) to $(SourceBuiltAspNetCoreRuntime){version}/" />
+    <PublishToolsetBinaries Binaries="@(AspNetTarballs)"
+                            DestinationFolderTemplate="$(SourceBuiltAspNetCoreRuntime){version}/">
+      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
+    </PublishToolsetBinaries>
+    <Message Text="Published ASP.NET runtime version $(PublishedVersion)" Importance="High" />
+  </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>
