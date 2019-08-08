@@ -69,10 +69,6 @@
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
     <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
 
-    <!-- Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
-      parameter, it is lost during the restore call.  -->
-    <EnvironmentVariables Include="IncludeAspNetCoreRuntime=false" />
-
     <!-- Disable bundled tools until we can figure out:
       Unable to find package dotnet-dev-certs.
       Unable to find package dotnet-ef.
