@@ -1,15 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>6348f1068ae4e6cb5766670d3351f3421429e27a</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190718.3</OfficialBuildId>
-    <GitCommitCount>12821</GitCommitCount>
-
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
@@ -38,6 +31,7 @@
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
@@ -71,8 +65,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
-    <EnvironmentVariables Include="GitInfoCommitHash=$(PreferredHash)" />
     <EnvironmentVariables Include="CLIBUILD_SKIP_TESTS=true" />
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
@@ -94,17 +86,6 @@
                   is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"
                           Condition="'$(UseStableVersions)' == 'true'" />
-
-    <!-- reset SDK location variables to use 3.0 SDK override -->
-    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
-
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <Target Name="CopyTarBall" AfterTargets="CopyPackage">
