@@ -9,9 +9,9 @@
     <OverridePortable>$(PortableBuild)</OverridePortable>
     <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
 
-    <BuildArguments>--restore --build</BuildArguments>
-    <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) --ci</BuildArguments>
+    <BuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
