@@ -122,6 +122,7 @@ cp $SCRIPT_ROOT/Dotnet3CLIVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/BuildToolsVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
