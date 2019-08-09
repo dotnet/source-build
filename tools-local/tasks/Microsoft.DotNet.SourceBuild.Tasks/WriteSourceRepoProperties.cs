@@ -33,6 +33,8 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string SourceBuildMetadataDir { get; set; }
 
+        public bool SkipOnlineSourceMetadata { get; set; }
+
         public override bool Execute()
         {
             var serializer = new XmlSerializer(typeof(VersionDetails));
@@ -54,7 +56,10 @@ namespace Microsoft.DotNet.Build.Tasks
                 try
                 {
                     WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                    WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
+                    if (!SkipOnlineSourceMetadata)
+                    {
+                        WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
+                    }
                     if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
                     {
                         HandleSubmodules(repoPath, repoGitDir, dep);
@@ -67,10 +72,12 @@ namespace Microsoft.DotNet.Build.Tasks
                     Log.LogErrorFromException(e, true, true, null);
                 }
             }
-
-            string allRepoPropsPath = Path.Combine(SourceBuildMetadataDir, "AllRepoVersions.props");
-            Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Writing all repo versions to {allRepoPropsPath}");
-            WritePropsFile(allRepoPropsPath, allRepoProps);
+            if (!SkipOnlineSourceMetadata)
+            {
+                string allRepoPropsPath = Path.Combine(SourceBuildMetadataDir, "AllRepoVersions.props");
+                Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Writing all repo versions to {allRepoPropsPath}");
+                WritePropsFile(allRepoPropsPath, allRepoProps);
+            }
 
             return !Log.HasLoggedErrors;
         }
