@@ -171,11 +171,15 @@
   </Target>
 
   <Target Name="WriteSourceLinkMetadata" DependsOnTargets="BuildDarc;FetchSources">
+    <PropertyGroup>
+      <SourceDir Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)</SourceDir>
+      <SourceDir Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)</SourceDir>
+    </PropertyGroup>
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Writing out SourceLink metadata." />
     <WriteSourceRepoProperties
        VersionDetailsFile="$(ProjectDir)eng/Version.Details.xml"
        ClonedSubmoduleGitRootDirectory="$(ClonedSubmoduleGitRootDirectory)"
-       ClonedSubmoduleDirectory="$(ClonedSubmoduleDirectory)"
+       ClonedSubmoduleDirectory="$(SourceDir)"
        SourceBuildMetadataDir="$(GitInfoOutputDir)"
        SkipOnlineSourceMetadata="$(OfflineBuild)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done writing out SourceLink metadata." />
