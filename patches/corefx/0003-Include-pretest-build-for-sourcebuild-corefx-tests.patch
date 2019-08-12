@@ -1,22 +1,22 @@
-From 4dad842c8c8628ba09185987ecadaae67427eaa4 Mon Sep 17 00:00:00 2001
+From 2857e19af9fce15d6f7b7d55a2bc46007b2d2168 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Tue, 6 Aug 2019 19:21:43 +0000
-Subject: [PATCH 3/5] Include pretest build for sourcebuild corefx tests
+Subject: [PATCH 3/7] Include pretest build for sourcebuild corefx tests
 
 ---
  src/dirs.proj | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/dirs.proj b/src/dirs.proj
-index fbe8e15..7a4c6ca 100644
+index af8d308..30932b8 100644
 --- a/src/dirs.proj
 +++ b/src/dirs.proj
 @@ -13,7 +13,7 @@
      <Project Include="src.builds" />
      <Project Include="shims\manual\*.csproj" />
      <Project Include="shims\ApiCompat.proj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
--    <Project Include="pretest.builds" Condition="'$(DotNetBuildFromSource)' != 'true'" />
-+    <Project Include="pretest.builds" Condition="('$(DotNetBuildFromSource)' != 'true') or '$(IncludeTestUtils)' == 'true'" />
+-    <Project Include="pretest.proj" Condition="'$(DotNetBuildFromSource)' != 'true' and '$(BuildAllConfigurations)' != 'true'" />
++    <Project Include="pretest.proj" Condition="('$(DotNetBuildFromSource)' != 'true' and '$(BuildAllConfigurations)' != 'true') or '$(IncludeTestUtils)' == 'true'" />
    </ItemGroup>
  
    <!-- Don't build System.Text.Encodings.Web tools as part of build; they're intended to be run manually. -->

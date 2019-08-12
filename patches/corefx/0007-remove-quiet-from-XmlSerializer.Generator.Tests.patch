@@ -1,0 +1,32 @@
+From e248d73deb1426da819f830c965aa9129c292d3e Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 12 Aug 2019 22:19:25 +0000
+Subject: [PATCH 7/7] remove quiet from XmlSerializer.Generator.Tests
+
+---
+ .../tests/Microsoft.XmlSerializer.Generator.Tests.csproj              | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Microsoft.XmlSerializer.Generator/tests/Microsoft.XmlSerializer.Generator.Tests.csproj b/src/Microsoft.XmlSerializer.Generator/tests/Microsoft.XmlSerializer.Generator.Tests.csproj
+index a971eb5..30eb039 100644
+--- a/src/Microsoft.XmlSerializer.Generator/tests/Microsoft.XmlSerializer.Generator.Tests.csproj
++++ b/src/Microsoft.XmlSerializer.Generator/tests/Microsoft.XmlSerializer.Generator.Tests.csproj
+@@ -42,7 +42,7 @@
+       <SerializerName>$(AssemblyName).XmlSerializers</SerializerName>
+     </PropertyGroup>
+     <Message Text="Running Serialization Tool" Importance="normal" />
+-    <Exec Command="$(GeneratorCommand) $(OutputPath)dotnet-Microsoft.XmlSerializer.Generator.dll $(OutputPath)Microsoft.XmlSerializer.Generator.Tests.dll --force --quiet" />
++    <Exec Command="$(GeneratorCommand) $(OutputPath)dotnet-Microsoft.XmlSerializer.Generator.dll $(OutputPath)Microsoft.XmlSerializer.Generator.Tests.dll --force" />
+     <Warning Condition="Exists('$(OutputPath)$(SerializerName).cs') != 'true'" Text="Fail to generate $(OutputPath)$(SerializerName).cs" />
+     <Csc Condition="Exists('$(OutputPath)$(SerializerName).cs') == 'true'" OutputAssembly="$(OutputPath)$(SerializerName).dll" References="@(ReferencePath);@(IntermediateAssembly)" EmitDebugInformation="$(DebugSymbols)" DebugType="$(DebugType)" Sources="$(OutputPath)$(SerializerName).cs" TargetType="Library" ToolExe="$(CscToolExe)" ToolPath="$(CscToolPath)" DisabledWarnings="$(NoWarn), 219" UseSharedCompilation="true" />
+     <Warning Condition="Exists('$(OutputPath)$(SerializerName).dll') != 'true'" Text="Fail to generate $(OutputPath)$(SerializerName).dll" />
+@@ -51,4 +51,4 @@
+       <ReferenceCopyLocalPaths Include="$(OutputPath)$(SerializerName).dll" />
+     </ItemGroup>
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+1.8.3.1
+
