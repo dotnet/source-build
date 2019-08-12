@@ -172,4 +172,12 @@
     <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternalVersion" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />
   </ItemGroup>
 
+  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
+
+  <!-- Arcade uses this property to determine which version of SourceLink to pull in -->
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(sourcelinkOutputPackageVersion)" />
+  </ItemGroup>
+
 </Project>

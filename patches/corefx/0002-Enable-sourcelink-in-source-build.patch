@@ -1,0 +1,38 @@
+From b7f0dce77b8cc8082d12fb7bedada3794c5ea640 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 7 Aug 2019 23:39:59 -0500
+Subject: [PATCH 2/2] Enable sourcelink in source-build
+
+---
+ eng/Tools.props | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 9b9078ecee..f9a9887489 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -16,6 +16,10 @@
+ 
+     <!-- roslyn -->
+     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
++
++    <!-- SourceLink -->
++    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
++    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+   <!-- excluded from offline portion of source build -->
+@@ -30,10 +34,6 @@
+     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.VersionTools.Tasks" Version="$(MicrosoftDotNetVersionToolsTasksPackageVersion)" />
+ 
+-    <!-- SourceLink -->
+-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+-    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+-
+     <!-- UWP test tools -->
+     <PackageReference Include="Microsoft.DotNet.UAP.TestTools" Version="$(MicrosoftDotNetUapTestToolsPackageVersion)" Condition="$(TargetGroup.StartsWith('uap'))" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+-- 
+2.21.0
+
