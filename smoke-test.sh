@@ -136,13 +136,6 @@ function doCommand() {
 
     newArgs="new $proj -lang $lang"
 
-    # XXX temporary workaround XXX
-    # this is a temporary workaround before templates are updated to use netcoreapp3.0.
-    # see issue https://github.com/dotnet/source-build/issues/635 for more details.
-    # This part ensures packages won't fail to restore before we can edit the csproj.
-    newArgs="$newArgs --no-restore"
-    # XXX temporary workaround XXX
-
     while :; do
         if [ $# -le 0 ]; then
             break
@@ -359,14 +352,6 @@ fi
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
-
-# XXX temporary workaround XXX
-# This is a temporary workaround to disable tests that will fail until ASP.NET packages are updated.
-# See https://github.com/dotnet/source-build/issues/635 for more details.
-echo "WARNING: Setting excludeWebTests and excludeOnlineTests to disable known-failing tests." | tee -a "$logFile"
-excludeWebTests=true
-excludeOnlineTests=true
-# XXX temporary workaround XXX
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
