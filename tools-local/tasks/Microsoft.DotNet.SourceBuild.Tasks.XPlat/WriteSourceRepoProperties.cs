@@ -5,7 +5,6 @@
 using Microsoft.Build.Framework;
 using Microsoft.Build.Tasks;
 using Microsoft.Build.Utilities;
-using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.DotNet.SourceBuild.Tasks.Models;
 using NuGet.Versioning;
 using System;
@@ -175,16 +174,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         private string GetCommitDate(string gitDir, string hash)
         {
-            string format;
-            if (RuntimeEnvironment.OperatingSystemPlatform == Platform.Windows)
-            {
-                format = "%%cd";
-            }
-            else
-            {
-                format = "%cd";
-            }
-            return RunGitCommand($"log -1 --format={format} --date=short {hash}", gitDir: gitDir);
+            return RunGitCommand($"log -1 --format=%cd --date=short {hash}", gitDir: gitDir);
         }
 
         private IEnumerable<SubmoduleInfo> GetSubmoduleInfo(string gitModulesFilePath)

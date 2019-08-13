@@ -50,7 +50,7 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="PublishCoreSetupBinaries" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishCoreSetupBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
   <Target Name="PublishBinaries" AfterTargets="Package">
