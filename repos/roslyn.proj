@@ -9,8 +9,7 @@
 
     <!-- Versioning args. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:ContinuousIntegrationBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
