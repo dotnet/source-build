@@ -111,6 +111,14 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
+echo 'Copying sourcelink metadata to tarball...'
+pushd $SCRIPT_ROOT
+for srcDir in `find bin/src -name '.git' -type d`; do
+  newPath=`echo $srcDir | sed 's/^bin\///' | sed 's/\.git$//'`
+  cp -r $srcDir $TARBALL_ROOT/$newPath
+done
+popd
+
 echo 'Copying scripts and tools to tarball...'
 
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
@@ -122,6 +130,7 @@ cp $SCRIPT_ROOT/Dotnet3CLIVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/BuildToolsVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
