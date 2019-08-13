@@ -182,6 +182,7 @@ done
 
 echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Microsoft.Build.Tasks.Git*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Xliff*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $TARBALL_ROOT/prebuilt/source-built/
