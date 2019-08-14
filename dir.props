@@ -62,7 +62,11 @@
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
     <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll</DarcDll>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
+    <SourceBuildTasksAssembly>$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll</SourceBuildTasksAssembly>
+    <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/Debug/netstandard2.0/</XPlatTasksBinDir>
+    <XPlatSourceBuildTasksAssembly>$(XPlatTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.XPlat.dll</XPlatSourceBuildTasksAssembly>
     <LeakDetectionTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/</LeakDetectionTasksBinDir>
+    <LeakDetectionTasksAssembly>$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll</LeakDetectionTasksAssembly>
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
@@ -170,6 +174,7 @@
     <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternalVersion" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />
   </ItemGroup>
 
+  <Import Project="$(ProductionAllRepoPropsFile)" Condition="Exists('$(ProductionAllRepoPropsFile)')" />
   <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <!-- Arcade uses this property to determine which version of SourceLink to pull in -->
