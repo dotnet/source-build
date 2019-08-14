@@ -7,9 +7,13 @@
   <Import Project="..\dir.props" />
   <Import Project="$(ToolsDir)Packaging.targets" />
   <Import Project="$(ToolsDir)IL.targets" />
+  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteSourceRepoProperties" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
+  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
+  
 
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
@@ -21,7 +25,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildDarc;FetchSources;BuildTasks;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;CreateAllGitInfoProps;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildDarc;FetchSources;BuildTasks;WriteSourceLinkMetadata;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -47,19 +51,6 @@
     <ItemGroup>
       <RepoProjects Include="$(ProjectDir)repos/*.proj" />
     </ItemGroup>
-  </Target>
-
-  <Target Name="CreateAllGitInfoProps">
-    <!--
-      Create the files in a new process to avoid MSBuild remembering the static properties/items.
-      Using the MSBuild task here would cause, for example, GIT_COMMIT EnvironmentVariables items to
-      be created that don't contain any commit, and they would stick around until the real build.
-    -->
-    <Exec Command="$(DotNetCliToolDir)dotnet msbuild /v:$(LogVerbosity) /nologo $(MSBuildThisFileFullPath) /t:CreateGitInfoProps" />
-  </Target>
-
-  <Target Name="CreateGitInfoProps" DependsOnTargets="GetRepoProjects">
-    <MSBuild Projects="@(RepoProjects)" Targets="CreateGitInfoProps" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="ApplyPatches" DependsOnTargets="GetRepoProjects">
@@ -99,6 +90,15 @@
                ExcludeEmptyDirectories="false"
                CreateSymbolPackage="false" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
+  </Target>
+
+
+  <Target Name="ExtractToolPackage"
+          DependsOnTargets="BuildTasks"
+          Condition="'$(OfflineBuild)' == 'true'">
+    <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(arcadeOutputPackageVersion).nupkg"
+                               DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(arcadeOutputPackageVersion)/"
+                               OverwriteDestination="true" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles">
@@ -143,7 +143,7 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
-  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'">
+  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <PropertyGroup>
       <DarcCloneArguments>clone</DarcCloneArguments>
@@ -168,6 +168,16 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)'" />
     <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
+  </Target>
+
+  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc;FetchSources">
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Writing out SourceLink metadata." />
+    <WriteSourceRepoProperties
+       VersionDetailsFile="$(ProjectDir)eng/Version.Details.xml"
+       ClonedSubmoduleGitRootDirectory="$(ClonedSubmoduleGitRootDirectory)"
+       ClonedSubmoduleDirectory="$(ClonedSubmoduleDirectory)"
+       SourceBuildMetadataDir="$(GitInfoOutputDir)" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done writing out SourceLink metadata." />
   </Target>
 
 </Project>

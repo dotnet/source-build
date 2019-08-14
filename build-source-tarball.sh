@@ -59,6 +59,7 @@ fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+SDK3_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
 DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
@@ -110,6 +111,14 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
+echo 'Copying sourcelink metadata to tarball...'
+pushd $SCRIPT_ROOT
+for srcDir in `find bin/src -name '.git' -type d`; do
+  newPath=`echo $srcDir | sed 's/^bin\///' | sed 's/\.git$//'`
+  cp -r $srcDir $TARBALL_ROOT/$newPath
+done
+popd
+
 echo 'Copying scripts and tools to tarball...'
 
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
@@ -117,9 +126,11 @@ cp $SCRIPT_ROOT/*.props $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.targets $TARBALL_ROOT/
 cp $SCRIPT_ROOT/init-tools.msbuild $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
+cp $SCRIPT_ROOT/Dotnet3CLIVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/BuildToolsVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
@@ -149,6 +160,9 @@ mkdir -p $TARBALL_ROOT/reference-packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+
+# Copy generated source from bin to src/generatedSrc
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt

@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>25e4d0da1b94e04ff54f8aca8d459ed39ee77450</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190427.2</OfficialBuildId>
-
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
 
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
 
-    <BuildCommandArgs>--pack $(RuntimeArg)</BuildCommandArgs>
+    <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RuntimeArg)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <!--
       Setting NETCoreAppMaximumVersion to a high version so that the sdk doesn't complain if we're restoring/publishing for a higher version than the sdk.
@@ -28,10 +23,8 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
-    <BuildCommandArgs Condition="'$(OS)' == 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=\&quot;\&quot;\&quot;Prepare;Compile;Package\&quot;\&quot;\&quot;'</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(OS)' != 'Windows_NT'">$(BuildCommandArgs) '/p:CLITargets=&quot;Prepare;Compile;Package&quot;'</BuildCommandArgs>
-
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
@@ -58,13 +51,13 @@
   <ItemGroup>
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="application-insights" />
-    <RepositoryReference Include="cli-migrate" />
     <RepositoryReference Include="clicommandlineparser" />
     <RepositoryReference Include="core-setup" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="msbuild" />
     <RepositoryReference Include="nuget-client" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="sdk" />
     <RepositoryReference Include="standard" />
@@ -87,17 +80,6 @@
 
     <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
     <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
-
-    <!-- reset SDK location variables to use 3.0 SDK override -->
-    <EnvironmentVariables Remove="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="DotNetRoot=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Remove="_InitializeDotNetCli=$(DotNetCliToolDir)" />
-
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="DotNetRoot=$(DotNet3CliToolDir)" />
-    <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNet3CliToolDir)" />
   </ItemGroup>
 
   <!--

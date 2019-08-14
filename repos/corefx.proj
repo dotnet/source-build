@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>d06ce9d2116cb4bda528822e63d32ce3735ea653</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
@@ -25,14 +21,17 @@
     <BuildArguments>$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ToolsDir=$(ToolsDir)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+    <BuildArguments Condition="'$(OfflineBuild)' != 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</BuildArguments>
+    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'OSX'">$(BuildArguments) /p:MicrosoftNetCoreIlasmPackageRuntimeId=$(OverrideTargetRid)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
@@ -50,11 +49,12 @@
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/</PackagesOutput>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <OfficialBuildId>20190424.8</OfficialBuildId>
   </PropertyGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeConfigurationOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeCoreFxTestingOverride)" />
     <UseSourceBuiltSdkOverride Condition="'$(TargetOS)' == 'Linux'" Include="@(ILSdkOverride)" />
   </ItemGroup>
 
@@ -63,10 +63,6 @@
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

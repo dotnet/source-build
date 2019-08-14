@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>5eee83eaa61eff38f470dc690218bebf73f46e23</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
     <BuildArguments>$(FlagParameterPrefix)pack $(FlagParameterPrefix)publish</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)projects $(ProjectDirectory)build.proj</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:EnableSourceLink=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableSourceControlManagerQueries=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
@@ -30,8 +27,6 @@
 
     <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-    <VersionSeedDate>2017-07-19</VersionSeedDate>
-    <OfficialBuildId>20190422.1</OfficialBuildId>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>

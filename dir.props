@@ -19,8 +19,11 @@
     <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
     <!-- some repos, e.g. toolset, require a 3.0 preview SDK to build -->
     <DotNet3CliToolDir>$(ProjectDir)Tools/dotnetcli3/</DotNet3CliToolDir>
+    <!-- different casing here matches BuildTools property -->
+    <Dotnet3ToolCommand>$(DotNet3CliToolDir)dotnet</Dotnet3ToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
+    <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
     <DotNetSdk3Dir>$(DotNet3CliToolDir)sdk/$(SDK3_VERSION)/</DotNetSdk3Dir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
@@ -63,6 +66,8 @@
     <BaseIntermediatePath>$(BaseOutputPath)obj/</BaseIntermediatePath>
     <OutputPath>$(BaseOutputPath)$(Platform)/$(Configuration)/</OutputPath>
     <IntermediatePath>$(BaseIntermediatePath)$(Platform)/$(Configuration)/</IntermediatePath>
+    <GeneratedSourcePathOnline>$(IntermediatePath)generatedSrc</GeneratedSourcePathOnline>
+    <GeneratedSourcePathOffline>$(SubmoduleDirectory)generatedSrc</GeneratedSourcePathOffline>
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
     <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
@@ -84,6 +89,10 @@
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->
     <GitInfoOfflineDir>$(ProjectDir)git-info/</GitInfoOfflineDir>
+    <OutputGitInfoPropsFile>$(GitInfoOutputDir)$(RepositoryName).props</OutputGitInfoPropsFile>
+    <ProductionAllRepoPropsFile>$(GitInfoOutputDir)AllRepoVersions.props</ProductionAllRepoPropsFile>
+    <OfflineGitInfoPropsFile>$(GitInfoOfflineDir)$(RepositoryName).props</OfflineGitInfoPropsFile>
+    <OfflineAllRepoPropsFile>$(GitInfoOfflineDir)AllRepoVersions.props</OfflineAllRepoPropsFile>
     <PackageReportDir>$(BaseOutputPath)prebuilt-report/</PackageReportDir>
     <PackageReportDataFile>$(PackageReportDir)prebuilt-usage.xml</PackageReportDataFile>
     <PoisonUsageReportFile>$(PackageReportDir)poison-usage.xml</PoisonUsageReportFile>
@@ -159,6 +168,14 @@
 
   <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternalVersion" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />
+  </ItemGroup>
+
+  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
+
+  <!-- Arcade uses this property to determine which version of SourceLink to pull in -->
+  <ItemGroup>
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(sourcelinkOutputPackageVersion)" />
   </ItemGroup>
 
 </Project>

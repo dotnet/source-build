@@ -1,37 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>79b8271f65609b23e0c0ee1babed6862b7c5ed56</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190417.5</OfficialBuildId>
-
-    <!--
-      Normally this is generated from OfficialBuildId, but after a release, we tend to have access
-      to the package version, not the official build id. Here, directly apply package version.
-    -->
-    <VersionSuffixDateStamp>19067</VersionSuffixDateStamp>
-    <VersionSuffixBuildOfTheDay>14</VersionSuffixBuildOfTheDay>
-
     <BuildCommandArgs>pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
 
     <!-- Versioning args. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:VersionSuffixDateStamp=$(VersionSuffixDateStamp)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:VersionSuffixBuildOfTheDay=$(VersionSuffixBuildOfTheDay)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:ContinuousIntegrationBuild=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
-
-    <!--
-      Work around https://github.com/dotnet/sourcelink/issues/91:
-      error : SourceRoot items must include at least one top-level (not nested) item when DeterministicSourcePaths is true
-    -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -42,12 +21,7 @@
   <ItemGroup>
     <PackProjects Include="$(ProjectDirectory)SourceBuild.sln" />
     <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj" />
-    <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.Net.Compilers/Microsoft.Net.Compilers.Package.csproj" />
     <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="COMMIT_SHA=$(PreferredHash)" />
   </ItemGroup>
 
   <ItemGroup>

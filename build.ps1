@@ -23,20 +23,33 @@ function Exec-Block([scriptblock]$cmd) {
 
 $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
+$Sdk3Version = Get-Content (Join-Path $SCRIPT_ROOT "Dotnet3CLIVersion.txt")
+$GlobalJson = Get-Content (Join-Path $SCRIPT_ROOT "global.json") | ConvertFrom-Json
 $env:SDK_VERSION = $SdkVersion
+$env:SDK3_VERSION = $Sdk3Version
+$env:ARCADE_BOOTSTRAP_VERSION = $GlobalJson.'msbuild-sdks'.'Microsoft.DotNet.Arcade.Sdk'
 
 if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
 }
 
-$env:SDK_VERSION = $SdkVersion
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = 1
 $env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE = 1
 $env:DOTNET_MULTILEVEL_LOOKUP = 0
 $env:NUGET_PACKAGES = "$SCRIPT_ROOT\packages\"
 
 Exec-Block { & "$SCRIPT_ROOT\init-tools.cmd" } | Out-Host
+
+# While Arcade works as an SDK so we can use our SourceBuiltSdkOverride, BuildTools does not.
+# Additionally, a few repos expect BuildTools and Arcade to be in the same directories.
+# We don't build BuildTools, so we copy the existing BuildTools into the source-built folder so it can live with Arcade.
+# This source-built folder is only used during the build and thrown away after that, so there's no rish of contaminating
+# the shipping product with BuildTools binaries.
+if (-Not (Test-Path "$SCRIPT_ROOT\Tools\source-built")) {
+  Copy-Item -Recurse "$SCRIPT_ROOT\Tools" (Join-Path $env:TEMP "source-built")
+  Move-Item (Join-Path $env:TEMP "source-built") "$SCRIPT_ROOT\Tools"
+}
 
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"

@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>62fb89029dac66f73a5ca52363fd11b36f12190b</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190424.1</OfficialBuildId>
-
     <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
 
-    <OutputVersionArgs>/p:PackageVersion=16.0.461</OutputVersionArgs>
-    <!-- Set assembly version. Otherwise, defaults to 1.0.0 because we don't have nerdbank versioning. -->
-    <OutputVersionArgs>$(OutputVersionArgs) /p:VersionPrefix=15.1.0</OutputVersionArgs>
     <OutputVersionArgs>$(OutputVersionArgs) /p:DisableNerdbankVersioning=true</OutputVersionArgs>
 
     <BuildCommandArgs>--build --publish --pack</BuildCommandArgs>
@@ -30,6 +21,7 @@
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
@@ -49,7 +41,7 @@
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(CentralVersionsSdkOverride)" Condition="'$(OfflineBuild)' == 'true'"/>
+    <UseSourceBuiltSdkOverride Include="@(CentralVersionsSdkOverride)" />
   </ItemGroup>
 
   <ItemGroup>

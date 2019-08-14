@@ -12,10 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Build">
-      <Version>15.6.82</Version>
+      <Version>15.7.179</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Build.Utilities.Core">
-      <Version>15.6.82</Version>
+      <Version>15.7.179</Version>
     </PackageReference>
     <ProjectReference Include="$(ClonedSubmoduleDirectory)linker.$(LinkerPreferredVersion)/external/cecil/Mono.Cecil.csproj" Condition="'$(OfflineBuild)' != 'true'">
       <SetConfiguration Condition=" '$(Configuration)' == 'Debug' ">Configuration=netstandard_Debug</SetConfiguration>

@@ -1,25 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <PreferredHash>5e7ce5b394f3477bb0a485a4b761b7742e95be37</PreferredHash>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OfficialBuildId>20190418.7</OfficialBuildId>
-
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DeterministicSourcePaths=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnableSourceLink=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
@@ -33,37 +26,26 @@
 
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
+
+    <!-- we need to use a prebuilt Arcade to build Arcade -->
+    <UseBootstrapArcade>true</UseBootstrapArcade>
   </PropertyGroup>
 
   <ItemGroup>
+    <UseSourceBuiltSdkOverride Include="@(ArcadeBootstrapSdkOverride)" />
     <BuiltSdkPackageOverride Include="@(ArcadeSdkOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeConfigurationOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadeCoreFxTestingOverride)" />
+    <BuiltSdkPackageOverride Include="@(ArcadePackagingOverride)" />
   </ItemGroup>
 
   <ItemGroup>
     <EnvironmentVariables Include="UsingToolMicrosoftNetCompilers=false" />
-    <EnvironmentVariables Include="GIT_COMMIT=$(PreferredHash)" />
     <EnvironmentVariables Include="useInstalledDotNetCli=false" />
-
-    <!-- turn off shipping versions for Arcade because otherwise the build number changes daily and we can't resolve the SDK -->
-    <EnvironmentVariables Remove="DotNetUseShippingVersions=true" />
-    <EnvironmentVariables Include="DotNetUseShippingVersions=false" />
   </ItemGroup>
 
   <ItemGroup>
-    <RepositoryReference Include="newtonsoft-json" />
-  </ItemGroup>
-
-  <PropertyGroup>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">1.0.0-dev</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">1.0.0-beta.19270.2</ArcadeBootstrapVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <!-- bootstrap our version of Arcade using the version of Arcade that source-build retrieves.
-         This prevents getting into a dependency loop of Arcade needing Arcade to build and keeps us from having multiple prebuilt versions of Arcade.  -->
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_ARCADEBOOTSTRAP=Microsoft.DotNet.Arcade.Sdk" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_ARCADEBOOTSTRAP=$(ArcadeBootstrapVersion)" />
-    <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_ARCADEBOOTSTRAP=$(PackagesDir)microsoft.dotnet.arcade.sdk/$(ArcadeBootstrapVersion)" />
+    <RepositoryReference Include="sourcelink" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />

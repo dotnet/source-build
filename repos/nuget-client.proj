@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PreferredHash>10c6fc8eeee07637c6c97b0ce08ab211ff502c0f</PreferredHash>
     <SourceDirectory>NuGet.Client</SourceDirectory>
   </PropertyGroup>
 
@@ -12,7 +11,6 @@
     <NuGetCoreSourceDirectory>$(ProjectDirectory)src/NuGet.Core/</NuGetCoreSourceDirectory>
     <ToolsDirectory>$(ProjectDirectory)cli/</ToolsDirectory>
     <NuGetKeyFilePath>$(KeysDir)NuGet.Client.snk</NuGetKeyFilePath>
-    <NuGetClientBuildNumber>5921</NuGetClientBuildNumber>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <!--
@@ -20,6 +18,7 @@
     <OrchestratedManifestBuildName>nuget.client</OrchestratedManifestBuildName>
     -->
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
+    <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,14 +30,13 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="RepoBuild"
-          DependsOnTargets="InitSubmodules">
+  <Target Name="RepoBuild">
     <PropertyGroup>
       <BuildCommandBase>$(DotnetToolCommand) msbuild $(ProjectDirectory)/build/build.proj</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:VisualStudioVerion=15.0</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:Configuration=$(Configuration)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(NuGetClientBuildNumber)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
     </PropertyGroup>
 
@@ -66,14 +64,5 @@
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
-  </Target>
-
-  <Target Name="InitSubmodules" Condition="Exists('$(ProjectDirectory).git')">
-    <Exec Command="git submodule init"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
-    <Exec Command="git submodule update"
-          WorkingDirectory="$(ProjectDirectory)"
-          EnvironmentVariables="@(EnvironmentVariables)" />
   </Target>
 </Project>

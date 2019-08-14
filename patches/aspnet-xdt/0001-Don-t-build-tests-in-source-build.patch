@@ -1,0 +1,24 @@
+From b9a534c2cd64bb11d7e010400b4112e552dd6601 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 24 Jun 2019 10:48:43 -0500
+Subject: [PATCH] Don't build tests in source-build.
+
+---
+ .../Microsoft.Web.XmlTransform.Test.csproj                       | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/test/Microsoft.Web.XmlTransform.Test/Microsoft.Web.XmlTransform.Test.csproj b/test/Microsoft.Web.XmlTransform.Test/Microsoft.Web.XmlTransform.Test.csproj
+index 99a2e98..525ce75 100644
+--- a/test/Microsoft.Web.XmlTransform.Test/Microsoft.Web.XmlTransform.Test.csproj
++++ b/test/Microsoft.Web.XmlTransform.Test/Microsoft.Web.XmlTransform.Test.csproj
+@@ -2,6 +2,7 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.18.0
+

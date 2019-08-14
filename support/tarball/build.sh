@@ -4,8 +4,10 @@ IFS=$'\n\t'
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 CLI_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
+CLI3_VERSION=$(cat $SCRIPT_ROOT/Dotnet3CLIVersion.txt)
 CLI_ROOT="$SCRIPT_ROOT/Tools/dotnetcli"
 export SDK_VERSION=$CLI_VERSION
+export SDK3_VERSION=$CLI3_VERSION
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -37,27 +39,6 @@ REF_PACKAGE_SOURCE="$SCRIPT_ROOT/reference-packages/packages"
     echo "ERROR: Failed to expand BuildTools dependencies. Detailed log above."
     exit 1
 )
-
-# If running in Docker, make sure we have the UTF-8 locale or builds will error out.
-if [ -e /.dockerenv ]; then
-    if [ "$EUID" -ne "0" ]; then
-        echo "error: in docker but not root, so can't fix locale"
-        exit 1
-    fi
-    if [ -e /etc/os-release ]; then
-        source /etc/os-release
-        # work around a bad /etc/apt/sources.list in the image
-        if [[ "$ID" == "debian" ]]; then
-            printf "deb http://archive.debian.org/debian/ jessie main\ndeb-src http://archive.debian.org/debian/ jessie main\ndeb http://security.debian.org jessie/updates main\ndeb-src http://security.debian.org jessie/updates main" > /etc/apt/sources.list
-        fi
-        if [[ "$ID" == "debian" || "$ID" == "ubuntu" ]]; then
-            apt-get update
-            apt-get install -y locales
-            localedef -c -i en_US -f UTF-8 en_US.UTF-8
-        fi
-    fi
-fi
-
 
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"

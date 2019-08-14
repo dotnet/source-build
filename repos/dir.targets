@@ -3,7 +3,6 @@
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
-    <EnvironmentVariables Include="VersionSeedDate=$(OfficialBuildId)" />
   </ItemGroup>
 
   <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="AddSourceToNuGetConfig" />
@@ -85,46 +84,6 @@
           Condition="'@(PatchesToApply)' != ''" />
   </Target>
 
-  <Target Name="CreateGitInfoProps"
-          Condition="'$(OfflineBuild)' != 'true' AND Exists('$(ProjectDirectory).git')">
-    <Exec Command="git rev-parse HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitHash" />
-    </Exec>
-    <Exec Command="git rev-list --count HEAD" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitCount" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitLogFormatArg>--format=</GitLogFormatArg>
-      <!-- Escape the % with another % on Windows. -->
-      <GitLogFormatArg Condition="'$(OS)' == 'Windows_NT'">$(GitLogFormatArg)%25</GitLogFormatArg>
-      <GitLogFormatArg>$(GitLogFormatArg)%25cd</GitLogFormatArg>
-    </PropertyGroup>
-
-    <Exec Command="git log -1 $(GitLogFormatArg) --date=short" WorkingDirectory="$(ProjectDirectory)" ConsoleToMSBuild="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GitCommitDate" />
-    </Exec>
-
-    <PropertyGroup>
-      <GitInfoFileContents>
-        <![CDATA[<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <!-- $(RepositoryName) submodule information. -->
-    <GitCommitHash>$(GitCommitHash)</GitCommitHash>
-    <GitCommitCount>$(GitCommitCount)</GitCommitCount>
-    <GitCommitDate>$(GitCommitDate)</GitCommitDate>
-  </PropertyGroup>
-</Project>
-]]>
-      </GitInfoFileContents>
-    </PropertyGroup>
-
-    <WriteLinesToFile File="$(OutputGitInfoPropsFile)"
-                      Lines="$(GitInfoFileContents)"
-                      Overwrite="true" />
-  </Target>
-
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
           Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''">
@@ -164,9 +123,10 @@
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
     </ItemGroup>
 
-    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
+    <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' == 'true'"
+                JsonFilePath="$(GlobalJsonFile)"
                 PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
-                NewAttributeValue="$(SDK_VERSION)"
+                NewAttributeValue="$(SDK3_VERSION)"
                 SkipUpdateIfMissingKey="true" />
   </Target>
 
@@ -301,13 +261,14 @@
   <Target Name="GatherBuiltPackages">
     <ItemGroup>
       <!-- Filter out packages for WriteVersions -->
-      <_BuiltPackages Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <_BuiltPackages Condition="'$(PackagesOutput)' != ''" Include="$(PackagesOutput)/*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <_BuiltPackages Condition="'@(PackagesOutputList)' != ''" Include="%(PackagesOutputList.Identity)/*.nupkg" Exclude="%(PackagesOutputList.Identity)/*.symbols.nupkg"/>
     </ItemGroup>
   </Target>
 
   <Target Name="CopyPackage"
           AfterTargets="Package"
-          Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND '$(PackagesOutput)' != ''"
+          Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
           DependsOnTargets="GatherBuiltPackages">
     <Copy SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
@@ -328,14 +289,25 @@
           Condition="'@(BuiltSdkPackageOverride)' != ''">
     <ItemGroup>
       <_ToolPackage
+        Condition="'%(BuiltSdkPackageOverride.Version)' == ''"
         Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.nupkg"
         Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity)*.symbols.nupkg"
         Id="%(BuiltSdkPackageOverride.Identity)" />
+      <_ToolPackage
+        Condition="'%(BuiltSdkPackageOverride.Version)' != ''"
+        Include="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity).%(BuiltSdkPackageOverride.Version).nupkg"
+        Exclude="$(SourceBuiltPackagesPath)%(BuiltSdkPackageOverride.Identity).%(BuiltSdkPackageOverride.Version).symbols.nupkg"
+        Id="%(BuiltSdkPackageOverride.Identity)" />
     </ItemGroup>
 
-    <ZipFileExtractToDirectory SourceArchive="@(_ToolPackage)"
+    <ZipFileExtractToDirectory SourceArchive="%(_ToolPackage.Identity)"
                                DestinationDirectory="$(ToolPackageExtractDir)%(_ToolPackage.Id)\"
                                OverwriteDestination="true" />
+    <ItemGroup>
+      <ExtractedToolFiles Include="$(ToolPackageExtractDir)%(_ToolPackage.Id)/**/*netcore*/*.dll" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
   </Target>
 
   <Target Name="EnsurePackagesCreated"
@@ -353,6 +325,7 @@
       <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
       <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
       <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(_PackageVersionPropsBackupPath)" />
+      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check PackagesOutput in $(MSBuildProjectFullPath) (currently '$(PackagesOutput)')" />
     </ItemGroup>
 
     <Error Condition="'@(JustSourceBuiltPackages)' == ''"
@@ -410,7 +383,8 @@
     <ItemGroup>
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_ID_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Identity)" />
       <EnvironmentVariables Include="SOURCE_BUILT_SDK_VERSION_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Version)" />
-      <EnvironmentVariables Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' != ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=%(UseSourceBuiltSdkOverride.Location)/" />
+      <EnvironmentVariables Condition="'%(UseSourceBuiltSdkOverride.Location)' == ''" Include="SOURCE_BUILT_SDK_DIR_%(UseSourceBuiltSdkOverride.Group)=$(ToolPackageExtractDir)%(UseSourceBuiltSdkOverride.Identity)/" />
     </ItemGroup>
   </Target>
 
