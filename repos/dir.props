@@ -7,8 +7,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., dir.props))/dir.props" />
   <Import Project="$(OutputGitInfoPropsFile)" Condition="Exists('$(OutputGitInfoPropsFile)')" />
   <Import Project="$(OfflineGitInfoPropsFile)" Condition="Exists('$(OfflineGitInfoPropsFile)')" />
-  <Import Project="$(ProductionAllRepoPropsFile)" Condition="Exists('$(ProductionAllRepoPropsFile)')" />
-  <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <PropertyGroup>
     <SourceDirectory Condition="'$(SourceDirectory)' == ''">$(RepositoryName)</SourceDirectory>

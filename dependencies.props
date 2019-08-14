@@ -38,12 +38,6 @@
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
   </PropertyGroup>
 
-  <!-- leak detection code is tied to the version of Linker that we use, so define it here once -->
-  <PropertyGroup>
-    <LinkerPreferredVersion>18ff3f49475c3fc3fafa1d17161b1525eea182d8</LinkerPreferredVersion>
-    <CoreSetupPreferredVersion>c855ac718789051d5d67282c88decca445de7711</CoreSetupPreferredVersion>
-  </PropertyGroup>
-
   <ItemGroup>
     <!-- Get ILAsm tool version from CoreCLR. -->
     <RemoteDependencyBuildInfo Include="CoreClr">
