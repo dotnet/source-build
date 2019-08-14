@@ -181,11 +181,11 @@ do
 done
 
 echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
-
-for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg')
-do
-    cp $built_package $TARBALL_ROOT/prebuilt/source-built/
-done
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Microsoft.Build.Tasks.Git*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Xliff*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
