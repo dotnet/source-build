@@ -1,0 +1,70 @@
+From 10c6fc8eeee07637c6c97b0ce08ab211ff502c0f Mon Sep 17 00:00:00 2001
+From: Fernando Aguilar <feaguila@microsoft.com>
+Date: Thu, 23 May 2019 16:19:55 -0700
+Subject: [PATCH] MSBuild package versions for dotnet Source Build (#2857)
+
+Upgraded MSBuild package deps. to 16.x; added dotnet source-build Repo API
+---
+ build/config.props                                            | 11 ++++++++++-
+ .../Microsoft.Build.NuGetSdkResolver.csproj                   |  2 +-
+ .../Microsoft.Build.NuGetSdkResolver.Test.csproj              |  2 +-
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/build/config.props b/build/config.props
+index eb8f3b5..b1009d4 100644
+--- a/build/config.props
++++ b/build/config.props
+@@ -24,6 +24,15 @@
+     <ReleaseLabel Condition=" '$(ReleaseLabel)' == '' ">rtm</ReleaseLabel>
+   </PropertyGroup>
+ 
++  <!-- Special project import for dotnet source build
++
++  The dotnet source-build Repo API overrides *PackageVersion properties with versions that were built before.
++  Those paackages are injected in this props file
++
++  See: https://github.com/dotnet/source-build/blob/master/Documentation/auto-dependency-flow/api.md#-pdotnetpackageversionpropspathpath
++  -->
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <!-- Dependency versions -->
+   <PropertyGroup>
+     <NewtonsoftJsonVersionCore>9.0.1</NewtonsoftJsonVersionCore>
+@@ -31,7 +40,7 @@
+     <TestSDKVersion>15.5.0</TestSDKVersion>
+     <MoqVersion>4.10.1</MoqVersion>
+     <FluentAssertionsVersion>4.19.4</FluentAssertionsVersion>
+-    <MicrosoftBuildPackageVersion>15.1.1012</MicrosoftBuildPackageVersion>
++    <MicrosoftBuildPackageVersion Condition="$(MicrosoftBuildPackageVersion) == ''">16.0.461</MicrosoftBuildPackageVersion>
+   </PropertyGroup>
+ 
+   <!-- Config -->
+diff --git a/src/NuGet.Core/Microsoft.Build.NuGetSdkResolver/Microsoft.Build.NuGetSdkResolver.csproj b/src/NuGet.Core/Microsoft.Build.NuGetSdkResolver/Microsoft.Build.NuGetSdkResolver.csproj
+index a7844a0..79710f4 100644
+--- a/src/NuGet.Core/Microsoft.Build.NuGetSdkResolver/Microsoft.Build.NuGetSdkResolver.csproj
++++ b/src/NuGet.Core/Microsoft.Build.NuGetSdkResolver/Microsoft.Build.NuGetSdkResolver.csproj
+@@ -20,7 +20,7 @@
+ 
+   <ItemGroup>
+     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.Commands\NuGet.Commands.csproj" />
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" ExcludeAssets="runtime" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildPackageVersion)" ExcludeAssets="runtime" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/test/NuGet.Core.Tests/Microsoft.Build.NuGetSdkResolver.Tests/Microsoft.Build.NuGetSdkResolver.Test.csproj b/test/NuGet.Core.Tests/Microsoft.Build.NuGetSdkResolver.Tests/Microsoft.Build.NuGetSdkResolver.Test.csproj
+index 3bfc1a5..534ff10 100644
+--- a/test/NuGet.Core.Tests/Microsoft.Build.NuGetSdkResolver.Tests/Microsoft.Build.NuGetSdkResolver.Test.csproj
++++ b/test/NuGet.Core.Tests/Microsoft.Build.NuGetSdkResolver.Tests/Microsoft.Build.NuGetSdkResolver.Test.csproj
+@@ -11,7 +11,7 @@
+ 
+   <ItemGroup>
+     <ProjectReference Include="$(NuGetCoreSrcDirectory)Microsoft.Build.NuGetSdkResolver\Microsoft.Build.NuGetSdkResolver.csproj" />
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.6.85" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildPackageVersion)" />
+   </ItemGroup>
+ 
+   <Import Project="$(BuildCommonDirectory)common.targets" />
+-- 
+1.8.3.1
+
