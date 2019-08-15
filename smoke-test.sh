@@ -259,9 +259,11 @@ function runWebTests() {
     doCommand C# razor "$@" new restore run
 
     doCommand F# web "$@" new restore run
+    # XXX workaround for F# web template issue
     # non-empty F# web tests are not currently expected to pass because they rely on code that does not ship in the SDK
     # doCommand F# mvc "$@" new restore run
     # doCommand F# webapi "$@" new restore run
+    # XXX end workaround
 }
 
 function resetCaches() {
