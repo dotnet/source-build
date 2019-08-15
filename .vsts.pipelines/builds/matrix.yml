@@ -52,15 +52,3 @@ jobs:
     scriptPrefix: ./
     scriptSuffix: .sh
     setupMac: true
-
-- template: ../jobs/ci-local.yml
-  parameters:
-    job: windows
-    pool:
-      name: ${{ parameters.windowsPoolName }}
-      queue: ${{ parameters.windowsQueueName }}
-    scriptPrefix: ''
-    scriptSuffix: .cmd
-    setupWindows: true
-    skipSmokeTest: true
-    failOnPrebuiltBaselineError: false

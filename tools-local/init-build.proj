@@ -9,9 +9,9 @@
   <Import Project="$(ToolsDir)IL.targets" />
   <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="GetHostInformation" />
-  <UsingTask AssemblyFile="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll" TaskName="WriteSourceRepoProperties" />
-  <UsingTask AssemblyFile="$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll" TaskName="MarkAndCatalogPackages" />
+  <UsingTask AssemblyFile="$(SourceBuildTasksAssembly)" TaskName="GetHostInformation" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteSourceRepoProperties" />
+  <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="MarkAndCatalogPackages" />
   <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
   
 
@@ -25,7 +25,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildDarc;FetchSources;BuildTasks;WriteSourceLinkMetadata;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="BuildXPlatTasks;BuildDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -34,9 +34,9 @@
   </Target>
 
   <Target Name="InstallSourceBuildSdkResolver">
-    <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
+    <Copy SourceFiles="$(XPlatSourceBuildTasksAssembly)"
           DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
-    <Copy SourceFiles="$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll"
+    <Copy SourceFiles="$(XPlatSourceBuildTasksAssembly)"
           DestinationFiles="$(SourceBuildMSBuildSdk3ResolverPath)" />
   </Target>
 
@@ -45,6 +45,13 @@
       <OfflineSources>&quot;$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)&quot;</OfflineSources>
     </PropertyGroup>
     <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj /p:RestoreSources=$(OfflineSources) /p:OfflineBuild=$(OfflineBuild)" />
+  </Target>
+
+  <Target Name="BuildXPlatTasks">
+    <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
+      <OfflineSources>&quot;$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)&quot;</OfflineSources>
+    </PropertyGroup>
+    <Exec Command="$(DotNetCliToolDir)dotnet build tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj /p:RestoreSources=$(OfflineSources) /p:OfflineBuild=$(OfflineBuild)" />
   </Target>
 
   <Target Name="GetRepoProjects">
