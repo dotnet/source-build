@@ -6,7 +6,7 @@ TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=3.0
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
-DEV_CERTS_VERSION_DEFAULT=2.2.0
+DEV_CERTS_VERSION_DEFAULT=3.0.0-preview8-28405-07
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/bin/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -31,6 +31,7 @@ testingHome="$testingDir/home"
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
 smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
+runningLocalTests=true
 
 function usage() {
     echo ""
@@ -269,15 +270,11 @@ function runWebTests() {
     doCommand C# razor "$@" new restore run
 
     doCommand F# web "$@" new restore run
-    # XXX Disabled known-failing tests.
-    # F# MVC and WebAPI projects require bits that are not included in the SDK.
-    # see https://github.com/dotnet/source-build/issues/1182 for details
-    # doCommand F# mvc "$@" new restore run
-    echo "warning: skipping F# MVC due to known issue"
-    # doCommand F# webapi "$@" new restore run
-    echo "warning: skipping F# WebAPI due to known issue"
-    echo "see https://github.com/dotnet/source-build/issues/1182 for details"
-    # XXX end known-failing tests
+    # non-empty F# web tests can only work online - they require bits not shipping with the SDK
+    if [ "$runningLocalTests" == "false" ]; then
+        doCommand F# mvc "$@" new restore run
+        doCommand F# webapi "$@" new restore run
+    fi
 }
 
 function resetCaches() {
@@ -362,6 +359,7 @@ if [ "$excludeLocalTests" == "false" ]; then
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
+    runningLocalTests=true
     runAllTests
     copyRestoredPackages
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
@@ -379,6 +377,7 @@ if [ "$excludeOnlineTests" == "false" ]; then
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
+    runningLocalTests=false
     runAllTests
     copyRestoredPackages
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
