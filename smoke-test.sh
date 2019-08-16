@@ -252,20 +252,6 @@ function runAllTests() {
     fi
 }
 
-function runWebTests() {
-    doCommand C# web "$@" new restore run
-    doCommand C# mvc "$@" new restore run
-    doCommand C# webapi "$@" new restore run
-    doCommand C# razor "$@" new restore run
-
-    doCommand F# web "$@" new restore run
-    # XXX workaround for F# web template issue
-    # non-empty F# web tests are not currently expected to pass because they rely on code that does not ship in the SDK
-    # doCommand F# mvc "$@" new restore run
-    # doCommand F# webapi "$@" new restore run
-    # XXX end workaround
-}
-
 function resetCaches() {
     rm -rf "$testingHome"
     mkdir "$testingHome"
@@ -283,8 +269,15 @@ function runWebTests() {
     doCommand C# razor "$@" new restore run
 
     doCommand F# web "$@" new restore run
-    doCommand F# mvc "$@" new restore run
-    doCommand F# webapi "$@" new restore run
+    # XXX Disabled known-failing tests.
+    # F# MVC and WebAPI projects require bits that are not included in the SDK.
+    # see https://github.com/dotnet/source-build/issues/1182 for details
+    # doCommand F# mvc "$@" new restore run
+    echo "warning: skipping F# MVC due to known issue"
+    # doCommand F# webapi "$@" new restore run
+    echo "warning: skipping F# WebAPI due to known issue"
+    echo "see https://github.com/dotnet/source-build/issues/1182 for details"
+    # XXX end known-failing tests
 }
 
 function resetCaches() {
