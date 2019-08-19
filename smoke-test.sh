@@ -31,7 +31,6 @@ testingHome="$testingDir/home"
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
 smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
-runningLocalTests=true
 
 function usage() {
     echo ""
@@ -270,11 +269,8 @@ function runWebTests() {
     doCommand C# razor "$@" new restore run
 
     doCommand F# web "$@" new restore run
-    # non-empty F# web tests can only work online - they require bits not shipping with the SDK
-    if [ "$runningLocalTests" == "false" ]; then
-        doCommand F# mvc "$@" new restore run
-        doCommand F# webapi "$@" new restore run
-    fi
+    doCommand F# mvc "$@" new restore run
+    doCommand F# webapi "$@" new restore run
 }
 
 function resetCaches() {
@@ -359,7 +355,6 @@ if [ "$excludeLocalTests" == "false" ]; then
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
-    runningLocalTests=true
     runAllTests
     copyRestoredPackages
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
@@ -377,7 +372,6 @@ if [ "$excludeOnlineTests" == "false" ]; then
         cat "$testingDir/NuGet.Config"
     fi
     echo "RUN ALL TESTS - ONLINE RESTORE SOURCE"
-    runningLocalTests=false
     runAllTests
     copyRestoredPackages
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
