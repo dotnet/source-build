@@ -5,20 +5,17 @@
     <GeneratingStaticPropertiesFile>true</GeneratingStaticPropertiesFile>
   </PropertyGroup>
   <Import Project="..\dir.props" />
-  <Import Project="$(ToolsDir)Packaging.targets" />
-  <Import Project="$(ToolsDir)IL.targets" />
   <Import Project="$(OfflineAllRepoPropsFile)" Condition="Exists('$(OfflineAllRepoPropsFile)')" />
 
   <UsingTask AssemblyFile="$(SourceBuildTasksAssembly)" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteSourceRepoProperties" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="MarkAndCatalogPackages" />
-  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
   
 
   <PropertyGroup>
     <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
     <SourceBuildMSBuildSdkResolverPath>$(DotNetSdkResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdkResolverPath>
-    <SourceBuildMSBuildSdk3ResolverPath>$(DotNetSdk3ResolversDir)SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.dll</SourceBuildMSBuildSdk3ResolverPath>
   </PropertyGroup>
 
   <Target Name="Build"
@@ -36,8 +33,6 @@
   <Target Name="InstallSourceBuildSdkResolver">
     <Copy SourceFiles="$(XPlatSourceBuildTasksAssembly)"
           DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
-    <Copy SourceFiles="$(XPlatSourceBuildTasksAssembly)"
-          DestinationFiles="$(SourceBuildMSBuildSdk3ResolverPath)" />
   </Target>
 
   <Target Name="BuildTasks">
@@ -146,7 +141,7 @@
 
   <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
-    <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
+      <Exec Command="$(DotNetCliToolDir)dotnet build -c Release --framework netcoreapp3.0 $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
@@ -172,7 +167,7 @@
       <DarcCloneArguments>$(DarcCloneArguments) --debug</DarcCloneArguments>
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)'" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
     <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>

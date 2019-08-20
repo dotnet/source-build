@@ -17,12 +17,6 @@
     <CurrentRefXmlPath>$(MSBuildThisFileFullPath)</CurrentRefXmlPath>
   </PropertyGroup>
 
-  <!-- Package versions used as toolsets -->
-  <PropertyGroup>
-    <BuildToolsPackage>microsoft.dotnet.buildtools</BuildToolsPackage>
-    <BuildToolsPackageVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)BuildToolsVersion.txt').Trim())</BuildToolsPackageVersion>
-  </PropertyGroup>
-
   <!--
     Packages built by ProdCon, but not source-build. These are included as prebuilts, or embedded in
     the product as version strings to be used by the SDK to fetch extra content.

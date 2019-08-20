@@ -16,18 +16,13 @@
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
-    <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
-    <!-- some repos, e.g. toolset, require a 3.0 preview SDK to build -->
-    <DotNet3CliToolDir>$(ProjectDir)Tools/dotnetcli3/</DotNet3CliToolDir>
-    <!-- different casing here matches BuildTools property -->
-    <Dotnet3ToolCommand>$(DotNet3CliToolDir)dotnet</Dotnet3ToolCommand>
+    <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
+    <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
-    <DotNetSdk3Dir>$(DotNet3CliToolDir)sdk/$(SDK3_VERSION)/</DotNetSdk3Dir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
-    <DotNetSdk3ResolversDir>$(DotNetSdk3Dir)SdkResolvers/</DotNetSdk3ResolversDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -60,7 +55,7 @@
     <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
-    <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll</DarcDll>
+    <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll</DarcDll>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
     <SourceBuildTasksAssembly>$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll</SourceBuildTasksAssembly>
     <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/Debug/netstandard2.0/</XPlatTasksBinDir>
@@ -165,11 +160,6 @@
     <CliInternalReleaseTag>source</CliInternalReleaseTag>
     <CliInternalBuildVersion>30000001-1</CliInternalBuildVersion>
   </PropertyGroup>
-
-  <!-- With Arcade, this package version is stored in a property we need to override. -->
-  <ItemGroup>
-    <ExtraPackageVersionPropsPackageInfo Include="BuildToolsPackageVersion" Version="$(BuildToolsPackageVersion)" />
-  </ItemGroup>
 
   <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternalVersion" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />
