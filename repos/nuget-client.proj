@@ -38,7 +38,6 @@
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
-      <BuildCommandBase>$(BuildCommandBase) $(RepoApiArgs)</BuildCommandBase>
     </PropertyGroup>
 
     <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"
