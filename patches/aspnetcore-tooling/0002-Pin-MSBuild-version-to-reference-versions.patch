@@ -1,0 +1,43 @@
+From 246ca06ac67180ca74923a217acfbf6251d67f56 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 19 Aug 2019 15:15:46 -0500
+Subject: [PATCH 2/2] Pin MSBuild version to reference versions.
+
+---
+ .../Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj    | 4 ++--
+ .../Microsoft.VisualStudio.LanguageServices.Razor.csproj      | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+index 436cad224..a7dfffa40 100644
+--- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
++++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+@@ -14,8 +14,8 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCorePackageVersion)" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net46'" />
+ 
+diff --git a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
+index 6ec21290e..320f0dc9f 100644
+--- a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
++++ b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
+@@ -11,8 +11,8 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" />
++    <PackageReference Include="Microsoft.Build" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
+     <PackageReference Include="Microsoft.CodeAnalysis" Version="$(VSIX_MicrosoftCodeAnalysisPackageVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(VSIX_MicrosoftCodeAnalysisCommonPackageVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(VSIX_MicrosoftCodeAnalysisCSharpWorkspacesPackageVersion)" />
+-- 
+2.21.0
+
