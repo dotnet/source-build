@@ -1,17 +1,108 @@
-From 07f4d5c3221598971994c259cc41330eb31bb941 Mon Sep 17 00:00:00 2001
+From a91575cf577e3370b0460d02963bf5310a1d9ebc Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
-Date: Mon, 12 Aug 2019 15:09:37 +0000
-Subject: [PATCH 5/8] Remove test porojects for ComponentModel test projects
+Date: Mon, 5 Aug 2019 18:21:28 +0000
+Subject: [PATCH 3/3] restore project for sourcebuild&&IncludeTestUtils
 
+Include pretest build for sourcebuild corefx tests
+
+Remove test porojects for ComponentModel test projects
+
+Enable inclusion of IncluteTestUtils Flag for coreFx
+
+Don't restore files to later overwrite them during the build (#40426)
+
+NETStandard2.1 includes more facades which we still build in corefx.
+
+Make sure we don't copy these then later overwrite them during the ref build.
+
+binplacePackages was restoring runtime files even on NETCoreApp:
+we should never do this.  We have to be careful to only test assemblies
+we build in the repo for netcoreapp.  The only test target which needs
+these is NETFX.
 ---
+ Directory.Build.props                              |   9 +
+ build.proj                                         |   3 +-
+ external/binplacePackages/binplacePackages.depproj |   4 +-
+ external/netstandard/netstandard.depproj           |  10 +-
  ...nentModel.Composition.Registration.Tests.csproj |  23 ---
  .../System.ComponentModel.Composition.Tests.csproj | 185 ---------------------
  ...m.Runtime.Serialization.Formatters.Tests.csproj |  39 -----
- 3 files changed, 247 deletions(-)
+ src/dirs.proj                                      |   2 +-
+ 8 files changed, 23 insertions(+), 252 deletions(-)
  delete mode 100644 src/System.ComponentModel.Composition.Registration/tests/System.ComponentModel.Composition.Registration.Tests.csproj
  delete mode 100644 src/System.ComponentModel.Composition/tests/System.ComponentModel.Composition.Tests.csproj
  delete mode 100644 src/System.Runtime.Serialization.Formatters/tests/System.Runtime.Serialization.Formatters.Tests.csproj
 
+diff --git a/Directory.Build.props b/Directory.Build.props
+index e0acf98..dd2fccb 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -346,6 +346,15 @@
+     <PackageConflictPlatformManifests Include="$(PlatformManifestFile)" />
+   </ItemGroup>
+ 
++  <!-- 
++    Controls inclusion/exclusion of CoreFx TestUtilities project.
++    Allows overriding from the calling process, i.e. source-build test run.
++  -->
++  <PropertyGroup>
++    <IncludeTestUtils Condition="('$(IncludeTestUtils)' == '' and '$(DotNetBuildFromSource)' != 'true') or '$(BuildTests)' == 'true'">true</IncludeTestUtils>
++    <IncludeTestUtils Condition="'$(IncludeTestUtils)' == ''">false</IncludeTestUtils>
++  </PropertyGroup>
++
+   <!-- AOT only asset that we currently don't support. -->
+   <ItemGroup>
+     <ProjectExclusions Include="$(SourceDir)System.Private.Reflection.Metadata.Ecma335/**/*.csproj" />
+diff --git a/build.proj b/build.proj
+index 09b69e0..e15d7ce 100644
+--- a/build.proj
++++ b/build.proj
+@@ -22,7 +22,8 @@
+       <_RestoreProjects Include="external\dir.proj" Build="true" />
+     </ItemGroup>
+     
+-    <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
++    <!--When Building from source and including test utils then ref and src projects are to be restored-->
++    <ItemGroup Condition="('$(DotNetBuildFromSource)' != 'true') or '$(IncludeTestUtils)' == 'true'">
+       <_RestoreProjects Include="$(SourceDir)tests.proj" Build="false" />
+     </ItemGroup>
+ 
+diff --git a/external/binplacePackages/binplacePackages.depproj b/external/binplacePackages/binplacePackages.depproj
+index 48e61b9..eeb3109 100644
+--- a/external/binplacePackages/binplacePackages.depproj
++++ b/external/binplacePackages/binplacePackages.depproj
+@@ -14,8 +14,8 @@
+     </BinPlaceConfiguration>
+   </ItemGroup>
+ 
+-  <!-- Runtime / test-runtime binplacing -->
+-  <ItemGroup Condition="'$(TargetsNetStandard)' != 'true'">
++  <!-- Runtime / test-runtime binplacing, when we aren't building better live version of these libs -->
++  <ItemGroup Condition="'$(TargetsNetFx)' == 'true'">
+     <BinPlaceConfiguration Include="$(Configuration)">
+       <ItemName>BinPlaceLib</ItemName>
+       <RuntimePath>$(RuntimePath)</RuntimePath>
+diff --git a/external/netstandard/netstandard.depproj b/external/netstandard/netstandard.depproj
+index 18e54cc..5c55d91 100644
+--- a/external/netstandard/netstandard.depproj
++++ b/external/netstandard/netstandard.depproj
+@@ -81,7 +81,15 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <_NetStandard21Files Include="$(_NETStandard21RefFolder)\*.dll" />
++      <ExcludeNetStandard21Refs Include="System.Buffers" />
++      <ExcludeNetStandard21Refs Include="System.ComponentModel.Composition" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.DispatchProxy" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.ILGeneration" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.Lightweight" />
++      <_NetStandard21Files 
++        Include="$(_NETStandard21RefFolder)\*.dll"
++        Exclude="@(ExcludeNetStandardRefs -> '$(_NETStandard21RefFolder)\%(Identity).dll')"  />
+     </ItemGroup>
+ 
+     <Error Condition="'@(_NetStandard21Files)' == ''" Text="Could not find package assets for netstandard2.1" />
 diff --git a/src/System.ComponentModel.Composition.Registration/tests/System.ComponentModel.Composition.Registration.Tests.csproj b/src/System.ComponentModel.Composition.Registration/tests/System.ComponentModel.Composition.Registration.Tests.csproj
 deleted file mode 100644
 index 9abbcb3..0000000
@@ -279,6 +370,19 @@ index 7b665f0..0000000
 -  </ItemGroup>
 -</Project>
 \ No newline at end of file
+diff --git a/src/dirs.proj b/src/dirs.proj
+index af8d308..30932b8 100644
+--- a/src/dirs.proj
++++ b/src/dirs.proj
+@@ -13,7 +13,7 @@
+     <Project Include="src.builds" />
+     <Project Include="shims\manual\*.csproj" />
+     <Project Include="shims\ApiCompat.proj" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+-    <Project Include="pretest.proj" Condition="'$(DotNetBuildFromSource)' != 'true' and '$(BuildAllConfigurations)' != 'true'" />
++    <Project Include="pretest.proj" Condition="('$(DotNetBuildFromSource)' != 'true' and '$(BuildAllConfigurations)' != 'true') or '$(IncludeTestUtils)' == 'true'" />
+   </ItemGroup>
+ 
+   <!-- Don't build System.Text.Encodings.Web tools as part of build; they're intended to be run manually. -->
 -- 
 1.8.3.1
 
