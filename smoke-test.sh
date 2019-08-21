@@ -6,7 +6,7 @@ TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=3.0
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
-DEV_CERTS_VERSION_DEFAULT=2.1.0-rtm-30762
+DEV_CERTS_VERSION_DEFAULT=3.0.0-preview8-28405-07
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/bin/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -136,13 +136,6 @@ function doCommand() {
 
     newArgs="new $proj -lang $lang"
 
-    # XXX temporary workaround XXX
-    # this is a temporary workaround before templates are updated to use netcoreapp3.0.
-    # see issue https://github.com/dotnet/source-build/issues/635 for more details.
-    # This part ensures packages won't fail to restore before we can edit the csproj.
-    newArgs="$newArgs --no-restore"
-    # XXX temporary workaround XXX
-
     while :; do
         if [ $# -le 0 ]; then
             break
@@ -259,17 +252,6 @@ function runAllTests() {
     fi
 }
 
-function runWebTests() {
-    doCommand C# web "$@" new restore run
-    doCommand C# mvc "$@" new restore run
-    doCommand C# webapi "$@" new restore run
-    doCommand C# razor "$@" new restore run
-
-    doCommand F# web "$@" new restore run
-    doCommand F# mvc "$@" new restore run
-    doCommand F# webapi "$@" new restore run
-}
-
 function resetCaches() {
     rm -rf "$testingHome"
     mkdir "$testingHome"
@@ -359,14 +341,6 @@ fi
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
-
-# XXX temporary workaround XXX
-# This is a temporary workaround to disable tests that will fail until ASP.NET packages are updated.
-# See https://github.com/dotnet/source-build/issues/635 for more details.
-echo "WARNING: Setting excludeWebTests and excludeOnlineTests to disable known-failing tests." | tee -a "$logFile"
-excludeWebTests=true
-excludeOnlineTests=true
-# XXX temporary workaround XXX
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then

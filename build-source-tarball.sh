@@ -161,6 +161,12 @@ cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 
+# some references packages have a mismatching public key which causes compile issues in the tarball.  Remove these.
+# see issue https://github.com/dotnet/source-build/issues/1186
+rm $TARBALL_ROOT/reference-packages/packages/System.Threading.Tasks.Extensions.4.0.0.nupkg
+rm $TARBALL_ROOT/reference-packages/packages/System.Threading.Tasks.Extensions.4.3.0.nupkg
+rm $TARBALL_ROOT/reference-packages/packages/System.Threading.Tasks.Extensions.4.5.2.nupkg
+
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
