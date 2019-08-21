@@ -1,0 +1,58 @@
+From 0264e65466cce05b6d11d95f882a70cc82a957d3 Mon Sep 17 00:00:00 2001
+From: Eric StJohn <ericstj@microsoft.com>
+Date: Mon, 19 Aug 2019 16:59:00 -0700
+Subject: [PATCH 9/9] Don't restore files to later overwrite them during the
+ build (#40426)
+
+NETStandard2.1 includes more facades which we still build in corefx.
+
+Make sure we don't copy these then later overwrite them during the ref build.
+
+binplacePackages was restoring runtime files even on NETCoreApp:
+we should never do this.  We have to be careful to only test assemblies
+we build in the repo for netcoreapp.  The only test target which needs
+these is NETFX.
+---
+ external/binplacePackages/binplacePackages.depproj |  4 ++--
+ external/netstandard/netstandard.depproj           | 10 +++++++++-
+ 2 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/external/binplacePackages/binplacePackages.depproj b/external/binplacePackages/binplacePackages.depproj
+index 48e61b9..eeb3109 100644
+--- a/external/binplacePackages/binplacePackages.depproj
++++ b/external/binplacePackages/binplacePackages.depproj
+@@ -14,8 +14,8 @@
+     </BinPlaceConfiguration>
+   </ItemGroup>
+ 
+-  <!-- Runtime / test-runtime binplacing -->
+-  <ItemGroup Condition="'$(TargetsNetStandard)' != 'true'">
++  <!-- Runtime / test-runtime binplacing, when we aren't building better live version of these libs -->
++  <ItemGroup Condition="'$(TargetsNetFx)' == 'true'">
+     <BinPlaceConfiguration Include="$(Configuration)">
+       <ItemName>BinPlaceLib</ItemName>
+       <RuntimePath>$(RuntimePath)</RuntimePath>
+diff --git a/external/netstandard/netstandard.depproj b/external/netstandard/netstandard.depproj
+index 18e54cc..5c55d91 100644
+--- a/external/netstandard/netstandard.depproj
++++ b/external/netstandard/netstandard.depproj
+@@ -81,7 +81,15 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <_NetStandard21Files Include="$(_NETStandard21RefFolder)\*.dll" />
++      <ExcludeNetStandard21Refs Include="System.Buffers" />
++      <ExcludeNetStandard21Refs Include="System.ComponentModel.Composition" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.DispatchProxy" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.ILGeneration" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.Lightweight" />
++      <_NetStandard21Files 
++        Include="$(_NETStandard21RefFolder)\*.dll"
++        Exclude="@(ExcludeNetStandardRefs -> '$(_NETStandard21RefFolder)\%(Identity).dll')"  />
+     </ItemGroup>
+ 
+     <Error Condition="'@(_NetStandard21Files)' == ''" Text="Could not find package assets for netstandard2.1" />
+-- 
+1.8.3.1
+
