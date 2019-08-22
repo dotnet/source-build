@@ -129,6 +129,7 @@
     <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>
     <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(OfflineBaselineDataFile)</BaselineDataFile>
     <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(OnlineBaselineDataFile)</BaselineDataFile>
+    <!--Exclude tests that are failing for test enabled projects like - corefx -->
     <TestExclusionsDir>$(ProjectDir)test/exclusions/</TestExclusionsDir>
   </PropertyGroup>
 
