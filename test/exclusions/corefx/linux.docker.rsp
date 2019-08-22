@@ -1,3 +1,7 @@
+-notrait category=IgnoreForCI
+
+-notrait category=failing
+
 # System.Diagnostics.Tests.ProcessTests
 -nomethod System.Diagnostics.Tests.ProcessTests.TestBasePriorityOnUnix
 -nomethod System.Diagnostics.Tests.ProcessTests.TestPriorityClassUnix
@@ -20,7 +24,7 @@
 -noclass System.Net.NetworkInformation.Tests.PingTest
 
 # System.Net.Security.Tests
--nomethod System.Net.Security.Tests.ServerNoEncryptionTest.ServerNoEncryption_ClientNoEncryption_ConnectWithNoEncryption
+-noclass System.Net.Security.Tests.ServerNoEncryptionTest
 -noclass System.Net.Security.Tests.ClientAsyncAuthenticateTest
 -noclass System.Net.Security.Tests.ServerAsyncAuthenticateTest
 -nomethod System.Net.Security.Tests.CertificateValidationClientServer.CertificateValidationClientServer_EndToEnd_Ok
@@ -50,8 +54,6 @@
 # System.Security.Cryptography.X509Certificates.Tests
 -nomethod System.Security.Cryptography.X509Certificates.Tests.X509StoreTests.X509Store_MachineStoreLoadSkipsInvalidFiles
 
-# System.Net.Security.Tests
--nomethod System.Net.Security.Tests.ServerNoEncryptionTest.ServerNoEncryption_ClientNoEncryption_ConnectWithNoEncryption
-
 # System.Console.Tests
--nomethod System.Console.Tests.Color.NonRedirectedOutputDoesUseAnsiSequences
+-nomethod Color.NonRedirectedOutputDoesUseAnsiSequences
+
