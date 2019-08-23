@@ -6,8 +6,7 @@ Subject: [PATCH] Remove prebuilts for source build
 ---
  eng/Tools.props                      | 4 +++-
  eng/Workarounds.targets              | 4 ++--
- eng/tools/RepoTasks/RepoTasks.csproj | 2 +-
- 3 files changed, 6 insertions(+), 4 deletions(-)
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/eng/Tools.props b/eng/Tools.props
 index 46285b1..235f827 100644
@@ -39,19 +38,6 @@ index f2162e9..a3144ee 100644
      <PackageReference Include="Internal.AspNetCore.BuildTasks" PrivateAssets="All" Version="$(InternalAspNetCoreBuildTasksPackageVersion)" IsImplicitlyDefined="true" />
    </ItemGroup>
    <PropertyGroup>
-diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
-index 0bf6be9..b6368c6 100644
---- a/eng/tools/RepoTasks/RepoTasks.csproj
-+++ b/eng/tools/RepoTasks/RepoTasks.csproj
-@@ -13,7 +13,7 @@
- 
-   <ItemGroup>
-     <PackageReference Include="NuGet.Build.Tasks" Version="5.1.0-rtm.5921" />
--    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
-+    <Reference Include="Microsoft.Extensions.DependencyModel" />
-   </ItemGroup>
- 
-   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
 -- 
 1.8.3.1
 
