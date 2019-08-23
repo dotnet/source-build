@@ -1,0 +1,57 @@
+From cd48227d23bca02703606ad728b6fe3ea7c38aa7 Mon Sep 17 00:00:00 2001
+From: John Luo <johluo@microsoft.com>
+Date: Thu, 22 Aug 2019 17:13:15 -0700
+Subject: [PATCH] Remove prebuilts for source build
+
+---
+ eng/Tools.props                      | 4 +++-
+ eng/Workarounds.targets              | 4 ++--
+ eng/tools/RepoTasks/RepoTasks.csproj | 2 +-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 46285b1..cdfb670 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -6,7 +6,9 @@
+       Without this here, we see regular failures with 'error MSB4236: The SDK 'Yarn.MSBuild' specified could not be found.'
+       Since this project is evaluated before .npmproj files are loaded, this should cause the package to end
+       up in the NuGet cache ahead of time.
++
++      This is not needed in source build.
+     -->
+-    <PackageReference Include="Yarn.MSBuild" Version="1.15.2" />
++    <PackageReference Condition="'$(DotNetBuildFromSource)' != 'true'" Include="Yarn.MSBuild" Version="1.15.2" />
+   </ItemGroup>
+ </Project>
+diff --git a/eng/Workarounds.targets b/eng/Workarounds.targets
+index f5c74cd..5da0f1e 100644
+--- a/eng/Workarounds.targets
++++ b/eng/Workarounds.targets
+@@ -25,8 +25,8 @@
+   <!-- Workaround https://github.com/dotnet/source-build/issues/1112. Source link is currently disabled in source build so define this dummy target which is required for pack. -->
+   <Import Condition="'$(DotNetBuildFromSource)' == 'true'" Project="WorkaroundsImported.targets" />
+ 
+-  <!-- Workaround for https://github.com/dotnet/arcade/issues/204 -->
+-  <ItemGroup>
++  <!-- Workaround for https://github.com/dotnet/arcade/issues/204, not needed in source build -->
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <PackageReference Include="Internal.AspNetCore.BuildTasks" PrivateAssets="All" Version="$(InternalAspNetCoreBuildTasksPackageVersion)" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index 0bf6be9..b6368c6 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -13,7 +13,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NuGet.Build.Tasks" Version="5.1.0-rtm.5921" />
+-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
++    <Reference Include="Microsoft.Extensions.DependencyModel" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+-- 
+1.8.3.1
+
