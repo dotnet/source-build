@@ -1,0 +1,43 @@
+From 2ece62f59369bca0ea9f615d3e067f9d3ddeae10 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 23 Aug 2019 19:03:39 +0000
+Subject: [PATCH] Remove prebuilts for source build
+
+---
+ eng/Tools.props                      | 4 +++-
+ eng/Workarounds.targets              | 4 ++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 46285b1..235f827 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -6,7 +6,9 @@
+       Without this here, we see regular failures with 'error MSB4236: The SDK 'Yarn.MSBuild' specified could not be found.'
+       Since this project is evaluated before .npmproj files are loaded, this should cause the package to end
+       up in the NuGet cache ahead of time.
++
++      This is not needed in source build.
+     -->
+-    <PackageReference Include="Yarn.MSBuild" Version="1.15.2" />
++    <PackageReference Condition="'$(DotNetBuildFromSource)' != 'true'" Include="Yarn.MSBuild" Version="1.15.2" />
+   </ItemGroup>
+ </Project>
+diff --git a/eng/Workarounds.targets b/eng/Workarounds.targets
+index f2162e9..a3144ee 100644
+--- a/eng/Workarounds.targets
++++ b/eng/Workarounds.targets
+@@ -36,8 +36,8 @@
+     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
+   </PropertyGroup>
+ 
+-  <!-- Workaround for https://github.com/dotnet/arcade/issues/204 -->
+-  <ItemGroup>
++  <!-- Workaround for https://github.com/dotnet/arcade/issues/204, not needed in source build -->
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <PackageReference Include="Internal.AspNetCore.BuildTasks" PrivateAssets="All" Version="$(InternalAspNetCoreBuildTasksPackageVersion)" IsImplicitlyDefined="true" />
+   </ItemGroup>
+   <PropertyGroup>
+-- 
+1.8.3.1
+
