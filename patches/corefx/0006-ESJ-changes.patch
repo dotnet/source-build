@@ -1,0 +1,47 @@
+From 0b05a29272fee574941ff1d72b982158ba397168 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Fri, 23 Aug 2019 21:05:06 +0000
+Subject: [PATCH 6/6] ESJ changes
+
+---
+ external/binplacePackages/binplacePackages.depproj |  2 +-
+ external/netstandard/netstandard.depproj           | 10 +++++++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/external/binplacePackages/binplacePackages.depproj b/external/binplacePackages/binplacePackages.depproj
+index 48e61b9..f9286d6 100644
+--- a/external/binplacePackages/binplacePackages.depproj
++++ b/external/binplacePackages/binplacePackages.depproj
+@@ -15,7 +15,7 @@
+   </ItemGroup>
+ 
+   <!-- Runtime / test-runtime binplacing -->
+-  <ItemGroup Condition="'$(TargetsNetStandard)' != 'true'">
++  <ItemGroup Condition="'$(TargetsNetFx)' == 'true'">
+     <BinPlaceConfiguration Include="$(Configuration)">
+       <ItemName>BinPlaceLib</ItemName>
+       <RuntimePath>$(RuntimePath)</RuntimePath>
+diff --git a/external/netstandard/netstandard.depproj b/external/netstandard/netstandard.depproj
+index 18e54cc..309e052 100644
+--- a/external/netstandard/netstandard.depproj
++++ b/external/netstandard/netstandard.depproj
+@@ -81,7 +81,15 @@
+     </PropertyGroup>
+ 
+     <ItemGroup>
+-      <_NetStandard21Files Include="$(_NETStandard21RefFolder)\*.dll" />
++      <ExcludeNetStandard21Refs Include="System.Buffers" />
++      <ExcludeNetStandard21Refs Include="System.ComponentModel.Composition" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.DispatchProxy" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.ILGeneration" />
++      <ExcludeNetStandard21Refs Include="System.Reflection.Emit.Lightweight" />
++      <_NetStandard21Files 
++        Include="$(_NETStandard21RefFolder)\*.dll"
++        Exclude="@(ExcludeNetStandard21Refs -> '$(_NETStandard21RefFolder)\%(Identity).dll')"  />
+     </ItemGroup>
+ 
+     <Error Condition="'@(_NetStandard21Files)' == ''" Text="Could not find package assets for netstandard2.1" />
+-- 
+1.8.3.1
+
