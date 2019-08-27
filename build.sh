@@ -17,7 +17,7 @@ if [ -z "${HOME:-}" ]; then
     mkdir "$HOME"
 fi
 
-if grep -q /docker/ "/proc/1/cgroup"; then
+if grep -q '\(/docker/\|/docker-\)' "/proc/1/cgroup"; then
     export DotNetRunningInDocker=1
 fi
 
