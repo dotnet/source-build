@@ -1,0 +1,26 @@
+From 401bac43ea2bf796046483f3f58a758a180a2e86 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 17 Jul 2019 17:20:48 -0500
+Subject: [PATCH 2/4] Import PackageVersions.props.
+
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index a2f5ff40c9..c7d9bed81a 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -248,6 +248,9 @@
+     <XunitExtensibilityExecutionPackageVersion>$(XunitVersion)</XunitExtensibilityExecutionPackageVersion>
+     <MicrosoftDataSqlClientPackageVersion>1.0.19189.1-Preview</MicrosoftDataSqlClientPackageVersion>
+   </PropertyGroup>
++
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
++
+   <!-- Restore feeds -->
+   <PropertyGroup Label="Restore feeds">
+     <RestoreSources Condition=" '$(DotNetBuildOffline)' != 'true' ">
+-- 
+2.18.0
+

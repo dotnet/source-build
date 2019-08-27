@@ -86,7 +86,9 @@ namespace Microsoft.DotNet.Build.Tasks
                 foreach (PackageIdentity packageIdentity in latestPackages)
                 {
                     string propertyName = GetPropertyName(packageIdentity.Id);
+                    sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
 
+                    propertyName = GetAlternatePropertyName(packageIdentity.Id);
                     sw.WriteLine($"    <{propertyName}>{packageIdentity.Version}</{propertyName}>");
                 }
                 foreach (var extraProp in ExtraProperties ?? Enumerable.Empty<ITaskItem>())
@@ -119,6 +121,16 @@ namespace Microsoft.DotNet.Build.Tasks
                     ?? string.Empty);
 
             return $"{formattedId}PackageVersion";
+        }
+
+        public static string GetAlternatePropertyName(string id)
+        {
+            string formattedId = InvalidElementNameCharRegex.Replace(
+                id,
+                match => match.Groups?["FirstPartChar"].Value.ToUpperInvariant()
+                    ?? string.Empty);
+
+            return $"{formattedId}Version";
         }
     }
 }

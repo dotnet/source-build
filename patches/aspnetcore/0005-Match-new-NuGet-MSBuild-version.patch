@@ -1,0 +1,29 @@
+From f1f64f4e018f0e1071bbbd77a2a106ae5ef7c543 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 15 Aug 2019 16:38:08 -0500
+Subject: [PATCH 5/5] Match new NuGet MSBuild version.
+
+---
+ eng/tools/RepoTasks/RepoTasks.csproj | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index 0bf6be98ae..7a669b85d5 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -17,9 +17,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.8.166" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.8.166" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.8.166" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+-- 
+2.18.0
+

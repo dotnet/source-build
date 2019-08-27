@@ -3,10 +3,8 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
-
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:OSName=$(OSNameOverride)</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:CoreSetupRid=linux-x64</BuildCommandArgs>
     <!-- core-sdk always wants to build portable on OSX -->
     <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
@@ -57,8 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- placeholder - the real dependency here is on AspNetCore but we don't build that yet -->
-    <RepositoryReference Include="aspnet-extensions" />
+    <RepositoryReference Include="aspnetcore" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="toolset" />
@@ -69,10 +66,6 @@
 
     <!-- Pass multiple restore sources as environment: avoid the shell seeing ';' in an Exec. -->
     <EnvironmentVariables Include="ExternalRestoreSources=$(EnvironmentExternalRestoreSources)" />
-
-    <!-- Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
-      parameter, it is lost during the restore call.  -->
-    <EnvironmentVariables Include="IncludeAspNetCoreRuntime=false" />
 
     <!-- Disable bundled tools until we can figure out:
       Unable to find package dotnet-dev-certs.

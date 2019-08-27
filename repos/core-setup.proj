@@ -3,21 +3,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <!-- core-sdk always wants a portable runtime on OSX -->
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-    <OverridePortable>$(PortableBuild)</OverridePortable>
-    <OverridePortable Condition="'$(TargetOS)' == 'OSX'">true</OverridePortable>
-
-    <BuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
+    <BuildArguments>--restore --build</BuildArguments>
+    <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) --ci</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PreReleaseLabel="$(PreReleaseVersionLabel)"</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
 

@@ -1,0 +1,24 @@
+From 05835b0f1ad27a315ff5a4281ff2b6b9c5698c25 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 03:04:54 -0500
+Subject: [PATCH 4/4] Add default for _SuppressSdkImports?
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 443f4b2797..1f36384bc5 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -3,6 +3,7 @@
+     <RepoRoot>$(MSBuildThisFileDirectory)</RepoRoot>
+     <RepositoryUrl>https://github.com/aspnet/AspNetCore</RepositoryUrl>
+     <RepositoryType>git</RepositoryType>
++    <_SuppressSdkImports Condition="'$(_SuppressSdkImports)' == ''">false</_SuppressSdkImports>
+   </PropertyGroup>
+ 
+   <!-- Defines project type conventions. -->
+-- 
+2.18.0
+

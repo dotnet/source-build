@@ -1,0 +1,28 @@
+From 93d8a69b03abd855b56e9993ca90177f03021aaf Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 18 Jul 2019 01:34:30 -0500
+Subject: [PATCH 3/4] Exclude some projects from source-build.
+
+---
+ Directory.Build.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 6c07ec1582..443f4b2797 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -18,9 +18,11 @@
+     <IsUnitTestProject>false</IsUnitTestProject>
+     <IsUnitTestProject Condition="'$(IsSpecificationTestProject)' != 'true' and ( $(MSBuildProjectName.EndsWith('Tests')) or $(MSBuildProjectName.EndsWith('.Test')) or $(MSBuildProjectName.EndsWith('.FunctionalTest')) )">true</IsUnitTestProject>
+     <IsTestAssetProject Condition="$(RepoRelativeProjectDir.Contains('testassets'))">true</IsTestAssetProject>
++    <IsOtherTestProject Condition="$(MSBuildProjectName.Contains('IntegrationTesting')) or $(MSBuildProjectName.Contains('TestCommon'))">true</IsOtherTestProject>
+     <IsSampleProject Condition="$(RepoRelativeProjectDir.Contains('sample'))">true</IsSampleProject>
+     <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
+     <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
++    <ExcludeFromSourceBuild Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true' or '$(IsOtherTestProject)' == 'true'">true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <Import Project="eng\FlakyTests.BeforeArcade.props" />
+-- 
+2.18.0
+

@@ -67,12 +67,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!--
-      Exclude AspNetCore Runtime as an environment variable to ensure the entire build knows. As a
-      parameter, it is lost during the restore call.
-    -->
-    <EnvironmentVariables Include="IncludeAspNetCoreRuntime=false" />
-
     <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
          is fixed we will be able to determine this automatically.  -->
     <EnvironmentVariables Include="DropSuffix=true"

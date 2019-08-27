@@ -1,0 +1,47 @@
+From d30003d209a13df57141891fc134c9ba86fa3edb Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 20 Aug 2019 21:09:48 +0000
+Subject: [PATCH] Pin msbuild packages to ref pkg version
+
+---
+ src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj | 6 +++---
+ src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj           | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+index 221b036..da86b75 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+@@ -40,9 +40,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup Condition=" '$(TargetFramework)' == '$(NetStandardVersion)' ">
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
+index 22b406f..f7fa08d 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks/NuGet.Build.Tasks.csproj
+@@ -35,9 +35,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup Condition=" '$(TargetFramework)' == '$(NetStandardVersion)' ">
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+   </ItemGroup>
+   
+   <ItemGroup>
+-- 
+1.8.3.1
+

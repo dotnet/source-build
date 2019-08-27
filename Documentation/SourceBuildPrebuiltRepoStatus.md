@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-08-10
+Last source-build Build Date: 2019-08-24
 
-Last updated: 2019-08-12
+Last updated: 2019-08-26
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -12,20 +12,21 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [arcade][970] | Mark Wilke | ![ot] On Track | 1 | 4 |
 | [AspNetCore-Tooling][1150] | John Luo | ![ot] On Track | - | 1 | New repo added on 7/12
+| [AspNetCore][1150] | John Luo | ![ot] On Track | - | 9 | New repo added on 8/21
 | [cli][880] | Nick Guerrera | ![cp] Complete | 1 | - |  All direct-dependency prebuilts removed.
 | [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
 | [common][882] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [coreclr][883] | Jeff Schwartz | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
 | [corefx][884] | Eric St. John | ![ot] On Track | 2 | 2 |
-| [core-sdk][972] | Nick Guerrera | ![bn] Bounced | 1 | 1 | One prebuilt added in Preview8
+| [core-sdk][972] | Nick Guerrera | ![bn] Bounced | 1 | 2 | One prebuilt added in Preview8
 | [core-setup][885] | Davis Goodin | ![ot] On Track | 2 | 2 |
 | [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
 | [Extensions][1132] | John Luo | ![ot] On Track | - | 7 | New repo added on 6/28
 | [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 6 |
 | [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 2 | 4 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 2 | 6 |
+| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 4 | 3 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 4 | 4 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
 | [sdk][893] | Nick Guerrera | ![ot] On Track | 1 | 1 |
 | [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 3 |
@@ -34,8 +35,8 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | [Tools][974] | Dan Seefeldt | ![ot] On Track | - | 4 |
 | [toolset][973] | Nick Guerrera | ![ot] On Track | 1 | 4 |
 | [tools-local tasks][971] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [fsharp][886] | Brett Forsgren | ![ot] On Track | - | 1 |
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![ot] On Track | - | 3 |
+| [fsharp][886] | Brett Forsgren | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
 | [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 5 | Added 2 prebuilts in Preview 8.
 | xdt | John Luo | ![cp] Complete | - | - | No direct-dependency prebuilts.
 | [xliff-tasks][899] | Tom Meschter | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
@@ -65,29 +66,30 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | --- | --- | ---
 ApplicationInsights-dotnet | 53b80940842204f78708a538628288ff5d741a1d | 2017-12-21
 arcade | 8f3c22397990aeb20a88690b51dad4b33f21e7ff | 2019-07-15
+AspNetCore | 460f9b63e9db9f4a3a542fcdc4204e29ca90f123 | 2019-08-24
 AspNetCore-Tooling | c1aafc5dce1a2372c9c3ebb310d6e64f0cced0a5 | 2019-07-24
-cli | 47270add76873411c0caa4ddb87d64e2583e8390 | 2019-08-01
+cli | 1f3f34004a494b55121d05fd3d5e1ca7b0bb6a37 | 2019-08-06
 cliCommandLineParser | 0e89c2116ad28e404ba56c14d1c3f938caa25a01 | 2019-04-08
 common | 6e37cdfe96ac8b06a923242120169fafacd720e6 | 2018-11-02
-core-sdk | 1d6c76dc2b462f43e7632543a33e149b14ea3753 | 2019-08-01
+core-sdk | 8bf06ffc8d99abcc7c8a923e90b35d122887976d | 2019-08-06
 core-setup | 7d68d147accb91858bfee92e599ad8507691040b | 2019-07-25
 coreclr | ac25be694a5385a6a1496db40de932df0689b742 | 2019-07-28
-corefx | 7c56101d1829e8f317065f99d173834c38c2ec44 | 2019-07-29
-Extensions | dea3f207c8ea27f2a13ab15880df58ff91b42dfa | 2019-07-31
+corefx | 1bb52e6a3db7f3673a3825f3677b9f27b9af99aa | 2019-08-05
+Extensions | 898f6e9319f99bad6c917b22088144231db6c2c3 | 2019-08-05
 fsharp | d4884581c1e7a93232914a2e335928210d8ddd84 | 2019-07-27
 linker | 18ff3f49475c3fc3fafa1d17161b1525eea182d8 | 2019-07-29
 msbuild | dd8019d9e1de5080594965f27618b524dab8a34d | 2019-07-27
 Newtonsoft.Json | e43dae94c26f0c30e9095327a3a9eac87193923d | 2018-05-31
 NuGet.Client | 27af96bdb7ba8d6d7ea9ad53fc76cd1d1aa80703 | 2019-03-29
 roslyn | ef3a7a3863ae53b610a4b0c3682a35cad0829583 | 2019-07-31
-sdk | a799fe188c856e5cdaaa056f9afb57d511d9e15b | 2019-07-31
-source-build-reference-packages | cffb0d986fc6a64554f1b0f25777d9ff26af3b9e | 2019-07-19
+sdk | 7c9956bc0e4c5fe5390ce82a9806dbf8af9d050e | 2019-08-05
+source-build-reference-packages | 11dff5f8d4777896dd1434002d08f70243ff4d7b | 2019-08-23
 sourcelink | 51310e65e75010467993f793e1739d1a1dad50c5 | 2019-07-01
 standard | 56a4d43c963e533f5392c2c4f7b710f3ab98b5bd | 2019-07-19
 templating | e8d6da33000a416b2b36b4f04b1756dcc99f671d | 2019-07-31
-toolset | 6ef06656bbc34866a5e71facb17eb2c3a6faf234 | 2019-08-01
+toolset | 9c8c1c85d181cde1d7c43180c4072ce4c2f54adb | 2019-08-06
 vstest | 1e37ee32dbba48ad797b03bff0058c5c60a3a770 | 2019-07-11
-websdk | 3ecc06a891b70709f02d9845527e7fab83b02843 | 2019-08-01
+websdk | 95bd95faa6847f759e033d8647733a7c56f7c6c8 | 2019-08-06
 xdt | c01a538851a8ab1a1fbeb2e6243f391fff7587b4 | 2019-04-30
 xliff-tasks | 173ee3bd61c9549557eefa3cfb718bdef157cb87 | 2019-05-02
 
