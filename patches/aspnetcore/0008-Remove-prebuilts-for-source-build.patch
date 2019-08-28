@@ -1,15 +1,15 @@
-From 2ece62f59369bca0ea9f615d3e067f9d3ddeae10 Mon Sep 17 00:00:00 2001
+From 05fa8d2075171e94788e5887490d7f6b63906d45 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 23 Aug 2019 19:03:39 +0000
-Subject: [PATCH] Remove prebuilts for source build
+Subject: [PATCH 8/8] Remove prebuilts for source build
 
 ---
- eng/Tools.props                      | 4 +++-
- eng/Workarounds.targets              | 4 ++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+ eng/Tools.props         | 4 +++-
+ eng/Workarounds.targets | 1 +
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Tools.props b/eng/Tools.props
-index 46285b1..235f827 100644
+index 46285b1448..cdfb67026c 100644
 --- a/eng/Tools.props
 +++ b/eng/Tools.props
 @@ -6,7 +6,9 @@
@@ -24,20 +24,17 @@ index 46285b1..235f827 100644
    </ItemGroup>
  </Project>
 diff --git a/eng/Workarounds.targets b/eng/Workarounds.targets
-index f2162e9..a3144ee 100644
+index f5c74cdd43..c3ee1b689a 100644
 --- a/eng/Workarounds.targets
 +++ b/eng/Workarounds.targets
-@@ -36,8 +36,8 @@
-     <WarnOnPackingNonPackableProject>false</WarnOnPackingNonPackableProject>
-   </PropertyGroup>
+@@ -27,6 +27,7 @@
  
--  <!-- Workaround for https://github.com/dotnet/arcade/issues/204 -->
--  <ItemGroup>
-+  <!-- Workaround for https://github.com/dotnet/arcade/issues/204, not needed in source build -->
+   <!-- Workaround for https://github.com/dotnet/arcade/issues/204 -->
+   <ItemGroup>
 +  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
      <PackageReference Include="Internal.AspNetCore.BuildTasks" PrivateAssets="All" Version="$(InternalAspNetCoreBuildTasksPackageVersion)" IsImplicitlyDefined="true" />
    </ItemGroup>
-   <PropertyGroup>
+ 
 -- 
-1.8.3.1
+2.18.0
 
