@@ -43,4 +43,4 @@ done
 set -x
 
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
-"$scriptroot/eng/common/build.sh" --restore --build --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
+"$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
