@@ -130,6 +130,8 @@
     <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>
     <BaselineDataFile Condition="'$(OfflineBuild)' == 'true'">$(OfflineBaselineDataFile)</BaselineDataFile>
     <BaselineDataFile Condition="'$(OfflineBuild)' != 'true'">$(OnlineBaselineDataFile)</BaselineDataFile>
+    <!--Exclude tests that are failing for test enabled projects like - corefx -->
+    <TestExclusionsDir>$(ProjectDir)test/exclusions/</TestExclusionsDir>
   </PropertyGroup>
 
   <!-- Import Build tools common props file where repo-independent properties are found -->
@@ -150,6 +152,7 @@
          We need an "empty" project after the last real project in order for prebuilt detection
          to work, so we always build known-good. -->
     <RootRepo>known-good</RootRepo>
+    <RootRepoTests>known-good-tests</RootRepoTests>
   </PropertyGroup>
 
   <ItemGroup>
