@@ -1,3 +1,9 @@
+[CmdletBinding(PositionalBinding=$false)]
+Param(
+  [switch] $test,
+  [Parameter(ValueFromRemainingArguments=$true)][String[]]$captured_args
+)
+
 Set-StrictMode -version 2.0
 $ErrorActionPreference = "Stop"
 
@@ -29,7 +35,13 @@ $env:SDK_VERSION = $SdkVersion
 $env:SDK3_VERSION = $Sdk3Version
 $env:ARCADE_BOOTSTRAP_VERSION = $GlobalJson.'msbuild-sdks'.'Microsoft.DotNet.Arcade.Sdk'
 
-if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
+$key = Get-Item -LiteralPath Registry::HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control -ErrorAction SilentlyContinue
+if ($key.GetValue('ContainerType', $null) -ne $null)
+{
+    $env:DotNetRunningInDocker = 1
+}
+
+if (-NOT $test -and ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false"))
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
 }
@@ -54,6 +66,9 @@ if (-Not (Test-Path "$SCRIPT_ROOT\Tools\source-built")) {
 $CLIPATH = "$SCRIPT_ROOT\Tools\dotnetcli"
 $SDKPATH = "$CLIPATH\sdk\$SdkVersion"
 
-$captured_args = $args
+if ($test)
+{
+    $captured_args += "/t:RunTests"
+}
 
 Exec-Block { & "$CLIPATH\dotnet" "$SDKPATH/MSBuild.dll" "$SCRIPT_ROOT/build.proj" /flp:v=diag /bl /clp:v=m $captured_args } | Out-Host
