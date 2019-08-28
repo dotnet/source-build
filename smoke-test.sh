@@ -173,9 +173,9 @@ function doCommand() {
             fi
             webPid=$!
             killCommand="pkill -SIGTERM -P $webPid"
-            echo "    waiting up to 20 seconds for web project with pid $webPid..."
+            echo "    waiting up to 30 seconds for web project with pid $webPid..."
             echo "    to clean up manually after an interactive cancellation, run: $killCommand"
-            for seconds in $(seq 20); do
+            for seconds in $(seq 30); do
                 if [ "$(tail -n 1 "$logFile")" = 'Application started. Press Ctrl+C to shut down.' ]; then
                     echo "    app ready for shutdown after $seconds seconds"
                     break
