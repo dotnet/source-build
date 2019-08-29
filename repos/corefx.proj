@@ -38,7 +38,8 @@
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
 
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/</PackagesOutput>
+    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
 
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
@@ -56,6 +57,13 @@
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
   </ItemGroup>
+
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
