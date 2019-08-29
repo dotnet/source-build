@@ -1,0 +1,52 @@
+From 9db78abeb5ec2e1cc595f38239d3ff3bb8e083f0 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 29 Aug 2019 07:01:08 +0000
+Subject: [PATCH] Do not build for .NET Fx in source-build.
+
+---
+ eng/Packages.props        | 7 +++++--
+ src/Directory.Build.props | 3 ++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/eng/Packages.props b/eng/Packages.props
+index 2ed9a91..9032f03 100644
+--- a/eng/Packages.props
++++ b/eng/Packages.props
+@@ -50,9 +50,12 @@
+     <PackageReference Update="xunit.core" Version="$(XUnitVersion)" />
+   </ItemGroup>
+ 
+-  <ItemGroup>
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <GlobalPackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-004" PrivateAssets="All"/>
++  </ItemGroup>
++
++  <ItemGroup>
+     <GlobalPackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="15.0.15" PrivateAssets="All" Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'" />
+   </ItemGroup>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 6b291e7..92530c9 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -23,12 +23,13 @@
+     
+     <!-- Defaults for target frameworks and architecture -->
+     <LibraryTargetFrameworks>$(FullFrameworkTFM);netstandard2.0</LibraryTargetFrameworks>
++    <LibraryTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0</LibraryTargetFrameworks>
+     <LibraryTargetFrameworks Condition="'$(MonoBuild)'=='true'">net461</LibraryTargetFrameworks>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+ 
+     <!-- Target frameworks for Exe and unit test projects (ie projects with runtime output) -->
+     <RuntimeOutputTargetFrameworks>netcoreapp2.1</RuntimeOutputTargetFrameworks>
+-    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
++    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows' and '$(DotNetBuildFromSource)' != 'true'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
+     <RuntimeOutputTargetFrameworks Condition="'$(MonoBuild)' == 'true'">net461</RuntimeOutputTargetFrameworks>
+ 
+     <!-- Don't automatically append target framework to output path, since we want to put the Platform Target beforehand, if it's not AnyCPU -->
+-- 
+1.8.3.1
+
