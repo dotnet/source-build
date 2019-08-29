@@ -1,0 +1,30 @@
+From 312a528aba483d3e01a1615b27ca94c274e10c1c Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 29 Aug 2019 16:22:37 +0000
+Subject: [PATCH 5/5] Update VSIDE feeds to avoid the build break
+
+---
+ eng/Versions.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 318c913..2cf9d5e 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -326,11 +326,11 @@
+       https://myget.org/F/vs-devcore/api/v3/index.json;
+       https://myget.org/F/vs-editor/api/v3/index.json;
+       https://myget.org/F/roslyn_concord/api/v3/index.json;
+-      https://vside.myget.org/F/vssdk/api/v3/index.json;
+-      https://vside.myget.org/F/vs-impl/api/v3/index.json;
+       https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
+       https://dotnet.myget.org/F/system-commandline/api/v3/index.json;
+       https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json;
++      https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json;
++      https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json;
+     </RestoreSources>
+   </PropertyGroup>
+ </Project>
+-- 
+1.8.3.1
+
