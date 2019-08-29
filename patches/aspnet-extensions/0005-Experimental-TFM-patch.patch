@@ -1,4 +1,4 @@
-From 8929193ce88a9fcce9b93fcfbf4fdcfb8d65f289 Mon Sep 17 00:00:00 2001
+From a7cef286e53756ef9ba27df7ac8c6fe6474491b0 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 28 Aug 2019 17:38:46 -0500
 Subject: [PATCH 5/5] Experimental TFM patch
@@ -8,7 +8,12 @@ Subject: [PATCH 5/5] Experimental TFM patch
  .../Memory/src/Microsoft.Extensions.Caching.Memory.csproj     | 2 +-
  .../ref/Microsoft.Extensions.Configuration.Xml.csproj         | 4 ++--
  .../src/Microsoft.Extensions.Configuration.Xml.csproj         | 2 +-
+ src/DiagnosticAdapter/src/Internal/ProxyAssembly.cs           | 2 +-
+ src/DiagnosticAdapter/src/Internal/ProxyFactory.cs            | 2 +-
+ src/DiagnosticAdapter/src/Internal/ProxyMethodEmitter.cs      | 2 +-
+ src/DiagnosticAdapter/src/Internal/ProxyTypeEmitter.cs        | 2 +-
  .../src/Microsoft.Extensions.DiagnosticAdapter.csproj         | 2 +-
+ .../src/ProxyDiagnosticSourceMethodAdapter.cs                 | 2 +-
  .../ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj  | 4 ++--
  .../src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj  | 2 +-
  src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj   | 4 ++--
@@ -37,9 +42,10 @@ Subject: [PATCH 5/5] Experimental TFM patch
  .../src/Microsoft.Extensions.Options.DataAnnotations.csproj   | 2 +-
  src/Options/Options/ref/Microsoft.Extensions.Options.csproj   | 4 ++--
  src/Options/Options/src/Microsoft.Extensions.Options.csproj   | 2 +-
+ .../src/xunit/FrameworkSkipConditionAttribute.cs              | 4 ++--
  src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj   | 4 ++--
  src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj   | 2 +-
- 35 files changed, 52 insertions(+), 52 deletions(-)
+ 41 files changed, 59 insertions(+), 59 deletions(-)
 
 diff --git a/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj b/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj
 index 8a7ccd39c..53c109345 100644
@@ -99,6 +105,58 @@ index 776e85f8e..44b060251 100644
      <PackageTags>$(PackageTags);xml</PackageTags>
      <IsPackable>true</IsPackable>
      <IsShipping>true</IsShipping>
+diff --git a/src/DiagnosticAdapter/src/Internal/ProxyAssembly.cs b/src/DiagnosticAdapter/src/Internal/ProxyAssembly.cs
+index ddac7af9f..2093a72ec 100644
+--- a/src/DiagnosticAdapter/src/Internal/ProxyAssembly.cs
++++ b/src/DiagnosticAdapter/src/Internal/ProxyAssembly.cs
+@@ -57,7 +57,7 @@ public static string Save()
+ #endif
+     }
+ }
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+ #else
+ #error Target frameworks should be updated
+ #endif
+diff --git a/src/DiagnosticAdapter/src/Internal/ProxyFactory.cs b/src/DiagnosticAdapter/src/Internal/ProxyFactory.cs
+index bcd2c5b3d..b883f9ad2 100644
+--- a/src/DiagnosticAdapter/src/Internal/ProxyFactory.cs
++++ b/src/DiagnosticAdapter/src/Internal/ProxyFactory.cs
+@@ -25,7 +25,7 @@ public TProxy CreateProxy<TProxy>(object obj)
+ #if NETCOREAPP2_0 || NET461
+             var type = ProxyTypeEmitter.GetProxyType(_cache, typeof(TProxy), obj.GetType());
+             return (TProxy)Activator.CreateInstance(type, obj);
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+             throw new PlatformNotSupportedException("This platform does not support creating proxy types and methods.");
+ #else
+ #error Target frameworks should be updated
+diff --git a/src/DiagnosticAdapter/src/Internal/ProxyMethodEmitter.cs b/src/DiagnosticAdapter/src/Internal/ProxyMethodEmitter.cs
+index 50ad67578..ee1c8e771 100644
+--- a/src/DiagnosticAdapter/src/Internal/ProxyMethodEmitter.cs
++++ b/src/DiagnosticAdapter/src/Internal/ProxyMethodEmitter.cs
+@@ -232,7 +232,7 @@ public static string Save()
+ #endif
+     }
+ }
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+ #else
+ #error Target frameworks should be updated
+ #endif
+diff --git a/src/DiagnosticAdapter/src/Internal/ProxyTypeEmitter.cs b/src/DiagnosticAdapter/src/Internal/ProxyTypeEmitter.cs
+index 2840233a1..a3df53603 100644
+--- a/src/DiagnosticAdapter/src/Internal/ProxyTypeEmitter.cs
++++ b/src/DiagnosticAdapter/src/Internal/ProxyTypeEmitter.cs
+@@ -500,7 +500,7 @@ internal class VerificationResult
+         }
+     }
+ }
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+ #else
+ #error Target frameworks should be updated
+ #endif
 diff --git a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
 index 665515246..107309934 100644
 --- a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
@@ -112,6 +170,19 @@ index 665515246..107309934 100644
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
      <PackageTags>diagnosticadapter;diagnosticlistener;diagnostics</PackageTags>
+diff --git a/src/DiagnosticAdapter/src/ProxyDiagnosticSourceMethodAdapter.cs b/src/DiagnosticAdapter/src/ProxyDiagnosticSourceMethodAdapter.cs
+index 5c90a195b..8a9ceff2e 100644
+--- a/src/DiagnosticAdapter/src/ProxyDiagnosticSourceMethodAdapter.cs
++++ b/src/DiagnosticAdapter/src/ProxyDiagnosticSourceMethodAdapter.cs
+@@ -17,7 +17,7 @@ public class ProxyDiagnosticSourceMethodAdapter : IDiagnosticSourceMethodAdapter
+ #if NETCOREAPP2_0 || NET461
+             var proxyMethod = ProxyMethodEmitter.CreateProxyMethod(method, inputType);
+             return (listener, data) => proxyMethod(listener, data, _factory);
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+             throw new PlatformNotSupportedException("This platform does not support creating proxy types and methods.");
+ #else
+ #error Target frameworks should be updated
 diff --git a/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj b/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
 index 277e60910..3a8e9c9d0 100644
 --- a/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
@@ -332,7 +403,7 @@ index 5d1bd0dfe..92607680c 100644
      <Reference Include="Microsoft.Extensions.Logging"  />
      <Reference Include="System.Diagnostics.EventLog"  />
 diff --git a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
-index d199db5f6..fc0da324d 100644
+index d199db5f6..8b3291353 100644
 --- a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
 +++ b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
 @@ -2,7 +2,7 @@
@@ -518,6 +589,26 @@ index d1615f6f5..668127d74 100644
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
      <PackageTags>aspnetcore;options</PackageTags>
      <IsPackable>true</IsPackable>
+diff --git a/src/TestingUtils/Microsoft.AspNetCore.Testing/src/xunit/FrameworkSkipConditionAttribute.cs b/src/TestingUtils/Microsoft.AspNetCore.Testing/src/xunit/FrameworkSkipConditionAttribute.cs
+index 168076a43..3a397fbfd 100644
+--- a/src/TestingUtils/Microsoft.AspNetCore.Testing/src/xunit/FrameworkSkipConditionAttribute.cs
++++ b/src/TestingUtils/Microsoft.AspNetCore.Testing/src/xunit/FrameworkSkipConditionAttribute.cs
+@@ -43,7 +43,7 @@ private static bool CanRunOnThisFramework(RuntimeFrameworks excludedFrameworks)
+             {
+                 return false;
+             }
+-#elif NETSTANDARD2_0
++#elif NETSTANDARD2_1
+             if (excludedFrameworks.HasFlag(RuntimeFrameworks.CoreCLR))
+             {
+                 return false;
+@@ -54,4 +54,4 @@ private static bool CanRunOnThisFramework(RuntimeFrameworks excludedFrameworks)
+             return true;
+         }
+     }
+-}
+\ No newline at end of file
++}
 diff --git a/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj b/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj
 index 9dea660cb..13d2dd573 100644
 --- a/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj
