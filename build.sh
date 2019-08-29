@@ -12,6 +12,9 @@ if [[ $arcadeLine =~ $pattern ]]; then
 fi
 echo "Found 2.x SDK $SDK_VERSION, 3.x SDK $SDK3_VERSION, Arcade bootstrap $ARCADE_BOOTSTRAP_VERSION"
 
+echo "IP information:"
+ifconfig -a
+
 if [ -z "${HOME:-}" ]; then
     export HOME="$SCRIPT_ROOT/.home"
     mkdir "$HOME"

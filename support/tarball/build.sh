@@ -13,6 +13,9 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
+echo "IP information:"
+ifconfig -a
+
 MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 
 echo "Rebuild reference assemblies"
