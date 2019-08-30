@@ -1,0 +1,137 @@
+From 5cdf3c7fc72e1ba8d6f08910c923cfd12c27dcd6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 30 Aug 2019 10:54:47 -0500
+Subject: [PATCH 9/9] CoreFX TFM change propagation
+
+---
+ .../Components/src/Microsoft.AspNetCore.Components.csproj       | 2 +-
+ .../Web/src/Microsoft.AspNetCore.Components.Web.csproj          | 2 +-
+ .../src/Microsoft.AspNetCore.DataProtection.csproj              | 2 +-
+ .../src/Microsoft.AspNetCore.DataProtection.Extensions.csproj   | 2 +-
+ .../src/Microsoft.Extensions.Identity.Core.csproj               | 2 +-
+ .../src/Microsoft.Extensions.Identity.Stores.csproj             | 2 +-
+ .../Core/src/Microsoft.AspNetCore.Authorization.csproj          | 2 +-
+ .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj      | 2 +-
+ .../src/Microsoft.AspNetCore.SignalR.Common.csproj              | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj b/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
+index dffcf43a97..c78d732b23 100644
+--- a/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
++++ b/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+ 
+   <PropertyGroup>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <Description>Components feature for ASP.NET Core.</Description>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <IsShippingPackage>true</IsShippingPackage>
+diff --git a/src/Components/Web/src/Microsoft.AspNetCore.Components.Web.csproj b/src/Components/Web/src/Microsoft.AspNetCore.Components.Web.csproj
+index 59c78672b1..e38b7e6e56 100644
+--- a/src/Components/Web/src/Microsoft.AspNetCore.Components.Web.csproj
++++ b/src/Components/Web/src/Microsoft.AspNetCore.Components.Web.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <Description>Support for rendering ASP.NET Core components for browsers.</Description>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/DataProtection/DataProtection/src/Microsoft.AspNetCore.DataProtection.csproj b/src/DataProtection/DataProtection/src/Microsoft.AspNetCore.DataProtection.csproj
+index 1c5f507cc2..36a9532890 100644
+--- a/src/DataProtection/DataProtection/src/Microsoft.AspNetCore.DataProtection.csproj
++++ b/src/DataProtection/DataProtection/src/Microsoft.AspNetCore.DataProtection.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>ASP.NET Core logic to protect and unprotect data, similar to DPAPI.</Description>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <IsShippingPackage>true</IsShippingPackage>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+diff --git a/src/DataProtection/Extensions/src/Microsoft.AspNetCore.DataProtection.Extensions.csproj b/src/DataProtection/Extensions/src/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+index 1a0a65d3fa..7e09fd113a 100644
+--- a/src/DataProtection/Extensions/src/Microsoft.AspNetCore.DataProtection.Extensions.csproj
++++ b/src/DataProtection/Extensions/src/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>Additional APIs for ASP.NET Core data protection.</Description>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <IsShippingPackage>true</IsShippingPackage>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Identity/Extensions.Core/src/Microsoft.Extensions.Identity.Core.csproj b/src/Identity/Extensions.Core/src/Microsoft.Extensions.Identity.Core.csproj
+index 56f0243273..7877bbe32b 100644
+--- a/src/Identity/Extensions.Core/src/Microsoft.Extensions.Identity.Core.csproj
++++ b/src/Identity/Extensions.Core/src/Microsoft.Extensions.Identity.Core.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>ASP.NET Core Identity is the membership system for building ASP.NET Core web applications, including membership, login, and user data. ASP.NET Core Identity allows you to add login features to your application and makes it easy to customize data about the logged in user.</Description>
+-    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <IsShippingPackage>true</IsShippingPackage>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj
+index a3fd7e5c65..2dd069b520 100644
+--- a/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj
++++ b/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>ASP.NET Core Identity is the membership system for building ASP.NET Core web applications, including membership, login, and user data. ASP.NET Core Identity allows you to add login features to your application and makes it easy to customize data about the logged in user.</Description>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <IsShippingPackage>true</IsShippingPackage>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Security/Authorization/Core/src/Microsoft.AspNetCore.Authorization.csproj b/src/Security/Authorization/Core/src/Microsoft.AspNetCore.Authorization.csproj
+index 6e17562a94..23b2250630 100644
+--- a/src/Security/Authorization/Core/src/Microsoft.AspNetCore.Authorization.csproj
++++ b/src/Security/Authorization/Core/src/Microsoft.AspNetCore.Authorization.csproj
+@@ -5,7 +5,7 @@
+ Commonly used types:
+ Microsoft.AspNetCore.Authorization.AllowAnonymousAttribute
+ Microsoft.AspNetCore.Authorization.AuthorizeAttribute</Description>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <IsShippingPackage>true</IsShippingPackage>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+diff --git a/src/SignalR/common/Protocols.Json/src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj b/src/SignalR/common/Protocols.Json/src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+index 5904b5dc87..e70a9ed818 100644
+--- a/src/SignalR/common/Protocols.Json/src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
++++ b/src/SignalR/common/Protocols.Json/src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>Implements the SignalR Hub Protocol using System.Text.Json.</Description>
+-    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <RootNamespace>Microsoft.AspNetCore.SignalR</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+diff --git a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
+index 118f42dc23..bf0abef800 100644
+--- a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
++++ b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>Common serialiation primitives for SignalR Clients Servers</Description>
+-    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsAspNetCoreApp>true</IsAspNetCoreApp>
+     <RootNamespace>Microsoft.AspNetCore.SignalR</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-- 
+2.18.0
+
