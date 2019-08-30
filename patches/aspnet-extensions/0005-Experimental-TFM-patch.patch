@@ -1,4 +1,4 @@
-From a7cef286e53756ef9ba27df7ac8c6fe6474491b0 Mon Sep 17 00:00:00 2001
+From 4b17de028d9a8a444aa97dafdfc300bf973eb88c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 28 Aug 2019 17:38:46 -0500
 Subject: [PATCH 5/5] Experimental TFM patch
@@ -158,7 +158,7 @@ index 2840233a1..a3df53603 100644
  #error Target frameworks should be updated
  #endif
 diff --git a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
-index 665515246..107309934 100644
+index 665515246..1c4e85cf2 100644
 --- a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
 +++ b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
 @@ -2,7 +2,7 @@
@@ -166,7 +166,7 @@ index 665515246..107309934 100644
    <PropertyGroup>
      <Description>Microsoft extension adapter feature to extend DiagnosticListener. Contains extension methods that extend System.Diagnostics.DiagnosticListener, and enables duck-typing based event handling by using dynamically generated proxy types.</Description>
 -    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net461</TargetFrameworks>
-+    <TargetFrameworks>netstandard2.1;netcoreapp2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.1;netcoreapp2.0</TargetFrameworks>
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
      <PackageTags>diagnosticadapter;diagnosticlistener;diagnostics</PackageTags>
