@@ -52,7 +52,8 @@
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
-    <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)coreclr.$(coreclr)/bin/Product/Linux.x64.Release/ildasm</IldasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)coreclr.$(coreclr)/bin/Product/Linux.x64.Release/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
     <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll</DarcDll>
