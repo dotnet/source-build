@@ -59,7 +59,7 @@ fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 SDK_VERSION=$(cat $SCRIPT_ROOT/DotnetCLIVersion.txt)
-DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll"
+DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
@@ -95,7 +95,7 @@ git submodule foreach --quiet --recursive '
 
 # Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
 ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup"
-"$SCRIPT_ROOT/Tools/dotnetcli/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
+"$SCRIPT_ROOT/.dotnet/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 # then delete the master copies - we only need the specific hashes
 pushd "$TARBALL_ROOT/src"
 find "$PWD" -maxdepth 1 -type d | grep -v reference-assemblies | grep -v netcorecli-fsc | grep -v "$PWD\$" | egrep -v '\.[A-Fa-f0-9]{40}' | xargs rm -rf
@@ -123,10 +123,10 @@ echo 'Copying scripts and tools to tarball...'
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.props $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.targets $TARBALL_ROOT/
-cp $SCRIPT_ROOT/init-tools.msbuild $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DotnetCLIVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/.dotnet $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
@@ -146,8 +146,8 @@ find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {}
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/reference-packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+#cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
+#cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
@@ -177,8 +177,8 @@ cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
-  ./Tools/dotnetcli/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
-  ./Tools/dotnetcli/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
+  ./.dotnet/dotnet restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  ./.dotnet/dotnet publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
 echo 'Removing reference-only packages from tarball prebuilts...'
