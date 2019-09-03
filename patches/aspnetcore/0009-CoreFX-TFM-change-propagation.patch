@@ -1,9 +1,10 @@
-From 53a5a76c1579709f14a49d48de522fdbf626a39f Mon Sep 17 00:00:00 2001
+From f9adee7ffd97a28fce5d6aa054f6c0bd8555548e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 30 Aug 2019 10:54:47 -0500
 Subject: [PATCH 9/9] CoreFX TFM change propagation
 
 ---
+ eng/targets/ResolveReferences.targets                         | 2 +-
  .../Components/ref/Microsoft.AspNetCore.Components.csproj     | 4 ++--
  .../Components/src/Microsoft.AspNetCore.Components.csproj     | 2 +-
  .../Web/src/Microsoft.AspNetCore.Components.Web.csproj        | 2 +-
@@ -14,8 +15,21 @@ Subject: [PATCH 9/9] CoreFX TFM change propagation
  .../Core/src/Microsoft.AspNetCore.Authorization.csproj        | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj    | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Common.csproj            | 2 +-
- 10 files changed, 11 insertions(+), 11 deletions(-)
+ 11 files changed, 12 insertions(+), 12 deletions(-)
 
+diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
+index 263edf3eaa..5dbd3d75e6 100644
+--- a/eng/targets/ResolveReferences.targets
++++ b/eng/targets/ResolveReferences.targets
+@@ -76,7 +76,7 @@
+ 
+     <_UnusedProjectReferenceProvider Include="@(ProjectReferenceProvider)" Exclude="@(Reference)" />
+ 
+-    <_CompilationOnlyReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="@(Reference->WithMetadataValue('NuGetPackageId','NETStandard.Library'))" />
++    <_CompilationOnlyReference Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netstandard2.1'" Include="@(Reference->WithMetadataValue('NuGetPackageId','NETStandard.Library'))" />
+ 
+     <_InvalidReferenceToNonSharedFxAssembly Condition="'$(IsAspNetCoreApp)' == 'true'"
+       Include="@(Reference)"
 diff --git a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj b/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
 index 4e878d13e3..5423d110f4 100644
 --- a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
@@ -33,7 +47,7 @@ index 4e878d13e3..5423d110f4 100644
      <Reference Include="Microsoft.AspNetCore.Authorization"  />
      <Reference Include="Microsoft.JSInterop"  />
 diff --git a/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj b/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
-index dffcf43a97..3ae0769644 100644
+index dffcf43a97..1b33197db6 100644
 --- a/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
 +++ b/src/Components/Components/src/Microsoft.AspNetCore.Components.csproj
 @@ -1,7 +1,7 @@
@@ -41,7 +55,7 @@ index dffcf43a97..3ae0769644 100644
  
    <PropertyGroup>
 -    <TargetFramework>netstandard2.0</TargetFramework>
-+    <TargetFramework>netstandard2.1;netcoreapp3.0</TargetFramework>
++    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
      <Description>Components feature for ASP.NET Core.</Description>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
      <IsShippingPackage>true</IsShippingPackage>
