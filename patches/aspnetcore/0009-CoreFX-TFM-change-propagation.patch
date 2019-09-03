@@ -1,10 +1,10 @@
-From f9adee7ffd97a28fce5d6aa054f6c0bd8555548e Mon Sep 17 00:00:00 2001
+From dfac0eced51c4833b72c6dfc025414d3efb61b66 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 30 Aug 2019 10:54:47 -0500
 Subject: [PATCH 9/9] CoreFX TFM change propagation
 
 ---
- eng/targets/ResolveReferences.targets                         | 2 +-
+ eng/targets/ResolveReferences.targets                         | 4 +---
  .../Components/ref/Microsoft.AspNetCore.Components.csproj     | 4 ++--
  .../Components/src/Microsoft.AspNetCore.Components.csproj     | 2 +-
  .../Web/src/Microsoft.AspNetCore.Components.Web.csproj        | 2 +-
@@ -15,10 +15,10 @@ Subject: [PATCH 9/9] CoreFX TFM change propagation
  .../Core/src/Microsoft.AspNetCore.Authorization.csproj        | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj    | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Common.csproj            | 2 +-
- 11 files changed, 12 insertions(+), 12 deletions(-)
+ 11 files changed, 12 insertions(+), 14 deletions(-)
 
 diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
-index 263edf3eaa..5dbd3d75e6 100644
+index 263edf3eaa..8c3fd40051 100644
 --- a/eng/targets/ResolveReferences.targets
 +++ b/eng/targets/ResolveReferences.targets
 @@ -76,7 +76,7 @@
@@ -30,6 +30,15 @@ index 263edf3eaa..5dbd3d75e6 100644
  
      <_InvalidReferenceToNonSharedFxAssembly Condition="'$(IsAspNetCoreApp)' == 'true'"
        Include="@(Reference)"
+@@ -118,8 +118,6 @@
+     <Error Condition="@(_InvalidReferenceToSharedFxOnlyAssembly->Count()) != 0"
+            Text="Cannot reference &quot;%(_InvalidReferenceToSharedFxOnlyAssembly.Identity)&quot; directly because it is part of the shared framework and this project is not. Use &lt;FrameworkReference Include=&quot;Microsoft.AspNetCore.App&quot; /&gt; instead." />
+ 
+-    <Error Condition="@(_InvalidReferenceToNonSharedFxAssembly->Count()) != 0"
+-           Text="Cannot reference &quot;%(_InvalidReferenceToNonSharedFxAssembly.Identity)&quot;. This dependency is not in the shared framework. See docs/SharedFramework.md for instructions on how to modify what is in the shared framework." />
+   </Target>
+ 
+   <Target Name="_WarnAboutRedundantRef" AfterTargets="ResolveFrameworkReferences">
 diff --git a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj b/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
 index 4e878d13e3..5423d110f4 100644
 --- a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
