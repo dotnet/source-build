@@ -1,10 +1,11 @@
-From 292bda5c3cbc0e59107a733d742bb395956a8b26 Mon Sep 17 00:00:00 2001
+From 03338377a93468165cc24c53ab068b9373b5b117 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 30 Aug 2019 10:54:47 -0500
 Subject: [PATCH 9/9] CoreFX TFM change propagation
 
 ---
  eng/targets/ResolveReferences.targets                     | 4 +---
+ .../src/Microsoft.AspNetCore.Components.Analyzers.csproj  | 4 ++--
  .../Components/ref/Microsoft.AspNetCore.Components.csproj | 4 ++--
  .../Components/src/Microsoft.AspNetCore.Components.csproj | 2 +-
  .../Components/src/Microsoft.AspNetCore.Components.nuspec | 8 ++++----
@@ -17,7 +18,7 @@ Subject: [PATCH 9/9] CoreFX TFM change propagation
  .../Core/src/Microsoft.AspNetCore.Authorization.csproj    | 2 +-
  .../Microsoft.AspNetCore.SignalR.Protocols.Json.csproj    | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Common.csproj        | 4 ++--
- 13 files changed, 20 insertions(+), 22 deletions(-)
+ 14 files changed, 22 insertions(+), 24 deletions(-)
 
 diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
 index 263edf3eaa..8c3fd40051 100644
@@ -41,6 +42,28 @@ index 263edf3eaa..8c3fd40051 100644
    </Target>
  
    <Target Name="_WarnAboutRedundantRef" AfterTargets="ResolveFrameworkReferences">
+diff --git a/src/Components/Analyzers/src/Microsoft.AspNetCore.Components.Analyzers.csproj b/src/Components/Analyzers/src/Microsoft.AspNetCore.Components.Analyzers.csproj
+index a83904f245..85a4d3ac27 100644
+--- a/src/Components/Analyzers/src/Microsoft.AspNetCore.Components.Analyzers.csproj
++++ b/src/Components/Analyzers/src/Microsoft.AspNetCore.Components.Analyzers.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <NoPackageAnalysis>true</NoPackageAnalysis>
+     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+@@ -17,7 +17,7 @@
+ 
+   <ItemGroup>
+     <None Include="$(TargetPath)" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+-    <None Include="build/netstandard2.0/*" Pack="true" PackagePath="build/netstandard2.0" />
++    <None Include="build/netstandard2.1/*" Pack="true" PackagePath="build/netstandard2.1" />
+   </ItemGroup>
+ 
+ </Project>
 diff --git a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj b/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
 index 4e878d13e3..5423d110f4 100644
 --- a/src/Components/Components/ref/Microsoft.AspNetCore.Components.csproj
