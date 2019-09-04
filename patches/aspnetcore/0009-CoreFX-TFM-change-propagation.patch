@@ -1,22 +1,22 @@
-From 69d4ce3f9828c873e16e9a9a4d2be159a66c76cb Mon Sep 17 00:00:00 2001
+From 82d0946d9965bf7fb81fa779dbb7e7a523c3160e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 30 Aug 2019 10:54:47 -0500
 Subject: [PATCH 9/9] CoreFX TFM change propagation
 
 ---
- eng/targets/ResolveReferences.targets                         | 4 +---
- .../Components/ref/Microsoft.AspNetCore.Components.csproj     | 4 ++--
- .../Components/src/Microsoft.AspNetCore.Components.csproj     | 2 +-
- .../Web/src/Microsoft.AspNetCore.Components.Web.csproj        | 2 +-
- .../src/Microsoft.AspNetCore.DataProtection.csproj            | 2 +-
- .../src/Microsoft.AspNetCore.DataProtection.Extensions.csproj | 2 +-
- .../src/Microsoft.Extensions.Identity.Core.csproj             | 2 +-
- src/Identity/Extensions.Core/src/PasswordHasher.cs            | 4 ++--
- .../src/Microsoft.Extensions.Identity.Stores.csproj           | 2 +-
- .../Core/src/Microsoft.AspNetCore.Authorization.csproj        | 2 +-
- .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj    | 2 +-
- .../src/Microsoft.AspNetCore.SignalR.Common.csproj            | 4 ++--
- 12 files changed, 15 insertions(+), 17 deletions(-)
+ eng/targets/ResolveReferences.targets                       | 4 +---
+ .../Components/ref/Microsoft.AspNetCore.Components.csproj   | 4 ++--
+ .../Components/src/Microsoft.AspNetCore.Components.csproj   | 2 +-
+ .../Web/src/Microsoft.AspNetCore.Components.Web.csproj      | 2 +-
+ .../src/Microsoft.AspNetCore.DataProtection.csproj          | 2 +-
+ .../Microsoft.AspNetCore.DataProtection.Extensions.csproj   | 2 +-
+ .../src/Microsoft.Extensions.Identity.Core.csproj           | 2 +-
+ src/Identity/Extensions.Core/src/PasswordHasher.cs          | 6 +++---
+ .../src/Microsoft.Extensions.Identity.Stores.csproj         | 2 +-
+ .../Core/src/Microsoft.AspNetCore.Authorization.csproj      | 2 +-
+ .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj  | 2 +-
+ .../src/Microsoft.AspNetCore.SignalR.Common.csproj          | 4 ++--
+ 12 files changed, 16 insertions(+), 18 deletions(-)
 
 diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
 index 263edf3eaa..8c3fd40051 100644
@@ -122,9 +122,18 @@ index 56f0243273..7877bbe32b 100644
      <IsShippingPackage>true</IsShippingPackage>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
 diff --git a/src/Identity/Extensions.Core/src/PasswordHasher.cs b/src/Identity/Extensions.Core/src/PasswordHasher.cs
-index 54c7fd2126..2a1b5de8ff 100644
+index 54c7fd2126..bb88d44abc 100644
 --- a/src/Identity/Extensions.Core/src/PasswordHasher.cs
 +++ b/src/Identity/Extensions.Core/src/PasswordHasher.cs
+@@ -65,7 +65,7 @@ namespace Microsoft.AspNetCore.Identity
+             _rng = options.Rng;
+         }
+ 
+-#if NETSTANDARD2_0
++#if NETSTANDARD2_1
+         // Compares two byte arrays for equality. The method is specifically written so that the loop is not optimized.
+         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+         private static bool ByteArraysEqual(byte[] a, byte[] b)
 @@ -244,7 +244,7 @@ namespace Microsoft.AspNetCore.Identity
  
              // Hash the incoming password and verify it
