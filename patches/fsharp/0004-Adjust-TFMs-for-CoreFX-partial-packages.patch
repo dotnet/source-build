@@ -1,0 +1,228 @@
+From 5005cc512352ebfaa699d43a8f551059794c34bb Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 4 Sep 2019 13:06:49 -0500
+Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
+
+---
+ .../FSharp.Compiler.Service.fsproj                   | 10 +++++-----
+ .../FSharp.Compiler.Interactive.Settings.fsproj      |  4 ++--
+ .../FSharp.Compiler.Private.fsproj                   |  6 +++---
+ .../FSharp.Compiler.Private.netcore.nuspec           |  4 ++--
+ .../Microsoft.FSharp.Compiler.csproj                 |  2 +-
+ .../Microsoft.FSharp.Compiler.nuspec                 | 12 ++++++------
+ .../FSharp.Core.nuget/FSharp.Core.nuget.csproj       |  2 +-
+ src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec      | 10 +++++-----
+ src/fsharp/FSharp.Core/FSharp.Core.fsproj            |  4 ++--
+ 9 files changed, 27 insertions(+), 27 deletions(-)
+
+diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
+index 5e0d2250f..abe18b6fb 100644
+--- a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
++++ b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
+@@ -2,7 +2,7 @@
+   <Import Project="..\netfx.props" />
+   <Import Project="..\..\src\buildtools\buildtools.targets" />
+   <PropertyGroup>
+-    <TargetFrameworks>$(FcsTargetNetFxFramework);netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>$(FcsTargetNetFxFramework);netstandard2.1</TargetFrameworks>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+     <DefineConstants>$(DefineConstants);COMPILER_SERVICE_AS_DLL</DefineConstants>
+     <DefineConstants>$(DefineConstants);COMPILER</DefineConstants>
+@@ -28,7 +28,7 @@
+     <PackageIconUrl>https://raw.github.com/fsharp/FSharp.Compiler.Service/master/misc/logo.png</PackageIconUrl>
+     <PackageTags>F#, fsharp, interactive, compiler, editor</PackageTags>
+   </PropertyGroup>
+-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <DefineConstants>$(DefineConstants);FX_NO_PDB_READER</DefineConstants>
+     <DefineConstants>$(DefineConstants);FX_NO_PDB_WRITER</DefineConstants>
+     <DefineConstants>$(DefineConstants);FX_NO_SYMBOLSTORE</DefineConstants>
+@@ -224,7 +224,7 @@
+       <Link>AbsIL/ilmorph.fs</Link>
+     </Compile>
+   </ItemGroup>
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="$(FSharpSourcesRoot)/absil/ilsign.fs">
+       <Link>AbsIL/ilsign.fs</Link>
+     </Compile>
+@@ -668,7 +668,7 @@
+     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
+   </ItemGroup>
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <PackageReference Include="System.Diagnostics.Process" Version="4.1.0" />
+     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.0.0" />
+     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+@@ -685,4 +685,4 @@
+     </Reference>
+   </ItemGroup>
+   <Target Name="GenerateCode" AfterTargets="Restore" BeforeTargets="BeforeBuild" DependsOnTargets="CallFsLex;CallFsYacc" Condition="'$(TargetFramework)' != ''"></Target>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj b/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
+index 75af428f4..16d7685ca 100644
+--- a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
++++ b/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
+@@ -4,8 +4,8 @@
+ 
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>net472;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.1</TargetFrameworks>
+     <AssemblyName>FSharp.Compiler.Interactive.Settings</AssemblyName>
+     <NoWarn>$(NoWarn);45;55;62;75;1182;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+index fd35444c3..50fcf9ba2 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+@@ -4,8 +4,8 @@
+ 
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>net472;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.1</TargetFrameworks>
+     <AssemblyName>FSharp.Compiler.Private</AssemblyName>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+@@ -20,7 +20,7 @@
+     <Tailcalls>true</Tailcalls>
+   </PropertyGroup>
+ 
+-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
++  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
+     <Tailcalls>true</Tailcalls>
+   </PropertyGroup>
+ 
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.netcore.nuspec b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.netcore.nuspec
+index e8af5ff0e..9343d6213 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.netcore.nuspec
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.netcore.nuspec
+@@ -4,7 +4,7 @@
+         <id>FSharp.Compiler.Private.netcore</id>
+         <description>
+             .NET Core compatible version of the fsharp compiler service dll
+-            Supported Platforms: - .NET Core (netstandard2.0)
++            Supported Platforms: - .NET Core (netstandard2.1)
+         </description>
+         <language>en-US</language>
+         <requireLicenseAcceptance>true</requireLicenseAcceptance>
+@@ -36,6 +36,6 @@
+         </dependencies>
+     </metadata>
+     <files>
+-        <file src="FSharp.Compiler.Private.dll"     target="lib\netstandard2.0" />
++        <file src="FSharp.Compiler.Private.dll"     target="lib\netstandard2.1" />
+     </files>
+ </package>
+diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
+index 21c76c580..014659a2d 100644
+--- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
++++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
+@@ -19,7 +19,7 @@
+       <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
+     </ProjectReference>
+     <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
+-      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netstandard2.1</AdditionalProperties>
+     </ProjectReference>
+   </ItemGroup>
+ 
+diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
+index dd9293cd8..e01fca589 100644
+--- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
++++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
+@@ -45,10 +45,10 @@
+         <!-- assemblies -->
+         <file src="fsc\$Configuration$\netcoreapp2.1\fsc.exe"                                             target="lib\netcoreapp2.1" />
+         <file src="fsi\$Configuration$\netcoreapp2.1\fsi.exe"                                             target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"                            target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\netcoreapp2.1" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.dll"                            target="lib\netcoreapp2.1" />
++        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\FSharp.Compiler.Private.dll"    target="lib\netcoreapp2.1" />
+         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\FSharp.Build.dll"                           target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\FSharp.Compiler.Interactive.Settings.dll"
++        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.1\FSharp.Compiler.Interactive.Settings.dll"
+                                                                                                           target="lib\netcoreapp2.1" />
+         <!-- additional files -->
+         <file src="fsc\$Configuration$\netcoreapp2.1\default.win32manifest"                               target="contentFiles\any\any" />
+@@ -59,10 +59,10 @@
+         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
+ 
+         <!-- resources -->
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\**\FSharp.Compiler.Private.resources.dll"
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\**\FSharp.Core.resources.dll"               target="lib\netcoreapp2.1" />
++        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\**\FSharp.Compiler.Private.resources.dll"
+                                                                                                           target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\**\FSharp.Compiler.Interactive.Settings.resources.dll"
++        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.1\**\FSharp.Compiler.Interactive.Settings.resources.dll"
+                                                                                                           target="lib\netcoreapp2.1" />
+         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\**\FSharp.Build.resources.dll"              target="lib\netcoreapp2.1" />
+     </files>
+diff --git a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj
+index 4afaa51f7..f68eeda5b 100644
+--- a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj
++++ b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <PreRelease>true</PreRelease>
+-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
+     <PackageId>FSharp.Core</PackageId>
+     <NuspecFile>FSharp.Core.nuspec</NuspecFile>
+     <IsPackable>true</IsPackable>
+diff --git a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
+index e94b3a547..0f738a08b 100644
+--- a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
++++ b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
+@@ -10,10 +10,10 @@
+         </dependencies>
+     </metadata>
+     <files>
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"              target="lib\netstandard2.0" />
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.sigdata"          target="lib\netstandard2.0" />
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.optdata"          target="lib\netstandard2.0" />
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.xml"              target="lib\netstandard2.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.dll"              target="lib\netstandard2.1" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.sigdata"          target="lib\netstandard2.1" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.optdata"          target="lib\netstandard2.1" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.xml"              target="lib\netstandard2.1" />
+ 
+         <file src="FSharp.Core\$Configuration$\net45\FSharp.Core.dll"                       target="lib\net45" />
+         <file src="FSharp.Core\$Configuration$\net45\FSharp.Core.sigdata"                   target="lib\net45" />
+@@ -21,7 +21,7 @@
+         <file src="FSharp.Core\$Configuration$\net45\FSharp.Core.xml"                       target="lib\net45" />
+ 
+         <!-- resources -->
+-        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll" target="lib\netstandard2.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\**\FSharp.Core.resources.dll" target="lib\netstandard2.1" />
+         <file src="FSharp.Core\$Configuration$\net45\**\FSharp.Core.resources.dll"          target="lib\net45" />
+     </files>
+ </package>
+diff --git a/src/fsharp/FSharp.Core/FSharp.Core.fsproj b/src/fsharp/FSharp.Core/FSharp.Core.fsproj
+index 829a118bc..f19b106f0 100644
+--- a/src/fsharp/FSharp.Core/FSharp.Core.fsproj
++++ b/src/fsharp/FSharp.Core/FSharp.Core.fsproj
+@@ -4,8 +4,8 @@
+ 
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>net45;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netstandard2.1</TargetFrameworks>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+     <DefineConstants>$(DefineConstants);FSHARP_CORE</DefineConstants>
+-- 
+2.18.0
+
