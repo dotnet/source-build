@@ -1,26 +1,97 @@
-From 66b1b376fcbc9540824cf01e614af6d6d85ce2e9 Mon Sep 17 00:00:00 2001
+From 95750ff82a6f18946bf8420acf5dd2b77a411562 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 4 Sep 2019 13:06:49 -0500
 Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
 
 ---
- .../FSharp.Compiler.Service.fsproj                   | 10 +++++-----
- src/buildtools/AssemblyCheck/AssemblyCheck.fsproj    |  2 +-
- src/buildtools/fslex/fslex.fsproj                    |  2 +-
- src/buildtools/fsyacc/fsyacc.fsproj                  |  2 +-
- src/fsharp/FSharp.Build/FSharp.Build.fsproj          |  2 +-
- .../FSharp.Compiler.Interactive.Settings.fsproj      |  4 ++--
- .../FSharp.Compiler.Private.fsproj                   |  6 +++---
- .../FSharp.Compiler.Private.netcore.nuspec           |  4 ++--
- .../Microsoft.FSharp.Compiler.csproj                 |  2 +-
- .../Microsoft.FSharp.Compiler.nuspec                 | 12 ++++++------
- .../FSharp.Core.nuget/FSharp.Core.nuget.csproj       |  2 +-
- src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec      | 10 +++++-----
- src/fsharp/FSharp.Core/FSharp.Core.fsproj            |  4 ++--
- src/fsharp/fsc/fsc.fsproj                            |  2 +-
- src/fsharp/fsi/fsi.fsproj                            |  2 +-
- 15 files changed, 33 insertions(+), 33 deletions(-)
+ FSharpTests.Directory.Build.props             |  6 +--
+ eng/build.sh                                  | 10 ++---
+ .../FSharp.Compiler.Service.fsproj            | 10 ++---
+ fcs/build.fsx                                 |  4 +-
+ proto.proj                                    |  6 +--
+ .../AssemblyCheck/AssemblyCheck.fsproj        |  2 +-
+ src/buildtools/fslex/fslex.fsproj             |  2 +-
+ src/buildtools/fsyacc/fsyacc.fsproj           |  2 +-
+ src/fsharp/FSharp.Build/FSharp.Build.fsproj   |  4 +-
+ ...Sharp.Compiler.Interactive.Settings.fsproj |  4 +-
+ .../FSharp.Compiler.LanguageServer.fsproj     |  4 +-
+ .../FSharp.Compiler.Private.fsproj            |  6 +--
+ .../FSharp.Compiler.Private.netcore.nuspec    |  4 +-
+ .../Microsoft.FSharp.Compiler.csproj          | 10 ++---
+ .../Microsoft.FSharp.Compiler.nuspec          | 40 +++++++++----------
+ .../FSharp.Core.nuget.csproj                  |  2 +-
+ .../FSharp.Core.nuget/FSharp.Core.nuspec      | 12 +++---
+ src/fsharp/FSharp.Core/FSharp.Core.fsproj     |  4 +-
+ src/fsharp/fsc/fsc.fsproj                     |  4 +-
+ src/fsharp/fsi/fsi.fsproj                     |  6 +--
+ 20 files changed, 71 insertions(+), 71 deletions(-)
 
+diff --git a/FSharpTests.Directory.Build.props b/FSharpTests.Directory.Build.props
+index 8a7a832a4..8a4730f8d 100644
+--- a/FSharpTests.Directory.Build.props
++++ b/FSharpTests.Directory.Build.props
+@@ -22,18 +22,18 @@
+     <FscToolPath>$([System.IO.Path]::GetDirectoryName('$(DOTNET_HOST_PATH)'))</FscToolPath>
+     <FscToolExe Condition="'$(OS)' != 'Unix'">dotnet.exe</FscToolExe>
+     <FscToolExe Condition="'$(OS)' == 'Unix'">dotnet</FscToolExe>
+-    <DotnetFscCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\netcoreapp2.1\fsc.exe</DotnetFscCompilerPath>
++    <DotnetFscCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\netcoreapp3.0\fsc.exe</DotnetFscCompilerPath>
+ 
+     <FsiToolPath>$([System.IO.Path]::GetDirectoryName('$(DOTNET_HOST_PATH)'))</FsiToolPath>
+     <FsiToolExe Condition="'$(OS)' != 'Unix'">dotnet.exe</FsiToolExe>
+     <FsiToolExe Condition="'$(OS)' == 'Unix'">dotnet</FsiToolExe>
+-    <DotnetFsiCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsi\$(Configuration)\netcoreapp2.1\fsi.exe</DotnetFsiCompilerPath>
++    <DotnetFsiCompilerPath>$(MSBuildThisFileDirectory)artifacts\bin\fsi\$(Configuration)\netcoreapp3.0\fsi.exe</DotnetFsiCompilerPath>
+   </PropertyGroup>
+ 
+   <!-- SDK targets override -->
+   <PropertyGroup>
+     <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'!='Core'">net472</_FSharpBuildTargetFramework>
+-    <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'=='Core'">netcoreapp2.1</_FSharpBuildTargetFramework>
++    <_FSharpBuildTargetFramework Condition="'$(MSBuildRuntimeType)'=='Core'">netcoreapp3.0</_FSharpBuildTargetFramework>
+     <_FSharpBuildBinPath>$(MSBuildThisFileDirectory)artifacts\bin\fsc\$(Configuration)\$(_FSharpBuildTargetFramework)</_FSharpBuildBinPath>
+ 
+     <FSharpBuildAssemblyFile>$(_FSharpBuildBinPath)\FSharp.Build.dll</FSharpBuildAssemblyFile>
+diff --git a/eng/build.sh b/eng/build.sh
+index eb7284277..b2d95d98b 100755
+--- a/eng/build.sh
++++ b/eng/build.sh
+@@ -231,8 +231,8 @@ function BuildSolution {
+       /t:Publish
+ 
+     mkdir -p "$bootstrap_dir"
+-    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/netcoreapp2.1/publish $bootstrap_dir/fslex
+-    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/netcoreapp2.1/publish $bootstrap_dir/fsyacc
++    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/netcoreapp3.0/publish $bootstrap_dir/fslex
++    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/netcoreapp3.0/publish $bootstrap_dir/fsyacc
+   fi
+   if [ ! -f "$bootstrap_dir/fsc.exe" ]; then
+     MSBuild "$repo_root/proto.proj" \
+@@ -240,7 +240,7 @@ function BuildSolution {
+       /p:Configuration=$bootstrap_config \
+       /t:Publish
+ 
+-    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/netcoreapp2.1/publish $bootstrap_dir/fsc
++    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/netcoreapp3.0/publish $bootstrap_dir/fsc
+   fi
+ 
+   # do real build
+@@ -264,13 +264,13 @@ function BuildSolution {
+ 
+ InitializeDotNetCli $restore
+ 
+-# enable us to build netcoreapp2.1 binaries
++# enable us to build netcoreapp3.0 binaries
+ # InstallDotNetSdk $_InitializeDotNetCli 2.1.503
+ 
+ BuildSolution
+ 
+ if [[ "$test_core_clr" == true ]]; then
+-  coreclrtestframework=netcoreapp2.1
++  coreclrtestframework=netcoreapp3.0
+   TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.UnitTests/FSharp.Compiler.UnitTests.fsproj" --targetframework $coreclrtestframework
+   TestUsingNUnit --testproject "$repo_root/tests/FSharp.Compiler.LanguageServer.UnitTests/FSharp.Compiler.LanguageServer.UnitTests.fsproj" --targetframework $coreclrtestframework
+   TestUsingNUnit --testproject "$repo_root/tests/FSharp.Build.UnitTests/FSharp.Build.UnitTests.fsproj" --targetframework $coreclrtestframework
 diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
 index 5e0d2250f..abe18b6fb 100644
 --- a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
@@ -68,6 +139,42 @@ index 5e0d2250f..abe18b6fb 100644
 -</Project>
 \ No newline at end of file
 +</Project>
+diff --git a/fcs/build.fsx b/fcs/build.fsx
+index cf0e0d8de..ebe665fa9 100644
+--- a/fcs/build.fsx
++++ b/fcs/build.fsx
+@@ -92,8 +92,8 @@ Target "BuildVersion" (fun _ ->
+ 
+ Target "Build" (fun _ ->
+     runDotnet __SOURCE_DIRECTORY__ "build ../src/buildtools/buildtools.proj -v n -c Proto"
+-    let fslexPath = __SOURCE_DIRECTORY__ + "/../artifacts/bin/fslex/Proto/netcoreapp2.1/fslex.dll"
+-    let fsyaccPath = __SOURCE_DIRECTORY__ + "/../artifacts/bin/fsyacc/Proto/netcoreapp2.1/fsyacc.dll"
++    let fslexPath = __SOURCE_DIRECTORY__ + "/../artifacts/bin/fslex/Proto/netcoreapp3.0/fslex.dll"
++    let fsyaccPath = __SOURCE_DIRECTORY__ + "/../artifacts/bin/fsyacc/Proto/netcoreapp3.0/fsyacc.dll"
+     runDotnet __SOURCE_DIRECTORY__ (sprintf "build FSharp.Compiler.Service.sln -v n -c Release /p:FsLexPath=%s /p:FsYaccPath=%s" fslexPath fsyaccPath)
+ )
+ 
+diff --git a/proto.proj b/proto.proj
+index 23d7525d1..3a9793b4b 100644
+--- a/proto.proj
++++ b/proto.proj
+@@ -7,13 +7,13 @@
+ 
+   <ItemGroup>
+     <Projects Include="src\fsharp\FSharp.Build\FSharp.Build.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.0</AdditionalProperties>
+     </Projects>
+     <Projects Include="src\fsharp\fsc\fsc.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.0</AdditionalProperties>
+     </Projects>
+     <Projects Include="src\fsharp\fsi\fsi.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.0</AdditionalProperties>
+     </Projects>
+   </ItemGroup>
+ 
 diff --git a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj b/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
 index 72f79d02f..cde9cb37a 100644
 --- a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
@@ -108,14 +215,16 @@ index dc5a4f67f..fad9941bd 100644
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
 diff --git a/src/fsharp/FSharp.Build/FSharp.Build.fsproj b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
-index 76b9c7043..da142a8e0 100644
+index 76b9c7043..ebf7b7e33 100644
 --- a/src/fsharp/FSharp.Build/FSharp.Build.fsproj
 +++ b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
-@@ -6,7 +6,7 @@
+@@ -5,8 +5,8 @@
+   <PropertyGroup>
      <OutputType>Library</OutputType>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
-     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
      <AssemblyName>FSharp.Build</AssemblyName>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
@@ -135,6 +244,21 @@ index 75af428f4..16d7685ca 100644
      <AssemblyName>FSharp.Compiler.Interactive.Settings</AssemblyName>
      <NoWarn>$(NoWarn);45;55;62;75;1182;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
+diff --git a/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj b/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
+index 48e2c5104..fd6e517e5 100644
+--- a/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
++++ b/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
+@@ -4,8 +4,8 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <TargetExt>.exe</TargetExt>
+-    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>net472;netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <PackageDescription>Implements the Language Server Protocol (LSP) for F#.</PackageDescription>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
 index fd35444c3..50fcf9ba2 100644
 --- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
@@ -181,11 +305,32 @@ index e8af5ff0e..9343d6213 100644
      </files>
  </package>
 diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
-index 21c76c580..014659a2d 100644
+index 21c76c580..eb9067e5b 100644
 --- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
 +++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.csproj
-@@ -19,7 +19,7 @@
-       <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <PreRelease>true</PreRelease>
+-    <TargetFramework>netcoreapp2.1</TargetFramework>
++    <TargetFramework>netcoreapp3.0</TargetFramework>
+     <NuspecFile>Microsoft.FSharp.Compiler.nuspec</NuspecFile>
+     <IsPackable>true</IsPackable>
+     <PackageDescription>.NET Core compatible version of the F# compiler fsc.exe.</PackageDescription>
+@@ -10,16 +10,16 @@
+ 
+   <ItemGroup>
+     <ProjectReference Include="..\fsc\fsc.fsproj">
+-      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp3.0</AdditionalProperties>
+     </ProjectReference>
+     <ProjectReference Include="..\fsi\fsi.fsproj">
+-      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp3.0</AdditionalProperties>
+     </ProjectReference>
+     <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj">
+-      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp3.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
 -      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
@@ -194,37 +339,65 @@ index 21c76c580..014659a2d 100644
    </ItemGroup>
  
 diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
-index dd9293cd8..e01fca589 100644
+index dd9293cd8..3f01d55e6 100644
 --- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
 +++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
-@@ -45,10 +45,10 @@
+@@ -4,7 +4,7 @@
+         $CommonMetadataElements$
+         <language>en-US</language>
+         <dependencies>
+-            <group targetFramework=".NETCoreApp2.1">
++            <group targetFramework=".NETCoreApp3.0">
+                 <dependency id="Microsoft.NETCore.Platforms" version="2.0.0" />
+                 <dependency id="NETStandard.Library" version="2.0.0" />
+                 <dependency id="System.Collections.Immutable" version="1.5.0" />
+@@ -43,27 +43,27 @@
+             this approach gives a very small deployment. Which is kind of necessary.
+         -->
          <!-- assemblies -->
-         <file src="fsc\$Configuration$\netcoreapp2.1\fsc.exe"                                             target="lib\netcoreapp2.1" />
-         <file src="fsi\$Configuration$\netcoreapp2.1\fsi.exe"                                             target="lib\netcoreapp2.1" />
+-        <file src="fsc\$Configuration$\netcoreapp2.1\fsc.exe"                                             target="lib\netcoreapp2.1" />
+-        <file src="fsi\$Configuration$\netcoreapp2.1\fsi.exe"                                             target="lib\netcoreapp2.1" />
 -        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"                            target="lib\netcoreapp2.1" />
 -        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\netcoreapp2.1" />
-+        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.dll"                            target="lib\netcoreapp2.1" />
-+        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\FSharp.Compiler.Private.dll"    target="lib\netcoreapp2.1" />
-         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\FSharp.Build.dll"                           target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\FSharp.Build.dll"                           target="lib\netcoreapp2.1" />
 -        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\FSharp.Compiler.Interactive.Settings.dll"
+-                                                                                                          target="lib\netcoreapp2.1" />
++        <file src="fsc\$Configuration$\netcoreapp3.0\fsc.exe"                                             target="lib\netcoreapp3.0" />
++        <file src="fsi\$Configuration$\netcoreapp3.0\fsi.exe"                                             target="lib\netcoreapp3.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\FSharp.Core.dll"                            target="lib\netcoreapp3.0" />
++        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\FSharp.Compiler.Private.dll"    target="lib\netcoreapp3.0" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\FSharp.Build.dll"                           target="lib\netcoreapp3.0" />
 +        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.1\FSharp.Compiler.Interactive.Settings.dll"
-                                                                                                           target="lib\netcoreapp2.1" />
++                                                                                                          target="lib\netcoreapp3.0" />
          <!-- additional files -->
-         <file src="fsc\$Configuration$\netcoreapp2.1\default.win32manifest"                               target="contentFiles\any\any" />
-@@ -59,10 +59,10 @@
-         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
+-        <file src="fsc\$Configuration$\netcoreapp2.1\default.win32manifest"                               target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.NetSdk.targets"            target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
++        <file src="fsc\$Configuration$\netcoreapp3.0\default.win32manifest"                               target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\Microsoft.FSharp.NetSdk.targets"            target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
  
          <!-- resources -->
 -        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\netcoreapp2.1" />
 -        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\**\FSharp.Compiler.Private.resources.dll"
-+        <file src="FSharp.Core\$Configuration$\netstandard2.1\**\FSharp.Core.resources.dll"               target="lib\netcoreapp2.1" />
-+        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\**\FSharp.Compiler.Private.resources.dll"
-                                                                                                           target="lib\netcoreapp2.1" />
+-                                                                                                          target="lib\netcoreapp2.1" />
 -        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\**\FSharp.Compiler.Interactive.Settings.resources.dll"
+-                                                                                                          target="lib\netcoreapp2.1" />
+-        <file src="FSharp.Build\$Configuration$\netcoreapp2.1\**\FSharp.Build.resources.dll"              target="lib\netcoreapp2.1" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.1\**\FSharp.Core.resources.dll"               target="lib\netcoreapp3.0" />
++        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.1\**\FSharp.Compiler.Private.resources.dll"
++                                                                                                          target="lib\netcoreapp3.0" />
 +        <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.1\**\FSharp.Compiler.Interactive.Settings.resources.dll"
-                                                                                                           target="lib\netcoreapp2.1" />
-         <file src="FSharp.Build\$Configuration$\netcoreapp2.1\**\FSharp.Build.resources.dll"              target="lib\netcoreapp2.1" />
++                                                                                                          target="lib\netcoreapp3.0" />
++        <file src="FSharp.Build\$Configuration$\netcoreapp3.0\**\FSharp.Build.resources.dll"              target="lib\netcoreapp3.0" />
      </files>
+ </package>
 diff --git a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj
 index 4afaa51f7..f68eeda5b 100644
 --- a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuget.csproj
@@ -239,10 +412,16 @@ index 4afaa51f7..f68eeda5b 100644
      <NuspecFile>FSharp.Core.nuspec</NuspecFile>
      <IsPackable>true</IsPackable>
 diff --git a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
-index e94b3a547..0f738a08b 100644
+index e94b3a547..cc89ba752 100644
 --- a/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
 +++ b/src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec
-@@ -10,10 +10,10 @@
+@@ -5,15 +5,15 @@
+         <iconUrl>https://fsharp.org/img/logo.png</iconUrl>
+         <language>en-US</language>
+         <dependencies>
+-            <group targetFramework=".NETStandard2.0" />
++            <group targetFramework=".NETStandard2.1" />
+             <group targetFramework="net45" />
          </dependencies>
      </metadata>
      <files>
@@ -282,31 +461,44 @@ index 829a118bc..f19b106f0 100644
      <AllowCrossTargeting>true</AllowCrossTargeting>
      <DefineConstants>$(DefineConstants);FSHARP_CORE</DefineConstants>
 diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
-index 7bddcb9df..97aea1545 100644
+index 7bddcb9df..84082d83b 100644
 --- a/src/fsharp/fsc/fsc.fsproj
 +++ b/src/fsharp/fsc/fsc.fsproj
-@@ -6,7 +6,7 @@
+@@ -5,8 +5,8 @@
+   <PropertyGroup>
      <OutputType>Exe</OutputType>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
-     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
      <TargetExt>.exe</TargetExt>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
 diff --git a/src/fsharp/fsi/fsi.fsproj b/src/fsharp/fsi/fsi.fsproj
-index 5b4978679..2916e436d 100644
+index 5b4978679..ab549af8c 100644
 --- a/src/fsharp/fsi/fsi.fsproj
 +++ b/src/fsharp/fsi/fsi.fsproj
-@@ -6,7 +6,7 @@
+@@ -5,8 +5,8 @@
+   <PropertyGroup>
      <OutputType>Exe</OutputType>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
-     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
      <TargetExt>.exe</TargetExt>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
+@@ -46,7 +46,7 @@
+     <Reference Include="WindowsBase" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+     <PackageReference Include="System.Diagnostics.Process" Version="$(SystemDiagnosticsProcessVersion)" />
+     <PackageReference Include="System.Linq.Expressions" Version="$(SystemLinqExpressionsVersion)" />
+     <PackageReference Include="System.Reflection.Emit" Version="$(SystemReflectionEmitVersion)" />
 -- 
 2.18.0
 
