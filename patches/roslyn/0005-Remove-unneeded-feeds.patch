@@ -1,0 +1,39 @@
+From c741527646d449c8731677b81365b3c46af96040 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 29 Aug 2019 22:03:26 +0000
+Subject: [PATCH] Remove unneeded feeds
+
+---
+ NuGet.config       | 2 --
+ eng/Versions.props | 2 --
+ 2 files changed, 4 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index 640f832..60f16e1 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -25,8 +25,6 @@
+     <add key="vs-devcore" value="https://myget.org/F/vs-devcore/api/v3/index.json" />
+     <add key="vs-editor" value="https://myget.org/F/vs-editor/api/v3/index.json" />
+     <add key="roslyn_concord" value="https://myget.org/F/roslyn_concord/api/v3/index.json" />
+-    <add key="vssdk" value="https://vside.myget.org/F/vssdk/api/v3/index.json" />
+-    <add key="vs-impl" value="https://vside.myget.org/F/vs-impl/api/v3/index.json" />
+     <add key="system-commandline" value="https://dotnet.myget.org/F/system-commandline/api/v3/index.json" />
+     <add key="dotnet-coreclr" value="https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json" />
+   </packageSources>
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 318c913..d884d4e 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -326,8 +326,6 @@
+       https://myget.org/F/vs-devcore/api/v3/index.json;
+       https://myget.org/F/vs-editor/api/v3/index.json;
+       https://myget.org/F/roslyn_concord/api/v3/index.json;
+-      https://vside.myget.org/F/vssdk/api/v3/index.json;
+-      https://vside.myget.org/F/vs-impl/api/v3/index.json;
+       https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
+       https://dotnet.myget.org/F/system-commandline/api/v3/index.json;
+       https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json;
+-- 
+1.8.3.1
+
