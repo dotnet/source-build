@@ -1,4 +1,4 @@
-From bb14eeb22d2689d85b0136f5fb6684eedf91577b Mon Sep 17 00:00:00 2001
+From 68b1169f6cb1332fc5b39c1ab42d9e6acbe23a0c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 4 Sep 2019 13:06:49 -0500
 Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
@@ -8,6 +8,7 @@ Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
  src/buildtools/AssemblyCheck/AssemblyCheck.fsproj    |  2 +-
  src/buildtools/fslex/fslex.fsproj                    |  2 +-
  src/buildtools/fsyacc/fsyacc.fsproj                  |  2 +-
+ src/fsharp/FSharp.Build/FSharp.Build.fsproj          |  2 +-
  .../FSharp.Compiler.Interactive.Settings.fsproj      |  4 ++--
  .../FSharp.Compiler.Private.fsproj                   |  6 +++---
  .../FSharp.Compiler.Private.netcore.nuspec           |  4 ++--
@@ -16,7 +17,8 @@ Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
  .../FSharp.Core.nuget/FSharp.Core.nuget.csproj       |  2 +-
  src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec      | 10 +++++-----
  src/fsharp/FSharp.Core/FSharp.Core.fsproj            |  4 ++--
- 12 files changed, 30 insertions(+), 30 deletions(-)
+ src/fsharp/fsc/fsc.fsproj                            |  2 +-
+ 14 files changed, 32 insertions(+), 32 deletions(-)
 
 diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
 index 5e0d2250f..abe18b6fb 100644
@@ -104,6 +106,19 @@ index dc5a4f67f..fad9941bd 100644
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstant)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
+diff --git a/src/fsharp/FSharp.Build/FSharp.Build.fsproj b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+index 76b9c7043..da142a8e0 100644
+--- a/src/fsharp/FSharp.Build/FSharp.Build.fsproj
++++ b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+@@ -6,7 +6,7 @@
+     <OutputType>Library</OutputType>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
+     <AssemblyName>FSharp.Build</AssemblyName>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
 diff --git a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj b/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
 index 75af428f4..16d7685ca 100644
 --- a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
@@ -265,6 +280,19 @@ index 829a118bc..f19b106f0 100644
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
      <DefineConstants>$(DefineConstants);FSHARP_CORE</DefineConstants>
+diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
+index 7bddcb9df..97aea1545 100644
+--- a/src/fsharp/fsc/fsc.fsproj
++++ b/src/fsharp/fsc/fsc.fsproj
+@@ -6,7 +6,7 @@
+     <OutputType>Exe</OutputType>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
+     <TargetExt>.exe</TargetExt>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
 -- 
 2.18.0
 
