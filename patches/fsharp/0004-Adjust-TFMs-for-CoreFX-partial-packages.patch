@@ -1,10 +1,13 @@
-From 5005cc512352ebfaa699d43a8f551059794c34bb Mon Sep 17 00:00:00 2001
+From bb14eeb22d2689d85b0136f5fb6684eedf91577b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 4 Sep 2019 13:06:49 -0500
 Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
 
 ---
  .../FSharp.Compiler.Service.fsproj                   | 10 +++++-----
+ src/buildtools/AssemblyCheck/AssemblyCheck.fsproj    |  2 +-
+ src/buildtools/fslex/fslex.fsproj                    |  2 +-
+ src/buildtools/fsyacc/fsyacc.fsproj                  |  2 +-
  .../FSharp.Compiler.Interactive.Settings.fsproj      |  4 ++--
  .../FSharp.Compiler.Private.fsproj                   |  6 +++---
  .../FSharp.Compiler.Private.netcore.nuspec           |  4 ++--
@@ -13,7 +16,7 @@ Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
  .../FSharp.Core.nuget/FSharp.Core.nuget.csproj       |  2 +-
  src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec      | 10 +++++-----
  src/fsharp/FSharp.Core/FSharp.Core.fsproj            |  4 ++--
- 9 files changed, 27 insertions(+), 27 deletions(-)
+ 12 files changed, 30 insertions(+), 30 deletions(-)
 
 diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
 index 5e0d2250f..abe18b6fb 100644
@@ -62,6 +65,45 @@ index 5e0d2250f..abe18b6fb 100644
 -</Project>
 \ No newline at end of file
 +</Project>
+diff --git a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj b/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
+index 72f79d02f..cde9cb37a 100644
+--- a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
++++ b/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp2.1</TargetFramework>
++    <TargetFramework>netcoreapp3.0</TargetFramework>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+ 
+diff --git a/src/buildtools/fslex/fslex.fsproj b/src/buildtools/fslex/fslex.fsproj
+index 2766098c2..e9c7bb0c5 100644
+--- a/src/buildtools/fslex/fslex.fsproj
++++ b/src/buildtools/fslex/fslex.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp2.1</TargetFramework>
++    <TargetFramework>netcoreapp3.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstant)</DefineConstants>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+diff --git a/src/buildtools/fsyacc/fsyacc.fsproj b/src/buildtools/fsyacc/fsyacc.fsproj
+index dc5a4f67f..fad9941bd 100644
+--- a/src/buildtools/fsyacc/fsyacc.fsproj
++++ b/src/buildtools/fsyacc/fsyacc.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp2.1</TargetFramework>
++    <TargetFramework>netcoreapp3.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstant)</DefineConstants>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
 diff --git a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj b/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
 index 75af428f4..16d7685ca 100644
 --- a/src/fsharp/FSharp.Compiler.Interactive.Settings/FSharp.Compiler.Interactive.Settings.fsproj
