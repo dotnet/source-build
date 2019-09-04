@@ -10,6 +10,7 @@
   <UsingTask AssemblyFile="$(SourceBuildTasksAssembly)" TaskName="GetHostInformation" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteSourceRepoProperties" />
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="MarkAndCatalogPackages" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="NuGetPack" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
   
 
@@ -73,7 +74,7 @@
     </ItemGroup>
 
     <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
-    <Exec Command="$(IlasmToolPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
+    <Exec Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
 
     <!-- Temporary workaround to copy dlls that can't be round-tripped 
          They just get copied from the source to the package staging area

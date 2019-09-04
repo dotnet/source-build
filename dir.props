@@ -52,8 +52,6 @@
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
-    <IldasmPath Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)coreclr.$(coreclr)/bin/Product/Linux.x64.Release/ildasm</IldasmPath>
-    <IldasmPath Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)coreclr.$(coreclr)/bin/Product/Linux.x64.Release/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
     <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll</DarcDll>
@@ -86,6 +84,10 @@
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
+    <IlasmPath Condition="'$(OfflineBuild)' != 'true'">invalid: ILAsm is not expected to be needed in the online build</IlasmPath>
+    <IlasmPath Condition="'$(OfflineBuild)' == 'true'">$(PrebuiltSourceBuiltPackagesPath)ilasm/ilasm</IlasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' != 'true'">$(ToolPackageExtractDir)ilasm/ildasm</IldasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' == 'true'">invalid: ILDasm is not expected to be needed in the offline build</IldasmPath>
     <!-- Dir where git info is generated during online builds. -->
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->

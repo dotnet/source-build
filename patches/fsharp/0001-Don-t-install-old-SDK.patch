@@ -1,17 +1,17 @@
-From b85d492fa84995e9b375e04d83101df7494fdb5c Mon Sep 17 00:00:00 2001
+From 52196b8b8be3d76a0724187e4fdbdbe939a53058 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 23 Jul 2019 10:37:55 -0500
-Subject: [PATCH] Don't install old SDK.
+Subject: [PATCH 1/3] Don't install old SDK.
 
 ---
  eng/build.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/eng/build.sh b/eng/build.sh
-index fceb48534..6808fc2d3 100755
+index 7f6a88128..eb7284277 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
-@@ -264,7 +264,7 @@ function BuildSolution {
+@@ -265,7 +265,7 @@ function BuildSolution {
  InitializeDotNetCli $restore
  
  # enable us to build netcoreapp2.1 binaries

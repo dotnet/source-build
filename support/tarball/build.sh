@@ -19,24 +19,8 @@ $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initBuildReferenceAs
 echo "Expanding BuildTools dependencies into packages directory..."
 # init-tools tries to copy from its script directory to Tools, which in this case is a copy to
 # itself. This is an error. To avoid the error, use a temp dir that we immediately delete.
-TEMP_TOOLS_DIR="$SCRIPT_ROOT/ToolsTemp"
 PREBUILT_PACKAGE_SOURCE="$SCRIPT_ROOT/prebuilt/nuget-packages"
 REF_PACKAGE_SOURCE="$SCRIPT_ROOT/reference-packages/packages"
-(
-    # Log the commands that run.
-    set -x
-
-    "$CLI_ROOT/dotnet" restore "$SCRIPT_ROOT/init-tools.msbuild" --no-cache --packages "$SCRIPT_ROOT/packages" --source "$PREBUILT_PACKAGE_SOURCE" --source "$REF_PACKAGE_SOURCE" || exit $?
-
-    export __INIT_TOOLS_RESTORE_ARGS="--source $PREBUILT_PACKAGE_SOURCE --source $REF_PACKAGE_SOURCE" || exit $?
-    "$SCRIPT_ROOT/Tools/init-tools.sh" "$SCRIPT_ROOT" "$SCRIPT_ROOT/.dotnet/dotnet" "$TEMP_TOOLS_DIR" "$SCRIPT_ROOT/packages" || exit $?
-
-    rm -rf "$TEMP_TOOLS_DIR" || exit $?
-) > "$SCRIPT_ROOT/init-tools.log" 2>&1 || (
-    cat "$SCRIPT_ROOT/init-tools.log"
-    echo "ERROR: Failed to expand BuildTools dependencies. Detailed log above."
-    exit 1
-)
 
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$CLI_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"

@@ -146,8 +146,8 @@ find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {}
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/reference-packages
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
-#cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
-#cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
 
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
@@ -174,6 +174,7 @@ cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Microsoft.Build.Tasks.Gi
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Xliff*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp -r $SCRIPT_ROOT/Tools/source-built/ilasm $TARBALL_ROOT/prebuilt/source-built/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
