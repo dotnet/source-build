@@ -1,4 +1,4 @@
-From dfac0eced51c4833b72c6dfc025414d3efb61b66 Mon Sep 17 00:00:00 2001
+From 69d4ce3f9828c873e16e9a9a4d2be159a66c76cb Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 30 Aug 2019 10:54:47 -0500
 Subject: [PATCH 9/9] CoreFX TFM change propagation
@@ -11,11 +11,12 @@ Subject: [PATCH 9/9] CoreFX TFM change propagation
  .../src/Microsoft.AspNetCore.DataProtection.csproj            | 2 +-
  .../src/Microsoft.AspNetCore.DataProtection.Extensions.csproj | 2 +-
  .../src/Microsoft.Extensions.Identity.Core.csproj             | 2 +-
+ src/Identity/Extensions.Core/src/PasswordHasher.cs            | 4 ++--
  .../src/Microsoft.Extensions.Identity.Stores.csproj           | 2 +-
  .../Core/src/Microsoft.AspNetCore.Authorization.csproj        | 2 +-
  .../src/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj    | 2 +-
- .../src/Microsoft.AspNetCore.SignalR.Common.csproj            | 2 +-
- 11 files changed, 12 insertions(+), 14 deletions(-)
+ .../src/Microsoft.AspNetCore.SignalR.Common.csproj            | 4 ++--
+ 12 files changed, 15 insertions(+), 17 deletions(-)
 
 diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
 index 263edf3eaa..8c3fd40051 100644
@@ -120,6 +121,28 @@ index 56f0243273..7877bbe32b 100644
      <IsAspNetCoreApp>true</IsAspNetCoreApp>
      <IsShippingPackage>true</IsShippingPackage>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Identity/Extensions.Core/src/PasswordHasher.cs b/src/Identity/Extensions.Core/src/PasswordHasher.cs
+index 54c7fd2126..2a1b5de8ff 100644
+--- a/src/Identity/Extensions.Core/src/PasswordHasher.cs
++++ b/src/Identity/Extensions.Core/src/PasswordHasher.cs
+@@ -244,7 +244,7 @@ namespace Microsoft.AspNetCore.Identity
+ 
+             // Hash the incoming password and verify it
+             byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, Pbkdf2Prf, Pbkdf2IterCount, Pbkdf2SubkeyLength);
+-#if NETSTANDARD2_0
++#if NETSTANDARD2_1
+             return ByteArraysEqual(actualSubkey, expectedSubkey);
+ #elif NETCOREAPP3_0
+             return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
+@@ -283,7 +283,7 @@ namespace Microsoft.AspNetCore.Identity
+ 
+                 // Hash the incoming password and verify it
+                 byte[] actualSubkey = KeyDerivation.Pbkdf2(password, salt, prf, iterCount, subkeyLength);
+-#if NETSTANDARD2_0
++#if NETSTANDARD2_1
+                 return ByteArraysEqual(actualSubkey, expectedSubkey);
+ #elif NETCOREAPP3_0
+                 return CryptographicOperations.FixedTimeEquals(actualSubkey, expectedSubkey);
 diff --git a/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj
 index a3fd7e5c65..2dd069b520 100644
 --- a/src/Identity/Extensions.Stores/src/Microsoft.Extensions.Identity.Stores.csproj
@@ -160,7 +183,7 @@ index 5904b5dc87..e70a9ed818 100644
      <RootNamespace>Microsoft.AspNetCore.SignalR</RootNamespace>
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 diff --git a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
-index 118f42dc23..bf0abef800 100644
+index 118f42dc23..a135eb3f9c 100644
 --- a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
 +++ b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
 @@ -2,7 +2,7 @@
@@ -172,6 +195,15 @@ index 118f42dc23..bf0abef800 100644
      <IsAspNetCoreApp>true</IsAspNetCoreApp>
      <RootNamespace>Microsoft.AspNetCore.SignalR</RootNamespace>
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+@@ -24,7 +24,7 @@
+     <Reference Include="Microsoft.Extensions.Options" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
 -- 
 2.18.0
 
