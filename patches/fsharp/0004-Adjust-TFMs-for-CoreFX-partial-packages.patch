@@ -1,4 +1,4 @@
-From 68b1169f6cb1332fc5b39c1ab42d9e6acbe23a0c Mon Sep 17 00:00:00 2001
+From 66b1b376fcbc9540824cf01e614af6d6d85ce2e9 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 4 Sep 2019 13:06:49 -0500
 Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
@@ -18,7 +18,8 @@ Subject: [PATCH 4/4] Adjust TFMs for CoreFX partial packages.
  src/fsharp/FSharp.Core.nuget/FSharp.Core.nuspec      | 10 +++++-----
  src/fsharp/FSharp.Core/FSharp.Core.fsproj            |  4 ++--
  src/fsharp/fsc/fsc.fsproj                            |  2 +-
- 14 files changed, 32 insertions(+), 32 deletions(-)
+ src/fsharp/fsi/fsi.fsproj                            |  2 +-
+ 15 files changed, 33 insertions(+), 33 deletions(-)
 
 diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
 index 5e0d2250f..abe18b6fb 100644
@@ -284,6 +285,19 @@ diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
 index 7bddcb9df..97aea1545 100644
 --- a/src/fsharp/fsc/fsc.fsproj
 +++ b/src/fsharp/fsc/fsc.fsproj
+@@ -6,7 +6,7 @@
+     <OutputType>Exe</OutputType>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.0</TargetFrameworks>
+     <TargetExt>.exe</TargetExt>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+diff --git a/src/fsharp/fsi/fsi.fsproj b/src/fsharp/fsi/fsi.fsproj
+index 5b4978679..2916e436d 100644
+--- a/src/fsharp/fsi/fsi.fsproj
++++ b/src/fsharp/fsi/fsi.fsproj
 @@ -6,7 +6,7 @@
      <OutputType>Exe</OutputType>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
