@@ -1,16 +1,16 @@
-From 59a9770499a998d54edc0c419c688a6383d1870d Mon Sep 17 00:00:00 2001
+From c1ea972d5d3ecae61fef21e7d262e7c4a7020410 Mon Sep 17 00:00:00 2001
 From: "Brett V. Forsgren" <brettfo@microsoft.com>
 Date: Wed, 31 Jul 2019 14:54:36 -0600
 Subject: [PATCH 2/3] exclude FSharp.Compiler.LanguageServer from source build
  (#7304)
 
 ---
- .../FSharp.Compiler.LanguageServer.fsproj                        | 1 +
- .../FSharp.Compiler.LanguageServer.UnitTests.fsproj              | 1 +
+ .../FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj | 1 +
+ .../FSharp.Compiler.LanguageServer.UnitTests.fsproj                      | 1 +
  2 files changed, 2 insertions(+)
 
 diff --git a/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj b/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
-index 3180a0a52..48e2c5104 100644
+index 3180a0a..48e2c51 100644
 --- a/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
 +++ b/src/fsharp/FSharp.Compiler.LanguageServer/FSharp.Compiler.LanguageServer.fsproj
 @@ -8,6 +8,7 @@
@@ -22,7 +22,7 @@ index 3180a0a52..48e2c5104 100644
  
    <ItemGroup>
 diff --git a/tests/FSharp.Compiler.LanguageServer.UnitTests/FSharp.Compiler.LanguageServer.UnitTests.fsproj b/tests/FSharp.Compiler.LanguageServer.UnitTests/FSharp.Compiler.LanguageServer.UnitTests.fsproj
-index 78c2689eb..a9df8d199 100644
+index 78c2689..a9df8d1 100644
 --- a/tests/FSharp.Compiler.LanguageServer.UnitTests/FSharp.Compiler.LanguageServer.UnitTests.fsproj
 +++ b/tests/FSharp.Compiler.LanguageServer.UnitTests/FSharp.Compiler.LanguageServer.UnitTests.fsproj
 @@ -7,6 +7,7 @@
@@ -34,5 +34,5 @@ index 78c2689eb..a9df8d199 100644
  
    <ItemGroup>
 -- 
-2.21.0
+1.8.3.1
 

@@ -1,18 +1,17 @@
-From 4a051438d29bd96ede45069031462522313ed1bc Mon Sep 17 00:00:00 2001
+From c927af935536451c39212cbd2a62a6c5da095fd0 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Tue, 2 Jul 2019 16:43:39 +0000
-Subject: [PATCH] Exclude test projects.
-Note: This patch is necessary to work around https://github.com/dotnet/arcade/pull/3051. Removing this patch is awaiting uptake of a new Arcade version.
+Subject: [PATCH 1/2] Exclude test projects.
 
 ---
- .../Microsoft.Build.Tasks.Git.UnitTests.csproj                   | 1 +
- .../Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj          | 1 +
- .../Microsoft.SourceLink.Common.UnitTests.csproj                 | 1 +
- .../Microsoft.SourceLink.Git.IntegrationTests.csproj             | 1 +
- .../Microsoft.SourceLink.GitHub.UnitTests.csproj                 | 1 +
- .../Microsoft.SourceLink.GitLab.UnitTests.csproj                 | 1 +
- .../Microsoft.SourceLink.Tfs.Git.UnitTests.csproj                | 1 +
- .../Microsoft.SourceLink.Vsts.Git.UnitTests.csproj               | 1 +
+ .../Microsoft.Build.Tasks.Git.UnitTests.csproj                           | 1 +
+ .../Microsoft.SourceLink.Bitbucket.Git.UnitTests.csproj                  | 1 +
+ .../Microsoft.SourceLink.Common.UnitTests.csproj                         | 1 +
+ .../Microsoft.SourceLink.Git.IntegrationTests.csproj                     | 1 +
+ .../Microsoft.SourceLink.GitHub.UnitTests.csproj                         | 1 +
+ .../Microsoft.SourceLink.GitLab.UnitTests.csproj                         | 1 +
+ .../Microsoft.SourceLink.Tfs.Git.UnitTests.csproj                        | 1 +
+ .../Microsoft.SourceLink.Vsts.Git.UnitTests.csproj                       | 1 +
  8 files changed, 8 insertions(+)
 
 diff --git a/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj b/src/Microsoft.Build.Tasks.Git.UnitTests/Microsoft.Build.Tasks.Git.UnitTests.csproj
@@ -112,5 +111,5 @@ index a14fb04..15f4894 100644
    <ItemGroup>
      <ProjectReference Include="..\SourceLink.Vsts.Git\Microsoft.SourceLink.Vsts.Git.csproj" />
 -- 
-2.21.0
+1.8.3.1
 
