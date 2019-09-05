@@ -35,6 +35,9 @@ for arg do
     (--publish-prebuilt-report) set -- "$@" "/t:PublishPrebuiltReportData"
             alternateTarget=true
             ;;
+    (--generate-prebuilt-data) set -- "$@" "/t:GeneratePrebuiltBurndownData"
+            alternateTarget=true
+            ;;
        (*) set -- "$@" "$arg" ;;
   esac
 done
