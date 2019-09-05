@@ -20,23 +20,26 @@ if grep -q '\(/docker/\|/docker-\)' "/proc/1/cgroup"; then
     export DotNetRunningInDocker=1
 fi
 
-test=false
+alternateTarget=false
 
 for arg do
   shift
   opt="$(echo "$arg" | awk '{print tolower($0)}')"
   case $opt in
     (-test) set -- "$@" "/t:RunTests"
-            test=true
+            alternateTarget=true
             ;;
     (--run-smoke-test) set -- "$@" "/t:RunSmokeTest"
-            test=true
+            alternateTarget=true
+            ;;
+    (--publish-prebuilt-report) set -- "$@" "/t:PublishPrebuiltReportData"
+            alternateTarget=true
             ;;
        (*) set -- "$@" "$arg" ;;
   esac
 done
 
-if [ "$test" == "false" ] && [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
+if [ "$alternateTarget" == "false" ] && [[ "${SOURCE_BUILD_SKIP_SUBMODULE_CHECK:-default}" == "default" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "0" || $SOURCE_BUILD_SKIP_SUBMODULE_CHECK == "false" ]]; then
   source "$SCRIPT_ROOT/check-submodules.sh"
 fi
 
@@ -60,7 +63,7 @@ done
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
-if [ "$test" == "true" ]; then
+if [ "$alternateTarget" == "true" ]; then
   CLIPATH="$scriptroot/.dotnet"
   SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
 
