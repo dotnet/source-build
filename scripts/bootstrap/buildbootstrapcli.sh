@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+set -u
 set -o pipefail
 
 usage()
@@ -99,7 +100,7 @@ __configuration=release
 __clangversion=
 __outputpath=
 
-while [[ "$1" != "" ]]; do
+while [[ "${1:-}" != "" ]]; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
     -h|--help)
@@ -259,15 +260,28 @@ disable_pax_mprotect $__frameworkpath/corerun
 disable_pax_mprotect $__frameworkpath/crossgen
 
 # Now copy the core-setup repo binaries
-cp core-setup/cli/exe/dotnet/dotnet $__outputpath
-cp core-setup/cli/exe/dotnet/dotnet $__frameworkpath/corehost
 
-cp core-setup/cli/dll/libhostpolicy.so $__frameworkpath
-cp core-setup/cli/dll/libhostpolicy.so $__outputpath/sdk/$__sdkversion
+if [[ $__fxrversion == 2* ]]; then
+    cp core-setup/cli/exe/dotnet/dotnet $__outputpath
+    cp core-setup/cli/exe/dotnet/dotnet $__frameworkpath/corehost
 
-cp core-setup/cli/fxr/libhostfxr.so $__frameworkpath
-cp core-setup/cli/fxr/libhostfxr.so $__outputpath/host/fxr/$__fxrversion
-cp core-setup/cli/fxr/libhostfxr.so $__outputpath/sdk/$__sdkversion
+    cp core-setup/cli/dll/libhostpolicy.so $__frameworkpath
+    cp core-setup/cli/dll/libhostpolicy.so $__outputpath/sdk/$__sdkversion
+
+    cp core-setup/cli/fxr/libhostfxr.so $__frameworkpath
+    cp core-setup/cli/fxr/libhostfxr.so $__outputpath/host/fxr/$__fxrversion
+    cp core-setup/cli/fxr/libhostfxr.so $__outputpath/sdk/$__sdkversion
+else
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/dotnet $__outputpath
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/dotnet $__frameworkpath/corehost
+
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/libhostpolicy.so $__frameworkpath
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/libhostpolicy.so $__outputpath/sdk/$__sdkversion
+
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/libhostfxr.so $__frameworkpath
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/libhostfxr.so $__outputpath/host/fxr/$__fxrversion
+    cp core-setup/bin/$__runtime_id.$__configuration/corehost/libhostfxr.so $__outputpath/sdk/$__sdkversion
+fi
 
 # Mark the core-setup executables as allowed to create executable memory mappings
 disable_pax_mprotect $__outputpath/dotnet
@@ -296,9 +310,13 @@ $__seedclipath/shared/Microsoft.NETCore.App/$__frameworkversion/Microsoft.NETCor
 >$__frameworkpath/Microsoft.NETCore.App.deps.json
 
 # add the new RID to the list of runtimes iff it does not already exist (sed inplace)
+__os_dependencies=
+if [[ $__build_os == "Linux" ]]; then
+    __os_dependencies='"linux", "linux-'$__build_arch'", '
+fi
 grep -q "\"$__runtime_id\":" $__frameworkpath/Microsoft.NETCore.App.deps.json || \
 sed -i \
-    -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      "unix", "unix-'$__build_arch'", "any", "base"\n    ],/g' \
+    -e 's/"runtimes": {/&\n    "'$__runtime_id'": [\n      '"$__os_dependencies"'"unix", "unix-'$__build_arch'", "any", "base"\n    ],/g' \
 $__frameworkpath/Microsoft.NETCore.App.deps.json
 
 __crossgentimeout=120

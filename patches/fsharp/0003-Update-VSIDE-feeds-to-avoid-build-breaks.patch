@@ -1,0 +1,47 @@
+From 54769e969b02df02b5498550bd9d0a824fd3da86 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 29 Aug 2019 18:22:30 +0000
+Subject: [PATCH 3/3] Update VSIDE feeds to avoid build breaks.
+
+---
+ NuGet.config       | 5 ++---
+ eng/Versions.props | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index a8664a7..1ab1f39 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -18,10 +18,9 @@
+     <add key="interactive-window" value="https://dotnet.myget.org/F/interactive-window/api/v3/index.json" />
+     <add key="vs-devcore" value="https://myget.org/F/vs-devcore/api/v3/index.json" />
+     <add key="vs-editor" value="https://myget.org/F/vs-editor/api/v3/index.json" />
+-    <add key="vssdk" value="https://vside.myget.org/F/vssdk/api/v3/index.json" />
+-    <add key="vs-impl" value="https://vside.myget.org/F/vs-impl/api/v3/index.json" />
++    <add key="vssdk" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json" />
++    <add key="vs-impl" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json" />
+     <add key="roslyn_concord" value="https://myget.org/F/roslyn_concord/api/v3/index.json" />
+-    <add key="devcore" value="https://vside.myget.org/F/devcore/api/v3/index.json" />
+   </packageSources>
+   <disabledPackageSources>
+     <clear />
+diff --git a/eng/Versions.props b/eng/Versions.props
+index ac79040..ad9d056 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -59,10 +59,9 @@
+       https://dotnet.myget.org/F/interactive-window/api/v3/index.json;
+       https://myget.org/F/vs-devcore/api/v3/index.json;
+       https://myget.org/F/vs-editor/api/v3/index.json;
+-      https://vside.myget.org/F/vssdk/api/v3/index.json;
+-      https://vside.myget.org/F/vs-impl/api/v3/index.json;
++      https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json;
++      https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json;
+       https://myget.org/F/roslyn_concord/api/v3/index.json;
+-      https://vside.myget.org/F/devcore/api/v3/index.json;
+     </RestoreSources>
+     <!-- version numbers from files -->
+     <RoslynVersion>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)..\RoslynPackageVersion.txt').Trim())</RoslynVersion>
+-- 
+1.8.3.1
+
