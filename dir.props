@@ -24,6 +24,9 @@
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
+    <!-- if we're not currently building,  Visual Studio will still set this -->
+    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$(NETCoreSdkVersion)</SDK_VERSION>
+    <SdkReferenceDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</SdkReferenceDir>
   </PropertyGroup>
 
   <PropertyGroup>
