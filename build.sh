@@ -3,6 +3,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # resolve $SOURCE until the file is no longer a symlink
+source="${BASH_SOURCE[0]}"
+scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 while [[ -h $source ]]; do
   scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
   source="$(readlink "$source")"
@@ -63,9 +65,6 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$scriptroot/packages/"
-
-source="${BASH_SOURCE[0]}"
-
 
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
