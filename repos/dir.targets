@@ -57,10 +57,6 @@
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
   </PropertyGroup>
 
-  <Import Project="$(ProjectDirectory)dependencies.props"
-          Condition="'$(DependencyVersionInputRepoApiImplemented)' != 'true' AND
-                     Exists('$(ProjectDirectory)dependencies.props')" />
-
   <Target Name="BuildRepoReferences" Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
     <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
     <ItemGroup>

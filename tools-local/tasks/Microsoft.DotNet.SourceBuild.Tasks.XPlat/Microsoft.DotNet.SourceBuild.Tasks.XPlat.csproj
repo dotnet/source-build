@@ -28,12 +28,6 @@
     Use some assemblies from the SDK, instead of package references. This ensures they match what's
     found when the task is loaded by the SDK's MSBuild.
   -->
-  <PropertyGroup>
-    <!-- Read SDK_VERSION if not passed in. Enables Visual Studio builds. -->
-    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$([System.IO.File]::ReadAllText('$(ProjectDir)DotnetCLIVersion.txt').Trim())</SDK_VERSION>
-    <SdkReferenceDir>$(ProjectDir).dotnet/sdk/$(SDK_VERSION)/</SdkReferenceDir>
-  </PropertyGroup>
-
   <ItemGroup>
     <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
     <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />

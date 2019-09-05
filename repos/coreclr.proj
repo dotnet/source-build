@@ -49,7 +49,7 @@
   <Target Name="CopyTools"
           AfterTargets="Package">
     <PropertyGroup>
-      <CoreClrDestinationDir>$(ToolPackageExtractDir)ilasm</CoreClrDestinationDir>
+      <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
       <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
       <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
       <AssemblyExtension Condition="'$(AssemblyExtension)' == ''">please define AssemblyExtension for $(TargetOS)</AssemblyExtension>
