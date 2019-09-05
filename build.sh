@@ -45,9 +45,6 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
-CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
-SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
-
 source="${BASH_SOURCE[0]}"
 
 # resolve $SOURCE until the file is no longer a symlink
@@ -64,7 +61,10 @@ set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
 if [ "$test" == "true" ]; then
-  "$scriptroot/.dotnet/dotnet" build "$scriptroot/build.proj" $@
+  CLIPATH="$scriptroot/.dotnet"
+  SDKPATH="$CLIPATH/sdk/$SDK_VERSION"
+
+  "$CLIPATH/dotnet" $SDKPATH/MSBuild.dll "$scriptroot/build.proj" /bl:source-build-test.binlog /flp:v=diag /clp:v=m "$@"
 else
   "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
 fi
