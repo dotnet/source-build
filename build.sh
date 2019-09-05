@@ -29,6 +29,9 @@ for arg do
     (-test) set -- "$@" "/t:RunTests"
             test=true
             ;;
+    (--run-smoke-test) set -- "$@" "/t:RunSmokeTest"
+            test=true
+            ;;
        (*) set -- "$@" "$arg" ;;
   esac
 done
@@ -58,6 +61,10 @@ while [[ -h $source ]]; do
 done
 
 set -x
-
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
-"$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
+
+if [ "$test" == "true" ]; then
+  "$scriptroot/.dotnet/dotnet" build "$scriptroot/build.proj" $@
+else
+  "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
+fi

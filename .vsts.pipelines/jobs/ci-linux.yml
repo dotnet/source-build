@@ -89,7 +89,7 @@ jobs:
       set -x
       df -h
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
-        /t:RunSmokeTest \
+        --run-smoke-test \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run smoke-test
