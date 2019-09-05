@@ -48,16 +48,19 @@
 
   <Target Name="CopyTools"
           AfterTargets="Package">
+    <PropertyGroup>
+      <CoreClrDestinationDir>$(ToolPackageExtractDir)ilasm</CoreClrDestinationDir>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
+      <AssemblyExtension Condition="'$(AssemblyExtension)' == ''">please define AssemblyExtension for $(TargetOS)</AssemblyExtension>
+    </PropertyGroup>
+
     <ItemGroup>
       <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ilasm" />
       <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ildasm" />
-      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.so" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.$(AssemblyExtension)" />
       <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/System.Private.CoreLib.dll" />
     </ItemGroup>
-
-    <PropertyGroup>
-      <CoreClrDestinationDir>$(ToolPackageExtractDir)ilasm</CoreClrDestinationDir>
-    </PropertyGroup>
 
     <Message Importance="High" Text="Copying source-built ILAsm and ILDasm '@(CoreClrTools)' to '$(CoreClrDestinationDir)'" />
 
