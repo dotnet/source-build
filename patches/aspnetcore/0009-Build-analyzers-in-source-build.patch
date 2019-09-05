@@ -1,0 +1,26 @@
+From 0edabf3069ad9b9a056df05f1905104ad8432ebb Mon Sep 17 00:00:00 2001
+From: John Luo <johluo@microsoft.com>
+Date: Thu, 29 Aug 2019 15:29:28 -0700
+Subject: [PATCH 1/1] Build analyzers in source build
+
+---
+ Directory.Build.targets | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 5006951..f5b217f 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -16,7 +16,8 @@
+     <IsPackable Condition="'$(IsAspNetCoreApp)' == 'true' AND '$(IsShippingPackage)' != 'true'">false</IsPackable>
+ 
+     <!-- Only build assemblies in Microsoft.AspNetCore.App in source build -->
+-    <ExcludeFromSourceBuild Condition="'$(ExcludeFromSourceBuild)' == '' and '$(DotNetBuildFromSource)' == 'true' and '$(IsAspNetCoreApp)' != 'true'">true</ExcludeFromSourceBuild>
++    <!-- Analyzer package are needed in source build for WebSDK -->
++    <ExcludeFromSourceBuild Condition="'$(ExcludeFromSourceBuild)' == '' and '$(DotNetBuildFromSource)' == 'true' and '$(IsAspNetCoreApp)' != 'true' and '$(IsAnalyzersProject)' != 'true'">true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <PropertyGroup Label="Resx settings">
+-- 
+1.8.3.1
+
