@@ -49,10 +49,10 @@
   <Target Name="CopyTools"
           AfterTargets="Package">
     <ItemGroup>
-      <CoreClrTools Include="$(ProjectDirectory)bin/Product/Linux.x64.Release/ilasm" />
-      <CoreClrTools Include="$(ProjectDirectory)bin/Product/Linux.x64.Release/ildasm" />
-      <CoreClrTools Include="$(ProjectDirectory)bin/Product/Linux.x64.Release/libcoreclr.so" />
-      <CoreClrTools Include="$(ProjectDirectory)bin/Product/Linux.x64.Release/System.Private.CoreLib.dll" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ilasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ildasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.so" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/System.Private.CoreLib.dll" />
     </ItemGroup>
 
     <PropertyGroup>
