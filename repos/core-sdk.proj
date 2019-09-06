@@ -6,6 +6,7 @@
     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:AspNetCoreSharedFxInstallerRid=linux-x64</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:OSName=$(OSNameOverride)</BuildCommandArgs>
     <!-- core-sdk always wants to build portable on OSX -->
     <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
