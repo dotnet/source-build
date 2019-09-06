@@ -10,24 +10,23 @@
     <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
   </PropertyGroup>
 
   <PropertyGroup>
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
-    <DotNetCliToolDir>$(ProjectDir)Tools/dotnetcli/</DotNetCliToolDir>
-    <!-- some repos, e.g. toolset, require a 3.0 preview SDK to build -->
-    <DotNet3CliToolDir>$(ProjectDir)Tools/dotnetcli3/</DotNet3CliToolDir>
-    <!-- different casing here matches BuildTools property -->
-    <Dotnet3ToolCommand>$(DotNet3CliToolDir)dotnet</Dotnet3ToolCommand>
+    <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
+    <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/</PackagesDir>
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
-    <DotNetSdk3Dir>$(DotNet3CliToolDir)sdk/$(SDK3_VERSION)/</DotNetSdk3Dir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
-    <DotNetSdk3ResolversDir>$(DotNetSdk3Dir)SdkResolvers/</DotNetSdk3ResolversDir>
+    <!-- if we're not currently building,  Visual Studio will still set this -->
+    <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$(NETCoreSdkVersion)</SDK_VERSION>
+    <SdkReferenceDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</SdkReferenceDir>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -57,10 +56,9 @@
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
-    <IldasmPath>$(ToolsDir)ilasm/ildasm</IldasmPath>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
-    <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp2.1/Microsoft.DotNet.Darc.dll</DarcDll>
+    <DarcDll>$(ToolsLocalDir)arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll</DarcDll>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
     <SourceBuildTasksAssembly>$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll</SourceBuildTasksAssembly>
     <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/Debug/netstandard2.0/</XPlatTasksBinDir>
@@ -90,6 +88,10 @@
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
+    <IlasmPath Condition="'$(OfflineBuild)' != 'true'">invalid: ILAsm is not expected to be needed in the online build</IlasmPath>
+    <IlasmPath Condition="'$(OfflineBuild)' == 'true'">$(PrebuiltSourceBuiltPackagesPath)coreclr-tools/ilasm</IlasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' != 'true'">$(ToolPackageExtractDir)coreclr-tools/ildasm</IldasmPath>
+    <IldasmPath Condition="'$(OfflineBuild)' == 'true'">invalid: ILDasm is not expected to be needed in the offline build</IldasmPath>
     <!-- Dir where git info is generated during online builds. -->
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->
@@ -144,8 +146,6 @@
 
   <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
 
-  <Import Project="$(ProjectDir)dependencies.props" />
-
   <PropertyGroup>
     <!-- known-good (repos/known-good.proj) conditionally includes submodules based on the platform,
          so this will not always correspond to the same repos - see that file for details.
@@ -168,11 +168,6 @@
     <CliInternalReleaseTag>source</CliInternalReleaseTag>
     <CliInternalBuildVersion>30000001-1</CliInternalBuildVersion>
   </PropertyGroup>
-
-  <!-- With Arcade, this package version is stored in a property we need to override. -->
-  <ItemGroup>
-    <ExtraPackageVersionPropsPackageInfo Include="BuildToolsPackageVersion" Version="$(BuildToolsPackageVersion)" />
-  </ItemGroup>
 
   <ItemGroup>
     <ExtraPackageVersionPropsPackageInfo Include="DotnetCliInternalVersion" Version="3.0.100-$(CliInternalReleaseTag)-$(CliInternalBuildVersion)" />

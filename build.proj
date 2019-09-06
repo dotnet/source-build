@@ -249,7 +249,7 @@
           EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
   </Target>
 
-  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.CloudTestTasks.dll" TaskName="UploadToAzure" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UploadToAzure" />
 
   <Target Name="PublishPrebuiltReportData">
     <Error Text="RelativeBlobPath must be set to a non-empty string." Condition="'$(RelativeBlobPath)' == ''" />
@@ -274,9 +274,6 @@
                    Overwrite="true" />
   </Target>
 
-  <Import Project="$(ProjectDir)dependencies.targets" />
-
-  <Import Project="$(ToolsDir)VersionTools.targets" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
 </Project>

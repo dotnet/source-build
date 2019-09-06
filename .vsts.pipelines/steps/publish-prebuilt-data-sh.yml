@@ -6,7 +6,7 @@ steps:
       set -x
       # Publish tarball's prebuilt data. Use ./build.sh from production build.
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
-        /t:PublishPrebuiltReportData \
+        --publish-prebuilt-report \
         /p:ProjectDir=/tb/$(tarballName)/ \
         "/p:RelativeBlobPath=$relativeBlobPath" \
         /p:ContainerName=$(publish.blobStorage.container) \
@@ -22,7 +22,7 @@ steps:
       set -x
       # Publish prebuilt data if burndown report was generated
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
-        /t:PublishPrebuiltReportData \
+        --publish-prebuilt-report \
         "/p:RelativeBlobPath=$relativeBlobPath" \
         /p:ContainerName=$(publish.blobStorage.container) \
         /p:AzureAccountName=$(publish.blobStorage.account) \

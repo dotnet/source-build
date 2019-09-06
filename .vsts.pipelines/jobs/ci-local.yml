@@ -23,7 +23,7 @@ jobs:
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     args.smokeTest: >
-      /t:RunSmokeTest
+      --run-smoke-test
       /p:Configuration=$(sb.configuration)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     # Prefix to distinguish artifacts from different legs.
