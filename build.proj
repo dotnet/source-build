@@ -6,6 +6,7 @@
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="CopyReferenceOnlyPackages" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -160,6 +161,9 @@
 
     <ItemGroup>
       <IlSourceFiles Include="$(IldasmTempOutputPath)/**/*.il" />
+      <OldLicenseFiles Include="$(ReferencePackagesStagingDir)/**/dotnet_library_license.txt" />
+      <OldLicenseFiles Include="$(ReferencePackagesStagingDir)/**/License.rtf" />
+      <RefAssyNuspecFiles Include="$(ReferencePackagesStagingDir)/**/*.nuspec" />
     </ItemGroup>
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying @(IlSourceFiles->Count()) IL source files" />
@@ -170,6 +174,34 @@
     <Delete Files="@(ReferenceOnlyPackageDlls)" />
     <RemoveDir Directories="$(IldasmTempOutputPath)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
+
+    <!-- Update licenseUrl to MIT license where needed in nuspec files -->
+    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
+        OldText="http://go.microsoft.com/fwlink/?LinkId=329770"
+        NewText="https://microsoft.mit-license.org/" />
+    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
+        OldText="https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm"
+        NewText="https://microsoft.mit-license.org/" />
+    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
+        OldText="http://go.microsoft.com/fwlink/?LinkId=529443"
+        NewText="https://microsoft.mit-license.org/" />
+  </Target>
+
+  <Target Name="ReplaceLicenseFiles" AfterTargets="CopyAndDisassembleReferenceOnlyPackages" Outputs="%(OldLicenseFiles.Identity)">
+    <!-- Create Item of all unique directories containing old licenses -->
+    <CreateItem Include="%(OldLicenseFiles.RelativeDir)">
+       <Output TaskParameter="Include" ItemName="DestinationDirs" />
+    </CreateItem>
+
+    <PropertyGroup>
+      <DestinationDirIdentity>%(DestinationDirs.Identity)</DestinationDirIdentity>
+    </PropertyGroup>
+    <ItemGroup>
+        <NewLicenseFile Include="$(ProjectDir)LICENSE.txt" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NewLicenseFile)" DestinationFiles="@(NewLicenseFile->'$(DestinationDirIdentity)%(RecursiveDir)%(Filename)%(Extension)')" />
+
+    <Delete Files="@(OldLicenseFiles)" />
   </Target>
 
   <Target Name="DownloadSourceBuildReferencePackages"
