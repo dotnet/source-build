@@ -1,0 +1,95 @@
+From e4be447d2796fd772e4b5efc61dd7c53c9fa3394 Mon Sep 17 00:00:00 2001
+From: Eric StJohn <ericstj@microsoft.com>
+Date: Thu, 8 Aug 2019 10:45:29 -0700
+Subject: [PATCH 2/4] Enable partial package build during source build (#40061)
+ (#40129)
+
+---
+ eng/Packaging.props   | 13 +++++++++++++
+ eng/Packaging.targets |  6 +++++-
+ src/packages.builds   | 10 +++++++---
+ src/src.builds        |  4 ++++
+ 4 files changed, 29 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Packaging.props b/eng/Packaging.props
+index 6a46905752..2dd967b520 100644
+--- a/eng/Packaging.props
++++ b/eng/Packaging.props
+@@ -30,6 +30,19 @@
+     <SkipValidatePackageTargetFramework>true</SkipValidatePackageTargetFramework>
+     <SkipGenerationCheck>true</SkipGenerationCheck>
+   </PropertyGroup>
++  
++  <PropertyGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++    <!-- Don't build referenced projects -->
++    <BuildPackageLibraryReferences>false</BuildPackageLibraryReferences>
++    <!-- Omit any files that were not built -->
++    <AllowPartialPackages>true</AllowPartialPackages>
++    <!-- Don't permit harvesting since this requires pre-builts -->
++    <HarvestStablePackage>false</HarvestStablePackage>
++    <!-- Validation will fail in case we were relying on harvested assets or assets not built to satisfy stated support -->
++    <SkipValidatePackage>true</SkipValidatePackage>
++    <!-- Include All BuildConfigurations in package, so that whatever we're building for source build is included -->
++    <PackageConfigurations>$(BuildConfigurations)</PackageConfigurations>
++  </PropertyGroup>
+ 
+   <Import Condition="Exists('../pkg/baseline/baseline.props') AND '$(MSBuildProjectExtension)' == '.pkgproj'" Project="../pkg/baseline/baseline.props" />
+ 
+diff --git a/eng/Packaging.targets b/eng/Packaging.targets
+index b350be6ccf..30d70400ec 100644
+--- a/eng/Packaging.targets
++++ b/eng/Packaging.targets
+@@ -13,7 +13,11 @@
+     </ItemGroup>    
+   </Target>
+ 
+-  <Target Name="ValidateExcludeCompileDesktop" AfterTargets="GetPackageDependencies" Inputs="%(Dependency.Identity);%(Dependency.TargetFramework)" Outputs="unused">
++  <Target Name="ValidateExcludeCompileDesktop"
++          AfterTargets="GetPackageDependencies"
++          Inputs="%(Dependency.Identity);%(Dependency.TargetFramework)" 
++          Outputs="unused"
++          Condition="'$(SkipValidatePackage)' != 'true'">
+     <PropertyGroup>
+       <_excludeCompile Condition="@(Dependency->WithMetadataValue('Exclude', 'Compile')->Count()) == @(Dependency->Count())">true</_excludeCompile>
+     </PropertyGroup>
+diff --git a/src/packages.builds b/src/packages.builds
+index eb33caecf6..9cca0099aa 100644
+--- a/src/packages.builds
++++ b/src/packages.builds
+@@ -1,11 +1,15 @@
+ <Project>
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Directory.Build.props))\Directory.Build.props" />
+ 
+-  <ItemGroup>
+-    <Project Include="$(MSBuildThisFileDirectory)..\pkg\*\*.builds" Condition="'$(SkipManagedPackageBuild)' != 'true'">
++  <PropertyGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++    <AdditionalBuildConfigurations>$(AdditionalBuildConfigurations);package-$(ConfigurationGroup)</AdditionalBuildConfigurations>
++  </PropertyGroup>
++
++  <ItemGroup Condition="'$(SkipManagedPackageBuild)' != 'true'">
++    <Project Include="$(MSBuildThisFileDirectory)..\pkg\*\*.builds" >
+       <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
+     </Project>
+-    <Project Include="*\pkg\**\*.pkgproj" Condition="'$(SkipManagedPackageBuild)' != 'true' AND '$(BuildAllConfigurations)' == 'true'">
++    <Project Include="*\pkg\**\*.pkgproj" Condition="'$(BuildAllConfigurations)' == 'true' OR '$(DotNetBuildFromSource)' == 'true'">
+       <AdditionalProperties>$(AdditionalProperties)</AdditionalProperties>
+     </Project>
+   </ItemGroup>
+diff --git a/src/src.builds b/src/src.builds
+index aeb419cfb0..3539c148f6 100644
+--- a/src/src.builds
++++ b/src/src.builds
+@@ -1,6 +1,10 @@
+ <Project DefaultTargets="Build">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Directory.Build.props))\Directory.Build.props" />
+ 
++  <PropertyGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++    <AdditionalBuildConfigurations>$(AdditionalBuildConfigurations);netstandard-$(ConfigurationGroup)</AdditionalBuildConfigurations>
++  </PropertyGroup>
++
+   <ItemGroup>
+     <Project Include="$(MSBuildThisFileDirectory)*/src/*.csproj" Exclude="@(ProjectExclusions)" />
+     <Project Include="$(MSBuildThisFileDirectory)*/src/*.ilproj" Exclude="@(ProjectExclusions)" />
+-- 
+2.21.0
+
