@@ -187,7 +187,10 @@
         NewText="https://microsoft.mit-license.org/" />
   </Target>
 
-  <Target Name="ReplaceLicenseFiles" AfterTargets="CopyAndDisassembleReferenceOnlyPackages" Outputs="%(OldLicenseFiles.Identity)">
+  <Target Name="ReplaceLicenseFiles"
+          AfterTargets="CopyAndDisassembleReferenceOnlyPackages"
+          Outputs="%(OldLicenseFiles.Identity)"
+          Condition="'$(OfflineBuild)' != 'true' and '$(ArchiveDownloadedPackages)' == 'true' and '$(OS)' != 'Windows_NT'">
     <!-- Create Item of all unique directories containing old licenses -->
     <CreateItem Include="%(OldLicenseFiles.RelativeDir)">
        <Output TaskParameter="Include" ItemName="DestinationDirs" />
