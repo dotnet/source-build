@@ -17,7 +17,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteRestoreSourceAndVersionProps" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteVersionsFile" />
-  <UsingTask AssemblyFile="$(BuildToolsTaskDir)Microsoft.DotNet.Build.Tasks.dll" TaskName="ZipFileExtractToDirectory" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
 
   <!--
     Central property to define that a repo doesn't implement any of the Repo API. If a repo adds an
@@ -56,10 +56,6 @@
   <PropertyGroup Condition="'$(OutputPlacementRepoApiImplemented)' == 'true'">
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
   </PropertyGroup>
-
-  <Import Project="$(ProjectDirectory)dependencies.props"
-          Condition="'$(DependencyVersionInputRepoApiImplemented)' != 'true' AND
-                     Exists('$(ProjectDirectory)dependencies.props')" />
 
   <Target Name="BuildRepoReferences" Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
     <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
@@ -123,10 +119,9 @@
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
     </ItemGroup>
 
-    <UpdateJson Condition="'$(UpdateGlobalJsonToV3Sdk)' == 'true'"
-                JsonFilePath="$(GlobalJsonFile)"
+    <UpdateJson JsonFilePath="$(GlobalJsonFile)"
                 PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
-                NewAttributeValue="$(SDK3_VERSION)"
+                NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
   </Target>
 
@@ -482,6 +477,5 @@
   <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />
   <Target Name="GetOfficialBuildId" Outputs="$(OfficialBuildId)" />
 
-  <Import Project="$(ToolsDir)VersionTools.targets" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., dir.targets))/dir.targets" />
 </Project>

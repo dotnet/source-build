@@ -26,17 +26,17 @@
       <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
     </PropertyGroup>
 
-    <Exec Command="$(Dotnet3ToolCommand) restore /bl:restore.binlog $(BuildCommandArgs)  "
+    <Exec Command="$(DotnetToolCommand) restore /bl:restore.binlog $(BuildCommandArgs)  "
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
 
-    <Exec Command="$(Dotnet3ToolCommand) build /bl:build.binlog $(BuildCommandArgs)"
+    <Exec Command="$(DotnetToolCommand) build /bl:build.binlog $(BuildCommandArgs)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
 
-    <Exec Command="$(Dotnet3ToolCommand) pack /bl:pack.binlog $(BuildCommandArgs)"
+    <Exec Command="$(DotnetToolCommand) pack /bl:pack.binlog $(BuildCommandArgs)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />

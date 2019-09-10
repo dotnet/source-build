@@ -6,7 +6,7 @@
     <BuildCommandArgs>--pack --ci</BuildCommandArgs>
     <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNetCliToolDir)</BuildCommandArgs>
 
     <!-- Consume the source-built Core-Setup. This line must be removed to source-build CLI without source-building Core-Setup first. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>

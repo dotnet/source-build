@@ -1,8 +1,8 @@
 ## Source-Build Prebuilt Removal Status Overview
 
-Last source-build Build Date: 2019-08-24
+Last source-build Build Date: 2019-09-09
 
-Last updated: 2019-08-26
+Last updated: 2019-09-10
 
 For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.powerbi.com/groups/dc6359c5-e96a-44ce-9d86-0af7fab1c15e/dashboards/73f852d5-4ca7-45d7-8e5c-977c2da3b11c/reports/64e989dd-8072-4d84-8268-140bde0cbc7d/ReportSection4ba78a029c61708d6808)
 
@@ -10,36 +10,36 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
 | [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 1 | 4 |
-| [AspNetCore-Tooling][1150] | John Luo | ![ot] On Track | - | 1 | New repo added on 7/12
-| [AspNetCore][1150] | John Luo | ![ot] On Track | - | 9 | New repo added on 8/21
+| [arcade][970] | Mark Wilke | ![ot] On Track | 2 | 3 |
+| [AspNetCore-Tooling][1150] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [AspNetCore][1150] | John Luo | ![ot] On Track | - | 1 | New repo added on 8/21
 | [cli][880] | Nick Guerrera | ![cp] Complete | 1 | - |  All direct-dependency prebuilts removed.
 | [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | Repo removed
 | [common][882] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [coreclr][883] | Jeff Schwartz | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
-| [corefx][884] | Eric St. John | ![ot] On Track | 2 | 2 |
+| [corefx][884] | Eric St. John | ![ot] On Track | 4 | 1 |
 | [core-sdk][972] | Nick Guerrera | ![bn] Bounced | 1 | 2 | One prebuilt added in Preview8
-| [core-setup][885] | Davis Goodin | ![ot] On Track | 2 | 2 |
+| [core-setup][885] | Davis Goodin | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
 | [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| [Extensions][1132] | John Luo | ![ot] On Track | - | 7 | New repo added on 6/28
-| [msbuild][888] | Nick Guerrera | ![ot] On Track | 1 | 6 |
+| [Extensions][1132] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [msbuild][888] | Nick Guerrera | ![ot] On Track | 2 | 3 |
 | [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 4 | 3 |
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 4 | 4 |
+| [NuGet.Client][890] | Rob Relyea | ![ot] On Track | 6 | 2 |
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![ot] On Track | 5 | 3 |
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
-| [sdk][893] | Nick Guerrera | ![ot] On Track | 1 | 1 |
-| [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 3 |
+| [sdk][893] | Nick Guerrera | ![ot] On Track | 2 | 1 |
+| [source-build-infra][975] | Dan Seefeldt | ![ot] On Track | - | 1 |
 | [standard][894] | Eric St. John | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [templating][895] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [Tools][974] | Dan Seefeldt | ![ot] On Track | - | 4 |
-| [toolset][973] | Nick Guerrera | ![ot] On Track | 1 | 4 |
+| [Tools][974] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [toolset][973] | Nick Guerrera | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | [tools-local tasks][971] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
 | [fsharp][886] | Brett Forsgren | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
-| [websdk][897] | Vijay Ramakrishnan | ![ot] On Track | 1 | 5 | Added 2 prebuilts in Preview 8.
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
+| [websdk][897] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 | xdt | John Luo | ![cp] Complete | - | - | No direct-dependency prebuilts.
-| [xliff-tasks][899] | Tom Meschter | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
+| [xliff-tasks][899] | Tom Meschter | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
 
 <br/>
 

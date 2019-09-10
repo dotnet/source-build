@@ -9,7 +9,7 @@
     <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNet3CliToolDir)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNetCliToolDir)</BuildCommandArgs>
 
     <!-- Consume the source-built Core-Setup. This line must be removed to source-build core-sdk without source-building Core-Setup first. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:CoreSetupBlobRootUrl=file:%2F%2F$(LocalBlobStorageRoot)</BuildCommandArgs>
