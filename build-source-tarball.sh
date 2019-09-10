@@ -181,6 +181,12 @@ cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBA
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Xliff*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $TARBALL_ROOT/prebuilt/source-built/
 cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*.nupkg $TARBALL_ROOT/prebuilt/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/PackageVersions.props $TARBALL_ROOT/prebuilt/source-built/
+
+# Setup package version props to include both source-built and running PackageVersions.props
+mkdir --parents $TARBALL_ROOT/bin/obj/x64/Release/
+cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/x64/Release/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'

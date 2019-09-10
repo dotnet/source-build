@@ -85,6 +85,8 @@
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
+    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' == 'true'">$(IntermediatePath)GennedPackageVersions.props</GennedPackageVersionPropsPath>
+    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' != 'true'">$(IntermediatePath)PackageVersions.props</GennedPackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
