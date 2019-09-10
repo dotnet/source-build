@@ -1,0 +1,70 @@
+From 8bcc714a79d7d70cf82fa4a56a6bbd65cc1c92fe Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Mon, 9 Sep 2019 20:50:41 +0000
+Subject: [PATCH 3/3] Do not build .NET Fx binaries in source build
+
+---
+ eng/Versions.props                                                     | 2 +-
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj             | 3 ++-
+ .../src/Microsoft.Extensions.DiagnosticAdapter.csproj                  | 3 ++-
+ .../Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj  | 3 ++-
+ 4 files changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index a7f92e3..da57762 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -28,7 +28,7 @@
+     <!-- Disable Arcade's Xliff tools -->
+     <UsingToolXliff>false</UsingToolXliff>
+     <!-- Using .NET framework assemblies from a package. -->
+-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
++    <UsingToolNetFrameworkReferenceAssemblies Condition="'$(DotNetBuildFromSource)' != 'true'">true</UsingToolNetFrameworkReferenceAssemblies>
+   </PropertyGroup>
+   <!--
+ 
+diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+index 583c760..8d05c52 100644
+--- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
++++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+@@ -2,7 +2,8 @@
+ 
+   <PropertyGroup>
+     <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
+-    <TargetFrameworks>netcoreapp3.0;net461;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net461</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>dependencyinjection;di</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
+index 6655152..34c2610 100644
+--- a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
++++ b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
+@@ -2,7 +2,8 @@
+ 
+   <PropertyGroup>
+     <Description>Microsoft extension adapter feature to extend DiagnosticListener. Contains extension methods that extend System.Diagnostics.DiagnosticListener, and enables duck-typing based event handling by using dynamically generated proxy types.</Description>
+-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net461</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>diagnosticadapter;diagnosticlistener;diagnostics</PackageTags>
+diff --git a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
+index d199db5..6a4c555 100644
+--- a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
++++ b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
+@@ -2,7 +2,8 @@
+ 
+   <PropertyGroup>
+     <Description>Windows Event Log logger provider implementation for Microsoft.Extensions.Logging.</Description>
+-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net461</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <PackageTags>$(PackageTags);eventlog;windowseventlog</PackageTags>
+     <IsPackable>true</IsPackable>
+-- 
+1.8.3.1
+
