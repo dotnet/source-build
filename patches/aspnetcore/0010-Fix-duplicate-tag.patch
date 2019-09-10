@@ -1,0 +1,24 @@
+From 2a0512141f4745a718a3f6a9f7c88daf113e6201 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 6 Sep 2019 15:56:49 -0500
+Subject: [PATCH 10/10] Fix duplicate tag
+
+---
+ eng/Workarounds.targets | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/eng/Workarounds.targets b/eng/Workarounds.targets
+index c3ee1b689a..1af28389ae 100644
+--- a/eng/Workarounds.targets
++++ b/eng/Workarounds.targets
+@@ -26,7 +26,6 @@
+   <Import Condition="'$(DotNetBuildFromSource)' == 'true'" Project="WorkaroundsImported.targets" />
+ 
+   <!-- Workaround for https://github.com/dotnet/arcade/issues/204 -->
+-  <ItemGroup>
+   <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <PackageReference Include="Internal.AspNetCore.BuildTasks" PrivateAssets="All" Version="$(InternalAspNetCoreBuildTasksPackageVersion)" IsImplicitlyDefined="true" />
+   </ItemGroup>
+-- 
+2.21.0
+
