@@ -3,10 +3,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:Rid=$(TargetRid)</BuildCommandArgs>
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">/p:CoreSetupRid=linux-x64</BuildCommandArgs>
+    <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
+    <BuildCommandArgs/>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:Rid=$(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:AspNetCoreSharedFxInstallerRid=linux-x64</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'Linux'">$(BuildCommandArgs) /p:OSName=$(OSNameOverride)</BuildCommandArgs>
     <!-- core-sdk always wants to build portable on OSX -->
-    <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">/p:CoreSetupRid=osx-x64</BuildCommandArgs>
+    <BuildCommandArgs Condition="'$(TargetOS)' == 'OSX'">$(BuildCommandArgs) /p:CoreSetupRid=osx-x64</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DOTNET_INSTALL_DIR=$(DotNetCliToolDir)</BuildCommandArgs>

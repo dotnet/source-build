@@ -1,0 +1,25 @@
+From 92e69728588a8a11116c54cf32fbc9291021fc17 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 6 Sep 2019 14:17:50 -0500
+Subject: [PATCH 2/2] Allow separate core-setup and ASP.NET RIDs
+
+---
+ src/redist/targets/GenerateLayout.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
+index 801b69ca0..2ce521253 100644
+--- a/src/redist/targets/GenerateLayout.targets
++++ b/src/redist/targets/GenerateLayout.targets
+@@ -48,7 +48,7 @@
+       <SharedFrameworkRid Condition=" '$(UsePortableLinuxSharedFramework)' == 'true' ">linux-$(Architecture)</SharedFrameworkRid>
+       <CombinedFrameworkHostCompressedFileName>dotnet-runtime-$(MicrosoftNETCoreAppPackageVersion)-$(SharedFrameworkRid)$(ArchiveExtension)</CombinedFrameworkHostCompressedFileName>
+ 
+-      <AspNetCoreSharedFxInstallerRid>$(SharedFrameworkRid)</AspNetCoreSharedFxInstallerRid>
++      <AspNetCoreSharedFxInstallerRid Condition="'$(AspNetCoreSharedFxInstallerRid)' == ''">$(SharedFrameworkRid)</AspNetCoreSharedFxInstallerRid>
+       <AspNetCoreSharedFxInstallerRid Condition="'$(SharedFrameworkRid)' == 'rhel.6-x64'">linux-x64</AspNetCoreSharedFxInstallerRid>
+       <AspNetCoreSharedFxArchiveRid>$(AspNetCoreSharedFxInstallerRid)</AspNetCoreSharedFxArchiveRid>
+       <AspNetCoreSharedFxInstallerRid Condition="'$(InstallerExtension)' == '.deb' OR '$(InstallerExtension)' == '.rpm'">x64</AspNetCoreSharedFxInstallerRid>
+-- 
+2.23.0
+
