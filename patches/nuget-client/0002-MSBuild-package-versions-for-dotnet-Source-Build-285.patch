@@ -1,0 +1,33 @@
+From 344c5a151b4625f987b7ef2c147dd573a9004b7d Mon Sep 17 00:00:00 2001
+From: Fernando Aguilar <feaguila@microsoft.com>
+Date: Thu, 23 May 2019 16:19:55 -0700
+Subject: [PATCH 2/4] MSBuild package versions for dotnet Source Build (#2857)
+
+Upgraded MSBuild package deps. to 16.x; added dotnet source-build Repo API
+---
+ build/config.props | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/build/config.props b/build/config.props
+index 2bfb1a9c6..ca7bf5331 100644
+--- a/build/config.props
++++ b/build/config.props
+@@ -46,6 +46,15 @@
+     <ToolsetTargetBranches Condition="'$(OverrideToolsetTargetBranches)' == ''">master</ToolsetTargetBranches>
+   </PropertyGroup>
+ 
++  <!-- Special project import for dotnet source build
++
++  The dotnet source-build Repo API overrides *PackageVersion properties with versions that were built before.
++  Those paackages are injected in this props file
++
++  See: https://github.com/dotnet/source-build/blob/master/Documentation/auto-dependency-flow/api.md#-pdotnetpackageversionpropspathpath
++  -->
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <!-- Dependency versions -->
+   <PropertyGroup>
+     <NewtonsoftJsonVersionCore Condition="$(NewtonsoftJsonPackageVersion) == ''">9.0.1</NewtonsoftJsonVersionCore>
+-- 
+2.18.0
+

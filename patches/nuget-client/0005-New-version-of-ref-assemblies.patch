@@ -1,22 +1,22 @@
-From f536563653d0e7caa1480b099286c9b40c1dd05e Mon Sep 17 00:00:00 2001
+From 479e1c9435a8dc06b6239786c8f6a59ab2a372dd Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Sun, 10 Feb 2019 10:44:47 -0600
-Subject: [PATCH] Update Reference Assemblies package to get net472 versions.
+Date: Wed, 28 Aug 2019 21:34:26 -0500
+Subject: [PATCH 5/5] New version of ref assemblies
 
 ---
  build/common.props | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/build/common.props b/build/common.props
-index 4a7c8866b..03db11f01 100644
+index fc89b77fe..579b266cf 100644
 --- a/build/common.props
 +++ b/build/common.props
-@@ -9,7 +9,7 @@
-   </ItemGroup>
+@@ -6,7 +6,7 @@
+ 
    <!-- When building on non-Windows machines, we need the reference assemblies to build full-framework assemblies. -->
    <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' AND '$(DotNetBuildFromSource)' == 'true'">
--     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-003" PrivateAssets="All" />
-+     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-5" PrivateAssets="All" />
+-     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-5" PrivateAssets="All" />
++     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.1" PrivateAssets="All" />
    </ItemGroup>
    <PropertyGroup Condition="'$(IsNetCoreProject)' == 'true' AND '$(Shipping)' == 'true' AND '$(IsXPlat)' != 'true'">
      <DebugType>full</DebugType>

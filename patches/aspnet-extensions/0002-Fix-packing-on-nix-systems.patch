@@ -1,0 +1,64 @@
+From ca00cfe47896b9a6e8275e03e0ea3081d0a80b8a Mon Sep 17 00:00:00 2001
+From: = <johluo@microsoft.com>
+Date: Thu, 12 Sep 2019 21:32:44 -0700
+Subject: [PATCH 2/2] Fix packing on *nix systems
+
+- Without this fix, the nupkg will be missing files if packed on *nix systems
+---
+ .../src/Microsoft.Extensions.FileProviders.Embedded.csproj  | 4 +---
+ ...oft.Extensions.FileProviders.Embedded.multitarget.nuspec | 6 +++---
+ ...t.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec | 6 +++---
+ 3 files changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+index d36323e3b..25f69f2a8 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+@@ -27,9 +27,7 @@
+ 
+   <ItemGroup>
+     <NuspecProperty Include="AssemblyName=$(AssemblyName)" />
+-    <NuspecProperty Include="OutputBinary=$(OutputPath)**\$(AssemblyName).dll" />
+-    <NuspecProperty Include="OutputSymbol=$(OutputPath)**\$(AssemblyName).pdb" />
+-    <NuspecProperty Include="OutputDocumentation=$(OutputPath)**\$(AssemblyName).xml" />
++    <NuspecProperty Include="OutputPath=$(OutputPath)" />
+     <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.dll"/>
+     <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
+   </ItemGroup>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+index 874c90c79..59b943ba6 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+@@ -13,9 +13,9 @@
+   </metadata>
+ 
+   <files>
+-    <file src="$OutputBinary$" target="lib\" />
+-    <file src="$OutputSymbol$" target="lib\" />
+-    <file src="$OutputDocumentation$" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.dll" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.pdb" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.xml" target="lib\" />
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
+index f98f0b4ad..b58385b06 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
+@@ -10,9 +10,9 @@
+   </metadata>
+ 
+   <files>
+-    <file src="$OutputBinary$" target="lib\" />
+-    <file src="$OutputSymbol$" target="lib\" />
+-    <file src="$OutputDocumentation$" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.dll" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.pdb" target="lib\" />
++    <file src="$OutputPath$**\$AssemblyName$.xml" target="lib\" />
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-- 
+2.17.1
+

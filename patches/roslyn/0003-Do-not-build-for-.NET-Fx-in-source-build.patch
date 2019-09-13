@@ -1,0 +1,26 @@
+From 01f896c6720361c6bc63aa8bf4d834c5cd23add3 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Wed, 11 Sep 2019 20:11:46 +0000
+Subject: [PATCH 3/3] Do not build for .NET Fx in source build
+
+---
+ eng/targets/Settings.props | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index 584c19fb3a..1f0629ac6c 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -18,7 +18,8 @@
+     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+     <ToolsetPackagesDir>$(RepoRoot)build\ToolsetPackages\</ToolsetPackagesDir>
+ 
+-    <RoslynPortableTargetFrameworks>net472;netcoreapp2.1</RoslynPortableTargetFrameworks>
++    <RoslynPortableTargetFrameworks>netcoreapp2.1</RoslynPortableTargetFrameworks>
++    <RoslynPortableTargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(RoslynPortableTargetFrameworks);net472</RoslynPortableTargetFrameworks>
+     <RoslynEnforceCodeStyle Condition="'$(ContinuousIntegrationBuild)' != 'true'">true</RoslynEnforceCodeStyle>
+     <UseSharedCompilation>true</UseSharedCompilation>
+ 
+-- 
+2.17.1
+
