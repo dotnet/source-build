@@ -1,0 +1,40 @@
+From 33b354a3845af6a4d54220fd2bce6691c6572bf4 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Tue, 10 Sep 2019 18:50:59 +0000
+Subject: [PATCH 6/6] Do not build .NET Fx binaries in source build
+
+---
+ eng/Versions.props                                                     | 2 +-
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj             | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index a7f92e3..da57762 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -28,7 +28,7 @@
+     <!-- Disable Arcade's Xliff tools -->
+     <UsingToolXliff>false</UsingToolXliff>
+     <!-- Using .NET framework assemblies from a package. -->
+-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
++    <UsingToolNetFrameworkReferenceAssemblies Condition="'$(DotNetBuildFromSource)' != 'true'">true</UsingToolNetFrameworkReferenceAssemblies>
+   </PropertyGroup>
+   <!--
+ 
+diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+index 583c760..8d05c52 100644
+--- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
++++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+@@ -2,7 +2,8 @@
+ 
+   <PropertyGroup>
+     <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
+-    <TargetFrameworks>netcoreapp3.0;net461;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net461</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>dependencyinjection;di</PackageTags>
+     <IsPackable>true</IsPackable>
+-- 
+1.8.3.1
+
