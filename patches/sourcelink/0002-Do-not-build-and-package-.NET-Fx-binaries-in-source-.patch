@@ -1,0 +1,334 @@
+From 08b65200cb7618ed21893bcec2a692f56098b76b Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Fri, 30 Aug 2019 12:56:21 -0700
+Subject: [PATCH 2/2] Do not build and package .NET Fx binaries in source build
+
+---
+ eng/Versions.props                                       |  2 +-
+ .../Microsoft.Build.Tasks.Git.csproj                     |  1 +
+ ...Microsoft.SourceLink.Bitbucket.Git.SourceBuild.nuspec | 16 ++++++++++++++++
+ .../Microsoft.SourceLink.Bitbucket.Git.csproj            |  2 ++
+ .../Microsoft.SourceLink.Common.SourceBuild.nuspec       | 12 ++++++++++++
+ src/SourceLink.Common/Microsoft.SourceLink.Common.csproj |  2 ++
+ .../Microsoft.SourceLink.GitHub.SourceBuild.nuspec       | 16 ++++++++++++++++
+ src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj |  2 ++
+ .../Microsoft.SourceLink.GitLab.SourceBuild.nuspec       | 16 ++++++++++++++++
+ src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj |  2 ++
+ .../Microsoft.SourceLink.Tfs.Git.SourceBuild.nuspec      | 16 ++++++++++++++++
+ .../Microsoft.SourceLink.Tfs.Git.csproj                  |  2 ++
+ .../Microsoft.SourceLink.Vsts.Git.SourceBuild.nuspec     | 16 ++++++++++++++++
+ .../Microsoft.SourceLink.Vsts.Git.csproj                 |  2 ++
+ .../Microsoft.SourceLink.Vsts.Tfvc.SourceBuild.nuspec    | 15 +++++++++++++++
+ .../Microsoft.SourceLink.Vsts.Tfvc.csproj                |  2 ++
+ 16 files changed, 123 insertions(+), 1 deletion(-)
+ create mode 100644 src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.Common/Microsoft.SourceLink.Common.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.SourceBuild.nuspec
+ create mode 100644 src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.SourceBuild.nuspec
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 45f1988..1cb4e39 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -6,7 +6,7 @@
+     <PreReleaseVersionLabel>beta2</PreReleaseVersionLabel>
+     <SemanticVersioningV1>true</SemanticVersioningV1>
+     <!-- Opt-in repo features -->
+-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
++    <UsingToolNetFrameworkReferenceAssemblies Condition="'$(DotNetBuildFromSource)' != 'true'">true</UsingToolNetFrameworkReferenceAssemblies>
+     <!-- TODO: enable when we switch to snupkgs
+     <UsingToolSymbolUploader>true</UsingToolSymbolUploader> -->
+     <XUnitVersion>2.4.1</XUnitVersion>
+diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
+index 5e60db7..74ba5b9 100644
+--- a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
++++ b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
+@@ -1,6 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+     
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.SourceBuild.nuspec b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.SourceBuild.nuspec
+new file mode 100644
+index 0000000..f1193bd
+--- /dev/null
++++ b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.SourceBuild.nuspec
+@@ -0,0 +1,16 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Git" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj
+index 7abd791..2811842 100644
+--- a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj
++++ b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>Generates source link for Bitbucket repositories.</PackageDescription>
+diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.SourceBuild.nuspec b/src/SourceLink.Common/Microsoft.SourceLink.Common.SourceBuild.nuspec
+new file mode 100644
+index 0000000..83283a6
+--- /dev/null
++++ b/src/SourceLink.Common/Microsoft.SourceLink.Common.SourceBuild.nuspec
+@@ -0,0 +1,12 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.Common.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
+index 7d8a979..7570c54 100644
+--- a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
++++ b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>MSBuild tasks providing source control information.</PackageDescription>
+diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.SourceBuild.nuspec b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.SourceBuild.nuspec
+new file mode 100644
+index 0000000..f1193bd
+--- /dev/null
++++ b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.SourceBuild.nuspec
+@@ -0,0 +1,16 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Git" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
+index 7e4bf97..587d82f 100644
+--- a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
++++ b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>Generates source link for GitHub repositories.</PackageDescription>
+diff --git a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.SourceBuild.nuspec b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.SourceBuild.nuspec
+new file mode 100644
+index 0000000..f1193bd
+--- /dev/null
++++ b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.SourceBuild.nuspec
+@@ -0,0 +1,16 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Git" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
+index 39fd6d1..7c867f6 100644
+--- a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
++++ b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>Generates source link for GitLab repositories.</PackageDescription>
+diff --git a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.SourceBuild.nuspec b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.SourceBuild.nuspec
+new file mode 100644
+index 0000000..f1193bd
+--- /dev/null
++++ b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.SourceBuild.nuspec
+@@ -0,0 +1,16 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Git" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
+index eb6d85a..c0b7a75 100644
+--- a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
++++ b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>Generates source link for VSTS Git repositories.</PackageDescription>
+diff --git a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.SourceBuild.nuspec b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.SourceBuild.nuspec
+new file mode 100644
+index 0000000..f1193bd
+--- /dev/null
++++ b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.SourceBuild.nuspec
+@@ -0,0 +1,16 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Git" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++    <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
++  </files>
++</package>
+diff --git a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
+index 65bfb3b..9277d9c 100644
+--- a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
++++ b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+ 
+     <PackageDescription>Generates source link for VSTS Git repositories.</PackageDescription>
+diff --git a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.SourceBuild.nuspec b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.SourceBuild.nuspec
+new file mode 100644
+index 0000000..d1f6b93
+--- /dev/null
++++ b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.SourceBuild.nuspec
+@@ -0,0 +1,15 @@
++<?xml version="1.0"?>
++<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
++  <metadata>
++    $CommonMetadataElements$
++    <dependencies>
++      <dependency id="Microsoft.SourceLink.Common" version="$Version$" />
++      <dependency id="Microsoft.Build.Tasks.Tfvc" version="$Version$" />
++    </dependencies>
++  </metadata>
++  <files>
++    <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
++
++    <file src="$ProjectDirectory$\build\*.*" target="build" />
++  </files>
++</package>
+diff --git a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
+index df36573..8ea5aed 100644
+--- a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
++++ b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
+@@ -1,11 +1,13 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+     <IsPackable>true</IsPackable>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
++    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).SourceBuild.nuspec</NuspecFile>
+     <NuspecBasePath>$(OutputPath)</NuspecBasePath>
+     
+     <PackageDescription>Generates source link for VSTS TFVC repositories.</PackageDescription>
+-- 
+2.7.4
+
