@@ -1,0 +1,25 @@
+From 904ac5590420e6e1f40bcdc95e119c4f25722f2d Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 16 Sep 2019 22:21:31 +0000
+Subject: [PATCH 3/3] Typo:Temporary patch
+
+---
+ external/netstandard/netstandard.depproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/external/netstandard/netstandard.depproj b/external/netstandard/netstandard.depproj
+index 5c55d91..309e052 100644
+--- a/external/netstandard/netstandard.depproj
++++ b/external/netstandard/netstandard.depproj
+@@ -89,7 +89,7 @@
+       <ExcludeNetStandard21Refs Include="System.Reflection.Emit.Lightweight" />
+       <_NetStandard21Files 
+         Include="$(_NETStandard21RefFolder)\*.dll"
+-        Exclude="@(ExcludeNetStandardRefs -> '$(_NETStandard21RefFolder)\%(Identity).dll')"  />
++        Exclude="@(ExcludeNetStandard21Refs -> '$(_NETStandard21RefFolder)\%(Identity).dll')"  />
+     </ItemGroup>
+ 
+     <Error Condition="'@(_NetStandard21Files)' == ''" Text="Could not find package assets for netstandard2.1" />
+-- 
+1.8.3.1
+
