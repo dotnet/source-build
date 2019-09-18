@@ -208,12 +208,13 @@ jobs:
   # Copy source-built artifacts tarball to drop directory.
   - script: |
       set -x
-      $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
+      $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c "
+        mkdir -p /drop/tarball/
         cd \"$(tarballName)\"
         find . \( \
           -iname 'source-built-artifacts*.tar.gz' \) \
           -exec cp {} /drop/tarball/ \;"
-    displayName: Copy tarball logs
+    displayName: Copy source-built artifacts tarball
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 

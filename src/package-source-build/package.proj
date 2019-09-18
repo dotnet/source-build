@@ -3,13 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
-  <PropertyGroup>
-    <RepoApiImplemented>false</RepoApiImplemented>
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <ProjectDirectory>$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
-    <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
-  </PropertyGroup>
-
   <Target Name="Pack">
     <!-- Copy PVP to packages dir in order to package them together -->
     <Copy SourceFiles="$(PackageVersionPropsPath)" DestinationFolder="$(SourceBuiltPackagesPath)" />
