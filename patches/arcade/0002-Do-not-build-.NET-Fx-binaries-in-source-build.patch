@@ -1,4 +1,4 @@
-From f1925f37610f71f2bf520cc8c04c1390de33bdb2 Mon Sep 17 00:00:00 2001
+From cf4e2e1767301ca7e88edbd361e0556d0f282069 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Fri, 6 Sep 2019 18:18:33 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build.
@@ -10,7 +10,9 @@ Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build.
  .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj          | 1 +
  .../Microsoft.DotNet.CoreFxTesting.csproj                      | 1 +
  .../Microsoft.DotNet.Deployment.Tasks.Links.csproj             | 1 +
- 6 files changed, 7 insertions(+), 2 deletions(-)
+ .../Microsoft.DotNet.GenFacades.csproj                         | 3 ++-
+ src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj | 1 +
+ 8 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index bf38e650..2c945967 100644
@@ -92,6 +94,37 @@ index 5adb4419..3bec2150 100644
  
      <IsPackable>true</IsPackable>
      <Description>Aka.ms link manager</Description>
+diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+index 8936c1f1..6678ac40 100644
+--- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
++++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+@@ -2,6 +2,7 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+     <PackageType>MSBuildSdk</PackageType>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+@@ -58,4 +59,4 @@
+ 
+   <Import Project="$(RepoRoot)eng\BuildTask.targets" />
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj b/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
+index a201af86..e84959e2 100644
+--- a/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
++++ b/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <LangVersion>Latest</LangVersion>
+     <IsPackable>true</IsPackable>
 -- 
 2.18.0
 
