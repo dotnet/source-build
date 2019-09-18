@@ -1,21 +1,19 @@
-From 2f4170e475fc334aeb0fb5e5b612245a05d36dfd Mon Sep 17 00:00:00 2001
+From f1925f37610f71f2bf520cc8c04c1390de33bdb2 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Fri, 6 Sep 2019 18:18:33 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build.
 
 ---
- eng/Versions.props                                                     | 2 +-
- src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj     | 1 +
- .../src/Microsoft.DotNet.Build.Tasks.Configuration.csproj              | 3 ++-
- .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj                  | 1 +
- .../Microsoft.DotNet.CoreFxTesting.csproj                              | 1 +
- .../Microsoft.DotNet.Deployment.Tasks.Links.csproj                     | 1 +
- src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj     | 3 ++-
- src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj         | 1 +
- 8 files changed, 10 insertions(+), 3 deletions(-)
+ eng/Versions.props                                             | 2 +-
+ .../Microsoft.DotNet.Arcade.Sdk.csproj                         | 1 +
+ .../src/Microsoft.DotNet.Build.Tasks.Configuration.csproj      | 3 ++-
+ .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj          | 1 +
+ .../Microsoft.DotNet.CoreFxTesting.csproj                      | 1 +
+ .../Microsoft.DotNet.Deployment.Tasks.Links.csproj             | 1 +
+ 6 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 249e6d2..bf7a2ed 100644
+index bf38e650..2c945967 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -6,7 +6,7 @@
@@ -28,7 +26,7 @@ index 249e6d2..bf7a2ed 100644
      <CommandLineParserVersion>2.2.1</CommandLineParserVersion>
      <CredentialManagementVersion>1.0.2</CredentialManagementVersion>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
-index aaaf4da..f16405e 100644
+index aaaf4dac..f16405e7 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 @@ -2,6 +2,7 @@
@@ -40,7 +38,7 @@ index aaaf4da..f16405e 100644
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
      <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Configuration/src/Microsoft.DotNet.Build.Tasks.Configuration.csproj b/src/Microsoft.DotNet.Build.Tasks.Configuration/src/Microsoft.DotNet.Build.Tasks.Configuration.csproj
-index 1ee3064..ce6a5e5 100644
+index 1ee3064c..ce6a5e5e 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Configuration/src/Microsoft.DotNet.Build.Tasks.Configuration.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Configuration/src/Microsoft.DotNet.Build.Tasks.Configuration.csproj
 @@ -2,6 +2,7 @@
@@ -59,7 +57,7 @@ index 1ee3064..ce6a5e5 100644
 \ No newline at end of file
 +</Project>
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
-index 5dfd052..2f771f9 100644
+index 678ba714..955d343b 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
 @@ -2,6 +2,7 @@
@@ -71,7 +69,7 @@ index 5dfd052..2f771f9 100644
      <PackageType>MSBuildSdk</PackageType>
      <IncludeBuildOutput>false</IncludeBuildOutput>
 diff --git a/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj b/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
-index 8bd6963..694e338 100644
+index 78d8c94c..33e90e49 100644
 --- a/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
 +++ b/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
 @@ -2,6 +2,7 @@
@@ -81,50 +79,19 @@ index 8bd6963..694e338 100644
 +    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
      <Description>This package provides support for running tests inside CoreFx.</Description>
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-   </PropertyGroup>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
 diff --git a/src/Microsoft.DotNet.Deployment.Tasks.Links/Microsoft.DotNet.Deployment.Tasks.Links.csproj b/src/Microsoft.DotNet.Deployment.Tasks.Links/Microsoft.DotNet.Deployment.Tasks.Links.csproj
-index ed385c1..7314a27 100644
+index 5adb4419..3bec2150 100644
 --- a/src/Microsoft.DotNet.Deployment.Tasks.Links/Microsoft.DotNet.Deployment.Tasks.Links.csproj
 +++ b/src/Microsoft.DotNet.Deployment.Tasks.Links/Microsoft.DotNet.Deployment.Tasks.Links.csproj
 @@ -3,6 +3,7 @@
  
    <PropertyGroup>
      <TargetFrameworks>netcoreapp2.0;net472</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
  
      <IsPackable>true</IsPackable>
      <Description>Aka.ms link manager</Description>
-diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
-index 196bc8d..04f3e5b 100644
---- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
-+++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
-@@ -2,6 +2,7 @@
- 
-   <PropertyGroup>
-     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
-     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
-     <PackageType>MSBuildSdk</PackageType>
-     <IncludeBuildOutput>false</IncludeBuildOutput>
-@@ -49,4 +50,4 @@
- 
-   <Import Project="$(RepoRoot)eng\BuildTask.targets" />
- 
--</Project>
-\ No newline at end of file
-+</Project>
-diff --git a/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj b/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
-index a201af8..e84959e 100644
---- a/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
-+++ b/src/Microsoft.DotNet.SignTool/Microsoft.DotNet.SignTool.csproj
-@@ -2,6 +2,7 @@
- <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-     <TargetFrameworks>net472;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
-     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-     <LangVersion>Latest</LangVersion>
-     <IsPackable>true</IsPackable>
 -- 
-1.8.3.1
+2.18.0
 
