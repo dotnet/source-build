@@ -7,7 +7,7 @@
     <!-- Copy PVP to packages dir in order to package them together -->
     <Copy SourceFiles="$(PackageVersionPropsPath)" DestinationFolder="$(SourceBuiltPackagesPath)" />
     <PropertyGroup>
-        <SourceBuiltTarballName>$(OutputPath)source-built-artifacts-$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
+        <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
     </PropertyGroup>
 
     <Exec Command="tar --numeric-owner -czf $(SourceBuiltTarballName) *.nupkg *.props" WorkingDirectory="$(SourceBuiltPackagesPath)" />
