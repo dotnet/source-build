@@ -156,8 +156,7 @@ cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/
 
 # Copy tarballs to ./packages/archive directory
 mkdir -p $TARBALL_ROOT/packages/archive
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/tarball/*.tar.gz $TARBALL_ROOT/packages/archive/
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/source-built-artifacts/*.tar.gz $TARBALL_ROOT/packages/archive/
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
 
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc

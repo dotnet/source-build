@@ -116,20 +116,19 @@
     <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
     <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
-    <SourceBuiltArtifactsTarballDir>$(IntermediatePath)source-built-artifacts/</SourceBuiltArtifactsTarballDir>
+    <ExternalTarballsDir>$(IntermediatePath)external-tarballs/</ExternalTarballsDir>
     <!--
-      Change ReferencePackagesBaseDir & SourceBuiltArtifactsTarballDir conditionally in offline build.
-      See corresponding change in build-source-tarball.sh to copy reference-packages & source-built-artifacts
+      Change ReferencePackagesBaseDir & ExternalTarballsDir conditionally in offline build.
+      See corresponding change in build-source-tarball.sh to copy reference-packages & external-tarballs
       from source-build bin dir to tarball packages/reference dir & packages/archive.
     -->
-    <SourceBuiltArtifactsTarballDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</SourceBuiltArtifactsTarballDir>
-    <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
-    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
+    <ExternalTarballsDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</ExternalTarballsDir>
     <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
     <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
-    <ReferencePackagesTarballDir>$(ProjectDir)packages/archive/</ReferencePackagesTarballDir>
+    <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
+    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>
     <ReferencePackagesTarballUrl>https://dotnetcli.blob.core.windows.net/source-build-reference-packages/assets/</ReferencePackagesTarballUrl>
     <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>

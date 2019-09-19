@@ -40,11 +40,11 @@
           BeforeTargets="Build"
           Condition="'$(OfflineBuild)' == 'true'">
     <MakeDir Directories="$(ReferencePackagesDir)" />
-    <Exec Command="tar -xzf $(ReferencePackagesTarballDir)$(ReferencePackagesTarballName).*.tar.gz"
+    <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
           WorkingDirectory="$(ReferencePackagesDir)" />
 
     <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" />
-    <Exec Command="tar -xzf $(SourceBuiltArtifactsTarballDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
+    <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
           WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)" />
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />

@@ -219,7 +219,7 @@
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
     <DownloadFile 
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
-          DestinationFolder="$(ReferencePackagesTarballDir)" />
+          DestinationFolder="$(ExternalTarballsDir)" />
   </Target>
 
   <Target Name="DownloadSourceBuiltArtifacts"
@@ -227,7 +227,7 @@
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
     <DownloadFile 
           SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
-          DestinationFolder="$(SourceBuiltArtifactsTarballDir)" />
+          DestinationFolder="$(ExternalTarballsDir)" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
