@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Pack" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+
+  <Target Name="Pack">
+    <!-- Copy PVP to packages dir in order to package them together -->
+    <Copy SourceFiles="$(PackageVersionPropsPath)" DestinationFolder="$(SourceBuiltPackagesPath)" />
+    <PropertyGroup>
+        <SourceBuiltTarballName>$(OutputPath)source-built-artifacts-$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
+    </PropertyGroup>
+
+    <Exec Command="tar --numeric-owner -czf $(SourceBuiltTarballName) *.nupkg *.props" WorkingDirectory="$(SourceBuiltPackagesPath)" />
+
+    <Message Importance="High" Text="Packaged source-built artifacts to $(SourceBuiltTarballName)" />
+  </Target>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>
