@@ -1,6 +1,6 @@
-From 4bc36ffcdd6ea3434c39a7e7aede43d16f38c6a8 Mon Sep 17 00:00:00 2001
+From 4bf4f5c1812eda9ff009449b524e9f3069574ac3 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
-Date: Wed, 4 Sep 2019 15:49:31 +0000
+Date: Thu, 19 Sep 2019 15:39:49 +0000
 Subject: [PATCH] Import PackageVersions props if exists
 
 ---
@@ -8,11 +8,11 @@ Subject: [PATCH] Import PackageVersions props if exists
  1 file changed, 1 insertion(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 318c913..d63c38e 100644
+index aed48a0..412101a 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -333,4 +333,5 @@
-       https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json;
+@@ -343,4 +343,5 @@
+       https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json;
      </RestoreSources>
    </PropertyGroup>
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
