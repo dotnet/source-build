@@ -220,9 +220,14 @@
     <DownloadFile 
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
           DestinationFolder="$(ReferencePackagesTarballDir)" />
-    <MakeDir Directories="$(ReferencePackagesDir)" />
-    <Exec Command="tar -xzf $(ReferencePackagesTarballDir)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
-          WorkingDirectory="$(ReferencePackagesDir)" />
+  </Target>
+
+  <Target Name="DownloadSourceBuiltArtifacts"
+          AfterTargets="Build"
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+    <DownloadFile 
+          SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
+          DestinationFolder="$(SourceBuiltArtifactsTarballDir)" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->

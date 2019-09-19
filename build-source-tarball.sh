@@ -143,17 +143,21 @@ cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
-mkdir -p $TARBALL_ROOT/prebuilt/nuget-packages
-mkdir -p $TARBALL_ROOT/prebuilt/source-built
-find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/prebuilt/nuget-packages/ \;
+mkdir -p $TARBALL_ROOT/packages/prebuilt
+mkdir -p $TARBALL_ROOT/packages/source-built
+find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
+find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
-mkdir -p $TARBALL_ROOT/reference-packages
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages $TARBALL_ROOT/reference-packages/packages
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/reference-packages/source
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/reference-packages/staging
+mkdir -p $TARBALL_ROOT/packages/reference
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
+
+# Copy tarballs to ./packages/archive directory
+mkdir -p $TARBALL_ROOT/packages/archive
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/tarball/*.tar.gz $TARBALL_ROOT/packages/archive/
+cp -r $SCRIPT_ROOT/bin/obj/x64/Release/source-built-artifacts/*.tar.gz $TARBALL_ROOT/packages/archive/
 
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
@@ -166,8 +170,8 @@ echo 'Removing source-built packages from tarball prebuilts...'
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $built_package)
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
     fi
     if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
@@ -175,14 +179,8 @@ do
 done
 
 echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Microsoft.Build.Tasks.Git*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Xliff*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Newtonsoft.Json*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*.nupkg $TARBALL_ROOT/prebuilt/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/PackageVersions.props $TARBALL_ROOT/prebuilt/source-built/
+mkdir -p $TARBALL_ROOT/packages/source-built
+cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/packages/source-built/
 
 # Setup package version props to include both source-built and running PackageVersions.props
 mkdir --parents $TARBALL_ROOT/bin/obj/x64/Release/
@@ -198,8 +196,17 @@ echo 'Removing reference-only packages from tarball prebuilts...'
 
 for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/nuget-packages/$(basename $ref_package)
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
+    fi
+done
+
+echo 'Removing reference-packages from tarball prebuilts...'
+
+for ref_package in $(tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]')
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
     fi
 done
 

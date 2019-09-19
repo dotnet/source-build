@@ -76,8 +76,8 @@
     <SourceBuiltBlobFeedDir>$(IntermediatePath)blob-feed/</SourceBuiltBlobFeedDir>
     <SourceBuiltPackagesPath>$(SourceBuiltBlobFeedDir)packages/</SourceBuiltPackagesPath>
     <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
-    <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
-    <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)prebuilt/source-built/</PrebuiltSourceBuiltPackagesPath>
+    <PrebuiltPackagesPath>$(ProjectDir)packages/prebuilt/</PrebuiltPackagesPath>
+    <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)packages/source-built/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
     <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Toolset/</SourceBuiltToolsetDir>
     <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
@@ -116,16 +116,20 @@
     <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
     <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
+    <SourceBuiltArtifactsTarballDir>$(IntermediatePath)source-built-artifacts/</SourceBuiltArtifactsTarballDir>
     <!--
-      Change ReferencePackagesBaseDir conditionally in offline build.
-      See corresponding change in build-source-tarball.sh to copy reference-packages
-      from source-build bin dir to tarball reference-packages dir.
+      Change ReferencePackagesBaseDir & SourceBuiltArtifactsTarballDir conditionally in offline build.
+      See corresponding change in build-source-tarball.sh to copy reference-packages & source-built-artifacts
+      from source-build bin dir to tarball packages/reference dir & packages/archive.
     -->
-    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)reference-packages/</ReferencePackagesBaseDir>
+    <SourceBuiltArtifactsTarballDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</SourceBuiltArtifactsTarballDir>
+    <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
+    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
+    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
     <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
-    <ReferencePackagesTarballDir>$(ReferencePackagesBaseDir)tarball/</ReferencePackagesTarballDir>
+    <ReferencePackagesTarballDir>$(ProjectDir)packages/archive/</ReferencePackagesTarballDir>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>
     <ReferencePackagesTarballUrl>https://dotnetcli.blob.core.windows.net/source-build-reference-packages/assets/</ReferencePackagesTarballUrl>
     <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>
