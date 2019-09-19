@@ -1,4 +1,4 @@
-From e017c731bb17682c88ce7344da5d2e3226a4ec0b Mon Sep 17 00:00:00 2001
+From 6d1c3014f23ee830fafdb4c34d394f64a0752c6c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 17 Jul 2019 17:20:48 -0500
 Subject: [PATCH 2/5] Import PackageVersions.props.
@@ -8,12 +8,12 @@ Subject: [PATCH 2/5] Import PackageVersions.props.
  1 file changed, 3 insertions(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 9508549dc3..58290f50bd 100644
+index 023598352f..243234628a 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -253,6 +253,9 @@
+@@ -264,6 +264,9 @@
      <XunitExtensibilityExecutionPackageVersion>$(XunitVersion)</XunitExtensibilityExecutionPackageVersion>
-     <MicrosoftDataSqlClientPackageVersion>1.0.19239.1</MicrosoftDataSqlClientPackageVersion>
+     <MicrosoftDataSqlClientPackageVersion>1.0.19249.1</MicrosoftDataSqlClientPackageVersion>
    </PropertyGroup>
 +
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
