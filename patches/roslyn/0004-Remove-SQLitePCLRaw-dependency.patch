@@ -1,0 +1,67 @@
+From f99e692da359ebac6215d7ab9ba7a904016a0d37 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 19 Sep 2019 16:42:55 -0500
+Subject: [PATCH 4/4] Remove SQLitePCLRaw dependency.
+
+---
+ .../Microsoft.CodeAnalysis.Workspaces.csproj  |  1 -
+ .../SQLite/SQLitePersistentStorageService.cs  | 31 +------------------
+ 2 files changed, 1 insertion(+), 31 deletions(-)
+
+diff --git a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+index c467c0c8df..c994833587 100644
+--- a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
++++ b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+@@ -24,7 +24,6 @@
+     <ProjectReference Include="..\..\..\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="$(SQLitePCLRawbundle_greenVersion)" PrivateAssets="all" />
+     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
+   </ItemGroup>
+   <ItemGroup Label="Linked Files">
+diff --git a/src/Workspaces/Core/Portable/Storage/SQLite/SQLitePersistentStorageService.cs b/src/Workspaces/Core/Portable/Storage/SQLite/SQLitePersistentStorageService.cs
+index ca7d67bfd7..929b216e03 100644
+--- a/src/Workspaces/Core/Portable/Storage/SQLite/SQLitePersistentStorageService.cs
++++ b/src/Workspaces/Core/Portable/Storage/SQLite/SQLitePersistentStorageService.cs
+@@ -29,36 +29,7 @@ internal partial class SQLitePersistentStorageService : AbstractPersistentStorag
+ 
+         private static bool TryInitializeLibrariesLazy()
+         {
+-            // Attempt to load the correct version of e_sqlite.dll.  That way when we call
+-            // into SQLitePCL.Batteries_V2.Init it will be able to find it.
+-            //
+-            // Only do this on Windows when we can safely do the LoadLibrary call to this
+-            // direct dll.  On other platforms, it is the responsibility of the host to ensure
+-            // that the necessary sqlite library has already been loaded such that SQLitePCL.Batteries_V2
+-            // will be able to call into it.
+-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+-            {
+-                var myFolder = Path.GetDirectoryName(
+-                    typeof(SQLitePersistentStorage).Assembly.Location);
+-
+-                var is64 = IntPtr.Size == 8;
+-                var subfolder = is64 ? "x64" : "x86";
+-
+-                LoadLibrary(Path.Combine(myFolder, subfolder, "e_sqlite3.dll"));
+-            }
+-
+-            try
+-            {
+-                // Necessary to initialize SQLitePCL.
+-                SQLitePCL.Batteries_V2.Init();
+-            }
+-            catch (Exception e) when (e is DllNotFoundException || e is EntryPointNotFoundException)
+-            {
+-                StorageDatabaseLogger.LogException(e);
+-                return false;
+-            }
+-
+-            return true;
++            return false;
+         }
+ 
+         public SQLitePersistentStorageService(
+-- 
+2.17.1
+
