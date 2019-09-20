@@ -1,10 +1,11 @@
-From 1bf61b712c981ff8f068d19afc18e0870d0694fe Mon Sep 17 00:00:00 2001
+From 7b21a3588eb585e7435f5656fc25929b4a3a5e0d Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 19 Sep 2019 16:42:55 -0500
 Subject: [PATCH 4/4] Remove SQLitePCLRaw dependency.
 
 ---
  .../Microsoft.CodeAnalysis.Workspaces.csproj  |   1 -
+ .../PersistenceStorageServiceFactory.cs       |  15 -
  .../Storage/SQLite/Interop/OpenFlags.cs       |  31 --
  .../SQLite/Interop/ResettableSqlStatement.cs  |  36 ---
  .../Portable/Storage/SQLite/Interop/Result.cs |  45 ---
@@ -24,7 +25,7 @@ Subject: [PATCH 4/4] Remove SQLitePCLRaw dependency.
  ...PersistentStorage_SolutionSerialization.cs |  48 ---
  .../SQLitePersistentStorage_StringIds.cs      | 179 -----------
  .../SQLitePersistentStorage_WriteBatching.cs  | 245 --------------
- 20 files changed, 2428 deletions(-)
+ 21 files changed, 2443 deletions(-)
  delete mode 100644 src/Workspaces/Core/Portable/Storage/SQLite/Interop/OpenFlags.cs
  delete mode 100644 src/Workspaces/Core/Portable/Storage/SQLite/Interop/ResettableSqlStatement.cs
  delete mode 100644 src/Workspaces/Core/Portable/Storage/SQLite/Interop/Result.cs
@@ -57,6 +58,39 @@ index c467c0c8df..c994833587 100644
      <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
    </ItemGroup>
    <ItemGroup Label="Linked Files">
+diff --git a/src/Workspaces/Core/Portable/Storage/PersistenceStorageServiceFactory.cs b/src/Workspaces/Core/Portable/Storage/PersistenceStorageServiceFactory.cs
+index b92569a1a5..abd90ec69a 100644
+--- a/src/Workspaces/Core/Portable/Storage/PersistenceStorageServiceFactory.cs
++++ b/src/Workspaces/Core/Portable/Storage/PersistenceStorageServiceFactory.cs
+@@ -5,7 +5,6 @@
+ using Microsoft.CodeAnalysis.Host.Mef;
+ using Microsoft.CodeAnalysis.Options;
+ using Microsoft.CodeAnalysis.SolutionSize;
+-using Microsoft.CodeAnalysis.SQLite;
+ 
+ namespace Microsoft.CodeAnalysis.Storage
+ {
+@@ -22,20 +21,6 @@ public PersistenceStorageServiceFactory(ISolutionSizeTracker solutionSizeTracker
+ 
+         public IWorkspaceService CreateService(HostWorkspaceServices workspaceServices)
+         {
+-            var optionService = workspaceServices.GetRequiredService<IOptionService>();
+-            var database = optionService.GetOption(StorageOptions.Database);
+-            switch (database)
+-            {
+-                case StorageDatabase.SQLite:
+-                    var locationService = workspaceServices.GetService<IPersistentStorageLocationService>();
+-                    if (locationService != null)
+-                    {
+-                        return new SQLitePersistentStorageService(optionService, locationService, _solutionSizeTracker);
+-                    }
+-
+-                    break;
+-            }
+-
+             return NoOpPersistentStorageService.Instance;
+         }
+     }
 diff --git a/src/Workspaces/Core/Portable/Storage/SQLite/Interop/OpenFlags.cs b/src/Workspaces/Core/Portable/Storage/SQLite/Interop/OpenFlags.cs
 deleted file mode 100644
 index 5401b5502e..0000000000
