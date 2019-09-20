@@ -1,0 +1,27 @@
+From 25582c799a1e5e84c9779cd765bfa7a11756d70b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 20 Sep 2019 13:48:23 -0500
+Subject: [PATCH 3/3] Don't reset RestoreSources
+
+---
+ src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props b/src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props
+index 0e36a2c5..4dffbdb0 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/DefaultVersions.props
+@@ -16,10 +16,6 @@
+   <Import Project="DefaultVersions.Generated.props" Condition="Exists('DefaultVersions.Generated.props')"/>
+   <Import Project="$(VersionsPropsPath)" Condition="Exists('$(VersionsPropsPath)')"/>
+ 
+-  <!-- TODO: remove once all repos remove RestoreSources from their Version.props files -->
+-  <PropertyGroup>
+-    <RestoreSources/>
+-  </PropertyGroup>
+ 
+   <!-- 
+     Prevent NuGet from using cached packages 
+-- 
+2.18.0
+
