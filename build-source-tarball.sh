@@ -162,7 +162,7 @@ cp -r $SCRIPT_ROOT/bin/obj/x64/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
-    cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/prebuilt
+    cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/packages
 fi
 
 echo 'Removing source-built packages from tarball prebuilts...'
@@ -172,8 +172,8 @@ do
     if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
     fi
-    if [ -e $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/prebuilt/smoke-test-packages/$(basename $built_package)
+    if [ -e $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package)
     fi
 done
 
@@ -187,7 +187,7 @@ cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/x64/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
-  "$CLI_PATH/dotnet" restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/prebuilt/source-built --source $FULL_TARBALL_ROOT/prebuilt/nuget-packages
+  "$CLI_PATH/dotnet" restore $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj --source $FULL_TARBALL_ROOT/packages/source-built --source $FULL_TARBALL_ROOT/packages/prebuilt
   "$CLI_PATH/dotnet" publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
