@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 set -euo pipefail
 IFS=$'\n\t'
 
@@ -139,13 +140,14 @@ cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
+rm -rf $TARBALL_ROOT/tools-local/arcade-services/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
 mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
-find $SCRIPT_ROOT/packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
+find $SCRIPT_ROOT/packages/restored/ -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
 # Copy reference-packages from bin dir to reference-packages directory.

@@ -37,7 +37,6 @@
   </Target>
 
   <Target Name="UnpackTarballs" 
-          BeforeTargets="Build"
           Condition="'$(OfflineBuild)' == 'true'">
     <MakeDir Directories="$(ReferencePackagesDir)" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
