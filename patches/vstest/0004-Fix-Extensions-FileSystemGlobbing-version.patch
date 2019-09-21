@@ -1,0 +1,24 @@
+From a005a77793a209ffb344635bab56f12c39e9cb80 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 21 Sep 2019 15:55:17 -0500
+Subject: [PATCH 4/4] Fix Extensions FileSystemGlobbing version
+
+---
+ scripts/build/TestPlatform.Dependencies.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/build/TestPlatform.Dependencies.props b/scripts/build/TestPlatform.Dependencies.props
+index 50026c9a..7f3cf10e 100644
+--- a/scripts/build/TestPlatform.Dependencies.props
++++ b/scripts/build/TestPlatform.Dependencies.props
+@@ -20,6 +20,7 @@
+ 
+     <ChutzpahAdapterVersion>4.3.7</ChutzpahAdapterVersion>
+     <FileSystemGlobbingVersion>1.1.1</FileSystemGlobbingVersion>
++    <FileSystemGlobbingVersion Condition="'$(MicrosoftExtensionsFileSystemGlobbingPackageVersion)' != ''">$(MicrosoftExtensionsFileSystemGlobbingPackageVersion)</FileSystemGlobbingVersion>
+ 
+     <NuGetFrameworksVersion>5.0.0</NuGetFrameworksVersion>
+     <JsonNetVersion>9.0.1</JsonNetVersion>
+-- 
+2.17.1
+
