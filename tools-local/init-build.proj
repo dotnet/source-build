@@ -23,7 +23,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="BuildXPlatTasks;BuildDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;BuildDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -34,6 +34,19 @@
   <Target Name="InstallSourceBuildSdkResolver">
     <Copy SourceFiles="$(XPlatSourceBuildTasksAssembly)"
           DestinationFiles="$(SourceBuildMSBuildSdkResolverPath)" />
+  </Target>
+
+  <Target Name="UnpackTarballs" 
+          Condition="'$(OfflineBuild)' == 'true'">
+    <MakeDir Directories="$(ReferencePackagesDir)" />
+    <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
+          WorkingDirectory="$(ReferencePackagesDir)" />
+
+    <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" />
+    <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
+          WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)" />
+
+    <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
   </Target>
 
   <Target Name="BuildTasks">

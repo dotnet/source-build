@@ -140,7 +140,7 @@
     <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
                            AdditionalAssetDirs="@(_AdditionalAssetDirs)"
-                           OutputPath="$(PackageVersionPropsPath)" />
+                           OutputPath="$(GennedPackageVersionPropsPath)" />
 
     <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
                            IncludeCreationTimeProperty="true"
@@ -399,6 +399,7 @@
       <TarballPrebuiltPackageFiles Include="$(PrebuiltPackagesPath)*.nupkg" />
 
       <SourceBuiltPackageFiles Include="$(SourceBuiltBlobFeedDir)**/*.nupkg" />
+      <SourceBuiltPackageFiles Include="$(PrebuiltSourceBuiltPackagesPath)*.nupkg" />
       <ReferencePackageFiles Condition="'$(OfflineBuild)' == 'true'" Include="$(ReferencePackagesDir)**/*.nupkg" />
 
       <!-- Check all RIDs from all restored Microsoft.NETCore.Platforms packages. -->
