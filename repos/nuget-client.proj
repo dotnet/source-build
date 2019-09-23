@@ -26,6 +26,7 @@
     <EnvironmentVariables Include="NUGET_PFX_PATH=$(NuGetKeyFilePath)" />
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="common" />
+    <RepositoryReference Include="msbuild" />
   </ItemGroup>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
@@ -38,6 +39,7 @@
       <BuildCommandBase>$(BuildCommandBase) /p:BuildRTM=false</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /p:BuildNumber=$(OfficialBuildId)</BuildCommandBase>
       <BuildCommandBase>$(BuildCommandBase) /v:$(LogVerbosity)</BuildCommandBase>
+      <BuildCommandBase>$(BuildCommandBase) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandBase>
     </PropertyGroup>
 
     <Exec Command="$(BuildCommandBase) /t:RestoreXPLAT /bl:restore.binlog $(RedirectRepoOutputToLog)"

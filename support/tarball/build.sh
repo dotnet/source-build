@@ -13,7 +13,7 @@ CLI_ROOT="$SCRIPT_ROOT/.dotnet"
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
+export NUGET_PACKAGES="$SCRIPT_ROOT/packages/restored/"
 
 MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 

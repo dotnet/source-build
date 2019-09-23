@@ -20,7 +20,7 @@
     <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
     <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
-    <PackagesDir>$(ProjectDir)packages/</PackagesDir>
+    <PackagesDir>$(ProjectDir)packages/restored/</PackagesDir>
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
     <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
     <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
@@ -76,8 +76,8 @@
     <SourceBuiltBlobFeedDir>$(IntermediatePath)blob-feed/</SourceBuiltBlobFeedDir>
     <SourceBuiltPackagesPath>$(SourceBuiltBlobFeedDir)packages/</SourceBuiltPackagesPath>
     <SourceBuiltAssetsDir>$(SourceBuiltBlobFeedDir)assets/</SourceBuiltAssetsDir>
-    <PrebuiltPackagesPath>$(ProjectDir)prebuilt/nuget-packages/</PrebuiltPackagesPath>
-    <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)prebuilt/source-built/</PrebuiltSourceBuiltPackagesPath>
+    <PrebuiltPackagesPath>$(ProjectDir)packages/prebuilt/</PrebuiltPackagesPath>
+    <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)packages/source-built/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
     <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Toolset/</SourceBuiltToolsetDir>
     <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
@@ -85,6 +85,8 @@
     <TargetInfoProps>$(IntermediatePath)TargetInfo.props</TargetInfoProps>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>
     <PackageVersionPropsPath>$(IntermediatePath)PackageVersions.props</PackageVersionPropsPath>
+    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' == 'true'">$(IntermediatePath)GennedPackageVersions.props</GennedPackageVersionPropsPath>
+    <GennedPackageVersionPropsPath Condition="'$(OfflineBuild)' != 'true'">$(IntermediatePath)PackageVersions.props</GennedPackageVersionPropsPath>
     <LoggingDir>$(BaseOutputPath)logs/</LoggingDir>
     <MSBuildDebugPathTargetDir>$(BaseOutputPath)msbuild-debug/</MSBuildDebugPathTargetDir>
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
@@ -114,16 +116,19 @@
     <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
     <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
+    <ExternalTarballsDir>$(IntermediatePath)external-tarballs/</ExternalTarballsDir>
     <!--
-      Change ReferencePackagesBaseDir conditionally in offline build.
-      See corresponding change in build-source-tarball.sh to copy reference-packages
-      from source-build bin dir to tarball reference-packages dir.
+      Change ReferencePackagesBaseDir & ExternalTarballsDir conditionally in offline build.
+      See corresponding change in build-source-tarball.sh to copy reference-packages & external-tarballs
+      from source-build bin dir to tarball packages/reference dir & packages/archive.
     -->
-    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)reference-packages/</ReferencePackagesBaseDir>
+    <ExternalTarballsDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</ExternalTarballsDir>
+    <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
     <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
-    <ReferencePackagesTarballDir>$(ReferencePackagesBaseDir)tarball/</ReferencePackagesTarballDir>
+    <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
+    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>
     <ReferencePackagesTarballUrl>https://dotnetcli.blob.core.windows.net/source-build-reference-packages/assets/</ReferencePackagesTarballUrl>
     <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>

@@ -12,6 +12,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -23,6 +24,8 @@
     <PackProjects Include="$(ProjectDirectory)SourceBuild.sln" />
     <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj" />
     <PackProjects Include="$(ProjectDirectory)src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj" />
+    <PackProjects Include="$(ProjectDirectory)src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj" />
+    <PackProjects Include="$(ProjectDirectory)src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj" />
   </ItemGroup>
 
   <ItemGroup>

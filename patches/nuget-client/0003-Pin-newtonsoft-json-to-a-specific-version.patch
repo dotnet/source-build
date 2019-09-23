@@ -1,0 +1,26 @@
+From e7f35d4a775f2ba372c2b7e90bbe9baef8e25d8e Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 20 Sep 2019 16:02:57 +0000
+Subject: [PATCH] Pin newtonsoft json to a specific version
+
+---
+ build/config.props | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/build/config.props b/build/config.props
+index 1332abb..52176e0 100644
+--- a/build/config.props
++++ b/build/config.props
+@@ -48,8 +48,7 @@
+ 
+   <!-- Dependency versions -->
+   <PropertyGroup>
+-    <NewtonsoftJsonVersionCore Condition="$(NewtonsoftJsonPackageVersion) == ''">9.0.1</NewtonsoftJsonVersionCore>
+-    <NewtonsoftJsonVersionCore Condition="$(NewtonsoftJsonPackageVersion) != ''">$(NewtonsoftJsonPackageVersion)</NewtonsoftJsonVersionCore>
++    <NewtonsoftJsonVersionCore>9.0.1</NewtonsoftJsonVersionCore>
+     <XunitVersion>2.4.1</XunitVersion>
+     <TestSDKVersion>15.5.0</TestSDKVersion>
+     <MoqVersion>4.12.0</MoqVersion>
+-- 
+1.8.3.1
+

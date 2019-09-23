@@ -122,7 +122,7 @@ jobs:
   - script: |
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
-        smokeTestPackages="$(tarballName)/prebuilt/smoke-test-packages"
+        smokeTestPackages="$(tarballName)/packages/smoke-test-packages"
         # smokeTestPackages is a package cache, with redundant data and unnecessary structure. E.g.
         # $smokeTestPackages/name/version/name.version.nupkg <- We want this.
         # $smokeTestPackages/name/version/lib/net46/name.dll <- This is already in the nupkg.
