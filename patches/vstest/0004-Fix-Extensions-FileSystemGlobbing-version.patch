@@ -1,0 +1,25 @@
+From aa449296a0a361be49fb0e2a38a986ca7a12f9b3 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 21 Sep 2019 15:55:17 -0500
+Subject: [PATCH 4/4] Fix Extensions FileSystemGlobbing version
+
+---
+ src/vstest.console/vstest.console.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
+index 6843aaf5..e8a6d673 100644
+--- a/src/vstest.console/vstest.console.csproj
++++ b/src/vstest.console/vstest.console.csproj
+@@ -22,7 +22,7 @@
+   </ItemGroup>
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing">
+-      <Version>$(FileSystemGlobbingVersion)</Version>
++      <Version>$(MicrosoftExtensionsFileSystemGlobbingPackageVersion)</Version>
+     </PackageReference>
+   </ItemGroup>
+   <ItemGroup>
+-- 
+2.17.1
+
