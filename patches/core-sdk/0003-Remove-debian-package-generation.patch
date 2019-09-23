@@ -1,0 +1,38 @@
+From 1d4fa44abf2f93fa562dd4801341f042ccb8ce4c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 22 Sep 2019 19:22:10 -0500
+Subject: [PATCH 3/3] Remove debian package generation
+
+---
+ src/redist/redist.csproj                      | 1 -
+ src/redist/targets/GenerateInstallers.targets | 3 +--
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index e9f84e078..2f229cc42 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -36,7 +36,6 @@
+   <Import Project="targets\GenerateArchives.targets" />
+   <Import Project="targets\GenerateMSIs.targets" />
+   <Import Project="targets\LinuxNativeInstallerDependencyVersions.targets" />
+-  <Import Project="targets\GenerateDebs.targets" />
+   <Import Project="targets\GenerateRPMs.targets" />
+   <Import Project="targets\GeneratePKG.targets" />
+   <Import Project="targets\GenerateInstallers.targets" />
+diff --git a/src/redist/targets/GenerateInstallers.targets b/src/redist/targets/GenerateInstallers.targets
+index a4e008b00..77d2718ab 100644
+--- a/src/redist/targets/GenerateInstallers.targets
++++ b/src/redist/targets/GenerateInstallers.targets
+@@ -10,7 +10,6 @@
+                             GetCurrentRuntimeInformation;
+                             GenerateMsis;
+                             GeneratePkgs;
+-                            GenerateRpms;
+-                            GenerateDebs"
++                            GenerateRpms"
+           />
+ </Project>
+-- 
+2.17.1
+
