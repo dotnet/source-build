@@ -103,6 +103,8 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run unit tests
     condition: and(succeeded(), eq(variables['runUnitTests'], true))
+    timeoutInMinutes: 40
+    continueOnError: true
 
   # Create tarball.
   - script: |
