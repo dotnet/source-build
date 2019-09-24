@@ -212,7 +212,7 @@ jobs:
         mkdir -p /drop/tarball/
         cd \"$(tarballName)\"
         find . \( \
-          -iname 'source-built-artifacts*.tar.gz' \) \
+          -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
           -exec cp {} /drop/tarball/ \;"
     displayName: Copy source-built artifacts tarball
     condition: eq(variables['sb.tarball'], true)
