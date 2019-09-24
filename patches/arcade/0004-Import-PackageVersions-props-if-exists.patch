@@ -1,0 +1,37 @@
+From a5cd97b12dc8fb7677345a29d668ef2fe4aa6be6 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 23 Sep 2019 19:06:35 +0000
+Subject: [PATCH] Import PackageVersions props if exists
+
+---
+ eng/Versions.props | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 249e6d2..bb68ec4 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -1,6 +1,10 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <Project>
+   <PropertyGroup>
++    <MicrosoftCodeAnalysisCSharpVersion>2.9.0</MicrosoftCodeAnalysisCSharpVersion>
++  </PropertyGroup>
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++  <PropertyGroup>
+     <!-- This repo version -->
+     <VersionPrefix>1.0.0</VersionPrefix>
+     <PreReleaseVersionLabel>beta</PreReleaseVersionLabel>
+@@ -22,8 +26,8 @@
+     <MicrosoftBuildTasksCoreVersion>15.7.179</MicrosoftBuildTasksCoreVersion>
+     <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
+     <MicrosoftCodeAnalysisAnalyzersVersion>2.6.3</MicrosoftCodeAnalysisAnalyzersVersion>
+-    <MicrosoftCodeAnalysisCSharpVersion>2.9.0</MicrosoftCodeAnalysisCSharpVersion>
+     <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>2.1.0</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
++    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
+     <MicrosoftDotNetPlatformAbstractionsVersion>2.1.0</MicrosoftDotNetPlatformAbstractionsVersion>
+     <MicrosoftIdentityModelClientsActiveDirectoryVersion>3.19.8</MicrosoftIdentityModelClientsActiveDirectoryVersion>
+     <MicrosoftRestClientRuntimeVersion>2.3.13</MicrosoftRestClientRuntimeVersion>
+-- 
+1.8.3.1
+
