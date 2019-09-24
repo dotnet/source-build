@@ -10,7 +10,7 @@
     <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
   </PropertyGroup>
 
   <PropertyGroup>
