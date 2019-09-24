@@ -1,0 +1,27 @@
+From 916cab1b423811ca250314f70287eb2d2c8562bc Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 24 Sep 2019 08:27:13 -0500
+Subject: [PATCH 3/3] Fix removing Windows templates for non-Windows RIDs
+
+---
+ src/redist/targets/BundledTemplates.targets | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/redist/targets/BundledTemplates.targets b/src/redist/targets/BundledTemplates.targets
+index 5c3b0a824..9d1343155 100644
+--- a/src/redist/targets/BundledTemplates.targets
++++ b/src/redist/targets/BundledTemplates.targets
+@@ -101,8 +101,8 @@
+   <Target Name="LayoutTemplatesForSDK"
+           DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
+     <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
+-      <BundledTemplate Remove="Microsoft.Dotnet.Wpf.ProjectTemplates" />
+-      <BundledTemplate Remove="Microsoft.Dotnet.WinForms.ProjectTemplates" />
++      <Bundled30Templates Remove="Microsoft.Dotnet.Wpf.ProjectTemplates" />
++      <Bundled30Templates Remove="Microsoft.Dotnet.WinForms.ProjectTemplates" />
+     </ItemGroup>
+     <Copy SourceFiles="%(Bundled30Templates.RestoredNupkgPath)"
+           DestinationFolder="$(RedistLayoutPath)templates/$(BundledTemplates30InstallPath)"/>
+-- 
+2.21.0
+
