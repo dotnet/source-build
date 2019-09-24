@@ -1,17 +1,26 @@
-From 916cab1b423811ca250314f70287eb2d2c8562bc Mon Sep 17 00:00:00 2001
+From e8e9538185d64893b507457a020a3ae5781adb74 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 24 Sep 2019 08:27:13 -0500
 Subject: [PATCH 3/3] Fix removing Windows templates for non-Windows RIDs
 
 ---
- src/redist/targets/BundledTemplates.targets | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/redist/targets/BundledTemplates.targets | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/src/redist/targets/BundledTemplates.targets b/src/redist/targets/BundledTemplates.targets
-index 5c3b0a824..9d1343155 100644
+index 5c3b0a824..b2d44f25b 100644
 --- a/src/redist/targets/BundledTemplates.targets
 +++ b/src/redist/targets/BundledTemplates.targets
-@@ -101,8 +101,8 @@
+@@ -38,8 +38,6 @@
+     <Bundled30Templates Include="Microsoft.DotNet.Common.ItemTemplates" PackageVersion="$(MicrosoftDotNetCommonItemTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Common.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetCommonProjectTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Test.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetTestProjectTemplates30PackageVersion)" />
+-    <Bundled30Templates Include="Microsoft.Dotnet.Wpf.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWpfProjectTemplates30PackageVersion)" />
+-    <Bundled30Templates Include="Microsoft.Dotnet.WinForms.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWinFormsProjectTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+@@ -101,8 +99,8 @@
    <Target Name="LayoutTemplatesForSDK"
            DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
      <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
