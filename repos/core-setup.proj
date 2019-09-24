@@ -49,6 +49,11 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EnvironmentVariables Include="StabilizePackageVersion=true" />
+    <EnvironmentVariables Include="PB_IsStable=true" />
+  </ItemGroup>
+
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
     <ItemGroup>
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
