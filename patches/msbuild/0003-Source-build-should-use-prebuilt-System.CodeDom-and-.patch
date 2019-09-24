@@ -1,0 +1,65 @@
+From a657487ecc7e227b8cb85e519185d4b5f6106456 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Tue, 24 Sep 2019 01:29:07 +0000
+Subject: [PATCH 3/3] Source-build should use prebuilt System.CodeDom and
+ System.Resources.Extensions packages
+
+---
+ Directory.Build.targets | 9 +++++++++
+ eng/Packages.props      | 6 ++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/Directory.Build.targets b/Directory.Build.targets
+index 289480d7..eda53eed 100644
+--- a/Directory.Build.targets
++++ b/Directory.Build.targets
+@@ -10,6 +10,15 @@
+     <None Include="$(ThirdPartyNotice)" Pack="true" PackagePath="notices" Visible="false" Condition=" '$(IsPackable)' == 'true' " />
+   </ItemGroup>
+ 
++  <!-- Special project import for dotnet source build
++
++  The dotnet source-build Repo API overrides *PackageVersion properties with versions that were built before.
++  Those packages are injected in this props file
++
++  See: https://github.com/dotnet/source-build/blob/master/Documentation/auto-dependency-flow/api.md#-pdotnetpackageversionpropspathpath
++  -->
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++
+   <PropertyGroup>
+     <CentralPackagesFile>$(MSBuildThisFileDirectory)eng/Packages.props</CentralPackagesFile>
+   </PropertyGroup>
+diff --git a/eng/Packages.props b/eng/Packages.props
+index 39dfa2cc..5b0d23b7 100644
+--- a/eng/Packages.props
++++ b/eng/Packages.props
+@@ -5,6 +5,8 @@
+       <NuGetBuildTasksVersion Condition="'$(NuGetBuildTasksVersion)' == ''">$(NuGetPackageVersion)</NuGetBuildTasksVersion>
+       <NuGetCommandsVersion Condition="'$(NuGetCommandsVersion)' == ''">$(NuGetPackageVersion)</NuGetCommandsVersion>
+       <NuGetProtocolVersion Condition="'$(NuGetProtocolVersion)' == ''">$(NuGetPackageVersion)</NuGetProtocolVersion>
++      <SystemCodeDomPackageVersion Condition="'$(SystemCodeDomPackageVersion)' == ''">4.4.0</SystemCodeDomPackageVersion> 
++      <SystemResourcesExtensionsPackageVersion Condition="'$(SystemResourcesExtensionsPackageVersion)' == ''">$(SystemResourcesExtensionsVersion)</SystemResourcesExtensionsPackageVersion>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -21,7 +23,7 @@
+     <PackageReference Update="PdbGit" Version="3.0.41" />
+     <PackageReference Update="Shouldly" Version="3.0.0" />
+     <PackageReference Update="SourceLink.Create.CommandLine" Version="2.1.2" />
+-    <PackageReference Update="System.CodeDom" Version="4.4.0" />
++    <PackageReference Update="System.CodeDom" Version="$(SystemCodeDomPackageVersion)" />
+     <PackageReference Update="System.Collections.Concurrent" Version="4.3.0" />
+     <PackageReference Update="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Update="System.Diagnostics.TraceSource" Version="4.0.0" />
+@@ -32,7 +34,7 @@
+     <PackageReference Update="System.Net.Http" Version="4.3.4" />
+     <PackageReference Update="System.Reflection.Metadata" Version="1.6.0" />
+     <PackageReference Update="System.Reflection.TypeExtensions" Version="4.1.0" />
+-    <PackageReference Update="System.Resources.Extensions" Version="$(SystemResourcesExtensionsVersion)" />
++    <PackageReference Update="System.Resources.Extensions" Version="$(SystemResourcesExtensionsPackageVersion)" />
+     <PackageReference Update="System.Resources.Writer" Version="4.0.0" />
+     <PackageReference Update="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+     <PackageReference Update="System.Runtime.Loader" Version="4.0.0" />
+-- 
+2.20.1
+

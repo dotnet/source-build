@@ -15,6 +15,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) --projects $(ProjectDirectory)MSBuild.SourceBuild.sln</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(OutputVersionArgs)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <!-- all repos that build with arcade currently have a warning about including RestoreSources twice -->
     <BuildCommandArgs>$(BuildCommandArgs) --warnAsError false</BuildCommandArgs>
