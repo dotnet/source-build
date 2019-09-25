@@ -1,0 +1,35 @@
+From 57e91080f345bbedde5e29e400e0bb668edbda21 Mon Sep 17 00:00:00 2001
+From: Joey Robichaud <jorobich@microsoft.com>
+Date: Wed, 7 Aug 2019 16:52:05 -0700
+Subject: [PATCH 06/11] Allow VersionPrefix to include an optionally provided
+ PatchVersion (#3601)
+
+* Allow VersionPrefix to include an optionally provided PatchVersion
+
+* Simplify optionally using a PatchVersion in VersionPrefix
+
+* Fix closing tag
+---
+ .../tools/Version.BeforeCommonTargets.targets                 | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets
+index 345dc6b5..970219c3 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/Version.BeforeCommonTargets.targets
+@@ -49,10 +49,10 @@
+ 
+   <!--
+     The project can specify version either directly using the .NET SDK recognized property VersionPrefix, or using MajorVersion and MinorVersion properties.
+-    Note that .NET Core SDK sets VersionPrefix to 1.0.0 if not set by the project. Override it here if the project sets MajorVersion and MinorVersion.
++    Note that .NET Core SDK sets VersionPrefix to 1.0.0 if not set by the project. Override it here if the project sets MajorVersion, MinorVersion, and optionally a PatchVersion.
+   -->
+   <PropertyGroup>
+-    <VersionPrefix Condition="'$(MajorVersion)' != '' and '$(MinorVersion)' != ''">$(MajorVersion).$(MinorVersion).0</VersionPrefix>
++    <VersionPrefix Condition="'$(MajorVersion)' != '' and '$(MinorVersion)' != ''">$(MajorVersion).$(MinorVersion).$(MSBuild::ValueOrDefault('$(PatchVersion)', '0'))</VersionPrefix>
+     <_OriginalVersionPrefix>$(VersionPrefix)</_OriginalVersionPrefix>
+   </PropertyGroup>
+ 
+-- 
+2.18.0
+
