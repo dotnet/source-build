@@ -40,6 +40,12 @@ namespace Microsoft.DotNet.Build.Tasks
                 string binaryFileName = Path.GetFileName(binaryFullPath);
                 string version = Regex.Match(binaryFileName, VersionMatchRegex).Groups["semver"].Value;
 
+                // workaround the RID being included for now - regex needs to be reworked for stable versions
+                if (version.EndsWith("-linux"))
+                {
+                    version = version.Substring(0, version.Length - "-linux".Length);
+                }
+
                 if (version == "")
                 {
                     Log.LogError($"Could not extract version information from {binaryFileName}");
