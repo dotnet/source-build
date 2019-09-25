@@ -46,6 +46,7 @@
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
