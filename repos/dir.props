@@ -76,6 +76,7 @@
     <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
     <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
     <EnvironmentVariables Include="IsStableBuild=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
+    <EnvironmentVariables Include="DotNetFinalVersionKind=release" Condition="'$(UseStableVersions)' == 'true' and '$(IsToolingProject)' != 'true'" />
 
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
     <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
