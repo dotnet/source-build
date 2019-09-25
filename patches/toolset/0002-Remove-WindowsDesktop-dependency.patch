@@ -1,0 +1,24 @@
+From acd36fac5391102ea8139b5d2bd1b207305bfd99 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 25 Sep 2019 11:24:07 -0500
+Subject: [PATCH 2/2] Remove WindowsDesktop dependency
+
+---
+ src/redist/targets/BundledSdks.targets | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/redist/targets/BundledSdks.targets b/src/redist/targets/BundledSdks.targets
+index d7c5440f5..87f4c9761 100644
+--- a/src/redist/targets/BundledSdks.targets
++++ b/src/redist/targets/BundledSdks.targets
+@@ -7,7 +7,6 @@
+     <BundledSdk Include="Microsoft.NET.Sdk.Publish" Version="$(MicrosoftNETSdkPublishPackageVersion)" />
+     <BundledSdk Include="Microsoft.NET.Sdk.Web.ProjectSystem" Version="$(MicrosoftNETSdkWebProjectSystemPackageVersion)" />
+     <BundledSdk Include="Microsoft.NET.Sdk.Worker" Version="$(MicrosoftNETSdkWorkerPackageVersion)" />
+-    <BundledSdk Include="Microsoft.NET.Sdk.WindowsDesktop" Version="$(MicrosoftNETSdkWindowsDesktopPackageVersion)" />
+     <BundledSdk Include="FSharp.NET.Sdk" Version="1.0.4-bundled-0100" />
+     <BundledSdk Include="Microsoft.Docker.Sdk" Version="1.1.0" />
+     <BundledSdk Include="ILLink.Tasks" Version="$(ILLinkTasksPackageVersion)" />
+-- 
+2.18.0
+
