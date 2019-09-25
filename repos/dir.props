@@ -73,10 +73,10 @@
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" Condition="'$(RepositoryName)' == 'arcade'" />
     <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)source-built" Condition="'$(RepositoryName)' != 'arcade'" />
 
-    <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
-    <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
-    <EnvironmentVariables Include="IsStableBuild=$(UseStableVersions)" Condition="'$(UseStableVersions)' != ''" />
-    <EnvironmentVariables Include="DotNetFinalVersionKind=release" Condition="'$(UseStableVersions)' == 'true'" />
+    <EnvironmentVariables Include="StabilizePackageVersion=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
+    <EnvironmentVariables Include="PB_IsStable=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
+    <EnvironmentVariables Include="IsStableBuild=$(UseStableVersions)" Condition="'$(UseStableVersions)' != '' and '$(IsToolingProject)' != 'true'" />
+    <EnvironmentVariables Include="DotNetFinalVersionKind=release" Condition="'$(UseStableVersions)' == 'true' and '$(IsToolingProject)' != 'true'" />
 
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
     <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
