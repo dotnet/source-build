@@ -265,7 +265,7 @@
           AfterTargets="Package"
           Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
           DependsOnTargets="GatherBuiltPackages">
-    <Move SourceFiles="@(_BuiltPackages)"
+    <Copy SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
   </Target>
@@ -332,6 +332,11 @@
 
     <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
     <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
+  </Target>
+
+  <Target Name="DeleteSourceCopyOfPackages"
+          AfterTargets="CopyPackage;WriteVersions;ExtractToolPackage;EnsurePackagesCreated">
+    <Delete Files="@(_BuiltPackages)" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
