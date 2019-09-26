@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [-- [extra build.sh args]]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [--minimize-disk-usage] [-- [extra build.sh args]]"
     echo ""
 }
 
@@ -17,6 +17,7 @@ shift
 
 SKIP_BUILD=0
 INCLUDE_LEAK_DETECTION=0
+MINIMIZE_DISK_USAGE=0
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
@@ -31,6 +32,9 @@ while :; do
             ;;
         --enable-leak-detection)
             INCLUDE_LEAK_DETECTION=1
+            ;;
+        --minimize-disk-usage)
+            MINIMIZE_DISK_USAGE=1
             ;;
         --)
             shift
@@ -79,6 +83,37 @@ fi
 
 mkdir -p "$TARBALL_ROOT"
 
+# We need to keep bin/src/<repo>/.git around for sourcelink metadata but we can delete
+# just about everything else, Darc will pull it from the copy in .git/modules.
+# This list of extensions is everything over 6MB or so.
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    find $SCRIPT_ROOT/bin/src \( -type f \( \
+        -iname *.dll -o \
+        -iname *.exe -o \
+        -iname *.pdb -o \
+        -iname *.mdb -o \
+        -iname *.zip -o \
+        -iname *.cs -o \
+        -iname *.vb -o \
+        -iname *.il -o \
+        -iname *.xlf -o \
+        -iname *.cpp -o \
+        -iname *.txt -o \
+        -iname *.map -o \
+        -iname *.md -o \
+        -iname *.fs -o \
+        -iname *.h -o \
+        -iname *.c -o \
+        -iname *.js -o \
+        -iname *.json -o \
+        -iname *.ildump -o \
+        -iname *.resx -o \
+        -iname *.xml -o \
+        -iname *.css -o \
+        -iname *.*proj -o \
+        -iname *.nupkg \) \) -exec rm {} \;
+fi
+
 echo 'Copying sources to tarball...'
 
 # Use Git to put sources in the tarball. This ensure it's fresh, without having to clean and reset
@@ -102,6 +137,13 @@ git submodule foreach --quiet --recursive '
 # Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
 ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup"
 "$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
+
+# now we don't need .git/modules/src or Darc anymore
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    rm -rf "$SCRIPT_ROOT/.git/modules/src"
+    rm -rf $SCRIPT_ROOT/tools-local/arcade-services
+fi
+
 # then delete the master copies - we only need the specific hashes
 pushd "$TARBALL_ROOT/src"
 find "$PWD" -maxdepth 1 -type d | grep -v reference-assemblies | grep -v netcorecli-fsc | grep -v package-source-build | grep -v "$PWD\$" | egrep -v '\.[A-Fa-f0-9]{40}' | xargs rm -rf
@@ -123,6 +165,11 @@ for srcDir in `find bin/src -name '.git' -type d`; do
   cp -r $srcDir $TARBALL_ROOT/$newPath
 done
 popd
+
+# now we don't need bin/src at all
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    rm -rf "$SCRIPT_ROOT/bin/src/"
+fi
 
 echo 'Copying scripts and tools to tarball...'
 

@@ -110,7 +110,7 @@ jobs:
   - script: |
       set -x
       df -h
-      args="--skip-build"
+      args="--skip-build --minimize-disk-usage"
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         args="$args --enable-leak-detection"
       fi
