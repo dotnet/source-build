@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [--minimize-disk-usage] [-- [extra build.sh args]]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [-- [extra build.sh args]]"
     echo ""
 }
 
@@ -54,6 +54,16 @@ while :; do
 
     shift
 done
+
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    echo "WARNING"
+    echo "WARNING"
+    echo "WARNING: --minimize-disk-usage intentionally trashes your local repo and any local work.  It will not be recoverable.  It is intended for CI use only."
+    echo "WARNING"
+    echo "WARNING"
+    echo "WARNING: You have 10 seconds to cancel."
+    sleep 10
+fi
 
 export FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
 
