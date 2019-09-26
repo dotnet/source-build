@@ -336,7 +336,11 @@
 
   <Target Name="DeleteSourceCopyOfPackages"
           AfterTargets="CopyPackage;WriteVersions;ExtractToolPackage;EnsurePackagesCreated">
-    <Delete Files="@(_BuiltPackages)" />
+    <ItemGroup>
+      <SourcePackages Condition="'$(PackagesOutput)' != ''" Include="$(PackagesOutput)/*.nupkg" />
+      <SourcePackages Condition="'@(PackagesOutputList)' != ''" Include="%(PackagesOutputList.Identity)/*.nupkg" />
+    </ItemGroup>
+    <Delete Files="@(SourcePackages)" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
