@@ -265,7 +265,7 @@
           AfterTargets="Package"
           Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
           DependsOnTargets="GatherBuiltPackages">
-    <Copy SourceFiles="@(_BuiltPackages)"
+    <Move SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
   </Target>
