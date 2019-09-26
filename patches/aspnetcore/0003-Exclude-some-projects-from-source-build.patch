@@ -1,14 +1,14 @@
-From c6e67b57180f9d2eb27259ef40cca5ed8b74e8f3 Mon Sep 17 00:00:00 2001
+From 13be14b9e411efee0425eb2d8d53e85a335c8a6a Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 18 Jul 2019 01:34:30 -0500
-Subject: [PATCH 3/5] Exclude some projects from source-build.
+Subject: [PATCH 3/6] Exclude some projects from source-build.
 
 ---
  Directory.Build.props | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 6c07ec1582..443f4b2797 100644
+index 141506a2b5..456bcafb06 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -18,9 +18,11 @@
@@ -20,9 +20,9 @@ index 6c07ec1582..443f4b2797 100644
      <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
      <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
 +    <ExcludeFromSourceBuild Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true' or '$(IsOtherTestProject)' == 'true'">true</ExcludeFromSourceBuild>
-   </PropertyGroup>
  
-   <Import Project="eng\FlakyTests.BeforeArcade.props" />
+     <!--
+       Following logic mimics core-setup approach as well as
 -- 
-2.18.0
+2.21.0
 

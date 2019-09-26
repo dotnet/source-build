@@ -2,7 +2,8 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</PackagesOutput>
+    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
 
     <BuildCommandArgs>--restore --pack --configuration $(Configuration) $(OutputVersionArgs)</BuildCommandArgs>
@@ -38,6 +39,13 @@
   <ItemGroup>
     <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
   </ItemGroup>
+
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 

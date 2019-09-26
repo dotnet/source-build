@@ -1,18 +1,18 @@
-From c1e8014464bd27414258fec0f72b5762c8a0bb44 Mon Sep 17 00:00:00 2001
+From b80de46a2cb225f23fb4d5c6907ce336218bc1da Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 28 Aug 2019 14:26:39 -0500
 Subject: [PATCH] Add PVP import.
 
 ---
- eng/Versions.props | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ eng/Versions.props | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index b50d4d0..976db3f 100644
+index f895dc5..039d2e5 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -24,7 +24,7 @@
-     <PreReleaseVersionLabel>rc1</PreReleaseVersionLabel>
+     <PreReleaseVersionLabel>rc2</PreReleaseVersionLabel>
    </PropertyGroup>
    <PropertyGroup>
 -    <RestoreSources>
@@ -20,13 +20,12 @@ index b50d4d0..976db3f 100644
        $(RestoreSources);
        https://dotnet.myget.org/F/dotnet-core/api/v3/index.json;
        https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json;
-@@ -48,4 +48,7 @@
-     <MicrosoftAspNetCoreMvcAnalyzersPackageVersion>3.0.0-rc1.19457.4</MicrosoftAspNetCoreMvcAnalyzersPackageVersion>
-     <MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>3.0.0-rc1.19457.4</MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>
+@@ -48,4 +48,6 @@
+     <MicrosoftAspNetCoreMvcAnalyzersPackageVersion>3.0.0-rc2.19465.2</MicrosoftAspNetCoreMvcAnalyzersPackageVersion>
+     <MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>3.0.0-rc2.19465.2</MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>
    </PropertyGroup>
 +
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
-+
  </Project>
 -- 
 2.18.0
