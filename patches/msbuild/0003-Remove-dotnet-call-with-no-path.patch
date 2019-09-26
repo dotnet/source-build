@@ -1,0 +1,29 @@
+From 74a928ce82f39ebda4ad96652fbf1c61d7a1738d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 25 Sep 2019 19:36:21 -0500
+Subject: [PATCH 3/3] Remove dotnet call with no path
+
+---
+ eng/common/tools.sh | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/eng/common/tools.sh b/eng/common/tools.sh
+index 757d5b9e..a8fabf54 100755
+--- a/eng/common/tools.sh
++++ b/eng/common/tools.sh
+@@ -338,12 +338,6 @@ function MSBuild {
+     InitializeBuildTool
+     InitializeToolset
+ 
+-    # Work around issues with Azure Artifacts credential provider
+-    # https://github.com/dotnet/arcade/issues/3932
+-    if [[ "$ci" == true ]]; then
+-      dotnet nuget locals http-cache -c
+-    fi
+-
+     local toolset_dir="${_InitializeToolset%/*}"
+     local logger_path="$toolset_dir/$_InitializeBuildToolFramework/Microsoft.DotNet.Arcade.Sdk.dll"
+     args=( "${args[@]}" "-logger:$logger_path" )
+-- 
+2.18.0
+
