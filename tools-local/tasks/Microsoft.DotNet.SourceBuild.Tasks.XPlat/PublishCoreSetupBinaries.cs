@@ -45,6 +45,10 @@ namespace Microsoft.DotNet.Build.Tasks
                 {
                     version = version.Substring(0, version.Length - "-linux".Length);
                 }
+                if (version.EndsWith("-osx"))
+                {
+                    version = version.Substring(0, version.Length - "-osx".Length);
+                }
 
                 if (version == "")
                 {
