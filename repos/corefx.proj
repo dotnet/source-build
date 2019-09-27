@@ -20,7 +20,7 @@
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
