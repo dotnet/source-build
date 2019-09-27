@@ -146,8 +146,9 @@ jobs:
 
   # Delete local copy of repo to save space
   - script: |
+      set -x
       df -h
-      rm -rf $(rootDirectory)/sb/source-build
+      sudo rm -rf $(rootDirectory)/sb/source-build
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Delete source copy of repo to save space
 
