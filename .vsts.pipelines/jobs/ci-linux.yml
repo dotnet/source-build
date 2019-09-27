@@ -52,7 +52,7 @@ jobs:
         rm -rf /root/sb/
         mkdir -p /root/sb/tarball
         cp -r . /root/sb/source-build'
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory and copy source from cloned directory
 
   - template: ../steps/init-submodules.yml
@@ -72,7 +72,7 @@ jobs:
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 120
 
@@ -94,7 +94,7 @@ jobs:
         --run-smoke-test \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test
 
   # Run unit tests that we support.
@@ -105,7 +105,7 @@ jobs:
         -test \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run unit tests
     condition: and(succeeded(), eq(variables['runUnitTests'], true))
     timeoutInMinutes: 40
@@ -122,7 +122,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         $args
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Create tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
@@ -139,7 +139,7 @@ jobs:
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/source-build/logs \;"
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build production build logs
     condition: always()
     continueOnError: true
@@ -148,7 +148,7 @@ jobs:
   - script: |
       df -h
       rm -rf $(rootDirectory)/sb/source-build
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Delete source copy of repo to save space
 
   # tar the tarball directory into the drop directory.
@@ -167,7 +167,7 @@ jobs:
         # Make one .tar.gz for build, another for extras necessary to smoke test:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
         tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
@@ -188,7 +188,7 @@ jobs:
         /p:PortableBuild=$(sb.portable) \
         /p:FailOnPrebuiltBaselineError=true \
         $poisonArg
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
     timeoutInMinutes: 120
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
@@ -202,7 +202,7 @@ jobs:
         --projectOutput \
         --configuration $(sb.configuration) \
         --prodConBlobFeedUrl ''
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test in tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
@@ -225,7 +225,7 @@ jobs:
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/tarball/logs \;"
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball logs
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
@@ -240,7 +240,7 @@ jobs:
         find . \( \
           -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
           -exec cp {} /drop/tarball/ \;"
-      du -h $(Build.SourcesDirectory) | sort -h | tail -n 50
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-built artifacts tarball
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
