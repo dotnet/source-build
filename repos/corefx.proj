@@ -20,7 +20,10 @@
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</BuildArguments>
+    <!-- CoreFX parses this argument for a OS "family", i.e. rhel.7 to rhel.  OSX doesn't have the extra identifier so we need to include the
+         "-x64" so CoreFX can find a character to break on (digits, hyphen, period).  -->
+    <BuildArguments Condition="'$(TargetOS)' != 'OSX'">$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</BuildArguments>
+    <BuildArguments Condition="'$(TargetOS)' == 'OSX'">$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
