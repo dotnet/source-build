@@ -81,21 +81,6 @@
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
     <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
 
-    <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
-    <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
-    <EnvironmentVariables Include="MSBUILDDEBUGCOMM=1" />
-    <EnvironmentVariables Include="MSBUILDDEBUGSCHEDULER=1" />
-    <EnvironmentVariables Include="MSBUILDDEBUGFORCECACHING=1" />
-    <EnvironmentVariables Include="MSBUILDDEBUG=1" />
-    <EnvironmentVariables Include="MSBUILDDEBUGEVALUATION=1" />
-    <EnvironmentVariables Include="MSBUILDTARGETOUTPUTLOGGING=1" />
-    <EnvironmentVariables Include="MSBUILDLOGTASKINPUTS=1" />
-    <EnvironmentVariables Include="MSBUILDEMITSOLUTION=1" />
-    <EnvironmentVariables Include="MSBUILDLOGVERBOSERARSEARCHRESULTS=1" />
-
-    <!-- Output Roslyn logs to allow debugging compiler errors -->
-    <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
-
     <!-- Turn off node reuse for source build because repos use conflicting versions 
          of compilers which cause assembly load errors.  
          See https://github.com/dotnet/source-build/issues/541 -->
@@ -117,6 +102,23 @@
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="DeterministicSourcePaths=true" Condition="'$(DeterministicBuildOptOut)' != 'true'" />
     <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(EnableExtraDebugging)' == 'true'">
+    <!-- If MSBuild exits early, make sure debug output like 'MSBuild_*.failure.txt' ends up in a place we can see it. -->
+    <EnvironmentVariables Include="MSBUILDDEBUGPATH=$(MSBuildDebugPathTargetDir)" />
+    <EnvironmentVariables Include="MSBUILDDEBUGCOMM=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGSCHEDULER=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGFORCECACHING=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUG=1" />
+    <EnvironmentVariables Include="MSBUILDDEBUGEVALUATION=1" />
+    <EnvironmentVariables Include="MSBUILDTARGETOUTPUTLOGGING=1" />
+    <EnvironmentVariables Include="MSBUILDLOGTASKINPUTS=1" />
+    <EnvironmentVariables Include="MSBUILDEMITSOLUTION=1" />
+    <EnvironmentVariables Include="MSBUILDLOGVERBOSERARSEARCHRESULTS=1" />
+
+    <!-- Output Roslyn logs to allow debugging compiler errors -->
+    <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
   </ItemGroup>
 
   <PropertyGroup>
