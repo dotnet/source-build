@@ -99,30 +99,30 @@ mkdir -p "$TARBALL_ROOT"
 # This list of extensions is everything over 6MB or so.
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     find $SCRIPT_ROOT/bin/src \( -type f \( \
-        -iname *.dll -o \
-        -iname *.exe -o \
-        -iname *.pdb -o \
-        -iname *.mdb -o \
-        -iname *.zip -o \
-        -iname *.cs -o \
-        -iname *.vb -o \
-        -iname *.il -o \
-        -iname *.xlf -o \
-        -iname *.cpp -o \
-        -iname *.txt -o \
-        -iname *.map -o \
-        -iname *.md -o \
-        -iname *.fs -o \
-        -iname *.h -o \
-        -iname *.c -o \
-        -iname *.js -o \
-        -iname *.json -o \
-        -iname *.ildump -o \
-        -iname *.resx -o \
-        -iname *.xml -o \
-        -iname *.css -o \
-        -iname *.*proj -o \
-        -iname *.nupkg \) \) -exec rm {} \;
+        -iname '*.dll' -o \
+        -iname '*.exe' -o \
+        -iname '*.pdb' -o \
+        -iname '*.mdb' -o \
+        -iname '*.zip' -o \
+        -iname '*.cs' -o \
+        -iname '*.vb' -o \
+        -iname '*.il' -o \
+        -iname '*.xlf' -o \
+        -iname '*.cpp' -o \
+        -iname '*.txt' -o \
+        -iname '*.map' -o \
+        -iname '*.md' -o \
+        -iname '*.fs' -o \
+        -iname '*.h' -o \
+        -iname '*.c' -o \
+        -iname '*.js' -o \
+        -iname '*.json' -o \
+        -iname '*.ildump' -o \
+        -iname '*.resx' -o \
+        -iname '*.xml' -o \
+        -iname '*.css' -o \
+        -iname '*.*proj' -o \
+        -iname '*.nupkg' \) \) -exec rm {} \;
 fi
 
 echo 'Copying sources to tarball...'
