@@ -285,22 +285,17 @@ popd
 for path in ${ilSrcPaths[@]}; do
     IFS='/'
     read -a splitLine <<< "$path"
-    echo " ${splitLine[1]}.${splitLine[2]}.nupkg "
     remove=false
     if [[ " ${allRefPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        echo "${splitLine[1]}.${splitLine[2]}.nupkg exists in ref pkgs"
         remove=true
     fi
     if [[ " ${allSourceBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        echo "${splitLine[1]}.${splitLine[2]}.nupkg exists in source-built pkgs"
         remove=true
     fi
     if [[ " ${allBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        echo "${splitLine[1]}.${splitLine[2]}.nupkg exists in source-built pkgs"
         remove=true
     fi
     if [[ "$remove" == "true" ]]; then
-        echo "removing $TARBALL_ROOT/packages/reference/staging/$path"
         rm -rf "$TARBALL_ROOT/packages/reference/staging/$path"
     fi
 done
