@@ -120,6 +120,27 @@ jobs:
     displayName: Create tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
+  # Copy logs from the production build
+  - script: |
+      set -x
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
+        mkdir -p /logs/source-build/logs
+        find . \( \
+          -path './bin/*-report/*' -o \
+          -path './bin/msbuild-debug/*' -o \
+          -path './bin/roslyn-debug/*' -o \
+          -iname '*.binlog' -o \
+          -iname '*.log' \) \
+          -exec cp {} --parents /logs/source-build/logs \;"
+    displayName: Copy source-build production build logs
+    condition: always()
+    continueOnError: true
+
+  # Delete local copy of repo to save space
+  - script: |
+      rm -rf $(rootDirectory)/sb/source-build
+    displayName: Delete source copy of repo to save space
+
   # tar the tarball directory into the drop directory.
   - script: |
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
@@ -177,20 +198,6 @@ jobs:
     continueOnError: true
 
   # Copy logs and reports to staging directory.
-  - script: |
-      set -x
-      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs
-        find . \( \
-          -path './bin/*-report/*' -o \
-          -path './bin/msbuild-debug/*' -o \
-          -path './bin/roslyn-debug/*' -o \
-          -iname '*.binlog' -o \
-          -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;"
-    displayName: Copy source-build logs
-    condition: always()
-    continueOnError: true
   - script: |
       set -x
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
