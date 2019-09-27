@@ -176,11 +176,6 @@ for srcDir in `find bin/src -name '.git' -type d`; do
 done
 popd
 
-# now we don't need bin/src at all
-if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
-    rm -rf "$SCRIPT_ROOT/bin/src/"
-fi
-
 echo 'Copying scripts and tools to tarball...'
 
 cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
