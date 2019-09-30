@@ -144,13 +144,16 @@ jobs:
     condition: always()
     continueOnError: true
 
-  # Delete local copy of repo to save space
+  # Delete key directories from local copy of repo to save space
   - script: |
       set -x
       df -h
-      sudo rm -rf $(rootDirectory)/sb/source-build
+      sudo rm -rf $(rootDirectory)/sb/source-build/bin/src
+      sudo rm -rf $(rootDirectory)/sb/source-build/bin/obj
+      sudo rm -rf $(rootDirectory)/sb/source-build/.git
+      sudo rm -rf $(rootDirectory)/sb/source-build/packages
       du -h $(rootDirectory) | sort -h | tail -n 50
-    displayName: Delete source copy of repo to save space
+    displayName: Delete key directories from source copy of repo to save space
 
   # tar the tarball directory into the drop directory.
   - script: |
