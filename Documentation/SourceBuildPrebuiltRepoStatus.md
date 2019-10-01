@@ -102,65 +102,89 @@ Prebuilts are dependencies that a repo has on binary files that are not built fr
 
 Patches are created in source-build when a repo's code doesn't build as-is. Patches are required to keep source-build moving forward and building on new product builds. As patches are created, issues are opened in the corresponding repo to incorporate the code and remove the patch.
 
-| Patch name | Status| Type | Disposition | Responsibility | Notes | Issue
+| Repo | Patch name | Type | Disposition | Responsibility | Notes | Issue
 | --- | --- | --- | --- | --- | --- | ---
-arcade/0001-Fix-InternalsVisibleTo-generation.patch | ![cp] Merged | One-off | Incorporate | source-build | Patch was needed only for cli-migrate signing issues.  Have PR out to Arcade anyway as it's a reasonable fix.
-arcade/0002-Exclude-test-projects-from-source-build.patch | ![cp] Fixed upstream | ProjRemoval | Incorporate | Repo |  | https://github.com/dotnet/arcade/issues/3014
-arcade/0003-Remove-projects-that-increased-prebuilts.patch | ![cp] Merged | ProjRemoval | Incorporate | Repo |  | 
-arcade/0004-Use-alternate-workaround-for-bootstrapping-Arcade.patch | ![ns] No action | One-off | Soft-patch | source-build | Allows us to use the bootstrap version of arcade.  Will be fixed eventually by toolset bootstrapping. | 
-aspnet-razor/0001-Remove-Internal.AspNetCore.Sdk-avoid-prebuilt.patch | ![cp] Not needed | Prebuilt | Incorporate | Repo |  | 
-aspnet-razor/0002-Add-reference-assemblies-to-allow-net46-build.patch | ![cp] Not needed | Build | Incorporate | Repo |  | 
-cli/0001-Implement-PVP-repo-API.patch | ![cp] Fixed upstream | Flow | Incorporate | Repo |  | https://github.com/dotnet/cli/issues/11518
-cli/0002-Exclude-test-projects-from-source-build.patch | ![cp] Fixed upstream | ProjRemoval | Incorporate | Repo |  | 
-cli/0003-Add-repo-specific-target-emptying-file.patch | ![ot] In PR | Build | Incorporate | Repo |  | 
-cli/0004-Consolidate-Newtonsoft.Json-versions.patch | ![pl] Needs upstream fix | No-op | Remove | source-build | Rebased after CLI took the fix but due to a whitespace diff this patch remained although it does nothing. | 
-cli/0005-Disable-signing.patch | ![cp] Fixed upstream | Build | Repo | source-build |  | 
-cli/0006-Remove-keys-from-InternalsVisibleTo.patch | ![cp] Fixed upstream | Build | Repo | source-build |  | 
-cli/0007-Consolidate-CommandLine-versions.patch | ![cp] Removed | Bug | RepoRemoval | Repo | This was an additional workaround for the cli-migrate signing issue and should go away when that does. | 
-cli/0008-Add-LangVersion-to-CLI.patch | ![pl] May no longer be needed | ToolCompat | Remove | source-build |  | 
-cli/0009-Revert-to-using-Newtonsoft.Json.patch | ![cp] Removed | ToolCompat | Remove | source-build |  | 
-clicommandlineparser/0001-Remove-test-and-sample-projects-from-solution.patch | ![cp] Fixed upstream | ProjRemoval | Incorporate | Repo |  | 
-clicommandlineparser/0002-Add-PackageProjectUrl-to-avoid-new-SDK-warning.patch | ![cp] Not needed | ToolCompat | Remove | source-build |  | 
-clicommandlineparser/0003-Ignore-LicenseUrl-warning.patch | ![cp] Not needed | ToolCompat | Remove | source-build |  | 
-cli-migrate/0001-Ignore-NU5125-warning-error-for-2.1.500-SDK.patch | ![cp] Repo removed | ToolCompat | RepoRemoval | source-build |  | 
-cli-migrate/0002-Partial-revert-of-0943def486e13fb376c7cc4a78ff2f9d82.patch | ![cp] Repo removed | ToolCompat | RepoRemoval | source-build |  | 
-cli-migrate/0003-Remove-test-projects-from-build.patch | ![cp] Repo removed | ProjRemoval | RepoRemoval | source-build |  | 
-cli-migrate/0004-Add-PackageProjectUrl-to-fix-warning.patch | ![cp] Repo removed | ToolCompat | RepoRemoval | source-build |  | 
-cli-migrate/0005-add-PVP-import.patch | ![cp] Repo removed | Flow | RepoRemoval | source-build |  | 
-cli-migrate/0006-fix-package-version-properties.patch | ![cp] Repo removed | Flow | RepoRemoval | source-build |  | 
-cli-migrate/0007-Add-LicenseExpression-for-new-warning.patch | ![cp] Repo removed | ToolCompat | RepoRemoval | source-build |  | 
-coreclr/0001-Allow-separate-tool-and-SDK-directories.patch | ![ot] Working with Jarret | Build | Incorporate | Repo |  | https://github.com/dotnet/coreclr/issues/25058
-corefx/0001-Remove-publishing-package-that-source-build-doesn-t-.patch | ![cp] Merged | Build | Incorporate | Repo |  | https://github.com/dotnet/corefx/issues/38412
-core-sdk/0001-Don-t-reset-blob-URL-if-we-pass-it-in.patch | ![cp] Merged | Build | Incorporate | Repo |  | https://github.com/dotnet/core-sdk/issues/2398
-core-sdk/0002-Don-t-copy-over-packages-if-there-are-no-packages-to.patch | ![cp] Merged | Build | Incorporate | Repo |  | 
-core-sdk/0003-Remove-test-projects-from-solution.patch | ![cp] Fixed upstream | ProjRemoval | Incorporate | Repo |  | 
-core-sdk/0004-Add-PVP-import.patch | ![cp] Fixed upstream | Flow | Incorporate | Repo |  | 
-core-sdk/0005-Allow-specifying-CoreSetupRid.patch | ![cp] Merged | Build | Incorporate | Repo |  | 
-core-setup/0001-Copy-run.cmd-changes-from-corefx.patch | ![pl] In progress | Build | Remove | Repo | This will go away once core-setup switches to Arcade. | https://github.com/dotnet/core-setup/issues/6762
-core-setup/0002-Disable-licenseUrl-warning.patch | ![cp] No longer needed | ToolCompat | Remove | source-build |  | 
-core-setup/0003-Disable-overriding-CentOS-as-RHEL.patch | ![pl] In progress | Bug | Incorporate | Repo | | 
-core-setup/0003-Import-dependencies-props-after-eng-Versions-props.patch | ![pl] In progress | Flow | Incorporate | Repo | May also go away with the Arcade switch. | 
-linker/0001-Add-an-option-to-use-reflection-heuristics-during-ma.patch | ![ns] No action | One-off | Fork | source-build | Patches in a feature needed by other repos that the maintainers rejected a PR for. | 
-linker/0002-Exclude-test-projects-from-source-build.patch | ![ns] No action | ProjRemoval | Fork | source-build |  | 
-msbuild/0001-Add-PackageLicenseExpression.patch | ![cp] No longer needed | ToolCompat | Remove | source-build |  | https://github.com/microsoft/msbuild/issues/4428
-msbuild/0002-Enable-full-framework-builds-for-SDK.patch | ![pl] Needs ref asm | Build | Remove | source-build |  | 
-msbuild/0003-Don-t-overwrite-source-build-s-MS.NETCore.Compilers-.patch | ![cp] Fixed upstream | Flow | Incorporate | Repo |  | 
-nuget-client/0001-Update-Reference-Assemblies-package-to-get-net472-ve.patch | ![ot] Working with Fernando | Build | Incorporate | Repo |  | https://github.com/NuGet/Home/issues/8214
-nuget-client/0002-use-netcoreapp2.1-to-match-netstandard.patch | ![cp] Removed | One-off | Remove | source-build |  | 
-nuget-client/0003-Add-roslyn-tools-restore-source-back-to-NuGet.Config.patch | ![ns] No action | ToolCompat | Remove | source-build |  | 
-roslyn/0001-Don-t-append-description-from-source-information-bec.patch | ![pl] Needs SourceLink uptake | Build | Incorporate | source-build | | https://github.com/dotnet/source-build/issues/1075
-roslyn/0002-Add-repository-properties-for-new-SDK-warning.patch | ![cp] No longer needed | ToolCompat | Remove | source-build |  | 
-sdk/0001-Upgrade-to-netcoreapp2.1.patch | ![ot] In PR | ToolCompat | Unknown | source-build |  | https://github.com/dotnet/sdk/issues/3317
-sdk/0002-Add-missing-PlatformAbstractions-reference.patch | ![pl] Nick believes unneeded | Bug | Incorporate | source-build |  | 
-sdk/0003-Consolidate-versions.patch | ![pl] Nick believes unneeded | Coherence | Incorporate | source-build |  | 
-templating/0001-Don-t-build-test-projects-when-building-from-source.patch | ![ot] Being worked on | ProjRemoval | Incorporate | Repo |  | https://github.com/dotnet/templating/issues/1927
-templating/0002-Fix-casing-in-template-projects.patch | ![cp] Fixed upstream | Bug | Incorporate | Repo |  | 
-templating/0003-Use-source-built-version-of-Newtonsoft.Json.patch | ![ot] Talking about correct fix | Flow | Incorporate | Repo |  | 
-toolset/0001-Exclude-test-projects-from-source-build.patch | ![cp] Fixed upstream | ProjRemoval | Incorporate | Repo |  | https://github.com/dotnet/toolset/issues/1178
-vstest/0001-Conditionally-remove-uap-from-TargetFramework-and-co.patch | ![pl] Talking about correct fix | Build | Incorporate | Repo |  | https://github.com/microsoft/vstest/issues/2050
-vstest/0002-Remove-unneccessary-projects-from-sln.patch | ![pl] Talking about correct fix | ProjRemoval | Incorporate | Repo |  | 
-websdk/0001-Remove-test-project.patch | ![cp] Merged | ProjRemoval | Incorporate | Repo |  | https://github.com/aspnet/websdk/issues/702
-xliff-tasks/0001-Hardcode-version-until-we-fix-Arcade.patch | ![ot] In progress on our side | Build | SourceBuildFix | source-build |  | https://github.com/dotnet/source-build/issues/1076
+arcade | 0001-Enable-sourcelink-in-sourcebuild.patch | ToolCompat | SourceBuildUptake | Source-build | Merged | https://github.com/dotnet/arcade/pull/4022
+arcade | 0002-Do-not-build-.NET-Fx-binaries-in-source-build.patch | Prebuilt | Incorporate | Repo | Thought Nikola had opened a PR for this one but can't find it | 
+arcade | 0003-Remove-adding-fake-dependencies-for-CoreFX-partial-p.patch | ToolCompat | SourceBuildUptake | Repo | Merged | https://github.com/dotnet/arcade/pull/3811
+arcade | 0004-Changing-GetLastStablePackage-logic-in-order-to-allo.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0004-Import-PackageVersions-props-if-exists.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0005-Fix-packaging-targets-3857.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0005-Update-SystemNetHttpPackageVersion.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0006-Allow-VersionPrefix-to-include-an-optionally-provide.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0007-Fix-missing-in-MSBuild-function-call-to-calculate-Ve.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0008-Produce-a-non-stable-version-if-package-is-non-shipp.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0009-Switch-IsShipping-IsShippingPackage-3909.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0010-Compute-IsShipping-before-version-strings-are-comput.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+arcade | 0011-Adding-switch-to-UpdatePackageIndex-Task-that-will-U.patch | ToolCompat | SourceBuildUptake | Source-build | Will be picked up with Arcade update | https://github.com/dotnet/source-build/pull/1237
+aspnetcore | 0001-Exclude-analyzer-for-source-build.patch | Prebuilt | Unknown | Source-build | Need to determine if we should be building Analyzers in AspNetCore | 
+aspnetcore | 0002-Import-PackageVersions.props.patch | Flow | Unknown | Source-build | May be fixed by Arcade update | 
+aspnetcore | 0003-Exclude-some-projects-from-source-build.patch | Prebuilt | Incorporate | Repo | In PR | https://github.com/aspnet/AspNetCore/pull/14631
+aspnetcore | 0004-Match-new-NuGet-MSBuild-version.patch | Prebuilt | Incorporate | Repo | In PR | https://github.com/aspnet/AspNetCore/pull/14631
+aspnetcore | 0005-Fix-version-number.patch | Bug | RepoFix | Repo |  | 
+aspnetcore | 0006-Remove-Yarn-dependency-not-used-in-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+aspnetcore | 0007-Don-t-call-out-to-dotnet-with-no-path.patch | ToolCompat | SourceBuildUptake | Source-build | This may need an additional Arcade fix as well. | https://github.com/dotnet/arcade/pull/4032
+aspnetcore-tooling | 0001-Import-PackageVersions.props.patch | Flow | Unknown | Source-build | May be fixed by Arcade update | 
+aspnetcore-tooling | 0002-Pin-MSBuild-version-to-reference-versions.patch | Prebuilt | Incorporate | Repo |  | 
+aspnetcore-tooling | 0003-Remove-fullfx.patch | Prebuilt | Incorporate | Repo |  | 
+aspnet-extensions | 0001-Target-framework-changes.patch | Build | Incorporate | Repo |  | 
+aspnet-extensions | 0002-Fix-packing-on-nix-systems.patch | Build | Incorporate | Repo | Believe there is already a PR for this. | 
+aspnet-extensions | 0006-Do-not-build-.NET-Fx-binaries-in-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+aspnet-xdt | 0001-Don-t-build-tests-in-source-build.patch | ProjRemoval | Incorporate | Repo |  | 
+aspnet-xdt | 0002-Do-not-build-NET-Fx-binaries-in-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+cli | 0002-Fix-package-version-property-name.patch | Bug | Incorporate | Repo |  | 
+cli | 0003-Don-t-call-dotnet-without-path.patch | ToolCompat | SourceBuildUptake | Source-build | Same as aspnetcore #0007 | https://github.com/dotnet/arcade/pull/4032
+cli | 0005-Exclude-test-projects-from-source-build.patch | ProjRemoval | Incorporate | Repo |  | 
+clicommandlineparser | 0001-Remove-test-and-sample-projects-from-solution.patch | ProjRemoval | Unknown | Source-build | CliCommandLineParser has been static for a while - was it going to be removed? | 
+coreclr | 0001-Allow-separate-tool-and-SDK-directories.patch | Build | Incorporate | Repo |  | 
+coreclr | 0007-Exclude-optdata-from-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+corefx | 0001-Enable-sourcelink-in-source-build.patch | ToolCompat | Incorporate | Repo |  | 
+corefx | 0002-Enable-tests-for-CoreFX-in-s-b.patch | UnitTesting | Unknown | Source-build |  | 
+corefx | 0003-Check-in-package-baseline-so-all-build-nodes-see-the.patch | Bug | Incorporate | Repo |  | 
+core-sdk | 0001-Exclude-test-project-from-source-build.patch | ProjRemoval | Incorporate | Repo |  | 
+core-sdk | 0003-Don-t-add-target-rid-to-NetCoreRuntimePackRids.patch | Bug | Incorporate | Repo |  | 
+core-sdk | 0003-Fix-removing-Windows-templates-for-non-Windows-RIDs.patch | Prebuilt | Incorporate | Repo |  | 
+core-sdk | 0003-Remove-debian-package-generation.patch | Prebuilt | Incorporate | Repo |  | 
+core-sdk | 0004-Patch-ASP.NET-directory.patch | Build | SourceBuildFix | Source-build |  | 
+core-sdk | 0005-Don-t-call-dotnet-without-path.patch | ToolCompat | SourceBuildUptake | Source-build | Same as aspnetcore #0007 | https://github.com/dotnet/arcade/pull/4032
+core-setup | 0001-Use-pinned-version-of-MSBuild-reference-assemblies.patch | Prebuilt | Incorporate | Repo |  | 
+core-setup | 0002-Try-ExcludeFromSourceBuild-in-windowsdesktop.patch | Prebuilt | Incorporate | Repo |  | 
+core-setup | 0003-Pin-NuGetProjectModel-to-a-specific-version.patch | Prebuilt | Incorporate | Repo |  | 
+fsharp | 0001-Don-t-install-old-SDK.patch | Build | Incorporate | Repo |  | 
+fsharp | 0002-Pin-S.R.Emit-to-a-ref-version.patch | Prebuilt | Incorporate | Repo |  | 
+linker | 0001-Add-an-option-to-use-reflection-heuristics-during-ma.patch | ToolCompat | Fork | Source-build |  | 
+linker | 0002-Exclude-test-projects-from-source-build.patch | ProjRemoval | Fork | Source-build |  | 
+linker | 0003-Don-t-add-sources-when-building-offline.patch | Build | Fork | Source-build |  | 
+linker | 0004-Use-new-versions-of-MSBuild-reference-assemblies.patch | Prebuilt | Fork | Source-build |  | 
+msbuild | 0001-Do-not-build-for-.NET-Fx-in-source-build.patch | Prebuilt | Incorporate | Source-build |  | 
+msbuild | 0002-Add-Microsoft.Build.Localization-to-msbuild-for-sour.patch | Prebuilt | Incorporate | Repo |  | 
+msbuild | 0003-Remove-dotnet-call-with-no-path.patch | ToolCompat | SourceBuildUptake | Source-build | Same as aspnetcore #0007 | https://github.com/dotnet/arcade/pull/4032
+msbuild | 0003-Source-build-should-use-prebuilt-System.CodeDom-and-.patch | Prebuilt | Incorporate | Repo |  | 
+nuget-client | 0002-Dont-include-extra-CoreCLR-DLLs.patch | Build | Unknown | Source-build | This builds differently from the official build, needs investigation | 
+nuget-client | 0002-MSBuild-package-versions-for-dotnet-Source-Build-285.patch | Flow | SourceBuildUptake | Source-build |  | 
+nuget-client | 0003-Pin-newtonsoft-json-to-a-specific-version.patch | Prebuilt | Incorporate | Repo |  | 
+nuget-client | 0004-Removed-unneeded-feeds.patch | Build | Incorporate | Repo |  | 
+nuget-client | 0005-New-version-of-ref-assemblies.patch | Prebuilt | Incorporate | Repo |  | 
+nuget-client | 0006-Do-not-build-NET-Fx-binaries-in-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+roslyn | 0001-Conditionally-remove-net472-from-TargetFrameworks.patch | Prebuilt | Incorporate | Repo |  | 
+roslyn | 0002-Fix-switch-expression-for-preview8-SDK.patch | ToolCompat | SouceBuildUptake | Source-build |  | 
+roslyn | 0003-Do-not-build-NET-Fx-binaries-in-source-build.patch | Prebuilt | Incorporate | Repo |  | 
+roslyn | 0004-Import-PackageVersions-props-if-exists.patch | Flow | Unknown | Source-build | Arcade update may fix this | 
+sdk | 0001-Add-missing-PlatformAbstractions-reference.patch | Bug | Incorporate | Repo |  | 
+sdk | 0002-Use-ref-only-msbuild-packages.patch | Prebuilt | Incorporate | Repo |  | 
+sdk | 0003-Don-t-call-dotnet-without-path.patch | ToolCompat | SourceBuildUpdtake | Source-build | Same as aspnetcore #0007 | https://github.com/dotnet/arcade/pull/4032
+sourcelink | 0001-Exclude-test-projects.patch | ProjRemoval | Incorporate | Repo |  | 
+sourcelink | 0002-Do-not-build-and-package-.NET-Fx-binaries-in-source-.patch | Prebuilt | Incorporate | Repo |  | 
+templating | 0001-Don-t-call-dotnet-with-no-path.patch | ToolCompat | SourceBuildUpdtake | Source-build | Same as aspnetcore #0007 | https://github.com/dotnet/arcade/pull/4032
+toolset | 0001-Exclude-test-projects-from-source-build.patch | ProjRemoval | Incorporate | Repo |  | 
+toolset | 0002-Remove-WindowsDesktop-dependency.patch | ProjRemoval | Incorporate | Repo |  | 
+vstest | 0001-Update-vstest-build-script-to-add-binlogs.patch | One-off | Unknown |  |  | 
+vstest | 0002-Remove-reference-to-System.Runtime.CompilerServices..patch | Prebuilt | Unknown |  |  | 
+vstest | 0003-Update-the-license-for-nuget-packages-to-point-to-MI.patch | One-off | Incorporate | Repo |  | 
+vstest | 0004-Fix-Extensions-FileSystemGlobbing-version.patch | Flow | Incorporate | Repo |  | 
+websdk | 0001-Add-PVP-import.patch | Flow | Unknown | Source-build | May be fixed by Arcade update | 
+xliff-tasks | 0001-Remove-unneeded-feeds.patch | Build | Incorporate | Repo |  | 
+
 
 
 **Repo BAR status**
@@ -171,12 +195,6 @@ Not publishing to BAR, not planning to be:
 - application-insights (not owned by us and doesn't change often)
 - aspnet/common (obsolete)
 - newtonsoft-json (not owned by us)
-
-Not on Arcade or BAR:
-- VSTest
-
-On Arcade but not BAR:
-- xliff-tasks (https://github.com/dotnet/xliff-tasks/issues/114)
 
 
 <!--StartOfIssuesList-->
