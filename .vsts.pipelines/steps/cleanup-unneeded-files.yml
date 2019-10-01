@@ -4,7 +4,7 @@
 steps:
 - script: sudo apt-get clean
   displayName: Clean apt-get cache
-  condition: ne(parameters.setupMac, true)
+  condition: ne(variables['parameters.setupMac'], true)
   continueOnError: true
 
 - script: sudo rm -rf /usr/local/lib/android
