@@ -253,14 +253,54 @@ do
     fi
 done
 
+allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+
 echo 'Removing reference-packages from tarball prebuilts...'
 
-for ref_package in $(tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]')
+for ref_package in ${allRefPkgs[@]}
 do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
     fi
 done
+
+echo 'Removing previously source-built packages from tarball prebuilts...'
+
+for ref_package in ${allSourceBuiltPkgs[@]}
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
+    fi
+done
+
+echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
+OLDIFS=$IFS
+
+allBuiltPkgs=(`ls $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
+pushd $TARBALL_ROOT/packages/reference/staging/
+ilSrcPaths=(`find . -maxdepth 2 -mindepth 2`)
+popd
+
+for path in ${ilSrcPaths[@]}; do
+    IFS='/'
+    read -a splitLine <<< "$path"
+    remove=false
+    if [[ " ${allRefPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
+        remove=true
+    fi
+    if [[ " ${allSourceBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
+        remove=true
+    fi
+    if [[ " ${allBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
+        remove=true
+    fi
+    if [[ "$remove" == "true" ]]; then
+        rm -rf "$TARBALL_ROOT/packages/reference/staging/$path"
+    fi
+done
+
+IFS=$OLDIFS
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 
