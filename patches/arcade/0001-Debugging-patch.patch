@@ -1,17 +1,17 @@
-From fe8fb0fe6216908f3ac20230555883ae57c8c7fd Mon Sep 17 00:00:00 2001
+From ec973d52b43da3b42a846a23c445d9b110a62ee2 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 2 Oct 2019 10:54:19 -0500
 Subject: [PATCH] Debugging patch
 
 ---
- .../src/NuGetPack.cs                             | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../src/NuGetPack.cs                          | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
-index 5fb7c2e7..935e5bf9 100644
+index 5fb7c2e7..d58d5b2a 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
-@@ -245,12 +245,28 @@ private string GetPackageOutputPath(string nuspecPath, Manifest manifest, bool i
+@@ -245,12 +245,33 @@ private string GetPackageOutputPath(string nuspecPath, Manifest manifest, bool i
          public void Pack(string nuspecPath, string nupkgPath, Manifest manifest, bool packSymbols)
          {
              bool creatingSymbolsPackage = packSymbols && (Path.GetExtension(nupkgPath) == _symbolsPackageExtension);
@@ -35,6 +35,11 @@ index 5fb7c2e7..935e5bf9 100644
 +                    {
 +                        Console.WriteLine($"File {s} exists: {File.Exists(s)}");
 +                        Console.WriteLine($"Directory {s} exists: {Directory.Exists(s)}");
++                        if (Directory.Exists(s))
++                        {
++                            Console.WriteLine($"Files in {s}: {string.Join(",", Directory.EnumerateFiles(s))}");
++                        }
++                        s = Directory.GetParent(s).FullName;
 +                    }
 +                }
                  builder.PopulateFiles(baseDirectoryPath, manifest.Files);
