@@ -48,22 +48,29 @@ namespace Microsoft.DotNet.Build.Tasks
                 Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Starting dependency {dep.ToString()}");
                 string repoPath = DeriveRepoPath(ClonedSubmoduleDirectory, dep.Uri, dep.Sha);
                 string repoGitDir = DeriveRepoGitDirPath(ClonedSubmoduleGitRootDirectory, dep.Uri);
-                string repoName = GetRepoNameOrDefault(dep);
-                string safeRepoName = repoName.Replace("-", "");
-                try
+                if (Directory.Exists(repoGitDir))
                 {
-                    WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                    WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
-                    if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                    string repoName = GetRepoNameOrDefault(dep);
+                    string safeRepoName = repoName.Replace("-", "");
+                    try
                     {
-                        HandleSubmodules(repoPath, repoGitDir, dep);
+                        WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
+                        WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
+                        if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                        {
+                            HandleSubmodules(repoPath, repoGitDir, dep);
+                        }
+                        allRepoProps[$"{safeRepoName}GitCommitHash"] = dep.Sha;
+                        allRepoProps[$"{safeRepoName}OutputPackageVersion"] = dep.Version;
                     }
-                    allRepoProps[$"{safeRepoName}GitCommitHash"] = dep.Sha;
-                    allRepoProps[$"{safeRepoName}OutputPackageVersion"] = dep.Version;
+                    catch (Exception e)
+                    {
+                        Log.LogErrorFromException(e, true, true, null);
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Log.LogErrorFromException(e, true, true, null);
+                    Log.LogMessage(MessageImportance.Normal, $"[{DateTimeOffset.Now}] Skipping dependency {dep.ToString()} - git dir {repoGitDir} doesn't exist");
                 }
             }
             string allRepoPropsPath = Path.Combine(SourceBuildMetadataDir, "AllRepoVersions.props");
