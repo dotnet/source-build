@@ -33,11 +33,11 @@ index 5fb7c2e7..d58d5b2a 100644
 +                    var s = f.Source;
 +                    while (s != "/")
 +                    {
-+                        Console.WriteLine($"File {s} exists: {File.Exists(s)}");
-+                        Console.WriteLine($"Directory {s} exists: {Directory.Exists(s)}");
++                        Log.LogWarning($"File {s} exists: {File.Exists(s)}");
++                        Log.LogWarning($"Directory {s} exists: {Directory.Exists(s)}");
 +                        if (Directory.Exists(s))
 +                        {
-+                            Console.WriteLine($"Files in {s}: {string.Join(",", Directory.EnumerateFiles(s))}");
++                            Log.LogWarning($"Files in {s}: {string.Join(",", Directory.EnumerateFiles(s))}");
 +                        }
 +                        s = Directory.GetParent(s).FullName;
 +                    }
