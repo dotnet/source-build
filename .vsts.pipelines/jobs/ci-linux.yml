@@ -242,7 +242,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /drop/tarball/
         cd \"$(tarballName)\"
-        find . \( \
+        find ./bin \( \
           -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
           -exec cp {} /drop/tarball/ \;"
       du -h $(rootDirectory) | sort -h | tail -n 50
