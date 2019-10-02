@@ -6,6 +6,7 @@
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -ignoreWarnings</BuildArguments>
     <BuildArguments>$(BuildArguments) -skipmanagedtools</BuildArguments>
+    <BuildArguments>$(BuildArguments) -skiprestoreoptdata</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -skiprestore</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
