@@ -16,9 +16,9 @@ index 5fb7c2e7..f1ff6c8b 100644
          {
              bool creatingSymbolsPackage = packSymbols && (Path.GetExtension(nupkgPath) == _symbolsPackageExtension);
 +            Log.LogWarning($"starting NuGetPack.Pack: nuspecPath={nuspecPath}, nupkgPath={nupkgPath}, packSymbols={packSymbols}");
-+            Log.LogWarning($"OutputDirectory={OutputDirectory}, BaseDirectory={BaseDirectory ?? "<null>"}, PackageVersoin=={PackageVersion ?? "<null>"}");
-+            Log.LogWarning($"ExcludeEmptyDirectories={ExcludeEmptyDirectories}, CreateSymbolPackage={CreateSymbolPackage}, IncludeSymbolsInPackage=={IncludeSymbolsInPackage}");
-+            Log.LogWarning($"CreatePackedPackage={CreatePackedPackage}, SymbolPackageOutputDirectory={SymbolPackageOutputDirectory ?? "<null>"}, PackedPackageNamePrefix=={PackedPackageNamePrefix ?? "<null>"}");
++            Log.LogWarning($"OutputDirectory={OutputDirectory}, BaseDirectory={BaseDirectory ?? "<null>"}, PackageVersion={PackageVersion ?? "<null>"}");
++            Log.LogWarning($"ExcludeEmptyDirectories={ExcludeEmptyDirectories}, CreateSymbolPackage={CreateSymbolPackage}, IncludeSymbolsInPackage={IncludeSymbolsInPackage}");
++            Log.LogWarning($"CreatePackedPackage={CreatePackedPackage}, SymbolPackageOutputDirectory={SymbolPackageOutputDirectory ?? "<null>"}, PackedPackageNamePrefix={PackedPackageNamePrefix ?? "<null>"}");
 +
              try
              {
