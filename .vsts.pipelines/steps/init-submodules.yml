@@ -4,7 +4,7 @@ parameters:
 steps:
   # Fetch vsts commits if building internally.
   - bash: |
-      set -x
+      set -ex
       # Ignore failure for the first command. It will intentionally fail if the commit is only
       # available in VSTS. "submodule update --init" is the simplest way to set up the submodule
       # directory. ("submodule init" only sets up .git/config, not the e.g. src/coreclr/.git and
@@ -18,7 +18,7 @@ steps:
 
   # Initialize submodules.
   - bash: |
-      set -x
+      set -ex
       $commandPrefix git submodule update --init --recursive
     displayName: Initialize submodules
     env:
