@@ -47,12 +47,12 @@ jobs:
 
   # Create working directory and copy source into it.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
         rm -rf /root/sb/
         mkdir -p /root/sb/tarball
-        cp -r . /root/sb/source-build' || exit 1
+        cp -r . /root/sb/source-build'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory and copy source from cloned directory
 
@@ -62,7 +62,7 @@ jobs:
 
   # Build source-build.
   - script: |
-      set -x
+      set -ex
       df -h
       if [ "$(sb.tarball)" != "true" ]; then
         failOnBaselineError=true
@@ -72,14 +72,14 @@ jobs:
         /p:PortableBuild=$(sb.portable) \
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) || exit 1
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 120
 
   # Generate prebuilt burndown data
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.src.map) $(docker.src.work) -e SOURCE_BUILD_SKIP_SUBMODULE_CHECK $(imageName) ./build.sh \
         --generate-prebuilt-data \
@@ -89,23 +89,23 @@ jobs:
 
   # Run smoke tests. This is needed even in tarball legs to create the smoke-test-prereqs archive.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         --run-smoke-test \
         /p:Configuration=$(sb.configuration) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) || exit 1
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test
 
   # Run unit tests that we support.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         -test \
         /p:Configuration=$(sb.configuration) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) || exit 1
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run unit tests
     condition: and(succeeded(), eq(variables['runUnitTests'], true))
@@ -114,7 +114,7 @@ jobs:
 
   # Create tarball.
   - script: |
-      set -x
+      set -ex
       df -h
       args="--skip-build --minimize-disk-usage"
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
@@ -122,14 +122,14 @@ jobs:
       fi
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
-        $args || exit 1
+        $args
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Create tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Copy logs from the production build
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/logs
@@ -139,7 +139,7 @@ jobs:
           -path './bin/roslyn-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;" || exit 1
+          -exec cp {} --parents /logs/source-build/logs \;"
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build production build logs
     condition: always()
@@ -147,7 +147,7 @@ jobs:
 
   # Delete key directories from local copy of repo to save space
   - script: |
-      set -x
+      set -ex
       df -h
       sudo rm -rf $(rootDirectory)/sb/source-build/bin/src
       sudo rm -rf $(rootDirectory)/sb/source-build/bin/obj
@@ -158,6 +158,7 @@ jobs:
 
   # tar the tarball directory into the drop directory.
   - script: |
+      set -ex
       df -h
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
@@ -171,14 +172,14 @@ jobs:
         find "$smokeTestPackages" -not -iname "*.nupkg" -delete
         # Make one .tar.gz for build, another for extras necessary to smoke test:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
-        tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"' || exit 1
+        tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball to output
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Build tarball.
   - script: |
-      set -x
+      set -ex
       df -h
       networkArg=
       if [ "$(sb.tarballOffline)" = "true" ]; then
@@ -192,7 +193,7 @@ jobs:
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
         /p:FailOnPrebuiltBaselineError=true \
-        $poisonArg || exit 1
+        $poisonArg
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
     timeoutInMinutes: 120
@@ -200,13 +201,13 @@ jobs:
 
   # Run smoke tests.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
         --minimal \
         --projectOutput \
         --configuration $(sb.configuration) \
-        --prodConBlobFeedUrl '' || exit 1
+        --prodConBlobFeedUrl ''
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test in tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
@@ -218,7 +219,7 @@ jobs:
 
   # Copy logs and reports to staging directory.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/tarball/logs
@@ -229,7 +230,7 @@ jobs:
           -path './bin/roslyn-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/tarball/logs \;" || exit 1
+          -exec cp {} --parents /logs/tarball/logs \;"
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball logs
     condition: eq(variables['sb.tarball'], true)
@@ -237,14 +238,14 @@ jobs:
 
   # Copy source-built artifacts tarball to drop directory.
   - script: |
-      set -x
+      set -ex
       df -h
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /drop/tarball/
         cd \"$(tarballName)\"
         find . \( \
           -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
-          -exec cp {} /drop/tarball/ \;" || exit 1
+          -exec cp {} /drop/tarball/ \;"
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-built artifacts tarball
     condition: eq(variables['sb.tarball'], true)

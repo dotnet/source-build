@@ -3,7 +3,7 @@ parameters:
 
 steps:
   - script: |
-      set -x
+      set -ex
       # Publish tarball's prebuilt data. Use ./build.sh from production build.
       $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         --publish-prebuilt-report \
@@ -19,7 +19,7 @@ steps:
     condition: and(succeeded(), ne(variables['publish.blobStorage.accessToken'], ''), eq(variables['sb.tarball'], true))
 
   - script: |
-      set -x
+      set -ex
       # Publish prebuilt data if burndown report was generated
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         --publish-prebuilt-report \
