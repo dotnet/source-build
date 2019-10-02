@@ -15,10 +15,10 @@ index 5fb7c2e7..f1ff6c8b 100644
          public void Pack(string nuspecPath, string nupkgPath, Manifest manifest, bool packSymbols)
          {
              bool creatingSymbolsPackage = packSymbols && (Path.GetExtension(nupkgPath) == _symbolsPackageExtension);
-+            Log.LogMessage(MessageImportance.High, $"starting NuGetPack.Pack: nuspecPath={nuspecPath}, nupkgPath={nupkgPath}, packSymbols={packSymbols}");
-+            Log.LogMessage(MessageImportance.High, $"OutputDirectory={OutputDirectory}, BaseDirectory={BaseDirectory ?? "<null>"}, PackageVersoin=={PackageVersion ?? "<null>"}");
-+            Log.LogMessage(MessageImportance.High, $"ExcludeEmptyDirectories={ExcludeEmptyDirectories}, CreateSymbolPackage={CreateSymbolPackage}, IncludeSymbolsInPackage=={IncludeSymbolsInPackage}");
-+            Log.LogMessage(MessageImportance.High, $"CreatePackedPackage={CreatePackedPackage}, SymbolPackageOutputDirectory={SymbolPackageOutputDirectory ?? "<null>"}, PackedPackageNamePrefix=={PackedPackageNamePrefix ?? "<null>"}");
++            Log.LogWarning($"starting NuGetPack.Pack: nuspecPath={nuspecPath}, nupkgPath={nupkgPath}, packSymbols={packSymbols}");
++            Log.LogWarning($"OutputDirectory={OutputDirectory}, BaseDirectory={BaseDirectory ?? "<null>"}, PackageVersoin=={PackageVersion ?? "<null>"}");
++            Log.LogWarning($"ExcludeEmptyDirectories={ExcludeEmptyDirectories}, CreateSymbolPackage={CreateSymbolPackage}, IncludeSymbolsInPackage=={IncludeSymbolsInPackage}");
++            Log.LogWarning($"CreatePackedPackage={CreatePackedPackage}, SymbolPackageOutputDirectory={SymbolPackageOutputDirectory ?? "<null>"}, PackedPackageNamePrefix=={PackedPackageNamePrefix ?? "<null>"}");
 +
              try
              {
@@ -26,10 +26,10 @@ index 5fb7c2e7..f1ff6c8b 100644
  
                  string baseDirectoryPath = (string.IsNullOrEmpty(BaseDirectory)) ? Path.GetDirectoryName(nuspecPath) : BaseDirectory;
                  builder.Populate(manifest.Metadata);
-+                Log.LogMessage(MessageImportance.High, $"about to populate files: baseDirectory={baseDirectoryPath}");
++                Log.LogWarning($"about to populate files: baseDirectory={baseDirectoryPath}");
 +                foreach (var f in manifest.Files)
 +                {
-+                    Log.LogMessage(MessageImportance.High, $"file: Source={f.Source}, Target={f.Target}, Exclude={f.Exclude}");
++                    Log.LogWarning($"file: Source={f.Source}, Target={f.Target}, Exclude={f.Exclude}");
 +                }
                  builder.PopulateFiles(baseDirectoryPath, manifest.Files);
  
