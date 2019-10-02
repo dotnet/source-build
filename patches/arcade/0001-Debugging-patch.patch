@@ -1,0 +1,39 @@
+From 35ebc611a4e5b00489ecbf4e248f97ae6a44c267 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 2 Oct 2019 10:54:19 -0500
+Subject: [PATCH] Debugging patch
+
+---
+ .../src/NuGetPack.cs                                   | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
+index 5fb7c2e7..f1ff6c8b 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/NuGetPack.cs
+@@ -245,12 +245,22 @@ private string GetPackageOutputPath(string nuspecPath, Manifest manifest, bool i
+         public void Pack(string nuspecPath, string nupkgPath, Manifest manifest, bool packSymbols)
+         {
+             bool creatingSymbolsPackage = packSymbols && (Path.GetExtension(nupkgPath) == _symbolsPackageExtension);
++            Log.LogMessage(MessageImportance.High, $"starting NuGetPack.Pack: nuspecPath={nuspecPath}, nupkgPath={nupkgPath}, packSymbols={packSymbols}");
++            Log.LogMessage(MessageImportance.High, $"OutputDirectory={OutputDirectory}, BaseDirectory={BaseDirectory ?? "<null>"}, PackageVersoin=={PackageVersion ?? "<null>"}");
++            Log.LogMessage(MessageImportance.High, $"ExcludeEmptyDirectories={ExcludeEmptyDirectories}, CreateSymbolPackage={CreateSymbolPackage}, IncludeSymbolsInPackage=={IncludeSymbolsInPackage}");
++            Log.LogMessage(MessageImportance.High, $"CreatePackedPackage={CreatePackedPackage}, SymbolPackageOutputDirectory={SymbolPackageOutputDirectory ?? "<null>"}, PackedPackageNamePrefix=={PackedPackageNamePrefix ?? "<null>"}");
++
+             try
+             {
+                 PackageBuilder builder = new PackageBuilder();
+ 
+                 string baseDirectoryPath = (string.IsNullOrEmpty(BaseDirectory)) ? Path.GetDirectoryName(nuspecPath) : BaseDirectory;
+                 builder.Populate(manifest.Metadata);
++                Log.LogMessage(MessageImportance.High, $"about to populate files: baseDirectory={baseDirectoryPath}");
++                foreach (var f in manifest.Files)
++                {
++                    Log.LogMessage(MessageImportance.High, $"file: Source={f.Source}, Target={f.Target}, Exclude={f.Exclude}");
++                }
+                 builder.PopulateFiles(baseDirectoryPath, manifest.Files);
+ 
+                 if (creatingSymbolsPackage)
+-- 
+2.18.0
+
