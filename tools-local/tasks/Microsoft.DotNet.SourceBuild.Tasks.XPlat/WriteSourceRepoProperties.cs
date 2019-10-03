@@ -85,7 +85,8 @@ namespace Microsoft.DotNet.Build.Tasks
                 ["GitCommitDate"] = GetCommitDate(repoGitDir, dependency.Sha),
                 ["OfficialBuildId"] = derivedVersion.OfficialBuildId,
                 ["OutputPackageVersion"] = dependency.Version,
-                ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel
+                ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel,
+                ["IsStable"] = string.IsNullOrWhitespace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
             };
             WritePropsFile(propsPath, repoProps);
         }

@@ -76,11 +76,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
-         is fixed we will be able to determine this automatically.  -->
-    <EnvironmentVariables Include="DropSuffix=true"
-                          Condition="'$(UseStableVersions)' == 'true'" />
-
     <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
     <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
   </ItemGroup>
