@@ -1,0 +1,39 @@
+From 59ffd433562e58844acfabc82c95ba8182667d49 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 3 Oct 2019 16:46:19 -0500
+Subject: [PATCH 4/4] Enable full fx builds for source-build
+
+---
+ src/Build/Microsoft.Build.csproj | 2 +-
+ src/Directory.Build.props        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Build/Microsoft.Build.csproj b/src/Build/Microsoft.Build.csproj
+index e6686fd9..88a8b079 100644
+--- a/src/Build/Microsoft.Build.csproj
++++ b/src/Build/Microsoft.Build.csproj
+@@ -7,7 +7,7 @@
+     <!-- Node reuse requires an API new to .NET Core 2.1 not yet available
+          in .NETStandard. -->
+     <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OsEnvironment)'=='windows'">$(FullFrameworkTFM);netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OsEnvironment)'=='windows' or '$(DotNetBuildFromSource)' == 'true'">$(FullFrameworkTFM);netcoreapp2.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(MonoBuild)'=='true'">$(RuntimeOutputTargetFrameworks)</TargetFrameworks>
+     <RootNamespace>Microsoft.Build</RootNamespace>
+     <AssemblyName>Microsoft.Build</AssemblyName>
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 6b291e7a..0ed71085 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -28,7 +28,7 @@
+ 
+     <!-- Target frameworks for Exe and unit test projects (ie projects with runtime output) -->
+     <RuntimeOutputTargetFrameworks>netcoreapp2.1</RuntimeOutputTargetFrameworks>
+-    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
++    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows' or '$(DotNetBuildFromSource)' == 'true'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
+     <RuntimeOutputTargetFrameworks Condition="'$(MonoBuild)' == 'true'">net461</RuntimeOutputTargetFrameworks>
+ 
+     <!-- Don't automatically append target framework to output path, since we want to put the Platform Target beforehand, if it's not AnyCPU -->
+-- 
+2.21.0
+
