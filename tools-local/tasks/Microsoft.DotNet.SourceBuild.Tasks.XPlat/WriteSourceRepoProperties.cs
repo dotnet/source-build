@@ -86,7 +86,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 ["OfficialBuildId"] = derivedVersion.OfficialBuildId,
                 ["OutputPackageVersion"] = dependency.Version,
                 ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel,
-                ["IsStable"] = string.IsNullOrWhitespace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
+                ["IsStable"] = string.IsNullOrWhiteSpace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
             };
             WritePropsFile(propsPath, repoProps);
         }
