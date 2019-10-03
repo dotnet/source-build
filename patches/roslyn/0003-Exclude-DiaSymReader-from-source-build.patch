@@ -1,0 +1,27 @@
+From 19d3c46eaff426d47b2c2e2bbe9725b86ed4af0d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 3 Oct 2019 14:41:17 -0500
+Subject: [PATCH 3/3] Exclude DiaSymReader from source-build
+
+---
+ .../DesktopCompilerArtifacts.targets                          | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets b/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
+index e9633b3f18..5003be7ae9 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/DesktopCompilerArtifacts.targets
+@@ -29,8 +29,8 @@
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.Scripting\$(Configuration)\netstandard2.0\Microsoft.CodeAnalysis.Scripting.dll" NgenArchitecture="all" NgenApplication="csi.exe"/>
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp.Scripting\$(Configuration)\netstandard2.0\Microsoft.CodeAnalysis.CSharp.Scripting.dll" NgenArchitecture="all" NgenApplication="csi.exe"/>
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.VisualBasic\$(Configuration)\netstandard2.0\Microsoft.CodeAnalysis.VisualBasic.dll" NgenArchitecture="all" NgenApplication="VBCSCompiler.exe"/>
+-      <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\Microsoft.DiaSymReader.Native.amd64.dll"/>
+-      <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\Microsoft.DiaSymReader.Native.x86.dll"/>
++      <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\Microsoft.DiaSymReader.Native.amd64.dll" Condition="'$(DotNetBuildFromSource)' != 'true'" />
++      <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\Microsoft.DiaSymReader.Native.x86.dll" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\csc.exe" NgenArchitecture="all" NgenApplication="csc.exe" NgenPriority="2"/>
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\csc.exe.config"/>
+       <DesktopCompilerArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\net472\csc.rsp"/>
+-- 
+2.21.0
+
