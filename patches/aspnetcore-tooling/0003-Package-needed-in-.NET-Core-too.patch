@@ -1,0 +1,25 @@
+From 45e1897e226effae5c0ba7d1dca2f01942e63983 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 4 Oct 2019 10:27:47 -0500
+Subject: [PATCH 3/3] Package needed in .NET Core too
+
+---
+ .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+index 83e69e93f..13700873b 100644
+--- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
++++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+@@ -17,7 +17,7 @@
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" />
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net46'" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" />
+ 
+     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions\Microsoft.AspNetCore.Mvc.Razor.Extensions.csproj" ReferenceOutputAssembly="false" Condition="'$(TargetFramework)'=='netcoreapp3.0'" />
+     <ProjectReference Include="..\Microsoft.AspNetCore.Razor.Tools\Microsoft.AspNetCore.Razor.Tools.csproj" ReferenceOutputAssembly="false" Condition="'$(TargetFramework)'=='netcoreapp3.0'" />
+-- 
+2.21.0
+
