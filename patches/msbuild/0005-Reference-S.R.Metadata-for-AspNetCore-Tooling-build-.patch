@@ -1,0 +1,25 @@
+From cdc21609305ba1a369964ab0e4e5a4229f3bbc1c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 4 Oct 2019 12:35:27 -0500
+Subject: [PATCH 5/5] Reference S.R.Metadata for AspNetCore-Tooling build task
+
+---
+ src/Build/Microsoft.Build.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Build/Microsoft.Build.csproj b/src/Build/Microsoft.Build.csproj
+index 88a8b079..abd80ae6 100644
+--- a/src/Build/Microsoft.Build.csproj
++++ b/src/Build/Microsoft.Build.csproj
+@@ -35,7 +35,7 @@
+     <PackageReference Include="System.Threading.Tasks.Dataflow" />
+     <PackageReference Include="System.Memory" />
+ 
+-    <PackageReference Include="System.Reflection.Metadata" Condition="'$(MonoBuild)' == 'true'" />
++    <PackageReference Include="System.Reflection.Metadata" Condition="'$(MonoBuild)' == 'true' or '$(DotNetBuildFromSource)' == 'true'" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+-- 
+2.21.0
+
