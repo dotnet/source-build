@@ -1,4 +1,4 @@
-From 59ffd433562e58844acfabc82c95ba8182667d49 Mon Sep 17 00:00:00 2001
+From 9d57cba04b40c7eeca67ac0a849a626a9959038b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 3 Oct 2019 16:46:19 -0500
 Subject: [PATCH 4/4] Enable full fx builds for source-build
@@ -6,7 +6,8 @@ Subject: [PATCH 4/4] Enable full fx builds for source-build
 ---
  src/Build/Microsoft.Build.csproj | 2 +-
  src/Directory.Build.props        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ src/MSBuild/MSBuild.csproj       | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/Build/Microsoft.Build.csproj b/src/Build/Microsoft.Build.csproj
 index e6686fd9..88a8b079 100644
@@ -34,6 +35,19 @@ index 6b291e7a..0ed71085 100644
      <RuntimeOutputTargetFrameworks Condition="'$(MonoBuild)' == 'true'">net461</RuntimeOutputTargetFrameworks>
  
      <!-- Don't automatically append target framework to output path, since we want to put the Platform Target beforehand, if it's not AnyCPU -->
+diff --git a/src/MSBuild/MSBuild.csproj b/src/MSBuild/MSBuild.csproj
+index 80e9e7d7..9ec5b5e8 100644
+--- a/src/MSBuild/MSBuild.csproj
++++ b/src/MSBuild/MSBuild.csproj
+@@ -276,7 +276,7 @@
+ 
+     <ItemGroup>
+       <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\MSBuild.exe.config" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' " />
+-      <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\Microsoft.Build.Framework.tlb" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' " />
++      <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\Microsoft.Build.Framework.tlb" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' and '$(DotNetBuildFromSource)' != 'true'" />
+       <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\Microsoft.Data.Entity.targets" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' " />
+       <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\Microsoft.ServiceModel.targets" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' " />
+       <_OurFiles Include="$(OutputPath)%(_TargetFrameworks.Identity)\Microsoft.WinFx.targets" TargetFramework="%(_TargetFrameworks.Identity)" Condition=" '%(_TargetFrameworks.Identity)' == '$(FullFrameworkTFM)' " />
 -- 
 2.21.0
 
