@@ -16,8 +16,6 @@
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PackageTargetRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
@@ -59,7 +57,6 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
-    <EnvironmentVariables Include="BuildInParallel=false" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
