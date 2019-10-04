@@ -1,12 +1,26 @@
-From 45e1897e226effae5c0ba7d1dca2f01942e63983 Mon Sep 17 00:00:00 2001
+From b0905ce5ac851729efac833c2c45249ee2539232 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 4 Oct 2019 10:27:47 -0500
 Subject: [PATCH 3/3] Package needed in .NET Core too
 
 ---
+ eng/Versions.props                                              | 2 +-
  .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 947b04c64..fb66dae63 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -59,7 +59,7 @@
+     <MicrosoftNETCorePlatformsPackageVersion>3.0.0</MicrosoftNETCorePlatformsPackageVersion>
+     <SystemDiagnosticsDiagnosticSourcePackageVersion>4.6.0</SystemDiagnosticsDiagnosticSourcePackageVersion>
+     <SystemTextEncodingsWebPackageVersion>4.6.0</SystemTextEncodingsWebPackageVersion>
+-    <SystemReflectionMetadataPackageVersion>1.7.0</SystemReflectionMetadataPackageVersion>
++    <SystemReflectionMetadataPackageVersion>1.6.0</SystemReflectionMetadataPackageVersion>
+     <!-- Packages from dotnet/roslyn -->
+     <MicrosoftNetCompilersToolsetPackageVersion>3.3.1-beta4-19462-11</MicrosoftNetCompilersToolsetPackageVersion>
+   </PropertyGroup>
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
 index 83e69e93f..13700873b 100644
 --- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
