@@ -1,0 +1,25 @@
+From f722cc0ff5646b3de20df5072990a4d2c498849d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 5 Oct 2019 17:37:41 -0500
+Subject: [PATCH 4/4] Upgrade target framework
+
+---
+ eng/targets/Settings.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index 60bda23f7c..d1fa62b2a1 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -18,7 +18,7 @@
+     <DisableImplicitNuGetFallbackFolder>true</DisableImplicitNuGetFallbackFolder>
+     <ToolsetPackagesDir>$(RepoRoot)build\ToolsetPackages\</ToolsetPackagesDir>
+ 
+-    <RoslynPortableTargetFrameworks>net472;netcoreapp2.1</RoslynPortableTargetFrameworks>
++    <RoslynPortableTargetFrameworks>net472;netcoreapp3.0</RoslynPortableTargetFrameworks>
+     <RoslynEnforceCodeStyle Condition="'$(ContinuousIntegrationBuild)' != 'true'">true</RoslynEnforceCodeStyle>
+     <UseSharedCompilation>true</UseSharedCompilation>
+ 
+-- 
+2.21.0
+
