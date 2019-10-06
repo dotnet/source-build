@@ -1,11 +1,13 @@
-From f722cc0ff5646b3de20df5072990a4d2c498849d Mon Sep 17 00:00:00 2001
+From 5df3bd0d460dde0a1f6cc2f0805b585aa3737809 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 5 Oct 2019 17:37:41 -0500
 Subject: [PATCH 4/4] Upgrade target framework
 
 ---
- eng/targets/Settings.props | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ eng/targets/Settings.props              | 2 +-
+ src/Compilers/Shared/NamedPipeUtil.cs   | 2 +-
+ src/Compilers/Shared/RuntimeHostInfo.cs | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
 index 60bda23f7c..d1fa62b2a1 100644
@@ -20,6 +22,32 @@ index 60bda23f7c..d1fa62b2a1 100644
      <RoslynEnforceCodeStyle Condition="'$(ContinuousIntegrationBuild)' != 'true'">true</RoslynEnforceCodeStyle>
      <UseSharedCompilation>true</UseSharedCompilation>
  
+diff --git a/src/Compilers/Shared/NamedPipeUtil.cs b/src/Compilers/Shared/NamedPipeUtil.cs
+index 88d6448e37..887a35c2ca 100644
+--- a/src/Compilers/Shared/NamedPipeUtil.cs
++++ b/src/Compilers/Shared/NamedPipeUtil.cs
+@@ -162,7 +162,7 @@ internal static PipeSecurity CreatePipeSecurity()
+             return security;
+         }
+ 
+-#elif NETCOREAPP2_1
++#elif NETCOREAPP3_0
+ 
+         private static PipeOptions CurrentUserOption = PipeOptions.CurrentUserOnly;
+ 
+diff --git a/src/Compilers/Shared/RuntimeHostInfo.cs b/src/Compilers/Shared/RuntimeHostInfo.cs
+index 1c6a1c5017..bd87f51a21 100644
+--- a/src/Compilers/Shared/RuntimeHostInfo.cs
++++ b/src/Compilers/Shared/RuntimeHostInfo.cs
+@@ -48,7 +48,7 @@ internal static bool IsDotNetHost(out string pathToDotNet)
+         internal static NamedPipeClientStream CreateNamedPipeClient(string serverName, string pipeName, PipeDirection direction, PipeOptions options) =>
+             new NamedPipeClientStream(serverName, pipeName, direction, options);
+ 
+-#elif NETCOREAPP2_1
++#elif NETCOREAPP3_0
+         internal static bool IsDesktopRuntime => false;
+ 
+         private static string DotNetHostPathEnvironmentName = "DOTNET_HOST_PATH";
 -- 
 2.21.0
 
