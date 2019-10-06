@@ -1,13 +1,14 @@
-From 5df3bd0d460dde0a1f6cc2f0805b585aa3737809 Mon Sep 17 00:00:00 2001
+From ab5fc5659cd09552dc99c83f87fad2ffac7f8c0e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 5 Oct 2019 17:37:41 -0500
 Subject: [PATCH 4/4] Upgrade target framework
 
 ---
- eng/targets/Settings.props              | 2 +-
- src/Compilers/Shared/NamedPipeUtil.cs   | 2 +-
- src/Compilers/Shared/RuntimeHostInfo.cs | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ eng/targets/Settings.props                                      | 2 +-
+ .../Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj  | 2 +-
+ src/Compilers/Shared/NamedPipeUtil.cs                           | 2 +-
+ src/Compilers/Shared/RuntimeHostInfo.cs                         | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
 index 60bda23f7c..d1fa62b2a1 100644
@@ -22,6 +23,19 @@ index 60bda23f7c..d1fa62b2a1 100644
      <RoslynEnforceCodeStyle Condition="'$(ContinuousIntegrationBuild)' != 'true'">true</RoslynEnforceCodeStyle>
      <UseSharedCompilation>true</UseSharedCompilation>
  
+diff --git a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+index 0efb1b2363..e67c077f0d 100644
+--- a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
++++ b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+@@ -57,7 +57,7 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkVersion)" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" ExcludeAssets="Runtime" />
+-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp2.1'" />
++    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.0'" />
+   </ItemGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.Build.Tasks.CodeAnalysis.UnitTests" />
 diff --git a/src/Compilers/Shared/NamedPipeUtil.cs b/src/Compilers/Shared/NamedPipeUtil.cs
 index 88d6448e37..887a35c2ca 100644
 --- a/src/Compilers/Shared/NamedPipeUtil.cs
