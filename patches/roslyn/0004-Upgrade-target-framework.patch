@@ -1,4 +1,4 @@
-From 8790bc8aa78ab6c60589e670a90835701dfde149 Mon Sep 17 00:00:00 2001
+From abb93903f13698233f12005220550151fa9905be Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 5 Oct 2019 17:37:41 -0500
 Subject: [PATCH 4/4] Upgrade target framework
@@ -8,15 +8,17 @@ Subject: [PATCH 4/4] Upgrade target framework
  src/Compilers/CSharp/csc/csc.csproj           |  2 +-
  .../Microsoft.Build.Tasks.CodeAnalysis.csproj |  2 +-
  .../Server/VBCSCompiler/VBCSCompiler.csproj   |  4 +--
+ .../Shared/CoreClrAnalyzerAssemblyLoader.cs   |  2 +-
  src/Compilers/Shared/NamedPipeUtil.cs         |  2 +-
  src/Compilers/Shared/RuntimeHostInfo.cs       |  2 +-
+ .../ShadowCopyAnalyzerAssemblyLoader.cs       |  2 +-
  src/Compilers/VisualBasic/vbc/vbc.csproj      |  2 +-
  src/Interactive/csi/csi.csproj                |  6 ++--
  ...Microsoft.NETCore.Compilers.Package.csproj |  2 +-
  .../CoreClrCompilerArtifacts.targets          | 28 +++++++++----------
  ...osoft.Net.Compilers.Toolset.Package.csproj | 18 ++++++------
  .../Microsoft.Net.Compilers.Toolset.props     |  2 +-
- 12 files changed, 36 insertions(+), 36 deletions(-)
+ 14 files changed, 38 insertions(+), 38 deletions(-)
 
 diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
 index 60bda23f7c..d1fa62b2a1 100644
@@ -72,6 +74,18 @@ index 3be285061e..7e7c709b7c 100644
    </ItemGroup>
    <ItemGroup>
      <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
+diff --git a/src/Compilers/Shared/CoreClrAnalyzerAssemblyLoader.cs b/src/Compilers/Shared/CoreClrAnalyzerAssemblyLoader.cs
+index ccf3220ee4..4734efb99d 100644
+--- a/src/Compilers/Shared/CoreClrAnalyzerAssemblyLoader.cs
++++ b/src/Compilers/Shared/CoreClrAnalyzerAssemblyLoader.cs
+@@ -1,6 +1,6 @@
+ ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+ 
+-#if NETCOREAPP2_1
++#if NETCOREAPP3_0
+ 
+ using System.Diagnostics;
+ using System.Reflection;
 diff --git a/src/Compilers/Shared/NamedPipeUtil.cs b/src/Compilers/Shared/NamedPipeUtil.cs
 index 88d6448e37..887a35c2ca 100644
 --- a/src/Compilers/Shared/NamedPipeUtil.cs
@@ -98,6 +112,19 @@ index 1c6a1c5017..bd87f51a21 100644
          internal static bool IsDesktopRuntime => false;
  
          private static string DotNetHostPathEnvironmentName = "DOTNET_HOST_PATH";
+diff --git a/src/Compilers/Shared/ShadowCopyAnalyzerAssemblyLoader.cs b/src/Compilers/Shared/ShadowCopyAnalyzerAssemblyLoader.cs
+index 6881ffd61a..7b0885e11a 100644
+--- a/src/Compilers/Shared/ShadowCopyAnalyzerAssemblyLoader.cs
++++ b/src/Compilers/Shared/ShadowCopyAnalyzerAssemblyLoader.cs
+@@ -8,7 +8,7 @@
+ using System.Threading.Tasks;
+ 
+ // The ShadowCopyAnalyzerAssemblyLoader derives from DesktopAnalyzerAssemblyLoader (NET472) OR CoreClrAnalyzerAssemblyLoader (NETCOREAPP2_1)
+-#if NET472 || NETCOREAPP2_1
++#if NET472 || NETCOREAPP3_0
+ 
+ namespace Microsoft.CodeAnalysis
+ {
 diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
 index 9dfc1aa473..9639e4cba2 100644
 --- a/src/Compilers/VisualBasic/vbc/vbc.csproj
