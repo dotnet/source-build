@@ -1,24 +1,24 @@
-From abb93903f13698233f12005220550151fa9905be Mon Sep 17 00:00:00 2001
+From 0c16ee517fbdc5589040e0b845592bde8e340a60 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 5 Oct 2019 17:37:41 -0500
 Subject: [PATCH 4/4] Upgrade target framework
 
 ---
  eng/targets/Settings.props                    |  2 +-
- src/Compilers/CSharp/csc/csc.csproj           |  2 +-
+ src/Compilers/CSharp/csc/csc.csproj           |  3 +-
  .../Microsoft.Build.Tasks.CodeAnalysis.csproj |  2 +-
- .../Server/VBCSCompiler/VBCSCompiler.csproj   |  4 +--
+ .../Server/VBCSCompiler/VBCSCompiler.csproj   |  5 ++--
  .../Shared/CoreClrAnalyzerAssemblyLoader.cs   |  2 +-
  src/Compilers/Shared/NamedPipeUtil.cs         |  2 +-
  src/Compilers/Shared/RuntimeHostInfo.cs       |  2 +-
  .../ShadowCopyAnalyzerAssemblyLoader.cs       |  2 +-
- src/Compilers/VisualBasic/vbc/vbc.csproj      |  2 +-
+ src/Compilers/VisualBasic/vbc/vbc.csproj      |  3 +-
  src/Interactive/csi/csi.csproj                |  6 ++--
  ...Microsoft.NETCore.Compilers.Package.csproj |  2 +-
  .../CoreClrCompilerArtifacts.targets          | 28 +++++++++----------
  ...osoft.Net.Compilers.Toolset.Package.csproj | 18 ++++++------
  .../Microsoft.Net.Compilers.Toolset.props     |  2 +-
- 14 files changed, 38 insertions(+), 38 deletions(-)
+ 14 files changed, 41 insertions(+), 38 deletions(-)
 
 diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
 index 60bda23f7c..d1fa62b2a1 100644
@@ -34,15 +34,16 @@ index 60bda23f7c..d1fa62b2a1 100644
      <UseSharedCompilation>true</UseSharedCompilation>
  
 diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
-index abe1554b6d..6f96dba46a 100644
+index abe1554b6d..fdce2c8346 100644
 --- a/src/Compilers/CSharp/csc/csc.csproj
 +++ b/src/Compilers/CSharp/csc/csc.csproj
-@@ -17,7 +17,7 @@
+@@ -17,7 +17,8 @@
      <ProjectReference Include="..\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
    </ItemGroup>
    <ItemGroup>
 -    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp2.1'" />
 +    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.0'" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
    </ItemGroup>
    <ItemGroup>
      <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
@@ -60,10 +61,10 @@ index 0efb1b2363..e67c077f0d 100644
    <ItemGroup>
      <InternalsVisibleTo Include="Microsoft.Build.Tasks.CodeAnalysis.UnitTests" />
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-index 3be285061e..7e7c709b7c 100644
+index 3be285061e..0a1d7eaa87 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-@@ -18,8 +18,8 @@
+@@ -18,8 +18,9 @@
      <ProjectReference Include="..\..\Core\Portable\Microsoft.CodeAnalysis.csproj" />
    </ItemGroup>
    <ItemGroup>
@@ -71,6 +72,7 @@ index 3be285061e..7e7c709b7c 100644
 -    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp2.1'" />
 +    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'netcoreapp3.0'" />
 +    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.0'" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
    </ItemGroup>
    <ItemGroup>
      <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
@@ -126,15 +128,16 @@ index 6881ffd61a..7b0885e11a 100644
  namespace Microsoft.CodeAnalysis
  {
 diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
-index 9dfc1aa473..9639e4cba2 100644
+index 9dfc1aa473..a254bba5d2 100644
 --- a/src/Compilers/VisualBasic/vbc/vbc.csproj
 +++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
-@@ -16,7 +16,7 @@
+@@ -16,7 +16,8 @@
      <ProjectReference Include="..\Portable\Microsoft.CodeAnalysis.VisualBasic.vbproj" />
    </ItemGroup>
    <ItemGroup>
 -    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp2.1'" />
 +    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.0'" />
++    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
    </ItemGroup>
    <ItemGroup>
      <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
