@@ -8,6 +8,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)binaryLog</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)ci</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
