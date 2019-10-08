@@ -1,4 +1,4 @@
-From 13eb8692ade23cdb3b9a62ec80d716068f982956 Mon Sep 17 00:00:00 2001
+From b3990768b849a7fe405283ba17e42d9db37c9afe Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 7 Oct 2019 15:37:14 -0500
 Subject: [PATCH 2/2] Don't build fullfx
@@ -10,6 +10,7 @@ Subject: [PATCH 2/2] Don't build fullfx
  .../Microsoft.SourceLink.Bitbucket.Git.nuspec               | 5 ++---
  src/SourceLink.Common/Microsoft.SourceLink.Common.csproj    | 2 +-
  src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec    | 6 ++----
+ .../build/Microsoft.SourceLink.Common.props                 | 2 +-
  src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj    | 2 +-
  src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec    | 5 ++---
  src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj    | 2 +-
@@ -20,7 +21,7 @@ Subject: [PATCH 2/2] Don't build fullfx
  .../Microsoft.SourceLink.Vsts.Git.nuspec                    | 5 ++---
  .../Microsoft.SourceLink.Vsts.Tfvc.csproj                   | 2 +-
  .../Microsoft.SourceLink.Vsts.Tfvc.nuspec                   | 5 ++---
- 16 files changed, 23 insertions(+), 31 deletions(-)
+ 17 files changed, 24 insertions(+), 32 deletions(-)
 
 diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
 index 5e60db7..3ae6f31 100644
@@ -107,6 +108,19 @@ index 382b926..5d86ae5 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.Common/build/Microsoft.SourceLink.Common.props b/src/SourceLink.Common/build/Microsoft.SourceLink.Common.props
+index 1e2e1f2..d87530f 100644
+--- a/src/SourceLink.Common/build/Microsoft.SourceLink.Common.props
++++ b/src/SourceLink.Common/build/Microsoft.SourceLink.Common.props
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_MicrosoftSourceLinkCommonAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.Common.dll</_MicrosoftSourceLinkCommonAssemblyFile>
+-    <_MicrosoftSourceLinkCommonAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.Common.dll</_MicrosoftSourceLinkCommonAssemblyFile>
++    <_MicrosoftSourceLinkCommonAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.Common.dll</_MicrosoftSourceLinkCommonAssemblyFile>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
 diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
 index 7e4bf97..3b05daa 100644
 --- a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
