@@ -1,0 +1,24 @@
+From 0d0081904fefb4845ca7fa12bb2eed6863ba1c55 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Tue, 8 Oct 2019 22:28:05 +0000
+Subject: [PATCH 4/4] Exclude Test Framework from source-build
+
+---
+ src/Tests/Microsoft.NET.TestFramework/Microsoft.NET.TestFramework.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Tests/Microsoft.NET.TestFramework/Microsoft.NET.TestFramework.csproj b/src/Tests/Microsoft.NET.TestFramework/Microsoft.NET.TestFramework.csproj
+index a9273ff..b83eee3 100644
+--- a/src/Tests/Microsoft.NET.TestFramework/Microsoft.NET.TestFramework.csproj
++++ b/src/Tests/Microsoft.NET.TestFramework/Microsoft.NET.TestFramework.csproj
+@@ -10,6 +10,7 @@
+     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+     <EnableDefaultItems>false</EnableDefaultItems>
+     <OutDirName>Tests\$(MSBuildProjectName)</OutDirName>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+-- 
+1.8.3.1
+
