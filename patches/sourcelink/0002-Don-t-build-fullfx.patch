@@ -1,4 +1,4 @@
-From b3990768b849a7fe405283ba17e42d9db37c9afe Mon Sep 17 00:00:00 2001
+From 72514d89245c922656048673202b2a7fca18faa7 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 7 Oct 2019 15:37:14 -0500
 Subject: [PATCH 2/2] Don't build fullfx
@@ -19,9 +19,10 @@ Subject: [PATCH 2/2] Don't build fullfx
  src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec  | 5 ++---
  .../Microsoft.SourceLink.Vsts.Git.csproj                    | 2 +-
  .../Microsoft.SourceLink.Vsts.Git.nuspec                    | 5 ++---
+ .../build/Microsoft.SourceLink.Vsts.Git.targets             | 4 ++--
  .../Microsoft.SourceLink.Vsts.Tfvc.csproj                   | 2 +-
  .../Microsoft.SourceLink.Vsts.Tfvc.nuspec                   | 5 ++---
- 17 files changed, 24 insertions(+), 32 deletions(-)
+ 18 files changed, 26 insertions(+), 34 deletions(-)
 
 diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
 index 5e60db7..3ae6f31 100644
@@ -241,6 +242,26 @@ index 783d9db..43baf31 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
+index 628227e..f027355 100644
+--- a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
++++ b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkVstsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.Vsts.Git.dll</_SourceLinkVstsGitAssemblyFile>
+-    <_SourceLinkVstsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.Vsts.Git.dll</_SourceLinkVstsGitAssemblyFile>
++    <_SourceLinkVstsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.Vsts.Git.dll</_SourceLinkVstsGitAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.Vsts.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkVstsGitAssemblyFile)"/>
+@@ -63,4 +63,4 @@
+     </ItemGroup>
+   </Target>
+ </Project>
+- 
+\ No newline at end of file
++ 
 diff --git a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
 index df36573..d8c7c6e 100644
 --- a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
