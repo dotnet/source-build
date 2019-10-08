@@ -1,26 +1,81 @@
-From c92d1ac2e9f47de7535078e7783fb4dbaf8fd0de Mon Sep 17 00:00:00 2001
+From de54fa7a3d4ff8ad27370224336016ba5086172a Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
-Date: Fri, 4 Oct 2019 21:12:44 +0000
+Date: Tue, 8 Oct 2019 22:04:36 +0000
 Subject: [PATCH] Get NuGet versions from PackageVersions
 
 ---
- eng/Versions.props | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ eng/Versions.props                                                  | 6 ++++--
+ .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj               | 6 +++---
+ .../tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj       | 6 +++---
+ .../lib/Microsoft.DotNet.VersionTools.csproj                        | 4 ++--
+ 4 files changed, 12 insertions(+), 10 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 249e6d2..c769f97 100644
+index 05048d4..1c45a0e 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -38,7 +38,8 @@
+@@ -41,8 +41,10 @@
+     <McMasterExtensionsCommandLineUtils>2.3.0</McMasterExtensionsCommandLineUtils>
      <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
      <MicrosoftBclJsonSourcesVersion>4.6.0-preview4.19202.2</MicrosoftBclJsonSourcesVersion>
-     <NuGetVersioningVersion>4.4.0</NuGetVersioningVersion>
+-    <NuGetVersioningVersion>4.4.0</NuGetVersioningVersion>
 -    <NuGetVersion>4.9.0-rtm.5658</NuGetVersion>
-+    <NuGetPackagingVersion>4.9.0-rtm.5658</NuGetPackagingVersion>
-+    <NuGetVersion>$(NuGetPackagingVersion)</NuGetVersion>
++    <NuGetVersioningVersion Condition="'$(NuGetVersioningVersion)' == ''">4.4.0</NuGetVersioningVersion>
++    <NuGetPackagingVersion Condition="'$(NuGetPackagingVersion)' == ''">4.9.0-rtm.5658</NuGetPackagingVersion>
++    <NuGetCommandsVersion Condition="'$(NuGetCommandsVersion)' == ''">4.9.0-rtm.5658</NuGetCommandsVersion>
++    <NuGetProjectModelVersion Condition="'$(NuGetProjectModelVersion)' == ''">4.9.0-rtm.5658</NuGetProjectModelVersion>
      <OctokitVersion>0.32.0</OctokitVersion>
      <DotNetSleetLibVersion>2.2.139</DotNetSleetLibVersion>
      <SwashbuckleAspNetCoreSwaggerVersion>3.0.0</SwashbuckleAspNetCoreSwaggerVersion>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
+index b58567b..4259930 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
+@@ -59,9 +59,9 @@
+     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+-    <PackageReference Include="NuGet.Commands" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetVersion)" />
++    <PackageReference Include="NuGet.Commands" Version="$(NuGetCommandsVersion)" />
++    <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
++    <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="Microsoft.NETCore.Platforms" Version="$(MicrosoftNETCorePlatformsVersion)" />
+   </ItemGroup>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
+index 1f42a09..ee18737 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/tests/Microsoft.DotNet.Build.Tasks.Packaging.Tests.csproj
+@@ -16,9 +16,9 @@
+     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)"/>
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)"/>
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+-    <PackageReference Include="NuGet.Commands" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetVersion)" />
++    <PackageReference Include="NuGet.Commands" Version="$(NuGetCommandsVersion)" />
++    <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
++    <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+   </ItemGroup>
+   
+diff --git a/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj b/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
+index d545fff..3589eb6 100644
+--- a/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
++++ b/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
+@@ -11,8 +11,8 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+-    <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersion)" />
++    <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingVersion)" />
++    <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersioningVersion)" />
+     <PackageReference Include="System.Diagnostics.TraceSource" Version="$(SystemDiagnosticsTraceSourceVersion)" />
+   </ItemGroup>
+ 
 -- 
 1.8.3.1
 
