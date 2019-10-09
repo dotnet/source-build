@@ -1,0 +1,53 @@
+From 4a74073416e5798e9be49d291da9e8a9db598fff Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 9 Oct 2019 20:39:30 +0000
+Subject: [PATCH] Remove runtime identifier from vstest projects
+
+---
+ src/testhost.x86/testhost.x86.csproj     | 2 +-
+ src/testhost/testhost.csproj             | 2 +-
+ src/vstest.console/vstest.console.csproj | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/testhost.x86/testhost.x86.csproj b/src/testhost.x86/testhost.x86.csproj
+index d35578c..426f81c 100644
+--- a/src/testhost.x86/testhost.x86.csproj
++++ b/src/testhost.x86/testhost.x86.csproj
+@@ -13,7 +13,7 @@
+     <Prefer32Bit>true</Prefer32Bit>
+     <OutputType>Exe</OutputType>
+     <ApplicationManifest>app.manifest</ApplicationManifest>
+-    <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
++    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' != 'true' ">win7-x86</RuntimeIdentifier>
+     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/testhost/testhost.csproj b/src/testhost/testhost.csproj
+index 97ef49b..92254a4 100644
+--- a/src/testhost/testhost.csproj
++++ b/src/testhost/testhost.csproj
+@@ -12,7 +12,7 @@
+     <ApplicationManifest>app.manifest</ApplicationManifest>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
++    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' != 'true' ">win7-x64</RuntimeIdentifier>
+     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
+index e8a6d67..39e33db 100644
+--- a/src/vstest.console/vstest.console.csproj
++++ b/src/vstest.console/vstest.console.csproj
+@@ -15,7 +15,7 @@
+     <ApplicationManifest>app.manifest</ApplicationManifest>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1'">
+-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
++    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' != 'true' ">win7-x64</RuntimeIdentifier>
+   </PropertyGroup>
+   <ItemGroup>
+     <EmbeddedResource Include="Resources\Resources.resx" />
+-- 
+1.8.3.1
+
