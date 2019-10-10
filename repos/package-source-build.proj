@@ -6,7 +6,10 @@
     <RepoApiImplemented>false</RepoApiImplemented>
     <ProjectDirectory>$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
     <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
-    <BuildCommand>$(ProjectDirectory)pack$(ShellExtension)</BuildCommand>
+    <BuildArgs>--binaryLog</BuildArgs>
+    <BuildArgs Condition="'$(OfflineBuild)' != 'true'">$(BuildArgs) /p:IncludedPackageVersionPropsFile="$(PackageVersionPropsPath)"</BuildArgs>
+    <BuildArgs Condition="'$(OfflineBuild)' == 'true'">$(BuildArgs) /p:IncludedPackageVersionPropsFile="$(GennedPackageVersionPropsPath)"</BuildArgs>
+    <BuildCommand>$(ProjectDirectory)pack$(ShellExtension) $(BuildArgs)</BuildCommand>
   </PropertyGroup>
 
   <ItemGroup>
