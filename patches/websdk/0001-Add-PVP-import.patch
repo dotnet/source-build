@@ -1,4 +1,4 @@
-From b80de46a2cb225f23fb4d5c6907ce336218bc1da Mon Sep 17 00:00:00 2001
+From f604803ef667da6d708230a773d6aca83b6d2b86 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 28 Aug 2019 14:26:39 -0500
 Subject: [PATCH] Add PVP import.
@@ -8,7 +8,7 @@ Subject: [PATCH] Add PVP import.
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index f895dc5..039d2e5 100644
+index cb10669..2e27ab8 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -24,7 +24,7 @@
@@ -21,8 +21,8 @@ index f895dc5..039d2e5 100644
        https://dotnet.myget.org/F/dotnet-core/api/v3/index.json;
        https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json;
 @@ -48,4 +48,6 @@
-     <MicrosoftAspNetCoreMvcAnalyzersPackageVersion>3.0.0-rc2.19465.2</MicrosoftAspNetCoreMvcAnalyzersPackageVersion>
-     <MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>3.0.0-rc2.19465.2</MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>
+     <MicrosoftAspNetCoreMvcAnalyzersPackageVersion>3.0.1-servicing.19503.9</MicrosoftAspNetCoreMvcAnalyzersPackageVersion>
+     <MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>3.0.1-servicing.19503.9</MicrosoftAspNetCoreMvcApiAnalyzersPackageVersion>
    </PropertyGroup>
 +
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />

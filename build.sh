@@ -75,5 +75,5 @@ if [ "$alternateTarget" == "true" ]; then
 
   "$CLIPATH/dotnet" $SDKPATH/MSBuild.dll "$scriptroot/build.proj" /bl:source-build-test.binlog /flp:v=diag /clp:v=m "$@"
 else
-  "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false $@ /p:Projects="$scriptroot/build.proj"
+  "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false -bl /flp:v=diag $@ /p:Projects="$scriptroot/build.proj"
 fi
