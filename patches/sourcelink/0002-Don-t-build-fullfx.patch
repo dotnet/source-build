@@ -1,4 +1,4 @@
-From 9805ec87c8ca50b08e07aec576a8ecedfaa5bbf2 Mon Sep 17 00:00:00 2001
+From 556d1d2ef74225ce74fe7b4369e50450727864de Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 7 Oct 2019 15:37:14 -0500
 Subject: [PATCH 2/2] Don't build fullfx
@@ -8,6 +8,7 @@ Subject: [PATCH 2/2] Don't build fullfx
  .../build/Microsoft.Build.Tasks.Git.props                   | 2 +-
  .../Microsoft.SourceLink.Bitbucket.Git.csproj               | 2 +-
  .../Microsoft.SourceLink.Bitbucket.Git.nuspec               | 5 ++---
+ .../build/Microsoft.SourceLink.Bitbucket.Git.targets        | 2 +-
  src/SourceLink.Common/Microsoft.SourceLink.Common.csproj    | 2 +-
  src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec    | 6 ++----
  .../build/Microsoft.SourceLink.Common.props                 | 2 +-
@@ -16,14 +17,17 @@ Subject: [PATCH 2/2] Don't build fullfx
  .../build/Microsoft.SourceLink.GitHub.targets               | 2 +-
  src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj    | 2 +-
  src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec    | 5 ++---
+ .../build/Microsoft.SourceLink.GitLab.targets               | 2 +-
  src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj  | 2 +-
  src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec  | 5 ++---
+ .../build/Microsoft.SourceLink.Tfs.Git.targets              | 4 ++--
  .../Microsoft.SourceLink.Vsts.Git.csproj                    | 2 +-
  .../Microsoft.SourceLink.Vsts.Git.nuspec                    | 5 ++---
  .../build/Microsoft.SourceLink.Vsts.Git.targets             | 4 ++--
  .../Microsoft.SourceLink.Vsts.Tfvc.csproj                   | 2 +-
  .../Microsoft.SourceLink.Vsts.Tfvc.nuspec                   | 5 ++---
- 19 files changed, 27 insertions(+), 35 deletions(-)
+ .../build/Microsoft.SourceLink.Vsts.Tfvc.targets            | 4 ++--
+ 23 files changed, 33 insertions(+), 41 deletions(-)
 
 diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
 index 5e60db7..3ae6f31 100644
@@ -79,6 +83,19 @@ index 783d9db..43baf31 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets b/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
+index 4e35472..28b0bf2 100644
+--- a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
++++ b/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkBitbucketAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.Bitbucket.Git.dll</_SourceLinkBitbucketAssemblyFile>
+-    <_SourceLinkBitbucketAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.Bitbucket.Git.dll</_SourceLinkBitbucketAssemblyFile>
++    <_SourceLinkBitbucketAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.Bitbucket.Git.dll</_SourceLinkBitbucketAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.Bitbucket.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkBitbucketAssemblyFile)"/>
 diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
 index 7d8a979..d071134 100644
 --- a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
@@ -196,6 +213,19 @@ index 783d9db..43baf31 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets b/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
+index cfa533f..ab7f7c0 100644
+--- a/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
++++ b/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkGitLabAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.GitLab.dll</_SourceLinkGitLabAssemblyFile>
+-    <_SourceLinkGitLabAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.GitLab.dll</_SourceLinkGitLabAssemblyFile>
++    <_SourceLinkGitLabAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.GitLab.dll</_SourceLinkGitLabAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.GitLab.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkGitLabAssemblyFile)"/>
 diff --git a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
 index eb6d85a..aef40f2 100644
 --- a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
@@ -226,6 +256,26 @@ index 783d9db..43baf31 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets b/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
+index d54e22f..945c3bc 100644
+--- a/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
++++ b/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkTfsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.Tfs.Git.dll</_SourceLinkTfsGitAssemblyFile>
+-    <_SourceLinkTfsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.Tfs.Git.dll</_SourceLinkTfsGitAssemblyFile>
++    <_SourceLinkTfsGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.Tfs.Git.dll</_SourceLinkTfsGitAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.Tfs.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkTfsGitAssemblyFile)"/>
+@@ -68,4 +68,4 @@
+     </ItemGroup>
+   </Target>
+ </Project>
+- 
+\ No newline at end of file
++ 
 diff --git a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
 index 65bfb3b..884ec16 100644
 --- a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
@@ -305,6 +355,26 @@ index 06c212b..c32f9ea 100644
 -</package>
 \ No newline at end of file
 +</package>
+diff --git a/src/SourceLink.Vsts.Tfvc/build/Microsoft.SourceLink.Vsts.Tfvc.targets b/src/SourceLink.Vsts.Tfvc/build/Microsoft.SourceLink.Vsts.Tfvc.targets
+index 8075d28..750d11f 100644
+--- a/src/SourceLink.Vsts.Tfvc/build/Microsoft.SourceLink.Vsts.Tfvc.targets
++++ b/src/SourceLink.Vsts.Tfvc/build/Microsoft.SourceLink.Vsts.Tfvc.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkVstsTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.Vsts.Tfvc.dll</_SourceLinkVstsTfvcAssemblyFile>
+-    <_SourceLinkVstsTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.Vsts.Tfvc.dll</_SourceLinkVstsTfvcAssemblyFile>
++    <_SourceLinkVstsTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.Vsts.Tfvc.dll</_SourceLinkVstsTfvcAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.Vsts.Tfvc.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkVstsTfvcAssemblyFile)"/>
+@@ -22,4 +22,4 @@
+     </ItemGroup>
+   </Target>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
 -- 
 2.18.0
 
