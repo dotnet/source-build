@@ -1,0 +1,38 @@
+From 6a9d89961903571826fe3c0279d07533dd798299 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 4 Oct 2019 20:49:56 +0000
+Subject: [PATCH] Update NuGet.Build.Tasks version to use dependency flow
+
+---
+ eng/Versions.props                   | 1 +
+ eng/tools/RepoTasks/RepoTasks.csproj | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 0235983..c2a3002 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -194,6 +194,7 @@
+     <InternalAspNetCoreBuildTasksPackageVersion>3.0.0-build-20190530.3</InternalAspNetCoreBuildTasksPackageVersion>
+     <MicrosoftSymbolUploaderBuildTaskPackageVersion>1.0.0-beta-64023-03</MicrosoftSymbolUploaderBuildTaskPackageVersion>
+     <MicrosoftVSSDKBuildToolsVersion>15.9.3032</MicrosoftVSSDKBuildToolsVersion>
++    <NuGetBuildTasksPackageVersion>5.1.0-rtm.5921</NuGetBuildTasksPackageVersion>
+     <!-- Stable dotnet/corefx packages no longer updated for .NET Core 3 -->
+     <SystemBuffersPackageVersion>4.5.0</SystemBuffersPackageVersion>
+     <SystemCodeDomPackageVersion>4.4.0</SystemCodeDomPackageVersion>
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index 0bf6be9..5c5ba9e 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -12,7 +12,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="NuGet.Build.Tasks" Version="5.1.0-rtm.5921" />
++    <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+   </ItemGroup>
+ 
+-- 
+1.8.3.1
+
