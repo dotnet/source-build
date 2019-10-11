@@ -1,0 +1,25 @@
+From 80d3355d6c704c93988801cddc5cd51eb4498f92 Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Thu, 10 Oct 2019 21:03:19 +0000
+Subject: [PATCH 7/7] Do not set RID in source-build
+
+---
+ .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj        | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+index 3a2cd17cd..db6a2b199 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+@@ -10,7 +10,7 @@
+     <Shipping>true</Shipping>
+     <PackProject>true</PackProject>
+     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+-    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
++    <RuntimeIdentifier Condition="'$(DotNetBuildFromSource)' != 'true'">win10-x64</RuntimeIdentifier>
+     <PreserveCompilationContext>true</PreserveCompilationContext>
+     <XPLATProject>true</XPLATProject>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+-- 
+2.20.1
+
