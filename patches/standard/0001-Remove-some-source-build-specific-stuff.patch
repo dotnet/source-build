@@ -1,13 +1,13 @@
-From 693d612a9c85d53713c0b3ac58ff08c2bc068ddd Mon Sep 17 00:00:00 2001
+From 10de6d2ac9700f4e3a1f335d0d8863b85063828c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 14 Oct 2019 14:23:48 -0500
 Subject: [PATCH] Remove some source-build specific stuff.
 
 ---
  build.proj                                      | 2 +-
- eng/Tools.props                                 | 9 ++++-----
+ eng/Tools.props                                 | 8 ++++----
  src/netstandard/pkg/NETStandard.Library.pkgproj | 2 +-
- 3 files changed, 6 insertions(+), 7 deletions(-)
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/build.proj b/build.proj
 index 279dfa1..bd73211 100644
@@ -23,7 +23,7 @@ index 279dfa1..bd73211 100644
      <BuildDependsOn Condition="'$(BuildTests)'=='true' and '$(DotNetBuildFromSource)'!='true'">$(BuildDependsOn);Test</BuildDependsOn>
      <BuildDependsOn Condition="'$(BuildPackages)'=='true'">$(BuildDependsOn);Pack</BuildDependsOn>
 diff --git a/eng/Tools.props b/eng/Tools.props
-index 7086c17..b934281 100644
+index 7086c17..9425706 100644
 --- a/eng/Tools.props
 +++ b/eng/Tools.props
 @@ -16,6 +16,10 @@
@@ -48,14 +48,6 @@ index 7086c17..b934281 100644
      <!-- last NETStandard package for harvesting -->
      <PackageReference Include="$(NetStandardLibraryPackage)" Version="$(NetStandardLibraryPackageVersion)" ExcludeAssets="All" />
  
-@@ -51,7 +51,6 @@
- 
-   <!-- the intellisense package doesn't use nuget conventions so we need to select manually -->
-   <Target Name="GetDocFiles"
--          Condition="'$(DotNetBuildFromSource)' != 'true'"
-           AfterTargets="Restore">
-     <ItemGroup>
-       <DocFile Include="$(XmlDocFileRoot)/**/*.xml"/>
 diff --git a/src/netstandard/pkg/NETStandard.Library.pkgproj b/src/netstandard/pkg/NETStandard.Library.pkgproj
 index 2814a62..ba857ec 100644
 --- a/src/netstandard/pkg/NETStandard.Library.pkgproj
