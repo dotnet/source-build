@@ -155,7 +155,7 @@
 
   <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
-    <Exec Command="$(ProjectDir)eng/common/darc-init.sh" />
+    <Exec Command="$(ProjectDir)eng/common/darc-init.sh --darcversion $(DarcVersion)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
