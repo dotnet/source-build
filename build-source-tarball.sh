@@ -192,6 +192,9 @@ cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
+rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
+rm -rf $TARBALL_ROOT/.dotnet/tools/
+rm -rf $TARBALL_ROOT/.dotnet/host/fxr/2.1.0/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
