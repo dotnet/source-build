@@ -69,6 +69,9 @@ export NUGET_PACKAGES="$scriptroot/packages/restored/"
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
+# runtime 2.1.0 required for darc
+"$scriptroot/eng/common/dotnet-install.sh"  -runtime dotnet -version 2.1.0
+
 if [ "$alternateTarget" == "true" ]; then
   CLIPATH="$scriptroot/.dotnet"
   SDKPATH="$CLIPATH/sdk/$SDK_VERSION"

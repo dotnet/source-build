@@ -49,16 +49,15 @@ function InstallDarcCli {
   local dotnet_root=$_InitializeDotNetCli
 
   local uninstall_command=`$dotnet_root/dotnet tool uninstall $darc_cli_package_name -g`
-  local tool_list=$($dotnet_root/dotnet tool list -g)
+  local tool_list=$($dotnet_root/dotnet tool list --tool-path $dotnet_root/tools)
   if [[ $tool_list = *$darc_cli_package_name* ]]; then
-    echo $($dotnet_root/dotnet tool uninstall $darc_cli_package_name -g)
+    echo $($dotnet_root/dotnet tool uninstall $darc_cli_package_name --tool-path $dotnet_root/tools)
   fi
 
   local arcadeServicesSource="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json"
-
-  echo "Installing Darc CLI version $darcVersion..."
+  echo "Installing Darc CLI version $darcVersion in $dotnet_root/tools..."
   echo "You may need to restart your command shell if this is the first dotnet tool you have installed."
-  echo $($dotnet_root/dotnet tool install $darc_cli_package_name --version $darcVersion --add-source "$arcadeServicesSource" -v $verbosity -g)
+  echo $($dotnet_root/dotnet tool install $darc_cli_package_name --version $darcVersion --add-source "$arcadeServicesSource" -v $verbosity --tool-path $dotnet_root/tools --framework netcoreapp3.0)
 }
 
 InstallDarcCli
