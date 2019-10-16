@@ -79,7 +79,8 @@ if [[ $sdkLine =~ $sdkPattern ]]; then
 fi
 echo "Found bootstrap SDK $SDK_VERSION"
 CLI_PATH="$SCRIPT_ROOT/.dotnet"
-DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll"
+DarcVersion=1.1.0-beta.19515.3
+DARC_DLL="$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp2.1/any/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
