@@ -1,0 +1,39 @@
+From cadad11668106da92530b8030f47a0fa00121bca Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 16 Oct 2019 14:14:16 +0000
+Subject: [PATCH] Update projects to netcoreapp2.1
+
+---
+ src/package/nuspec/Microsoft.TestPlatform.Build.csproj | 2 +-
+ src/package/nuspec/Microsoft.TestPlatform.CLI.csproj   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/package/nuspec/Microsoft.TestPlatform.Build.csproj b/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
+index fdc693f..e365fbd 100644
+--- a/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
++++ b/src/package/nuspec/Microsoft.TestPlatform.Build.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp1.0</TargetFramework>
++    <TargetFramework>netcoreapp2.1</TargetFramework>
+     <NuspecFile>TestPlatform.Build.nuspec</NuspecFile>
+     <NuspecProperties>version=$(Version)</NuspecProperties>
+ 
+diff --git a/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj b/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
+index b668cb3..4b408cc 100644
+--- a/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
++++ b/src/package/nuspec/Microsoft.TestPlatform.CLI.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp1.0</TargetFramework>
++    <TargetFramework>netcoreapp2.1</TargetFramework>
+     <NuspecFile>TestPlatform.CLI.nuspec</NuspecFile>
+     <NuspecProperties>version=$(Version)</NuspecProperties>
+ 
+-- 
+1.8.3.1
+
