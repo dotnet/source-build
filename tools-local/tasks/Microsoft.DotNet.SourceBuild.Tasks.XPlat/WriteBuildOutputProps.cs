@@ -96,11 +96,11 @@ namespace Microsoft.DotNet.Build.Tasks
                     string propertyName = extraProp.GetMetadata("Identity");
                     bool doNotOverwrite = false;
                     string overwriteCondition = string.Empty;
-                    if (extraProp.HasMetadata("DoNotOverwrite") && bool.TryParse(out doNotOverwite) && doNotOverwrite)
+                    if (bool.TryParse(extraProp.GetMetadata("DoNotOverwrite"), out doNotOverwrite) && doNotOverwrite)
                     {
                         overwriteCondition = $" Condition=\"'$({propertyName})' == ''\"";
                     }
-                    sw.WriteLine($"    <{propertyName}{overwiteCondition}>{extraProp.GetMetadata("Version")}</{propertyName}>");
+                    sw.WriteLine($"    <{propertyName}{overwriteCondition}>{extraProp.GetMetadata("Version")}</{propertyName}>");
                 }
                 foreach (var additionalAsset in additionalAssets)
                 {
