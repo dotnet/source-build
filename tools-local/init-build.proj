@@ -183,7 +183,7 @@
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
-    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="LD_LIBRARY_PATH=$(DotNetCliToolDir)/tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$(DarcVersion)/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
