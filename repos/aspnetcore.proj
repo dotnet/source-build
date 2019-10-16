@@ -51,6 +51,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
+    <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
