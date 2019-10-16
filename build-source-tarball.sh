@@ -237,6 +237,7 @@ cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_R
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/packages/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Build*Tasks*.nupkg $TARBALL_ROOT/packages/source-built/
 cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/runtime*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*DotNetHost*.nupkg $TARBALL_ROOT/packages/source-built/
 
 # Setup package version props to include both source-built and running PackageVersions.props
 mkdir --parents $TARBALL_ROOT/bin/obj/x64/Release/
