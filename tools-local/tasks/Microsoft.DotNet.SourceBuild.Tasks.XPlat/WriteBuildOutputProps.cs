@@ -94,7 +94,13 @@ namespace Microsoft.DotNet.Build.Tasks
                 foreach (var extraProp in ExtraProperties ?? Enumerable.Empty<ITaskItem>())
                 {
                     string propertyName = extraProp.GetMetadata("Identity");
-                    sw.WriteLine($"    <{propertyName}>{extraProp.GetMetadata("Version")}</{propertyName}>");
+                    bool doNotOverwrite = false;
+                    string overwriteCondition = string.Empty;
+                    if (extraProp.HasMetadata("DoNotOverwrite") && bool.TryParse(out doNotOverwite) && doNotOverwrite)
+                    {
+                        overwriteCondition = $" Condition=\"'$({propertyName})' == ''\"";
+                    }
+                    sw.WriteLine($"    <{propertyName}{overwiteCondition}>{extraProp.GetMetadata("Version")}</{propertyName}>");
                 }
                 foreach (var additionalAsset in additionalAssets)
                 {
