@@ -10,6 +10,7 @@
     <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -196,6 +197,8 @@
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppRuntimeVersion" Version="%24(MicrosoftNETCoreAppVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppHostPackageVersion" Version="%24(MicrosoftNETCoreDotNetAppHostPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeLinuxX64PackageVersion)" />
+    <!-- OSX needs the OSX version instead of Linux.  We don't have a lot of flexibility in how we output these properties so we're relying on the previous one being blank if the Linux version of the package is missing.  -->
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeOsxX64PackageVersion)" DoNotOverwrite="true" />
   </ItemGroup>
 
 </Project>

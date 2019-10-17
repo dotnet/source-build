@@ -145,7 +145,7 @@ git submodule foreach --quiet --recursive '
     fi'
 
 # Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
-ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup"
+ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup;https://github.com/dotnet/source-build-reference-packages"
 "$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 
 # now we don't need .git/modules/src or Darc anymore
@@ -233,6 +233,12 @@ done
 echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
 mkdir -p $TARBALL_ROOT/packages/source-built
 cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Build*Tasks*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/runtime*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*DotNetHost*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*DotNetAppHost*.nupkg $TARBALL_ROOT/packages/source-built/
 
 # Setup package version props to include both source-built and running PackageVersions.props
 mkdir --parents $TARBALL_ROOT/bin/obj/x64/Release/

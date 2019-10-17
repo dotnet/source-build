@@ -19,10 +19,13 @@
     <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /m:1</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
+    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm'))">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
@@ -33,6 +36,14 @@
 
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
+
+    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(ShippingPackagesOutput)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(NonShippingPackagesOutput)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -47,6 +58,11 @@
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
+    <EnvironmentVariables Include="BuildInParallel=false" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">

@@ -81,7 +81,7 @@ jobs:
 
   # Gather artifacts. Uses git bash on Windows.
   - bash: |
-      set -x
+      set -ex
       copyWithParents="cp {} --parents"
       if command -v rsync; then
         # On Mac, "--parents" isn't supported, but we can use rsync.
