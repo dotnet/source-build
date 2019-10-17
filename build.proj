@@ -94,6 +94,7 @@
     <ItemGroup>
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/System.Runtime.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/netstandard.dll" />
+      <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)netstandard.library/**/*.dll" />
       <!-- Microsoft.AspNet.App DLLs that include .resource files -->
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/Microsoft.AspNetCore.Antiforgery.dll" />
       <ReferenceOnlyPackageDlls Remove="$(ReferencePackagesSourceDir)**/Microsoft.AspNetCore.Authentication.OAuth.dll" />
