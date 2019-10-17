@@ -5,6 +5,7 @@
   <PropertyGroup>
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
+    <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
 
     <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
     <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
@@ -22,6 +23,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeMSBuildSdkResolver=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DefaultTargetLatestAspNetCoreRuntimePatch=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:OSName=$(OSNameOverride)</BuildCommandArgs>
 
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
@@ -36,11 +38,13 @@
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
 
     <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -76,13 +80,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Produce stable versions for RTM only.  When https://github.com/dotnet/source-build/issues/550
-         is fixed we will be able to determine this automatically.  -->
-    <EnvironmentVariables Include="DropSuffix=true"
-                          Condition="'$(UseStableVersions)' == 'true'" />
-
     <EnvironmentVariables Include="ReleaseSuffix=$(CliInternalReleaseTag)" />
     <EnvironmentVariables Include="BuildNumber=$(CliInternalBuildVersion)" />
+    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
   </ItemGroup>
 
   <!--

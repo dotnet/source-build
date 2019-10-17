@@ -39,6 +39,16 @@
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+
+    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/nuget-build/api/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/roslyn/api/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/roslyn-tools/api/v3/index.json</EnvironmentRestoreSources>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,6 +60,10 @@
     <RepositoryReference Include="arcade" />
     <RepositoryReference Include="corefx" />
     <RepositoryReference Include="roslyn" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">

@@ -1,0 +1,24 @@
+From aae7719ef63bb6a91577f485657a907963824157 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 10 Oct 2019 12:18:07 -0500
+Subject: [PATCH 8/8] Use ref version of CodeAnalysis
+
+---
+ eng/Versions.props | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 663f35f1..1153a305 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -27,7 +27,6 @@
+     <MicrosoftBuildUtilitiesCoreVersion>15.7.179</MicrosoftBuildUtilitiesCoreVersion>
+     <MicrosoftCodeAnalysisAnalyzersVersion>2.6.3</MicrosoftCodeAnalysisAnalyzersVersion>
+     <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>2.1.0</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
+-    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
+     <MicrosoftDotNetPlatformAbstractionsVersion>2.1.0</MicrosoftDotNetPlatformAbstractionsVersion>
+     <MicrosoftIdentityModelClientsActiveDirectoryVersion>3.19.8</MicrosoftIdentityModelClientsActiveDirectoryVersion>
+     <MicrosoftRestClientRuntimeVersion>2.3.13</MicrosoftRestClientRuntimeVersion>
+-- 
+2.18.0
+

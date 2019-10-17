@@ -1,0 +1,24 @@
+From fb40a09831a06ee786c884917813890959e1956f Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 24 Sep 2019 11:39:15 -0500
+Subject: [PATCH 3/3] Build CoreFxTesting in source-build
+
+---
+ .../Microsoft.DotNet.CoreFxTesting.csproj                        | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj b/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
+index 33e90e49..694e3381 100644
+--- a/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
++++ b/src/Microsoft.DotNet.CoreFxTesting/Microsoft.DotNet.CoreFxTesting.csproj
+@@ -5,7 +5,6 @@
+     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+     <Description>This package provides support for running tests inside CoreFx.</Description>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.18.0
+

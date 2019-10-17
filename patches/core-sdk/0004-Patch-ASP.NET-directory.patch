@@ -1,25 +1,25 @@
-From 8f4a58b324a162df76fe3949c1a25dc921540985 Mon Sep 17 00:00:00 2001
+From 2f16ea842a6a921d9d304401aa56a131155ca8c6 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Wed, 25 Sep 2019 14:25:23 -0500
-Subject: [PATCH 4/4] Patch ASP.NET directory
+Date: Fri, 4 Oct 2019 15:18:12 -0500
+Subject: [PATCH 5/5] Patch ASP.NET directory
 
 ---
  src/redist/targets/GenerateLayout.targets | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 812329f22..ea3aa22a0 100644
+index 962bb973a..593e37dde 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -12,7 +12,7 @@
-     <!-- The aspnetcore blobs will get uploaded to a directory that is not 
-          stabilized. There is not a great package that can be used to identify this version at
-          the moment. For a workaround, use Microsoft.AspNetCore.DeveloperCertificates.XPlat's version. -->
--    <AspNetCoreBlobDirectory>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobDirectory>
-+    <AspNetCoreBlobDirectory>3.0.0</AspNetCoreBlobDirectory>
-   </PropertyGroup>
-   
-   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
+@@ -10,7 +10,7 @@
+ 
+   <PropertyGroup>
+     <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
+-    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
++    <AspNetCoreBlobVersion>3.0.0</AspNetCoreBlobVersion>
+     <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
+ 
+     <!-- Change these individually to or $(CoreSetupBlobVersion) or $(AspNetCoreBlobVersion) if corresponding .Ref packages are unpinned. -->
 -- 
 2.18.0
 
