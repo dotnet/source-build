@@ -1,0 +1,53 @@
+From 11dc1d75a1387900e4ae39aba084303b3ebbc90f Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Wed, 16 Oct 2019 06:33:00 +0000
+Subject: [PATCH 5/5] Remove System.Runtime.Loader hack
+
+---
+ eng/Versions.props                                       | 2 +-
+ .../Core/Microsoft.CodeAnalysis.Scripting.csproj         | 9 +--------
+ 2 files changed, 2 insertions(+), 9 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index b135861644..00b8cbaf75 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -174,7 +174,6 @@
+     <RoslynToolsVSIXExpInstallerVersion>1.0.0-beta2-63222-01</RoslynToolsVSIXExpInstallerVersion>
+     <RoslynToolsOptProfVersion>1.0.0-beta3.19057.1</RoslynToolsOptProfVersion>
+     <RoslynOptProfRunSettingsGeneratorVersion>1.0.0-beta3.19057.1</RoslynOptProfRunSettingsGeneratorVersion>
+-    <RoslynToolsLightUpSystemRuntimeLoaderFixedVersion>4.3.0</RoslynToolsLightUpSystemRuntimeLoaderFixedVersion>
+     <RoslynMicrosoftVisualStudioExtensionManagerVersion>0.0.4</RoslynMicrosoftVisualStudioExtensionManagerVersion>
+     <SourceBrowserVersion>1.0.21</SourceBrowserVersion>
+     <StreamJsonRpcVersion>2.1.55</StreamJsonRpcVersion>
+@@ -189,6 +188,7 @@
+     <SystemMemoryVersion>4.5.3</SystemMemoryVersion>
+     <SystemReflectionMetadataVersion>1.6.0</SystemReflectionMetadataVersion>
+     <SystemRuntimeCompilerServicesUnsafeVersion>4.5.2</SystemRuntimeCompilerServicesUnsafeVersion>
++    <SystemRuntimeLoaderVersion>4.3.0</SystemRuntimeLoaderVersion>
+     <SystemTextEncodingCodePagesVersion>4.5.1</SystemTextEncodingCodePagesVersion>
+     <SystemTextEncodingExtensionsVersion>4.3.0</SystemTextEncodingExtensionsVersion>
+     <SystemThreadingTasksDataflowVersion>4.9.0</SystemThreadingTasksDataflowVersion>
+diff --git a/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj b/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
+index f4fd9ea9b1..d25ca45ea0 100644
+--- a/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
++++ b/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
+@@ -20,14 +20,7 @@
+     <ProjectReference Include="..\..\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <!-- 
+-      Workaround for https://github.com/NuGet/Home/issues/1471.
+-
+-      RoslynTools.LightUp.System.Runtime.Loader distributes System.Runtime.Loader in ref/netstandard1.3 directory,
+-      so that it can be referenced in libraries targeting netstandard1.3 once they check that the executing runtime 
+-      is .NET Core.
+-    -->
+-    <PackageReference Include="RoslynTools.LightUp.System.Runtime.Loader" Version="$(RoslynToolsLightUpSystemRuntimeLoaderFixedVersion)" PrivateAssets="all" />
++    <PackageReference Include="System.Runtime.Loader" Version="$(SystemRuntimeLoaderVersion)" PrivateAssets="all" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="..\..\Compilers\Shared\CoreClrShim.cs" />
+-- 
+2.20.1
+
