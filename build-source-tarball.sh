@@ -148,9 +148,10 @@ git submodule foreach --quiet --recursive '
 # Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
 ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup;https://github.com/dotnet/source-build-reference-packages"
 
+set -x 
+
 #export the LC_LIB_PATH for libgit2 so file as fedora fails to find it in the repodir
-export LD_LIBRARY_PATH=$CLI_PATH/tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/
-"$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
+LD_LIBRARY_PATH=$CLI_PATH/tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/ "$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 
 # now we don't need .git/modules/src or Darc anymore
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
