@@ -58,6 +58,7 @@
     <ToolPackageExtractDir>$(ToolsDir)source-built/</ToolPackageExtractDir>
     <ToolsLocalDir>$(ProjectDir)tools-local/</ToolsLocalDir>
     <TaskDirectory>$(ToolsLocalDir)tasks/</TaskDirectory>
+    <DarcInstallDir>$(DotNetCliToolDir)tools/</DarcInstallDir>
     <DarcVersion>$([System.IO.File]::ReadAllText('$(ProjectDir)DarcVersion.txt').Trim())</DarcVersion>
     <DarcDll>$(DotNetCliToolDir)tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$(DarcVersion)/tools/netcoreapp2.1/any/Microsoft.DotNet.Darc.dll</DarcDll>
     <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
