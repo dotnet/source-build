@@ -153,8 +153,6 @@ export LD_LIBRARY_PATH=$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion
 
 "$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 
-echo $LD_LIBRARY_PATH
-
 # now we don't need .git/modules/src or Darc anymore
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     rm -rf "$SCRIPT_ROOT/.git/modules/src"

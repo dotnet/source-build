@@ -23,7 +23,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;BuildDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -153,13 +153,13 @@
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
   </Target>
 
-  <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
+  <Target Name="AcquireDarc" Condition="'$(OfflineBuild)' != 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
     <Exec Command="$(ProjectDir)eng/common/darc-init.sh --darcversion $(DarcVersion)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
-  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc">
+  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <PropertyGroup>
       <DarcCloneArguments>clone</DarcCloneArguments>
@@ -187,7 +187,7 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
-  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc;FetchSources">
+  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc;FetchSources">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Writing out SourceLink metadata." />
     <WriteSourceRepoProperties
        VersionDetailsFile="$(ProjectDir)eng/Version.Details.xml"
