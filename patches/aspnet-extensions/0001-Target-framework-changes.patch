@@ -1,4 +1,4 @@
-From 556dd026175cdd8f29470bb8182bb9a891642204 Mon Sep 17 00:00:00 2001
+From ca3e76b16a2129b4bd58b5e8e31ea36ec839cd0a Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 19 Oct 2019 16:29:22 -0500
 Subject: [PATCH] Target framework changes
@@ -668,7 +668,7 @@ index dc39334b9..3a2f54141 100644
    <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
      <Compile Include="Microsoft.Extensions.DependencyInjection.netcoreapp.cs" />
 diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
-index eb488c625..f222d50b9 100644
+index eb488c625..79f00d116 100644
 --- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
 +++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
 @@ -2,7 +2,7 @@
@@ -676,7 +676,7 @@ index eb488c625..f222d50b9 100644
    <PropertyGroup>
      <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
 -    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net461;netstandard2.0;netstandard2.1</TargetFrameworks>
-+    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net461;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks>$(DefaultNetCoreTargetFramework);netstandard2.1</TargetFrameworks>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
      <PackageTags>dependencyinjection;di</PackageTags>
      <IsPackable>true</IsPackable>
