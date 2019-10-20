@@ -187,6 +187,7 @@ cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.props $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.targets $TARBALL_ROOT/
 cp $SCRIPT_ROOT/global.json $TARBALL_ROOT/
+cp $SCRIPT_ROOT/DarcVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
 cp -r $CLI_PATH $TARBALL_ROOT/
