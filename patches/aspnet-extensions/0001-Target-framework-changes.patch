@@ -1,115 +1,118 @@
-From ca3e76b16a2129b4bd58b5e8e31ea36ec839cd0a Mon Sep 17 00:00:00 2001
+From 50d4a310be0bc3565ae581503414e2f1aba6b5ef Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 19 Oct 2019 16:29:22 -0500
 Subject: [PATCH] Target framework changes
 
 ---
- Directory.Build.props                                         | 1 +
- .../ref/Microsoft.Extensions.Caching.Abstractions.csproj      | 4 ++--
- .../src/Microsoft.Extensions.Caching.Abstractions.csproj      | 2 +-
- .../Memory/ref/Microsoft.Extensions.Caching.Memory.csproj     | 4 ++--
- .../Memory/src/Microsoft.Extensions.Caching.Memory.csproj     | 2 +-
- .../ref/Microsoft.Extensions.Caching.SqlServer.csproj         | 4 ++--
- .../src/Microsoft.Extensions.Caching.SqlServer.csproj         | 2 +-
- .../Microsoft.Extensions.Caching.StackExchangeRedis.csproj    | 4 ++--
- .../Microsoft.Extensions.Caching.StackExchangeRedis.csproj    | 2 +-
- .../Microsoft.Extensions.Configuration.Abstractions.csproj    | 4 ++--
- .../Microsoft.Extensions.Configuration.Abstractions.csproj    | 2 +-
- .../Microsoft.Extensions.Configuration.AzureKeyVault.csproj   | 4 ++--
- .../Microsoft.Extensions.Configuration.AzureKeyVault.csproj   | 2 +-
- .../ref/Microsoft.Extensions.Configuration.Binder.csproj      | 4 ++--
- .../src/Microsoft.Extensions.Configuration.Binder.csproj      | 2 +-
- .../ref/Microsoft.Extensions.Configuration.CommandLine.csproj | 4 ++--
- .../src/Microsoft.Extensions.Configuration.CommandLine.csproj | 2 +-
- ...osoft.Extensions.Configuration.EnvironmentVariables.csproj | 4 ++--
- ...osoft.Extensions.Configuration.EnvironmentVariables.csproj | 2 +-
- .../Microsoft.Extensions.Configuration.FileExtensions.csproj  | 4 ++--
- .../Microsoft.Extensions.Configuration.FileExtensions.csproj  | 2 +-
- .../ref/Microsoft.Extensions.Configuration.Ini.csproj         | 4 ++--
- .../src/Microsoft.Extensions.Configuration.Ini.csproj         | 2 +-
- .../ref/Microsoft.Extensions.Configuration.Json.csproj        | 4 ++--
- .../src/Microsoft.Extensions.Configuration.Json.csproj        | 4 ++--
- .../ref/Microsoft.Extensions.Configuration.KeyPerFile.csproj  | 4 ++--
- .../src/Microsoft.Extensions.Configuration.KeyPerFile.csproj  | 2 +-
- .../Microsoft.Extensions.Configuration.NewtonsoftJson.csproj  | 4 ++--
- .../Microsoft.Extensions.Configuration.NewtonsoftJson.csproj  | 2 +-
- .../ref/Microsoft.Extensions.Configuration.UserSecrets.csproj | 4 ++--
- .../src/Microsoft.Extensions.Configuration.UserSecrets.csproj | 2 +-
- .../ref/Microsoft.Extensions.Configuration.Xml.csproj         | 4 ++--
- .../src/Microsoft.Extensions.Configuration.Xml.csproj         | 2 +-
- .../Config/ref/Microsoft.Extensions.Configuration.csproj      | 4 ++--
- .../Config/src/Microsoft.Extensions.Configuration.csproj      | 2 +-
- ...crosoft.Extensions.DependencyInjection.Abstractions.csproj | 4 ++--
- ...crosoft.Extensions.DependencyInjection.Abstractions.csproj | 2 +-
- .../DI/ref/Microsoft.Extensions.DependencyInjection.csproj    | 2 +-
- .../DI/src/Microsoft.Extensions.DependencyInjection.csproj    | 2 +-
- .../ref/Microsoft.Extensions.DiagnosticAdapter.csproj         | 4 ++--
- .../src/Microsoft.Extensions.DiagnosticAdapter.csproj         | 2 +-
- .../Microsoft.Extensions.FileProviders.Abstractions.csproj    | 4 ++--
- .../Microsoft.Extensions.FileProviders.Abstractions.csproj    | 2 +-
- .../ref/Microsoft.Extensions.FileProviders.Composite.csproj   | 4 ++--
- .../src/Microsoft.Extensions.FileProviders.Composite.csproj   | 2 +-
- .../ref/Microsoft.Extensions.FileProviders.Embedded.csproj    | 4 ++--
- .../src/Microsoft.Extensions.FileProviders.Embedded.csproj    | 2 +-
- ...oft.Extensions.FileProviders.Embedded.Manifest.Task.csproj | 2 +-
- .../ref/Microsoft.Extensions.FileProviders.Physical.csproj    | 4 ++--
- .../src/Microsoft.Extensions.FileProviders.Physical.csproj    | 2 +-
- .../ref/Microsoft.Extensions.FileSystemGlobbing.csproj        | 4 ++--
- .../src/Microsoft.Extensions.FileSystemGlobbing.csproj        | 2 +-
- ...ft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 4 ++--
- ...ft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 2 +-
- .../ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj  | 4 ++--
- .../src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj  | 2 +-
- .../ref/Microsoft.Extensions.Hosting.Abstractions.csproj      | 4 ++--
- .../src/Microsoft.Extensions.Hosting.Abstractions.csproj      | 4 ++--
- src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj   | 2 +-
- src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj   | 2 +-
- .../ref/Microsoft.Extensions.Hosting.WindowsServices.csproj   | 2 +-
- .../src/Microsoft.Extensions.Hosting.WindowsServices.csproj   | 2 +-
- .../Http/ref/Microsoft.Extensions.Http.csproj                 | 4 ++--
- .../Http/src/Microsoft.Extensions.Http.csproj                 | 2 +-
- .../Polly/ref/Microsoft.Extensions.Http.Polly.csproj          | 4 ++--
- .../Polly/src/Microsoft.Extensions.Http.Polly.csproj          | 2 +-
- .../Microsoft.JSInterop/ref/Microsoft.JSInterop.csproj        | 4 ++--
- .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj        | 4 ++--
- .../ref/Mono.WebAssembly.Interop.csproj                       | 4 ++--
- .../src/Mono.WebAssembly.Interop.csproj                       | 2 +-
- .../ref/Microsoft.Extensions.Localization.Abstractions.csproj | 4 ++--
- .../src/Microsoft.Extensions.Localization.Abstractions.csproj | 2 +-
- .../Localization/ref/Microsoft.Extensions.Localization.csproj | 4 ++--
- .../Localization/src/Microsoft.Extensions.Localization.csproj | 2 +-
- .../ref/Microsoft.Extensions.Logging.Abstractions.csproj      | 4 ++--
- .../src/Microsoft.Extensions.Logging.Abstractions.csproj      | 2 +-
- .../ref/Microsoft.Extensions.Logging.AzureAppServices.csproj  | 4 ++--
- .../src/Microsoft.Extensions.Logging.AzureAppServices.csproj  | 2 +-
- .../ref/Microsoft.Extensions.Logging.Configuration.csproj     | 4 ++--
- .../src/Microsoft.Extensions.Logging.Configuration.csproj     | 2 +-
- .../ref/Microsoft.Extensions.Logging.Console.csproj           | 4 ++--
- .../src/Microsoft.Extensions.Logging.Console.csproj           | 2 +-
- .../ref/Microsoft.Extensions.Logging.Debug.csproj             | 4 ++--
- .../src/Microsoft.Extensions.Logging.Debug.csproj             | 2 +-
- .../ref/Microsoft.Extensions.Logging.EventLog.csproj          | 4 ++--
- .../src/Microsoft.Extensions.Logging.EventLog.csproj          | 2 +-
- .../ref/Microsoft.Extensions.Logging.EventSource.csproj       | 4 ++--
- .../src/Microsoft.Extensions.Logging.EventSource.csproj       | 4 ++--
- .../ref/Microsoft.Extensions.Logging.TraceSource.csproj       | 4 ++--
- .../src/Microsoft.Extensions.Logging.TraceSource.csproj       | 2 +-
- src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj   | 4 ++--
- src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj   | 2 +-
- src/ObjectPool/ref/Microsoft.Extensions.ObjectPool.csproj     | 4 ++--
- src/ObjectPool/src/Microsoft.Extensions.ObjectPool.csproj     | 2 +-
- ...icrosoft.Extensions.Options.ConfigurationExtensions.csproj | 4 ++--
- ...icrosoft.Extensions.Options.ConfigurationExtensions.csproj | 2 +-
- .../ref/Microsoft.Extensions.Options.DataAnnotations.csproj   | 4 ++--
- .../src/Microsoft.Extensions.Options.DataAnnotations.csproj   | 4 ++--
- src/Options/Options/ref/Microsoft.Extensions.Options.csproj   | 4 ++--
- src/Options/Options/src/Microsoft.Extensions.Options.csproj   | 4 ++--
- src/Primitives/ref/Microsoft.Extensions.Primitives.csproj     | 4 ++--
- src/Primitives/src/Microsoft.Extensions.Primitives.csproj     | 4 ++--
- .../src/Microsoft.AspNetCore.Testing.csproj                   | 2 +-
- src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj   | 4 ++--
- src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj   | 4 ++--
- 105 files changed, 161 insertions(+), 160 deletions(-)
+ Directory.Build.props                                       | 1 +
+ .../ref/Microsoft.Extensions.Caching.Abstractions.csproj    | 4 ++--
+ .../src/Microsoft.Extensions.Caching.Abstractions.csproj    | 2 +-
+ .../Memory/ref/Microsoft.Extensions.Caching.Memory.csproj   | 4 ++--
+ .../Memory/src/Microsoft.Extensions.Caching.Memory.csproj   | 2 +-
+ .../ref/Microsoft.Extensions.Caching.SqlServer.csproj       | 4 ++--
+ .../src/Microsoft.Extensions.Caching.SqlServer.csproj       | 2 +-
+ .../Microsoft.Extensions.Caching.StackExchangeRedis.csproj  | 4 ++--
+ .../Microsoft.Extensions.Caching.StackExchangeRedis.csproj  | 2 +-
+ .../Microsoft.Extensions.Configuration.Abstractions.csproj  | 4 ++--
+ .../Microsoft.Extensions.Configuration.Abstractions.csproj  | 2 +-
+ .../Microsoft.Extensions.Configuration.AzureKeyVault.csproj | 4 ++--
+ .../Microsoft.Extensions.Configuration.AzureKeyVault.csproj | 2 +-
+ .../ref/Microsoft.Extensions.Configuration.Binder.csproj    | 4 ++--
+ .../src/Microsoft.Extensions.Configuration.Binder.csproj    | 2 +-
+ .../Microsoft.Extensions.Configuration.CommandLine.csproj   | 4 ++--
+ .../Microsoft.Extensions.Configuration.CommandLine.csproj   | 2 +-
+ ...oft.Extensions.Configuration.EnvironmentVariables.csproj | 4 ++--
+ ...oft.Extensions.Configuration.EnvironmentVariables.csproj | 2 +-
+ ...Microsoft.Extensions.Configuration.FileExtensions.csproj | 4 ++--
+ ...Microsoft.Extensions.Configuration.FileExtensions.csproj | 2 +-
+ .../ref/Microsoft.Extensions.Configuration.Ini.csproj       | 4 ++--
+ .../src/Microsoft.Extensions.Configuration.Ini.csproj       | 2 +-
+ .../ref/Microsoft.Extensions.Configuration.Json.csproj      | 4 ++--
+ .../src/Microsoft.Extensions.Configuration.Json.csproj      | 4 ++--
+ .../Microsoft.Extensions.Configuration.KeyPerFile.csproj    | 4 ++--
+ .../Microsoft.Extensions.Configuration.KeyPerFile.csproj    | 2 +-
+ ...Microsoft.Extensions.Configuration.NewtonsoftJson.csproj | 4 ++--
+ ...Microsoft.Extensions.Configuration.NewtonsoftJson.csproj | 2 +-
+ .../Microsoft.Extensions.Configuration.UserSecrets.csproj   | 4 ++--
+ .../Microsoft.Extensions.Configuration.UserSecrets.csproj   | 2 +-
+ .../ref/Microsoft.Extensions.Configuration.Xml.csproj       | 4 ++--
+ .../src/Microsoft.Extensions.Configuration.Xml.csproj       | 2 +-
+ .../Config/ref/Microsoft.Extensions.Configuration.csproj    | 4 ++--
+ .../Config/src/Microsoft.Extensions.Configuration.csproj    | 2 +-
+ ...osoft.Extensions.DependencyInjection.Abstractions.csproj | 4 ++--
+ ...osoft.Extensions.DependencyInjection.Abstractions.csproj | 2 +-
+ .../DI/ref/Microsoft.Extensions.DependencyInjection.csproj  | 2 +-
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj  | 2 +-
+ .../ref/Microsoft.Extensions.DiagnosticAdapter.csproj       | 4 ++--
+ .../src/Microsoft.Extensions.DiagnosticAdapter.csproj       | 2 +-
+ .../Microsoft.Extensions.FileProviders.Abstractions.csproj  | 4 ++--
+ .../Microsoft.Extensions.FileProviders.Abstractions.csproj  | 2 +-
+ .../ref/Microsoft.Extensions.FileProviders.Composite.csproj | 4 ++--
+ .../src/Microsoft.Extensions.FileProviders.Composite.csproj | 2 +-
+ .../ref/Microsoft.Extensions.FileProviders.Embedded.csproj  | 4 ++--
+ .../src/Microsoft.Extensions.FileProviders.Embedded.csproj  | 6 +++---
+ ...oft.Extensions.FileProviders.Embedded.multitarget.nuspec | 4 ++--
+ ...soft.Extensions.FileProviders.Embedded.netcoreapp.nuspec | 4 ++--
+ .../Microsoft.Extensions.FileProviders.Embedded.props       | 2 +-
+ ...t.Extensions.FileProviders.Embedded.Manifest.Task.csproj | 2 +-
+ .../ref/Microsoft.Extensions.FileProviders.Physical.csproj  | 4 ++--
+ .../src/Microsoft.Extensions.FileProviders.Physical.csproj  | 2 +-
+ .../ref/Microsoft.Extensions.FileSystemGlobbing.csproj      | 4 ++--
+ .../src/Microsoft.Extensions.FileSystemGlobbing.csproj      | 2 +-
+ ....Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 4 ++--
+ ....Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 2 +-
+ .../Microsoft.Extensions.Diagnostics.HealthChecks.csproj    | 4 ++--
+ .../Microsoft.Extensions.Diagnostics.HealthChecks.csproj    | 2 +-
+ .../ref/Microsoft.Extensions.Hosting.Abstractions.csproj    | 4 ++--
+ .../src/Microsoft.Extensions.Hosting.Abstractions.csproj    | 4 ++--
+ src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj | 2 +-
+ src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj | 2 +-
+ .../ref/Microsoft.Extensions.Hosting.WindowsServices.csproj | 2 +-
+ .../src/Microsoft.Extensions.Hosting.WindowsServices.csproj | 2 +-
+ .../Http/ref/Microsoft.Extensions.Http.csproj               | 4 ++--
+ .../Http/src/Microsoft.Extensions.Http.csproj               | 2 +-
+ .../Polly/ref/Microsoft.Extensions.Http.Polly.csproj        | 4 ++--
+ .../Polly/src/Microsoft.Extensions.Http.Polly.csproj        | 2 +-
+ .../Microsoft.JSInterop/ref/Microsoft.JSInterop.csproj      | 4 ++--
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj      | 4 ++--
+ .../ref/Mono.WebAssembly.Interop.csproj                     | 4 ++--
+ .../src/Mono.WebAssembly.Interop.csproj                     | 2 +-
+ .../Microsoft.Extensions.Localization.Abstractions.csproj   | 4 ++--
+ .../Microsoft.Extensions.Localization.Abstractions.csproj   | 2 +-
+ .../ref/Microsoft.Extensions.Localization.csproj            | 4 ++--
+ .../src/Microsoft.Extensions.Localization.csproj            | 2 +-
+ .../ref/Microsoft.Extensions.Logging.Abstractions.csproj    | 4 ++--
+ .../src/Microsoft.Extensions.Logging.Abstractions.csproj    | 2 +-
+ .../Microsoft.Extensions.Logging.AzureAppServices.csproj    | 4 ++--
+ .../Microsoft.Extensions.Logging.AzureAppServices.csproj    | 2 +-
+ .../ref/Microsoft.Extensions.Logging.Configuration.csproj   | 4 ++--
+ .../src/Microsoft.Extensions.Logging.Configuration.csproj   | 2 +-
+ .../ref/Microsoft.Extensions.Logging.Console.csproj         | 4 ++--
+ .../src/Microsoft.Extensions.Logging.Console.csproj         | 2 +-
+ .../ref/Microsoft.Extensions.Logging.Debug.csproj           | 4 ++--
+ .../src/Microsoft.Extensions.Logging.Debug.csproj           | 2 +-
+ .../ref/Microsoft.Extensions.Logging.EventLog.csproj        | 4 ++--
+ .../src/Microsoft.Extensions.Logging.EventLog.csproj        | 2 +-
+ .../ref/Microsoft.Extensions.Logging.EventSource.csproj     | 4 ++--
+ .../src/Microsoft.Extensions.Logging.EventSource.csproj     | 4 ++--
+ .../ref/Microsoft.Extensions.Logging.TraceSource.csproj     | 4 ++--
+ .../src/Microsoft.Extensions.Logging.TraceSource.csproj     | 2 +-
+ src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj | 4 ++--
+ src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj | 2 +-
+ src/ObjectPool/ref/Microsoft.Extensions.ObjectPool.csproj   | 4 ++--
+ src/ObjectPool/src/Microsoft.Extensions.ObjectPool.csproj   | 2 +-
+ ...rosoft.Extensions.Options.ConfigurationExtensions.csproj | 4 ++--
+ ...rosoft.Extensions.Options.ConfigurationExtensions.csproj | 2 +-
+ .../ref/Microsoft.Extensions.Options.DataAnnotations.csproj | 4 ++--
+ .../src/Microsoft.Extensions.Options.DataAnnotations.csproj | 4 ++--
+ src/Options/Options/ref/Microsoft.Extensions.Options.csproj | 4 ++--
+ src/Options/Options/src/Microsoft.Extensions.Options.csproj | 4 ++--
+ src/Primitives/ref/Microsoft.Extensions.Primitives.csproj   | 4 ++--
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj   | 4 ++--
+ .../src/Microsoft.AspNetCore.Testing.csproj                 | 2 +-
+ src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj | 4 ++--
+ src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj | 4 ++--
+ 108 files changed, 168 insertions(+), 167 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
 index 0dbdaf0bd..ae8a1733c 100644
@@ -784,7 +787,7 @@ index 89cba5ba5..13216fc59 100644
      <Reference Include="Microsoft.Extensions.FileProviders.Abstractions"  />
    </ItemGroup>
 diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
-index 44e8e2afb..d0971fc0c 100644
+index 44e8e2afb..c5a274edd 100644
 --- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
 +++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
 @@ -3,7 +3,7 @@
@@ -796,6 +799,58 @@ index 44e8e2afb..d0971fc0c 100644
      <NuspecFile>$(MSBuildProjectName).multitarget.nuspec</NuspecFile>
      <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
      <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).netcoreapp.nuspec</NuspecFile>
+@@ -28,8 +28,8 @@
+   <ItemGroup>
+     <NuspecProperty Include="AssemblyName=$(AssemblyName)" />
+     <NuspecProperty Include="OutputPath=$(OutputPath)" />
+-    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.dll"/>
+-    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
++    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.dll"/>
++    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
+     <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+index ca6b2bcf1..458f981ee 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+@@ -20,7 +20,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
+index ea8d3386f..ff549539f 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
+@@ -17,7 +17,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
+diff --git a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+index aabbabc92..2d8c55e95 100644
+--- a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
++++ b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
++    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.1\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
+   </PropertyGroup>
+ 
+   <UsingTask
 diff --git a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj b/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
 index cdc4ffdcb..1216252b5 100644
 --- a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
