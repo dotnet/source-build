@@ -1,0 +1,39 @@
+From dd3385eab332cccd481538648b990b0177520590 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 20 Oct 2019 17:39:21 -0500
+Subject: [PATCH 7/7] Upgrade to netcoreapp3.0
+
+---
+ src/package/package/package.csproj       | 2 +-
+ src/vstest.console/vstest.console.csproj | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/package/package/package.csproj b/src/package/package/package.csproj
+index 4b39d121..0b5fd8a6 100644
+--- a/src/package/package/package.csproj
++++ b/src/package/package/package.csproj
+@@ -6,7 +6,7 @@
+   <Import Project="$(TestPlatformRoot)scripts/build/TestPlatform.Settings.targets" />
+   <PropertyGroup>
+     <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp3.0</TargetFrameworks>
+     <AssemblyName>package</AssemblyName>
+     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
+index 39e33dbd..2d3616f7 100644
+--- a/src/vstest.console/vstest.console.csproj
++++ b/src/vstest.console/vstest.console.csproj
+@@ -7,7 +7,7 @@
+   <PropertyGroup>
+     <AssemblyName>vstest.console</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net451</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp3.0</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <OutputType>Exe</OutputType>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
+-- 
+2.18.0
+
