@@ -1,14 +1,13 @@
-From cf26188b0e85a76caa1dc095dec31b1b254359cf Mon Sep 17 00:00:00 2001
+From 701436ba110c60c7bcd49c252593f1c876c91f4b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 20 Oct 2019 17:39:21 -0500
 Subject: [PATCH 7/7] Upgrade to netcoreapp3.0
 
 ---
  src/package/nuspec/Microsoft.TestPlatform.Portable.nuspec | 8 ++++----
- src/package/nuspec/TestPlatform.CLI.nuspec                | 1 +
  src/package/package/package.csproj                        | 2 +-
  src/vstest.console/vstest.console.csproj                  | 2 +-
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/src/package/nuspec/Microsoft.TestPlatform.Portable.nuspec b/src/package/nuspec/Microsoft.TestPlatform.Portable.nuspec
 index 287b34f8..6c371319 100644
@@ -29,17 +28,6 @@ index 287b34f8..6c371319 100644
      <file src="netcoreapp2.1\NuGet.Frameworks.dll"	target="tools\netcoreapp2.1\NuGet.Frameworks.dll" />
  
      <file src="netcoreapp2.1\cs\Microsoft.TestPlatform.CommunicationUtilities.resources.dll"	target="tools\netcoreapp2.1\cs\Microsoft.TestPlatform.CommunicationUtilities.resources.dll" />
-diff --git a/src/package/nuspec/TestPlatform.CLI.nuspec b/src/package/nuspec/TestPlatform.CLI.nuspec
-index ca995ffc..156c9a38 100644
---- a/src/package/nuspec/TestPlatform.CLI.nuspec
-+++ b/src/package/nuspec/TestPlatform.CLI.nuspec
-@@ -22,5 +22,6 @@
-     <file src="ThirdPartyNotices.txt" target="" />
-     
-     <file src="netcoreapp2.1\**\*.*" exclude="**\*.pdb" target="contentFiles\any\netcoreapp2.1" />
-+    <file src="netcoreapp3.0\**\*.*" exclude="**\*.pdb" target="contentFiles\any\netcoreapp3.0" />
-   </files>
- </package>
 diff --git a/src/package/package/package.csproj b/src/package/package/package.csproj
 index 4b39d121..0b5fd8a6 100644
 --- a/src/package/package/package.csproj
