@@ -1,4 +1,4 @@
-From 50d4a310be0bc3565ae581503414e2f1aba6b5ef Mon Sep 17 00:00:00 2001
+From 177907e7128485f21bdcef84c429d775cf6b0c07 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 19 Oct 2019 16:29:22 -0500
 Subject: [PATCH] Target framework changes
@@ -894,7 +894,7 @@ index dee9f559a..6040609a9 100644
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
      <IsPackable>true</IsPackable>
 diff --git a/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj b/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj
-index c93da686d..1c4fadd88 100644
+index c93da686d..ce3680459 100644
 --- a/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj
 +++ b/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj
 @@ -1,9 +1,9 @@
@@ -902,7 +902,7 @@ index c93da686d..1c4fadd88 100644
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-+    <TargetFrameworks>$(DefaultNetStandardTargetFramework)</TargetFrameworks>
++    <TargetFrameworks>$(DefaultNetStandardTargetFramework);netcoreapp2.1</TargetFrameworks>
    </PropertyGroup>
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetStandardTargetFramework)'">
@@ -910,7 +910,7 @@ index c93da686d..1c4fadd88 100644
      
    </ItemGroup>
 diff --git a/src/FileSystemGlobbing/src/Microsoft.Extensions.FileSystemGlobbing.csproj b/src/FileSystemGlobbing/src/Microsoft.Extensions.FileSystemGlobbing.csproj
-index 65910694d..5e935a9b2 100644
+index 65910694d..495591904 100644
 --- a/src/FileSystemGlobbing/src/Microsoft.Extensions.FileSystemGlobbing.csproj
 +++ b/src/FileSystemGlobbing/src/Microsoft.Extensions.FileSystemGlobbing.csproj
 @@ -4,7 +4,7 @@
@@ -918,7 +918,7 @@ index 65910694d..5e935a9b2 100644
      <AssemblyName>Microsoft.Extensions.FileSystemGlobbing</AssemblyName>
      <Description>File system globbing to find files matching a specified pattern.</Description>
 -    <TargetFramework>netstandard2.0</TargetFramework>
-+    <TargetFramework>$(DefaultNetStandardTargetFramework)</TargetFramework>
++    <TargetFramework>$(DefaultNetStandardTargetFramework);netcoreapp2.1</TargetFramework>
      <NoWarn>$(NoWarn);CS1591</NoWarn>
      <PackageTags>files;filesystem;glob;globbing</PackageTags>
      <GenerateDocumentationFile>true</GenerateDocumentationFile>
