@@ -1,12 +1,27 @@
-From 199dc76f3c9bb099bc1d210516fd0cb9ed99d8b0 Mon Sep 17 00:00:00 2001
+From 39038d1814f5ae523a1c9e8d6a9bcea7a9f9cc12 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 23 Oct 2019 13:58:31 -0500
 Subject: [PATCH 2/2] .NET Core only for VBCSCompiler
 
 ---
+ src/Compilers/CSharp/csc/csc.csproj                   | 2 +-
  src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/Compilers/VisualBasic/vbc/vbc.csproj              | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
+index 20b207b5fc..83c5b205f8 100644
+--- a/src/Compilers/CSharp/csc/csc.csproj
++++ b/src/Compilers/CSharp/csc/csc.csproj
+@@ -8,7 +8,7 @@
+     <Prefer32Bit>false</Prefer32Bit>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.CSharp.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>$(RoslynPortableTargetFrameworks)</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+   </PropertyGroup>
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 index a199b3f631..14f1d15e66 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
@@ -20,6 +35,19 @@ index a199b3f631..14f1d15e66 100644
      <UseVSHostingProcess>false</UseVSHostingProcess>
      <ServerGarbageCollection>true</ServerGarbageCollection>
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
+index 99df382cbb..d6486810e5 100644
+--- a/src/Compilers/VisualBasic/vbc/vbc.csproj
++++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
+@@ -7,7 +7,7 @@
+     <RootNamespace>Microsoft.CodeAnalysis.VisualBasic.CommandLine</RootNamespace>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.VisualBasic.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>$(RoslynPortableTargetFrameworks)</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+   </PropertyGroup>
 -- 
 2.18.0
 
