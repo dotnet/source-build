@@ -1,0 +1,25 @@
+From e7fda3e1d990283b0783f04c0bc553fc02c04f71 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 20 Oct 2019 15:51:49 -0500
+Subject: [PATCH] Don't build fullfx
+
+---
+ .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+index 9c811eb9c..1e60fa128 100644
+--- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
++++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <Description>Razor is a markup syntax for adding server-side logic to web pages. This package contains MSBuild support for Razor.</Description>
+-    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net46</TargetFrameworks>
++    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net472</TargetFrameworks>
+ 
+     <TargetName>Microsoft.NET.Sdk.Razor.Tasks</TargetName>
+     <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
+-- 
+2.18.0
+
