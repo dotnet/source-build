@@ -1,14 +1,14 @@
-From e7fda3e1d990283b0783f04c0bc553fc02c04f71 Mon Sep 17 00:00:00 2001
+From 5c56d545e51b8f9066e348acf738cc5e72ec2240 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 20 Oct 2019 15:51:49 -0500
 Subject: [PATCH] Don't build fullfx
 
 ---
- .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj  | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../Microsoft.NET.Sdk.Razor.csproj                     | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
-index 9c811eb9c..1e60fa128 100644
+index 9c811eb9c..ca367a819 100644
 --- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
 +++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
 @@ -1,7 +1,7 @@
@@ -20,6 +20,30 @@ index 9c811eb9c..1e60fa128 100644
  
      <TargetName>Microsoft.NET.Sdk.Razor.Tasks</TargetName>
      <NuspecFile>$(MSBuildProjectName).nuspec</NuspecFile>
+@@ -19,7 +19,7 @@
+     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCorePackageVersion)" />
+     <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" />
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net46'" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net472'" />
+ 
+     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions\Microsoft.AspNetCore.Mvc.Razor.Extensions.csproj" ReferenceOutputAssembly="false" Condition="'$(TargetFramework)'=='$(DefaultNetCoreTargetFramework)'" />
+     <ProjectReference Include="..\Microsoft.AspNetCore.Razor.Tools\Microsoft.AspNetCore.Razor.Tools.csproj" ReferenceOutputAssembly="false" Condition="'$(TargetFramework)'=='$(DefaultNetCoreTargetFramework)'" />
+@@ -58,11 +58,11 @@
+     </Copy>
+ 
+     <ItemGroup>
+-      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net46*\Microsoft.NET.Sdk.Razor.Tasks.*" />
++      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net472*\Microsoft.NET.Sdk.Razor.Tasks.*" />
+       <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\$(DefaultNetCoreTargetFramework)*\Microsoft.NET.Sdk.Razor.Tasks.*" />
+ 
+-      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net46*\System.Collections.Immutable.dll" />
+-      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net46*\System.Reflection.Metadata.dll" />
++      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net472*\System.Collections.Immutable.dll" />
++      <ProjectOutput Include="$(ArtifactsBinDir)Microsoft.NET.Sdk.Razor\$(Configuration)\net472*\System.Reflection.Metadata.dll" />
+     </ItemGroup>
+ 
+     <Copy SourceFiles="@(ProjectOutput)" DestinationFiles="$(SdkOutputPath)tasks\%(RecursiveDir)%(FileName)%(Extension)" SkipUnchangedFiles="true">
 -- 
 2.18.0
 
