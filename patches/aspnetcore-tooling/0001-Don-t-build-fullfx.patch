@@ -1,11 +1,12 @@
-From 5c56d545e51b8f9066e348acf738cc5e72ec2240 Mon Sep 17 00:00:00 2001
+From 62d4c6ecb6fc285a58f589a738c5128947ee69db Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 20 Oct 2019 15:51:49 -0500
 Subject: [PATCH] Don't build fullfx
 
 ---
  .../Microsoft.NET.Sdk.Razor.csproj                     | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../netstandard2.0/Sdk.Razor.CurrentVersion.targets    |  2 +-
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
 index 9c811eb9c..ca367a819 100644
@@ -44,6 +45,19 @@ index 9c811eb9c..ca367a819 100644
      </ItemGroup>
  
      <Copy SourceFiles="@(ProjectOutput)" DestinationFiles="$(SdkOutputPath)tasks\%(RecursiveDir)%(FileName)%(Extension)" SkipUnchangedFiles="true">
+diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
+index 6345c52e9..e16e764b9 100644
+--- a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
++++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
+@@ -31,7 +31,7 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <RazorSdkDirectoryRoot Condition="'$(RazorSdkDirectoryRoot)'==''">$(MSBuildThisFileDirectory)..\..\</RazorSdkDirectoryRoot>
+     <RazorSdkBuildTasksDirectoryRoot Condition="'$(RazorSdkBuildTasksDirectoryRoot)'==''">$(RazorSdkDirectoryRoot)tasks\</RazorSdkBuildTasksDirectoryRoot>
+     <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(DefaultNetCoreTargetFramework)</_RazorSdkTasksTFM>
+-    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net46</_RazorSdkTasksTFM>
++    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net472</_RazorSdkTasksTFM>
+     <RazorSdkBuildTasksAssembly>$(RazorSdkBuildTasksDirectoryRoot)$(_RazorSdkTasksTFM)\Microsoft.NET.Sdk.Razor.Tasks.dll</RazorSdkBuildTasksAssembly>
+   </PropertyGroup>
+ 
 -- 
 2.18.0
 
