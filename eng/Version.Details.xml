@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Dependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19381.1">
+    <Dependency Name="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19463.3">
       <Uri>https://github.com/dotnet/arcade</Uri>
-      <Sha>8f3c22397990aeb20a88690b51dad4b33f21e7ff</Sha>
+      <Sha>ce459ae07c3d7a1e68251268855e0bc7b3d97f75</Sha>
     </Dependency>
-    <Dependency Name="Private.SourceBuild.ReferencePackages" Version="1.0.0-beta.19510.2">
+    <Dependency Name="Private.SourceBuild.ReferencePackages" Version="1.0.0-beta.19523.2">
       <Uri>https://github.com/dotnet/source-build-reference-packages</Uri>
-      <Sha>13b8e96f5bda02f489c7116ae926c3beae16ac1f</Sha>
+      <Sha>9bf1b292bed4b8ab7198b50405ed74dc2b535ab1</Sha>
     </Dependency>
   </ToolsetDependencies>
   <ProductDependencies>
-    <Dependency Name="sourcelink" Version="1.0.0-beta2-19351-01">
+    <Dependency Name="Microsoft.Build.Tasks.Git" Version="1.0.0-beta2-19367-01">
       <Uri>https://github.com/dotnet/sourcelink</Uri>
-      <Sha>51310e65e75010467993f793e1739d1a1dad50c5</Sha>
+      <Sha>855afb5af9ea79e63dd9c051a7cfe0941bbb5ced</Sha>
     </Dependency>
     <!-- this is pinned to work around https://github.com/dotnet/arcade/issues/3518 -->
     <!-- if XDT is updated before that issue is fixed, this should be updated.  After the issue is fixed, it should be unpinned.  -->
@@ -27,30 +27,30 @@
       <Sha>1127689f262d52ea8ff68ef03d706fa62b3b40a1</Sha>
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.Runtime.CoreCLR" Version="3.0.0-rc2.19462.5" CoherentParentDependency="Microsoft.Private.CoreFx.NETCoreApp">
+    <Dependency Name="Microsoft.NETCore.Runtime.CoreCLR" Version="3.0.1-servicing.19475.2" CoherentParentDependency="Microsoft.Private.CoreFx.NETCoreApp">
       <Uri>https://github.com/dotnet/coreclr</Uri>
-      <Sha>922429db0144dd6f3b4324805464dae82857512a</Sha>
+      <Sha>68ff240063fc2ddb9b03275ae5d5063a09d38ace</Sha>
     </Dependency>
     <Dependency Name="NETStandard.Library" Version="2.1.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/standard</Uri>
       <Sha>a5b5f2e1e369972c8ff1e2183979fab6099f52ef</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Private.CoreFx.NETCoreApp" Version="4.6.0-rc2.19462.14" CoherentParentDependency="Microsoft.NETCore.App">
+    <Dependency Name="Microsoft.Private.CoreFx.NETCoreApp" Version="4.6.0-servicing.19501.4" CoherentParentDependency="Microsoft.NETCore.App">
       <Uri>https://github.com/dotnet/corefx</Uri>
-      <Sha>4ac4c0367003fe3973a3648eb0715ddb0e3bbcea</Sha>
+      <Sha>54d63c3e283e0c3937a35ab4e99f391c84ff119e</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App" Version="3.0.0-rc2-19463-05" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App" Version="3.0.1-servicing-19502-09" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/core-setup</Uri>
-      <Sha>7d57652f33493fa022125b7f63aad0d70c52d810</Sha>
+      <Sha>0bdbe6b3a7caf32a4f594196effe56a941980d7b</Sha>
     </Dependency>
     <Dependency Name="Microsoft.AspNetCore.Mvc.Razor.Extensions" Version="3.0.0" CoherentParentDependency="Microsoft.AspNetCore.App.Ref">
       <Uri>https://github.com/aspnet/AspNetCore-Tooling</Uri>
       <Sha>16b0ca4a5838c39c8852e6cf144232597e2bee2e</Sha>
       <RepoName>aspnetcore-tooling</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="3.0.0" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="3.0.1-servicing.19476.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>b2663fb07294f5d6cf3caa927d58f7cbebf7d626</Sha>
+      <Sha>a776e417c83c52908298b3767e462feae8b18b98</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NETCore.Compilers" Version="3.3.1-beta4-19462-11" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/roslyn</Uri>
@@ -70,9 +70,9 @@
       <Sha>0b951c16de0f39e13cce8372e11c28eb90576662</Sha>
       <RepoName>aspnet-extensions</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="3.0.100-rc2.19467.3" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.NET.Sdk" Version="3.0.101-servicing.19477.3" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>b3a343bf8ed65f5208c5bb86c632856c5d107b1d</Sha>
+      <Sha>3819a21a612cd8bc15b6f6c4e361d18490469577</Sha>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.19208.1" CoherentParentDependency="Microsoft.DotNet.Cli.Runtime">
       <Uri>https://github.com/dotnet/cliCommandLineParser</Uri>
@@ -94,29 +94,29 @@
       <Sha>aee5e4080331553ea9dfb7fb388b6d72f715bf6a</Sha>
       <RepoName>aspnetcore</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Cli.Runtime" Version="3.0.100-rc2.19467.7" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.DotNet.Cli.Runtime" Version="3.0.101-servicing.19503.4" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/cli</Uri>
-      <Sha>e72d84f73adcbfa0054df27fbb21505295a55dcb</Sha>
+      <Sha>2bb5a58198c6d96aae157ea3a119867b57cd839d</Sha>
     </Dependency>
     <Dependency Name="Microsoft.FSharp.Compiler" Version="10.6.0-beta.19454.10" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/dotnet/fsharp</Uri>
       <Sha>0422ff293bb2cc722fe5021b85ef50378a9af823</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk.Web" Version="3.0.100-rc2.19465.1" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
+    <Dependency Name="Microsoft.NET.Sdk.Web" Version="3.0.100-rc2.19507.2" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/aspnet/websdk</Uri>
-      <Sha>002ea5ca7c699d925281abd8307556ec8eccb530</Sha>
+      <Sha>9b65fe8b178d2ad73482080c6a0aabae911e1224</Sha>
     </Dependency>
     <Dependency Name="Microsoft.TestPlatform.Build" Version="16.3.0" CoherentParentDependency="Microsoft.Dotnet.Toolset.Internal">
       <Uri>https://github.com/microsoft/vstest</Uri>
       <Sha>55e7e45431c9c05656c999b902686e7402664573</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.0.100-rc2.19468.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.Dotnet.Toolset.Internal" Version="3.0.101-servicing.19508.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/toolset</Uri>
-      <Sha>33026f95de81116aefd79b4ec4c8071090a02480</Sha>
+      <Sha>6a8609fc2c10ee908977238e5c6bc48b926491da</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="1.0.0-preview.19468.4">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="1.0.0-preview.19508.2">
       <Uri>https://github.com/dotnet/core-sdk</Uri>
-      <Sha>04339c3a262a2e313f9431edd3805ce71e08b92e</Sha>
+      <Sha>f08e8bc516c2d598c8b0fba247bf8eac5e329a91</Sha>
     </Dependency>
     <!-- external dependencies, not handled by Maestro/Arcade -->
     <Dependency Name="Newtonsoft.Json" Version="12.0.2">

@@ -15,8 +15,7 @@ steps:
     brew install icu4c openssl
     brew link --force icu4c
     # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
-    brew install pkgconfig openssl
-    brew upgrade cmake
+    brew install pkgconfig openssl cmake
     brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
     # Use 'for' to get last/latest openssl install dir.
     for openssl_path in $brew_openssl_paths; do :; done
