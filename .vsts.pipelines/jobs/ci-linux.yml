@@ -137,6 +137,7 @@ jobs:
           -path './bin/*-report/*' -o \
           -path './bin/msbuild-debug/*' -o \
           -path './bin/roslyn-debug/*' -o \
+          -path './bin/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/source-build/logs \;"
@@ -228,6 +229,7 @@ jobs:
           -path './bin/*-report/*' -o \
           -path './bin/msbuild-debug/*' -o \
           -path './bin/roslyn-debug/*' -o \
+          -path './bin/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/tarball/logs \;"

@@ -95,6 +95,7 @@ jobs:
         -path './bin/*-report/*' -o \
         -path './bin/msbuild-debug/*' -o \
         -path './bin/roslyn-debug/*' -o \
+         -path './bin/aspnet-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
         -exec $copyWithParents "$(logsDirectory)" \;
