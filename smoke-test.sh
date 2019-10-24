@@ -31,6 +31,8 @@ testingHome="$testingDir/home"
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
 smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
+runningOnline=false
+runningHttps=false
 
 function usage() {
     echo ""
@@ -157,13 +159,23 @@ function doCommand() {
             break
         fi
 
+        binlogOnlinePart="local"
+        binlogHttpsPart="nohttps"
+        if [ "$runningOnline" == "true" ]; then
+            binlogOnlinePart="online"
+        fi
+        if [ "$runningHttps" == "true" ]; then
+            binlogHttpsPart="https"
+        fi
+
+        binlog="$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_$1.binlog"
         echo "    running $1" | tee -a "$logFile"
 
         if [ "$1" == "new" ]; then
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $newArgs | tee -a "$logFile"
+                "${dotnetCmd}" $newArgs --no-restore | tee -a "$logFile"
             else
-                "${dotnetCmd}" $newArgs >> "$logFile" 2>&1
+                "${dotnetCmd}" $newArgs --no-restore >> "$logFile" 2>&1
             fi
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
@@ -188,9 +200,9 @@ function doCommand() {
             echo "    terminated with exit code $?" | tee -a "$logFile"
         else
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $1 | tee -a "$logFile"
+                "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
             else
-                "${dotnetCmd}" $1 >> "$logFile" 2>&1
+                "${dotnetCmd}" $1 /bl:"$binlog" >> "$logFile" 2>&1
             fi
         fi
         if [ $? -eq 0 ]; then
@@ -224,17 +236,17 @@ function setupDevCerts() {
 function runAllTests() {
     # Run tests for each language and template
     if [ "$excludeNonWebTests" == "false" ]; then
-        doCommand C# console new restore run
+        doCommand C# console new restore build run
         doCommand C# classlib new restore build
         doCommand C# xunit new restore test
         doCommand C# mstest new restore test
 
-        doCommand VB console new restore run
+        doCommand VB console new restore build run
         doCommand VB classlib new restore build
         doCommand VB xunit new restore test
         doCommand VB mstest new restore test
 
-        doCommand F# console new restore run
+        doCommand F# console new restore build run
         doCommand F# classlib new restore build
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
@@ -242,10 +254,12 @@ function runAllTests() {
 
     if [ "$excludeWebTests" == "false" ]; then
         if [ "$excludeWebNoHttpsTests" == "false" ]; then
+            runningHttps=false
             runWebTests --new-arg --no-https
         fi
 
         if [ "$excludeWebHttpsTests" == "false" ]; then
+            runningHttps=true
             setupDevCerts
             runWebTests
         fi
@@ -263,14 +277,14 @@ function resetCaches() {
 }
 
 function runWebTests() {
-    doCommand C# web "$@" new restore run
-    doCommand C# mvc "$@" new restore run
-    doCommand C# webapi "$@" new restore run
-    doCommand C# razor "$@" new restore run
+    doCommand C# web "$@" new restore build run
+    doCommand C# mvc "$@" new restore build run
+    doCommand C# webapi "$@" new restore build run
+    doCommand C# razor "$@" new restore build run
 
-    doCommand F# web "$@" new restore run
-    doCommand F# mvc "$@" new restore run
-    doCommand F# webapi "$@" new restore run
+    doCommand F# web "$@" new restore build run
+    doCommand F# mvc "$@" new restore build run
+    doCommand F# webapi "$@" new restore build run
 }
 
 function resetCaches() {
@@ -345,6 +359,7 @@ SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packag
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
     resetCaches
+    runningOnline=false
     # Setup NuGet.Config with local restore source
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
@@ -362,6 +377,7 @@ fi
 
 if [ "$excludeOnlineTests" == "false" ]; then
     resetCaches
+    runningOnline=true
     # Setup NuGet.Config to use online restore sources
     if [ -e "$SCRIPT_ROOT/smoke-testNuGet.Config" ]; then
         cp "$SCRIPT_ROOT/smoke-testNuGet.Config" "$testingDir/NuGet.Config"
