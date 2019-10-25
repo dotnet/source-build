@@ -79,7 +79,8 @@ if [[ $sdkLine =~ $sdkPattern ]]; then
 fi
 echo "Found bootstrap SDK $SDK_VERSION"
 CLI_PATH="$SCRIPT_ROOT/.dotnet"
-DARC_DLL="$SCRIPT_ROOT/tools-local/arcade-services/artifacts/bin/Microsoft.DotNet.Darc/Release/netcoreapp3.0/Microsoft.DotNet.Darc.dll"
+DarcVersion=$(cat $SCRIPT_ROOT/DarcVersion.txt)
+DARC_DLL="$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp2.1/any/Microsoft.DotNet.Darc.dll"
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
@@ -146,6 +147,10 @@ git submodule foreach --quiet --recursive '
 
 # Now re-uberclone into the tarball src directory.  Since we reuse the .gitdirs, this shouldn't hit the network at all.
 ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted;https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted;https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization;https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup;https://github.com/dotnet/source-build-reference-packages"
+
+#export the LC_LIB_PATH for libgit2 so file as fedora fails to find it in the repodir
+export LD_LIBRARY_PATH=$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/
+
 "$CLI_PATH/dotnet" "$DARC_DLL" clone --repos-folder=$TARBALL_ROOT/src/ --git-dir-folder $SCRIPT_ROOT/.git/modules/src/ --include-toolset --ignore-repos "$ignored_repos" --azdev-pat bogus --github-pat bogus --depth 0 --debug
 
 # now we don't need .git/modules/src or Darc anymore
@@ -182,6 +187,7 @@ cp $SCRIPT_ROOT/*.proj $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.props $TARBALL_ROOT/
 cp $SCRIPT_ROOT/*.targets $TARBALL_ROOT/
 cp $SCRIPT_ROOT/global.json $TARBALL_ROOT/
+cp $SCRIPT_ROOT/DarcVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
 cp -r $CLI_PATH $TARBALL_ROOT/
@@ -192,6 +198,9 @@ cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
+rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
+rm -rf $TARBALL_ROOT/.dotnet/tools/
+rm -rf $TARBALL_ROOT/.dotnet/host/fxr/2.1.0/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
