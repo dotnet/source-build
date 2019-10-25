@@ -1,0 +1,27 @@
+From ff76d7c3d58b3eff697d9c15f149a23890a9241c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 17 Oct 2019 21:27:16 -0500
+Subject: [PATCH] Don't include DotNetInstall in source-build
+
+---
+ .../tools/InstallDotNetCore.targets                            | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/InstallDotNetCore.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/InstallDotNetCore.targets
+index 444a002d..030e8b78 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/InstallDotNetCore.targets
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/InstallDotNetCore.targets
+@@ -1,8 +1,9 @@
+ <!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project>
+-  <UsingTask TaskName="Microsoft.DotNet.Arcade.Sdk.InstallDotNetCore" AssemblyFile="$(ArcadeSdkBuildTasksAssembly)" />
++  <UsingTask TaskName="Microsoft.DotNet.Arcade.Sdk.InstallDotNetCore" AssemblyFile="$(ArcadeSdkBuildTasksAssembly)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+ 
+   <Target Name="InstallDotNetCore"
++          Condition="'$(DotNetBuildFromSource)' != 'true'"
+           AfterTargets="Restore">
+     <PropertyGroup>
+       <_DotNetInstallScript>$(RepositoryEngineeringDir)common\dotnet-install.cmd</_DotNetInstallScript>
+-- 
+2.18.0
+

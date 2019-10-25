@@ -120,6 +120,9 @@
 
     <!-- Output Roslyn logs to allow debugging compiler errors -->
     <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
+
+    <!--ASP.NET dev server request logs -->
+    <EnvironmentVariables Include="RAZORBUILDSERVER_LOG=$(AspNetRazorBuildServerLogFile)" />
   </ItemGroup>
 
   <PropertyGroup>
