@@ -1,0 +1,25 @@
+From 3a56b0c5205509075c2b47293ffd9d7cfd9c273b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 17 Oct 2019 20:42:17 -0500
+Subject: [PATCH] Don't install 2.1.503 for testing.
+
+---
+ eng/build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/build.sh b/eng/build.sh
+index 54a7dd2062..752a6baed9 100755
+--- a/eng/build.sh
++++ b/eng/build.sh
+@@ -288,7 +288,7 @@ function BuildSolution {
+ InitializeDotNetCli $restore
+ 
+ # Make sure we have a 2.1 runtime available for running our tests
+-InstallDotNetSdk $_InitializeDotNetCli 2.1.503
++# InstallDotNetSdk $_InitializeDotNetCli 2.1.503
+ 
+ bootstrap_dir=""
+ if [[ "$bootstrap" == true ]]; then
+-- 
+2.18.0
+

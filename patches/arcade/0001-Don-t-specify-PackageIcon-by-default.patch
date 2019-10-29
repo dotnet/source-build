@@ -1,0 +1,24 @@
+From 33f1e5f75b63691130dfcf06f8ea3273c30c0ea7 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 18 Oct 2019 15:08:13 -0500
+Subject: [PATCH] Don't specify PackageIcon by default
+
+---
+ src/Microsoft.DotNet.Arcade.Sdk/tools/ProjectDefaults.props | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/ProjectDefaults.props b/src/Microsoft.DotNet.Arcade.Sdk/tools/ProjectDefaults.props
+index c2f8ddb6..8b676e7c 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/ProjectDefaults.props
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/ProjectDefaults.props
+@@ -16,7 +16,6 @@
+     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+     <PublishRepositoryUrl>true</PublishRepositoryUrl>
+ 
+-    <PackageIcon>Icon.png</PackageIcon>
+     <PackageIconFullPath>$(MSBuildThisFileDirectory)Assets\DotNetPackageIcon.png</PackageIconFullPath>
+ 
+     <!-- Disable the message indicating we are using a preview SDK. That is understood and by design -->
+-- 
+2.18.0
+

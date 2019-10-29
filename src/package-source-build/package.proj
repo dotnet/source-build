@@ -5,8 +5,7 @@
 
   <Target Name="Pack">
     <!-- Copy PVP to packages dir in order to package them together -->
-    <Copy Condition="'$(DotNetBuildOffline)' != 'true'" SourceFiles="$(PackageVersionPropsPath)" DestinationFolder="$(SourceBuiltPackagesPath)" />
-    <Copy Condition="'$(DotNetBuildOffline)' == 'true'" SourceFiles="$(GennedPackageVersionPropsPath)" DestinationFiles="$(SourceBuiltPackagesPath)PackageVersions.props" />
+    <Copy SourceFiles="$(IncludedPackageVersionPropsFile)" DestinationFiles="$(SourceBuiltPackagesPath)PackageVersions.props" />
     <PropertyGroup>
         <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
     </PropertyGroup>
