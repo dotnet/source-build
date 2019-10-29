@@ -1,24 +1,24 @@
-From 31c0c9f7d98b3100148d8af62838acb028e12ed9 Mon Sep 17 00:00:00 2001
-From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Mon, 26 Aug 2019 13:38:27 -0700
-Subject: [PATCH 4/4] Removed unneeded feeds.
+From 3785ae298ef1e74bb72680bf79aec52fffd005e7 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Tue, 29 Oct 2019 17:38:08 +0000
+Subject: [PATCH 7/7] Remove-unneeded-feeds
 
 ---
  NuGet.Config | 1 -
  1 file changed, 1 deletion(-)
 
 diff --git a/NuGet.Config b/NuGet.Config
-index 1b1484729..1c2ddda1e 100644
+index 440c8b5..1c2ddda 100644
 --- a/NuGet.Config
 +++ b/NuGet.Config
 @@ -7,7 +7,6 @@
      <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
      <add key="dotnet-buildtools" value="https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json" />
      <add key="dotnet-roslyn" value="https://dotnet.myget.org/F/roslyn/api/v3/index.json" />
--    <add key="cps" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json" />
+-    <add key="vside" value="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vs-impl/nuget/v3/index.json" />
      <add key="dotnet-msbuild" value="https://dotnet.myget.org/F/msbuild/api/v3/index.json" />
    </packageSources>
    <disabledPackageSources>
 -- 
-2.18.0
+1.8.3.1
 
