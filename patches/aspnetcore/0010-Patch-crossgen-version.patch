@@ -1,0 +1,25 @@
+From 4af488483e91c5258a99cdb3d64308e94295de83 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 30 Oct 2019 14:21:37 -0500
+Subject: [PATCH 10/10] Patch crossgen version.
+
+---
+ src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+index e4717cf247..89f23ac182 100644
+--- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+@@ -102,7 +102,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+ 
+     <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
+     <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(AppHostRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
+-    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)', '$(MicrosoftNETCoreAppRuntimeVersion)'))</RuntimePackageRoot>
++    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)', '3.0.1'))</RuntimePackageRoot>
+     <RuntimePackageRoot>$([MSBuild]::EnsureTrailingSlash('$(RuntimePackageRoot)'))</RuntimePackageRoot>
+     <CrossgenToolPath>$([System.IO.Path]::Combine('$(RuntimePackageRoot)', 'tools', '$(CrossgenToolPackagePath)'))</CrossgenToolPath>
+     <AssetTargetFallback>$(AssetTargetFallback);native,Version=0.0</AssetTargetFallback>
+-- 
+2.18.0
+
