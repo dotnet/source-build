@@ -16,7 +16,7 @@ index 2e11857..2456577 100644
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-x64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
-+    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(AppHostRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
++    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(SourceBuildRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
    </ItemGroup>
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
@@ -30,7 +30,7 @@ index 9b6fe29..e4717cf 100644
  
 -    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(RuntimeIdentifier)', '$(MicrosoftNETCoreAppRuntimeVersion)'))</RuntimePackageRoot>
 +    <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-+    <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(AppHostRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
++    <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
 +    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)', '$(MicrosoftNETCoreAppRuntimeVersion)'))</RuntimePackageRoot>
      <RuntimePackageRoot>$([MSBuild]::EnsureTrailingSlash('$(RuntimePackageRoot)'))</RuntimePackageRoot>
      <CrossgenToolPath>$([System.IO.Path]::Combine('$(RuntimePackageRoot)', 'tools', '$(CrossgenToolPackagePath)'))</CrossgenToolPath>
