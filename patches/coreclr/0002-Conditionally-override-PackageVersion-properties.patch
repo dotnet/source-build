@@ -1,0 +1,44 @@
+From f2b6e2f828479800e27638d7a5cde7e0e4bb3f8e Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 31 Oct 2019 14:48:46 +0000
+Subject: [PATCH] Conditionally override PackageVersion properties
+
+---
+ dependencies.props | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/dependencies.props b/dependencies.props
+index 774b169..dc7afc0 100644
+--- a/dependencies.props
++++ b/dependencies.props
+@@ -22,12 +22,12 @@
+ 
+   <!-- Tests/infrastructure dependency versions. -->
+   <PropertyGroup>
+-    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion>3.0.0-preview6.19280.1</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
+-    <XunitPackageVersion>2.4.1-pre.build.4059</XunitPackageVersion>
+-    <XunitPerformanceApiPackageVersion>1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
+-    <MicrosoftDiagnosticsTracingTraceEventPackageVersion>2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
+-    <MicrosoftDiagnosticsToolsRuntimeClientVersion>1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
+-    <CommandLineParserVersion>2.2.0</CommandLineParserVersion>
++    <MicrosoftNETCoreRuntimeCoreCLRPackageVersion Condition="'$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)' == ''">3.0.0-preview6.19280.1</MicrosoftNETCoreRuntimeCoreCLRPackageVersion>
++    <XunitPackageVersion Condition="'$(XunitPackageVersion)' == ''">2.4.1-pre.build.4059</XunitPackageVersion>
++    <XunitPerformanceApiPackageVersion Condition="'$(XunitPerformanceApiPackageVersion)' == ''">1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
++    <MicrosoftDiagnosticsTracingTraceEventPackageVersion Condition="'$(MicrosoftDiagnosticsTracingTraceEventPackageVersion)' == ''">2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
++    <MicrosoftDiagnosticsToolsRuntimeClientVersion Condition="'$(MicrosoftDiagnosticsToolsRuntimeClientVersion)' == ''">1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
++    <CommandLineParserVersion Condition="'$(CommandLineParserVersion)' == ''">2.2.0</CommandLineParserVersion>
+ 
+     <!-- Scenario tests install this version of Microsoft.NetCore.App, then patch coreclr binaries via xcopy. At the moment it is
+          updated manually whenever breaking changes require it to move forward, but it would be nice if we could update it automatically
+@@ -45,7 +45,7 @@
+   <!-- ILLink.Tasks package version -->
+   <PropertyGroup>
+     <ILLinkTasksPackage>ILLink.Tasks</ILLinkTasksPackage>
+-    <ILLinkTasksPackageVersion>0.1.5-preview-1461378</ILLinkTasksPackageVersion>
++    <ILLinkTasksPackageVersion Condition="'$(ILLinkTasksPackageVersion)' == ''">0.1.5-preview-1461378</ILLinkTasksPackageVersion>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+
