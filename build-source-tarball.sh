@@ -173,6 +173,14 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    pushd "$TARBALL_ROOT/src"
+    echo 'Removing unneeded files to trim tarball...'
+    # we don't build CoreCLR tests right now and they have a lot of them - ~380MB
+    rm -rf coreclr.*/tests
+    popd
+fi
+
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
 for srcDir in `find bin/src -name '.git' -type d`; do
@@ -205,10 +213,7 @@ cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
-mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
-find $SCRIPT_ROOT/packages/restored/ -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
@@ -231,9 +236,6 @@ echo 'Removing source-built packages from tarball prebuilts...'
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
-    fi
     if [ -e $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package)
     fi
@@ -259,35 +261,8 @@ if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   "$CLI_PATH/dotnet" publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
-echo 'Removing reference-only packages from tarball prebuilts...'
-
-for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
-do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
-    fi
-done
-
 allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
 allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
-
-echo 'Removing reference-packages from tarball prebuilts...'
-
-for ref_package in ${allRefPkgs[@]}
-do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
-    fi
-done
-
-echo 'Removing previously source-built packages from tarball prebuilts...'
-
-for ref_package in ${allSourceBuiltPkgs[@]}
-do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
-    fi
-done
 
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
 OLDIFS=$IFS
