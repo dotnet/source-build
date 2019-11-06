@@ -307,7 +307,7 @@ do
     if [[ "$packagePattern" =~ ^# ]]; then
         continue
     fi
-    rm $TARBALL_ROOT/packages/prebuilt/$packagePattern
+    rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
 done < $SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt
 
 if [ $SKIP_PREBUILT_ENFORCEMENT -ne 1 ]; then
