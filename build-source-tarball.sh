@@ -213,7 +213,10 @@ cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 
+mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
+find $SCRIPT_ROOT/packages/restored/ -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
+find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
@@ -236,6 +239,9 @@ echo 'Removing source-built packages from tarball prebuilts...'
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
+    fi
     if [ -e $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/packages/smoke-test-packages/$(basename $built_package)
     fi
@@ -261,8 +267,56 @@ if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   "$CLI_PATH/dotnet" publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
+echo 'Removing reference-only packages from tarball prebuilts...'
+
+for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
+    fi
+done
+
 allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
 allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+
+echo 'Removing reference-packages from tarball prebuilts...'
+
+for ref_package in ${allRefPkgs[@]}
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
+    fi
+done
+
+echo 'Removing previously source-built packages from tarball prebuilts...'
+
+for ref_package in ${allSourceBuiltPkgs[@]}
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
+    fi
+done
+
+echo 'Removing known extra packages from tarball prebuilts...'
+while IFS= read -r packagePattern
+do
+    if [[ "$packagePattern" =~ ^# ]]; then
+        continue
+    fi
+    rm $TARBALL_ROOT/packages/prebuilt/$packagePattern
+done < $SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt
+
+echo 'Checking for extra prebuilts...'
+for package in `ls -A $TARBALL_ROOT/packages/prebuilt`
+do
+    if grep -q "$package" $SCRIPT_ROOT/support/allowed-prebuilts.txt; then
+        echo "Allowing prebuilt $package"
+    else
+        echo "ERROR: $package is not in the allowed prebuilts list ($SCRIPT_ROOT/support/allowed-prebuilts.txt)"
+        echo "Either remove this prebuilt, add it to the known extras list ($SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt) or add it to the allowed prebuilts list."
+        exit 1
+    fi
+done
 
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
 OLDIFS=$IFS
