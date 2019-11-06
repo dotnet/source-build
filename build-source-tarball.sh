@@ -312,6 +312,7 @@ for path in ${ilSrcPaths[@]}; do
     fi
     if [[ "$remove" == "true" ]]; then
         rm -rf "$TARBALL_ROOT/packages/reference/staging/$path"
+        rm -rf "$TARBALL_ROOT/packages/reference/source/$path"
     fi
 done
 
