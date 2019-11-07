@@ -11,11 +11,21 @@ steps:
     # Work around brew bug: https://github.com/dotnet/coreclr/pull/21913
     brew update
     # Install macOS native dependencies not present in hosted pool.
-    # Based on https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
-    brew install icu4c openssl
+    # Package lists are from:
+    # https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
+    # and https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
+    # these will fail if the package is already installed, so allow them to fail
+    brew install icu4c || true
+    brew install openssl || true
+    brew install pkgconfig || true
+    brew install cmake || true
+    # and these will fail if we're already up to date, so allow that too
+    brew upgrade icu4c || true
+    brew upgrade openssl || true
+    brew upgrade pkgconfig || true
+    brew upgrade cmake || true
+
     brew link --force icu4c
-    # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
-    brew install pkgconfig openssl cmake
     brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
     # Use 'for' to get last/latest openssl install dir.
     for openssl_path in $brew_openssl_paths; do :; done
