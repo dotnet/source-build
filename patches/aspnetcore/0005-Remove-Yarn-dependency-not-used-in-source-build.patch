@@ -1,7 +1,7 @@
-From 002de978f1f0d9e7466f336dfe18b63ec5799915 Mon Sep 17 00:00:00 2001
+From 3b94eb32dfd8f1383f332962bbe81a9e21914038 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 23 Sep 2019 16:21:28 -0500
-Subject: [PATCH 6/6] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 5/9] Remove Yarn dependency - not used in source-build
 
 ---
  eng/targets/Npm.Common.targets                                 | 3 ---
@@ -25,10 +25,10 @@ index 062a9d3a8f..3f91b02d42 100644
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
 diff --git a/global.json b/global.json
-index dcba24801f..1934419949 100644
+index fa652db0a9..f02c60c4fc 100644
 --- a/global.json
 +++ b/global.json
-@@ -23,7 +23,6 @@
+@@ -24,7 +24,6 @@
      }
    },
    "msbuild-sdks": {
@@ -77,5 +77,5 @@ index 48d8dad7a6..8a18913ca4 100644
  
    <Target Name="EnsureNodeJSRestored" Condition="'$(SeleniumE2ETestsSupported)' == 'true'" BeforeTargets="Build">
 -- 
-2.21.0
+2.18.0
 
