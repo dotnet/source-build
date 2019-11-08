@@ -23,7 +23,7 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;BuildDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
@@ -89,15 +89,6 @@
     <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
     <Exec Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
 
-    <!-- Temporary workaround to copy dlls that can't be round-tripped 
-         They just get copied from the source to the package staging area
-    -->
-    <ItemGroup>
-      <DllsInSource Include="$(ReferencePackagesSourceDir)**/*.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="%(DllsInSource.Identity)" DestinationFiles="$(ReferencePackagesStagingDir)%(DllsInSource.RecursiveDir)%(DllsInSource.Filename).dll" />
-
-    <!-- End Temporary workaround -->
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
@@ -153,13 +144,13 @@
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
   </Target>
 
-  <Target Name="BuildDarc" Condition="'$(OfflineBuild)' != 'true'">
+  <Target Name="AcquireDarc" Condition="'$(OfflineBuild)' != 'true'">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
-    <Exec Command="$(DotNetCliToolDir)dotnet build -c Release $(MSBuildProjectDirectory)/arcade-services/src/Microsoft.DotNet.Darc/src/Darc/Microsoft.DotNet.Darc.csproj /p:TargetFramework=netcoreapp3.0" />
+    <Exec Command="$(ProjectDir)eng/common/darc-init.sh --darcversion $(DarcVersion) --toolpath $(DarcInstallDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
   </Target>
 
-  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc">
+  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <PropertyGroup>
       <DarcCloneArguments>clone</DarcCloneArguments>
@@ -183,11 +174,11 @@
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
-    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" />
+    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="LD_LIBRARY_PATH=$(DotNetCliToolDir)/tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$(DarcVersion)/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
-  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="BuildDarc;FetchSources">
+  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc;FetchSources">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Writing out SourceLink metadata." />
     <WriteSourceRepoProperties
        VersionDetailsFile="$(ProjectDir)eng/Version.Details.xml"

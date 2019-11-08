@@ -28,6 +28,7 @@
     <BuildArguments>$(BuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' != 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(coresetupOutputPackageVersion)</BuildArguments>
