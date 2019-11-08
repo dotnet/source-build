@@ -1,4 +1,4 @@
-From ab8e5db829c0565f4ee4364948e6dd60375ff6a5 Mon Sep 17 00:00:00 2001
+From 63ce048a7a1d07c5593fbf624761fdbda8fd2f81 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Tue, 10 Sep 2019 18:50:59 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
@@ -10,7 +10,8 @@ Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
  .../DI/src/Microsoft.Extensions.DependencyInjection.csproj     | 3 ++-
  .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj | 2 +-
  .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj         | 2 +-
- 6 files changed, 7 insertions(+), 6 deletions(-)
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj      | 2 +-
+ 7 files changed, 8 insertions(+), 7 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 05f4e462c..84e19a64c 100644
@@ -91,6 +92,19 @@ index 9df18f74c..59c72dff9 100644
      <Reference Include="System.Text.Json" />
    </ItemGroup>
  
+diff --git a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+index 4a42ce96e..8354c544d 100644
+--- a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
++++ b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+@@ -19,7 +19,7 @@ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <Compile Include="$(SharedSourceRoot)HashCodeCombiner\**\*.cs" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Reference Include="System.Memory" />
+     <Reference Include="System.Runtime.CompilerServices.Unsafe" />
+   </ItemGroup>
 -- 
 2.21.0 (Apple Git-122.2)
 
