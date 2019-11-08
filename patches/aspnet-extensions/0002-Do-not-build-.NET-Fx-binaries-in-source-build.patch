@@ -1,4 +1,4 @@
-From c56c4ab4e555cd0ae5a566a5f431eae7e10b3b53 Mon Sep 17 00:00:00 2001
+From ab8e5db829c0565f4ee4364948e6dd60375ff6a5 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Tue, 10 Sep 2019 18:50:59 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
@@ -9,7 +9,8 @@ Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
  .../Config/src/Microsoft.Extensions.Configuration.csproj       | 2 +-
  .../DI/src/Microsoft.Extensions.DependencyInjection.csproj     | 3 ++-
  .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj | 2 +-
- 5 files changed, 6 insertions(+), 5 deletions(-)
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj         | 2 +-
+ 6 files changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 05f4e462c..84e19a64c 100644
@@ -77,6 +78,19 @@ index dff946a6b..193b5772d 100644
      <IsPackable>true</IsPackable>
      <IsShipping>true</IsShipping>
    </PropertyGroup>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+index 9df18f74c..59c72dff9 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
++++ b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+@@ -10,7 +10,7 @@
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
 -- 
 2.21.0 (Apple Git-122.2)
 
