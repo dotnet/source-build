@@ -1,4 +1,4 @@
-From c3b0ea04b3728ca8b97a40ef97a33e1c3c655a63 Mon Sep 17 00:00:00 2001
+From c56c4ab4e555cd0ae5a566a5f431eae7e10b3b53 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Tue, 10 Sep 2019 18:50:59 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
@@ -6,9 +6,10 @@ Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
 ---
  eng/Versions.props                                             | 2 +-
  .../src/Microsoft.Extensions.Configuration.Binder.csproj       | 2 +-
+ .../Config/src/Microsoft.Extensions.Configuration.csproj       | 2 +-
  .../DI/src/Microsoft.Extensions.DependencyInjection.csproj     | 3 ++-
  .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj | 2 +-
- 4 files changed, 5 insertions(+), 4 deletions(-)
+ 5 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 05f4e462c..84e19a64c 100644
@@ -30,6 +31,19 @@ index d6fcba085..9bade55bb 100644
 @@ -3,7 +3,7 @@
    <PropertyGroup>
      <Description>Functionality to bind an object to data in configuration providers for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+index dc93341da..64e7c9968 100644
+--- a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
++++ b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>Implementation of key-value pair based configuration for Microsoft.Extensions.Configuration. Includes the memory configuration provider.</Description>
      <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
