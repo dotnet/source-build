@@ -1,0 +1,31 @@
+From 1615af0680443e20e30675c0b74af03ddb3d5fa4 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 8 Nov 2019 10:24:14 -0600
+Subject: [PATCH 3/3] Build MS.Internal.Ext.Refs for AspNetCore.
+
+---
+ .../ref/Microsoft.Internal.Extensions.Refs.csproj             | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+index f00ec1d0d..d8ae75e7e 100644
+--- a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
++++ b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+@@ -4,12 +4,12 @@
+     <TargetFramework>netcoreapp3.0</TargetFramework>
+ 
+     <!-- Do not pack in servicing builds. -->
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsPackable Condition=" '$(PatchVersion)' == '0' ">true</IsPackable>
+ 
+     <IsShipping>false</IsShipping>
+     <!-- This project is not included in the shared framework -->
+-    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+ 
+     <!-- Subject to change: see https://github.com/dotnet/designs/pull/50 -->
+-- 
+2.18.0
+
