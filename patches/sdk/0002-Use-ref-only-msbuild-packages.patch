@@ -1,7 +1,7 @@
-From a547de169a7e7bac594032488fbc517fe4011682 Mon Sep 17 00:00:00 2001
+From b45e4cdf6ae0d9e723520f30116664edf438101f Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Wed, 21 Aug 2019 21:36:24 +0000
-Subject: [PATCH 2/2] Use ref-only msbuild packages
+Date: Mon, 4 Nov 2019 22:10:01 +0000
+Subject: [PATCH 2/3] Use ref-only msbuild packages
 
 ---
  .../Microsoft.NET.Build.Extensions.Tasks.csproj            | 5 +++--
@@ -25,7 +25,7 @@ index df2904a9..47e4e80b 100644
    </ItemGroup>
  
 diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-index f03320ce..48f89ae7 100644
+index 86eef5d2..8b2c71f0 100644
 --- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 +++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 @@ -37,9 +37,10 @@
@@ -40,8 +40,8 @@ index f03320ce..48f89ae7 100644
 +    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" ExcludeAssets="Runtime" />
 +    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" ExcludeAssets="Runtime" />
      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
-     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
      <PackageReference Include="Microsoft.NET.HostModel" Version="$(MicrosoftNETHostModelVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
 -- 
-2.18.0
+2.20.1
 
