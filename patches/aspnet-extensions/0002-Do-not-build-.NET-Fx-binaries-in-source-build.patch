@@ -1,17 +1,20 @@
-From 63ce048a7a1d07c5593fbf624761fdbda8fd2f81 Mon Sep 17 00:00:00 2001
+From d1e64fa9b1c55bd8da1f2577ee123036540fd01d Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Tue, 10 Sep 2019 18:50:59 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
 
 ---
- eng/Versions.props                                             | 2 +-
- .../src/Microsoft.Extensions.Configuration.Binder.csproj       | 2 +-
- .../Config/src/Microsoft.Extensions.Configuration.csproj       | 2 +-
- .../DI/src/Microsoft.Extensions.DependencyInjection.csproj     | 3 ++-
- .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj | 2 +-
- .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj         | 2 +-
- src/Primitives/src/Microsoft.Extensions.Primitives.csproj      | 2 +-
- 7 files changed, 8 insertions(+), 7 deletions(-)
+ eng/Versions.props                                          | 2 +-
+ .../src/Microsoft.Extensions.Configuration.Binder.csproj    | 2 +-
+ .../Config/src/Microsoft.Extensions.Configuration.csproj    | 2 +-
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj  | 3 ++-
+ .../Microsoft.Extensions.FileProviders.Abstractions.csproj  | 2 +-
+ .../src/Microsoft.Extensions.FileProviders.Embedded.csproj  | 6 +++---
+ ...oft.Extensions.FileProviders.Embedded.multitarget.nuspec | 6 +++---
+ ...t.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec | 4 ++--
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj      | 2 +-
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj   | 2 +-
+ 10 files changed, 16 insertions(+), 15 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 05f4e462c..84e19a64c 100644
@@ -79,6 +82,67 @@ index dff946a6b..193b5772d 100644
      <IsPackable>true</IsPackable>
      <IsShipping>true</IsShipping>
    </PropertyGroup>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+index 4858cae97..9a752c3e6 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+@@ -5,7 +5,7 @@
+     <Description>File provider for files in embedded resources for Microsoft.Extensions.FileProviders.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <NuspecFile>$(MSBuildProjectName).multitarget.nuspec</NuspecFile>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).netcoreapp3.0.nuspec</NuspecFile>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+@@ -30,8 +30,8 @@
+     <NuspecProperty Include="OutputBinary=$(OutputPath)**\$(AssemblyName).dll" />
+     <NuspecProperty Include="OutputSymbol=$(OutputPath)**\$(AssemblyName).pdb" />
+     <NuspecProperty Include="OutputDocumentation=$(OutputPath)**\$(AssemblyName).xml" />
+-    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.dll"/>
+-    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
++    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.dll"/>
++    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
+     <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+index c9ab1ba84..7e2fa61df 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+@@ -6,7 +6,7 @@
+       <group targetFramework=".NETCoreApp3.0">
+         <dependency id="Microsoft.Extensions.FileProviders.Abstractions" version="$version$" exclude="Build,Analyzers" />
+       </group>
+-      <group targetFramework=".NETStandard2.0">
++      <group targetFramework=".NETStandard2.1">
+         <dependency id="Microsoft.Extensions.FileProviders.Abstractions" version="$version$" exclude="Build,Analyzers" />
+       </group>
+     </dependencies>
+@@ -20,7 +20,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
+index b42e51174..590b84c9a 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
+@@ -17,7 +17,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
 diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
 index 9df18f74c..59c72dff9 100644
 --- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
