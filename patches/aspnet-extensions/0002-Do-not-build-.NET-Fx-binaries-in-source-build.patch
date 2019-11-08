@@ -1,4 +1,4 @@
-From c17605cf60c20bad4119ff6bfd14b9cabb148b19 Mon Sep 17 00:00:00 2001
+From 34635ab6a57ac9ef1e33335fa6a6e559adab04cc Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Tue, 10 Sep 2019 18:50:59 +0000
 Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
@@ -12,10 +12,11 @@ Subject: [PATCH 2/2] Do not build .NET Fx binaries in source build
  .../src/Microsoft.Extensions.FileProviders.Embedded.csproj  | 6 +++---
  ...oft.Extensions.FileProviders.Embedded.multitarget.nuspec | 6 +++---
  ...t.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec | 4 ++--
+ .../Microsoft.Extensions.FileProviders.Embedded.props       | 2 +-
  ...t.Extensions.FileProviders.Embedded.Manifest.Task.csproj | 2 +-
  .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj      | 2 +-
  src/Primitives/src/Microsoft.Extensions.Primitives.csproj   | 2 +-
- 11 files changed, 17 insertions(+), 16 deletions(-)
+ 12 files changed, 18 insertions(+), 17 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 05f4e462c..84e19a64c 100644
@@ -144,6 +145,19 @@ index b42e51174..590b84c9a 100644
 +    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
    </files>
  </package>
+diff --git a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+index aabbabc92..2d8c55e95 100644
+--- a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
++++ b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
++    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.1\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
+   </PropertyGroup>
+ 
+   <UsingTask
 diff --git a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj b/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
 index cdc4ffdcb..adf20a3f1 100644
 --- a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
