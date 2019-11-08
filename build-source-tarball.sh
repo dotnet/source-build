@@ -173,6 +173,11 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
+#Remove binaries from tools-local as we don't want them to end up in tarball, the intent is to have them built within the context of tarball
+echo 'Removing binaries from tools-local'
+find $SCRIPT_ROOT/tools-local \( -type f \( \
+    -iname '*.dll' \) \) -exec rm {} \;
+
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
 for srcDir in `find bin/src -name '.git' -type d`; do
