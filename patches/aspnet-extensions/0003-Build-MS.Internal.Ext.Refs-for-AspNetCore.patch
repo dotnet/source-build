@@ -1,14 +1,14 @@
-From 1615af0680443e20e30675c0b74af03ddb3d5fa4 Mon Sep 17 00:00:00 2001
+From d7231c597b6331c05c5d03b458b5ab32a25b6a71 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 8 Nov 2019 10:24:14 -0600
 Subject: [PATCH 3/3] Build MS.Internal.Ext.Refs for AspNetCore.
 
 ---
- .../ref/Microsoft.Internal.Extensions.Refs.csproj             | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../ref/Microsoft.Internal.Extensions.Refs.csproj           | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
-index f00ec1d0d..d8ae75e7e 100644
+index f00ec1d0d..95de1620b 100644
 --- a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
 +++ b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
 @@ -4,12 +4,12 @@
@@ -26,6 +26,15 @@ index f00ec1d0d..d8ae75e7e 100644
      <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
  
      <!-- Subject to change: see https://github.com/dotnet/designs/pull/50 -->
+@@ -50,7 +50,7 @@
+     </BuildDependsOn>
+ 
+     <!-- Suppresses building this project completely during servicing builds. -->
+-    <BuildDependsOn Condition="! $(IsPackable)" />
++    <BuildDependsOn />
+   </PropertyGroup>
+ 
+   <!-- Override the default MSBuild targets so that nothing is returned from the project since it represents a collection of assemblies. -->
 -- 
 2.18.0
 
