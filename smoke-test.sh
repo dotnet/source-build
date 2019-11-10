@@ -339,7 +339,7 @@ else
 fi
 
 echo SDK under test is:
-"$dotnetDir/dotnet --info"
+"$dotnetDir/dotnet" --info
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
