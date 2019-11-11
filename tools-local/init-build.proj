@@ -108,7 +108,7 @@
                                OverwriteDestination="true" />
   </Target>
 
-  <Target Name="WriteDynamicPropsToStaticPropsFiles">
+  <Target Name="WriteDynamicPropsToStaticPropsFiles" DependsOnTargets="BuildTasks">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
       <Output PropertyName="TargetRid" TaskParameter="Rid" />
     </GetHostInformation>
