@@ -1,14 +1,14 @@
-From 2ec8eb30c45ed2a5d48659f50960133471fb9ae5 Mon Sep 17 00:00:00 2001
+From 6c53d1b1517d32f1f15214e37f9f7f5b9550b41e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Sun, 10 Nov 2019 12:22:30 -0600
-Subject: [PATCH 4/4] Don't call dotnet without a path
+Date: Mon, 11 Nov 2019 08:22:27 -0600
+Subject: [PATCH 4/4] Don't call dotnet without path
 
 ---
  eng/common/tools.sh | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/eng/common/tools.sh b/eng/common/tools.sh
-index 757d5b9e..5a4cfeb1 100755
+index 757d5b9ea..5a4cfeb1f 100755
 --- a/eng/common/tools.sh
 +++ b/eng/common/tools.sh
 @@ -340,9 +340,9 @@ function MSBuild {

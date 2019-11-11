@@ -338,6 +338,9 @@ else
     fi
 fi
 
+echo SDK under test is:
+"$dotnetDir/dotnet" --info
+
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
