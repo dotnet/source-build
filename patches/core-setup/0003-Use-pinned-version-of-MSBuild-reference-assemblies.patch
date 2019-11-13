@@ -1,0 +1,32 @@
+From f8595fa6b1e977dc66d97f3f855b7f94b0747fe3 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Wed, 13 Nov 2019 00:36:31 +0000
+Subject: [PATCH 3/3] Use pinned version of MSBuild reference assemblies
+
+---
+ tools-local/tasks/core-setup.tasks.csproj | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/tools-local/tasks/core-setup.tasks.csproj b/tools-local/tasks/core-setup.tasks.csproj
+index 34a2a57..33154e3 100644
+--- a/tools-local/tasks/core-setup.tasks.csproj
++++ b/tools-local/tasks/core-setup.tasks.csproj
+@@ -21,10 +21,11 @@
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' != 'net46'">
+-    <PackageReference Include="Microsoft.Build" Version="$(RefOnlyMicrosoftBuildPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Framework" Version="$(RefOnlyMicrosoftBuildFrameworkPackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(RefOnlyMicrosoftBuildTasksCorePackageVersion)" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(RefOnlyMicrosoftBuildUtilitiesCorePackageVersion)" />
++  <!-- these are used as reference assemblies only, so they don't need to take a ProdCon/source-build version. -->
++    <PackageReference Include="Microsoft.Build" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+ 
+     <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.0.0" />
+   </ItemGroup>
+-- 
+1.8.3.1
+
