@@ -1,0 +1,202 @@
+From 0e439cea06474c84c8d34507b593c1d0d4d6baee Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Wed, 13 Nov 2019 17:22:51 +0000
+Subject: [PATCH 1/2] Do not build .NET Fx binaries in source build
+
+---
+ eng/Versions.props                                                  | 2 +-
+ .../src/Microsoft.Extensions.Configuration.Binder.csproj            | 2 +-
+ .../Config/src/Microsoft.Extensions.Configuration.csproj            | 2 +-
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj          | 3 ++-
+ .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj      | 2 +-
+ .../Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj | 6 +++---
+ .../Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec  | 6 +++---
+ .../Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec   | 4 ++--
+ .../Microsoft.Extensions.FileProviders.Embedded.props               | 2 +-
+ ...Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj | 2 +-
+ src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj    | 2 +-
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj           | 2 +-
+ 12 files changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 29b04d7..c6f1bb2 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -40,7 +40,7 @@
+     <!-- Disable Arcade's Xliff tools -->
+     <UsingToolXliff>false</UsingToolXliff>
+     <!-- Using .NET framework assemblies from a package. -->
+-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
++    <UsingToolNetFrameworkReferenceAssemblies Condition="'$(DotNetBuildFromSource)' != 'true'">true</UsingToolNetFrameworkReferenceAssemblies>
+   </PropertyGroup>
+   <!--
+ 
+diff --git a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+index 7b336a5..4872cbc 100644
+--- a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
++++ b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>Functionality to bind an object to data in configuration providers for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+index dfa2c25..33a6814 100644
+--- a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
++++ b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>Implementation of key-value pair based configuration for Microsoft.Extensions.Configuration. Includes the memory configuration provider.</Description>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+index eb488c6..d10bda8 100644
+--- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
++++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+@@ -2,7 +2,8 @@
+ 
+   <PropertyGroup>
+     <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
+-    <TargetFrameworks>$(DefaultNetCoreTargetFramework);net461;netstandard2.0;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net461</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>dependencyinjection;di</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+index 49e129e..1fab674 100644
+--- a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
++++ b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+@@ -8,7 +8,7 @@ Microsoft.Extensions.FileProviders.IDirectoryContents
+ Microsoft.Extensions.FileProviders.IFileInfo
+ Microsoft.Extensions.FileProviders.IFileProvider</Description>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+index 44e8e2a..63ff357 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <RootNamespace>Microsoft.Extensions.FileProviders</RootNamespace>
+     <Description>File provider for files in embedded resources for Microsoft.Extensions.FileProviders.</Description>
+-    <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.1;netcoreapp3.0</TargetFrameworks>
+     <NuspecFile>$(MSBuildProjectName).multitarget.nuspec</NuspecFile>
+     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+     <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).netcoreapp.nuspec</NuspecFile>
+@@ -28,8 +28,8 @@
+   <ItemGroup>
+     <NuspecProperty Include="AssemblyName=$(AssemblyName)" />
+     <NuspecProperty Include="OutputPath=$(OutputPath)" />
+-    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.dll"/>
+-    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
++    <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.dll"/>
++    <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
+     <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+index ca6b2bc..8d34f35 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
+@@ -6,7 +6,7 @@
+       <group targetFramework=".NETCoreApp3.1">
+         <dependency id="Microsoft.Extensions.FileProviders.Abstractions" version="$version$" exclude="Build,Analyzers" />
+       </group>
+-      <group targetFramework=".NETStandard2.0">
++      <group targetFramework=".NETStandard2.1">
+         <dependency id="Microsoft.Extensions.FileProviders.Abstractions" version="$version$" exclude="Build,Analyzers" />
+       </group>
+     </dependencies>
+@@ -20,7 +20,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
+index ea8d338..ff54953 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp.nuspec
+@@ -17,7 +17,7 @@
+     <file src="build\**\*" target="build\" />
+     <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
+     <file src="$PackageIcon$" target="" />
+-    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
+-    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.pdb" />
++    <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.dll" />
++    <file src="$TaskSymbolNetStandard$" target="tasks\netstandard2.1\$AssemblyName$.Manifest.Task.pdb" />
+   </files>
+ </package>
+diff --git a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+index aabbabc..2d8c55e 100644
+--- a/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
++++ b/src/FileProviders/Embedded/src/build/netstandard2.0/Microsoft.Extensions.FileProviders.Embedded.props
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.0\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
++    <_FileProviderTaskAssembly>$(MSBuildThisFileDirectory)..\..\tasks\netstandard2.1\Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.dll</_FileProviderTaskAssembly>
+   </PropertyGroup>
+ 
+   <UsingTask
+diff --git a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj b/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
+index cdc4ffd..adf20a3 100644
+--- a/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
++++ b/src/FileProviders/Manifest.MSBuildTask/src/Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>MSBuild task to generate a manifest that can be used by Microsoft.Extensions.FileProviders.Embedded to preserve
+     metadata of the files embedded in the assembly at compilation time.</Description>
+-    <TargetFramework>netstandard2.0</TargetFramework>
++    <TargetFramework>netstandard2.1</TargetFramework>
+     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+     <IsShippingAssembly>true</IsShippingAssembly>
+     <IsPackable>false</IsPackable>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+index a45484e..f4b24ee 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
++++ b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+@@ -10,7 +10,7 @@
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
+diff --git a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+index 81dc5fe..8c7866b 100644
+--- a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
++++ b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+@@ -19,7 +19,7 @@ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <Compile Include="$(SharedSourceRoot)HashCodeCombiner\**\*.cs" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Reference Include="System.Memory" />
+     <Reference Include="System.Runtime.CompilerServices.Unsafe" />
+   </ItemGroup>
+-- 
+1.8.3.1
+
