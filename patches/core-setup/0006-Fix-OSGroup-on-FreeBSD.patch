@@ -1,0 +1,24 @@
+From 63218afeff61a044c6482c5cd119a17bdb59de09 Mon Sep 17 00:00:00 2001
+From: Tomas Weinfurt <tweinfurt@yahoo.com>
+Date: Wed, 13 Nov 2019 14:07:57 -0800
+Subject: [PATCH] Fix OSGroup on FreeBSD
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 890012bf..a2539d51 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -111,6 +111,7 @@
+   -->
+   <PropertyGroup>
+     <OSGroup Condition="'$(OS)'=='Unix' AND Exists('/Applications')">OSX</OSGroup>
++    <OSGroup Condition="'$(OS)'=='Unix' and $([MSBuild]::IsOSPlatform('FREEBSD'))">FreeBSD</OSGroup>
+     <OSGroup Condition="'$(OSGroup)' == ''">$(OS)</OSGroup>
+   </PropertyGroup>
+ 
+-- 
+2.23.0
+
