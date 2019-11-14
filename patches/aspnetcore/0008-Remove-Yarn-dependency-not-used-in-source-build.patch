@@ -1,0 +1,81 @@
+From c82a7a5537422d88822676aecc9f79c754153d83 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Thu, 14 Nov 2019 17:34:41 +0000
+Subject: [PATCH 8/8] Remove Yarn dependency - not used in source-build
+
+---
+ eng/targets/Npm.Common.targets                                         | 3 ---
+ global.json                                                            | 1 -
+ .../NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj          | 3 ---
+ src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj | 3 ---
+ src/Shared/E2ETesting/E2ETesting.targets                               | 3 ---
+ 5 files changed, 13 deletions(-)
+
+diff --git a/eng/targets/Npm.Common.targets b/eng/targets/Npm.Common.targets
+index 062a9d3..3f91b02 100644
+--- a/eng/targets/Npm.Common.targets
++++ b/eng/targets/Npm.Common.targets
+@@ -1,8 +1,5 @@
+ <Project DefaultTargets="Build" InitialTargets="_CheckForInvalidConfiguration">
+ 
+-  <!-- Version of this SDK is set in global.json -->
+-  <Sdk Name="Yarn.MSBuild" />
+-
+   <PropertyGroup>
+     <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
+     <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
+diff --git a/global.json b/global.json
+index 17454ad..2f5a03b 100644
+--- a/global.json
++++ b/global.json
+@@ -24,7 +24,6 @@
+     }
+   },
+   "msbuild-sdks": {
+-    "Yarn.MSBuild": "1.15.2",
+     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19517.3",
+     "Microsoft.DotNet.Helix.Sdk": "2.0.0-beta.19517.3"
+   }
+diff --git a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
+index e67862e..29c3b8c 100644
+--- a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
++++ b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
+@@ -16,9 +16,6 @@
+     <Reference Include="Newtonsoft.Json" />
+   </ItemGroup>
+ 
+-  <!-- Version of this SDK is set in global.json -->
+-  <Sdk Name="Yarn.MSBuild" />
+-
+   <Target Name="YarnInstall">
+     <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
+     <Yarn Command="install --mutex network" />
+diff --git a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
+index 3db479b..ad01493 100644
+--- a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
++++ b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
+@@ -20,9 +20,6 @@
+     <Reference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" />
+   </ItemGroup>
+ 
+-  <!-- Version of this SDK is set in global.json -->
+-  <Sdk Name="Yarn.MSBuild" />
+-
+   <Target Name="YarnInstall">
+     <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
+     <Yarn Command="install --mutex network" />
+diff --git a/src/Shared/E2ETesting/E2ETesting.targets b/src/Shared/E2ETesting/E2ETesting.targets
+index 500d910..2ccf1a4 100644
+--- a/src/Shared/E2ETesting/E2ETesting.targets
++++ b/src/Shared/E2ETesting/E2ETesting.targets
+@@ -1,7 +1,4 @@
+ <Project>
+-  <!-- Version of this SDK is set in global.json -->
+-  <Sdk Name="Yarn.MSBuild" />
+-
+   <!-- Make sure the settings files get copied to the test output folder. -->
+   <ItemGroup>
+     <None Update="e2eTestSettings*.json">
+-- 
+1.8.3.1
+
