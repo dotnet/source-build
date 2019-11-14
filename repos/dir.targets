@@ -163,6 +163,7 @@
                                        KnownOriginPackagePaths="@(_KnownOriginPackagePaths)">
       <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
     </GetSourceBuiltNupkgCacheConflicts>
+
   </Target>
 
   <Target Name="CheckSourceBuiltNupkgConflictUsages"
@@ -268,6 +269,26 @@
     <Copy SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
+  </Target>
+
+  <Target Name="RemoveBuiltPackagesFromCache"
+          AfterTargets="Package"
+          Condition="'@(_BuiltPackages)'!=''"
+          DependsOnTargets="GatherBuiltPackages">
+
+    <ReadNuGetPackageInfos PackagePaths="@(_BuiltPackages)">
+      <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
+    </ReadNuGetPackageInfos>
+
+    <!-- Copy built nupkgs from nuget packages cache directory to the previouslyRestored directory
+         and then delete all expanded files and the nupkg from the package cache so the next time
+         the package is used, it will reload the source-built version -->
+    <ItemGroup>
+      <_FilesToCopy Include="$(PackagesDir)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLower())/%(_BuiltPackageInfos.PackageVersion)/**/*.nupkg" />
+      <_FilesToDelete Include="$(PackagesDir)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLower())/%(_BuiltPackageInfos.PackageVersion)/**/*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
+    <Delete Files="@(_FilesToDelete)" />
   </Target>
 
   <Target Name="WriteVersions"
