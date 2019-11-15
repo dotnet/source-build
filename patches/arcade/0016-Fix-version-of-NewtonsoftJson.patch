@@ -1,0 +1,32 @@
+From 8f04243447640e483edb742616266187c8d46198 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 24 Oct 2019 13:36:06 +0000
+Subject: [PATCH] Fix version of NewtonsoftJson
+
+---
+ eng/Versions.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index a8a2a0c..e0bb462 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -35,7 +35,6 @@
+     <MoqVersion>4.8.3</MoqVersion>
+     <MonoOptionsVersion>5.3.0.1</MonoOptionsVersion>
+     <McMasterExtensionsCommandLineUtils>2.3.0</McMasterExtensionsCommandLineUtils>
+-    <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
+     <MicrosoftBclJsonSourcesVersion>4.6.0-preview4.19202.2</MicrosoftBclJsonSourcesVersion>
+     <NuGetVersioningVersion>4.4.0</NuGetVersioningVersion>
+     <NuGetVersion>5.1.0</NuGetVersion>
+@@ -74,6 +73,7 @@
+   </PropertyGroup>
+   <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+   <PropertyGroup>
++    <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
+     <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
+   </PropertyGroup>
+ </Project>
+-- 
+1.8.3.1
+
