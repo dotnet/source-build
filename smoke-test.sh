@@ -344,6 +344,11 @@ echo SDK under test is:
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
+export DOTNET_ROOT="$dotnetDir"
+# OSX also requires DOTNET_ROOT to be on the PATH
+if [ `uname` == 'Darwin' ]; then
+    export PATH="$dotnetDir:$PATH"
+fi
 
 # Run all tests, local restore sources first, online restore sources second
 if [ "$excludeLocalTests" == "false" ]; then
