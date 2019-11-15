@@ -18,6 +18,7 @@ shift
 SKIP_BUILD=0
 INCLUDE_LEAK_DETECTION=0
 MINIMIZE_DISK_USAGE=0
+SKIP_PREBUILT_ENFORCEMENT=0
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
@@ -35,6 +36,9 @@ while :; do
             ;;
         --minimize-disk-usage)
             MINIMIZE_DISK_USAGE=1
+            ;;
+        --skip-prebuilt-check)
+            SKIP_PREBUILT_ENFORCEMENT=1
             ;;
         --)
             shift
@@ -173,6 +177,14 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
+if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
+    pushd "$TARBALL_ROOT/src"
+    echo 'Removing unneeded files to trim tarball...'
+    # we don't build CoreCLR tests right now and they have a lot of them - ~380MB
+    rm -rf coreclr.*/tests
+    popd
+fi
+
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
 for srcDir in `find bin/src -name '.git' -type d`; do
@@ -288,6 +300,29 @@ do
         rm $TARBALL_ROOT/packages/prebuilt/$ref_package
     fi
 done
+
+echo 'Removing known extra packages from tarball prebuilts...'
+while IFS= read -r packagePattern
+do
+    if [[ "$packagePattern" =~ ^# ]]; then
+        continue
+    fi
+    rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
+done < $SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt
+
+if [ $SKIP_PREBUILT_ENFORCEMENT -ne 1 ]; then
+  echo 'Checking for extra prebuilts...'
+  for package in `ls -A $TARBALL_ROOT/packages/prebuilt`
+  do
+      if grep -q "$package" $SCRIPT_ROOT/support/allowed-prebuilts.txt; then
+          echo "Allowing prebuilt $package"
+      else
+          echo "ERROR: $package is not in the allowed prebuilts list ($SCRIPT_ROOT/support/allowed-prebuilts.txt)"
+          echo "Either remove this prebuilt, add it to the known extras list ($SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt) or add it to the allowed prebuilts list."
+          exit 1
+      fi
+  done
+fi
 
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
 OLDIFS=$IFS
