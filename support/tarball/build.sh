@@ -9,7 +9,7 @@ if [[ $sdkLine =~ $sdkPattern ]]; then
   export SDK_VERSION=${BASH_REMATCH[1]}
 fi
 
-sourceBuiltArchive=`find ./packages/archive -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz'`
+sourceBuiltArchive=`find $SCRIPT_ROOT/packages/archive -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz'`
 if [ -f "$sourceBuiltArchive" ]; then
   tar -xzf "$sourceBuiltArchive" -C /tmp PackageVersions.props
   arcadeSdkLine=`grep -m 1 'MicrosoftDotNetArcadeSdkVersion' /tmp/PackageVersions.props`
