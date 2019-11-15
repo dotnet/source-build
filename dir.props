@@ -187,7 +187,7 @@
   <ItemGroup>
     <!-- Arcade uses this property to determine which version of SourceLink to pull in -->
     <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(sourcelinkOutputPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" />
     <!-- we don't produce the Windows version of this package but that's the one core-sdk keys off of for the ASP.NET version -->
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimewinx64PackageVersion" Version="$(aspnetcoreOutputPackageVersion)" />
     <!-- same thing here for CLI -->
