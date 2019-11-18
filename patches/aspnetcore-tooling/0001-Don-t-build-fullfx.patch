@@ -1,7 +1,7 @@
-From c90601256b1888afa3aa176b7a2f18370506e547 Mon Sep 17 00:00:00 2001
+From 722a6b2ceced53bb6e536856a813672c421fd273 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 20 Oct 2019 15:51:49 -0500
-Subject: [PATCH 1/2] Don't build fullfx
+Subject: [PATCH 1/5] Don't build fullfx
 
 ---
  .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj | 10 +++++-----
@@ -46,7 +46,7 @@ index dd3272a..ac0b233 100644
  
      <Copy SourceFiles="@(ProjectOutput)" DestinationFiles="$(SdkOutputPath)tasks\%(RecursiveDir)%(FileName)%(Extension)" SkipUnchangedFiles="true">
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
-index 6345c52..e16e764 100644
+index 84d7bb7..b0a7c5e 100644
 --- a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 +++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 @@ -31,7 +31,7 @@ Copyright (c) .NET Foundation. All rights reserved.
