@@ -1,0 +1,32 @@
+From 457e4bcc40228d64bb98c4e35937d31b4cc76599 Mon Sep 17 00:00:00 2001
+From: Tomas Weinfurt <tweinfurt@yahoo.com>
+Date: Wed, 13 Nov 2019 22:32:02 -0800
+Subject: [PATCH] Add FreeBSD
+
+---
+ Directory.Build.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 80e6bb14f0..76b1b4451b 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -115,6 +115,7 @@
+   <PropertyGroup>
+     <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</TargetOsName>
+     <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
++    <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('FreeBSD'))">freebsd</TargetOsName>
+     <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
+     <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
+     <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
+@@ -125,6 +126,7 @@
+       win-x86;
+       win-arm;
+       osx-x64;
++      freebsd-x64;
+       linux-musl-x64;
+       linux-musl-arm64;
+       linux-x64;
+-- 
+2.23.0
+
