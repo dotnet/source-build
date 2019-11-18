@@ -47,6 +47,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Arcade uses this property to determine which version of SourceLink to pull in -->
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <RepositoryReference Include="sourcelink" />
   </ItemGroup>
 
