@@ -1,0 +1,25 @@
+From 8d8403c7422650df9c3461bb4b6d3ba4381abca8 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 28 Aug 2019 21:34:26 -0500
+Subject: [PATCH 4/7] New version of ref assemblies
+
+---
+ build/common.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/common.props b/build/common.props
+index fc89b77..579b266 100644
+--- a/build/common.props
++++ b/build/common.props
+@@ -6,7 +6,7 @@
+ 
+   <!-- When building on non-Windows machines, we need the reference assemblies to build full-framework assemblies. -->
+   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework' AND '$(DotNetBuildFromSource)' == 'true'">
+-     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-alpha-5" PrivateAssets="All" />
++     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.1" PrivateAssets="All" />
+   </ItemGroup>
+   <PropertyGroup Condition="'$(IsNetCoreProject)' == 'true' AND '$(Shipping)' == 'true' AND '$(IsXPlat)' != 'true'">
+     <DebugType>full</DebugType>
+-- 
+1.8.3.1
+

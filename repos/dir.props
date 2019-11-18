@@ -15,6 +15,7 @@
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
     <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
     <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>
+    <IsStable Condition="'$(UseStableVersions)' == 'true'">true</IsStable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">
@@ -120,6 +121,9 @@
 
     <!-- Output Roslyn logs to allow debugging compiler errors -->
     <EnvironmentVariables Include="RoslynCommandLineLogFile=$(RoslynDebugPathTargetDir)" />
+
+    <!--ASP.NET dev server request logs -->
+    <EnvironmentVariables Include="RAZORBUILDSERVER_LOG=$(AspNetRazorBuildServerLogFile)" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -9,37 +9,37 @@ For more detailed information, see: [SourceBuildPrebuiltReport](https://msit.pow
 <!--TrackingTable-->
 | Repo/Issue | Owner | Overall Status | # of Patches | # of Prebuilts | Comments |
 | :--- | :--- | :--- |  :---: | :---: | --- |
-| [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [arcade][970] | Mark Wilke | ![ot] On Track | 13 | 1 |
-| [AspNetCore-Tooling][1150] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [AspNetCore][1150] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [cli][880] | Nick Guerrera | ![cp] Complete | 3 | - |  All direct-dependency prebuilts removed.
-| [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [common][882] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [coreclr][883] | Jeff Schwartz | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
-| [corefx][884] | Eric St. John | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
-| [core-sdk][972] | Nick Guerrera | ![cp] Complete | 6 | - | All direct-dependency prebuilts removed.
-| [core-setup][885] | Davis Goodin | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
-| [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| [Extensions][1132] | John Luo | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [msbuild][888] | Nick Guerrera | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [NuGet.Client][890] | Rob Relyea | ![cp] Complete | 6 | - | All direct-dependency prebuilts removed.
-| [roslyn][891] | Jared Parsons / Fred Silberberg | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
+| [ApplicationInsights-dotnet][900] | Sergey Kanzhelev | ![cp] Complete | - | - | All prebuilts removed.
+| [arcade][970] | Mark Wilke | ![cp] Complete | 13 | - | All prebuilts removed.
+| [AspNetCore-Tooling][1150] | John Luo | ![cp] Complete | - | - | All prebuilts removed.
+| [AspNetCore][1150] | John Luo | ![cp] Complete | - | - | All prebuilts removed.
+| [cli][880] | Nick Guerrera | ![cp] Complete | 3 | - |  All prebuilts removed.
+| [cliCommandLineParser][976] | Nick Guerrera | ![cp] Complete | 1 | - | All prebuilts removed.
+| [cli-migrate][881] | Nick Guerrera | ![cp] Complete | - | - | All prebuilts removed.
+| [common][882] | John Luo | ![cp] Complete | - | - | All prebuilts removed.
+| [coreclr][883] | Jeff Schwartz | ![cp] Complete | 2 | - | All prebuilts removed.
+| [corefx][884] | Eric St. John | ![cp] Complete | 3 | - | All prebuilts removed.
+| [core-sdk][972] | Nick Guerrera | ![cp] Complete | 6 | - | All prebuilts removed.
+| [core-setup][885] | Davis Goodin | ![cp] Complete | 3 | - | All prebuilts removed.
+| [linker][887] | Dan Seefeldt | ![cp] Complete | 4 | - | All prebuilts removed.
+| [Extensions][1132] | John Luo | ![cp] Complete | - | - | All prebuilts removed.
+| [msbuild][888] | Nick Guerrera | ![cp] Complete | 4 | - | All prebuilts removed.
+| [Newtonsoft.Json][889] | Chris Rummel | ![cp] Complete | - | - | All prebuilts removed.
+| [NuGet.Client][890] | Rob Relyea | ![cp] Complete | 6 | - | All prebuilts removed.
+| [roslyn][891] | Jared Parsons / Fred Silberberg | ![cp] Complete | 4 | - | All prebuilts removed.
 | [roslyn-tools][892] | Tomas Matousek | ![cp] Complete | - | - | Repo removed
-| [sdk][893] | Nick Guerrera | ![cp] Complete | 3 | - | All direct-dependency prebuilts removed.
-| [source-build-infra][975] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [standard][894] | Eric St. John | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [templating][895] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| [Tools][974] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [toolset][973] | Nick Guerrera | ![cp] Complete | 2 | - | All direct-dependency prebuilts removed.
-| [tools-local tasks][971] | Dan Seefeldt | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [fsharp][886] | Brett Forsgren | ![cp] Complete | - | - | All direct-dependency prebuilts removed.
-| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![cp] Complete | 4 | - | All direct-dependency prebuilts removed.
-| [websdk][897] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
-| xdt | John Luo | ![cp] Complete | - | - | No direct-dependency prebuilts.
-| [xliff-tasks][899] | Tom Meschter | ![cp] Complete | 1 | - | All direct-dependency prebuilts removed.
+| [sdk][893] | Nick Guerrera | ![cp] Complete | 3 | - | All prebuilts removed.
+| [source-build-infra][975] | Dan Seefeldt | ![cp] Complete | - | - | All prebuilts removed.
+| [standard][894] | Eric St. John | ![cp] Complete | - | - | All prebuilts removed.
+| [templating][895] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All prebuilts removed.
+| [Tools][974] | Dan Seefeldt | ![cp] Complete | - | - | All prebuilts removed.
+| [toolset][973] | Nick Guerrera | ![cp] Complete | 2 | - | All prebuilts removed.
+| [tools-local tasks][971] | Dan Seefeldt | ![cp] Complete | - | - | All prebuilts removed.
+| [fsharp][886] | Brett Forsgren | ![cp] Complete | - | - | All prebuilts removed.
+| [vstest][896] | Shiva Shankar Thangadurai / Sarabjot Singh | ![cp] Complete | 4 | - | All prebuilts removed.
+| [websdk][897] | Vijay Ramakrishnan | ![cp] Complete | 1 | - | All prebuilts removed.
+| xdt | John Luo | ![cp] Complete | - | - | No prebuilts.
+| [xliff-tasks][899] | Tom Meschter | ![cp] Complete | 1 | - | All prebuilts removed.
 
 <br/>
 

@@ -89,15 +89,6 @@
     <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
     <Exec Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
 
-    <!-- Temporary workaround to copy dlls that can't be round-tripped 
-         They just get copied from the source to the package staging area
-    -->
-    <ItemGroup>
-      <DllsInSource Include="$(ReferencePackagesSourceDir)**/*.dll" />
-    </ItemGroup>
-    <Copy SourceFiles="%(DllsInSource.Identity)" DestinationFiles="$(ReferencePackagesStagingDir)%(DllsInSource.RecursiveDir)%(DllsInSource.Filename).dll" />
-
-    <!-- End Temporary workaround -->
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
