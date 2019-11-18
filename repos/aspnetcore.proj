@@ -7,12 +7,15 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
+
     <BuildCommandArgs>$(BuildCommandArgs) --restore --build --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNodeJs=false</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:CrossgenOutput=false</BuildCommandArgs>
 

@@ -118,6 +118,7 @@
     </GetHostInformation>
 
     <PropertyGroup Condition="'$(PortableBuild)' == 'true'">
+      <TargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-$(Platform)</TargetRid>
       <TargetRid Condition="'$(TargetOS)' == 'OSX'">osx-$(Platform)</TargetRid>
       <TargetRid Condition="'$(TargetOS)' == 'Linux'">linux-$(Platform)</TargetRid>
       <TargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-$(Platform)</TargetRid>
