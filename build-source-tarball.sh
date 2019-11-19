@@ -175,8 +175,9 @@ find $TARBALL_ROOT/src \( -type f \( \
 
 #Remove binaries from tools-local as we don't want them to end up in tarball, the intent is to have them built within the context of tarball
 echo 'Removing binaries from tools-local'
-find $SCRIPT_ROOT/tools-local \( -type f \( \
-    -iname '*.dll' \) \) -exec rm {} \;
+find $SCRIPT_ROOT/tools-local \( -type d \( \
+    -iname bin -o\
+    -iname obj \) \) -exec rm -rf {} \;
 
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
