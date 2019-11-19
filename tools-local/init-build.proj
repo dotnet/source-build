@@ -146,9 +146,9 @@
   </Target>
 
   <Target Name="AcquireDarc" Condition="'$(OfflineBuild)' != 'true'">
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building Darc." />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Installing Darc." />
     <Exec Command="$(ProjectDir)eng/common/darc-init.sh --darcversion $(DarcVersion) --toolpath $(DarcInstallDir)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building Darc." />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done installing Darc." />
   </Target>
 
   <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc">
