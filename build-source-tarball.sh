@@ -153,7 +153,6 @@ ignored_repos="https://dev.azure.com/dnceng/internal/_git/dotnet-optimization;ht
 # now we don't need .git/modules/src or Darc anymore
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     rm -rf "$SCRIPT_ROOT/.git/modules/src"
-    rm -rf $SCRIPT_ROOT/tools-local/arcade-services
 fi
 
 # then delete the master copies - we only need the specific hashes
@@ -194,7 +193,6 @@ cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
-rm -rf $TARBALL_ROOT/tools-local/arcade-services/
 rm -rf $TARBALL_ROOT/.dotnet/tools/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
