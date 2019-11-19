@@ -173,12 +173,6 @@ find $TARBALL_ROOT/src \( -type f \( \
     -iname *.zip -o \
     -iname *.nupkg \) \) -exec rm {} \;
 
-#Remove binaries from tools-local as we don't want them to end up in tarball, the intent is to have them built within the context of tarball
-echo 'Removing binaries from tools-local'
-find $SCRIPT_ROOT/tools-local \( -type d \( \
-    -iname bin -o\
-    -iname obj \) \) -exec rm -rf {} \;
-
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
 for srcDir in `find bin/src -name '.git' -type d`; do
@@ -204,6 +198,8 @@ cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
+rm -rf $TARBALL_ROOT/tools-local/tasks/*/bin
+rm -rf $TARBALL_ROOT/tools-local/tasks/*/obj
 rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
 rm -rf $TARBALL_ROOT/.dotnet/tools/
 rm -rf $TARBALL_ROOT/.dotnet/host/fxr/2.1.0/
