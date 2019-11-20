@@ -1,0 +1,32 @@
+From 065e2cc1a6919226988c309a909eb4ad1a0d2726 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 19 Nov 2019 20:16:20 +0000
+Subject: [PATCH] Conditionally restore runtime native SystemDataSqlClient
+
+---
+ external/runtime/runtime.depproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/external/runtime/runtime.depproj b/external/runtime/runtime.depproj
+index 52460d2..40a6e72 100644
+--- a/external/runtime/runtime.depproj
++++ b/external/runtime/runtime.depproj
+@@ -9,6 +9,7 @@
+ 
+   <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <PackageReference Include="Microsoft.DiaSymReader.Native" Version="1.7.0" />
++    <PackageReference Include="runtime.native.System.Data.SqlClient.sni" Version="$(RuntimeNativeSystemDataSqlClientSniPackageVersion)" />
+   </ItemGroup>
+ 
+   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.0'">
+@@ -26,7 +27,6 @@
+     <PackageReference Include="Microsoft.NETCore.Platforms" Version="$(MicrosoftNETCorePlatformsPackageVersion)" />
+     <PackageReference Include="transport.Microsoft.NETCore.Runtime.CoreCLR" Version="$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)" />
+     <PackageReference Include="Microsoft.NETCore.TestHost" Version="$(MicrosoftNETCoreRuntimeCoreCLRPackageVersion)" />
+-    <PackageReference Include="runtime.native.System.Data.SqlClient.sni" Version="$(RuntimeNativeSystemDataSqlClientSniPackageVersion)" />
+     <PackageReference Include="Microsoft.NETCore.DotNetHost" Version="$(MicrosoftNETCoreDotNetHostPackageVersion)" />
+     <PackageReference Include="Microsoft.NETCore.DotNetHostPolicy" Version="$(MicrosoftNETCoreDotNetHostPolicyPackageVersion)" />
+     <!-- We do not need apphost.exe and the 3.0 SDK will actually remove it.
+-- 
+1.8.3.1
+
