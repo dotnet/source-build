@@ -193,6 +193,10 @@ cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/scripts $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/repos $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
+rm -rf $TARBALL_ROOT/tools-local/arcade-services/
+rm -rf $TARBALL_ROOT/tools-local/tasks/*/bin
+rm -rf $TARBALL_ROOT/tools-local/tasks/*/obj
+rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
 rm -rf $TARBALL_ROOT/.dotnet/tools/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
