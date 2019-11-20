@@ -1,7 +1,7 @@
-From 39038d1814f5ae523a1c9e8d6a9bcea7a9f9cc12 Mon Sep 17 00:00:00 2001
+From e8e1d6793cf95c7ebf9fb9abaf356af9aa993d4e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 23 Oct 2019 13:58:31 -0500
-Subject: [PATCH 2/2] .NET Core only for VBCSCompiler
+Subject: [PATCH 3/6] .NET Core only for VBCSCompiler
 
 ---
  src/Compilers/CSharp/csc/csc.csproj                   | 2 +-
@@ -10,7 +10,7 @@ Subject: [PATCH 2/2] .NET Core only for VBCSCompiler
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
-index 20b207b5fc..83c5b205f8 100644
+index 20b207b..83c5b20 100644
 --- a/src/Compilers/CSharp/csc/csc.csproj
 +++ b/src/Compilers/CSharp/csc/csc.csproj
 @@ -8,7 +8,7 @@
@@ -23,7 +23,7 @@ index 20b207b5fc..83c5b205f8 100644
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
    </PropertyGroup>
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-index a199b3f631..14f1d15e66 100644
+index a199b3f..14f1d15 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 @@ -5,7 +5,7 @@
@@ -36,7 +36,7 @@ index a199b3f631..14f1d15e66 100644
      <ServerGarbageCollection>true</ServerGarbageCollection>
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
 diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
-index 99df382cbb..d6486810e5 100644
+index 99df382..d648681 100644
 --- a/src/Compilers/VisualBasic/vbc/vbc.csproj
 +++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
 @@ -7,7 +7,7 @@
@@ -49,5 +49,5 @@ index 99df382cbb..d6486810e5 100644
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
    </PropertyGroup>
 -- 
-2.18.0
+1.8.3.1
 

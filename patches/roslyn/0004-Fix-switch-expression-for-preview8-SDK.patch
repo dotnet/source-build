@@ -1,0 +1,28 @@
+From 31edc42e42d36fb23adbed02116073c98baf2805 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Wed, 20 Nov 2019 22:23:57 +0000
+Subject: [PATCH 4/6] Fix switch expression for preview8 SDK
+
+---
+ src/Compilers/CSharp/Portable/BoundTree/NullabilityRewriter.cs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Compilers/CSharp/Portable/BoundTree/NullabilityRewriter.cs b/src/Compilers/CSharp/Portable/BoundTree/NullabilityRewriter.cs
+index 40eea09..f2532fa 100644
+--- a/src/Compilers/CSharp/Portable/BoundTree/NullabilityRewriter.cs
++++ b/src/Compilers/CSharp/Portable/BoundTree/NullabilityRewriter.cs
+@@ -53,9 +53,9 @@ private BoundNode VisitBinaryOperatorBase(BoundBinaryOperatorBase binaryOperator
+ 
+                 currentBinary = currentBinary switch
+                 {
+-                    BoundBinaryOperator binary => binary.Update(binary.OperatorKind, binary.ConstantValueOpt, GetUpdatedSymbol(binary, binary.MethodOpt), binary.ResultKind, binary.OriginalUserDefinedOperatorsOpt, leftChild, right, type),
++                    BoundBinaryOperator binary => (BoundBinaryOperatorBase?) binary.Update(binary.OperatorKind, binary.ConstantValueOpt, GetUpdatedSymbol(binary, binary.MethodOpt), binary.ResultKind, binary.OriginalUserDefinedOperatorsOpt, leftChild, right, type),
+                     // https://github.com/dotnet/roslyn/issues/35031: We'll need to update logical.LogicalOperator
+-                    BoundUserDefinedConditionalLogicalOperator logical => logical.Update(logical.OperatorKind, logical.LogicalOperator, logical.TrueOperator, logical.FalseOperator, logical.ResultKind, logical.OriginalUserDefinedOperatorsOpt, leftChild, right, type),
++                    BoundUserDefinedConditionalLogicalOperator logical => (BoundBinaryOperatorBase?) logical.Update(logical.OperatorKind, logical.LogicalOperator, logical.TrueOperator, logical.FalseOperator, logical.ResultKind, logical.OriginalUserDefinedOperatorsOpt, leftChild, right, type),
+                     _ => throw ExceptionUtilities.UnexpectedValue(currentBinary.Kind),
+                 };
+ 
+-- 
+1.8.3.1
+
