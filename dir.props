@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
+
+    <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
+    <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
@@ -201,7 +204,7 @@
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppRuntimePackageVersion" Version="%24(MicrosoftNETCoreDotNetAppHostPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppRuntimeVersion" Version="%24(MicrosoftNETCoreDotNetAppHostPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppHostPackageVersion" Version="%24(MicrosoftNETCoreDotNetAppHostPackageVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeLinuxX64PackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeLinux$(Platform)PackageVersion)" />
     <!-- core-sdk uses this property for ASP.NET blob directory -->
     <ExtraPackageVersionPropsPackageInfo Include="VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion" Version="$(aspnetcoreOutputPackageVersion)" />
     <!-- OSX needs the OSX version instead of Linux.  We don't have a lot of flexibility in how we output these properties so we're relying on the previous one being blank if the Linux version of the package is missing.  -->

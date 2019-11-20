@@ -12,6 +12,32 @@ if [ -z "${1:-}" ]; then
     exit 1
 fi
 
+# Use uname to determine what the CPU is.
+cpuname=$(uname -p)
+# Some Linux platforms report unknown for platform, but the arch for machine.
+if [[ "$cpuname" == "unknown" ]]; then
+  cpuname=$(uname -m)
+fi
+
+case $cpuname in
+  aarch64)
+    targetArchitecture=arm64
+    ;;
+  amd64|x86_64)
+    targetArchitecture=x64
+    ;;
+  armv7l)
+    targetArchitecture=arm
+    ;;
+  i686)
+    targetArchitecture=x86
+    ;;
+  *)
+    echo "Unknown CPU $cpuname detected, treating it as x64"
+    targetArchitecture=x64
+    ;;
+esac
+
 TARBALL_ROOT=$1
 shift
 
@@ -217,20 +243,20 @@ cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
 find $SCRIPT_ROOT/packages/restored/ -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
-find $SCRIPT_ROOT/bin/obj/x64/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
+find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/packages/reference
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
+cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
+cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
 
 # Copy tarballs to ./packages/archive directory
 mkdir -p $TARBALL_ROOT/packages/archive
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
+cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
 
 # Copy generated source from bin to src/generatedSrc
-cp -r $SCRIPT_ROOT/bin/obj/x64/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
+cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/packages
@@ -238,7 +264,7 @@ fi
 
 echo 'Removing source-built packages from tarball prebuilts...'
 
-for built_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for built_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
@@ -251,16 +277,16 @@ done
 echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
 mkdir -p $TARBALL_ROOT/packages/source-built
 cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*Build*Tasks*.nupkg $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/runtime*.nupkg $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*DotNetHost*.nupkg $TARBALL_ROOT/packages/source-built/
-cp $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*DotNetAppHost*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*Arcade*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*SourceLink*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*Build*Tasks*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/runtime*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*DotNetHost*.nupkg $TARBALL_ROOT/packages/source-built/
+cp $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*DotNetAppHost*.nupkg $TARBALL_ROOT/packages/source-built/
 
 # Setup package version props to include both source-built and running PackageVersions.props
-mkdir --parents $TARBALL_ROOT/bin/obj/x64/Release/
-cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/x64/Release/
+mkdir --parents $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
+cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
@@ -270,7 +296,7 @@ fi
 
 echo 'Removing reference-only packages from tarball prebuilts...'
 
-for ref_package in $(find $SCRIPT_ROOT/bin/obj/x64/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for ref_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
         rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
@@ -328,7 +354,7 @@ fi
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
 OLDIFS=$IFS
 
-allBuiltPkgs=(`ls $SCRIPT_ROOT/bin/obj/x64/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
+allBuiltPkgs=(`ls $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
 pushd $TARBALL_ROOT/packages/reference/staging/
 ilSrcPaths=(`find . -maxdepth 2 -mindepth 2`)
 popd
