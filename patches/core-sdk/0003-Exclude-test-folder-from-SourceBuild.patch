@@ -1,0 +1,24 @@
+From 36be37a2455a0fff9fd2dc3bd5550b276fb2c93d Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 19 Nov 2019 21:58:21 +0000
+Subject: [PATCH] Exclude test folder from SourceBuild
+
+---
+ test/Directory.Build.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/test/Directory.Build.props b/test/Directory.Build.props
+index a953b97..26d4863 100644
+--- a/test/Directory.Build.props
++++ b/test/Directory.Build.props
+@@ -1,4 +1,7 @@
+ <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <Import Project="..\Directory.Build.props" />
+   <Import Project="..\eng\TestVersions.props" />
++  <PropertyGroup>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++  </PropertyGroup>
+ </Project>
+-- 
+1.8.3.1
+
