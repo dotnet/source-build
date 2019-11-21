@@ -46,7 +46,7 @@
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
 
     <!-- core-setup does not destabilize for intermediate servicing builds -->
-    <IsStable>false</IsStable>
+    <IsStable>true</IsStable>
   </PropertyGroup>
 
   <ItemGroup>

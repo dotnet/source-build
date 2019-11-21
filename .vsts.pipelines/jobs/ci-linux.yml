@@ -207,8 +207,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
         --minimal \
         --projectOutput \
-        --configuration $(sb.configuration) \
-        --prodConBlobFeedUrl ''
+        --configuration $(sb.configuration)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test in tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))

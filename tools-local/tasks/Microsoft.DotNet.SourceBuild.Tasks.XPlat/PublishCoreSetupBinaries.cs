@@ -49,6 +49,10 @@ namespace Microsoft.DotNet.Build.Tasks
                 {
                     version = version.Substring(0, version.Length - "-osx".Length);
                 }
+                if (version.Contains("-ubuntu"))
+                {
+                    version = version.Substring(0, version.IndexOf("-ubuntu"));
+                }
 
                 if (version == "")
                 {

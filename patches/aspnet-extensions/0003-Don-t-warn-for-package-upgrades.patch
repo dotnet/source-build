@@ -1,0 +1,24 @@
+From dbfe192c7005cba605a99753a15dc65bc86c1512 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 14 Nov 2019 20:50:56 -0600
+Subject: [PATCH 3/3] Don't warn for package upgrades
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index ae8a1733c..db1fa96de 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -19,6 +19,7 @@
+     <OutDirName Condition="'$(IsReferenceAssemblyProject)' == 'true'">$(MSBuildProjectName)-ref</OutDirName>
+ 
+     <ExcludeFromSourceBuild Condition="'$(IsUnitTestProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsSampleProject)' == 'true'">true</ExcludeFromSourceBuild>
++    <NoWarn>$(NoWarn);NU1603</NoWarn>
+   </PropertyGroup>
+ 
+   <Import Project="eng\FlakyTests.BeforeArcade.props" />
+-- 
+2.18.0
+
