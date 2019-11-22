@@ -18,8 +18,8 @@ usage() {
 
 function LogMessage {
     local size=(`df -h .`)
-    local message="[${size[10]} - ${size[11]}] : $1"
-    #local message=$1
+    #local message="[${size[10]} - ${size[11]}] : $1"
+    local message=$1
     local dt=`date '+%d/%m/%Y %H:%M:%S'`
     local outFile="$bootstrapDir/status.log"
 
@@ -58,6 +58,134 @@ function BuildStage1Sdk {
     LogMessage "Completing Step1 - Build stage1 sdk" 
 }
 
+function BuildRefPkgs {
+    LogMessage "Starting Step2 - Build Reference Packages" 
+
+    if [ ! -d "$refPkgSourceDir" ]; then
+        echo "$refPkgSourceDir doesn't exist"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ -d "$refPkgsDir" ]; then
+        echo "$refPkgsDir already exists"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ ! -d "$stage1Dir" ]; then
+        echo "$stage1Dir doesn't exist"
+        echo "exiting..."
+        exit 1
+    fi
+
+    LogMessage "Copy reference-packages source to ref-pkgs dir"
+    cp -r $refPkgSourceDir $refPkgsDir
+
+    LogMessage "Copy coreclr-tools to ref-pkgs source-built dir"
+    cp -r $stage1Dir/Tools/source-built/coreclr-tools/ $refPkgsDir/source-built
+
+    LogMessage "Un-tar private source-built artifacts into ref-pkgs source-built dir"
+    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.0.1.0*.tar.gz --directory $refPkgsDir/source-built/
+
+    LogMessage "Un-tar sdk into ref-pkgs .dotnet dir"
+    if [ -d "$refPkgsDir/.dotnet/" ]; then
+        rm -rf $refPkgsDir/.dotnet/
+    fi
+    mkdir $refPkgsDir/.dotnet/
+    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $refPkgsDir/.dotnet/
+
+    LogMessage "Update SDK version in global.json file"
+    sdk_ver=`ls $refPkgsDir/.dotnet/sdk`
+    sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdk_ver\"|g" $refPkgsDir/global.json
+
+    LogMessage "Build stage1 ref-pkgs"
+    cd $refPkgsDir
+    ./build.sh
+
+    LogMessage "Package built reference packages into new tarball"
+    cd $refPkgsDir/artifacts/reference-packages
+    tar --numeric-owner -czf ../Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
+
+    LogMessage "Completing Step2 - Build Reference Packages" 
+}
+
+function buildFinalSdk {
+    LogMessage "Starting Step3 - Build final sdk"
+
+    tarballSourceDir="$bootstrapDir/tarball-source"
+    stage1Dir="$bootstrapDir/stage0"
+    finalSdkDir="$bootstrapDir/stage1"
+    stage1RefPkgsDir="$bootstrapDir/stage1-ref-pkgs"
+
+    if [ -d "$finalSdkDir" ] && [ "${1-default}" != "test" ]; then
+        echo "$finalSdkDir already exists"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ ! -d "$stage1Dir" ]; then
+        echo "$stage1Dir doesn't exist"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ ! -d "$stage1RefPkgsDir" ]; then
+        echo "$stage1RefPkgsDir doesn't exist"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ ! -d "$tarballSourceDir" ]; then
+        echo "$tarballSourceDir doesn't exist"
+        echo "exiting..."
+        exit 1
+    fi
+
+    if [ "${1-default}" != "test" ]; then
+    LogMessage "Copy tarball-source to ./stage1"
+    cp -r $tarballSourceDir $finalSdkDir
+    fi
+
+    LogMessage "Remove archive packages, source-built packages and SDK from stage1 dir"
+    rm -rf $finalSdkDir/packages/archive/*
+    rm -rf $finalSdkDir/packages/source-built/*
+    rm -rf $finalSdkDir/.dotnet
+
+    LogMessage "Copy stage0 coreclr-tools to stage1"
+    cp -r $stage1Dir/Tools/source-built/coreclr-tools $finalSdkDir/packages/source-built
+
+    LogMessage "Copy source-built packages from stage0 build output to stage1 packages dir"
+    cp $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz $finalSdkDir/packages/archive
+
+    LogMessage "Copy .NET Core SDK from stage0 build output to stage1"
+    if [ -d "$finalSdkDir/.dotnet/" ]; then
+        rm -rf $finalSdkDir/.dotnet/
+    fi
+    mkdir $finalSdkDir/.dotnet/
+    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $finalSdkDir/.dotnet/
+
+    LogMessage "Copy reference packages from stage1-ref-pkgs to stage1"
+    cp $stage1RefPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz $finalSdkDir/packages/archive
+
+    LogMessage "Update version of SDK and arcade in global.json"
+    arcadeName=$(tar -tf $finalSdkDir/packages/archive/Private.SourceBuilt.Artifacts*.tar.gz Microsoft.DotNet.Arcade.Sdk.*.nupkg)
+    arcadeVer=${arcadeName//Microsoft.DotNet.Arcade.Sdk.}
+    arcadeVer=${arcadeVer//.nupkg}
+    LogMessage "    Arcade version = [$arcadeVer]"
+    sed -i "s|\(\"Microsoft.DotNet.Arcade.Sdk\": \"\)[^\"]*\"|\1$arcadeVer\"|g" ../stage1/global.json
+
+    sdkVer=$(ls $finalSdkDir/.dotnet/sdk)
+    LogMessage "    Sdk version = [$sdkVer]"
+    sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdkVer\"|g" $finalSdkDir/global.json
+
+    LogMessage "Build stage1"
+    cd $finalSdkDir
+    ./build.sh
+
+    LogMessage "Completing Step3 - Build final sdk"
+}
+
 if [ -z "${3:-}" ]; then
     usage
     exit 1
@@ -65,17 +193,22 @@ fi
 
 bootstrapDir=$1
 tarballSourceDir=$2
-refPkgDir=$3
+refPkgSourceDir=$3
 startStep="${4:-}"
 
-HERE: CHECK FOR START STEP
-if [ -d "$bootstrapDir" ]; then
+if [[ -d "$bootstrapDir" && "$startStep" == "" ]]; then
     echo "$bootstrapDir already exists"
     echo "exiting..."
     exit 1
 fi
 
+if [ ! -d "$bootstrapDir" ]; then
+    mkdir "$bootstrapDir"
+fi
+
 stage1Dir="$bootstrapDir/stage1-sdk"
+refPkgsDir="$bootstrapDir/reference-packages"
+finalSdkDir="$bootstrapDir/final-sdk"
 
 # Check network access
 wget -q --spider http://www.microsoft.com
@@ -85,5 +218,12 @@ if [ $? -eq 0 ]; then
     echo ""
 fi
 
-
-
+if [[ "$startStep" == "" || "$startStep" == "1" ]]; then
+    BuildStage1Sdk
+fi
+if [[ "$startStep" == "" || "$startStep" == "2" ]]; then
+    BuildRefPkgs
+fi
+if [[ "$startStep" == "" || "$startStep" == "3" ]]; then
+    buildFinalSdk
+fi
