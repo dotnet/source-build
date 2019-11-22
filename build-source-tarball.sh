@@ -3,7 +3,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [-- [extra build.sh args]]"
+    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [--skip-prebuilt-check] [-- [extra build.sh args]]"
     echo ""
 }
 
@@ -213,6 +213,7 @@ rm -rf $TARBALL_ROOT/.dotnet/tools/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
+cp -r $SCRIPT_ROOT/support/tarball/tool-bootstrapping/ $TARBALL_ROOT
 
 mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
