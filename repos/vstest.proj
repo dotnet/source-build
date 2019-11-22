@@ -3,10 +3,13 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
+    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
+
     <BuildCommandArgs>-DotNetBuildFromSource</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -DotNetCoreSdkDir $(DotNetCliToolDir)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -c $(Configuration)</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -r $(TargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) -r $(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(OutputPackageVersion)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>

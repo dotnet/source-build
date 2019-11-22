@@ -1,0 +1,25 @@
+From ef90f9473a5b2b24d9c1a523aefa7d6478bd3335 Mon Sep 17 00:00:00 2001
+From: Tomas Weinfurt <tweinfurt@yahoo.com>
+Date: Tue, 12 Nov 2019 13:24:37 -0800
+Subject: [PATCH] do not fail on test chmod
+
+---
+ external/runtime/runtime.depproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/external/runtime/runtime.depproj b/external/runtime/runtime.depproj
+index 3ce0ed89bc..1298019efd 100644
+--- a/external/runtime/runtime.depproj
++++ b/external/runtime/runtime.depproj
+@@ -60,7 +60,7 @@
+           SkipUnchangedFiles="true"
+           UseHardlinksIfPossible="$(UseHardlink)" />
+ 
+-    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension)" Condition="'$(OS)' != 'Windows_NT'"/>
++    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension) || true" Condition="'$(OS)' != 'Windows_NT'"/>
+ 
+     <Copy SourceFiles="@(HostSdkFile)"
+           DestinationFolder="$(TestHostRootPath)sdk\$(DotNetVersion)\%(RecursiveDir)"
+-- 
+2.23.0
+

@@ -18,8 +18,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
 
-    <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
-    <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
     <DependencyVersionInputRepoApiImplemented>false</DependencyVersionInputRepoApiImplemented>
@@ -32,6 +31,7 @@
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
   </PropertyGroup>
 
   <ItemGroup>

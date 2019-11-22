@@ -26,6 +26,7 @@
 
     <PackageOutputRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</PackageOutputRid>
+    <PackageOutputRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</PackageOutputRid>
     <PackageOutputRid Condition="'$(PackageOutputRid)' == ''">$(TargetRid)</PackageOutputRid>
     <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/NonShipping/</ToolsetZipOutputDir>
 

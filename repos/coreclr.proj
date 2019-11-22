@@ -11,6 +11,7 @@
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
     <BuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm'))">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
+    <BuildArguments Condition="'$(TargetOS)' == 'FreeBSD'">$(BuildArguments) -clang6.0 /p:PortableBuild=true</BuildArguments>
 
     <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
          Additionally, Linux builds are portable by default and only have a switch to turn it off -->
@@ -61,6 +62,7 @@
     <PropertyGroup>
       <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
       <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'FreeBSD'">so</AssemblyExtension>
       <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
       <AssemblyExtension Condition="'$(AssemblyExtension)' == ''">please define AssemblyExtension for $(TargetOS)</AssemblyExtension>
     </PropertyGroup>
