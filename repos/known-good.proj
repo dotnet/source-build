@@ -19,7 +19,7 @@
         <RepositoryReference Include="corefx" />
       </ItemGroup>
     </When>
-    <When Condition="$(Platform.Contains('arm'))">
+    <When Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">
       <ItemGroup>
         <RepositoryReference Include="core-setup" />
       </ItemGroup>

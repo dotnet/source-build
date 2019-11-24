@@ -75,7 +75,7 @@
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
-     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
+     <Exec Condition="$(Platform.Contains('arm')) AND '$(Platform)' != 'armel' AND '$(BuildArchitecture)' != 'arm64'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/build-rootfs.sh" />
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
@@ -175,7 +175,7 @@
       <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
     </PropertyGroup>
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
-    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="LD_LIBRARY_PATH=$(DotNetCliToolDir)/tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$(DarcVersion)/tools/netcoreapp2.1/any/runtimes/rhel-x64/native/" />
+    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)"  />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
