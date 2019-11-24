@@ -1,0 +1,32 @@
+From f13b054c8eca2ecb8d8352f9538fe57c120638c6 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Fri, 22 Nov 2019 16:56:41 +0000
+Subject: [PATCH 6/6] Get rid of analyzers
+
+---
+ eng/targets/Settings.props | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index 6a91007..4eaf58d 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -128,13 +128,13 @@
+   <!-- Language-specific analyzer packages -->
+   <Choose>
+     <When Condition="'$(Language)' == 'VB' and '$(RoslynCheckCodeStyle)' == 'true'">
+-      <ItemGroup>
++      <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+         <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.CodeStyle" Version="$(MicrosoftCodeAnalysisVisualBasicCodeStyleVersion)" PrivateAssets="all" />
+       </ItemGroup>
+     </When>
+ 
+     <When Condition="'$(Language)' == 'C#' and '$(RoslynCheckCodeStyle)' == 'true'">
+-      <ItemGroup>
++      <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="$(MicrosoftCodeAnalysisCSharpCodeStyleVersion)" PrivateAssets="all" />
+       </ItemGroup>
+     </When>
+-- 
+1.8.3.1
+

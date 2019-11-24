@@ -1,14 +1,14 @@
-From 3a56b0c5205509075c2b47293ffd9d7cfd9c273b Mon Sep 17 00:00:00 2001
+From 35c0366bea36061615786d9718ec69407dc3ef1b Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 17 Oct 2019 20:42:17 -0500
-Subject: [PATCH] Don't install 2.1.503 for testing.
+Subject: [PATCH 2/6] Don't install 2.1.503 for testing.
 
 ---
  eng/build.sh | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/eng/build.sh b/eng/build.sh
-index 54a7dd2062..752a6baed9 100755
+index 54a7dd2..752a6ba 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
 @@ -288,7 +288,7 @@ function BuildSolution {
@@ -21,5 +21,5 @@ index 54a7dd2062..752a6baed9 100755
  bootstrap_dir=""
  if [[ "$bootstrap" == true ]]; then
 -- 
-2.18.0
+1.8.3.1
 
