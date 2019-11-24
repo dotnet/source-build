@@ -75,7 +75,7 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
-    timeoutInMinutes: 120
+    timeoutInMinutes: 150
 
   # Generate prebuilt burndown data
   - script: |
@@ -196,7 +196,7 @@ jobs:
         $poisonArg
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
-    timeoutInMinutes: 120
+    timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Run smoke tests.
