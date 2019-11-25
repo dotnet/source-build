@@ -288,7 +288,7 @@ jobs:
   # Copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files
   # have correct ownership so VSTS can clean them up later.
   - task: CopyFiles@2
-    displayName: Copy artifacts from Docker-owned staging directory to VSTS-owned artifacts directory
+    displayName: Copy artifacts from Docker-owned staging directory to AzDO-agent-owned artifacts directory
     condition: always()
     continueOnError: true
     inputs:
