@@ -71,7 +71,7 @@ jobs:
       condition: always()
       continueOnError: true
       inputs:
-        PathToPublish: $(Build.StagingDirectory)/collected
+        PathToPublish: $(Build.SourcesDirectory)/artifacts/tarball/
         ArtifactName: Collected artifacts
         ArtifactType: Container
     - task: PublishBuildArtifacts@1
