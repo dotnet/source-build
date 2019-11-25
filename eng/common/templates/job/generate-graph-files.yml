@@ -20,8 +20,6 @@ jobs:
   variables:
     # Publish-Build-Assets provides: MaestroAccessToken, BotAccount-dotnet-maestro-bot-PAT
     # DotNet-AllOrgs-Darc-Pats provides: dn-bot-devdiv-dnceng-rw-code-pat
-    - group: Publish-Build-Assets
-    - group: DotNet-AllOrgs-Darc-Pats
     - name: _GraphArguments
       value: -gitHubPat $(BotAccount-dotnet-maestro-bot-PAT) 
         -azdoPat $(dn-bot-devdiv-dnceng-rw-code-pat) 
