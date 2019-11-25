@@ -24,10 +24,7 @@ steps:
     brew upgrade openssl || true
     brew upgrade pkgconfig || true
     brew upgrade cmake || true
-
-    brew link --force icu4c
-    brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
-    # Use 'for' to get last/latest openssl install dir.
-    for openssl_path in $brew_openssl_paths; do :; done
-    setvariable OPENSSL_ROOT_DIR "$openssl_path"
+    ln -s /usr/local/opt/openssl/lib/pkgconfig/libcrypto.pc /usr/local/lib/pkgconfig/
+    ln -s /usr/local/opt/openssl/lib/pkgconfig/libssl.pc /usr/local/lib/pkgconfig/
+    ln -s /usr/local/opt/openssl/lib/pkgconfig/openssl.pc /usr/local/lib/pkgconfig/
   displayName: Install native dependencies
