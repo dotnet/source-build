@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.DotNet.Arcade.Sdk">
+  <PropertyGroup>
+    <ArtifactsPkgDir>$(RepoRoot)artifacts/packages/</ArtifactsPkgDir>
+    <ManifestDir>$(RepoRoot)artifacts/asset-manifests/</ManifestDir>
+    <TarballDir>$(RepoRoot)artifacts/tarball/</TarballDir>
+    <RestoreSources>
+      $(RestoreSources);
+      https://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json;
+    </RestoreSources>
+    <CreateTargets>
+      CreateEmptyPackage;
+    </CreateTargets>
+    <BuildDependsOn>
+      $(CreateTargets);
+    </BuildDependsOn>
+    <BuildDependsOn Condition="'$(AzureAccessToken)' != ''">
+      $(BuildDependsOn);
+      PreparePublish;
+      PublishPackagesToBlobFeed;
+      PublishFilesToBlobFeed;
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedVersion)" />
+  </ItemGroup>
+
+  <Target Name="Build" DependsOnTargets="$(BuildDependsOn)" />
+  <Target Name="Pack" />
+
+  <Target Name="CreateEmptyPackage">
+    <MSBuild
+      Projects="$(RepoRoot)eng/emptyPackageProject/Private.SourceBuilt.Artifacts.csproj"
+      Properties="PackageOutputPath=$(ArtifactsPkgDir);ManifestCommit=$(ManifestCommit);Version=$(SourceBuildOutputVersion)"
+      Targets="Restore;Pack" />
+  </Target>
+
+  <Target Name="GetTarballFileName">
+    <ItemGroup>
+      <CollectedTarball Include="$(BUILD_STAGINGDIRECTORY)/collected/Private.SourceBuilt.Artifacts.*.tar.gz" />
+    </ItemGroup>
+    <Move SourceFiles="@(CollectedTarball)" DestinationFiles="$(TarballDir)Private.SourceBuilt.Artifacts.$(SourceBuildOutputVersion).tar.gz" />
+
+    <PropertyGroup>
+      <TarballFileName>$(TarballDir)Private.SourceBuilt.Artifacts.*.tar.gz</TarballFileName>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PreparePublish" DependsOnTargets="$(CreateDependsOn)">
+    <MakeDir Directories="$(ManifestDir)" />
+    <PropertyGroup>
+      <ExpectedFeedUrl>https://$(AzureAccountName).blob.core.windows.net/$(ContainerName)/index.json</ExpectedFeedUrl>
+      <AccountKey>$(AzureAccessToken)</AccountKey>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="PreparePublishPackages" DependsOnTargets="PreparePublish" BeforeTargets="PublishPackagesToBlobFeed">
+    <PropertyGroup>
+      <AssetManifestFilePath>$(ManifestDir)source-build-artifacts-nupkg-manifest.xml</AssetManifestFilePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackagesToPublish Include="$(ArtifactsPkgDir)**/*.nupkg" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PreparePublishFiles" DependsOnTargets="PreparePublish;GetTarballFileName" BeforeTargets="PublishFilesToBlobFeed">
+    <PropertyGroup>
+      <AssetManifestFilePath>$(ManifestDir)source-build-artifacts-tar-manifest.xml</AssetManifestFilePath>
+    </PropertyGroup>
+    <ItemGroup>
+      <FilesToPublish Include="$(TarballFileName)" />
+    </ItemGroup>
+  </Target>
+
+  <Import Project="$(NuGetPackageRoot)microsoft.dotnet.build.tasks.feed\$(MicrosoftDotNetBuildTasksFeedVersion)\build\Microsoft.DotNet.Build.Tasks.Feed.targets" />
+</Project>

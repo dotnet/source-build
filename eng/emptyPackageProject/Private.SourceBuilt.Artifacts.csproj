@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- This is an empty project that exists to be published by DARC and trigger
+  dependency uptake for this repo. -->
+
+  <PropertyGroup>
+    <PackageProjectUrl>https://github.com/dotnet/source-build</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dotnet/source-build</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryCommit>0000</RepositoryCommit>
+    <RepositoryCommit Condition="'$(ManifestCommit)' != ''">$(ManifestCommit)</RepositoryCommit>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <IsShipping>false</IsShipping>
+    <NoWarn>NU5105</NoWarn>
+  </PropertyGroup>
+
+</Project>
+

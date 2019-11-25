@@ -28,6 +28,7 @@ jobs:
     matrix:
       Production: {}
       Online: { type: Online }
+      Offline: { type: Offline }
 
 - template: ../jobs/ci-linux.yml
   parameters:
@@ -43,6 +44,8 @@ jobs:
   parameters:
     job: ubuntu1804
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-f90bc20-20180320154721
+    matrix:
+      Offline: { type: Offline }
 
 - template: ../jobs/ci-local.yml
   parameters:

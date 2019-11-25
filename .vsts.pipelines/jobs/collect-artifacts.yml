@@ -1,0 +1,104 @@
+jobs:
+- job: Collect_Artifacts
+
+  dependsOn: ${{ parameters.dependsOn }}
+
+  displayName: Collect Artifacts
+
+  pool: ${{ parameters.pool }}
+
+  steps:
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - task: DownloadBuildArtifacts@0
+      displayName: Download CentOS artifacts
+      inputs:
+        artifactName: Tarball centos71 Offline
+        downloadPath: '$(Build.StagingDirectory)/centos'
+    - task: DownloadBuildArtifacts@0
+      displayName: Download Debian artifacts
+      inputs:
+        artifactName: Tarball debian9 Offline
+        downloadPath: '$(Build.StagingDirectory)/debian'
+    - task: DownloadBuildArtifacts@0
+      displayName: Download Fedora artifacts
+      inputs:
+        artifactName: Tarball fedora29 Offline
+        downloadPath: '$(Build.StagingDirectory)/fedora'
+    - task: DownloadBuildArtifacts@0
+      displayName: Download Ubuntu artifacts
+      inputs:
+        artifactName: Tarball ubuntu1604 Offline
+        downloadPath: '$(Build.StagingDirectory)/ubuntu'
+    - task: DownloadBuildArtifacts@0
+      displayName: Download portable artifacts
+      inputs:
+        artifactName: Tarball centos71 Offline Portable
+        downloadPath: '$(Build.StagingDirectory)/portable'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)'
+        script: |
+          version=`echo centos/*/Private.SourceBuilt.Artifacts*.tar.gz | sed 's/\.tar\.gz$//' | sed 's/^centos\/.*\/Private\.SourceBuilt\.Artifacts\.//'`
+          echo "Artifacts version: $version"
+          mkdir collected
+          cd collected
+          # do CentOS last to prefer those versions of any duplicates
+          for os in portable debian fedora ubuntu centos; do
+            # DownloadArtifact creates another directory - use '*' to not deal with this
+            tar xzf ../$os/*/Private.SourceBuilt.Artifacts*.tar.gz
+            rm -rf ../$os
+          done
+          echo $(Build.SourceVersion) > .version
+          echo $(Build.BuildNumber) > .buildnumber
+          echo $(Build.BuildId) > .buildid
+          tar czf ../Private.SourceBuilt.Artifacts.$version.tar.gz * .version .buildnumber .buildid
+          rm -rf *
+          mv ../Private.SourceBuilt.Artifacts.*.tar.gz .
+      displayName: Collect RID-specific packages into one tarball
+      condition: succeeded()
+    - task: PowerShell@2
+      inputs:
+        targetType: 'filePath'
+        filePath: $(Build.SourcesDirectory)\publish.ps1
+        arguments: /p:OfficialBuildId=$(Build.BuildNumber) /p:AzureAccountName=$(publish.blobStorage.account) /p:ContainerName=$(publish.blobStorage.container) "/p:AzureAccessToken=$(publish.blobStorage.accessToken)" "/p:ManifestName=$(BUILD.REPOSITORY.NAME)" "/p:ManifestBuildId=$(BUILD.BUILDID)" "/p:ManifestBranch=$(BUILD.SOURCEBRANCHNAME)" /p:ManifestCommit=$(Build.SourceVersion)
+        workingDirectory: '$(Build.SourcesDirectory)'
+      displayName: Publish collected artifacts
+      condition: succeeded()
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+          write-host "Staging:"
+          gci -recurse $(Build.StagingDirectory)
+          write-host "Sources:"
+          gci -recurse $(Build.SourcesDirectory)
+      displayName: DEBUG list files
+      condition: always()
+      continueOnError: true
+    - task: PublishBuildArtifacts@1
+      displayName: Uploaded collected artifacts
+      condition: always()
+      continueOnError: true
+      inputs:
+        PathToPublish: $(Build.StagingDirectory)/collected
+        ArtifactName: Collected artifacts
+        ArtifactType: Container
+    - task: PublishBuildArtifacts@1
+      displayName: Uploaded asset manifests
+      condition: always()
+      continueOnError: true
+      inputs:
+        PathToPublish: $(Build.SourcesDirectory)/artifacts/asset-manifests/
+        ArtifactName: AssetManifests
+        ArtifactType: Container
+    - task: PublishBuildArtifacts@1
+      displayName: Upload publish logs
+      condition: always()
+      continueOnError: true
+      inputs:
+        PathToPublish: $(Build.SourcesDirectory)/artifacts/log/
+        ArtifactName: Publishing logs
+        ArtifactType: Container
+

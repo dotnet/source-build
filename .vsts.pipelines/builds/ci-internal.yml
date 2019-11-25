@@ -3,3 +3,21 @@ jobs:
   parameters:
     windowsPoolName: NetCoreInternal-Pool
     windowsQueueName: buildpool.windows.10.amd64.vs2017
+
+- template: ../jobs/collect-artifacts.yml
+  parameters:
+    dependsOn:
+      - centos71
+      - debian9
+      - fedora29
+      - ubuntu1604
+    pool:
+      vmImage: vs2017-win2016
+
+- template: /eng/common/templates/job/publish-build-assets.yml
+  parameters:
+    dependsOn:
+      - Collect_Artifacts
+    enablePublishBuildArtifacts: true
+    pool:
+      vmImage: vs2017-win2016
