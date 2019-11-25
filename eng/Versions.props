@@ -4,6 +4,11 @@
   <PropertyGroup>
     <VersionPrefix>0.1.0</VersionPrefix>
     <PreReleaseVersionLabel>alpha.1</PreReleaseVersionLabel>
+    <VersionSuffix>3.1.100-$(PreReleaseVersionLabel)</VersionSuffix>
+    <VersionSuffix Condition="'$(BUILD_BUILDNUMBER)' != ''">$(VersionSuffix).$(BUILD_BUILDNUMBER)</VersionSuffix>
+    <VersionSuffix Condition="'$(BUILD_SOURCEVERSION)' != ''">$(VersionSuffix)+$(BUILD_SOURCEVERSION)</VersionSuffix>
+    <VersionSuffix Condition="'$(BUILD_SOURCEVERSION)' == '' and '$(GitCommitHash)' != ''">$(VersionSuffix)+$(GitCommitHash)</VersionSuffix>
+    <SourceBuildOutputVersion>$(VersionPrefix)-$(VersionSuffix)</SourceBuildOutputVersion>
   </PropertyGroup>
   <!-- Production Dependencies -->
   <PropertyGroup>

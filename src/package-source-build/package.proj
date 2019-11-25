@@ -14,7 +14,7 @@
     <Copy SourceFiles="@(CoreClrToolsFiles)" DestinationFolder="$(SourceBuiltPackagesPath)coreclr-tools" />
 
     <PropertyGroup>
-        <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
+        <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(SourceBuildOutputVersion).tar.gz</SourceBuiltTarballName>
     </PropertyGroup>
 
     <Exec Command="tar --numeric-owner -czf $(SourceBuiltTarballName) *.nupkg *.props coreclr-tools/*" WorkingDirectory="$(SourceBuiltPackagesPath)" />
