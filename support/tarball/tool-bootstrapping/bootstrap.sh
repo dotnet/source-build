@@ -44,7 +44,7 @@ function BuildStage1Sdk {
     fi
 
     # Copy tarball-source to stage1 directory
-    LogMessage "Copy tarball-source to stage1 directory"
+    LogMessage "Copy $tarballSourceDir to $stage1Dir"
     cp -r $tarballSourceDir $stage1Dir
 
     # Build stage1 source
