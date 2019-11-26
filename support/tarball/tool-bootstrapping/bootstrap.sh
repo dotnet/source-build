@@ -209,14 +209,12 @@ fi
 
 # Check network access
 if command -v wget 2>/dev/null; then
-    wget -q --spider http://www.microsoft.com
-    if [ $? -eq 0 ]; then
+    if wget -q --spider http://www.microsoft.com 2>/dev/null; then
         echo "Network can be off for bootstrapping..."
         read -n1 -r -p "Press space to continue..." key
         echo ""
     fi
-    wget -q --spider http://www.microsoft.com
-    if [ $? -eq 0 ]; then
+    if wget -q --spider http://www.microsoft.com 2>/dev/null; then
         LogMessage "Network is ON"
     else
         LogMessage "Network is OFF"
