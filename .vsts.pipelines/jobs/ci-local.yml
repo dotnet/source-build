@@ -40,10 +40,6 @@ jobs:
 
   - template: ../steps/cleanup-unneeded-files.yml
 
-  # If the machine is dirty, submodule URLs may be from a different branch. Sync to prevent that.
-  - script: git submodule sync
-    displayName: Sync submodule urls
-
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
     displayName: Clean leftover submodules
@@ -62,8 +58,6 @@ jobs:
     - template: ../steps/setup-windows-python.yml
 
   - template: ../steps/calculate-config-flags.yml
-
-  - template: ../steps/init-submodules.yml
 
   - template: ../steps/check-space-powershell.yml
 
