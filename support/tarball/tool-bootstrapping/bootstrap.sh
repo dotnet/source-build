@@ -17,8 +17,6 @@ usage() {
 }
 
 function LogMessage {
-    local size=(`df -h .`)
-    #local message="[${size[10]} - ${size[11]}] : $1"
     local message=$1
     local dt=`date '+%d/%m/%Y %H:%M:%S'`
     local outFile="$bootstrapDir/status.log"
@@ -51,9 +49,9 @@ function BuildStage1Sdk {
 
     # Build stage1 source
     LogMessage "Building stage1"
-    cd $stage1Dir
+    pushd $stage1Dir
     ./build.sh
-    cd $bootstrapDir
+    popd
 
     LogMessage "Completing Step1 - Build stage1 sdk" 
 }
@@ -79,16 +77,16 @@ function BuildRefPkgs {
         exit 1
     fi
 
-    LogMessage "Copy reference-packages source to ref-pkgs dir"
+    LogMessage "Copy $refPkgSourceDir to $refPkgsDir"
     cp -r $refPkgSourceDir $refPkgsDir
 
-    LogMessage "Copy coreclr-tools to ref-pkgs source-built dir"
+    LogMessage "Copy coreclr-tools to $refPkgsDir/source-built"
     cp -r $stage1Dir/Tools/source-built/coreclr-tools/ $refPkgsDir/source-built
 
-    LogMessage "Un-tar private source-built artifacts into ref-pkgs source-built dir"
-    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.0.1.0*.tar.gz --directory $refPkgsDir/source-built/
+    LogMessage "Un-tar private source-built artifacts into $refPkgsDir/source-built/"
+    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --directory $refPkgsDir/source-built/
 
-    LogMessage "Un-tar sdk into ref-pkgs .dotnet dir"
+    LogMessage "Un-tar sdk into $refPkgsDir/.dotnet/"
     if [ -d "$refPkgsDir/.dotnet/" ]; then
         rm -rf $refPkgsDir/.dotnet/
     fi
@@ -101,12 +99,14 @@ function BuildRefPkgs {
     sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdkVer\"|g" $refPkgsDir/global.json
 
     LogMessage "Build stage1 ref-pkgs"
-    cd $refPkgsDir
+    pushd $refPkgsDir
     ./build.sh
+    popd
 
     LogMessage "Package built reference packages into new tarball"
-    cd $refPkgsDir/artifacts/reference-packages
-    tar --numeric-owner -czf ../Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
+    pushd $refPkgsDir/artifacts/reference-packages
+    tar --numeric-owner -czf $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
+    popd
 
     LogMessage "Completing Step2 - Build Reference Packages" 
 }
@@ -139,7 +139,7 @@ function buildFinalSdk {
     fi
 
     if [ "${1-default}" != "test" ]; then
-    LogMessage "Copy tarball-source to ./final-sdk"
+    LogMessage "Copy $tarballSourceDir to $finalSdkDir"
     cp -r $tarballSourceDir $finalSdkDir
     fi
 
@@ -148,20 +148,20 @@ function buildFinalSdk {
     rm -rf $finalSdkDir/packages/source-built/*
     rm -rf $finalSdkDir/.dotnet
 
-    LogMessage "Copy stage1 coreclr-tools to final-sdk"
+    LogMessage "Copy stage1 coreclr-tools to $finalSdkDir/packages/source-built"
     cp -r $stage1Dir/Tools/source-built/coreclr-tools $finalSdkDir/packages/source-built
 
-    LogMessage "Copy source-built packages from stage1 build output to final-sdk packages dir"
+    LogMessage "Copy source-built packages archive from $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz to $finalSdkDir/packages/archive"
     cp $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz $finalSdkDir/packages/archive
 
-    LogMessage "Copy .NET Core SDK from stage1 build output to final-sdk"
+    LogMessage "Extract .NET Core SDK from $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz to $finalSdkDir/.dotnet/"
     if [ -d "$finalSdkDir/.dotnet/" ]; then
         rm -rf $finalSdkDir/.dotnet/
     fi
     mkdir $finalSdkDir/.dotnet/
     tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $finalSdkDir/.dotnet/
 
-    LogMessage "Copy reference packages from reference-packages to final-sdk"
+    LogMessage "Copy reference packages from $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz to $finalSdkDir/packages/archive"
     cp $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz $finalSdkDir/packages/archive
 
     LogMessage "Update version of SDK and arcade in global.json"
@@ -176,8 +176,9 @@ function buildFinalSdk {
     sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdkVer\"|g" $finalSdkDir/global.json
 
     LogMessage "Build final sdk"
-    cd $finalSdkDir
+    pushd $finalSdkDir
     ./build.sh
+    popd
 
     LogMessage "Completing Step3 - Build final sdk"
 }
@@ -207,17 +208,21 @@ if [ ! -d "$bootstrapDir" ]; then
 fi
 
 # Check network access
-wget -q --spider http://www.microsoft.com
-if [ $? -eq 0 ]; then
-    echo "Network can be off for bootstrapping..."
-    read -n1 -r -p "Press space to continue..." key
-    echo ""
-fi
-wget -q --spider http://www.microsoft.com
-if [ $? -eq 0 ]; then
-    LogMessage "Network is ON"
+if command -v wget 2>/dev/null; then
+    wget -q --spider http://www.microsoft.com
+    if [ $? -eq 0 ]; then
+        echo "Network can be off for bootstrapping..."
+        read -n1 -r -p "Press space to continue..." key
+        echo ""
+    fi
+    wget -q --spider http://www.microsoft.com
+    if [ $? -eq 0 ]; then
+        LogMessage "Network is ON"
+    else
+        LogMessage "Network is OFF"
+    fi
 else
-    LogMessage "Network is OFF"
+    LogMessage "Unknown network status"
 fi
 
 if [[ "$startStep" == "" || "$startStep" == "1" ]]; then
