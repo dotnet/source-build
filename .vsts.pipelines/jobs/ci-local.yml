@@ -22,6 +22,7 @@ jobs:
       /p:PortableBuild=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+      /p:AzDoPat=$(System.AccessToken)
     args.smokeTest: >
       --run-smoke-test
       /p:Configuration=$(sb.configuration)

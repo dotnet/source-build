@@ -167,7 +167,8 @@
       <IgnoredRepos>$(IgnoredRepos);https://github.com/dotnet/source-build-reference-packages</IgnoredRepos>
       <DarcCloneArguments>$(DarcCloneArguments) --ignore-repos "$(IgnoredRepos)"</DarcCloneArguments>
       <!-- required so Darc doesn't throw an error for missing auth -->
-      <DarcCloneArguments>$(DarcCloneArguments) --azdev-pat bogus</DarcCloneArguments>
+      <AzDoPat Condition="'$(AzDoPat)' == ''">bogus</AzDoPat>
+      <DarcCloneArguments>$(DarcCloneArguments) --azdev-pat $(AzDoPat)</DarcCloneArguments>
       <DarcCloneArguments>$(DarcCloneArguments) --github-pat bogus</DarcCloneArguments>
       <!-- depth 0 should be sufficient for us since we explictly declare all our dependencies -->
       <DarcCloneArguments>$(DarcCloneArguments) --depth 0</DarcCloneArguments>
