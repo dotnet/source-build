@@ -1,0 +1,25 @@
+From 44202788ec60f3a62132322d6a8959e89975fc4a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 26 Nov 2019 21:01:30 -0600
+Subject: [PATCH 6/6] Another testing stabilization attempt
+
+---
+ .../Microsoft.NETCore.Platforms.pkgproj                         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.pkgproj b/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.pkgproj
+index 14f8501026..c0d04f03fc 100644
+--- a/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.pkgproj
++++ b/pkg/Microsoft.NETCore.Platforms/Microsoft.NETCore.Platforms.pkgproj
+@@ -1,7 +1,7 @@
+ ﻿<Project DefaultTargets="Build">
+   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Directory.Build.props))\Directory.Build.props" />
+   <PropertyGroup>
+-    <PackageVersion>$(PlatformPackageVersion)</PackageVersion>
++    <PackageVersion>3.0.1</PackageVersion>
+     <SkipValidatePackage>true</SkipValidatePackage>
+     <!-- We don't need to harvest the stable packages to build this -->
+     <HarvestStablePackage>false</HarvestStablePackage>
+-- 
+2.18.0
+
