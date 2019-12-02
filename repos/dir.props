@@ -129,8 +129,7 @@
   <PropertyGroup>
     <ArcadeBootstrapDir Condition="'$(OfflineBuild)' != 'true'">$(PackagesDir)</ArcadeBootstrapDir>
     <ArcadeBootstrapDir Condition="'$(OfflineBuild)' == 'true'">$(ArcadeBootstrapPackageDir)</ArcadeBootstrapDir>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' != 'true'">$(ARCADE_BOOTSTRAP_VERSION)</ArcadeBootstrapVersion>
-    <ArcadeBootstrapVersion Condition="'$(OfflineBuild)' == 'true'">$(arcadeOutputPackageVersion)</ArcadeBootstrapVersion>
+    <ArcadeBootstrapVersion>$(ARCADE_BOOTSTRAP_VERSION)</ArcadeBootstrapVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -32,8 +32,8 @@
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' != 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</BuildArguments>
     <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(coresetupOutputPackageVersion)</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPolicyPackageVersion=$(coresetupOutputPackageVersion)</BuildArguments>
+    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</BuildArguments>
+    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPolicyPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
