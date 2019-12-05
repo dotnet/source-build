@@ -6,11 +6,13 @@ parameters:
     name: Hosted Ubuntu 1604
   imageName: null
   reportPrebuiltLeaks: false
+  dependsOn: null
   generatePrebuiltBurndown: false
   runUnitTests: false
 
 jobs:
 - job: ${{ parameters.job }}
+  dependsOn: ${{ parameters.dependsOn }}
   strategy:
     matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
