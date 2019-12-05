@@ -21,6 +21,16 @@ jobs:
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
+- template: ../jobs/ci-linux_bootstrap.yml
+  parameters:
+    job: centos71_BootStrap
+    dependsOn: centos71
+    condition: succeeded()
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
+    reportPrebuiltLeaks: false
+    matrix:
+      Offline: { type: Offline }
+
 - template: ../jobs/ci-linux.yml
   parameters:
     job: debian9

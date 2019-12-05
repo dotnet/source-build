@@ -1,0 +1,164 @@
+parameters:
+  job: null
+  matrix:
+    Production: {}
+  pool:
+    name: Hosted Ubuntu 1604
+  imageName: null
+  reportPrebuiltLeaks: false
+  generatePrebuiltBurndown: false
+  runUnitTests: false
+
+jobs:
+- job: ${{ parameters.job }}
+  strategy:
+    matrix: ${{ parameters.matrix }}
+  pool: ${{ parameters.pool }}
+  timeoutInMinutes: 270
+  variables:
+    # Prefix to distinguish artifacts from different legs.
+    artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
+    docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
+    docker.agentSrc.work: -w /agentSrc
+    docker.drop.map: -v $(dropDirectory):/drop:z
+    docker.logs.map: -v $(dropDirectory)/logs:/logs:z
+    docker.root.map: -v $(rootDirectory):/root:z
+    docker.run: docker run --rm
+    docker.src.map: -v $(rootDirectory)/sb/source-build:/src:z
+    docker.src.work: -w /src
+    docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
+    docker.tb.work: -w /tb
+    dropDirectory: $(stagingDirectory)/drop
+    imageName: ${{ parameters.imageName }}
+    reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
+    generatePrebuiltBurndown: ${{ parameters.generatePrebuiltBurndown }}
+    rootDirectory: $(Build.SourcesDirectory)/..
+    stagingDirectory: $(rootDirectory)/sb/staging
+    tarballName: tarball_$(Build.BuildId)
+    SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
+    # Default type, can be overridden by matrix legs.
+    type: Production
+
+  steps:
+  - template: ../steps/cleanup-unneeded-files.yml
+  - template: ../steps/docker-cleanup-linux.yml
+  - template: ../steps/calculate-config-flags.yml
+
+  # Create working directory and copy source into it.
+  - script: |
+      set -ex
+      df -h
+      $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
+        rm -rf /root/sb/
+        mkdir -p /root/sb/tarball
+        cp -r . /root/sb/source-build'
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Clean sb directory and copy source from cloned directory
+
+  - template: ../steps/init-submodules.yml
+    parameters:
+      commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
+
+  # # Create tarball.
+  # - script: |
+  #     set -ex
+  #     df -h
+  #     args="--skip-build --minimize-disk-usage"
+  #     if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+  #       args="$args --enable-leak-detection"
+  #     fi
+  #     $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
+  #       "/tb/$(tarballName)" \
+  #       $args
+  #     du -h $(rootDirectory) | sort -h | tail -n 50
+  #   displayName: Create tarball
+  #   condition: and(succeeded(), eq(variables['sb.tarball'], true))
+
+  # # Copy logs from the production build
+  # - script: |
+  #     set -ex
+  #     df -h
+  #     $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
+  #       mkdir -p /logs/source-build/logs
+  #       find . \( \
+  #         -path './bin/*-report/*' -o \
+  #         -path './bin/msbuild-debug/*' -o \
+  #         -path './bin/roslyn-debug/*' -o \
+  #         -path './bin/aspnet-debug/*' -o \
+  #         -iname '*.binlog' -o \
+  #         -iname '*.log' \) \
+  #         -exec cp {} --parents /logs/source-build/logs \;"
+  #     du -h $(rootDirectory) | sort -h | tail -n 50
+  #   displayName: Copy source-build production build logs
+  #   condition: always()
+  #   continueOnError: true
+
+  # # Copy logs and reports to staging directory.
+  # - script: |
+  #     set -ex
+  #     df -h
+  #     $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
+  #       mkdir -p /logs/tarball/logs
+  #       cd \"$(tarballName)\"
+  #       find . \( \
+  #         -path './bin/*-report/*' -o \
+  #         -path './bin/msbuild-debug/*' -o \
+  #         -path './bin/roslyn-debug/*' -o \
+  #         -path './bin/aspnet-debug/*' -o \
+  #         -iname '*.binlog' -o \
+  #         -iname '*.log' \) \
+  #         -exec cp {} --parents /logs/tarball/logs \;"
+  #     du -h $(rootDirectory) | sort -h | tail -n 50
+  #   displayName: Copy tarball logs
+  #   condition: eq(variables['sb.tarball'], true)
+  #   continueOnError: true
+
+  # # Copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files
+  # # have correct ownership so VSTS can clean them up later.
+  # - task: CopyFiles@2
+  #   condition: always()
+  #   continueOnError: true
+  #   inputs:
+  #     sourceFolder: $(stagingDirectory)
+  #     targetFolder: $(Build.ArtifactStagingDirectory)
+
+  # # Publish artifacts.
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Logs artifact
+  #   condition: always()
+  #   continueOnError: true
+  #   inputs:
+  #     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
+  #     ArtifactName: Logs $(artifactName)
+  #     ArtifactType: Container
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish Tarball artifact
+  #   condition: eq(variables['sb.tarball'], true)
+  #   continueOnError: true
+  #   inputs:
+  #     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
+  #     ArtifactName: Tarball $(artifactName)
+  #     ArtifactType: Container
+
+  # # Publish prebuilt report data to blob storage.
+  # - template: ../steps/publish-prebuilt-data-sh.yml
+  #   parameters:
+  #     relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/latest/$(artifactName)
+  # # Also publish per-build data to a unique location for future use.
+  # - template: ../steps/publish-prebuilt-data-sh.yml
+  #   parameters:
+  #     relativeBlobPath: prebuilt-data/$(Build.SourceBranchName)/rolling/$(Build.SourceVersion)/$(Build.BuildNumber)/$(Build.DefinitionName)/$(artifactName)
+
+  # Clean up (very large) working directory. root owner makes it difficult for others to remove.
+  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
+    displayName: Clean sb directory
+    condition: always()
+    continueOnError: true
+
+  - template: ../steps/docker-cleanup-linux.yml
+
+  - script: df -h
+    displayName: Check space (df -h)
+    condition: always()
+    continueOnError: true
