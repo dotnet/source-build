@@ -22,6 +22,7 @@ jobs:
       /p:PortableBuild=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+      /p:AzDoPat=$(System.AccessToken)
     args.smokeTest: >
       --run-smoke-test
       /p:Configuration=$(sb.configuration)
@@ -39,10 +40,6 @@ jobs:
     clean: true
 
   - template: ../steps/cleanup-unneeded-files.yml
-
-  # If the machine is dirty, submodule URLs may be from a different branch. Sync to prevent that.
-  - script: git submodule sync
-    displayName: Sync submodule urls
 
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
@@ -62,8 +59,6 @@ jobs:
     - template: ../steps/setup-windows-python.yml
 
   - template: ../steps/calculate-config-flags.yml
-
-  - template: ../steps/init-submodules.yml
 
   - template: ../steps/check-space-powershell.yml
 
