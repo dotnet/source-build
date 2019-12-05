@@ -62,17 +62,6 @@ jobs:
     parameters:
       commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
 
-  # - task: DownloadBuildArtifacts@0
-  #   displayName: Download CentOS artifacts
-  #   inputs:
-  #     buildType: specific
-  #     project: source-build
-  #     pipeline: source-build-CI
-  #     buildVersionToDownload: latest
-  #     buildId: 441625
-  #     artifactName: Tarball centos71 Offline
-  #     downloadPath: '$(Build.StagingDirectory)/centos'
-
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
     displayName: Clean sb directory
