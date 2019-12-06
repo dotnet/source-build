@@ -67,7 +67,7 @@ jobs:
       buildVersionToDownload: 'specific'
       buildId: '441879'
       artifactName: 'Tarball centos71 Offline'
-      downloadPath: '$(System.ArtifactsDirectory)'
+      downloadPath: '$(rootDirectory)/sb/tarball'
 
   - script: |
       set -ex
@@ -87,7 +87,7 @@ jobs:
       $(docker.run) --network=none $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
       mkdir -p /tb/sb/tarball
       mkdir -p /tb/bootstrap_dir
-      tar -xvf $(System.ArtifactsDirectory)/$(tarballName).tar.gz -C /tb/sb/tarball --no-same-owner --strip-components=1
+      tar -xvf /tb/$(tarballName).tar.gz -C /tb/sb/tarball --no-same-owner --strip-components=1
       ./tb/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /tb/bootstrap_dir /tb/sb/tarball /tb/source-build-reference-packages'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Unpack the tarball and Run Bootstrapping
