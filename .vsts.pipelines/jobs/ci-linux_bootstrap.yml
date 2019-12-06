@@ -60,7 +60,6 @@ jobs:
 
   - task: DownloadBuildArtifacts@0
     displayName: Download CentOS artifacts
-    timeoutInMinutes: 2
     inputs:
       buildType: 'specific'
       project: 'internal'
@@ -68,7 +67,7 @@ jobs:
       buildVersionToDownload: 'specific'
       buildId: '441879'
       artifactName: 'Tarball centos71 Offline'
-      downloadPath: '/root/sb/tarball_artifact'
+      downloadPath: '$(System.ArtifactsDirectory)'
 
   - script: |
       set -ex
