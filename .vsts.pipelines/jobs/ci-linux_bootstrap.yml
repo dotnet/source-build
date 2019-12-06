@@ -73,7 +73,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
-      pushd /root
+      pushd /tb
       git clone https://github.com/dotnet/source-build-reference-packages
       popd'
       du -h $(rootDirectory) | sort -h | tail -n 50
@@ -85,18 +85,18 @@ jobs:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
-      mkdir -p /root/sb/tarball
-      mkdir -p /root/bootstrap_dir
-      tar -xvf /root/sb/tarball_artifact/$(tarballName).tar.gz -C /root/sb/tarball --no-same-owner --strip-components=1
-      ./root/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /root/bootstrap_dir /root/sb/tarball /root/source-build-reference-packages'
+      mkdir -p /tb/sb/tarball
+      mkdir -p /tb/bootstrap_dir
+      tar -xvf $(System.ArtifactsDirectory)/$(tarballName).tar.gz -C /tb/sb/tarball --no-same-owner --strip-components=1
+      ./tb/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /tb/bootstrap_dir /tb/sb/tarball /tb/source-build-reference-packages'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Unpack the tarball and Run Bootstrapping
     condition: always()
     continueOnError: false
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
-  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
-    displayName: Clean sb directory
+  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/tb'
+    displayName: Clean tb directory
     condition: always()
     continueOnError: true
 
