@@ -53,9 +53,9 @@ jobs:
       df -h
       $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
         rm -rf /root/sb/
-        mkdir -p /root/sb/tarball
+        mkdir -p /root/sb/tarball'
       du -h $(rootDirectory) | sort -h | tail -n 50
-    displayName: Clean sb directory and copy source from cloned directory
+    displayName: Clean sb directory
 
   - template: ../steps/init-submodules.yml
     parameters:
@@ -90,8 +90,8 @@ jobs:
       buildVersionToDownload: 'specific'
       buildId: '441625'
       artifactName: 'Tarball centos71 Offline'
-      itemPattern: tarball_??????.tar.gz
-      downloadPath: '/root/sb/tarball'
+      itemPattern: 'tarball_??????.tar.gz'
+      downloadPath: '$(System.ArtifactsDirectory)'
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
