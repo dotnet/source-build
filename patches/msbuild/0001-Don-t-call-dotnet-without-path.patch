@@ -1,4 +1,4 @@
-From f9c2189c5c622672ba588f00e11a25cb4bc6230e Mon Sep 17 00:00:00 2001
+From 95372a80ae67d4b5e653e43f243196578254010e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 23 Oct 2019 17:23:58 -0500
 Subject: [PATCH] Don't call dotnet without path
@@ -8,7 +8,7 @@ Subject: [PATCH] Don't call dotnet without path
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/eng/common/tools.sh b/eng/common/tools.sh
-index 757d5b9e..5a4cfeb1 100755
+index 757d5b9..5a4cfeb 100755
 --- a/eng/common/tools.sh
 +++ b/eng/common/tools.sh
 @@ -340,9 +340,9 @@ function MSBuild {
@@ -25,5 +25,5 @@ index 757d5b9e..5a4cfeb1 100755
      local toolset_dir="${_InitializeToolset%/*}"
      local logger_path="$toolset_dir/$_InitializeBuildToolFramework/Microsoft.DotNet.Arcade.Sdk.dll"
 -- 
-2.18.0
+1.8.3.1
 
