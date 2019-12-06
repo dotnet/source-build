@@ -57,9 +57,9 @@ jobs:
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory
 
-  - template: ../steps/init-submodules.yml
-    parameters:
-      commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
+  # - template: ../steps/init-submodules.yml
+  #   parameters:
+  #     commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
 
   # - task: DownloadBuildArtifacts@0
   #   displayName: Download CentOS artifacts
