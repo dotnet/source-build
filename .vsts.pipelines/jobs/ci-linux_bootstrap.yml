@@ -86,9 +86,10 @@ jobs:
     timeoutInMinutes: 1
     inputs:
       buildType: specific
+      project: public
       buildId: 441625
       artifactName: Tarball centos71 Offline
-      downloadPath: '$(rootDirectory)/tb'
+      downloadPath: '/root/tb'
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
