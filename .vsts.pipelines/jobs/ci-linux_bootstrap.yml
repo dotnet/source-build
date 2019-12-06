@@ -87,10 +87,11 @@ jobs:
     inputs:
       buildType: specific
       project: public
-      pipeline: dotnet/source-build/source-build-CI
+      pipeline: source-build-CI
       buildVersionToDownload: specific
       buildId: 441625
       artifactName: Tarball centos71 Offline
+      itemPattern: drop/tarball_??????.tar.gz
       downloadPath: '$(System.ArtifactsDirectory)'
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
