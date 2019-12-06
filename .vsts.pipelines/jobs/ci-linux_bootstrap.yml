@@ -54,7 +54,6 @@ jobs:
       $(docker.run) $(docker.root.map) $(docker.agentSrc.map) $(docker.agentSrc.work) $(imageName) bash -c '
         rm -rf /root/sb/
         mkdir -p /root/sb/tarball
-        cp -r . /root/sb/source-build'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory and copy source from cloned directory
 
@@ -92,7 +91,7 @@ jobs:
       buildId: '441625'
       artifactName: 'Tarball centos71 Offline'
       itemPattern: tarball_??????.tar.gz
-      downloadPath: '$(System.ArtifactsDirectory)'
+      downloadPath: '/root/sb/tarball'
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
