@@ -26,7 +26,6 @@ jobs:
     docker.agentSrc.work: -w /agentSrc
     docker.drop.map: -v $(dropDirectory):/drop:z
     docker.logs.map: -v $(dropDirectory)/logs:/logs:z
-    docker.network: --network ${{ parameters.dockerNetwork }}
     docker.root.map: -v $(rootDirectory):/root:z
     docker.run: docker run --rm
     docker.src.map: -v $(rootDirectory)/sb/source-build:/src:z
@@ -59,29 +58,6 @@ jobs:
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory
 
-  # - template: ../steps/init-submodules.yml
-  #   parameters:
-  #     commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
-
-  # - task: DownloadBuildArtifacts@0
-  #   displayName: Download CentOS artifacts
-  #   continueOnError: true
-  #   inputs:
-      #buildType: 'current' # Options: current, specific
-      #project: # Required when buildType == Specific
-      #pipeline: # Required when buildType == Specific
-      #specificBuildWithTriggering: false # Optional
-      #buildVersionToDownload: 'latest' # Required when buildType == Specific. Options: latest, latestFromBranch, specific
-      #allowPartiallySucceededBuilds: false # Optional
-      #branchName: 'refs/heads/master' # Required when buildType == Specific && BuildVersionToDownload == LatestFromBranch
-      #buildId: # Required when buildType == Specific && BuildVersionToDownload == Specific
-      #tags: # Optional
-      #downloadType: 'single' # Choose whether to download a single artifact or all artifacts of a specific build. Options: single, specific
-      #artifactName: # Required when downloadType == Single
-      #itemPattern: '**' # Optional
-      #downloadPath: '$(System.ArtifactsDirectory)' 
-      #parallelizationLimit: '8' # Optional
-
   - task: DownloadBuildArtifacts@0
     displayName: Download CentOS artifacts
     timeoutInMinutes: 2
@@ -110,7 +86,7 @@ jobs:
   - script: |
       set -ex 
       df -h 
-      $(docker.run) $(docker.network) $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
+      $(docker.run) --network=none $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
       mkdir -p /root/sb/tarball
       mkdir -p /root/bootstrap_dir
       tar -xvf /root/sb/tarball_artifact/$(tarballName).tar.gz -C /root/sb/tarball --no-same-owner --strip-components=1
