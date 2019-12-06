@@ -32,7 +32,7 @@ jobs:
     docker.src.work: -w /src
     docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
     docker.tb.work: -w /tb
-    docker.bst.map: $(System.ArtifactsDirectory)/boostrap_root:/bst:z
+    docker.bst.map: -v $(System.ArtifactsDirectory)/boostrap_root:/bst:z
     docker.bst.work: -w /bst
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
@@ -84,7 +84,7 @@ jobs:
   - script: |
       set -ex 
       df -h 
-      $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       ls /bst
       mkdir -p /bst/sb/tarball
       mkdir -p /bst/bootstrap_dir
