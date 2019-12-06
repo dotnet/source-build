@@ -90,7 +90,7 @@ jobs:
       buildVersionToDownload: latest
       buildId: 441625
       artifactName: Tarball centos71 Offline
-      downloadPath: '$(Build.StagingDirectory)/centos'
+      downloadPath: '$(Build.StagingDirectory)'
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/sb'
