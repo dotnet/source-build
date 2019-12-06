@@ -1,11 +1,16 @@
-From f2f346c5377bb7fe3d06017e87d83c3fce1bbe84 Mon Sep 17 00:00:00 2001
+From f469fbebc755679f34453ad4af632da390c566b3 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 6 Dec 2019 15:07:09 -0600
 Subject: [PATCH 2/2] Patch ref packages out.
 
 ---
- eng/Versions.props | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ eng/Versions.props                                              | 2 +-
+ src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj  | 2 +-
+ .../Microsoft.SourceLink.AzureRepos.Git.csproj                  | 2 +-
+ src/SourceLink.Common/Microsoft.SourceLink.Common.csproj        | 2 +-
+ src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj        | 2 +-
+ src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj        | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 6df5c27..5cbb65c 100644
@@ -20,6 +25,66 @@ index 6df5c27..5cbb65c 100644
      <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
      <XUnitVersion>2.4.1</XUnitVersion>
      <!-- 
+diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
+index bb6c3b3..31b47fb 100644
+--- a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
++++ b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- NuGet -->
+diff --git a/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj b/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
+index bc5c152..6e2aac9 100644
+--- a/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
++++ b/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
+diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
+index 11730b8..1e99e38 100644
+--- a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
++++ b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- NuGet -->
+diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
+index 651620d..efc3f52 100644
+--- a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
++++ b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
+diff --git a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
+index 557305a..01c69e6 100644
+--- a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
++++ b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
 -- 
 2.18.0
 
