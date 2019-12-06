@@ -32,6 +32,8 @@ jobs:
     docker.src.work: -w /src
     docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
     docker.tb.work: -w /tb
+    docker.bst.map: $(System.ArtifactsDirectory)/boostrap_root:/bst:z
+    docker.bst.work: -w /bst
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
     reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
@@ -67,7 +69,7 @@ jobs:
       buildVersionToDownload: 'specific'
       buildId: '441879'
       artifactName: 'Tarball centos71 Offline'
-      downloadPath: '$(dropDirectory)'
+      downloadPath: '$(System.ArtifactsDirectory)/boostrap_root'
 
   - script: |
       set -ex
@@ -84,11 +86,12 @@ jobs:
   - script: |
       set -ex 
       df -h 
-      $(docker.run) --network=none $(docker.tb.map) $(docker.tb.work) $(imageName) bash -c '
-      mkdir -p /tb/sb/tarball
-      mkdir -p /tb/bootstrap_dir
-      tar -xvf /tb/$(tarballName).tar.gz -C /tb/sb/tarball --no-same-owner --strip-components=1
-      ./tb/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /tb/bootstrap_dir /tb/sb/tarball /tb/source-build-reference-packages'
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      ls /bst
+      mkdir -p /bst/sb/tarball
+      mkdir -p /bst/bootstrap_dir
+      tar -xvf /bst/$(tarballName).tar.gz -C /bst/sb/tarball --no-same-owner --strip-components=1
+      ./bst/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Unpack the tarball and Run Bootstrapping
     condition: always()
