@@ -88,7 +88,7 @@ jobs:
       ls /bst
       mkdir -p /bst/sb/tarball
       mkdir -p /bst/bootstrap_dir
-      tar -xvf /bst/Tarball centos71 Offline/$(tarballName).tar.gz -C /bst/sb/tarball --no-same-owner --strip-components=1
+      tar -xvf '/bst/Tarball centos71 Offline/$(tarballName).tar.gz' -C /bst/sb/tarball --no-same-owner --strip-components=1
       ./bst/sb/tarball/support/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Unpack the tarball and Run Bootstrapping
