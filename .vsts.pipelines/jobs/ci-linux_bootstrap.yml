@@ -88,7 +88,6 @@ jobs:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       ls /bst
       mkdir -p /bst/sb/tarball
-      mkdir -p /bst/bootstrap_dir
       tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
       ls /bst/sb/tarball
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages'
