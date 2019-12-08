@@ -1,7 +1,7 @@
-From 652dc82c8c657acf52a7b59f89479d6dc842cc27 Mon Sep 17 00:00:00 2001
+From 8ee74401bd863fe685da759a4d13e0d25c865ba3 Mon Sep 17 00:00:00 2001
 From: Tomas Weinfurt <tweinfurt@yahoo.com>
 Date: Thu, 24 Oct 2019 10:19:39 -0700
-Subject: [PATCH 4/5] add entries for new FreeBSD releases (#41794)
+Subject: [PATCH 4/6] add entries for new FreeBSD releases (#41794)
 
 ---
  .../runtime.compatibility.json                | 81 +++----------------
@@ -10,10 +10,10 @@ Subject: [PATCH 4/5] add entries for new FreeBSD releases (#41794)
  3 files changed, 22 insertions(+), 99 deletions(-)
 
 diff --git a/pkg/Microsoft.NETCore.Platforms/runtime.compatibility.json b/pkg/Microsoft.NETCore.Platforms/runtime.compatibility.json
-index 76259c8339..f31ddd728a 100644
+index 1e5c380a7a..2a196ecc9f 100644
 --- a/pkg/Microsoft.NETCore.Platforms/runtime.compatibility.json
 +++ b/pkg/Microsoft.NETCore.Platforms/runtime.compatibility.json
-@@ -926,17 +926,17 @@
+@@ -984,17 +984,17 @@
      "any",
      "base"
    ],
@@ -36,7 +36,7 @@ index 76259c8339..f31ddd728a 100644
      "freebsd.11-x64",
      "freebsd.11",
      "freebsd-x64",
-@@ -946,75 +946,20 @@
+@@ -1004,75 +1004,20 @@
      "any",
      "base"
    ],
@@ -121,10 +121,10 @@ index 76259c8339..f31ddd728a 100644
      "freebsd.11",
      "freebsd-x64",
 diff --git a/pkg/Microsoft.NETCore.Platforms/runtime.json b/pkg/Microsoft.NETCore.Platforms/runtime.json
-index 4cac2a6be9..e53735b985 100644
+index b2f286ea24..e70f2da7e6 100644
 --- a/pkg/Microsoft.NETCore.Platforms/runtime.json
 +++ b/pkg/Microsoft.NETCore.Platforms/runtime.json
-@@ -480,48 +480,26 @@
+@@ -510,48 +510,26 @@
          "freebsd-x64"
        ]
      },
@@ -182,10 +182,10 @@ index 4cac2a6be9..e53735b985 100644
      },
      "gentoo": {
 diff --git a/pkg/Microsoft.NETCore.Platforms/runtimeGroups.props b/pkg/Microsoft.NETCore.Platforms/runtimeGroups.props
-index 5567506b33..ea0f89ee8d 100644
+index eeb8130b54..6c95b67819 100644
 --- a/pkg/Microsoft.NETCore.Platforms/runtimeGroups.props
 +++ b/pkg/Microsoft.NETCore.Platforms/runtimeGroups.props
-@@ -98,7 +98,7 @@
+@@ -99,7 +99,7 @@
      <RuntimeGroup Include="freebsd">
        <Parent>unix</Parent>
        <Architectures>x64</Architectures>
