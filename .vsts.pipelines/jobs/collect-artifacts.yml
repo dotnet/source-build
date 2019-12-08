@@ -22,12 +22,12 @@ jobs:
     - task: DownloadBuildArtifacts@0
       displayName: Download Fedora artifacts
       inputs:
-        artifactName: Tarball fedora29 Offline
+        artifactName: Tarball fedora30 Offline
         downloadPath: '$(Build.StagingDirectory)/fedora'
     - task: DownloadBuildArtifacts@0
       displayName: Download Ubuntu artifacts
       inputs:
-        artifactName: Tarball ubuntu1604 Offline
+        artifactName: Tarball ubuntu1804 Offline
         downloadPath: '$(Build.StagingDirectory)/ubuntu'
     - task: DownloadBuildArtifacts@0
       displayName: Download portable artifacts
