@@ -20,7 +20,7 @@ jobs:
         targetType: 'inline'
         workingDirectory: '$(Build.StagingDirectory)/centos'
         script: |
-          rm tarball*.tar.gz
+          rm */tarball*.tar.gz
 
     - task: DownloadBuildArtifacts@0
       displayName: Download Debian artifacts
@@ -33,7 +33,7 @@ jobs:
         targetType: 'inline'
         workingDirectory: '$(Build.StagingDirectory)/debian'
         script: |
-          rm tarball*.tar.gz
+          rm */tarball*.tar.gz
 
     - task: DownloadBuildArtifacts@0
       displayName: Download Fedora artifacts
@@ -46,7 +46,7 @@ jobs:
         targetType: 'inline'
         workingDirectory: '$(Build.StagingDirectory)/fedora'
         script: |
-          rm tarball*.tar.gz
+          rm */tarball*.tar.gz
 
     - task: DownloadBuildArtifacts@0
       displayName: Download Ubuntu artifacts
@@ -59,7 +59,7 @@ jobs:
         targetType: 'inline'
         workingDirectory: '$(Build.StagingDirectory)/ubuntu'
         script: |
-          rm tarball*.tar.gz
+          rm */tarball*.tar.gz
 
     - task: DownloadBuildArtifacts@0
       displayName: Download portable artifacts
@@ -72,7 +72,7 @@ jobs:
         targetType: 'inline'
         workingDirectory: '$(Build.StagingDirectory)/portable'
         script: |
-          rm tarball*.tar.gz
+          rm */tarball*.tar.gz
 
     - task: Bash@3
       inputs:
