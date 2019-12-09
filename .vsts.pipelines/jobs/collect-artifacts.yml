@@ -14,26 +14,65 @@ jobs:
       inputs:
         artifactName: Tarball centos71 Offline
         downloadPath: '$(Build.StagingDirectory)/centos'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)/centos'
+        script: |
+          rm tarball*.tar.gz
+
     - task: DownloadBuildArtifacts@0
       displayName: Download Debian artifacts
       inputs:
         artifactName: Tarball debian9 Offline
         downloadPath: '$(Build.StagingDirectory)/debian'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)/debian'
+        script: |
+          rm tarball*.tar.gz
+
     - task: DownloadBuildArtifacts@0
       displayName: Download Fedora artifacts
       inputs:
         artifactName: Tarball fedora30 Offline
         downloadPath: '$(Build.StagingDirectory)/fedora'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)/fedora'
+        script: |
+          rm tarball*.tar.gz
+
     - task: DownloadBuildArtifacts@0
       displayName: Download Ubuntu artifacts
       inputs:
         artifactName: Tarball ubuntu1804 Offline
         downloadPath: '$(Build.StagingDirectory)/ubuntu'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)/ubuntu'
+        script: |
+          rm tarball*.tar.gz
+
     - task: DownloadBuildArtifacts@0
       displayName: Download portable artifacts
       inputs:
         artifactName: Tarball centos71 Offline Portable
         downloadPath: '$(Build.StagingDirectory)/portable'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        workingDirectory: '$(Build.StagingDirectory)/portable'
+        script: |
+          rm tarball*.tar.gz
 
     - task: Bash@3
       inputs:
@@ -58,6 +97,7 @@ jobs:
           mv ../Private.SourceBuilt.Artifacts.*.tar.gz .
       displayName: Collect RID-specific packages into one tarball
       condition: succeeded()
+
     - task: PowerShell@2
       inputs:
         targetType: 'filePath'
@@ -66,6 +106,7 @@ jobs:
         workingDirectory: '$(Build.SourcesDirectory)'
       displayName: Publish collected artifacts
       condition: succeeded()
+
     - task: PublishBuildArtifacts@1
       displayName: Uploaded collected artifacts
       condition: always()
@@ -74,6 +115,7 @@ jobs:
         PathToPublish: $(Build.SourcesDirectory)/artifacts/tarball/
         ArtifactName: Collected artifacts
         ArtifactType: Container
+
     - task: PublishBuildArtifacts@1
       displayName: Uploaded asset manifests
       condition: always()
@@ -82,6 +124,7 @@ jobs:
         PathToPublish: $(Build.SourcesDirectory)/artifacts/asset-manifests/
         ArtifactName: AssetManifests
         ArtifactType: Container
+
     - task: PublishBuildArtifacts@1
       displayName: Upload publish logs
       condition: always()
