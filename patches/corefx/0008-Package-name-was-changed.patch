@@ -1,0 +1,25 @@
+From 818987414d7edaf5c57e0d19a8d9ff24c1c268b9 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 9 Dec 2019 07:59:20 -0600
+Subject: [PATCH 8/8] Package name was changed
+
+---
+ eng/Tools.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 025f8ab9af..d4988c8e6d 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -23,7 +23,7 @@
+ 
+     <!-- SourceLink -->
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+-    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
++    <PackageReference Include="Microsoft.SourceLink.AzureDevOpsServer.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+   <!-- excluded from offline portion of source build -->
+-- 
+2.18.0
+
