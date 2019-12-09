@@ -1,9 +1,9 @@
-From 35590a2d0c6f8eb7f5d3712c7002654beb3cc5c6 Mon Sep 17 00:00:00 2001
+From 56becb4eee48cdbcfbf5606d60f9a1a481f88647 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 14 Oct 2019 14:23:48 -0500
-Subject: [PATCH] Source-build improvements. - Always restore, even in
- source-build.  This is required so we get NETStandard.Library netstandard2.0
- reference bits for inclusion in the NETStandard.Library we are building.   -
+Subject: [PATCH 1/2] Source-build improvements. - Always restore, even in
+ source-build. This is required so we get NETStandard.Library netstandard2.0
+ reference bits for inclusion in the NETStandard.Library we are building. -
  Also make this error out in source-build if it fails like it does in the
  standalone build. - Sourcelink is now supported in source-build.
 
@@ -27,7 +27,7 @@ index 279dfa1..bd73211 100644
      <BuildDependsOn Condition="'$(BuildTests)'=='true' and '$(DotNetBuildFromSource)'!='true'">$(BuildDependsOn);Test</BuildDependsOn>
      <BuildDependsOn Condition="'$(BuildPackages)'=='true'">$(BuildDependsOn);Pack</BuildDependsOn>
 diff --git a/eng/Tools.props b/eng/Tools.props
-index afad33d..1daacc0 100644
+index 7086c17..9425706 100644
 --- a/eng/Tools.props
 +++ b/eng/Tools.props
 @@ -16,6 +16,10 @@
@@ -53,7 +53,7 @@ index afad33d..1daacc0 100644
      <PackageReference Include="$(NetStandardLibraryPackage)" Version="$(NetStandardLibraryPackageVersion)" ExcludeAssets="All" />
  
 diff --git a/src/netstandard/pkg/NETStandard.Library.pkgproj b/src/netstandard/pkg/NETStandard.Library.pkgproj
-index 9de550b..434708c 100644
+index 2814a62..ba857ec 100644
 --- a/src/netstandard/pkg/NETStandard.Library.pkgproj
 +++ b/src/netstandard/pkg/NETStandard.Library.pkgproj
 @@ -42,7 +42,7 @@
