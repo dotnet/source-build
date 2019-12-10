@@ -82,7 +82,7 @@ jobs:
     condition: always()
     continueOnError: true
   
-  - template: ../steps/cleanup-unneeded-files.yml
+  - template: ../steps/run-bootstrap.yml
 
   - script: |
       set -ex 
