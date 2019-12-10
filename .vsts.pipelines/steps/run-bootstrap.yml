@@ -7,7 +7,8 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
-      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1'
+      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
+      rm -rf "$(System.ArtifactsDirectory)/boostrap_root/Tarball centos71 Offline"'
   displayName: Unpack Tarball
   condition: always()
   continueOnError: true
@@ -21,7 +22,7 @@ steps:
   condition: always()
   continueOnError: true
 
-- script: rm -rf "$(System.ArtifactsDirectory)/boostrap_root/Tarball centos71 Offline"
+- script: df -h
   displayName: Clean all except tarball in stage0 
   condition: always()
   continueOnError: true
