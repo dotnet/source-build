@@ -210,6 +210,8 @@
     <!-- property used by Arcade to determine what version of SourceLink to use -->
     <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
     <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" />
+    <!-- if the built version is available overwrite it instead -->
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
   </ItemGroup>
 
 </Project>
