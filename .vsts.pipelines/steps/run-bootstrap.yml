@@ -21,7 +21,7 @@ steps:
   condition: always()
   continueOnError: true
 
-- script: df -h 
+- script: rm -rf "$(System.ArtifactsDirectory)/boostrap_root/Tarball centos71 Offline"
   displayName: Clean all except tarball in stage0 
   condition: always()
   continueOnError: true
