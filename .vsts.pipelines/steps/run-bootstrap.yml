@@ -1,0 +1,50 @@
+# Delete some files from the default image since we're tight on disk space.
+# List is from https://github.com/microsoft/azure-pipelines-image-generation/pull/1231#issuecomment-537174621
+
+steps:
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      mkdir -p /bst/sb/tarball
+      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1'
+  displayName: Unpack Tarball
+  condition: always()
+  continueOnError: true
+
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
+  displayName: Build stage0
+  condition: always()
+  continueOnError: true
+
+- script: df -h 
+  displayName: Clean all except tarball in stage0 
+  condition: always()
+  continueOnError: true
+
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
+  displayName: Build stage0 source-build-reference-packages
+  condition: always()
+  continueOnError: true
+
+- script: df -h
+  displayName: Clean all except tarball in source-build-reference-packages
+  condition: always()
+  continueOnError: true
+
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 3'
+  displayName: Build final SDK
+  condition: always()
+  continueOnError: true
