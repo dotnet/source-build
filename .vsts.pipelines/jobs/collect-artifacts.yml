@@ -102,7 +102,7 @@ jobs:
       inputs:
         targetType: 'filePath'
         filePath: $(Build.SourcesDirectory)\publish.ps1
-        arguments: /p:OfficialBuildId=$(Build.BuildNumber) /p:AzureAccountName=$(publish.blobStorage.account) /p:ContainerName=$(publish.blobStorage.container) "/p:AzureAccessToken=$(publish.blobStorage.accessToken)" "/p:ManifestName=$(BUILD.REPOSITORY.NAME)" "/p:ManifestBuildId=$(BUILD.BUILDID)" "/p:ManifestBranch=$(BUILD.SOURCEBRANCHNAME)" /p:ManifestCommit=$(Build.SourceVersion)
+        arguments: /p:OfficialBuildId=$(Build.BuildNumber) /p:AzureAccountName=$(publish.blobStorage.account) /p:ContainerName=$(publish.blobStorage.container) "/p:AzureAccessToken=$(publish.blobStorage.accessToken)" "/p:ManifestName=$(BUILD.REPOSITORY.NAME)" "/p:ManifestBuildId=$(BUILD.BUILDID)" "/p:ManifestBranch=$(BUILD.SOURCEBRANCHNAME)" /p:ManifestCommit=$(Build.SourceVersion) /p:PublishingToBlobStorage=true
         workingDirectory: '$(Build.SourcesDirectory)'
       displayName: Publish collected artifacts
       condition: succeeded()
