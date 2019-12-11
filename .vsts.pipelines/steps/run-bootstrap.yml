@@ -8,7 +8,9 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
       tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
-      rm -rf "$(System.ArtifactsDirectory)/boostrap_root/Tarball centos71 Offline"'
+      ls /bst
+      rm -rf "/bst/Tarball centos71 Offline"
+      ls /bst'
   displayName: Unpack Tarball
   condition: always()
   continueOnError: true
@@ -18,12 +20,12 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
-  displayName: Build stage0
+  displayName: Build stage1
   condition: always()
   continueOnError: true
 
 - script: df -h
-  displayName: Clean all except tarball in stage0 
+  displayName: Clean all except tarball in stage1
   condition: always()
   continueOnError: true
 
@@ -32,7 +34,7 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
-  displayName: Build stage0 source-build-reference-packages
+  displayName: Build stage1 source-build-reference-packages
   condition: always()
   continueOnError: true
 
