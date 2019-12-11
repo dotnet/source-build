@@ -85,16 +85,14 @@ jobs:
   - template: ../steps/run-bootstrap.yml
 
   - script: |
-      set -ex 
-      df -h 
-      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      mkdir -p /bst/sb/tarball
-      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
-      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages'
-      du -h $(rootDirectory) | sort -h | tail -n 50
-    displayName: Unpack the tarball and Run Bootstrapping
+        set -ex 
+        df -h 
+        $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+        pushd /bst/bootstrap_dir/final-sdk
+        ./smoke-test.sh --prodConBlobFeedUrl='''
+    displayName: Smoke-test final SDK
     condition: always()
-    continueOnError: false
+    continueOnError: true
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
   - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/tb'
