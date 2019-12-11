@@ -56,7 +56,7 @@ steps:
       pushd /bst/bootstrap_dir/reference-packages
       echo "Removing everything in reference-packages except artifacts directory"
       shopt -s extglob
-      rm -rvf !("Tools"|"bin")
+      rm -rvf !("artifacts")
       shopt -u extglob
       popd
       ls -lrth /bst/bootstrap_dir/reference-packages'
