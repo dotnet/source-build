@@ -56,10 +56,6 @@ jobs:
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Clean sb directory and copy source from cloned directory
 
-  - template: ../steps/init-submodules.yml
-    parameters:
-      commandPrefix: $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName)
-
   # Build source-build.
   - script: |
       set -ex
@@ -72,7 +68,8 @@ jobs:
         /p:PortableBuild=$(sb.portable) \
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
+        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
+        /p:AzDoPat=$(System.AccessToken)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 150
