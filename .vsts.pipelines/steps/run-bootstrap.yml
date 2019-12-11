@@ -17,7 +17,7 @@ steps:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      /bst/sb/tarball/tool-bootstrapping/bootstrap.h /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
   displayName: Build stage1
   condition: always()
   continueOnError: true
@@ -40,7 +40,7 @@ steps:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      /bst/sb/tarball/tool-bootstrapping/bootstrap.h /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
   displayName: Build stage1 source-build-reference-packages
   condition: always()
   continueOnError: true
@@ -62,7 +62,7 @@ steps:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      /bst/sb/tarball/tool-bootstrapping/bootstrap.h /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 3'
+      /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 3'
   displayName: Build final SDK
   condition: always()
   continueOnError: true
