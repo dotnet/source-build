@@ -8,9 +8,7 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
       tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
-      ls /bst
-      rm -rf "/bst/Tarball centos71 Offline"
-      ls /bst'
+      rm -rf "/bst/Tarball centos71 Offline"'
   displayName: Unpack Tarball
   condition: always()
   continueOnError: true
@@ -24,7 +22,18 @@ steps:
   condition: always()
   continueOnError: true
 
-- script: df -h
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      ls -lrth /bst/bootstrap_dir/stage1-sdk
+      pushd /bst/bootstrap_dir/stage1-sdk
+      echo "Removing everything in stage-1sdk except Tools and bin directory"
+      shopt -s extglob
+      rm -rvf !("Tools"|"bin")
+      shopt -u extglob
+      popd
+      ls -lrth /bst/bootstrap_dir/stage1-sdk'
   displayName: Clean all except tarball in stage1
   condition: always()
   continueOnError: true
@@ -38,7 +47,19 @@ steps:
   condition: always()
   continueOnError: true
 
-- script: df -h
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      rm -rf /bst/source-build-reference-packages/*
+      ls -lrth /bst/bootstrap_dir/reference-packages
+      pushd /bst/bootstrap_dir/reference-packages
+      echo "Removing everything in reference-packages except artifacts directory"
+      shopt -s extglob
+      rm -rvf !("Tools"|"bin")
+      shopt -u extglob
+      popd
+      ls -lrth /bst/bootstrap_dir/reference-packages'
   displayName: Clean all except tarball in source-build-reference-packages
   condition: always()
   continueOnError: true
