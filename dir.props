@@ -208,10 +208,10 @@
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeOsxX64PackageVersion)" DoNotOverwrite="true" />
 
     <!-- property used by Arcade to determine what version of SourceLink to use -->
-    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' != 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
-    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
     <!-- if the built version is available overwrite it instead -->
-    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" DoNotOverwrite="true" />
   </ItemGroup>
 
 </Project>
