@@ -89,7 +89,7 @@ jobs:
         df -h 
         $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
         pushd /bst/bootstrap_dir/final-sdk
-        ./smoke-test.sh --prodConBlobFeedUrl='''
+        ./smoke-test.sh --prodConBlobFeedUrl '''
     displayName: Smoke-test final SDK
     condition: always()
     continueOnError: true
