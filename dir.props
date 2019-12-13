@@ -211,9 +211,6 @@
     <!-- if MicrosoftSourceLinkCommonPackageVersion is non-empty, then we've already built SourceLink, regardless of whether
          this is the production or offline build, so we should use that version.  -->
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftSourceLinkVersion" Version="%24(MicrosoftSourceLinkCommonPackageVersion)" />
-    <!-- otherwise, online builds will use their default SourceLink version.  -->
-    <!-- offline builds need to use the bootstrap version, which comes from the previously-source-built tarball and is set by support/tarball/build.sh -->
-    <ExtraPackageVersionPropsPackageInfo Condition="'$(OfflineBuild)' == 'true'" Include="MicrosoftSourceLinkVersion" Version="$(SOURCE_LINK_BOOTSTRAP_VERSION)" DoNotOverwrite="true" />
   </ItemGroup>
 
 </Project>
