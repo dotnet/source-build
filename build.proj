@@ -245,6 +245,10 @@
                    Overwrite="true" />
   </Target>
 
+  <Target Name="">
+    <MSBuild Projects="eng/publishPackages/collectArtifacts.proj" Targets="CopyArtifactsToOutputFolder" Properties="ArtifactOutput=$(ArtifactOutput)" />
+  </Target>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
 </Project>
