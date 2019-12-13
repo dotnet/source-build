@@ -28,5 +28,9 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
+  </ItemGroup>
+
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 </Project>

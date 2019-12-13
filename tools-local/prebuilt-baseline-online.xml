@@ -26,7 +26,7 @@
     <Dir>src/package-source-build/</Dir>
     <Dir>bin/src/roslyn.ff930dec4565e2bc424ad3bf3e22ecb20542c87d/</Dir>
     <Dir>bin/src/sdk.fc412c7e032c25a17da0e8ca4556b34897313d7c/</Dir>
-    <Dir>bin/src/sourcelink.855afb5af9ea79e63dd9c051a7cfe0941bbb5ced/</Dir>
+    <Dir>bin/src/sourcelink.f175b06862f889474b689a57527e489101c774cc/</Dir>
     <Dir>bin/src/standard.a5b5f2e1e369972c8ff1e2183979fab6099f52ef/</Dir>
     <Dir>bin/src/templating.53a17fce7ce81aa68ddaa7b04f371dc6391d3497/</Dir>
     <Dir>bin/src/toolset.575b1c9f9636e57881fc41817d3f049dff6ff470/</Dir>
@@ -63,6 +63,7 @@
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.1.548" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.7.179" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Git" Version="1.0.0-beta2-18618-05" />
+    <Usage Id="Microsoft.Build.Tasks.Git" Version="1.0.0-beta2-19367-01" />
     <Usage Id="Microsoft.Build.Traversal" Version="2.0.2" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.548" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.1012" IsDirectDependency="true" />
@@ -70,8 +71,6 @@
     <Usage Id="Microsoft.CodeAnalysis.Analyzers" Version="2.6.1" />
     <Usage Id="Microsoft.CodeAnalysis.Common" Version="2.9.0" />
     <Usage Id="Microsoft.CodeAnalysis.CSharp" Version="2.9.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.3.1-beta3-19454-05" IsDirectDependency="true" />
-    <Usage Id="Microsoft.CodeAnalysis.VisualBasic.CodeStyle" Version="3.3.1-beta3-19454-05" IsDirectDependency="true" />
     <Usage Id="Microsoft.CSharp" Version="4.0.1" />
     <Usage Id="Microsoft.CSharp" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DiaSymReader.Pdb2Pdb" Version="1.1.0-beta1-62506-02" IsDirectDependency="true" IsAutoReferenced="true" />
@@ -105,13 +104,9 @@
     <Usage Id="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.0" />
     <Usage Id="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.0-rtm.19565.1" />
     <Usage Id="Microsoft.Extensions.DependencyModel" Version="2.1.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.Net.Compilers.Toolset" Version="3.3.0-beta2-19367-02" IsDirectDependency="true" IsAutoReferenced="true" />
-    <Usage Id="Microsoft.Net.Compilers.Toolset" Version="3.3.1-beta3-final" />
-    <Usage Id="Microsoft.Net.Compilers.Toolset" Version="3.4.0-beta4-19562-05" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETCore.App" Version="2.0.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETCore.App" Version="2.1.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETCore.App.Ref" Version="3.0.0" />
-    <Usage Id="Microsoft.NETCore.Compilers" Version="3.4.0-beta4-19562-05" IsDirectDependency="true" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="2.0.0" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="2.1.0" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="3.1.0-preview3.19553.2" />
@@ -134,10 +129,14 @@
     <Usage Id="Microsoft.NETCore.Targets" Version="1.1.0" />
     <Usage Id="Microsoft.NETCore.Targets" Version="2.1.0" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net461" Version="1.0.0-preview.2" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-preview.2" />
     <Usage Id="Microsoft.SourceLink.Common" Version="1.0.0-beta2-18618-05" />
+    <Usage Id="Microsoft.SourceLink.Common" Version="1.0.0-beta2-19367-01" />
     <Usage Id="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta2-18618-05" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta2-19367-01" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.TargetingPack.NETFramework.v4.7.2" Version="1.0.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.TargetingPack.Private.WinRT" Version="1.0.5" />
     <Usage Id="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30" />
@@ -224,10 +223,10 @@
     <Usage Id="System.Collections.Immutable" Version="1.5.0" />
     <Usage Id="System.Collections.NonGeneric" Version="4.0.1" />
     <Usage Id="System.Collections.NonGeneric" Version="4.3.0" />
-    <Usage Id="System.Collections.Specialized" Version="4.3.0" />
+    <Usage Id="System.Collections.Specialized" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.ComponentModel" Version="4.3.0" />
     <Usage Id="System.ComponentModel.Primitives" Version="4.3.0" />
-    <Usage Id="System.ComponentModel.TypeConverter" Version="4.3.0" />
+    <Usage Id="System.ComponentModel.TypeConverter" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.Composition" Version="1.0.31" />
     <Usage Id="System.Composition.AttributedModel" Version="1.0.31" />
     <Usage Id="System.Composition.Convention" Version="1.0.31" />
@@ -246,14 +245,14 @@
     <Usage Id="System.Diagnostics.Process" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Process" Version="4.3.0" />
     <Usage Id="System.Diagnostics.StackTrace" Version="4.3.0" IsDirectDependency="true" />
-    <Usage Id="System.Diagnostics.TextWriterTraceListener" Version="4.0.0" />
+    <Usage Id="System.Diagnostics.TextWriterTraceListener" Version="4.0.0" IsDirectDependency="true" />
     <Usage Id="System.Diagnostics.Tools" Version="4.0.1" />
     <Usage Id="System.Diagnostics.Tools" Version="4.3.0" />
     <Usage Id="System.Diagnostics.TraceSource" Version="4.0.0" />
     <Usage Id="System.Diagnostics.TraceSource" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.3.0" />
-    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" />
+    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Dynamic.Runtime" Version="4.3.0" />
     <Usage Id="System.Globalization" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Globalization" Version="4.3.0" />
@@ -275,7 +274,7 @@
     <Usage Id="System.IO.Pipes.AccessControl" Version="4.3.0" />
     <Usage Id="System.Linq" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Linq" Version="4.3.0" />
-    <Usage Id="System.Linq.Expressions" Version="4.1.0" />
+    <Usage Id="System.Linq.Expressions" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Linq.Expressions" Version="4.3.0" />
     <Usage Id="System.Linq.Parallel" Version="4.0.1" />
     <Usage Id="System.Linq.Queryable" Version="4.3.0" />
@@ -296,7 +295,7 @@
     <Usage Id="System.Net.WebHeaderCollection" Version="4.3.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.4.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.5.0" />
-    <Usage Id="System.ObjectModel" Version="4.0.12" />
+    <Usage Id="System.ObjectModel" Version="4.0.12" IsDirectDependency="true" />
     <Usage Id="System.ObjectModel" Version="4.3.0" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.1.1" />
     <Usage Id="System.Reflection" Version="4.1.0" IsDirectDependency="true" />
@@ -340,7 +339,7 @@
     <Usage Id="System.Runtime.Numerics" Version="4.0.1" />
     <Usage Id="System.Runtime.Numerics" Version="4.3.0" />
     <Usage Id="System.Runtime.Serialization.Formatters" Version="4.3.0" />
-    <Usage Id="System.Runtime.Serialization.Primitives" Version="4.1.1" />
+    <Usage Id="System.Runtime.Serialization.Primitives" Version="4.1.1" IsDirectDependency="true" />
     <Usage Id="System.Runtime.Serialization.Primitives" Version="4.3.0" />
     <Usage Id="System.Runtime.Serialization.Xml" Version="4.1.1" />
     <Usage Id="System.Security.AccessControl" Version="4.3.0" />
@@ -405,7 +404,7 @@
     <Usage Id="System.Xml.XDocument" Version="4.0.11" />
     <Usage Id="System.Xml.XDocument" Version="4.3.0" />
     <Usage Id="System.Xml.XmlDocument" Version="4.0.1" />
-    <Usage Id="System.Xml.XmlDocument" Version="4.3.0" />
+    <Usage Id="System.Xml.XmlDocument" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.Xml.XmlSerializer" Version="4.0.11" />
     <Usage Id="System.Xml.XPath" Version="4.3.0" />
     <Usage Id="System.Xml.XPath.XDocument" Version="4.3.0" />

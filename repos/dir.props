@@ -104,6 +104,7 @@
     <EnvironmentVariables Include="RepositoryType=Git" />
     <EnvironmentVariables Include="DeterministicSourcePaths=true" Condition="'$(DeterministicBuildOptOut)' != 'true'" />
     <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
+    <EnvironmentVariables Include="SourceRoot=$(ProjectDirectory)" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(EnableExtraDebugging)' == 'true'">
