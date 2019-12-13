@@ -1,0 +1,21 @@
+<Project>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
+  <ItemGroup>
+    <BuildArtifacts Include="$(BaseOutputPath)*/*/*.tar.gz" />
+    <BuildArtifacts Include="$(BaseOutputPath)*/*/runtime/*.tar.gz" />
+    <BuildArtifacts Include="$(BaseIntermediatePath)*/*/blobs/aspnetcore/Runtime/*/*.tar.gz" />
+    <BuildArtifacts Include="$(BaseIntermediatePath)$(Platform)/$(Configuration)/*.props" />
+    <BuildArtifacts Include="$(SourceBuiltBlobFeedDir)packages/PackageVersions.props" />
+    <BuildArtifacts Include="$(BaseOutputPath)git-info/**/*" />
+    <BuildArtifacts Include="$(BaseIntermediatePath)*/*/build-info/**/*" />
+  </ItemGroup>
+
+  <Target Name="CopyArtifactsToOutputFolder">
+    <Error Condition="'$(ArtifactOutput)' == ''" Text="ArtifactOutput property must be set to the desired output directory" />
+
+    <MakeDir Directories="$(ArtifactOutput)" />
+
+    <Copy SourceFiles="@(BuildArtifacts)" DestinationFolder="$(ArtifactOutput)/%(RecursiveDir)" />
+  </Target>
+</Project>

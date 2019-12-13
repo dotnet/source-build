@@ -77,15 +77,10 @@ jobs:
   - script: |
       set -ex
       df -h
-      $(docker.run) $(docker.drop.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /drop/artifacts/source-build
-        cp ./bin/*/*/*.tar.gz /drop/artifacts/source-build/
-        cp ./bin/*/*/runtime/*.tar.gz /drop/artifacts/source-build/
-        cp ./bin/obj/*/*/blobs/aspnetcore/Runtime/*/*.tar.gz /drop/artifacts/source-build/
-        cp ./bin/obj/*/*/blob-feed/packages/PackageVersions.props /drop/artifacts/source-build/
-        cp ./bin/obj/x64/Release/*.props /drop/artifacts/source-build/
-        cp -r ./bin/git-info /drop/artifacts/source-build/
-        cp -r ./bin/obj/*/*/build-info /drop/artifacts/source-build/"
+      $(docker.run) $(docker.drop.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+        --collect-artifacts \
+        /p:ArtifactOutput=/drop/artifacts/source-build/ \
+        /bl
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build artifacts
     condition: always()
@@ -218,15 +213,10 @@ jobs:
   - script: |
       set -ex
       df -h
-      $(docker.run) $(docker.drop.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        mkdir -p /drop/artifacts/tarball
-        cp ./tarball*/bin/*/*/*.tar.gz /drop/artifacts/tarball/
-        cp ./tarball*/bin/*/*/runtime/*.tar.gz /drop/artifacts/tarball/
-        cp ./tarball*/bin/obj/*/*/blobs/aspnetcore/Runtime/*/*.tar.gz /drop/artifacts/tarball/
-        cp ./tarball*/bin/obj/*/*/blob-feed/packages/PackageVersions.props /drop/artifacts/tarball/
-        cp ./tarball*/bin/obj/x64/Release/*.props /drop/artifacts/tarball/
-        cp -r ./tarball*/bin/git-info /drop/artifacts/tarball/
-        cp -r ./tarball*/bin/obj/*/*/build-info /drop/artifacts/tarball/"
+      $(docker.run) $(docker.drop.map) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/build.sh" \
+        --collect-artifacts \
+        /p:ArtifactOutput=/drop/artifacts/tarball/ \
+        /bl
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball artifacts
     condition: eq(variables['sb.tarball'], true)

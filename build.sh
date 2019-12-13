@@ -53,6 +53,9 @@ for arg do
     (--generate-prebuilt-data) set -- "$@" "/t:GeneratePrebuiltBurndownData"
             alternateTarget=true
             ;;
+    (--collect-artifacts) set -- "$@" "/t:CopyArtifactsToOutputFolder"
+            alternateTarget=true
+            ;;
        (*) set -- "$@" "$arg" ;;
   esac
 done
