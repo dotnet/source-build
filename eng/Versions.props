@@ -2,13 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Repo Version Information -->
   <PropertyGroup>
-    <VersionPrefix>0.1.0</VersionPrefix>
-    <PreReleaseVersionLabel>alpha.1</PreReleaseVersionLabel>
-    <VersionSuffix>3.1.100-$(PreReleaseVersionLabel)</VersionSuffix>
-    <VersionSuffix Condition="'$(BUILD_BUILDNUMBER)' != ''">$(VersionSuffix).$(BUILD_BUILDNUMBER)</VersionSuffix>
-    <VersionSuffix Condition="'$(BUILD_SOURCEVERSION)' != ''">$(VersionSuffix)+$(BUILD_SOURCEVERSION)</VersionSuffix>
-    <VersionSuffix Condition="'$(BUILD_SOURCEVERSION)' == '' and '$(GitCommitHash)' != ''">$(VersionSuffix)+$(GitCommitHash)</VersionSuffix>
-    <SourceBuildOutputVersion>$(VersionPrefix)-$(VersionSuffix)</SourceBuildOutputVersion>
+    <MajorVersion>3</MajorVersion>
+    <MinorVersion>1</MinorVersion>
+    <ExtraSuffix Condition="'$(BUILD_BUILDNUMBER)' != ''">$(BUILD_BUILDNUMBER)</ExtraSuffix>
+    <ExtraSuffix Condition="'$(BUILD_SOURCEVERSION)' != ''">$(VersionSuffix)+$(BUILD_SOURCEVERSION)</ExtraSuffix>
+    <ExtraSuffix Condition="'$(BUILD_SOURCEVERSION)' == '' and '$(GitCommitHash)' != ''">$(VersionSuffix)+$(GitCommitHash)</ExtraSuffix>
   </PropertyGroup>
   <!-- Production Dependencies -->
   <PropertyGroup>
