@@ -50,6 +50,7 @@ jobs:
   - template: ../steps/docker-cleanup-linux.yml
   - template: ../steps/calculate-config-flags.yml
 
+  # Create working directory and copy source into it.
   - script: |
       set -ex
       df -h
@@ -76,6 +77,7 @@ jobs:
       df -h
       $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       git clone https://github.com/dotnet/source-build-reference-packages'
+      du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: clone source-build-reference-packages
     condition: always()
     continueOnError: true
@@ -85,13 +87,9 @@ jobs:
   - script: |
         set -ex 
         df -h 
-        $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+        $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c "
         pushd /bst/bootstrap_dir/final-sdk
-        ./build.sh \
-        --run-smoke-test \
-        /p:Configuration=$(sb.configuration) \
-        /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-        popd'
+        ./smoke-test.sh --prodConBlobFeedUrl ''"
     displayName: Smoke-test final SDK
     condition: always()
     continueOnError: true
