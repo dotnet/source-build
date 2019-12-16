@@ -5,11 +5,7 @@ parameters:
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
-  reportPrebuiltLeaks: false
   dependsOn: ''
-  generatePrebuiltBurndown: false
-  runUnitTests: false
-  dockerNetwork: ''
 
 jobs:
 - job: ${{ parameters.job }}
@@ -30,14 +26,10 @@ jobs:
     docker.run: docker run --rm
     docker.src.map: -v $(rootDirectory)/sb/source-build:/src:z
     docker.src.work: -w /src
-    docker.tb.map: -v $(rootDirectory)/sb/tarball:/tb:z
-    docker.tb.work: -w /tb
     docker.bst.map: -v $(System.ArtifactsDirectory)/boostrap_root:/bst:z
     docker.bst.work: -w /bst
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
-    reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
-    generatePrebuiltBurndown: ${{ parameters.generatePrebuiltBurndown }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/bst/staging
     tarballName: tarball_$(Build.BuildId)
@@ -46,9 +38,7 @@ jobs:
     type: Production
 
   steps:
-  # - template: ../steps/cleanup-unneeded-files.yml
   - template: ../steps/docker-cleanup-linux.yml
-  - template: ../steps/calculate-config-flags.yml
 
   # Create working directory and copy source into it.
   - script: |
@@ -95,7 +85,7 @@ jobs:
     continueOnError: true
 
   # Clean up (very large) working directory. root owner makes it difficult for others to remove.
-  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/tb'
+  - script: $(docker.run) $(docker.root.map) $(imageName) bash -c 'rm -rf /root/bst'
     displayName: Clean tb directory
     condition: always()
     continueOnError: true

@@ -1,6 +1,7 @@
 # Delete some files from the default image since we're tight on disk space.
 # List is from https://github.com/microsoft/azure-pipelines-image-generation/pull/1231#issuecomment-537174621
 
+# Extract the tarball fetched from the previous Offline stage 
 steps:
 - script: |
       set -ex 
@@ -13,6 +14,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Build the stage1 of bootstrapping
 - script: |
       set -ex 
       df -h 
@@ -22,6 +24,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Copy all logs from stage-1 before removing any files. The removal needs to take place as we are contrained on space atm
 - script: |
     set -ex
     df -h
@@ -59,6 +62,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Remove stage-1 produce other than what's needed in the subsequent stages
 - script: |
       set -ex 
       df -h 
@@ -73,6 +77,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Run step-2 of bootstrapping a.k.a. build reference-packages
 - script: |
       set -ex 
       df -h 
@@ -98,6 +103,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Clean reference-packages produce other than what's needed for the last step
 - script: |
       set -ex 
       df -h 
@@ -111,6 +117,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Run last step(3) of bootstapping
 - script: |
       set -ex 
       df -h 
@@ -120,6 +127,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Copy logs of final stage
 - script: |
     set -ex
     df -h
@@ -140,6 +148,7 @@ steps:
   condition: always()
   continueOnError: true
 
+# Copy log for the overall bootstrap status
 - script: |
     set -ex
     df -h
