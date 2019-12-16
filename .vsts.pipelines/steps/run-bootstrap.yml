@@ -42,6 +42,23 @@ steps:
   condition: always()
   continueOnError: true
 
+# Copy stage-1 source-built artifacts and sdk tarball to drop directory.
+- script: |
+    set -ex
+    df -h
+    $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
+      mkdir -p /drop/tarball/stage1
+      pushd /bst/bootstrap_dir/stage1-sdk
+      find . \( \
+        -iname 'dotnet-sdk*.tar.gz' -o \
+        -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
+        -exec cp {} /drop/tarball/stage1 \;
+      popd"
+    du -h $(rootDirectory) | sort -h | tail -n 50
+  displayName: Copy source-built artifacts tarball
+  condition: always()
+  continueOnError: true
+
 - script: |
       set -ex 
       df -h 
@@ -62,6 +79,22 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
   displayName: Build stage1 source-build-reference-packages
+  condition: always()
+  continueOnError: true
+
+# Copy ref-packages tarball to drop directory.
+- script: |
+    set -ex
+    df -h
+    $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
+      mkdir -p /drop/tarball/reference-packages
+      pushd /bst/bootstrap_dir/reference-packages
+      find . \( \
+        -iname 'Private.SourceBuild.ReferencePackages.bootstrap.tar.gz' \) \
+        -exec cp {} /drop/tarball/reference-packages \;
+      popd"
+    du -h $(rootDirectory) | sort -h | tail -n 50
+  displayName: Copy ref-packages tarball 
   condition: always()
   continueOnError: true
 
@@ -107,6 +140,38 @@ steps:
   condition: always()
   continueOnError: true
 
+- script: |
+    set -ex
+    df -h
+    $(docker.run) $(docker.logs.map) $(docker.bst.map) $(docker.bst.work) $(imageName) /bin/bash -c "
+      mkdir -p /logs/bootstrap
+      pushd /bst/bootstrap_dir
+      find . \( \    
+        -iname 'status.log' \) \
+        -exec cp {} --parents /logs/bootstrap \;
+      popd"
+    du -h $(rootDirectory) | sort -h | tail -n 50
+  displayName: Copy bootstrap status log
+  condition: always()
+  continueOnError: true
+
+# Copy final stage source-built artifacts and sdk tarball to drop directory.
+- script: |
+    set -ex
+    df -h
+    $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
+      mkdir -p /drop/tarball/final
+      pushd /bst/bootstrap_dir/final-sdk
+      find ./bin \( \
+        -iname 'dotnet-sdk*.tar.gz' -o \
+        -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
+        -exec cp {} /drop/tarball/final \;"
+    du -h $(rootDirectory) | sort -h | tail -n 50
+  displayName: Copy source-built artifacts tarball
+  condition: always()
+  continueOnError: true
+
+
 # Copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files
 # have correct ownership so VSTS can clean them up later.
 - task: CopyFiles@2
@@ -117,7 +182,7 @@ steps:
     targetFolder: $(Build.ArtifactStagingDirectory)
 
 
-# Publish artifacts.
+# Publish log artifacts
 - task: PublishBuildArtifacts@1
   displayName: Publish Logs artifact
   condition: always()
@@ -125,4 +190,14 @@ steps:
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
     ArtifactName: Logs $(artifactName)
+    ArtifactType: Container
+
+# Publish tarball artifacts
+- task: PublishBuildArtifacts@1
+  displayName: Publish Tarball artifact
+  condition: always()
+  continueOnError: true
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
+    ArtifactName: Tarball Artifacts $(artifactName)
     ArtifactType: Container
