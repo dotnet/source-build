@@ -45,6 +45,21 @@ steps:
   condition: always()
   continueOnError: true
 
+# Remove stage-1 produce other than what's needed in the subsequent stages
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      pushd /bst/bootstrap_dir/stage1-sdk
+      echo "Removing everything in stage-1sdk except Tools and bin directory"
+      shopt -s extglob
+      rm -rvf !("Tools"|"bin")
+      shopt -u extglob
+      popd'
+  displayName: Clean all except tarball in stage1
+  condition: always()
+  continueOnError: true
+
 # Copy stage-1 source-built artifacts and sdk tarball to drop directory.
 - script: |
     set -ex
@@ -59,21 +74,6 @@ steps:
       popd"
     du -h $(rootDirectory) | sort -h | tail -n 50
   displayName: Copy source-built artifacts tarball
-  condition: always()
-  continueOnError: true
-
-# Remove stage-1 produce other than what's needed in the subsequent stages
-- script: |
-      set -ex 
-      df -h 
-      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      pushd /bst/bootstrap_dir/stage1-sdk
-      echo "Removing everything in stage-1sdk except Tools and bin directory"
-      shopt -s extglob
-      rm -rvf !("Tools"|"bin")
-      shopt -u extglob
-      popd'
-  displayName: Clean all except tarball in stage1
   condition: always()
   continueOnError: true
 
@@ -164,7 +164,7 @@ steps:
   condition: always()
   continueOnError: true
 
-# Copy final stage source-built artifacts and sdk tarball to drop directory.
+# Copy final-stage tarball artifactss and sdk tarball to drop directory.
 - script: |
     set -ex
     df -h
@@ -176,7 +176,7 @@ steps:
         -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
         -exec cp {} /drop/tarball/final \;"
     du -h $(rootDirectory) | sort -h | tail -n 50
-  displayName: Copy source-built artifacts tarball
+  displayName: Copy final-stage tarball artifacts
   condition: always()
   continueOnError: true
 
