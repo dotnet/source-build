@@ -75,7 +75,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                     packageEntry.Id = packageIdentity.Id;
                     packageEntry.Version = packageIdentity.Version.OriginalVersion;
                     var packageTempPath = Path.Combine(tempDir.FullName, Path.GetFileName(p.ItemSpec));
-                    ZipFile.ExtractToDirectory(p.ItemSpec, packageTempPath);
+                    ZipFile.ExtractToDirectory(p.ItemSpec, packageTempPath, true);
 
                     foreach (string f in Directory.EnumerateFiles(packageTempPath, "*", SearchOption.AllDirectories))
                     {

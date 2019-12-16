@@ -14,7 +14,7 @@ jobs:
   parameters:
     job: centos71
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
-    reportPrebuiltLeaks: false
+    reportPrebuiltLeaks: true
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: true }
       Online: { type: Online }
