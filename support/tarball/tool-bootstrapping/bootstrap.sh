@@ -183,14 +183,25 @@ function buildFinalSdk {
     LogMessage "Completing Step3 - Build final sdk"
 }
 
+function abspath() {
+  # $1 : relative filename
+  parentdir=$(dirname "$1")
+
+  if [ -d "$1" ]; then
+      echo "$(cd "$1" && pwd)"
+  elif [ -d "${parentdir}" ]; then
+    echo "$(cd "${parentdir}" && pwd)/$(basename "$1")"
+  fi
+}
+
 if [ -z "${3:-}" ]; then
     usage
     exit 1
 fi
 
-bootstrapDir=$1
-tarballSourceDir=$2
-refPkgSourceDir=$3
+bootstrapDir="$(abspath $1)"
+tarballSourceDir="$(abspath $2)"
+refPkgSourceDir="$(abspath $3)"
 startStep="${4:-}"
 
 stage1Dir="$bootstrapDir/stage1-sdk"
