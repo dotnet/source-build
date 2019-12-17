@@ -134,7 +134,10 @@ if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
         -iname '*.pdb' -o \
         -iname '*.mdb' -o \
         -iname '*.zip' -o \
-        -iname '*.cs' -o \
+        -iname '*.so' -o \
+        -iname '*.o' -o \
+        -iname '*.a' -o \
+        -iname '*.tar.gz' -o \
         -iname '*.vb' -o \
         -iname '*.il' -o \
         -iname '*.xlf' -o \
