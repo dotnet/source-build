@@ -24,8 +24,6 @@ jobs:
     docker.logs.map: -v $(dropDirectory)/logs:/logs:z
     docker.root.map: -v $(rootDirectory):/root:z
     docker.run: docker run --rm
-    docker.src.map: -v $(rootDirectory)/sb/source-build:/src:z
-    docker.src.work: -w /src
     docker.bst.map: -v $(System.ArtifactsDirectory)/boostrap_root:/bst:z
     docker.bst.work: -w /bst
     dropDirectory: $(stagingDirectory)/drop
