@@ -180,6 +180,15 @@ steps:
   condition: always()
   continueOnError: true
 
+- script: |
+      set -ex 
+      df -h 
+      $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c "
+      pushd /bst/bootstrap_dir/final-sdk
+      ./smoke-test.sh --prodConBlobFeedUrl ''"
+  displayName: Smoke-test final SDK
+  condition: always()
+    continueOnError: true
 
 # Remove bootstrap_dir
 - script: |
