@@ -154,7 +154,6 @@ if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
         -iname '*.resx' -o \
         -iname '*.xml' -o \
         -iname '*.css' -o \
-        -iname '*.*proj' -o \
         -iname '*.nupkg' \) \) -exec rm {} \;
 fi
 
