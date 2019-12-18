@@ -106,7 +106,7 @@ jobs:
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run unit tests
     condition: and(succeeded(), eq(variables['runUnitTests'], true))
-    timeoutInMinutes: 40
+    timeoutInMinutes: 80
     continueOnError: true
 
   # Create tarball.
