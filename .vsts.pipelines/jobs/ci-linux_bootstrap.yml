@@ -40,11 +40,7 @@ jobs:
   - task: DownloadBuildArtifacts@0
     displayName: Download CentOS artifacts
     inputs:
-      buildType: 'specific'
-      project: 'internal'
-      pipeline: 'source-build-rolling-CI'
-      buildVersionToDownload: 'specific'
-      buildId: '449139'
+      buildType: 'latest'
       itemPattern: 'Tarball centos71 Offline/$(tarballName).tar.gz'
       artifactName: 'Tarball centos71 Offline'
       downloadPath: '$(System.ArtifactsDirectory)/boostrap_root'
