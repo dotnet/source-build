@@ -143,6 +143,20 @@ jobs:
     condition: always()
     continueOnError: true
 
+  # Copy unit-test results from the production build
+  - script: |
+      set -ex
+      df -h
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
+        mkdir -p /logs/source-build/unit-tests-results
+        find bin/src/. \( \
+          -iname '*testResults.xml' \) \
+          -exec cp {} --parents /logs/source-build/unit-tests-results \;"
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Copy unit test run results
+    condition: always()
+    continueOnError: true
+
   # Delete key directories from local copy of repo to save space
   - script: |
       set -ex
