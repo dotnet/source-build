@@ -5,7 +5,7 @@
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
   </PropertyGroup>
@@ -30,6 +30,7 @@
       <Name>Mono.Cecil</Name>
     </ProjectReference>
     <ProjectReference Include="../Microsoft.DotNet.SourceBuild.Tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj" />
+    <ProjectReference Include="../Microsoft.DotNet.SourceBuild.Tasks.XPlat/Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj" />
   </ItemGroup>
 
   <!--
