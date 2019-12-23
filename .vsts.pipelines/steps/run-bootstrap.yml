@@ -12,7 +12,6 @@ steps:
       rm -rf "/bst/Tarball centos71 Offline"'
   displayName: Unpack Tarball
   condition: always()
-  continueOnError: true
 
 # Build the stage1 of bootstrapping
 - script: |
@@ -21,8 +20,7 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
   displayName: Build stage1
-  condition: always()
-  continueOnError: true
+  condition: succeeded()
 
 # Copy all logs from stage-1 before removing any files. The removal needs to take place as we are contrained on space atm
 - script: |
@@ -84,8 +82,7 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 2'
   displayName: Build stage1 source-build-reference-packages
-  condition: always()
-  continueOnError: true
+  condition: succeeded()
 
 # Copy ref-packages tarball to drop directory.
 - script: |
@@ -124,8 +121,7 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 3'
   displayName: Build final SDK
-  condition: always()
-  continueOnError: true
+  condition: succeeded()
 
 # Copy logs of final stage
 - script: |
@@ -188,7 +184,6 @@ steps:
       ./smoke-test.sh --prodConBlobFeedUrl ''"
   displayName: Smoke-test final SDK
   condition: always()
-  continueOnError: true
 
 # Remove bootstrap_dir
 - script: |
