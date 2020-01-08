@@ -15,7 +15,7 @@
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:OutputRid=linux-x64</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:OutputRid=linux-$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /m:1</BuildArguments>
 

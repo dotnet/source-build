@@ -13,7 +13,7 @@
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack /p:SkipTests=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PackageRid=linux-x64</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:PackageRid=linux-$(Platform)</BuildArguments>
     <!-- CoreFX parses this argument for a OS "family", i.e. rhel.7 to rhel.  OSX doesn't have the extra identifier so we need to include the
          "-x64" so CoreFX can find a character to break on (digits, hyphen, period).  -->
     <BuildArguments Condition="'$(TargetOS)' != 'OSX'">$(BuildArguments) /p:RuntimeOS=linux</BuildArguments>
