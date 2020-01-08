@@ -42,9 +42,14 @@
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
           WorkingDirectory="$(ReferencePackagesDir)" />
 
-    <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" />
+    <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
-          WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)" />
+          WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)"
+          Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
+
+    <PropertyGroup>
+      <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''">$(CustomPrebuiltSourceBuiltPackagesPath)</PrebuiltSourceBuiltPackagesPath>
+    </PropertyGroup>
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
   </Target>

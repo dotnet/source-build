@@ -155,7 +155,7 @@
 
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslyBuiltArtifacts)' != 'true'">
     <DownloadFile 
           SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
