@@ -57,7 +57,7 @@
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
-    <RepositoryReference Include="core-setup-portable" />
+    <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>

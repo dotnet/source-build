@@ -51,7 +51,7 @@
   <ItemGroup>
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="roslyn" />
-    <RepositoryReference Include="coreclr-portable" />
+    <RepositoryReference Include="coreclr-portable" Condition="'$(PortableBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>
