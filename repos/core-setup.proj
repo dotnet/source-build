@@ -57,7 +57,7 @@
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
-    <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux'" />
+    <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>

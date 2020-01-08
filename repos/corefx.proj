@@ -79,7 +79,7 @@
     <RepositoryReference Include="linker" />
     <RepositoryReference Include="coreclr" />
     <RepositoryReference Include="standard" />
-    <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux'" />
+    <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
   <ItemGroup>
