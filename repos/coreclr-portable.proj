@@ -55,13 +55,7 @@
     <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
   </ItemGroup>
 
-  <Target Name="GatherBuiltPackages">
-    <ItemGroup>
-      <_BuiltPackages Include="$(PackagesOutput)/*linux*nupkg" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="CopyPackage">
+  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersionsFile">
     <ItemGroup>
       <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
       <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
@@ -71,4 +65,10 @@
   </Target>
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <Target Name="GatherBuiltPackages">
+    <ItemGroup>
+      <_BuiltPackages Include="$(PackagesOutput)/*linux*nupkg" />
+    </ItemGroup>
+  </Target>
 </Project>
