@@ -20,7 +20,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     /// </summary>
     public class CopyReferenceOnlyPackages : Task
     {
-        private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd", ".a" };
+        private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd", ".a", ".cache" };
         private static readonly string[] pathsToExclude = { "testdata" };
         private static readonly string refPath = string.Concat(Path.DirectorySeparatorChar, "ref", Path.DirectorySeparatorChar);
 
