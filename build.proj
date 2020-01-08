@@ -147,7 +147,7 @@
 
   <Target Name="DownloadSourceBuildReferencePackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslyBuiltArtifacts)' != 'true'">
     <DownloadFile 
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
