@@ -86,8 +86,8 @@
 
   <Target Name="GatherBuiltPackages">
     <ItemGroup>
-      <_BuiltPackages Include="$(ShippingPackagesOutput)/*linux*nupkg" />
-      <_BuiltPackages Include="$(NonShippingPackagesOutput)/*linux*nupkg" />
+      <_BuiltPackages Include="$(ShippingPackagesOutput)/*linux*nupkg" Exclude="$(ShippingPackagesOutput)/*.symbols.nupkg" />
+      <_BuiltPackages Include="$(NonShippingPackagesOutput)/*linux*nupkg" Exclude="$(NonShippingPackagesOutput)/*.symbols.nupkg" />
     </ItemGroup>
   </Target>
 </Project>
