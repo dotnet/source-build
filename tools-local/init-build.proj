@@ -38,9 +38,10 @@
 
   <Target Name="UnpackTarballs" 
           Condition="'$(OfflineBuild)' == 'true'">
-    <MakeDir Directories="$(ReferencePackagesDir)" />
+    <MakeDir Directories="$(ReferencePackagesDir)"  Condition="'$(CustomReferencePackagesPath)' == ''" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
-          WorkingDirectory="$(ReferencePackagesDir)" />
+          WorkingDirectory="$(ReferencePackagesDir)"
+          Condition="'$(CustomReferencePackagesPath)' == ''" />
 
     <MakeDir Directories="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
@@ -49,6 +50,9 @@
 
     <PropertyGroup>
       <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''">$(CustomPrebuiltSourceBuiltPackagesPath)</PrebuiltSourceBuiltPackagesPath>
+    </PropertyGroup>
+    <PropertyGroup>
+      <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' == ''">$(CustomReferencePackagesPath)</ReferencePackagesDir>
     </PropertyGroup>
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
