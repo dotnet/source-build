@@ -5,11 +5,13 @@
 steps:
 - script: |
       set -ex 
+      mount
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
-      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
+      tar -xf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
       rm -rf "/bst/Tarball centos71 Offline"'
+      df -h
   displayName: Unpack Tarball
   condition: always()
 
@@ -19,6 +21,7 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
+      df -h
   displayName: Build stage1
   condition: succeeded()
 
