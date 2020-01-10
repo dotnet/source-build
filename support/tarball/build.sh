@@ -5,8 +5,8 @@ IFS=$'\n\t'
 usage() {
     echo "usage: $0 [options]"
     echo "options:"
-    echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
-    echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
+    echo "  --with-ref-packages <dir>          use the specified directory of reference packages"
+    echo "  --with-packages <dir>              use the specified directory of previously-built packages"
     echo "use -- to send the remaining arguments to MSBuild"
     echo ""
 }
