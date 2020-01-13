@@ -8,6 +8,10 @@
     <RepositoryReference Include="coreclr-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
+  <ItemGroup>
+    <BuiltSdkPackageOverride Include="@(ILSdkOverride)" />
+  </ItemGroup>
+
   <Target Name="CopyTools"
           AfterTargets="Package">
     <PropertyGroup>
