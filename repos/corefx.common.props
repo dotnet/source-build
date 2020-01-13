@@ -7,7 +7,7 @@
 
     <!-- OSX core-setup build always uses the portable RID, so override it -->
     <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT' or '$(BuildingPortableRuntime) == 'true'">true</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT' or '$(BuildingPortableRuntime)' == 'true'">true</OverridePortableBuild>
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
