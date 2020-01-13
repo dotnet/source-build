@@ -1,78 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
-
-  <PropertyGroup>
-    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
-
-    <!-- OSX core-setup build always uses the portable RID, so override it -->
-    <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
-
-    <BuildArguments>$(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' != 'true' AND '$(PrepForTests)' != 'true'">$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack /p:SkipTests=true</BuildArguments>
-    <BuildArguments Condition="'$(PrepForTests)' == 'true'">$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build /p:IncludeTestUtils=true</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' == 'true'">$(BuildArguments)  $(FlagParameterPrefix)restore $(FlagParameterPrefix)buildtests $(FlagParameterPrefix)test /p:IncludeTestUtils=true</BuildArguments>
-    <BuildArguments Condition="'$(RunTests)' == 'true' AND '$(DotNetRunningInDocker)' == '1' AND '$(TargetOS)' == 'Linux'">$(BuildArguments) /p:TestRspFile=$(TestExclusionsDir)corefx/linux.docker.rsp</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ArchGroup=$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ConfigurationGroup=$(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PackageRid=$(OverrideTargetRid)</BuildArguments>
-    <!-- CoreFX parses this argument for a OS "family", i.e. rhel.7 to rhel.  OSX doesn't have the extra identifier so we need to include the
-         "-x64" so CoreFX can find a character to break on (digits, hyphen, period).  -->
-    <BuildArguments Condition="'$(TargetOS)' != 'OSX'">$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</BuildArguments>
-    <BuildArguments Condition="'$(TargetOS)' == 'OSX'">$(BuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortableBuild)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:EnableVSTestReferences=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' != 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</BuildArguments>
-    <BuildArguments Condition="'$(OfflineBuild)' == 'true'">$(BuildArguments) /p:MicrosoftNETCoreDotNetHostPolicyPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</BuildArguments>
-
-    <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
-    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
-
-    <!--
-      Disable node reuse (in the new/Arcade way) to avoid errors like this:
-
-      error MSB4062: The "Microsoft.CodeAnalysis.BuildTasks.Csc" task could not be loaded from the
-      assembly .../build/../tools/Microsoft.Build.Tasks.CodeAnalysis.dll. Assembly with same name
-      is already loaded
-    -->
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg) $(FlagParameterPrefix)ci</BuildArguments>
-
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-
-    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
-    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
-
-    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
-
-    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
-    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ArcadeConfigurationOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ArcadeCoreFxTestingOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ILSdkOverride)" />
-  </ItemGroup>
+  <Import Project="corefx.common.props" />
 
   <ItemGroup Condition="'$(RunTests)' != 'true' AND '$(PrepForTests)' != 'true'">
     <RepositoryReference Include="arcade" />
@@ -82,10 +10,6 @@
     <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
-  </ItemGroup>
-
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
     <ItemGroup>
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
@@ -93,20 +17,6 @@
     </ItemGroup>
   </Target>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
-
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddRidToRuntimeJson" />
-
-  <Target Name="UpdateRuntimeGraph"
-          BeforeTargets="Build"
-          Condition="'$(_IsBootstrapping)' == 'true'">
-    <PropertyGroup>
-      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
-    <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
-                         Rid="$(TargetRid)-$(Platform)" />
-  </Target>
+  <Import Project="corefx.common.targets" />
 
 </Project>
