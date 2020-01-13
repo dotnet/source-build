@@ -2,50 +2,10 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <SourceDirectory>core-setup</SourceDirectory>
+    <BuildingPortableRuntime>true</BuildingPortableRuntime>
   </PropertyGroup>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
-
-  <PropertyGroup>
-    <BuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=true</BuildArguments>
-    <BuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:OutputRid=linux-$(Platform)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /m:1</BuildArguments>
-
-    <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
-
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-
-    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
-    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
-
-    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
-    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
-
-    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(ShippingPackagesOutput)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(NonShippingPackagesOutput)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
-
-    <!-- core-setup does not destabilize for intermediate servicing builds -->
-    <IsStable>true</IsStable>
-  </PropertyGroup>
+  <Import Project="core-setup.common.props" />
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
@@ -56,23 +16,6 @@
     <RepositoryReference Include="standard" />
   </ItemGroup>
 
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
-    <EnvironmentVariables Include="BuildInParallel=false" />
-  </ItemGroup>
-
-  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
-    <ItemGroup>
-      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
-      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
-    </ItemGroup>
-  </Target>
-
   <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersionsFile">
     <ItemGroup>
       <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
@@ -82,7 +25,7 @@
     <RemoveDir Directories="@(DirsToDelete)" />
   </Target>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="core-setup.common.targets" />
 
   <Target Name="GatherBuiltPackages">
     <ItemGroup>
