@@ -92,7 +92,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             {
                 foreach (var file in EnumerateAllFiles(dir, "*"))
                 {
-                    if (extensionsToRemove.Contains(Path.GetExtension(file))
+                    if (extensionsToRemove.Contains(Path.GetExtension(file)))
                     {
                         // skip these files
                     }
