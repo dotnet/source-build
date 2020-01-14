@@ -12,7 +12,7 @@
     <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
-  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersions">
+  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersions;EnsurePackagesCreated">
     <ItemGroup>
       <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
       <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
