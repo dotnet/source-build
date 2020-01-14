@@ -16,7 +16,7 @@
     <RepositoryReference Include="standard" />
   </ItemGroup>
 
-  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersionsFile">
+  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="WriteVersions">
     <ItemGroup>
       <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
       <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
