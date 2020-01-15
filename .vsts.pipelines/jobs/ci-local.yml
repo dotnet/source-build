@@ -38,6 +38,8 @@ jobs:
   - checkout: self
     clean: true
 
+  - template: ../steps/cleanup-unneeded-files.yml
+
   # If the machine is dirty, submodule URLs may be from a different branch. Sync to prevent that.
   - script: git submodule sync
     displayName: Sync submodule urls

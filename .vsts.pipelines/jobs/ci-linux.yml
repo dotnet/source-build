@@ -37,6 +37,7 @@ jobs:
     type: Production
 
   steps:
+  - template: ../steps/cleanup-unneeded-files.yml
   - template: ../steps/docker-cleanup-linux.yml
   - template: ../steps/calculate-config-flags.yml
 
