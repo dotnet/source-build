@@ -1,7 +1,7 @@
-From d20dcc1f5e37dd823d3614617785df3e854bb894 Mon Sep 17 00:00:00 2001
+From b4031e1ca766412d9a7ee663274ade38e6e2c84a Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 8 Nov 2019 14:35:59 -0600
-Subject: [PATCH 4/4] Make ref assembly versions match implementation assembly
+Subject: [PATCH 3/7] Make ref assembly versions match implementation assembly
  versions
 
 ---
@@ -9,11 +9,11 @@ Subject: [PATCH 4/4] Make ref assembly versions match implementation assembly
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 84e19a64c..6ad9600e3 100644
+index 25a46c011..5b52a57af 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -11,13 +11,7 @@
-     <PatchVersion>1</PatchVersion>
+     <PatchVersion>2</PatchVersion>
      <VersionPrefix>$(MajorVersion).$(MinorVersion).$(PatchVersion)</VersionPrefix>
      <PreReleaseVersionLabel>servicing</PreReleaseVersionLabel>
 -    <AssemblyVersion Condition="'$(IsReferenceAssemblyProject)' != 'true'">$(VersionPrefix).0</AssemblyVersion>
@@ -26,7 +26,7 @@ index 84e19a64c..6ad9600e3 100644
 +    <AssemblyVersion>$(VersionPrefix).0</AssemblyVersion>
      <ExperimentalVersionPrefix>0.1.$(PatchVersion)</ExperimentalVersionPrefix>
      <!--
-       Until package baselines are updated (see aspnet/AspNetCore#12702), ignore them and PatchConfig.props. This also
+       Until package baselines are updated (see aspnet/AspNetCore#12702), ignore them. This also
 -- 
 2.18.0
 

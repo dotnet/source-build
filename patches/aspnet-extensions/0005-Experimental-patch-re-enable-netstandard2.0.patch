@@ -1,0 +1,156 @@
+From 0fcdca2395c3d64328373ac0266135fc11d33938 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 17 Jan 2020 11:01:09 -0600
+Subject: [PATCH 5/7] Experimental patch - re-enable netstandard2.0.
+
+---
+ .../src/Microsoft.Extensions.Caching.Abstractions.csproj      | 1 -
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj    | 4 ++--
+ .../src/Microsoft.Extensions.DiagnosticAdapter.csproj         | 2 +-
+ .../Microsoft.Extensions.FileProviders.Abstractions.csproj    | 2 +-
+ .../src/Microsoft.Extensions.Hosting.Abstractions.csproj      | 1 -
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj        | 3 +--
+ src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj   | 1 -
+ src/Options/Options/src/Microsoft.Extensions.Options.csproj   | 1 -
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj     | 3 +--
+ 9 files changed, 6 insertions(+), 12 deletions(-)
+
+diff --git a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+index 3ff41adc1..aac665560 100644
+--- a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
++++ b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+@@ -6,7 +6,6 @@ Commonly used types:
+ Microsoft.Extensions.Caching.Distributed.IDistributedCache
+ Microsoft.Extensions.Caching.Memory.IMemoryCache</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;memorycache;distributedcache</PackageTags>
+diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+index 1fa455775..e3d96d9ec 100644
+--- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
++++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+@@ -2,13 +2,13 @@
+ 
+   <PropertyGroup>
+     <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
+-    <TargetFrameworks>netcoreapp3.0;netstandard2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>dependencyinjection;di</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+ 
+-    <ILEmitBackend Condition="$(TargetFramework) != 'netstandard2.1'">True</ILEmitBackend>
++    <ILEmitBackend Condition="$(TargetFramework) != 'netstandard2.0'">True</ILEmitBackend>
+     <DefineConstants Condition="'$(ILEmitBackend)' == 'True'">$(DefineConstants);IL_EMIT</DefineConstants>
+     <DefineConstants Condition="'$(TargetFramework)' == 'netcoreapp3.0'">$(DefineConstants);DISPOSE_ASYNC</DefineConstants>
+ 
+diff --git a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
+index a9e883540..a0a400231 100644
+--- a/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
++++ b/src/DiagnosticAdapter/src/Microsoft.Extensions.DiagnosticAdapter.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>Microsoft extension adapter feature to extend DiagnosticListener. Contains extension methods that extend System.Diagnostics.DiagnosticListener, and enables duck-typing based event handling by using dynamically generated proxy types.</Description>
+-    <TargetFrameworks>netstandard2.0;netcoreapp2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>diagnosticadapter;diagnosticlistener;diagnostics</PackageTags>
+diff --git a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+index 709e13175..7052d81ce 100644
+--- a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
++++ b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+@@ -7,7 +7,7 @@ Commonly used types:
+ Microsoft.Extensions.FileProviders.IDirectoryContents
+ Microsoft.Extensions.FileProviders.IFileInfo
+ Microsoft.Extensions.FileProviders.IFileProvider</Description>
+-    <TargetFrameworks>netstandard2.1;netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+index 9f9236800..d56fad467 100644
+--- a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
++++ b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>.NET Core hosting and startup abstractions for applications.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+index ff664fee3..bd197e218 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
++++ b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+@@ -2,7 +2,6 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <Description>Abstractions and features for interop between .NET and JavaScript code.</Description>
+     <PackageTags>javascript;interop</PackageTags>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -10,7 +9,7 @@
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
+diff --git a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+index 9129b292f..6874acd8c 100644
+--- a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
++++ b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Logging infrastructure default implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Options/Options/src/Microsoft.Extensions.Options.csproj b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+index b9baa3d0d..57122cda6 100644
+--- a/src/Options/Options/src/Microsoft.Extensions.Options.csproj
++++ b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Provides a strongly typed way of specifying and accessing settings using dependency injection.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;options</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+index 969ef1a42..1f52fe08a 100644
+--- a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
++++ b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+@@ -6,7 +6,6 @@ Microsoft.Extensions.Primitives.IChangeToken
+ Microsoft.Extensions.Primitives.StringValues
+ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+@@ -19,7 +18,7 @@ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <Compile Include="$(SharedSourceRoot)HashCodeCombiner\**\*.cs" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Reference Include="System.Memory" />
+     <Reference Include="System.Runtime.CompilerServices.Unsafe" />
+   </ItemGroup>
+-- 
+2.18.0
+

@@ -1,0 +1,29 @@
+From 9712e305a124c54a28fba8285919148008e840d5 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 26 Jan 2020 22:12:55 -0600
+Subject: [PATCH 5/5] Patch out authed feeds
+
+---
+ NuGet.config | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index 6c564b30c..0ff0043e8 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -2,12 +2,6 @@
+ <configuration>
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-pub-dotnet-core-setup-7d57652" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-7d57652f/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-4ac4c03" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-4ac4c036/nuget/v3/index.json" />
+-    <add key="darc-int-dotnet-core-setup-a2c3406" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-a2c3406f/nuget/v3/index.json" />
+-    <add key="darc-int-aspnet-Extensions-c3451e0" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-aspnet-Extensions-c3451e0b/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet3" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
+     <add key="dotnet3-transport" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3-transport/nuget/v3/index.json" />
+-- 
+2.18.0
+

@@ -1,17 +1,17 @@
-From 759cf9dc23910b9421223f1c05ad2f46abe1f410 Mon Sep 17 00:00:00 2001
+From bb5b0a745c5ec9ff305c0ca0259e1b15acaab2bf Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 26 Sep 2019 00:35:59 -0500
-Subject: [PATCH 6/9] Don't call out to dotnet with no path
+Subject: [PATCH 06/10] Don't call out to dotnet with no path
 
 ---
  eng/common/tools.sh | 6 ------
  1 file changed, 6 deletions(-)
 
 diff --git a/eng/common/tools.sh b/eng/common/tools.sh
-index 757d5b9ea4..a8fabf54ba 100755
+index 6221830226..ee785e1040 100755
 --- a/eng/common/tools.sh
 +++ b/eng/common/tools.sh
-@@ -338,12 +338,6 @@ function MSBuild {
+@@ -368,12 +368,6 @@ function MSBuild {
      InitializeBuildTool
      InitializeToolset
  

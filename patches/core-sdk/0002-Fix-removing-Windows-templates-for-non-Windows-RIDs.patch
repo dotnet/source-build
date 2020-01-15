@@ -1,14 +1,14 @@
-From e8e9538185d64893b507457a020a3ae5781adb74 Mon Sep 17 00:00:00 2001
+From e25cd8f605f7ee089ee7abab2479e8dde72649a4 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 24 Sep 2019 08:27:13 -0500
-Subject: [PATCH 3/3] Fix removing Windows templates for non-Windows RIDs
+Subject: [PATCH 2/4] Fix removing Windows templates for non-Windows RIDs
 
 ---
  src/redist/targets/BundledTemplates.targets | 6 ++----
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/src/redist/targets/BundledTemplates.targets b/src/redist/targets/BundledTemplates.targets
-index 5c3b0a824..b2d44f25b 100644
+index 7f858b80a..e5dfaa81b 100644
 --- a/src/redist/targets/BundledTemplates.targets
 +++ b/src/redist/targets/BundledTemplates.targets
 @@ -38,8 +38,6 @@
@@ -20,7 +20,7 @@ index 5c3b0a824..b2d44f25b 100644
      <Bundled30Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
      <Bundled30Templates Include="Microsoft.DotNet.Web.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
      <Bundled30Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
-@@ -101,8 +99,8 @@
+@@ -123,8 +121,8 @@
    <Target Name="LayoutTemplatesForSDK"
            DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
      <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
@@ -32,5 +32,5 @@ index 5c3b0a824..b2d44f25b 100644
      <Copy SourceFiles="%(Bundled30Templates.RestoredNupkgPath)"
            DestinationFolder="$(RedistLayoutPath)templates/$(BundledTemplates30InstallPath)"/>
 -- 
-2.21.0
+2.18.0
 
