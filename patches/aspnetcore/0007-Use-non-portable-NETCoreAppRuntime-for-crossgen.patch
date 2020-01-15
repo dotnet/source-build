@@ -1,7 +1,7 @@
-From 7d47a03f7dd575061e7503edef4511a37b7355e6 Mon Sep 17 00:00:00 2001
+From c8fcbfa4e981085711f04845a1deb9e26db22eb5 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 29 Oct 2019 18:19:03 +0000
-Subject: [PATCH 7/9] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH 07/10] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
  eng/Dependencies.props                                    | 1 +
@@ -21,10 +21,10 @@ index 8e7bb0ecd5..fca75d926c 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 90a77196ff..61cdd770ea 100644
+index 291d9e6691..7bc050a134 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -106,7 +106,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -107,7 +107,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'linux-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-musl-arm64' ">x64_arm64\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
      <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm' ">x86_arm\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
  
@@ -35,7 +35,7 @@ index 90a77196ff..61cdd770ea 100644
      <RuntimePackageRoot>$([MSBuild]::EnsureTrailingSlash('$(RuntimePackageRoot)'))</RuntimePackageRoot>
      <CrossgenToolPath>$([System.IO.Path]::Combine('$(RuntimePackageRoot)', 'tools', '$(CrossgenToolPackagePath)'))</CrossgenToolPath>
      <AssetTargetFallback>$(AssetTargetFallback);native,Version=0.0</AssetTargetFallback>
-@@ -121,7 +123,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -122,7 +124,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
        <IncludeAssets>Runtime;Native</IncludeAssets>
      </Reference>
  
