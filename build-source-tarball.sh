@@ -151,7 +151,7 @@ if [ $SKIP_BUILD -ne 1 ]; then
     fi
 
     $SCRIPT_ROOT/clean.sh
-    $SCRIPT_ROOT/build.sh  ${MAIN_BUILD_ARGUMENTS[@]} "$@"
+    $SCRIPT_ROOT/build.sh  ${MAIN_BUILD_ARGS[@]} "$@"
 fi
 
 mkdir -p "$TARBALL_ROOT"
