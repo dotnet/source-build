@@ -7,6 +7,7 @@
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'true'">linux-$(Platform)</OverrideTargetRid>
     <OverridePortable>$(PortableBuild)</OverridePortable>
     <OverridePortable Condition="'$(TargetOS)' == 'OSX' or '$(TargetOS)' == 'FreeBSD'">true</OverridePortable>
 

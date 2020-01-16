@@ -9,7 +9,7 @@
 
     <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
     <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
-                         Rid="$(TargetRid)-$(Platform)" />
+                         Rid="$(OverrideTargetRid)" />
   </Target>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
