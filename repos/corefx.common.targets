@@ -12,7 +12,7 @@
                          Rid="$(OverrideTargetRid)" />
   </Target>
 
-  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages;CopyPackage">
     <ItemGroup>
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
       <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
