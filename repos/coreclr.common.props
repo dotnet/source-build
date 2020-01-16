@@ -9,13 +9,13 @@
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -skiprestore</BuildArguments>
     <BuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(BuildArguments) -nopgooptimize</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) msbuildonunsupportedplatform</BuildArguments>
-    <BuildArguments Condition="( '$(UseSystemLibraries)' == 'true' or '$(BuildingPortableRuntime)' == 'true' ) AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
+    <BuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(BuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</BuildArguments>
     <BuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64' ">$(BuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</BuildArguments>
     <BuildArguments Condition="'$(TargetOS)' == 'FreeBSD'">$(BuildArguments) -clang6.0 /p:PortableBuild=true</BuildArguments>
 
     <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
          Additionally, Linux builds are portable by default and only have a switch to turn it off -->
-    <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false' and '$(BuildingPortableRuntime)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
+    <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
 
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>

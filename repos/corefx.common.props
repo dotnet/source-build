@@ -7,12 +7,12 @@
 
     <!-- OSX core-setup build always uses the portable RID, so override it -->
     <OverridePortableBuild>$(PortableBuild)</OverridePortableBuild>
-    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT' or '$(BuildingPortableRuntime)' == 'true'">true</OverridePortableBuild>
+    <OverridePortableBuild Condition="'$(TargetOS)' == 'OSX' OR '$(TargetOS)' == 'Windows_NT'">true</OverridePortableBuild>
     <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux' and '$(BuildingPortableRuntime)' == 'true'">linux-$(Platform)</OverrideTargetRid>
+    <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux'">linux-$(Platform)</OverrideTargetRid>
 
     <BuildArguments>$(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
     <BuildArguments Condition="'$(RunTests)' != 'true' AND '$(PrepForTests)' != 'true'">$(BuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build $(FlagParameterPrefix)pack /p:SkipTests=true</BuildArguments>
