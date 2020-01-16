@@ -12,12 +12,6 @@
     <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
-  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
-    <ItemGroup>
-      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
-      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
-    </ItemGroup>
-  </Target>
 
   <Import Project="core-setup.common.targets" />
 

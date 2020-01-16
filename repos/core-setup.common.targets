@@ -33,4 +33,11 @@
           Condition="'@(BinariesToCopy)'!=''" />
   </Target>
 
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
+
 </Project>
