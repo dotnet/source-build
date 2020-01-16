@@ -8,7 +8,6 @@ usage() {
     echo "  --skip-build                       assume we have already built (requires you have built with the /p:ArchiveDownloadedPackages=true flag)"
     echo "  --enable-leak-detection            build leaked-binary detection tasts for later use while building from this tarball"
     echo "  --skip-prebuilt-check              do not confirm that all prebuilt packages used are either reference packages, previously-built, or known extras"
-    echo "  --assume-no-prebuilts              assume that no prebuilts are necessary and reference packages and a previously-built set of packages will be provided when building the tarball.  implies --skip-prebuilt-check, makes --with-ref-packages and --with-packages redundant"
     echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "use -- to send the remaining arguments to build.sh"
@@ -52,7 +51,6 @@ SKIP_BUILD=0
 INCLUDE_LEAK_DETECTION=0
 MINIMIZE_DISK_USAGE=0
 SKIP_PREBUILT_ENFORCEMENT=0
-DELETE_ALL_PREBUILTS=0
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
 MAIN_BUILD_ARGS=("/p:ArchiveDownloadedPackages=true")
@@ -76,11 +74,6 @@ while :; do
             ;;
         --skip-prebuilt-check)
             SKIP_PREBUILT_ENFORCEMENT=1
-            ;;
-        --assume-no-prebuilts)
-            DELETE_ALL_PREBUILTS=1
-            SKIP_PREBUILT_ENFORCEMENT=1
-            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslyBuiltArtifacts=true" )
             ;;
         --with-ref-packages)
             CUSTOM_REF_PACKAGES_DIR="$2"
@@ -116,6 +109,10 @@ while :; do
 
     shift
 done
+
+if [[ -d "$CUSTOM_REF_PACKAGES_DIR" && -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]]; then
+    MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslyBuiltArtifacts=true" )
+fi
 
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     echo "WARNING"
@@ -325,77 +322,69 @@ if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   "$CLI_PATH/dotnet" publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
-if [ "$DELETE_ALL_PREBUILTS" == "0" ]; then
+echo 'Removing reference-only packages from tarball prebuilts...'
 
-  echo 'Removing reference-only packages from tarball prebuilts...'
-
-  for ref_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
-  do
-      if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
-          rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
-      fi
-  done
-
-  if [ -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
-      allRefPkgs=(`ls "$CUSTOM_REF_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
-  else
-      allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
-  fi
-  if [ -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]; then
-      allSourceBuiltPkgs=(`ls "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
-  else
-      allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
-  fi
-
-  echo 'Removing reference-packages from tarball prebuilts...'
-
-  for ref_package in ${allRefPkgs[@]}
-  do
-      if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
-          rm $TARBALL_ROOT/packages/prebuilt/$ref_package
-      fi
-  done
-
-  echo 'Removing previously source-built packages from tarball prebuilts...'
-
-  for ref_package in ${allSourceBuiltPkgs[@]}
-  do
-      if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
-          rm $TARBALL_ROOT/packages/prebuilt/$ref_package
-      fi
-  done
-
-  echo 'Removing known extra packages from tarball prebuilts...'
-  while IFS= read -r packagePattern
-  do
-      if [[ "$packagePattern" =~ ^# ]]; then
-          continue
-      fi
-      rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
-  done < $SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt
-
-  if [ $SKIP_PREBUILT_ENFORCEMENT -ne 1 ]; then
-    echo 'Checking for extra prebuilts...'
-    error_encountered=false
-    for package in `ls -A $TARBALL_ROOT/packages/prebuilt`
-    do
-        if grep -q "$package" $SCRIPT_ROOT/support/allowed-prebuilts.txt; then
-            echo "Allowing prebuilt $package"
-        else
-            echo "ERROR: $package is not in the allowed prebuilts list ($SCRIPT_ROOT/support/allowed-prebuilts.txt)"
-            error_encountered=true
-        fi
-    done
-    if [ "$error_encountered" = "true" ]; then
-      echo "Either remove this prebuilt, add it to the known extras list ($SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt) or add it to the allowed prebuilts list."
-      exit 1
+for ref_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
     fi
-  fi
+done
 
+if [ -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
+    allRefPkgs=(`ls "$CUSTOM_REF_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
 else
-  echo "Deleting all prebuilt packages..."
-  # leave the actual directory so we can use it as a NuGet source later without problems
-  rm -rf $TARBALL_ROOT/packages/prebuilt/*
+    allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+fi
+if [ -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]; then
+    allSourceBuiltPkgs=(`ls "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
+else
+    allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+fi
+
+echo 'Removing reference-packages from tarball prebuilts...'
+
+for ref_package in ${allRefPkgs[@]}
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
+    fi
+done
+
+echo 'Removing previously source-built packages from tarball prebuilts...'
+
+for ref_package in ${allSourceBuiltPkgs[@]}
+do
+    if [ -e $TARBALL_ROOT/packages/prebuilt/$ref_package ]; then
+        rm $TARBALL_ROOT/packages/prebuilt/$ref_package
+    fi
+done
+
+echo 'Removing known extra packages from tarball prebuilts...'
+while IFS= read -r packagePattern
+do
+    if [[ "$packagePattern" =~ ^# ]]; then
+        continue
+    fi
+    rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
+done < $SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt
+
+if [ $SKIP_PREBUILT_ENFORCEMENT -ne 1 ]; then
+  echo 'Checking for extra prebuilts...'
+  error_encountered=false
+  for package in `ls -A $TARBALL_ROOT/packages/prebuilt`
+  do
+      if grep -q "$package" $SCRIPT_ROOT/support/allowed-prebuilts.txt; then
+          echo "Allowing prebuilt $package"
+      else
+          echo "ERROR: $package is not in the allowed prebuilts list ($SCRIPT_ROOT/support/allowed-prebuilts.txt)"
+          error_encountered=true
+      fi
+  done
+  if [ "$error_encountered" = "true" ]; then
+    echo "Either remove this prebuilt, add it to the known extras list ($SCRIPT_ROOT/support/additional-prebuilts-to-delete.txt) or add it to the allowed prebuilts list."
+    exit 1
+  fi
 fi
 
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
