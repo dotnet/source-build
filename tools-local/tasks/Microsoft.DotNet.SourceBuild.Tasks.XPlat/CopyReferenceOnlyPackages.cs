@@ -96,7 +96,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
                     {
                         // skip these files
                     }
-                    if (file.EndsWith(".nupkg")) 
+                    else if (file.EndsWith(".nupkg"))
                     {
                         File.Copy(file, Path.Combine(IdentifiedPackagesDir, Path.GetFileName(file)), true);
                     }
