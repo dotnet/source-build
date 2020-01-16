@@ -84,6 +84,7 @@
     <PrebuiltPackagesPath>$(ProjectDir)packages/prebuilt/</PrebuiltPackagesPath>
     <PreviouslyRestoredPackagesPath>$(ProjectDir)packages/previouslyRestored/</PreviouslyRestoredPackagesPath>
     <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)packages/source-built/</PrebuiltSourceBuiltPackagesPath>
+    <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(CustomPrebuiltSourceBuiltPackagesPath)/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
     <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Toolset/</SourceBuiltToolsetDir>
     <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
@@ -135,6 +136,7 @@
     <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
+    <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' != ''">$(CustomReferencePackagesPath)/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>

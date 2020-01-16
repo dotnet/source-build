@@ -25,19 +25,21 @@ while :; do
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
         --with-ref-packages)
-            CUSTOM_REF_PACKAGES_DIR="$2"
+            CUSTOM_REF_PACKAGES_DIR="$(cd -P "$2" && pwd)"
             if [ ! -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
                 echo "Custom reference packages directory '$CUSTOM_REF_PACKAGES_DIR' does not exist"
                 exit 1
             fi
+            MSBUILD_ARGUMENTS+=( "/p:CustomReferencePackagesPath=$CUSTOM_REF_PACKAGES_DIR" )
             shift
             ;;
         --with-packages)
-            CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR="$2"
+            CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR="$(cd -P "$2" && pwd)"
             if [ ! -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]; then
                 echo "Custom prviously built packages directory '$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR' does not exist"
                 exit 1
             fi
+            MSBUILD_ARGUMENTS+=( "/p:CustomPrebuiltSourceBuiltPackagesPath=$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" )
             shift
             ;;
         --)
@@ -55,6 +57,8 @@ while :; do
             exit 1
             ;;
     esac
+    shift
+done
 
 sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
 sdkPattern="\"dotnet\" *: *\"(.*)\""
@@ -83,19 +87,19 @@ if [ ! -f "$packageVersionsPath" ]; then
   exit 1
 fi
 
-arcadeSdkLine=`grep -m 1 'MicrosoftDotNetArcadeSdkVersion' "$packageVersionsPath"
+arcadeSdkLine=`grep -m 1 'MicrosoftDotNetArcadeSdkVersion' "$packageVersionsPath"`
 versionPattern="<MicrosoftDotNetArcadeSdkVersion>(.*)</MicrosoftDotNetArcadeSdkVersion>"
 if [[ $arcadeSdkLine =~ $versionPattern ]]; then
   export ARCADE_BOOTSTRAP_VERSION=${BASH_REMATCH[1]}
 fi
 
-sourceLinkLine=`grep -m 1 'MicrosoftSourceLinkCommonVersion' "$packageVersionsPath"
+sourceLinkLine=`grep -m 1 'MicrosoftSourceLinkCommonVersion' "$packageVersionsPath"`
 versionPattern="<MicrosoftSourceLinkCommonVersion>(.*)</MicrosoftSourceLinkCommonVersion>"
 if [[ $sourceLinkLine =~ $versionPattern ]]; then
   export SOURCE_LINK_BOOTSTRAP_VERSION=${BASH_REMATCH[1]}
 fi
 
-dotNetHostLine=`grep -m 1 'MicrosoftNETCoreDotNetHostVersion' "$packageVersionsPath"
+dotNetHostLine=`grep -m 1 'MicrosoftNETCoreDotNetHostVersion' "$packageVersionsPath"`
 versionPattern="<MicrosoftNETCoreDotNetHostVersion>(.*)</MicrosoftNETCoreDotNetHostVersion>"
 if [[ $dotNetHostLine =~ $versionPattern ]]; then
   export DOTNET_HOST_BOOTSTRAP_VERSION=${BASH_REMATCH[1]}
@@ -107,7 +111,6 @@ CLI_ROOT="$SCRIPT_ROOT/.dotnet"
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/restored/"
-
 
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:BuildXPlatTasks.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:BuildXPlatTasks ${MSBUILD_ARGUMENTS[@]} "$@"
 

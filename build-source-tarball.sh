@@ -285,7 +285,7 @@ cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
 
 # Copy tarballs to ./packages/archive directory
-if [ -d "$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find \"$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs\" -iname '*.tar.gz')" ]; then
+if [[ -d "$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs -iname '*.tar.gz')" ]]; then
     mkdir -p $TARBALL_ROOT/packages/archive
     cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
 fi

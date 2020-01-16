@@ -48,13 +48,6 @@
           WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)"
           Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
 
-    <PropertyGroup>
-      <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''">$(CustomPrebuiltSourceBuiltPackagesPath)</PrebuiltSourceBuiltPackagesPath>
-    </PropertyGroup>
-    <PropertyGroup>
-      <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' == ''">$(CustomReferencePackagesPath)</ReferencePackagesDir>
-    </PropertyGroup>
-
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
   </Target>
 
