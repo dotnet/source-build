@@ -1,0 +1,25 @@
+From ca11161175d11d5f42f190ec6ab49a67da2f83ec Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 8 Dec 2019 17:14:50 -0600
+Subject: [PATCH] Remove old feeds
+
+---
+ build/sources.props | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/build/sources.props b/build/sources.props
+index 677ae724..278b499a 100644
+--- a/build/sources.props
++++ b/build/sources.props
+@@ -11,8 +11,6 @@
+       https://dotnet.myget.org/F/msbuild/api/v3/index.json;
+       https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json;
+       https://dotnet.myget.org/F/roslyn/api/v3/index.json;
+-      https://vside.myget.org/F/vssdk/api/v3/index.json;
+-      https://vside.myget.org/F/vsmac/api/v3/index.json
+     </RestoreSources>
+     <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">
+       $(RestoreSources);
+-- 
+2.18.0
+
