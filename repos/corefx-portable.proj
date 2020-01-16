@@ -25,7 +25,7 @@
 
   <Import Project="corefx.common.targets" />
 
-  <Target Name="GatherBuiltPackages">
+  <Target Name="GatherBuiltPackages" BeforeTargets="CopyPackage">
     <ItemGroup>
       <_BuiltPackages Include="$(ShippingPackagesOutput)/*linux*nupkg" Exclude="$(ShippingPackagesOutput)/*.symbols.nupkg" />
       <_BuiltPackages Include="$(NonShippingPackagesOutput)/*linux*nupkg" Exclude="$(NonShippingPackagesOutput)/*.symbols.nupkg" />
