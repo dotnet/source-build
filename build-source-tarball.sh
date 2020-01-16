@@ -55,6 +55,7 @@ SKIP_PREBUILT_ENFORCEMENT=0
 DELETE_ALL_PREBUILTS=0
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
+MAIN_BUILD_ARGS=("/p:ArchiveDownloadedPackages=true")
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
@@ -79,6 +80,7 @@ while :; do
         --assume-no-prebuilts)
             DELETE_ALL_PREBUILTS=1
             SKIP_PREBUILT_ENFORCEMENT=1
+            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslyBuiltArtifacts=true" )
             ;;
         --with-ref-packages)
             CUSTOM_REF_PACKAGES_DIR="$2"
@@ -149,7 +151,7 @@ if [ $SKIP_BUILD -ne 1 ]; then
     fi
 
     $SCRIPT_ROOT/clean.sh
-    $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true "$@"
+    $SCRIPT_ROOT/build.sh  ${MAIN_BUILD_ARGUMENTS[@]} "$@"
 fi
 
 mkdir -p "$TARBALL_ROOT"
