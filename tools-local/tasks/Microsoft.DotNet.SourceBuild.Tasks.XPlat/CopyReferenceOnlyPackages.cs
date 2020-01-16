@@ -21,6 +21,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
     public class CopyReferenceOnlyPackages : Task
     {
         private static readonly string[] extensionsToExclude = { ".exe", ".dylib", ".so", ".profdata", ".pgd", ".a" };
+        private static readonly string[] extensionsToRemove = { ".cache" };
         private static readonly string[] pathsToExclude = { "testdata" };
         private static readonly string refPath = string.Concat(Path.DirectorySeparatorChar, "ref", Path.DirectorySeparatorChar);
 
@@ -91,7 +92,11 @@ namespace Microsoft.DotNet.SourceBuild.Tasks
             {
                 foreach (var file in EnumerateAllFiles(dir, "*"))
                 {
-                    if (file.EndsWith(".nupkg")) 
+                    if (extensionsToRemove.Contains(Path.GetExtension(file)))
+                    {
+                        // skip these files
+                    }
+                    else if (file.EndsWith(".nupkg"))
                     {
                         File.Copy(file, Path.Combine(IdentifiedPackagesDir, Path.GetFileName(file)), true);
                     }
