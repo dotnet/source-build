@@ -201,7 +201,7 @@ jobs:
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         poisonArg="/p:EnablePoison=true"
       fi
-      $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" -- \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
         /p:FailOnPrebuiltBaselineError=true \
