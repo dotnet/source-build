@@ -1,0 +1,33 @@
+From 23827f7810d6f0cbfb16d7587b15f88819f9c311 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 17 Jan 2020 14:11:13 -0600
+Subject: [PATCH 7/7] ASP.NET Extensions needs this as netstandard2.0, let's
+ see if it works
+
+---
+ .../src/System.ComponentModel.Annotations.csproj              | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/System.ComponentModel.Annotations/src/System.ComponentModel.Annotations.csproj b/src/System.ComponentModel.Annotations/src/System.ComponentModel.Annotations.csproj
+index dfb5942ecf..82ef3a3f47 100644
+--- a/src/System.ComponentModel.Annotations/src/System.ComponentModel.Annotations.csproj
++++ b/src/System.ComponentModel.Annotations/src/System.ComponentModel.Annotations.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <ProjectGuid>{4266D58F-EB60-46C2-BA81-3ABDE759A7D5}</ProjectGuid>
+-    <Configurations>netstandard2.1-Debug;netstandard2.1-Release</Configurations>
++    <Configurations>netstandard2.0-Debug;netstandard2.0-Release</Configurations>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System\ComponentModel\DataAnnotations\AssociatedMetadataTypeTypeDescriptor.cs" />
+@@ -55,4 +55,4 @@
+       <Link>Common\System\NotImplemented.cs</Link>
+     </Compile>
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.21.0
+
