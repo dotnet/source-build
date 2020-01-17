@@ -23,7 +23,7 @@
 
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
-  <Target Name="GatherBuiltPackages">
+  <Target Name="GatherBuiltPackages" AfterTargets="Build">
     <ItemGroup>
       <_BuiltPackages Include="$(PackagesOutput)/*linux*nupkg"  Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
     </ItemGroup>
