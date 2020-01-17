@@ -1,0 +1,25 @@
+From ddd39edc2dd0b47d5e8356f713de0c80da7e18aa Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 17 Jan 2020 16:50:40 -0600
+Subject: [PATCH 5/5] Hard-code ref version of package
+
+---
+ eng/Dependencies.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Dependencies.props b/eng/Dependencies.props
+index 73f6ac55c..aff323eea 100644
+--- a/eng/Dependencies.props
++++ b/eng/Dependencies.props
+@@ -19,7 +19,7 @@ and are generated based on the last package release.
+ 
+   <ItemGroup Label=".NET team dependencies">
+     <LatestPackageReference Include="Microsoft.Win32.Registry" Version="$(MicrosoftWin32RegistryPackageVersion)" />
+-    <LatestPackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsPackageVersion)" />
++    <LatestPackageReference Include="System.ComponentModel.Annotations" Version="4.6.0" />
+     <LatestPackageReference Include="System.Diagnostics.DiagnosticSource" Version="$(SystemDiagnosticsDiagnosticSourcePackageVersion)" />
+     <LatestPackageReference Include="System.Diagnostics.EventLog" Version="$(SystemDiagnosticsEventLogPackageVersion)" />
+     <LatestPackageReference Include="System.IO.Pipelines" Version="$(SystemIOPipelinesPackageVersion)" />
+-- 
+2.21.0
+
