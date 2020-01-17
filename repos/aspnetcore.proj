@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <SourceDirectory>AspNetCore</SourceDirectory>
-  </PropertyGroup>
-
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
 
   <PropertyGroup>
@@ -14,13 +10,13 @@
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNodeJs=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:CrossgenOutput=false</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
