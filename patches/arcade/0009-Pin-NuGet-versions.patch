@@ -1,19 +1,19 @@
-From 7c4a81212c1b6718538bb6c8495e4a5d38f1fc28 Mon Sep 17 00:00:00 2001
-From: Chris Rummel <crummel@microsoft.com>
-Date: Fri, 29 Nov 2019 13:36:01 -0600
-Subject: [PATCH 13/13] Pin NuGet versions.
+From 1aba614000dcdf05fc1eb6936dd2d08576d8cbbf Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 17 Jan 2020 11:08:39 +0000
+Subject: [PATCH] Pin NuGet versions.
 
 ---
- .../Microsoft.DotNet.Arcade.Sdk.csproj                      | 2 +-
- .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj       | 6 +++---
- .../lib/Microsoft.DotNet.VersionTools.csproj                | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj  | 2 +-
+ .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj               | 6 +++---
+ .../lib/Microsoft.DotNet.VersionTools.csproj                        | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
-index f16405e7..3b9558ae 100644
+index eeb9386..e3ecaf3 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
-@@ -24,7 +24,7 @@
+@@ -25,7 +25,7 @@
    <ItemGroup>
      <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />
      <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
@@ -23,10 +23,10 @@ index f16405e7..3b9558ae 100644
      <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
-index 5455c363..86490d1a 100644
+index 8fdee5e..2cd2821 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
-@@ -59,9 +59,9 @@
+@@ -60,9 +60,9 @@
      <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />
      <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
      <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
@@ -40,20 +40,22 @@ index 5455c363..86490d1a 100644
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
      <PackageReference Include="Microsoft.NETCore.Platforms" Version="$(MicrosoftNETCorePlatformsVersion)" />
 diff --git a/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj b/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
-index d545fffd..b2148ccd 100644
+index 9caf1fb..a53f9fb 100644
 --- a/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
 +++ b/src/Microsoft.DotNet.VersionTools/lib/Microsoft.DotNet.VersionTools.csproj
-@@ -11,8 +11,8 @@
+@@ -11,9 +11,9 @@
  
    <ItemGroup>
      <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
 -    <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersion)" />
+-    <PackageReference Include="NuGet.Packaging.Core" Version="$(NuGetVersion)" />
 -    <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersion)" />
 +    <PackageReference Include="NuGet.Packaging" Version="5.1.0" />
++    <PackageReference Include="NuGet.Packaging.Core" Version="5.1.0" />
 +    <PackageReference Include="NuGet.Versioning" Version="5.1.0" />
      <PackageReference Include="System.Diagnostics.TraceSource" Version="$(SystemDiagnosticsTraceSourceVersion)" />
    </ItemGroup>
  
 -- 
-2.18.0
+1.8.3.1
 

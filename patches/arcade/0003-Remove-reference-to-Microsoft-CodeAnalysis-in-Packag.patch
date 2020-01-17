@@ -1,17 +1,17 @@
-From 2403a70c6d88849d3bca74aedc74f3c457524848 Mon Sep 17 00:00:00 2001
+From f38e69c1256353f624b3984441fb36de83f25180 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
-Date: Tue, 1 Oct 2019 14:26:40 +0000
-Subject: [PATCH 06/13] Remove reference to Microsoft CodeAnalysis in Packaging
+Date: Fri, 17 Jan 2020 10:57:21 +0000
+Subject: [PATCH] Remove reference to Microsoft CodeAnalysis in Packaging
 
 ---
- .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj           | 2 --
+ .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj                   | 2 --
  1 file changed, 2 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
-index 955d343b..22f5cded 100644
+index 7e20144..d3d37a3 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
 +++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
-@@ -58,8 +58,6 @@
+@@ -59,8 +59,6 @@
    <ItemGroup>
      <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />
      <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
@@ -21,5 +21,5 @@ index 955d343b..22f5cded 100644
      <PackageReference Include="NuGet.Commands" Version="$(NuGetVersion)" />
      <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersion)" />
 -- 
-2.18.0
+1.8.3.1
 
