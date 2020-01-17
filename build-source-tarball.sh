@@ -81,6 +81,7 @@ while :; do
                 echo "Custom reference packages directory '$CUSTOM_REF_PACKAGES_DIR' does not exist"
                 exit 1
             fi
+            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingReferencePackages=true" )
             shift
             ;;
         --with-packages)
@@ -89,6 +90,7 @@ while :; do
                 echo "Custom reference packages directory '$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR' does not exist"
                 exit 1
             fi
+            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslySourceBuiltPackages=true" )
             shift
             ;;
         --)
@@ -109,10 +111,6 @@ while :; do
 
     shift
 done
-
-if [[ -d "$CUSTOM_REF_PACKAGES_DIR" && -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]]; then
-    MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslyBuiltArtifacts=true" )
-fi
 
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     echo "WARNING"
