@@ -33,7 +33,7 @@
           Condition="'@(BinariesToCopy)'!=''" />
   </Target>
 
-  <Target Name="SetOutputList" AfterTargets="Package">
+  <Target Name="SetOutputList" AfterTargets="RepoBuild">
     <ItemGroup>
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
       <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
