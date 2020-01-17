@@ -1,0 +1,24 @@
+From b229baae217a92ba383f8a136b9be1dcb67e0594 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 7 Jan 2020 20:36:51 +0000
+Subject: [PATCH] Exclude optdata from source-build
+
+---
+ src/coreclr/src/.nuget/optdata/optdata.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/coreclr/src/.nuget/optdata/optdata.csproj b/src/coreclr/src/.nuget/optdata/optdata.csproj
+index 0596049..26ae7e4 100644
+--- a/src/coreclr/src/.nuget/optdata/optdata.csproj
++++ b/src/coreclr/src/.nuget/optdata/optdata.csproj
+@@ -7,6 +7,7 @@
+     <OptimizationDataSupported Condition="'$(BuildOS)' == 'Linux' And '$(BuildArch)' == 'x64'">True</OptimizationDataSupported>
+     <RuntimeIdentifiers>win7-x64;win7-x86;linux-x64</RuntimeIdentifiers>
+     <_BuildOSArchLowercase>$(BuildOS.ToLower())-$(BuildArch.ToLower())</_BuildOSArchLowercase>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+

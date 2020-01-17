@@ -1,0 +1,31 @@
+From ad82059d907a253687f90b88306443207d03ef63 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 7 Jan 2020 20:35:28 +0000
+Subject: [PATCH] Conditionally override PackageVersion properties
+
+---
+ src/coreclr/dependencies.props | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/src/coreclr/dependencies.props b/src/coreclr/dependencies.props
+index 6336b79..7172cf6 100644
+--- a/src/coreclr/dependencies.props
++++ b/src/coreclr/dependencies.props
+@@ -7,10 +7,10 @@
+ 
+   <!-- Tests/infrastructure dependency versions. -->
+   <PropertyGroup>
+-    <XunitPerformanceApiPackageVersion>1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
+-    <MicrosoftDiagnosticsTracingTraceEventPackageVersion>2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
+-    <MicrosoftDiagnosticsToolsRuntimeClientVersion>1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
+-    <CommandLineParserVersion>2.2.0</CommandLineParserVersion>
++    <XunitPerformanceApiPackageVersion Condition="'$(XunitPerformanceApiPackageVersion)' == ''">1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
++    <MicrosoftDiagnosticsTracingTraceEventPackageVersion Condition="'$(MicrosoftDiagnosticsTracingTraceEventPackageVersion)' == ''">2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
++    <MicrosoftDiagnosticsToolsRuntimeClientVersion Condition="'$(MicrosoftDiagnosticsToolsRuntimeClientVersion)' == ''">1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
++    <CommandLineParserVersion Condition="'$(CommandLineParserVersion)' == ''">2.2.0</CommandLineParserVersion>
+ 
+     <!-- Scenario tests install this version of Microsoft.NetCore.App, then patch coreclr binaries via xcopy. At the moment it is
+          updated manually whenever breaking changes require it to move forward, but it would be nice if we could update it automatically
+-- 
+1.8.3.1
+

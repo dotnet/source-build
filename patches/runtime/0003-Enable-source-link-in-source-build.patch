@@ -1,0 +1,37 @@
+From 0b0128a3d530319a4ca0588d51b9bcc2f953cec3 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 7 Jan 2020 20:39:03 +0000
+Subject: [PATCH] Enable source-link in source-build
+
+---
+ eng/Tools.props | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/eng/Tools.props b/eng/Tools.props
+index 4c39928..620f82b 100644
+--- a/eng/Tools.props
++++ b/eng/Tools.props
+@@ -23,6 +23,10 @@
+ 
+     <!-- mono -->
+     <PackageReference Include="illink.tasks" Version="$(ILLinkTasksVersion)" PrivateAssets="all" IsImplicitlyDefined="true" ExcludeAssets="build" GeneratePathProperty="true" />
++
++    <!-- SourceLink -->
++    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
++    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+   <!-- excluded from offline portion of source build -->
+@@ -37,9 +41,6 @@
+     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Feed" Version="$(MicrosoftDotNetBuildTasksFeedVersion)" />
+     <PackageReference Include="Microsoft.DotNet.VersionTools.Tasks" Version="$(MicrosoftDotNetVersionToolsTasksVersion)" />
+ 
+-    <!-- SourceLink -->
+-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+-    <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+   <Import Project="$(RepositoryEngineeringDir)restore\docs.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+-- 
+1.8.3.1
+

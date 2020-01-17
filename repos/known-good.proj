@@ -16,12 +16,12 @@
   <Choose>
     <When Condition="'$(OS)' == 'Windows_NT'">
       <ItemGroup>
-        <RepositoryReference Include="corefx" />
+        <RepositoryReference Include="runtime" />
       </ItemGroup>
     </When>
     <When Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">
       <ItemGroup>
-        <RepositoryReference Include="core-setup" />
+        <RepositoryReference Include="runtime" />
       </ItemGroup>
     </When>
     <Otherwise>
@@ -47,21 +47,16 @@
         <RepositoryReference Include="msbuild" />
         <RepositoryReference Include="nuget-client" />
         <RepositoryReference Include="websdk" />
-        <RepositoryReference Include="coreclr" />
-        <RepositoryReference Include="coreclr-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
 
         <RepositoryReference Include="templating" />
 
         <!-- Tier 3 -->
 
         <RepositoryReference Include="aspnet-extensions" />
-        <RepositoryReference Include="corefx" />
-        <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
 
         <!-- Tier 4 -->
 
-        <RepositoryReference Include="core-setup" />
-        <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+        <RepositoryReference Include="runtime" />
 
         <!-- Tier 5 -->
 
