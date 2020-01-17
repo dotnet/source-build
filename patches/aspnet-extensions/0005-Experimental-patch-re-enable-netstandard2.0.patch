@@ -1,0 +1,493 @@
+From 82c6ec95336acea62df3d3582817d5671b2953f9 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 17 Jan 2020 11:01:09 -0600
+Subject: [PATCH 5/5] Experimental patch - re-enable netstandard2.0.
+
+---
+ .../src/Microsoft.Extensions.Caching.Abstractions.csproj        | 1 -
+ .../Memory/src/Microsoft.Extensions.Caching.Memory.csproj       | 1 -
+ .../src/Microsoft.Extensions.Configuration.Abstractions.csproj  | 1 -
+ .../src/Microsoft.Extensions.Configuration.Binder.csproj        | 1 -
+ .../src/Microsoft.Extensions.Configuration.CommandLine.csproj   | 1 -
+ ...crosoft.Extensions.Configuration.EnvironmentVariables.csproj | 1 -
+ .../Microsoft.Extensions.Configuration.FileExtensions.csproj    | 1 -
+ .../src/Microsoft.Extensions.Configuration.Ini.csproj           | 1 -
+ .../src/Microsoft.Extensions.Configuration.Json.csproj          | 1 -
+ .../src/Microsoft.Extensions.Configuration.KeyPerFile.csproj    | 1 -
+ .../src/Microsoft.Extensions.Configuration.UserSecrets.csproj   | 1 -
+ .../src/Microsoft.Extensions.Configuration.Xml.csproj           | 1 -
+ .../Config/src/Microsoft.Extensions.Configuration.csproj        | 1 -
+ .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj  | 1 -
+ .../src/Microsoft.Extensions.FileProviders.Composite.csproj     | 1 -
+ .../src/Microsoft.Extensions.FileProviders.Embedded.csproj      | 2 --
+ .../src/Microsoft.Extensions.FileProviders.Physical.csproj      | 1 -
+ ...soft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 1 -
+ .../src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj    | 1 -
+ .../src/Microsoft.Extensions.Hosting.Abstractions.csproj        | 1 -
+ src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj     | 1 -
+ src/HttpClientFactory/Http/src/Microsoft.Extensions.Http.csproj | 1 -
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj          | 1 -
+ .../src/Microsoft.Extensions.Localization.Abstractions.csproj   | 1 -
+ .../Localization/src/Microsoft.Extensions.Localization.csproj   | 1 -
+ .../src/Microsoft.Extensions.Logging.Configuration.csproj       | 1 -
+ .../src/Microsoft.Extensions.Logging.Console.csproj             | 1 -
+ .../Logging.Debug/src/Microsoft.Extensions.Logging.Debug.csproj | 1 -
+ .../src/Microsoft.Extensions.Logging.EventLog.csproj            | 1 -
+ .../src/Microsoft.Extensions.Logging.EventSource.csproj         | 1 -
+ .../src/Microsoft.Extensions.Logging.TraceSource.csproj         | 1 -
+ src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj     | 1 -
+ .../Microsoft.Extensions.Options.ConfigurationExtensions.csproj | 1 -
+ .../src/Microsoft.Extensions.Options.DataAnnotations.csproj     | 1 -
+ src/Options/Options/src/Microsoft.Extensions.Options.csproj     | 1 -
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj       | 1 -
+ src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj     | 1 -
+ 37 files changed, 38 deletions(-)
+
+diff --git a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+index 3ff41adc1..aac665560 100644
+--- a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
++++ b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+@@ -6,7 +6,6 @@ Commonly used types:
+ Microsoft.Extensions.Caching.Distributed.IDistributedCache
+ Microsoft.Extensions.Caching.Memory.IMemoryCache</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;memorycache;distributedcache</PackageTags>
+diff --git a/src/Caching/Memory/src/Microsoft.Extensions.Caching.Memory.csproj b/src/Caching/Memory/src/Microsoft.Extensions.Caching.Memory.csproj
+index b3f1a2e98..4e44588e2 100644
+--- a/src/Caching/Memory/src/Microsoft.Extensions.Caching.Memory.csproj
++++ b/src/Caching/Memory/src/Microsoft.Extensions.Caching.Memory.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>In-memory cache implementation of Microsoft.Extensions.Caching.Memory.IMemoryCache.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;memorycache</PackageTags>
+diff --git a/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj b/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
+index ce441b5ff..1423bdbe2 100644
+--- a/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
++++ b/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
+@@ -2,7 +2,6 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <Description>Abstractions of key-value pair based configuration.
+ Commonly used types:
+ Microsoft.Extensions.Configuration.IConfiguration
+diff --git a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+index d6fcba085..3dca39916 100644
+--- a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
++++ b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Functionality to bind an object to data in configuration providers for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config.CommandLine/src/Microsoft.Extensions.Configuration.CommandLine.csproj b/src/Configuration/Config.CommandLine/src/Microsoft.Extensions.Configuration.CommandLine.csproj
+index eb7920118..03082e918 100644
+--- a/src/Configuration/Config.CommandLine/src/Microsoft.Extensions.Configuration.CommandLine.csproj
++++ b/src/Configuration/Config.CommandLine/src/Microsoft.Extensions.Configuration.CommandLine.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Command line configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);commandline</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config.EnvironmentVariables/src/Microsoft.Extensions.Configuration.EnvironmentVariables.csproj b/src/Configuration/Config.EnvironmentVariables/src/Microsoft.Extensions.Configuration.EnvironmentVariables.csproj
+index aaec24827..aa8bffc2f 100644
+--- a/src/Configuration/Config.EnvironmentVariables/src/Microsoft.Extensions.Configuration.EnvironmentVariables.csproj
++++ b/src/Configuration/Config.EnvironmentVariables/src/Microsoft.Extensions.Configuration.EnvironmentVariables.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Environment variables configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);envvar;environmentvariable</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config.FileExtensions/src/Microsoft.Extensions.Configuration.FileExtensions.csproj b/src/Configuration/Config.FileExtensions/src/Microsoft.Extensions.Configuration.FileExtensions.csproj
+index 15c0679ef..fe208218d 100644
+--- a/src/Configuration/Config.FileExtensions/src/Microsoft.Extensions.Configuration.FileExtensions.csproj
++++ b/src/Configuration/Config.FileExtensions/src/Microsoft.Extensions.Configuration.FileExtensions.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Extension methods for configuring file-based configuration providers for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config.Ini/src/Microsoft.Extensions.Configuration.Ini.csproj b/src/Configuration/Config.Ini/src/Microsoft.Extensions.Configuration.Ini.csproj
+index 1f650046d..fe14e6572 100644
+--- a/src/Configuration/Config.Ini/src/Microsoft.Extensions.Configuration.Ini.csproj
++++ b/src/Configuration/Config.Ini/src/Microsoft.Extensions.Configuration.Ini.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>INI configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);ini</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config.Json/src/Microsoft.Extensions.Configuration.Json.csproj b/src/Configuration/Config.Json/src/Microsoft.Extensions.Configuration.Json.csproj
+index 0fec4aec0..06a765cfc 100644
+--- a/src/Configuration/Config.Json/src/Microsoft.Extensions.Configuration.Json.csproj
++++ b/src/Configuration/Config.Json/src/Microsoft.Extensions.Configuration.Json.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>JSON configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);json</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config.KeyPerFile/src/Microsoft.Extensions.Configuration.KeyPerFile.csproj b/src/Configuration/Config.KeyPerFile/src/Microsoft.Extensions.Configuration.KeyPerFile.csproj
+index 10f41fa9f..d26c36a31 100644
+--- a/src/Configuration/Config.KeyPerFile/src/Microsoft.Extensions.Configuration.KeyPerFile.csproj
++++ b/src/Configuration/Config.KeyPerFile/src/Microsoft.Extensions.Configuration.KeyPerFile.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Configuration provider that uses files in a directory for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config.UserSecrets/src/Microsoft.Extensions.Configuration.UserSecrets.csproj b/src/Configuration/Config.UserSecrets/src/Microsoft.Extensions.Configuration.UserSecrets.csproj
+index 4187bd5f3..5325f2da6 100644
+--- a/src/Configuration/Config.UserSecrets/src/Microsoft.Extensions.Configuration.UserSecrets.csproj
++++ b/src/Configuration/Config.UserSecrets/src/Microsoft.Extensions.Configuration.UserSecrets.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>User secrets configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);secrets;usersecrets</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj b/src/Configuration/Config.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj
+index 3a055260d..fc9da351b 100644
+--- a/src/Configuration/Config.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj
++++ b/src/Configuration/Config.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>XML configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);xml</PackageTags>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+index dc93341da..140807df7 100644
+--- a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
++++ b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Implementation of key-value pair based configuration for Microsoft.Extensions.Configuration. Includes the memory configuration provider.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+index dff946a6b..7052d81ce 100644
+--- a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
++++ b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+@@ -8,7 +8,6 @@ Microsoft.Extensions.FileProviders.IDirectoryContents
+ Microsoft.Extensions.FileProviders.IFileInfo
+ Microsoft.Extensions.FileProviders.IFileProvider</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Composite/src/Microsoft.Extensions.FileProviders.Composite.csproj b/src/FileProviders/Composite/src/Microsoft.Extensions.FileProviders.Composite.csproj
+index e8d3cfc0e..7735bec68 100644
+--- a/src/FileProviders/Composite/src/Microsoft.Extensions.FileProviders.Composite.csproj
++++ b/src/FileProviders/Composite/src/Microsoft.Extensions.FileProviders.Composite.csproj
+@@ -4,7 +4,6 @@
+     <RootNamespace>Microsoft.Extensions.FileProviders</RootNamespace>
+     <Description>Composite file and directory providers for Microsoft.Extensions.FileProviders.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+index d36323e3b..3d01ccf30 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+@@ -5,8 +5,6 @@
+     <Description>File provider for files in embedded resources for Microsoft.Extensions.FileProviders.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <NuspecFile>$(MSBuildProjectName).multitarget.nuspec</NuspecFile>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+-    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).netcoreapp3.0.nuspec</NuspecFile>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj b/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
+index 12a110024..b107b47b0 100644
+--- a/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
++++ b/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
+@@ -4,7 +4,6 @@
+     <RootNamespace>Microsoft.Extensions.FileProviders</RootNamespace>
+     <Description>File provider for physical files for Microsoft.Extensions.FileProviders.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/HealthChecks/Abstractions/src/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj b/src/HealthChecks/Abstractions/src/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj
+index f41b257c6..18cd52d5c 100644
+--- a/src/HealthChecks/Abstractions/src/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj
++++ b/src/HealthChecks/Abstractions/src/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj
+@@ -8,7 +8,6 @@ Microsoft.Extensions.Diagnostics.HealthChecks.IHealthCheck
+     </Description>
+     <RootNamespace>Microsoft.Extensions.Diagnostics.HealthChecks</RootNamespace>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>diagnostics;healthchecks</PackageTags>
+diff --git a/src/HealthChecks/HealthChecks/src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj b/src/HealthChecks/HealthChecks/src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
+index 400568501..cef34a351 100644
+--- a/src/HealthChecks/HealthChecks/src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
++++ b/src/HealthChecks/HealthChecks/src/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
+@@ -7,7 +7,6 @@ Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckService
+ Microsoft.Extensions.Diagnostics.HealthChecks.IHealthChecksBuilder
+     </Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>diagnostics;healthchecks</PackageTags>
+diff --git a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+index 9f9236800..d56fad467 100644
+--- a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
++++ b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>.NET Core hosting and startup abstractions for applications.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+diff --git a/src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj b/src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj
+index 6c6dfc428..522ede20d 100644
+--- a/src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj
++++ b/src/Hosting/Hosting/src/Microsoft.Extensions.Hosting.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>.NET Core hosting and startup infrastructures for applications.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+diff --git a/src/HttpClientFactory/Http/src/Microsoft.Extensions.Http.csproj b/src/HttpClientFactory/Http/src/Microsoft.Extensions.Http.csproj
+index a40a68ee8..f146d3f91 100644
+--- a/src/HttpClientFactory/Http/src/Microsoft.Extensions.Http.csproj
++++ b/src/HttpClientFactory/Http/src/Microsoft.Extensions.Http.csproj
+@@ -7,7 +7,6 @@
+       System.Net.Http.IHttpClientFactory
+     </Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;httpclient</PackageTags>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+index 044c843b2..bd197e218 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
++++ b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+@@ -2,7 +2,6 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <Description>Abstractions and features for interop between .NET and JavaScript code.</Description>
+     <PackageTags>javascript;interop</PackageTags>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Localization/Abstractions/src/Microsoft.Extensions.Localization.Abstractions.csproj b/src/Localization/Abstractions/src/Microsoft.Extensions.Localization.Abstractions.csproj
+index 09b8bf65b..d355ca038 100644
+--- a/src/Localization/Abstractions/src/Microsoft.Extensions.Localization.Abstractions.csproj
++++ b/src/Localization/Abstractions/src/Microsoft.Extensions.Localization.Abstractions.csproj
+@@ -7,7 +7,6 @@ Commonly used types:
+ Microsoft.Extensions.Localization.IStringLocalizer
+ Microsoft.Extensions.Localization.IStringLocalizer&lt;T&gt;</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>localization</PackageTags>
+diff --git a/src/Localization/Localization/src/Microsoft.Extensions.Localization.csproj b/src/Localization/Localization/src/Microsoft.Extensions.Localization.csproj
+index 86ebaf197..c790f243f 100644
+--- a/src/Localization/Localization/src/Microsoft.Extensions.Localization.csproj
++++ b/src/Localization/Localization/src/Microsoft.Extensions.Localization.csproj
+@@ -4,7 +4,6 @@
+     <Product>Microsoft .NET Extensions</Product>
+     <Description>Application localization services and default implementation based on ResourceManager to load localized assembly resources.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>localization</PackageTags>
+diff --git a/src/Logging/Logging.Configuration/src/Microsoft.Extensions.Logging.Configuration.csproj b/src/Logging/Logging.Configuration/src/Microsoft.Extensions.Logging.Configuration.csproj
+index 641424cfc..b8b168818 100644
+--- a/src/Logging/Logging.Configuration/src/Microsoft.Extensions.Logging.Configuration.csproj
++++ b/src/Logging/Logging.Configuration/src/Microsoft.Extensions.Logging.Configuration.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Configuration support for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Logging/Logging.Console/src/Microsoft.Extensions.Logging.Console.csproj b/src/Logging/Logging.Console/src/Microsoft.Extensions.Logging.Console.csproj
+index 72a55381d..bb9ff4157 100644
+--- a/src/Logging/Logging.Console/src/Microsoft.Extensions.Logging.Console.csproj
++++ b/src/Logging/Logging.Console/src/Microsoft.Extensions.Logging.Console.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Console logger provider implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Logging/Logging.Debug/src/Microsoft.Extensions.Logging.Debug.csproj b/src/Logging/Logging.Debug/src/Microsoft.Extensions.Logging.Debug.csproj
+index 560d20564..610448f5e 100644
+--- a/src/Logging/Logging.Debug/src/Microsoft.Extensions.Logging.Debug.csproj
++++ b/src/Logging/Logging.Debug/src/Microsoft.Extensions.Logging.Debug.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Debug output logger provider implementation for Microsoft.Extensions.Logging. This logger logs messages to a debugger monitor by writing messages with System.Diagnostics.Debug.WriteLine().</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
+index d2a5d47a4..206d076d1 100644
+--- a/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
++++ b/src/Logging/Logging.EventLog/src/Microsoft.Extensions.Logging.EventLog.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Windows Event Log logger provider implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;net461;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <PackageTags>$(PackageTags);eventlog;windowseventlog</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Logging/Logging.EventSource/src/Microsoft.Extensions.Logging.EventSource.csproj b/src/Logging/Logging.EventSource/src/Microsoft.Extensions.Logging.EventSource.csproj
+index f0e878a3a..6c8f3b33f 100644
+--- a/src/Logging/Logging.EventSource/src/Microsoft.Extensions.Logging.EventSource.csproj
++++ b/src/Logging/Logging.EventSource/src/Microsoft.Extensions.Logging.EventSource.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>EventSource/EventListener logger provider implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <PackageTags>$(PackageTags);EventSource;ETW</PackageTags>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Logging/Logging.TraceSource/src/Microsoft.Extensions.Logging.TraceSource.csproj b/src/Logging/Logging.TraceSource/src/Microsoft.Extensions.Logging.TraceSource.csproj
+index 496775d71..29376495d 100644
+--- a/src/Logging/Logging.TraceSource/src/Microsoft.Extensions.Logging.TraceSource.csproj
++++ b/src/Logging/Logging.TraceSource/src/Microsoft.Extensions.Logging.TraceSource.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>TraceSource logger provider implementation for Microsoft.Extensions.Logging.  This logger logs messages to a trace listener by writing messages with System.Diagnostics.TraceSource.TraceEvent().</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>logging;tracesource</PackageTags>
+diff --git a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+index 9129b292f..6874acd8c 100644
+--- a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
++++ b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Logging infrastructure default implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Options/ConfigurationExtensions/src/Microsoft.Extensions.Options.ConfigurationExtensions.csproj b/src/Options/ConfigurationExtensions/src/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
+index 0d302806c..a65b6ce87 100644
+--- a/src/Options/ConfigurationExtensions/src/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
++++ b/src/Options/ConfigurationExtensions/src/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Provides additional configuration specific functionality related to Options.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;configuration;options</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Options/DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj b/src/Options/DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
+index be2be354b..c1db792ad 100644
+--- a/src/Options/DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
++++ b/src/Options/DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Provides additional DataAnnotations specific functionality related to Options.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;validation;options</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Options/Options/src/Microsoft.Extensions.Options.csproj b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+index b9baa3d0d..57122cda6 100644
+--- a/src/Options/Options/src/Microsoft.Extensions.Options.csproj
++++ b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Provides a strongly typed way of specifying and accessing settings using dependency injection.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;options</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+index 639d32e96..1f52fe08a 100644
+--- a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
++++ b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+@@ -6,7 +6,6 @@ Microsoft.Extensions.Primitives.IChangeToken
+ Microsoft.Extensions.Primitives.StringValues
+ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj b/src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj
+index 2ed725eac..0fb1004e1 100644
+--- a/src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj
++++ b/src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Contains registration and configuration APIs to add the core framework encoders to a dependency injection container.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore</PackageTags>
+-- 
+2.21.0
+
