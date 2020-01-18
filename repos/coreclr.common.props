@@ -15,7 +15,7 @@
 
     <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
          Additionally, Linux builds are portable by default and only have a switch to turn it off -->
-    <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false' and '$(BuildingPortableRuntime)' == 'false'">$(BuildArguments) -PortableBuild=false</BuildArguments>
+    <BuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false' and '$(BuildingPortableRuntime)' != 'true'">$(BuildArguments) -PortableBuild=false</BuildArguments>
 
     <BuildArguments>$(BuildArguments) /bl</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ILLinkTrimAssembly=false</BuildArguments>
