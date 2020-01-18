@@ -25,7 +25,9 @@
 
   <Target Name="GatherBuiltPackages" AfterTargets="Build" BeforeTargets="CopyPackage">
     <ItemGroup>
-      <_BuiltPackages Include="$(PackagesOutput)/*linux*nupkg"  Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <_BuiltPackages Include="$(PackagesOutput)/*linux*nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <AllPackages Include="$(ProjectDirectory)/**/*.nupkg" />
     </ItemGroup>
+    <Message Text="@(AllPackages)" />
   </Target>
 </Project>
