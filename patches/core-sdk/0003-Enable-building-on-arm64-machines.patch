@@ -1,7 +1,7 @@
-From 0047cdf04b38ec1cc7599cd50b33cee0382d3c40 Mon Sep 17 00:00:00 2001
+From d4daccc3d0dd1f29676d5a124e27ba55906f093b Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 8 Oct 2019 17:02:29 -0400
-Subject: [PATCH] Enable building on arm64 machines
+Subject: [PATCH 3/8] Enable building on arm64 machines
 
 With this commit, I can build core-sdk on RHEL 8 on arm64 directly,
 without cross compilation.
@@ -68,10 +68,10 @@ index 47adeab..3fccba0 100644
        <SharedFrameworkNameVersionPath>$(RedistLayoutPath)shared/$(SharedFrameworkName)/$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedFrameworkNameVersionPath>
        <DIASymReaderCrossgenFilter>*</DIASymReaderCrossgenFilter>
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 0e41cd9..711e1bc 100644
+index ed591f2..632357b 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -47,11 +47,11 @@
+@@ -42,11 +42,11 @@
  
        <!-- Use the "x64" Rid when downloading Linux shared framework 'DEB' installer files. -->
        <SharedFrameworkInstallerFileRid>$(CoreSetupRid)</SharedFrameworkInstallerFileRid>
@@ -98,5 +98,5 @@ index bdc42db..6e010c5 100644
      </PropertyGroup>
      
 -- 
-1.8.3.1
+2.7.4
 

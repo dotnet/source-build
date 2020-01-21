@@ -1,18 +1,18 @@
-From a0ae7e9b334c167943035dff556730d017baa760 Mon Sep 17 00:00:00 2001
+From 0196762fd10cbd2daaff71ce2da48b5da7f8400e Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Thu, 14 Nov 2019 17:34:41 +0000
-Subject: [PATCH 08/13] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 08/12] Remove Yarn dependency - not used in source-build
 
 ---
- eng/targets/Npm.Common.targets                                 | 3 ---
- global.json                                                    | 1 -
- .../NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj  | 3 ---
- .../SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj    | 3 ---
- src/Shared/E2ETesting/E2ETesting.targets                       | 3 ---
+ eng/targets/Npm.Common.targets                                         | 3 ---
+ global.json                                                            | 1 -
+ .../NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj          | 3 ---
+ src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj | 3 ---
+ src/Shared/E2ETesting/E2ETesting.targets                               | 3 ---
  5 files changed, 13 deletions(-)
 
 diff --git a/eng/targets/Npm.Common.targets b/eng/targets/Npm.Common.targets
-index 062a9d3a8f..3f91b02d42 100644
+index 062a9d3..3f91b02 100644
 --- a/eng/targets/Npm.Common.targets
 +++ b/eng/targets/Npm.Common.targets
 @@ -1,8 +1,5 @@
@@ -25,7 +25,7 @@ index 062a9d3a8f..3f91b02d42 100644
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
 diff --git a/global.json b/global.json
-index 17454ad1bf..2f5a03b4b6 100644
+index 3070303..0f03d68 100644
 --- a/global.json
 +++ b/global.json
 @@ -24,7 +24,6 @@
@@ -33,11 +33,11 @@ index 17454ad1bf..2f5a03b4b6 100644
    },
    "msbuild-sdks": {
 -    "Yarn.MSBuild": "1.15.2",
-     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19517.3",
-     "Microsoft.DotNet.Helix.Sdk": "2.0.0-beta.19517.3"
+     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19607.3",
+     "Microsoft.DotNet.Helix.Sdk": "2.0.0-beta.19607.3"
    }
 diff --git a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
-index e67862ea45..29c3b8c137 100644
+index e67862e..29c3b8c 100644
 --- a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
 +++ b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
 @@ -16,9 +16,6 @@
@@ -51,7 +51,7 @@ index e67862ea45..29c3b8c137 100644
      <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
      <Yarn Command="install --mutex network" />
 diff --git a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
-index 3db479b01e..ad0149356f 100644
+index 3db479b..ad01493 100644
 --- a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
 +++ b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
 @@ -20,9 +20,6 @@
@@ -65,7 +65,7 @@ index 3db479b01e..ad0149356f 100644
      <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
      <Yarn Command="install --mutex network" />
 diff --git a/src/Shared/E2ETesting/E2ETesting.targets b/src/Shared/E2ETesting/E2ETesting.targets
-index 500d910a30..2ccf1a431c 100644
+index 500d910..2ccf1a4 100644
 --- a/src/Shared/E2ETesting/E2ETesting.targets
 +++ b/src/Shared/E2ETesting/E2ETesting.targets
 @@ -1,7 +1,4 @@
@@ -77,5 +77,5 @@ index 500d910a30..2ccf1a431c 100644
    <ItemGroup>
      <None Update="e2eTestSettings*.json">
 -- 
-2.18.0
+2.7.4
 
