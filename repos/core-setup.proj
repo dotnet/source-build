@@ -1,54 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
-
-  <PropertyGroup>
-    <!-- core-sdk always wants a portable runtime on OSX and FreeBSD-->
-    <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-    <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
-    <OverridePortable>$(PortableBuild)</OverridePortable>
-    <OverridePortable Condition="'$(TargetOS)' == 'OSX' or '$(TargetOS)' == 'FreeBSD'">true</OverridePortable>
-
-    <BuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:PortableBuild=$(OverridePortable)</BuildArguments>
-    <BuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
-    <BuildArguments>$(BuildArguments) /m:1</BuildArguments>
-
-    <LogVerbosityOptOut>true</LogVerbosityOptOut>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
-    <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildArguments>
-
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
-    <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
-
-    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
-    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
-
-    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
-    <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
-
-    <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(ShippingPackagesOutput)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(NonShippingPackagesOutput)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
-
-    <!-- core-setup does not destabilize for intermediate servicing builds -->
-    <IsStable>true</IsStable>
-  </PropertyGroup>
+  <Import Project="core-setup.common.props" />
 
   <ItemGroup>
     <RepositoryReference Include="coreclr" />
@@ -57,55 +9,9 @@
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
+    <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
   </ItemGroup>
 
-  <ItemGroup>
-    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
-    <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EnvironmentVariables Include="RestoreSources=$(EnvironmentRestoreSources)" />
-    <EnvironmentVariables Include="BuildInParallel=false" />
-  </ItemGroup>
-
-  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
-    <ItemGroup>
-      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
-      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
-    </ItemGroup>
-  </Target>
-
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
-
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishCoreSetupBinaries" />
-
-  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" AfterTargets="Package">
-    <ItemGroup>
-      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
-      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
-    </ItemGroup>
-    <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
-                              DestinationFolderTemplate="$(SourceBuiltRuntimeDir){version}/" >
-      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
-    </PublishCoreSetupBinaries>
-    <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
-  </Target>
-
-  <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
-    <ItemGroup>
-      <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
-      <_builtRuntimePackages>
-        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
-      </_builtRuntimePackages>
-      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
-      <BinariesToCopy Include="@(_builtRuntimePackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
-    </ItemGroup>
-
-    <Copy SourceFiles="@(BinariesToCopy)"
-          DestinationFolder="$(OutputPath)runtime"
-          Condition="'@(BinariesToCopy)'!=''" />
-  </Target>
+  <Import Project="core-setup.common.targets" />
 
 </Project>

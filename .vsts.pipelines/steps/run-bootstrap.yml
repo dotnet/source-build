@@ -1,15 +1,14 @@
-# Delete some files from the default image since we're tight on disk space.
-# List is from https://github.com/microsoft/azure-pipelines-image-generation/pull/1231#issuecomment-537174621
-
 # Extract the tarball fetched from the previous Offline stage 
 steps:
 - script: |
       set -ex 
+      mount
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
-      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
+      tar -xf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
       rm -rf "/bst/Tarball centos71 Offline"'
+      df -h
   displayName: Unpack Tarball
   condition: always()
 
@@ -19,6 +18,7 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
+      df -h
   displayName: Build stage1
   condition: succeeded()
 
@@ -105,7 +105,8 @@ steps:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      rm -rf /bst/source-build-reference-packages/* 
+      rm -rf /bst/source-build-reference-packages/*
+      rm -rf /bst/source-build-reference-packages/.git
       pushd /bst/bootstrap_dir/reference-packages
       echo "Removing everything in reference-packages except artifacts"
       find . -type f -not -name '*SourceBuild.ReferencePackages.bootstrap.tar.gz' -delete
