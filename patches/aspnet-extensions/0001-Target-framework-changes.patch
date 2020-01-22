@@ -1,7 +1,7 @@
-From f4ca05a04139be956614a6faa921c9cadf8bd5c3 Mon Sep 17 00:00:00 2001
+From e4162b7e6d6c4659b1f6d583a92aec7f79894ef5 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sat, 19 Oct 2019 16:29:22 -0500
-Subject: [PATCH 1/4] Target framework changes
+Subject: [PATCH] Target framework changes
 
 ---
  Directory.Build.props                                               | 1 +
@@ -56,7 +56,7 @@ Subject: [PATCH 1/4] Target framework changes
  .../Microsoft.Extensions.FileProviders.Embedded.props               | 2 +-
  ...Microsoft.Extensions.FileProviders.Embedded.Manifest.Task.csproj | 2 +-
  .../Physical/ref/Microsoft.Extensions.FileProviders.Physical.csproj | 4 ++--
- .../Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj | 2 +-
+ .../Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj | 3 +--
  .../ref/Microsoft.Extensions.FileSystemGlobbing.csproj              | 4 ++--
  .../src/Microsoft.Extensions.FileSystemGlobbing.csproj              | 2 +-
  ...icrosoft.Extensions.Diagnostics.HealthChecks.Abstractions.csproj | 4 ++--
@@ -112,7 +112,7 @@ Subject: [PATCH 1/4] Target framework changes
  .../src/Microsoft.AspNetCore.Testing.csproj                         | 2 +-
  src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj         | 4 ++--
  src/WebEncoders/src/Microsoft.Extensions.WebEncoders.csproj         | 4 ++--
- 108 files changed, 168 insertions(+), 167 deletions(-)
+ 108 files changed, 168 insertions(+), 168 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
 index 5c87238..b9ac69e 100644
@@ -880,18 +880,19 @@ index c662e57..9054f1b 100644
      <Reference Include="Microsoft.Extensions.FileProviders.Abstractions"  />
      <Reference Include="Microsoft.Extensions.FileSystemGlobbing"  />
 diff --git a/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj b/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
-index dee9f55..6040609 100644
+index dee9f55..dfc5582 100644
 --- a/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
 +++ b/src/FileProviders/Physical/src/Microsoft.Extensions.FileProviders.Physical.csproj
-@@ -3,7 +3,7 @@
+@@ -3,8 +3,7 @@
    <PropertyGroup>
      <RootNamespace>Microsoft.Extensions.FileProviders</RootNamespace>
      <Description>File provider for physical files for Microsoft.Extensions.FileProviders.</Description>
 -    <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
 +    <TargetFrameworks>$(DefaultNetStandardTargetFramework);$(DefaultNetCoreTargetFramework)</TargetFrameworks>
-     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
      <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
 diff --git a/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj b/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj
 index c93da68..ce36804 100644
 --- a/src/FileSystemGlobbing/ref/Microsoft.Extensions.FileSystemGlobbing.csproj
