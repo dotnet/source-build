@@ -21,6 +21,7 @@
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
     <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
+    <DotNetCliToolDir Condition="'$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
     <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/restored/</PackagesDir>

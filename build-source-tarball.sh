@@ -10,6 +10,7 @@ usage() {
     echo "  --skip-prebuilt-check              do not confirm that all prebuilt packages used are either reference packages, previously-built, or known extras"
     echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
+    echo "  --with-sdk                         use the specified SDK to check out source code.  do not copy it to the tarball.  an external SDK will be required to build from the tarball."
     echo "use -- to send the remaining arguments to build.sh"
 }
 
@@ -48,6 +49,7 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
+CUSTOM_SDK_DIR=''
 INCLUDE_LEAK_DETECTION=0
 MINIMIZE_DISK_USAGE=0
 SKIP_PREBUILT_ENFORCEMENT=0
@@ -74,6 +76,15 @@ while :; do
             ;;
         --skip-prebuilt-check)
             SKIP_PREBUILT_ENFORCEMENT=1
+            ;;
+        --with-sdk)
+            CUSTOM_SDK_DIR="$2"
+            if [ ! -d "$CUSTOM_SDK_DIR" ]; then
+                echo "Custom SDK directory '$CUSTOM_SDK_DIR' does not exist"
+            fi
+            if [ ! -x "$CUSTOM_SDK_DIR/dotnet" ]; then
+                echo "Custom SDK '$CUSTOM_SDK_DIR/dotnet' not found or not executable"
+            fi
             ;;
         --with-ref-packages)
             CUSTOM_REF_PACKAGES_DIR="$2"
@@ -129,13 +140,20 @@ if [ -e "$TARBALL_ROOT" ]; then
 fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
-sdkPattern="\"dotnet\" *: *\"(.*)\""
-if [[ $sdkLine =~ $sdkPattern ]]; then
-  export SDK_VERSION=${BASH_REMATCH[1]}
+if [ -d "$CUSTOM_SDK_DIR" ]; then
+  export SDK_VERSION=`"$CUSTOM_SDK_DIR/dotnet" --version`
+  echo "Using custom bootstrap SDK from '$CUSTOM_SDK_DIR', version $SDK_VERSION"
+  CLI_PATH="$CUSTOM_SDK_DIR"
+else
+  sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
+  sdkPattern="\"dotnet\" *: *\"(.*)\""
+  if [[ $sdkLine =~ $sdkPattern ]]; then
+    export SDK_VERSION=${BASH_REMATCH[1]}
+    CLI_DIR=".dotnet"
+    CLI_PATH="$SCRIPT_ROOT/$CLI_DIR"
+  fi
+  echo "Found bootstrap SDK $SDK_VERSION"
 fi
-echo "Found bootstrap SDK $SDK_VERSION"
-CLI_PATH="$SCRIPT_ROOT/.dotnet"
 DarcVersion=$(cat $SCRIPT_ROOT/DarcVersion.txt)
 DARC_DLL="$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp3.0/any/Microsoft.DotNet.Darc.dll"
 
@@ -253,7 +271,11 @@ cp $SCRIPT_ROOT/global.json $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DarcVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
-cp -r $CLI_PATH $TARBALL_ROOT/
+if [ ! -d "$CUSTOM_SDK_DIR" ]; then
+  cp -r $CLI_PATH $TARBALL_ROOT/
+  rm -rf $TARBALL_ROOT/$CLI_DIR/shared/2.1.0/
+  rm -rf $TARBALL_ROOT/$CLI_DIR/tools/
+fi
 cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
@@ -263,8 +285,6 @@ cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/bin
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/obj
-rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
-rm -rf $TARBALL_ROOT/.dotnet/tools/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
