@@ -12,6 +12,7 @@
     <BuildArguments>$(BuildArguments) /p:DotNetRestoreSourcePropsPath=$(RestoreSourcePropsPath)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:NetStandardLibraryPackageVersion=2.0.3</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</BuildArguments>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</BuildArguments>
