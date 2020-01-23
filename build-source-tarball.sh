@@ -85,6 +85,7 @@ while :; do
             if [ ! -x "$CUSTOM_SDK_DIR/dotnet" ]; then
                 echo "Custom SDK '$CUSTOM_SDK_DIR/dotnet' not found or not executable"
             fi
+            shift
             ;;
         --with-ref-packages)
             CUSTOM_REF_PACKAGES_DIR="$2"
