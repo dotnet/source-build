@@ -1,0 +1,657 @@
+From daa38da130db47d31f61d496a30f93d4d7c4a032 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 23 Jan 2020 20:32:29 +0000
+Subject: [PATCH 14/14] Only build for netcoreapp
+
+---
+ ...soft.AspNetCore.Components.Authorization.csproj |   1 +
+ .../ref/Microsoft.AspNetCore.Components.Web.csproj |   1 +
+ .../ref/Microsoft.AspNetCore.DataProtection.csproj |   1 +
+ ...oft.AspNetCore.DataProtection.Extensions.csproj |   1 +
+ .../ref/Microsoft.AspNetCore.Http.Features.csproj  |   1 +
+ .../ref/Microsoft.Extensions.Identity.Core.csproj  |   1 +
+ .../Microsoft.Extensions.Identity.Stores.csproj    |   1 +
+ .../TagHelpersWebSite/Views/Home/Index.cshtml      | 102 ++++++++++-----------
+ .../BlazorServerWeb-CSharp/Pages/Error.razor       |  30 +++---
+ .../appsettings.Development.json                   |  20 ++--
+ .../EmptyWeb-CSharp/appsettings.Development.json   |   6 +-
+ .../EmptyWeb-FSharp/appsettings.Development.json   |   6 +-
+ .../content/EmptyWeb-FSharp/appsettings.json       |   4 +-
+ .../content/GrpcService-CSharp/appsettings.json    |   4 +-
+ .../appsettings.Development.json                   |   6 +-
+ .../StarterWeb-CSharp/appsettings.Development.json |   6 +-
+ .../StarterWeb-FSharp/appsettings.Development.json |   6 +-
+ .../content/StarterWeb-FSharp/appsettings.json     |   4 +-
+ .../WebApi-CSharp/appsettings.Development.json     |   6 +-
+ .../WebApi-FSharp/appsettings.Development.json     |   6 +-
+ .../content/WebApi-FSharp/appsettings.json         |   4 +-
+ .../Worker-CSharp/appsettings.Development.json     |   6 +-
+ .../Angular-CSharp/appsettings.Development.json    |   6 +-
+ .../content/Angular-CSharp/appsettings.json        |   6 +-
+ .../React-CSharp/appsettings.Development.json      |   6 +-
+ .../content/React-CSharp/appsettings.json          |   6 +-
+ .../ReactRedux-CSharp/appsettings.Development.json |   6 +-
+ .../content/ReactRedux-CSharp/appsettings.json     |   6 +-
+ .../ref/Microsoft.AspNetCore.Authorization.csproj  |   1 +
+ ...soft.AspNetCore.Connections.Abstractions.csproj |   1 +
+ ...osoft.AspNetCore.Http.Connections.Common.csproj |   1 +
+ ...rosoft.AspNetCore.SignalR.Protocols.Json.csproj |   1 +
+ .../ref/Microsoft.AspNetCore.SignalR.Common.csproj |   1 +
+ 33 files changed, 138 insertions(+), 126 deletions(-)
+
+diff --git a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
+index 5e6c8fb..5cf3f1e 100644
+--- a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
++++ b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Components.Authorization.netstandard2.0.cs" />
+diff --git a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
+index 13a6a50..54cd401 100644
+--- a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
++++ b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Components.Web.netstandard2.0.cs" />
+diff --git a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
+index 91b4748..6af17d7 100644
+--- a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
++++ b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.DataProtection.netstandard2.0.cs" />
+diff --git a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+index 42e3a30..93f4956 100644
+--- a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
++++ b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.DataProtection.Extensions.netstandard2.0.cs" />
+diff --git a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
+index d312e44..14cf5af 100644
+--- a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
++++ b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Http.Features.netstandard2.0.cs" />
+diff --git a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
+index 9bd6ba2..06690fb 100644
+--- a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
++++ b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.Extensions.Identity.Core.netstandard2.0.cs" />
+diff --git a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
+index f277fc6..164354c 100644
+--- a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
++++ b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.Extensions.Identity.Stores.netstandard2.0.cs" />
+diff --git a/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml b/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
+index 77699bd..0a26a53 100644
+--- a/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
++++ b/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
+@@ -1,52 +1,52 @@
+-@using TagHelpersWebSite.Models
+-@using Microsoft.AspNetCore.Mvc.Razor
+-
+-@model WebsiteContext
+-@{
+-    ViewBag.Title = "Home Page";
+-}
+-
+-@addTagHelper *, TagHelpersWebSite
+-
+-@section css {
+-    <style condition="!Model.Approved">
+-        h1 {
+-            color:red;
+-            font-size:2em;
+-        }
+-    </style>
+-}
+-
+-@functions {
+-    public void RenderTemplate(string title, Func<string, HelperResult> template)
+-    {
+-        Output.WriteLine("<br /><p><em>Rendering Template:</em></p>");
+-        var helperResult = template(title);
+-        helperResult.WriteTo(Output, HtmlEncoder);
+-    }
+-}
+-
+-<div condition="!Model.Approved">
+-    <p>This website has <strong surround="em">not</strong> been approved yet. Visit www.contoso.com for <strong make-pretty="false">more</strong> information.</p>
+-</div>
+-
+-<div>
+-    <h3>Current Tag Cloud from Tag Helper</h3>
+-    <tag-cloud count="Model.TagsToShow" surround="div" />
+-    <h3>Current Tag Cloud from ViewComponentHelper:</h3>
+-    <section bold>@await Component.InvokeAsync("Tags", new { count = 15 })</section>
+-    @{
+-        RenderTemplate(
+-            "Tag Cloud from Template: ",
+-            @<div condition="true"><h3>@item</h3><tag-cloud count="Model.TagsToShow"></tag-cloud></div>);
+-    }
+-</div>
+-
+-<div>
+-    <h3>Dictionary Valued Model Expression</h3>
+-    <div prefix-test1="@Model.TagsToShow" prefix-test2="@Model.Version.Build"></div>
+-</div>
+-
+-@section footerContent {
+-    <p condition="Model.Approved" bold surround="section">&copy; @Model.CopyrightYear - My ASP.NET Application</p>
++@using TagHelpersWebSite.Models
++@using Microsoft.AspNetCore.Mvc.Razor
++
++@model WebsiteContext
++@{
++    ViewBag.Title = "Home Page";
++}
++
++@addTagHelper *, TagHelpersWebSite
++
++@section css {
++    <style condition="!Model.Approved">
++        h1 {
++            color:red;
++            font-size:2em;
++        }
++    </style>
++}
++
++@functions {
++    public void RenderTemplate(string title, Func<string, HelperResult> template)
++    {
++        Output.WriteLine("<br /><p><em>Rendering Template:</em></p>");
++        var helperResult = template(title);
++        helperResult.WriteTo(Output, HtmlEncoder);
++    }
++}
++
++<div condition="!Model.Approved">
++    <p>This website has <strong surround="em">not</strong> been approved yet. Visit www.contoso.com for <strong make-pretty="false">more</strong> information.</p>
++</div>
++
++<div>
++    <h3>Current Tag Cloud from Tag Helper</h3>
++    <tag-cloud count="Model.TagsToShow" surround="div" />
++    <h3>Current Tag Cloud from ViewComponentHelper:</h3>
++    <section bold>@await Component.InvokeAsync("Tags", new { count = 15 })</section>
++    @{
++        RenderTemplate(
++            "Tag Cloud from Template: ",
++            @<div condition="true"><h3>@item</h3><tag-cloud count="Model.TagsToShow"></tag-cloud></div>);
++    }
++</div>
++
++<div>
++    <h3>Dictionary Valued Model Expression</h3>
++    <div prefix-test1="@Model.TagsToShow" prefix-test2="@Model.Version.Build"></div>
++</div>
++
++@section footerContent {
++    <p condition="Model.Approved" bold surround="section">&copy; @Model.CopyrightYear - My ASP.NET Application</p>
+ }
+\ No newline at end of file
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
+index cd87ea9..79929d7 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
+@@ -1,16 +1,16 @@
+-﻿@page "/error"
+-
+-
+-<h1 class="text-danger">Error.</h1>
+-<h2 class="text-danger">An error occurred while processing your request.</h2>
+-
+-<h3>Development Mode</h3>
+-<p>
+-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+-</p>
+-<p>
+-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
+-    It can result in displaying sensitive information from exceptions to end users.
+-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
+-    and restarting the app.
++﻿@page "/error"
++
++
++<h1 class="text-danger">Error.</h1>
++<h2 class="text-danger">An error occurred while processing your request.</h2>
++
++<h3>Development Mode</h3>
++<p>
++    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
++</p>
++<p>
++    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
++    It can result in displaying sensitive information from exceptions to end users.
++    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
++    and restarting the app.
+ </p>
+\ No newline at end of file
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
+index 2defd04..5173757 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
+@@ -1,10 +1,10 @@
+-{
+-  "DetailedErrors": true,
+-  "Logging": {
+-    "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
+-    }
+-  }
+-}
++{
++  "DetailedErrors": true,
++  "Logging": {
++    "LogLevel": {
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
++    }
++  }
++}
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
+index 238d518..d9d9a9b 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
+@@ -1,8 +1,8 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
++      "Default": "Information",
++      "Microsoft": "Warning",
+       "Microsoft.Hosting.Lifetime": "Information"
+     }
+   },
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
+index f5ef230..1f29241 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
+@@ -1,8 +1,8 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
++      "Default": "Information",
++      "Microsoft": "Warning",
+       "Microsoft.Hosting.Lifetime": "Information"
+     }
+   },
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
+index 238d518..d9d9a9b 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
+@@ -1,8 +1,8 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
++      "Default": "Information",
++      "Microsoft": "Warning",
+       "Microsoft.Hosting.Lifetime": "Information"
+     }
+   },
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
+index 238d518..d9d9a9b 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
+@@ -1,8 +1,8 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
++      "Default": "Information",
++      "Microsoft": "Warning",
+       "Microsoft.Hosting.Lifetime": "Information"
+     }
+   },
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
+index c971918..a1213fe 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+ ////#if (IndividualLocalAuth)
+ //  },
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
+index 8861bc9..7bed5bd 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
+@@ -10,9 +10,9 @@
+ ////#endif
+   "Logging": {
+       "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+       }
+     },
+ ////#if (IndividualLocalAuth)
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
+index c971918..a1213fe 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+ ////#if (IndividualLocalAuth)
+ //  },
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
+index 8861bc9..7bed5bd 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
+@@ -10,9 +10,9 @@
+ ////#endif
+   "Logging": {
+       "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+       }
+     },
+ ////#if (IndividualLocalAuth)
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
+index dba68eb..8983e0f 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   }
+ }
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
+index d48929e..d9d9a9b 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
+@@ -1,9 +1,9 @@
+ {
+   "Logging": {
+     "LogLevel": {
+-      "Default": "Information",
+-      "Microsoft": "Warning",
+-      "Microsoft.Hosting.Lifetime": "Information"
++      "Default": "Information",
++      "Microsoft": "Warning",
++      "Microsoft.Hosting.Lifetime": "Information"
+     }
+   },
+   "AllowedHosts": "*"
+diff --git a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
+index 6c84d4e..7f1202a 100644
+--- a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
++++ b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Authorization.netstandard2.0.cs" />
+diff --git a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
+index 9eccf06..100a08a 100644
+--- a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
++++ b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Connections.Abstractions.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
+index ca3ba9a..d7519cc 100644
+--- a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
++++ b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Http.Connections.Common.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+index 2d45dbe..fc2a517 100644
+--- a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
++++ b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.SignalR.Protocols.Json.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
+index 91d7996..21dad45 100644
+--- a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
++++ b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.SignalR.Common.netstandard2.0.cs" />
+-- 
+2.7.4
+
