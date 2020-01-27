@@ -10,7 +10,7 @@ usage() {
     echo "  --skip-prebuilt-check              do not confirm that all prebuilt packages used are either reference packages, previously-built, or known extras"
     echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
-    echo "  --with-sdk                         use the specified SDK to check out source code.  do not copy it to the tarball.  an external SDK will be required to build from the tarball."
+    echo "  --with-sdk <dir>                   use the specified SDK to check out source code.  do not copy it to the tarball.  an external SDK will be required to build from the tarball."
     echo "use -- to send the remaining arguments to build.sh"
 }
 
