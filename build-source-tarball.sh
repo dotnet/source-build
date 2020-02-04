@@ -306,10 +306,6 @@ do
     fi
 done
 
-echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
-mkdir -p $TARBALL_ROOT/packages/source-built
-cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/packages/source-built/
-
 # Setup package version props to include both source-built and running PackageVersions.props
 mkdir --parents $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
 cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
