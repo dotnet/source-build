@@ -1,46 +1,46 @@
-From daa38da130db47d31f61d496a30f93d4d7c4a032 Mon Sep 17 00:00:00 2001
+From fba57da9cbf0241237a1a5b17ae32f074d592d3a Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 23 Jan 2020 20:32:29 +0000
-Subject: [PATCH 14/14] Only build for netcoreapp
+Subject: [PATCH 14/15] Only build for netcoreapp
 
 ---
- ...soft.AspNetCore.Components.Authorization.csproj |   1 +
- .../ref/Microsoft.AspNetCore.Components.Web.csproj |   1 +
- .../ref/Microsoft.AspNetCore.DataProtection.csproj |   1 +
- ...oft.AspNetCore.DataProtection.Extensions.csproj |   1 +
- .../ref/Microsoft.AspNetCore.Http.Features.csproj  |   1 +
- .../ref/Microsoft.Extensions.Identity.Core.csproj  |   1 +
- .../Microsoft.Extensions.Identity.Stores.csproj    |   1 +
- .../TagHelpersWebSite/Views/Home/Index.cshtml      | 102 ++++++++++-----------
- .../BlazorServerWeb-CSharp/Pages/Error.razor       |  30 +++---
- .../appsettings.Development.json                   |  20 ++--
- .../EmptyWeb-CSharp/appsettings.Development.json   |   6 +-
- .../EmptyWeb-FSharp/appsettings.Development.json   |   6 +-
- .../content/EmptyWeb-FSharp/appsettings.json       |   4 +-
- .../content/GrpcService-CSharp/appsettings.json    |   4 +-
- .../appsettings.Development.json                   |   6 +-
- .../StarterWeb-CSharp/appsettings.Development.json |   6 +-
- .../StarterWeb-FSharp/appsettings.Development.json |   6 +-
- .../content/StarterWeb-FSharp/appsettings.json     |   4 +-
- .../WebApi-CSharp/appsettings.Development.json     |   6 +-
- .../WebApi-FSharp/appsettings.Development.json     |   6 +-
- .../content/WebApi-FSharp/appsettings.json         |   4 +-
- .../Worker-CSharp/appsettings.Development.json     |   6 +-
- .../Angular-CSharp/appsettings.Development.json    |   6 +-
- .../content/Angular-CSharp/appsettings.json        |   6 +-
- .../React-CSharp/appsettings.Development.json      |   6 +-
- .../content/React-CSharp/appsettings.json          |   6 +-
- .../ReactRedux-CSharp/appsettings.Development.json |   6 +-
- .../content/ReactRedux-CSharp/appsettings.json     |   6 +-
- .../ref/Microsoft.AspNetCore.Authorization.csproj  |   1 +
- ...soft.AspNetCore.Connections.Abstractions.csproj |   1 +
- ...osoft.AspNetCore.Http.Connections.Common.csproj |   1 +
- ...rosoft.AspNetCore.SignalR.Protocols.Json.csproj |   1 +
- .../ref/Microsoft.AspNetCore.SignalR.Common.csproj |   1 +
+ ...AspNetCore.Components.Authorization.csproj |   1 +
+ ...Microsoft.AspNetCore.Components.Web.csproj |   1 +
+ ...Microsoft.AspNetCore.DataProtection.csproj |   1 +
+ ...spNetCore.DataProtection.Extensions.csproj |   1 +
+ .../Microsoft.AspNetCore.Http.Features.csproj |   1 +
+ .../Microsoft.Extensions.Identity.Core.csproj |   1 +
+ ...icrosoft.Extensions.Identity.Stores.csproj |   1 +
+ .../TagHelpersWebSite/Views/Home/Index.cshtml | 102 +++++++++---------
+ .../BlazorServerWeb-CSharp/Pages/Error.razor  |  30 +++---
+ .../appsettings.Development.json              |  20 ++--
+ .../appsettings.Development.json              |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../content/EmptyWeb-FSharp/appsettings.json  |   4 +-
+ .../GrpcService-CSharp/appsettings.json       |   4 +-
+ .../appsettings.Development.json              |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../StarterWeb-FSharp/appsettings.json        |   4 +-
+ .../appsettings.Development.json              |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../content/WebApi-FSharp/appsettings.json    |   4 +-
+ .../appsettings.Development.json              |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../content/Angular-CSharp/appsettings.json   |   6 +-
+ .../React-CSharp/appsettings.Development.json |   6 +-
+ .../content/React-CSharp/appsettings.json     |   6 +-
+ .../appsettings.Development.json              |   6 +-
+ .../ReactRedux-CSharp/appsettings.json        |   6 +-
+ .../Microsoft.AspNetCore.Authorization.csproj |   1 +
+ ...AspNetCore.Connections.Abstractions.csproj |   1 +
+ ....AspNetCore.Http.Connections.Common.csproj |   1 +
+ ...t.AspNetCore.SignalR.Protocols.Json.csproj |   1 +
+ ...Microsoft.AspNetCore.SignalR.Common.csproj |   1 +
  33 files changed, 138 insertions(+), 126 deletions(-)
 
 diff --git a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
-index 5e6c8fb..5cf3f1e 100644
+index 5e6c8fb34c..5cf3f1eedb 100644
 --- a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
 +++ b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
 @@ -2,6 +2,7 @@
@@ -52,7 +52,7 @@ index 5e6c8fb..5cf3f1e 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Components.Authorization.netstandard2.0.cs" />
 diff --git a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
-index 13a6a50..54cd401 100644
+index 13a6a503eb..54cd401221 100644
 --- a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
 +++ b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
 @@ -2,6 +2,7 @@
@@ -64,7 +64,7 @@ index 13a6a50..54cd401 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Components.Web.netstandard2.0.cs" />
 diff --git a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
-index 91b4748..6af17d7 100644
+index 91b47483f9..6af17d7d46 100644
 --- a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
 +++ b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
 @@ -2,6 +2,7 @@
@@ -76,7 +76,7 @@ index 91b4748..6af17d7 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.DataProtection.netstandard2.0.cs" />
 diff --git a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
-index 42e3a30..93f4956 100644
+index 42e3a30cc5..93f4956cdf 100644
 --- a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
 +++ b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
 @@ -2,6 +2,7 @@
@@ -88,7 +88,7 @@ index 42e3a30..93f4956 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.DataProtection.Extensions.netstandard2.0.cs" />
 diff --git a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
-index d312e44..14cf5af 100644
+index d312e44940..14cf5afa7e 100644
 --- a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
 +++ b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
 @@ -2,6 +2,7 @@
@@ -100,7 +100,7 @@ index d312e44..14cf5af 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Http.Features.netstandard2.0.cs" />
 diff --git a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
-index 9bd6ba2..06690fb 100644
+index 9bd6ba236a..06690fb58c 100644
 --- a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
 +++ b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
 @@ -2,6 +2,7 @@
@@ -112,7 +112,7 @@ index 9bd6ba2..06690fb 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.Extensions.Identity.Core.netstandard2.0.cs" />
 diff --git a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
-index f277fc6..164354c 100644
+index f277fc6634..164354cb85 100644
 --- a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
 +++ b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
 @@ -2,6 +2,7 @@
@@ -124,7 +124,7 @@ index f277fc6..164354c 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.Extensions.Identity.Stores.netstandard2.0.cs" />
 diff --git a/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml b/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
-index 77699bd..0a26a53 100644
+index 77699bd939..0a26a53b06 100644
 --- a/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
 +++ b/src/Mvc/test/WebSites/TagHelpersWebSite/Views/Home/Index.cshtml
 @@ -1,52 +1,52 @@
@@ -233,7 +233,7 @@ index 77699bd..0a26a53 100644
  }
 \ No newline at end of file
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
-index cd87ea9..79929d7 100644
+index cd87ea9518..79929d7832 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/Pages/Error.razor
 @@ -1,16 +1,16 @@
@@ -270,7 +270,7 @@ index cd87ea9..79929d7 100644
  </p>
 \ No newline at end of file
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
-index 2defd04..5173757 100644
+index 2defd04095..51737579ef 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/BlazorServerWeb-CSharp/appsettings.Development.json
 @@ -1,10 +1,10 @@
@@ -295,7 +295,7 @@ index 2defd04..5173757 100644
 +  }
 +}
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -312,7 +312,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -329,7 +329,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
-index 238d518..d9d9a9b 100644
+index 238d518d39..d9d9a9bff6 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/EmptyWeb-FSharp/appsettings.json
 @@ -1,8 +1,8 @@
@@ -344,7 +344,7 @@ index 238d518..d9d9a9b 100644
      }
    },
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
-index f5ef230..1f29241 100644
+index f5ef230f62..1f292413bb 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/GrpcService-CSharp/appsettings.json
 @@ -1,8 +1,8 @@
@@ -359,7 +359,7 @@ index f5ef230..1f29241 100644
      }
    },
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/RazorPagesWeb-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -376,7 +376,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -393,7 +393,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -410,7 +410,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
-index 238d518..d9d9a9b 100644
+index 238d518d39..d9d9a9bff6 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/StarterWeb-FSharp/appsettings.json
 @@ -1,8 +1,8 @@
@@ -425,7 +425,7 @@ index 238d518..d9d9a9b 100644
      }
    },
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -442,7 +442,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -459,7 +459,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
-index 238d518..d9d9a9b 100644
+index 238d518d39..d9d9a9bff6 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/WebApi-FSharp/appsettings.json
 @@ -1,8 +1,8 @@
@@ -474,7 +474,7 @@ index 238d518..d9d9a9b 100644
      }
    },
 diff --git a/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.ProjectTemplates/content/Worker-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -491,7 +491,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
-index c971918..a1213fe 100644
+index c9719186fb..a1213fe246 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -508,7 +508,7 @@ index c971918..a1213fe 100644
  ////#if (IndividualLocalAuth)
  //  },
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
-index 8861bc9..7bed5bd 100644
+index 8861bc9d6c..7bed5bd8f8 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
 @@ -10,9 +10,9 @@
@@ -525,7 +525,7 @@ index 8861bc9..7bed5bd 100644
      },
  ////#if (IndividualLocalAuth)
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
-index c971918..a1213fe 100644
+index c9719186fb..a1213fe246 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -542,7 +542,7 @@ index c971918..a1213fe 100644
  ////#if (IndividualLocalAuth)
  //  },
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
-index 8861bc9..7bed5bd 100644
+index 8861bc9d6c..7bed5bd8f8 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
 @@ -10,9 +10,9 @@
@@ -559,7 +559,7 @@ index 8861bc9..7bed5bd 100644
      },
  ////#if (IndividualLocalAuth)
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
-index dba68eb..8983e0f 100644
+index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
 @@ -1,9 +1,9 @@
@@ -576,7 +576,7 @@ index dba68eb..8983e0f 100644
    }
  }
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
-index d48929e..d9d9a9b 100644
+index d48929ec8c..d9d9a9bff6 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
 +++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.json
 @@ -1,9 +1,9 @@
@@ -593,7 +593,7 @@ index d48929e..d9d9a9b 100644
    },
    "AllowedHosts": "*"
 diff --git a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
-index 6c84d4e..7f1202a 100644
+index 6c84d4e54d..7f1202a788 100644
 --- a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
 +++ b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
 @@ -2,6 +2,7 @@
@@ -605,7 +605,7 @@ index 6c84d4e..7f1202a 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Authorization.netstandard2.0.cs" />
 diff --git a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
-index 9eccf06..100a08a 100644
+index 9eccf06da0..100a08a744 100644
 --- a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
 +++ b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
 @@ -2,6 +2,7 @@
@@ -617,7 +617,7 @@ index 9eccf06..100a08a 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Connections.Abstractions.netstandard2.0.cs" />
 diff --git a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
-index ca3ba9a..d7519cc 100644
+index ca3ba9ad87..d7519cc026 100644
 --- a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
 +++ b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
 @@ -2,6 +2,7 @@
@@ -629,7 +629,7 @@ index ca3ba9a..d7519cc 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Http.Connections.Common.netstandard2.0.cs" />
 diff --git a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
-index 2d45dbe..fc2a517 100644
+index 2d45dbe1f3..fc2a517d4b 100644
 --- a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
 +++ b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
 @@ -2,6 +2,7 @@
@@ -641,7 +641,7 @@ index 2d45dbe..fc2a517 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.SignalR.Protocols.Json.netstandard2.0.cs" />
 diff --git a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
-index 91d7996..21dad45 100644
+index 91d7996a3c..21dad45218 100644
 --- a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
 +++ b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
 @@ -2,6 +2,7 @@
@@ -653,5 +653,5 @@ index 91d7996..21dad45 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.SignalR.Common.netstandard2.0.cs" />
 -- 
-2.7.4
+2.21.0
 

@@ -1,7 +1,7 @@
-From b8e0bcb052f711dd57e559ab9f78a4e56e322918 Mon Sep 17 00:00:00 2001
+From 1a3dde28002797d128677478c80489c437003386 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 29 Oct 2019 18:19:03 +0000
-Subject: [PATCH 02/12] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH 02/15] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
  eng/Dependencies.props                                    | 1 +
@@ -9,7 +9,7 @@ Subject: [PATCH 02/12] Use non-portable NETCoreAppRuntime for crossgen
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 8e7bb0e..fca75d9 100644
+index 8e7bb0ecd5..fca75d926c 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
 @@ -113,6 +113,7 @@ and are generated based on the last package release.
@@ -21,7 +21,7 @@ index 8e7bb0e..fca75d9 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 4a7b1c9..b63c15c 100644
+index 4a7b1c9c4f..b63c15c275 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -107,7 +107,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -45,5 +45,5 @@ index 4a7b1c9..b63c15c 100644
      <ProjectReference Condition="'$(BuildIisNativeProjects)' == 'true' AND '$(BuildNative)' != 'false' AND '$(VCTargetsPath)' != ''" Include="$(RepoRoot)src\Servers\IIS\AspNetCoreModuleV2\InProcessRequestHandler\InProcessRequestHandler.vcxproj">
        <SetPlatform>Platform=$(TargetArchitecture)</SetPlatform>
 -- 
-2.7.4
+2.21.0
 

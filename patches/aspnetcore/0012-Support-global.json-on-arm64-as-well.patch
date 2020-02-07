@@ -1,7 +1,7 @@
-From 285694309985a4825690f7b4ee9925cb78b9c298 Mon Sep 17 00:00:00 2001
+From 538f8664ba0b9f07615e1421cec34cd32b369d05 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Wed, 23 Oct 2019 15:43:57 -0400
-Subject: [PATCH 12/12] Support global.json on arm64 as well
+Subject: [PATCH 12/15] Support global.json on arm64 as well
 
 arcade uses the runtime section of global.json to decide which
 architecture + runtime combination needs to be installed.
@@ -19,7 +19,7 @@ This gets us a working SDK/Runtime combo on arm64.
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/global.json b/global.json
-index 0f03d68..31c0835 100644
+index 0f03d68bd8..31c0835b5d 100644
 --- a/global.json
 +++ b/global.json
 @@ -5,10 +5,7 @@
@@ -35,5 +35,5 @@ index 0f03d68..31c0835 100644
        ]
      },
 -- 
-2.7.4
+2.21.0
 

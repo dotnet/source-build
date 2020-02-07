@@ -1,7 +1,7 @@
-From af693c6b64c1c7124c107577ddfe8fc572dd76b1 Mon Sep 17 00:00:00 2001
+From dcdc8d33c880e66a59c37ea4f7bf347319749625 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
-Subject: [PATCH 13/13] Support building for arm64 on arm64 (*nix)
+Subject: [PATCH 13/15] Support building for arm64 on arm64 (*nix)
 
 This commit allows ASP.NET Core to be built on arm64 machines directly,
 without relying on cross-compilation.
@@ -31,12 +31,12 @@ There's a few changes in here:
 This also needs https://github.com/aspnet/AspNetCore/pull/14790 to fully
 work on arm64.
 ---
- Directory.Build.props                                     |  1 +
- src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj | 12 ++++++++----
+ Directory.Build.props                                |  1 +
+ .../src/Microsoft.AspNetCore.App.Runtime.csproj      | 12 ++++++++----
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 9ab5379..440558e 100644
+index 9ab5379da7..440558e8c6 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -113,6 +113,7 @@
@@ -48,7 +48,7 @@ index 9ab5379..440558e 100644
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index b63c15c..39f78a1 100644
+index b63c15c275..39f78a11b0 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -97,15 +97,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -84,5 +84,5 @@ index b63c15c..39f78a1 100644
  
    <ItemGroup>
 -- 
-2.7.4
+2.21.0
 
