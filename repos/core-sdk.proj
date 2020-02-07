@@ -30,6 +30,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:UsePortableLinuxSharedFramework=$(PortableBuild)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSharedFrameworksForBackwardsCompatibilityTests=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:VersionSuffix="$(PreReleaseVersionLabel)"</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
     <BuildCommandArgs>$(BuildCommandArgs) -v $(LogVerbosity)</BuildCommandArgs>
