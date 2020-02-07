@@ -1,0 +1,37 @@
+From 686626aa167088025b4c6ee33d3c5804eae5ae5e Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Thu, 16 Jan 2020 08:29:38 +0100
+Subject: [PATCH 6/6] Add target rid to AppHostRuntimeIdentifiers
+
+---
+ src/redist/targets/GenerateBundledVersions.targets | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateBundledVersions.targets b/src/redist/targets/GenerateBundledVersions.targets
+index c5a281158..dd6e9607d 100644
+--- a/src/redist/targets/GenerateBundledVersions.targets
++++ b/src/redist/targets/GenerateBundledVersions.targets
+@@ -38,6 +38,11 @@
+           win-x86;
+           " />
+ 
++      <NetCoreAppHostPackRids Include="
++          $(ProductMonikerRid);
++          @(NetCoreRuntimePackRids)
++          " />
++
+       <AspNetCoreRuntimePackRids Include="
+         win-x64;
+         win-x86;
+@@ -157,7 +162,7 @@ Copyright (c) .NET Foundation. All rights reserved.
+                       TargetFramework="netcoreapp3.0"
+                       AppHostPackNamePattern="Microsoft.NETCore.App.Host.**RID**"
+                       AppHostPackVersion="$(_NETCoreAppPackageVersion)"
+-                      AppHostRuntimeIdentifiers="@(NetCoreRuntimePackRids, '%3B')"
++                      AppHostRuntimeIdentifiers="@(NetCoreAppHostPackRids, '%3B')"
+                       />
+     
+     <KnownFrameworkReference Include="Microsoft.WindowsDesktop.App"
+-- 
+2.21.0
+
