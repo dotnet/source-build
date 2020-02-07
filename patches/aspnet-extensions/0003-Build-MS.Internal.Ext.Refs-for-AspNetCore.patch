@@ -1,0 +1,39 @@
+From 8d06304a3f5f5435385567c9eb691c6ebf02190e Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Fri, 7 Feb 2020 20:55:51 +0000
+Subject: [PATCH 3/3] Build-MS.Internal.Ext.Refs-for-AspNetCore
+
+---
+ .../ref/Microsoft.Internal.Extensions.Refs.csproj           | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+index c89ec063a..952d69edc 100644
+--- a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
++++ b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
+@@ -4,11 +4,11 @@
+     <TargetFramework>$(DefaultNetCoreTargetFramework)</TargetFramework>
+ 
+     <!-- Do not pack in servicing builds. -->
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsPackable Condition=" '$(PatchVersion)' == '0' ">true</IsPackable>
+     <IsShipping>false</IsShipping>
+     <!-- This project is not included in the shared framework -->
+-    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+ 
+     <!-- Subject to change: see https://github.com/dotnet/designs/pull/50 -->
+@@ -49,7 +49,7 @@
+     </BuildDependsOn>
+ 
+     <!-- Suppresses building this project completely during servicing builds. -->
+-    <BuildDependsOn Condition="! $(IsPackable)" />
++    <BuildDependsOn />
+   </PropertyGroup>
+ 
+   <!-- Override the default MSBuild targets so that nothing is returned from the project since it represents a collection of assemblies. -->
+-- 
+2.21.0
+
