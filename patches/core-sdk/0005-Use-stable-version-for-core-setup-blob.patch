@@ -1,0 +1,25 @@
+From 18ac5ff5d16d97b67b775d8a8bdbbef64660774b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 6 Feb 2020 19:47:32 -0600
+Subject: [PATCH 5/5] Use stable version for core-setup blob
+
+---
+ src/redist/targets/GenerateLayout.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
+index 718b48956..bf4b0c540 100644
+--- a/src/redist/targets/GenerateLayout.targets
++++ b/src/redist/targets/GenerateLayout.targets
+@@ -11,7 +11,7 @@
+   <PropertyGroup>
+     <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
+     <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
+-    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
++    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
+ 
+     <!-- Change these individually to or $(CoreSetupBlobVersion) or $(AspNetCoreBlobVersion) if corresponding .Ref packages are unpinned. -->
+     <NETCoreAppTargetingPackBlobVersion>3.0.0</NETCoreAppTargetingPackBlobVersion>
+-- 
+2.21.0
+
