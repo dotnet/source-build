@@ -7,6 +7,7 @@ usage() {
     echo "options:"
     echo "  --with-ref-packages <dir>          use the specified directory of reference packages"
     echo "  --with-packages <dir>              use the specified directory of previously-built packages"
+    echo "  --with-sdk <dir>                   use the SDK in the specified directory for bootstrapping"
     echo "use -- to send the remaining arguments to MSBuild"
     echo ""
 }
@@ -16,6 +17,7 @@ SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
+CUSTOM_SDK_DIR=''
 
 while :; do
     if [ $# -le 0 ]; then
@@ -42,6 +44,18 @@ while :; do
             MSBUILD_ARGUMENTS+=( "/p:CustomPrebuiltSourceBuiltPackagesPath=$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" )
             shift
             ;;
+        --with-sdk)
+            CUSTOM_SDK_DIR="$(cd -P "$2" && pwd)"
+            if [ ! -d "$CUSTOM_SDK_DIR" ]; then
+                echo "Custom SDK directory '$CUSTOM_SDK_DIR' does not exist"
+                exit 1
+            fi
+            if [ ! -x "$CUSTOM_SDK_DIR/dotnet" ]; then
+                echo "Custom SDK '$CUSTOM_SDK_DIR/dotnet' does not exist or is not executable"
+                exit 1
+            fi
+            shift
+            ;;
         --)
             shift
             echo "Detected '--': passing remaining parameters '$@' as build.sh arguments."
@@ -60,10 +74,19 @@ while :; do
     shift
 done
 
-sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
-sdkPattern="\"dotnet\" *: *\"(.*)\""
-if [[ $sdkLine =~ $sdkPattern ]]; then
-  export SDK_VERSION=${BASH_REMATCH[1]}
+if [ -d "$CUSTOM_SDK_DIR" ]; then
+  export SDK_VERSION=`"$CUSTOM_SDK_DIR/dotnet" --version`
+  export CLI_ROOT="$CUSTOM_SDK_DIR"
+  export _InitializeDotNetCli="$CLI_ROOT/dotnet"
+  export CustomDotNetSdkDir="$CLI_ROOT"
+  echo "Using custom bootstrap SDK from '$CLI_ROOT', version '$SDK_VERSION'"
+else
+  sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
+  sdkPattern="\"dotnet\" *: *\"(.*)\""
+  if [[ $sdkLine =~ $sdkPattern ]]; then
+    export SDK_VERSION=${BASH_REMATCH[1]}
+    export CLI_ROOT="$SCRIPT_ROOT/.dotnet"
+  fi
 fi
 
 packageVersionsPath=''
@@ -106,7 +129,6 @@ if [[ $dotNetHostLine =~ $versionPattern ]]; then
 fi
 
 echo "Found bootstrap SDK $SDK_VERSION, bootstrap Arcade $ARCADE_BOOTSTRAP_VERSION, bootstrap SourceLink $SOURCE_LINK_BOOTSTRAP_VERSION, bootstrap DotNetHost $DOTNET_HOST_BOOTSTRAP_VERSION"
-CLI_ROOT="$SCRIPT_ROOT/.dotnet"
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
