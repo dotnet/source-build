@@ -194,7 +194,7 @@
   <!-- Additional psuedo-versions that some repos depend on -->
   <ItemGroup>
     <!-- we don't produce the Windows version of this package but that's the one core-sdk keys off of for the ASP.NET version -->
-    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimewinx64PackageVersion" Version="$(aspnetcoreOutputPackageVersion)" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimewinx64PackageVersion" Version="$(aspnetcoreOutputPackageVersion)" DoNotOverwrite="true" />
     <!-- same thing here for CLI -->
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftNETCoreAppRuntimewinx64Version" Version="$(coresetupOutputPackageVersion)" />
     <!-- same thing here for toolset -->
