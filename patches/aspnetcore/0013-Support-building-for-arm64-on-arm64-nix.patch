@@ -1,7 +1,7 @@
-From e2a30328cd69705abda36ba4cb8a695e1dc90d2a Mon Sep 17 00:00:00 2001
+From 8ccaaf1a5d607c601790f033c49f126d5c69d79b Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
-Subject: [PATCH 13/13] Support building for arm64 on arm64 (*nix)
+Subject: [PATCH 13/15] Support building for arm64 on arm64 (*nix)
 
 This commit allows ASP.NET Core to be built on arm64 machines directly,
 without relying on cross-compilation.
@@ -36,10 +36,10 @@ work on arm64.
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index a6befbab24..30e1c7d683 100644
+index 9ab5379da7..440558e8c6 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -107,6 +107,7 @@
+@@ -113,6 +113,7 @@
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('FreeBSD'))">freebsd</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
@@ -48,10 +48,10 @@ index a6befbab24..30e1c7d683 100644
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index edad46be14..b4e9189960 100644
+index b63c15c275..39f78a11b0 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -90,15 +90,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -97,15 +97,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <PathSeparator Condition="'$(PathSeparator)' == ''">:</PathSeparator>
      <PathSeparator Condition=" '$(TargetOsName)' == 'win' ">%3B</PathSeparator>
  
@@ -72,10 +72,10 @@ index edad46be14..b4e9189960 100644
  
      <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
      <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-@@ -295,7 +297,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
-   -->
+@@ -303,7 +305,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
    <PropertyGroup>
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
+     <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>
 -    <CoreCLRJitPath>$(CrossgenToolDir)$(LibPrefix)clrjit$(LibExtension)</CoreCLRJitPath>
 +    <!-- Pick the right coreclr jit based on whether we are cross-compiling or not -->
 +    <CoreCLRJitPath Condition="'$(CrossCompileDirectory)' == ''">$(RuntimePackageRoot)runtimes\$(RuntimeIdentifier)\native\$(LibPrefix)clrjit$(LibExtension)</CoreCLRJitPath>
@@ -84,5 +84,5 @@ index edad46be14..b4e9189960 100644
  
    <ItemGroup>
 -- 
-2.18.0
+2.21.0
 
