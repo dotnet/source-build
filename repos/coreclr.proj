@@ -23,6 +23,7 @@
     <BuildArguments>$(BuildArguments) /p:PackagesDir=$(PackagesDir)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:ContinuousIntegrationBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:UseSharedCompilation=false</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>

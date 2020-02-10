@@ -1,0 +1,187 @@
+From 2d7e46edaa4c7bad39916112972d7c9efc05be7e Mon Sep 17 00:00:00 2001
+From: Nikola Milosavljevic <nikolam@microsoft.com>
+Date: Tue, 10 Sep 2019 18:50:59 +0000
+Subject: [PATCH] Do not build .NET Fx binaries in source build
+
+---
+ eng/Versions.props                                              | 2 +-
+ .../src/Microsoft.Extensions.Caching.Abstractions.csproj        | 2 +-
+ .../src/Microsoft.Extensions.Configuration.Abstractions.csproj  | 2 +-
+ .../src/Microsoft.Extensions.Configuration.Binder.csproj        | 1 -
+ .../Config/src/Microsoft.Extensions.Configuration.csproj        | 1 -
+ .../DI/src/Microsoft.Extensions.DependencyInjection.csproj      | 2 +-
+ .../src/Microsoft.Extensions.FileProviders.Abstractions.csproj  | 1 -
+ .../src/Microsoft.Extensions.FileProviders.Embedded.csproj      | 2 --
+ .../src/Microsoft.Extensions.Hosting.Abstractions.csproj        | 1 -
+ .../Microsoft.JSInterop/src/Microsoft.JSInterop.csproj          | 1 -
+ src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj     | 2 +-
+ src/Options/Options/src/Microsoft.Extensions.Options.csproj     | 2 +-
+ src/Primitives/src/Microsoft.Extensions.Primitives.csproj       | 1 -
+ 13 files changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 56961b4b1..96bcf0c4c 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -38,7 +38,7 @@
+     <!-- Disable Arcade's Xliff tools -->
+     <UsingToolXliff>false</UsingToolXliff>
+     <!-- Using .NET framework assemblies from a package. -->
+-    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
++    <UsingToolNetFrameworkReferenceAssemblies Condition="'$(DotNetBuildFromSource)' != 'true'">true</UsingToolNetFrameworkReferenceAssemblies>
+   </PropertyGroup>
+   <!--
+ 
+diff --git a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+index 3ff41adc1..3abd3f134 100644
+--- a/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
++++ b/src/Caching/Abstractions/src/Microsoft.Extensions.Caching.Abstractions.csproj
+@@ -6,7 +6,7 @@ Commonly used types:
+ Microsoft.Extensions.Caching.Distributed.IDistributedCache
+ Microsoft.Extensions.Caching.Memory.IMemoryCache</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;memorycache;distributedcache</PackageTags>
+diff --git a/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj b/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
+index ce441b5ff..60247fbec 100644
+--- a/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
++++ b/src/Configuration/Config.Abstractions/src/Microsoft.Extensions.Configuration.Abstractions.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <Description>Abstractions of key-value pair based configuration.
+ Commonly used types:
+ Microsoft.Extensions.Configuration.IConfiguration
+diff --git a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+index d6fcba085..3dca39916 100644
+--- a/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
++++ b/src/Configuration/Config.Binder/src/Microsoft.Extensions.Configuration.Binder.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Functionality to bind an object to data in configuration providers for Microsoft.Extensions.Configuration.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+index dc93341da..140807df7 100644
+--- a/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
++++ b/src/Configuration/Config/src/Microsoft.Extensions.Configuration.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>Implementation of key-value pair based configuration for Microsoft.Extensions.Configuration. Includes the memory configuration provider.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+index 583c76098..e3d96d9ec 100644
+--- a/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
++++ b/src/DependencyInjection/DI/src/Microsoft.Extensions.DependencyInjection.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <Description>Default implementation of dependency injection for Microsoft.Extensions.DependencyInjection.</Description>
+-    <TargetFrameworks>netcoreapp3.0;net461;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>dependencyinjection;di</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+index dff946a6b..7052d81ce 100644
+--- a/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
++++ b/src/FileProviders/Abstractions/src/Microsoft.Extensions.FileProviders.Abstractions.csproj
+@@ -8,7 +8,6 @@ Microsoft.Extensions.FileProviders.IDirectoryContents
+ Microsoft.Extensions.FileProviders.IFileInfo
+ Microsoft.Extensions.FileProviders.IFileProvider</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+index d36323e3b..3d01ccf30 100644
+--- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
++++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
+@@ -5,8 +5,6 @@
+     <Description>File provider for files in embedded resources for Microsoft.Extensions.FileProviders.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <NuspecFile>$(MSBuildProjectName).multitarget.nuspec</NuspecFile>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+-    <NuspecFile Condition="'$(DotNetBuildFromSource)' == 'true'">$(MSBuildProjectName).netcoreapp3.0.nuspec</NuspecFile>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+diff --git a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+index 9f9236800..d56fad467 100644
+--- a/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
++++ b/src/Hosting/Abstractions/src/Microsoft.Extensions.Hosting.Abstractions.csproj
+@@ -3,7 +3,6 @@
+   <PropertyGroup>
+     <Description>.NET Core hosting and startup abstractions for applications.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+index 044c843b2..bd197e218 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
++++ b/src/JSInterop/Microsoft.JSInterop/src/Microsoft.JSInterop.csproj
+@@ -2,7 +2,6 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <Description>Abstractions and features for interop between .NET and JavaScript code.</Description>
+     <PackageTags>javascript;interop</PackageTags>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+diff --git a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+index 9129b292f..0975bd459 100644
+--- a/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
++++ b/src/Logging/Logging/src/Microsoft.Extensions.Logging.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>Logging infrastructure default implementation for Microsoft.Extensions.Logging.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+diff --git a/src/Options/Options/src/Microsoft.Extensions.Options.csproj b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+index b9baa3d0d..1881b49aa 100644
+--- a/src/Options/Options/src/Microsoft.Extensions.Options.csproj
++++ b/src/Options/Options/src/Microsoft.Extensions.Options.csproj
+@@ -3,7 +3,7 @@
+   <PropertyGroup>
+     <Description>Provides a strongly typed way of specifying and accessing settings using dependency injection.</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0;netcoreapp3.0</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>aspnetcore;options</PackageTags>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+index 639d32e96..1f52fe08a 100644
+--- a/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
++++ b/src/Primitives/src/Microsoft.Extensions.Primitives.csproj
+@@ -6,7 +6,6 @@ Microsoft.Extensions.Primitives.IChangeToken
+ Microsoft.Extensions.Primitives.StringValues
+ Microsoft.Extensions.Primitives.StringSegment</Description>
+     <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+-- 
+2.21.0
+

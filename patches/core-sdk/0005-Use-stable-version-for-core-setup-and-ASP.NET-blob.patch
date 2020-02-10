@@ -1,25 +1,27 @@
-From 20e01d93d05085d6b64a55867fb398b0a5069066 Mon Sep 17 00:00:00 2001
+From ba482c3acf2d82e9f928f0d6ba99c21df61c63ec Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Sat, 9 Nov 2019 19:39:25 -0600
-Subject: [PATCH 5/5] Patch property used for core-setup version
+Date: Thu, 6 Feb 2020 19:47:32 -0600
+Subject: [PATCH 5/6] Use stable version for core-setup and ASP.NET blob
 
 ---
- src/redist/targets/GenerateLayout.targets | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/redist/targets/GenerateLayout.targets | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index db089843c..1ab089e09 100644
+index 718b48956..d7df57105 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -11,7 +11,7 @@
+@@ -10,8 +10,8 @@
+ 
    <PropertyGroup>
      <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
-     <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion)</AspNetCoreBlobVersion>
+-    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
 -    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
++    <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion)</AspNetCoreBlobVersion>
 +    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
  
      <!-- Change these individually to or $(CoreSetupBlobVersion) or $(AspNetCoreBlobVersion) if corresponding .Ref packages are unpinned. -->
      <NETCoreAppTargetingPackBlobVersion>3.0.0</NETCoreAppTargetingPackBlobVersion>
 -- 
-2.18.0
+2.21.0
 
