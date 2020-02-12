@@ -1,0 +1,26 @@
+From 89c20530991b37ca40a36c2ac3ec59a62ae0e22f Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 24 Jan 2020 15:49:45 +0000
+Subject: [PATCH 8/8] Remove fallback folder to pick up correct
+ libhostpolicy.so
+
+---
+ src/pkg/packaging-tools/framework.sharedfx.props | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/src/pkg/packaging-tools/framework.sharedfx.props b/src/pkg/packaging-tools/framework.sharedfx.props
+index 02e0aa2..315b072 100644
+--- a/src/pkg/packaging-tools/framework.sharedfx.props
++++ b/src/pkg/packaging-tools/framework.sharedfx.props
+@@ -26,8 +26,6 @@
+     <RestoreAllBuildRids>false</RestoreAllBuildRids>
+     <!-- Ensure only this repo's NuGet.config file is used. -->
+     <RestoreConfigFile>$(ProjectDir)NuGet.config</RestoreConfigFile>
+-    <!-- Use repo-restored packages for platforms and targets dependencies -->
+-    <RestoreFallbackFolders>$(PackagesDir)</RestoreFallbackFolders>
+     <!-- Don't error due to lack of runtime-specific deps, we're referencing those directly -->
+     <EnsureRuntimePackageDependencies>false</EnsureRuntimePackageDependencies>
+     <!-- Use a project-local packages folder. 'p', not 'packages': max path breathing room. -->
+-- 
+2.7.4
+

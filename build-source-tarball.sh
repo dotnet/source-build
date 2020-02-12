@@ -3,8 +3,15 @@ set -euo pipefail
 IFS=$'\n\t'
 
 usage() {
-    echo "usage: $0 <path-to-tarball-root> [--skip-build] [--enable-leak-detection] [--skip-prebuilt-check] [-- [extra build.sh args]]"
-    echo ""
+    echo "usage: $0 <path-to-tarball-root> [options]"
+    echo "options:"
+    echo "  --skip-build                       assume we have already built (requires you have built with the /p:ArchiveDownloadedPackages=true flag)"
+    echo "  --enable-leak-detection            build leaked-binary detection tasts for later use while building from this tarball"
+    echo "  --skip-prebuilt-check              do not confirm that all prebuilt packages used are either reference packages, previously-built, or known extras"
+    echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
+    echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
+    echo "  --with-sdk <dir>                   use the specified SDK to check out source code.  do not copy it to the tarball.  an external SDK will be required to build from the tarball."
+    echo "use -- to send the remaining arguments to build.sh"
 }
 
 if [ -z "${1:-}" ]; then
@@ -42,9 +49,13 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
+CUSTOM_SDK_DIR=''
 INCLUDE_LEAK_DETECTION=0
 MINIMIZE_DISK_USAGE=0
 SKIP_PREBUILT_ENFORCEMENT=0
+CUSTOM_REF_PACKAGES_DIR=''
+CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
+MAIN_BUILD_ARGS=("/p:ArchiveDownloadedPackages=true")
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
 while :; do
@@ -65,6 +76,34 @@ while :; do
             ;;
         --skip-prebuilt-check)
             SKIP_PREBUILT_ENFORCEMENT=1
+            ;;
+        --with-sdk)
+            CUSTOM_SDK_DIR="$2"
+            if [ ! -d "$CUSTOM_SDK_DIR" ]; then
+                echo "Custom SDK directory '$CUSTOM_SDK_DIR' does not exist"
+            fi
+            if [ ! -x "$CUSTOM_SDK_DIR/dotnet" ]; then
+                echo "Custom SDK '$CUSTOM_SDK_DIR/dotnet' not found or not executable"
+            fi
+            shift
+            ;;
+        --with-ref-packages)
+            CUSTOM_REF_PACKAGES_DIR="$2"
+            if [ ! -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
+                echo "Custom reference packages directory '$CUSTOM_REF_PACKAGES_DIR' does not exist"
+                exit 1
+            fi
+            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingReferencePackages=true" )
+            shift
+            ;;
+        --with-packages)
+            CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR="$2"
+            if [ ! -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]; then
+                echo "Custom reference packages directory '$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR' does not exist"
+                exit 1
+            fi
+            MAIN_BUILD_ARGS+=( "/p:SkipDownloadingPreviouslySourceBuiltPackages=true" )
+            shift
             ;;
         --)
             shift
@@ -102,13 +141,20 @@ if [ -e "$TARBALL_ROOT" ]; then
 fi
 
 export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
-sdkPattern="\"dotnet\" *: *\"(.*)\""
-if [[ $sdkLine =~ $sdkPattern ]]; then
-  export SDK_VERSION=${BASH_REMATCH[1]}
+if [ -d "$CUSTOM_SDK_DIR" ]; then
+  export SDK_VERSION=`"$CUSTOM_SDK_DIR/dotnet" --version`
+  echo "Using custom bootstrap SDK from '$CUSTOM_SDK_DIR', version $SDK_VERSION"
+  CLI_PATH="$CUSTOM_SDK_DIR"
+else
+  sdkLine=`grep -m 1 'dotnet' "$SCRIPT_ROOT/global.json"`
+  sdkPattern="\"dotnet\" *: *\"(.*)\""
+  if [[ $sdkLine =~ $sdkPattern ]]; then
+    export SDK_VERSION=${BASH_REMATCH[1]}
+    CLI_DIR=".dotnet"
+    CLI_PATH="$SCRIPT_ROOT/$CLI_DIR"
+  fi
+  echo "Found bootstrap SDK $SDK_VERSION"
 fi
-echo "Found bootstrap SDK $SDK_VERSION"
-CLI_PATH="$SCRIPT_ROOT/.dotnet"
 DarcVersion=$(cat $SCRIPT_ROOT/DarcVersion.txt)
 DARC_DLL="$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.dotnet.darc/$DarcVersion/tools/netcoreapp3.0/any/Microsoft.DotNet.Darc.dll"
 
@@ -119,7 +165,7 @@ if [ $SKIP_BUILD -ne 1 ]; then
     fi
 
     $SCRIPT_ROOT/clean.sh
-    $SCRIPT_ROOT/build.sh /p:ArchiveDownloadedPackages=true "$@"
+    $SCRIPT_ROOT/build.sh  ${MAIN_BUILD_ARGS[@]} "$@"
 fi
 
 mkdir -p "$TARBALL_ROOT"
@@ -226,7 +272,11 @@ cp $SCRIPT_ROOT/global.json $TARBALL_ROOT/
 cp $SCRIPT_ROOT/DarcVersion.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/ProdConFeed.txt $TARBALL_ROOT/
 cp $SCRIPT_ROOT/smoke-test* $TARBALL_ROOT/
-cp -r $CLI_PATH $TARBALL_ROOT/
+if [ ! -d "$CUSTOM_SDK_DIR" ]; then
+  cp -r $CLI_PATH $TARBALL_ROOT/
+  rm -rf $TARBALL_ROOT/$CLI_DIR/shared/2.1.0/
+  rm -rf $TARBALL_ROOT/$CLI_DIR/tools/
+fi
 cp -r $SCRIPT_ROOT/eng $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/keys $TARBALL_ROOT/
 cp -r $SCRIPT_ROOT/patches $TARBALL_ROOT/
@@ -236,8 +286,6 @@ cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/bin
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/obj
-rm -rf $TARBALL_ROOT/.dotnet/shared/2.1.0/
-rm -rf $TARBALL_ROOT/.dotnet/tools/
 cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
@@ -255,8 +303,10 @@ cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/source
 cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
 
 # Copy tarballs to ./packages/archive directory
-mkdir -p $TARBALL_ROOT/packages/archive
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
+if [[ -d "$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs -iname '*.tar.gz')" ]]; then
+    mkdir -p $TARBALL_ROOT/packages/archive
+    cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
+fi
 
 # Copy generated source from bin to src/generatedSrc
 cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
@@ -277,10 +327,6 @@ do
     fi
 done
 
-echo 'Copying source-built packages to tarball to replace packages needed before they are built...'
-mkdir -p $TARBALL_ROOT/packages/source-built
-cp -r $SCRIPT_ROOT/Tools/source-built/coreclr-tools $TARBALL_ROOT/packages/source-built/
-
 # Setup package version props to include both source-built and running PackageVersions.props
 mkdir --parents $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
 cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
@@ -300,8 +346,16 @@ do
     fi
 done
 
-allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
-allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+if [ -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
+    allRefPkgs=(`ls "$CUSTOM_REF_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
+else
+    allRefPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+fi
+if [ -d "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" ]; then
+    allSourceBuiltPkgs=(`ls "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
+else
+    allSourceBuiltPkgs=(`tar -tf $TARBALL_ROOT/packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'`)
+fi
 
 echo 'Removing reference-packages from tarball prebuilts...'
 

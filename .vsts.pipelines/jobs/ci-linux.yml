@@ -14,7 +14,7 @@ jobs:
   strategy:
     matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
-  timeoutInMinutes: 270
+  timeoutInMinutes: 300
   variables:
     # Prefix to distinguish artifacts from different legs.
     artifactName: ${{ format('{0} $(type)', parameters.job) }}
@@ -72,7 +72,7 @@ jobs:
         /p:AzDoPat=$(System.AccessToken)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
-    timeoutInMinutes: 150
+    timeoutInMinutes: 180
 
   # Generate prebuilt burndown data
   - script: |
@@ -201,14 +201,14 @@ jobs:
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         poisonArg="/p:EnablePoison=true"
       fi
-      $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" \
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" -- \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
         /p:FailOnPrebuiltBaselineError=true \
         $poisonArg
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
-    timeoutInMinutes: 120
+    timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Run smoke tests.

@@ -21,6 +21,7 @@
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
     <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
+    <DotNetCliToolDir Condition="'$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
     <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir>$(ProjectDir)packages/restored/</PackagesDir>
@@ -84,6 +85,7 @@
     <PrebuiltPackagesPath>$(ProjectDir)packages/prebuilt/</PrebuiltPackagesPath>
     <PreviouslyRestoredPackagesPath>$(ProjectDir)packages/previouslyRestored/</PreviouslyRestoredPackagesPath>
     <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)packages/source-built/</PrebuiltSourceBuiltPackagesPath>
+    <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(CustomPrebuiltSourceBuiltPackagesPath)/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
     <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Toolset/</SourceBuiltToolsetDir>
     <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
@@ -135,10 +137,11 @@
     <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
     <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
+    <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' != ''">$(CustomReferencePackagesPath)/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
-    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
+    <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>
-    <ReferencePackagesTarballUrl>https://dotnetcli.blob.core.windows.net/source-build-reference-packages/assets/</ReferencePackagesTarballUrl>
+    <ReferencePackagesTarballUrl>https://dotnetfeed.blob.core.windows.net/dotnet-core/assets/</ReferencePackagesTarballUrl>
     <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>
     <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
     <OfflineBaselineDataFile>$(BaselineDataFile)offline.xml</OfflineBaselineDataFile>
@@ -206,6 +209,7 @@
     <ExtraPackageVersionPropsPackageInfo Include="VSRedistCommonAspNetCoreTargetingPackx6430PackageVersion" Version="$(aspnetcoreOutputPackageVersion)" />
     <!-- OSX needs the OSX version instead of Linux.  We don't have a lot of flexibility in how we output these properties so we're relying on the previous one being blank if the Linux version of the package is missing.  -->
     <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimeOsxX64PackageVersion)" DoNotOverwrite="true" />
+    <ExtraPackageVersionPropsPackageInfo Include="MicrosoftAspNetCoreAppRuntimePackageVersion" Version="%24(MicrosoftAspNetCoreAppRuntimewinx64PackageVersion)" DoNotOverwrite="true" />
 
     <!-- property used by Arcade to determine what version of SourceLink to use -->
     <!-- if MicrosoftSourceLinkCommonPackageVersion is non-empty, then we've already built SourceLink, regardless of whether
