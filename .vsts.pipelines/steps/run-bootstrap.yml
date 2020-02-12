@@ -84,16 +84,18 @@ steps:
   displayName: Build stage1 source-build-reference-packages
   condition: succeeded()
 
-# Copy ref-packages tarball to drop directory.
+# Create and copy ref-packages tarball to drop directory.
 - script: |
     set -ex
     df -h
     $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
       mkdir -p /drop/tarball/reference-packages
       pushd /bst/bootstrap_dir/reference-packages
+      tar --numeric-owner -czf Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
       find . \( \
         -iname 'Private.SourceBuild.ReferencePackages.bootstrap.tar.gz' \) \
         -exec cp {} /drop/tarball/reference-packages \;
+      rm -rf Private.SourceBuild.ReferencePackages.bootstrap.tar.gz
       popd"
     du -h $(rootDirectory) | sort -h | tail -n 50
   displayName: Copy ref-packages tarball 
@@ -109,7 +111,9 @@ steps:
       rm -rf /bst/source-build-reference-packages/.git
       pushd /bst/bootstrap_dir/reference-packages
       echo "Removing everything in reference-packages except artifacts"
-      find . -type f -not -name '*SourceBuild.ReferencePackages.bootstrap.tar.gz' -delete
+      shopt -s extglob
+      rm -rvf !("reference-packages")
+      shopt -u extglob
       popd'
   displayName: Clean all except tarball in source-build-reference-packages
   condition: always()
