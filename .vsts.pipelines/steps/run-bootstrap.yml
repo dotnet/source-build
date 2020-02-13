@@ -110,10 +110,8 @@ steps:
       rm -rf /bst/source-build-reference-packages/*
       rm -rf /bst/source-build-reference-packages/.git
       pushd /bst/bootstrap_dir/reference-packages
-      echo "Removing everything in reference-packages except artifacts"
-      shopt -s extglob
-      rm -rvf !("reference-packages")
-      shopt -u extglob
+      echo "Removing everything in reference-packages except nupkg artifacts"
+      find . -type f -not -name '*.nupkg' -delete
       popd'
   displayName: Clean all except tarball in source-build-reference-packages
   condition: always()
