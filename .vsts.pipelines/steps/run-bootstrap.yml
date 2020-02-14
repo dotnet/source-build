@@ -7,7 +7,7 @@ steps:
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
       tar -xf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
-      rm -rf "/bst/Tarball centos71 Offline"'
+      rm -rf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz"'
       df -h
   displayName: Unpack Tarball
   condition: always()
@@ -178,6 +178,17 @@ steps:
   displayName: Copy final-stage tarball artifacts
   condition: always()
   continueOnError: true
+
+- script: |
+      set -ex
+      mount
+      df -h
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      tar -xf "/bst/Tarball centos71 Offline/$(tarballName)-smoke-test-prereqs.tar.gz" -C /bst/bootstrap_dir/final-sdk --no-same-owner --strip-components=1
+      rm -rf "/bst/Tarball centos71 Offline/$(tarballName)-smoke-test-prereqs.tar.gz"'
+      df -h
+  displayName: Unpack smoke test prereqs
+  condition: always()
 
 - script: |
       set -ex 
