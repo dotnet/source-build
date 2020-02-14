@@ -1,17 +1,18 @@
-From 1b9676adf62d2443f4e99966fcf682ba0f06d2af Mon Sep 17 00:00:00 2001
+From 12ddb9dbd5a0551399dfc6b33c8d060642fc2d12 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
-Date: Thu, 19 Dec 2019 17:14:05 +0000
+Date: Thu, 23 Jan 2020 17:26:32 +0000
 Subject: [PATCH] Update targets to support netcoreapp2.1
 
 ---
- src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.props     | 2 +-
- .../build/Microsoft.SourceLink.AzureRepos.Git.targets                   | 2 +-
- .../build/Microsoft.SourceLink.Bitbucket.Git.targets                    | 2 +-
- src/SourceLink.Common/build/Microsoft.SourceLink.Common.props           | 2 +-
- src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets         | 2 +-
- src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets         | 2 +-
- .../build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets            | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.props   | 2 +-
+ .../build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets          | 2 +-
+ .../build/Microsoft.SourceLink.AzureRepos.Git.targets                 | 4 ++--
+ .../build/Microsoft.SourceLink.AzureRepos.Tfvc.targets                | 4 ++--
+ .../build/Microsoft.SourceLink.Bitbucket.Git.targets                  | 2 +-
+ src/SourceLink.Common/build/Microsoft.SourceLink.Common.props         | 2 +-
+ src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets       | 2 +-
+ src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets       | 2 +-
+ 8 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.props b/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.props
 index 2078031..2e3c3de 100644
@@ -25,8 +26,21 @@ index 2078031..2e3c3de 100644
 +    <MicrosoftBuildTasksGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.Build.Tasks.Git.dll</MicrosoftBuildTasksGitAssemblyFile>
    </PropertyGroup>
  </Project>
+diff --git a/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets b/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
+index c0812e7..0a678b6 100644
+--- a/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
++++ b/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
+-    <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
++    <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.AzureDevOpsServer.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkAzureDevOpsServerGitAssemblyFile)"/>
 diff --git a/src/SourceLink.AzureRepos.Git/build/Microsoft.SourceLink.AzureRepos.Git.targets b/src/SourceLink.AzureRepos.Git/build/Microsoft.SourceLink.AzureRepos.Git.targets
-index e30145e..8d99e2a 100644
+index e30145e..0a5df34 100644
 --- a/src/SourceLink.AzureRepos.Git/build/Microsoft.SourceLink.AzureRepos.Git.targets
 +++ b/src/SourceLink.AzureRepos.Git/build/Microsoft.SourceLink.AzureRepos.Git.targets
 @@ -2,7 +2,7 @@
@@ -38,6 +52,33 @@ index e30145e..8d99e2a 100644
    </PropertyGroup>
  
    <UsingTask TaskName="Microsoft.SourceLink.AzureRepos.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkAzureReposGitAssemblyFile)"/>
+@@ -55,4 +55,4 @@
+     </ItemGroup>
+   </Target>
+ </Project>
+- 
+\ No newline at end of file
++ 
+diff --git a/src/SourceLink.AzureRepos.Tfvc/build/Microsoft.SourceLink.AzureRepos.Tfvc.targets b/src/SourceLink.AzureRepos.Tfvc/build/Microsoft.SourceLink.AzureRepos.Tfvc.targets
+index ede39e4..3576cbf 100644
+--- a/src/SourceLink.AzureRepos.Tfvc/build/Microsoft.SourceLink.AzureRepos.Tfvc.targets
++++ b/src/SourceLink.AzureRepos.Tfvc/build/Microsoft.SourceLink.AzureRepos.Tfvc.targets
+@@ -2,7 +2,7 @@
+ <Project>
+   <PropertyGroup>
+     <_SourceLinkAzureReposTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.AzureRepos.Tfvc.dll</_SourceLinkAzureReposTfvcAssemblyFile>
+-    <_SourceLinkAzureReposTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.AzureRepos.Tfvc.dll</_SourceLinkAzureReposTfvcAssemblyFile>
++    <_SourceLinkAzureReposTfvcAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.AzureRepos.Tfvc.dll</_SourceLinkAzureReposTfvcAssemblyFile>
+   </PropertyGroup>
+ 
+   <UsingTask TaskName="Microsoft.SourceLink.AzureRepos.Tfvc.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkAzureReposTfvcAssemblyFile)"/>
+@@ -22,4 +22,4 @@
+     </ItemGroup>
+   </Target>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
 diff --git a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets b/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
 index 16576b7..53f35a0 100644
 --- a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
@@ -90,19 +131,6 @@ index ed8d16b..cae60a8 100644
    </PropertyGroup>
  
    <UsingTask TaskName="Microsoft.SourceLink.GitLab.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkGitLabAssemblyFile)"/>
-diff --git a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-index c0812e7..0a678b6 100644
---- a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-+++ b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-@@ -2,7 +2,7 @@
- <Project>
-   <PropertyGroup>
-     <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net461\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
--    <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
-+    <_SourceLinkAzureDevOpsServerGitAssemblyFile Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\Microsoft.SourceLink.AzureDevOpsServer.Git.dll</_SourceLinkAzureDevOpsServerGitAssemblyFile>
-   </PropertyGroup>
- 
-   <UsingTask TaskName="Microsoft.SourceLink.AzureDevOpsServer.Git.GetSourceLinkUrl" AssemblyFile="$(_SourceLinkAzureDevOpsServerGitAssemblyFile)"/>
 -- 
 1.8.3.1
 

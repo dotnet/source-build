@@ -1,0 +1,24 @@
+From 0cbf87b1bfbc8a0da9ae647b8b0c53048762e742 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 14 Feb 2020 21:02:33 +0000
+Subject: [PATCH] Update NuGet package build to pass in Configuration
+
+---
+ src/coreclr/build.sh | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/coreclr/build.sh b/src/coreclr/build.sh
+index 769c3bb..517366e 100755
+--- a/src/coreclr/build.sh
++++ b/src/coreclr/build.sh
+@@ -444,6 +444,7 @@ generate_NugetPackages()
+     $__RepoRootDir/eng/common/build.sh -r -b -projects $__SourceDir/.nuget/packages.builds \
+                                        -verbosity minimal -bl:$__LogsDir/Nuget_$__BuildOS__$__BuildArch__$__BuildType.binlog \
+                                        /p:PortableBuild=true \
++                                       /p:Configuration=$__BuildType \
+                                        /p:__IntermediatesDir=$__IntermediatesDir /p:__RootBinDir=$__RootBinDir /p:__DoCrossArchBuild=$__CrossBuild \
+                                        $__CommonMSBuildArgs $__UnprocessedBuildArgs
+ 
+-- 
+1.8.3.1
+
