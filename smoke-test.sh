@@ -30,7 +30,7 @@ restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
 archiveRestoredPackages=false
 archivedPackagesDir="$testingDir/smoke-test-packages"
-smokeTestPrebuilts="$SCRIPT_ROOT/prebuilt/smoke-test-packages"
+smokeTestPrebuilts="$SCRIPT_ROOT/packages/smoke-test-packages"
 runningOnline=false
 runningHttps=false
 
