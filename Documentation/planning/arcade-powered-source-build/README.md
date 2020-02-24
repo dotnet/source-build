@@ -91,10 +91,10 @@ source-build needs to support restoring from an intermediate artifact.
 To make incremental progress, we should pick one of Core-SDK's upstreams, and
 add source-build functionality that produces source-built intermediates.
 Core-SDK should consume them. We should choose a leaf in the source-build
-dependency graph, say, SourceLink. When Core-SDK is looking at the build graph
-to determine which repos to build, instead of building SourceLink, it should
-restore the SourceLink intermediate artifact. Once we have this flow working,
-the functionality should be integrated into Arcade SDK for easy onboarding.
+dependency graph, say, Linker. When Core-SDK is looking at the build graph to
+determine which repos to build, instead of building Linker, it should restore
+the Linker intermediate artifact. Once we have this flow working, the
+functionality should be integrated into Arcade SDK for easy onboarding.
 
 Then, working from the bottom (leaves) upward (towards Core-SDK), more repos
 should consume and produce source-built intermediates in their official builds.
