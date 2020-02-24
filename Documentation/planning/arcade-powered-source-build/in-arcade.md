@@ -83,13 +83,13 @@ source-build and we don't know for sure whether any extra prebuilts were
 restored until the entire build completes. (It's not guaranteed that all
 downloading happens during the Arcade SDK's Restore phase.)
 
-## Supporting a source-built SDK
+## Supporting source-built SDKs
 
-For bootstrap and N-1 flows, we need to use an SDK from disk. For example, an
-SDK that's restored from an [intermediate nupkg]. The problem is that by the
-time we've restored the intermediate nupkg, we're already inside processes using
-a prebuilt SDK, so we need to launch a new build. A few alternative ways how to
-do this (best first):
+We need to build using a source-built Arcade SDK. For bootstrap and N-1 flows,
+we also need to use a source-built .NET Core SDK. We can get a source-built SDK
+in an [intermediate nupkg]. The problem is that by the time we've restored the
+intermediate nupkg, we're already inside a process using a prebuilt SDK, so we
+need to launch a new build. A few alternative ways how to do this (best first):
 
 1. Reclone the current repo somewhere in `artifacts/`, then run `build.sh` with
    extra parameters pointing to the restored SDK.
