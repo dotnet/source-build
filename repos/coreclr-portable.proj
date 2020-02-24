@@ -14,6 +14,28 @@
     <RepositoryReference Include="roslyn" />
   </ItemGroup>
 
+  <Target Name="CopyTools"
+          AfterTargets="Package">
+    <PropertyGroup>
+      <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'FreeBSD'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
+      <AssemblyExtension Condition="'$(AssemblyExtension)' == ''">please define AssemblyExtension for $(TargetOS)</AssemblyExtension>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ilasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ildasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.$(AssemblyExtension)" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/System.Private.CoreLib.dll" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Copying source-built ILAsm and ILDasm '@(CoreClrTools)' to '$(CoreClrDestinationDir)'" />
+
+    <Copy SourceFiles="@(CoreClrTools)" DestinationFolder="$(CoreClrDestinationDir)" />
+  </Target>
+
   <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="RemoveBuiltPackagesFromCache">
     <ItemGroup>
       <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
