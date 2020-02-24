@@ -80,6 +80,13 @@ This needs more work to meet our goals for many reasons:
 
 For more info, see [source-build-in-pipeline.md].
 
+Related work, but not necessary to meet our goals:
+
+* Unit tests are typically disabled in source-build, because test infrastructure
+  isn't built from source. We should run tests on the source-build product to
+  catch bugs. However, this isn't necessary to meet the maintainability goals of
+  this plan.
+
 ## Incremental progress
 
 ### The performance gap
