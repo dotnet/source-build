@@ -97,6 +97,7 @@ do this (best first):
      keeps the logic inside MSBuild code.
    * We already need to be able to clone upstreams in `artifacts` for the "build
      dependencies from source" option. This can leverage that infrastructure.
+     The `darc clone` command provided by Arcade should fulfill this role.
    * It may not be necessary to create a fresh clone: this can be investigated
      as a perf optimization.
 2. Have the user first call `./build.sh [...]` with some args that bring down
