@@ -1,23 +1,83 @@
-From f84564c88c319fd67ba4c5fd4db9b551b4f63320 Mon Sep 17 00:00:00 2001
+From 06af8261927f5f85298dee1d0cb18b2f69d2e54d Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 8 Dec 2019 23:52:15 -0600
 Subject: [PATCH 3/3] Don't think we want to replace original with translated
  unless there actually are translated here.
 
 ---
- .../build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets  | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../build/Microsoft.SourceLink.Bitbucket.Git.targets                  | 2 +-
+ src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets       | 2 +-
+ src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets       | 2 +-
+ src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets     | 4 ++--
+ src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets   | 4 ++--
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets b/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-index dca4fab..c0812e7 100644
---- a/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-+++ b/src/SourceLink.AzureDevOpsServer.Git/build/Microsoft.SourceLink.AzureDevOpsServer.Git.targets
-@@ -63,9 +63,9 @@
-     </Microsoft.SourceLink.AzureDevOpsServer.Git.TranslateRepositoryUrls>
+diff --git a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets b/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
+index 4e35472..78f2ff7 100644
+--- a/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
++++ b/src/SourceLink.Bitbucket.Git/build/Microsoft.SourceLink.Bitbucket.Git.targets
+@@ -58,7 +58,7 @@
+     </Microsoft.SourceLink.Bitbucket.Git.TranslateRepositoryUrls>
  
      <ItemGroup>
 -      <SourceRoot Remove="@(SourceRoot)"/>
-+      <SourceRoot Remove="@(SourceRoot)" Condition="'@(_TranslatedSourceRoot)' != ''"/>
++      <SourceRoot Remove="@(SourceRoot)"  Condition="'@(_TranslatedSourceRoot)' != ''"/>
+       <SourceRoot Include="@(_TranslatedSourceRoot)"/>
+     </ItemGroup>
+   
+diff --git a/src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets b/src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets
+index 796d099..c186986 100644
+--- a/src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets
++++ b/src/SourceLink.GitHub/build/Microsoft.SourceLink.GitHub.targets
+@@ -58,7 +58,7 @@
+     </Microsoft.SourceLink.GitHub.TranslateRepositoryUrls>
+ 
+     <ItemGroup>
+-      <SourceRoot Remove="@(SourceRoot)"/>
++      <SourceRoot Remove="@(SourceRoot)"  Condition="'@(_TranslatedSourceRoot)' != ''"/>
+       <SourceRoot Include="@(_TranslatedSourceRoot)"/>
+     </ItemGroup>
+   
+diff --git a/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets b/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
+index cfa533f..cbc10c8 100644
+--- a/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
++++ b/src/SourceLink.GitLab/build/Microsoft.SourceLink.GitLab.targets
+@@ -58,7 +58,7 @@
+     </Microsoft.SourceLink.GitLab.TranslateRepositoryUrls>
+ 
+     <ItemGroup>
+-      <SourceRoot Remove="@(SourceRoot)"/>
++      <SourceRoot Remove="@(SourceRoot)"  Condition="'@(_TranslatedSourceRoot)' != ''"/>
+       <SourceRoot Include="@(_TranslatedSourceRoot)"/>
+     </ItemGroup>
+   </Target>
+diff --git a/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets b/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
+index d54e22f..726cfed 100644
+--- a/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
++++ b/src/SourceLink.Tfs.Git/build/Microsoft.SourceLink.Tfs.Git.targets
+@@ -63,9 +63,9 @@
+     </Microsoft.SourceLink.Tfs.Git.TranslateRepositoryUrls>
+ 
+     <ItemGroup>
+-      <SourceRoot Remove="@(SourceRoot)"/>
++      <SourceRoot Remove="@(SourceRoot)"  Condition="'@(_TranslatedSourceRoot)' != ''"/>
+       <SourceRoot Include="@(_TranslatedSourceRoot)"/>
+     </ItemGroup>
+   </Target>
+ </Project>
+- 
+\ No newline at end of file
++ 
+diff --git a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
+index 628227e..9605252 100644
+--- a/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
++++ b/src/SourceLink.Vsts.Git/build/Microsoft.SourceLink.Vsts.Git.targets
+@@ -58,9 +58,9 @@
+     </Microsoft.SourceLink.Vsts.Git.TranslateRepositoryUrls>
+ 
+     <ItemGroup>
+-      <SourceRoot Remove="@(SourceRoot)"/>
++      <SourceRoot Remove="@(SourceRoot)"  Condition="'@(_TranslatedSourceRoot)' != ''"/>
        <SourceRoot Include="@(_TranslatedSourceRoot)"/>
      </ItemGroup>
    </Target>
@@ -26,5 +86,5 @@ index dca4fab..c0812e7 100644
 \ No newline at end of file
 + 
 -- 
-2.18.0
+2.7.4
 

@@ -1,21 +1,31 @@
-From 5222ca1b4a06898f05a46659826cb7c266899d2f Mon Sep 17 00:00:00 2001
+From 129ac90449b5dc9bffcd715c3207e5c811d66978 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 6 Dec 2019 15:07:09 -0600
-Subject: [PATCH 2/2] Patch ref packages out.
+Subject: [PATCH 2/3] Patch ref packages out.
 
 ---
- eng/Versions.props                                              | 2 +-
- src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj  | 2 +-
- .../Microsoft.SourceLink.AzureDevOpsServer.Git.csproj           | 2 +-
- .../Microsoft.SourceLink.AzureRepos.Git.csproj                  | 2 +-
- .../Microsoft.SourceLink.Bitbucket.Git.csproj                   | 2 +-
- src/SourceLink.Common/Microsoft.SourceLink.Common.csproj        | 2 +-
- src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj        | 2 +-
- src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj        | 2 +-
- 8 files changed, 8 insertions(+), 8 deletions(-)
+ eng/Versions.props                                                    | 2 +-
+ src/Microsoft.Build.StandardCI/Microsoft.Build.StandardCI.csproj      | 2 +-
+ .../Microsoft.Build.Tasks.Git.Operations.csproj                       | 2 +-
+ src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj        | 2 +-
+ .../Microsoft.SourceLink.Bitbucket.Git.csproj                         | 2 +-
+ .../Microsoft.SourceLink.Bitbucket.Git.nuspec                         | 3 +--
+ src/SourceLink.Common/Microsoft.SourceLink.Common.csproj              | 2 +-
+ src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec              | 4 +---
+ src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj              | 2 +-
+ src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec              | 3 +--
+ src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj              | 2 +-
+ src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec              | 3 +--
+ src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj            | 2 +-
+ src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec            | 3 +--
+ src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj          | 2 +-
+ src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.nuspec          | 3 +--
+ src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj        | 2 +-
+ src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.nuspec        | 3 +--
+ 18 files changed, 18 insertions(+), 26 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 6df5c27..5cbb65c 100644
+index a02d515..1b694ff 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -6,7 +6,7 @@
@@ -27,42 +37,42 @@ index 6df5c27..5cbb65c 100644
      <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
      <XUnitVersion>2.4.1</XUnitVersion>
      <!-- 
+diff --git a/src/Microsoft.Build.StandardCI/Microsoft.Build.StandardCI.csproj b/src/Microsoft.Build.StandardCI/Microsoft.Build.StandardCI.csproj
+index 5ae9775..0f599fa 100644
+--- a/src/Microsoft.Build.StandardCI/Microsoft.Build.StandardCI.csproj
++++ b/src/Microsoft.Build.StandardCI/Microsoft.Build.StandardCI.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+ 
+diff --git a/src/Microsoft.Build.Tasks.Git.Operations/Microsoft.Build.Tasks.Git.Operations.csproj b/src/Microsoft.Build.Tasks.Git.Operations/Microsoft.Build.Tasks.Git.Operations.csproj
+index 9a6d593..99331f8 100644
+--- a/src/Microsoft.Build.Tasks.Git.Operations/Microsoft.Build.Tasks.Git.Operations.csproj
++++ b/src/Microsoft.Build.Tasks.Git.Operations/Microsoft.Build.Tasks.Git.Operations.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+     
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
 diff --git a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
-index bb6c3b3..31b47fb 100644
+index 5e60db7..ce04ccb 100644
 --- a/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
 +++ b/src/Microsoft.Build.Tasks.Git/Microsoft.Build.Tasks.Git.csproj
 @@ -1,6 +1,6 @@
  ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
      <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
- 
-     <!-- NuGet -->
-diff --git a/src/SourceLink.AzureDevOpsServer.Git/Microsoft.SourceLink.AzureDevOpsServer.Git.csproj b/src/SourceLink.AzureDevOpsServer.Git/Microsoft.SourceLink.AzureDevOpsServer.Git.csproj
-index e294f3f..ac3c0a4 100644
---- a/src/SourceLink.AzureDevOpsServer.Git/Microsoft.SourceLink.AzureDevOpsServer.Git.csproj
-+++ b/src/SourceLink.AzureDevOpsServer.Git/Microsoft.SourceLink.AzureDevOpsServer.Git.csproj
-@@ -1,6 +1,6 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
--    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
- 
-     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
-diff --git a/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj b/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
-index bc5c152..6e2aac9 100644
---- a/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
-+++ b/src/SourceLink.AzureRepos.Git/Microsoft.SourceLink.AzureRepos.Git.csproj
-@@ -1,6 +1,6 @@
- ﻿<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
--    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
-     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
- 
-     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
+     
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
 diff --git a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj
 index 7abd791..1147bcb 100644
 --- a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.csproj
@@ -71,46 +81,193 @@ index 7abd791..1147bcb 100644
  ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
      <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
  
      <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.nuspec b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.nuspec
+index 783d9db..f1193bd 100644
+--- a/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.nuspec
++++ b/src/SourceLink.Bitbucket.Git/Microsoft.SourceLink.Bitbucket.Git.nuspec
+@@ -9,9 +9,8 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
 diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
-index 11730b8..1e99e38 100644
+index 7d8a979..5b2232c 100644
 --- a/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
 +++ b/src/SourceLink.Common/Microsoft.SourceLink.Common.csproj
 @@ -1,6 +1,6 @@
  ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
      <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
  
-     <!-- NuGet -->
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec b/src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec
+index 382b926..83283a6 100644
+--- a/src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec
++++ b/src/SourceLink.Common/Microsoft.SourceLink.Common.nuspec
+@@ -6,9 +6,7 @@
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.Common.*" target="tools\netcoreapp2.0" />
+ 
+-    <file src="net461\Microsoft.SourceLink.Common.*" target="tools\net461" />
+-
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
 diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
-index 651620d..efc3f52 100644
+index 7e4bf97..766af6f 100644
 --- a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
 +++ b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.csproj
 @@ -1,6 +1,6 @@
  ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
      <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
  
-     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec
+index 783d9db..f1193bd 100644
+--- a/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec
++++ b/src/SourceLink.GitHub/Microsoft.SourceLink.GitHub.nuspec
+@@ -9,9 +9,8 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
 diff --git a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
-index 557305a..01c69e6 100644
+index 39fd6d1..8281645 100644
 --- a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
 +++ b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.csproj
 @@ -1,6 +1,6 @@
  ﻿<Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
      <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
  
-     <!-- Using an explicit nuspec file due to https://github.com/NuGet/Home/issues/6754 -->
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec
+index 783d9db..f1193bd 100644
+--- a/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec
++++ b/src/SourceLink.GitLab/Microsoft.SourceLink.GitLab.nuspec
+@@ -9,9 +9,8 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
+diff --git a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
+index eb6d85a..baabf1c 100644
+--- a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
++++ b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec
+index 783d9db..f1193bd 100644
+--- a/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec
++++ b/src/SourceLink.Tfs.Git/Microsoft.SourceLink.Tfs.Git.nuspec
+@@ -9,9 +9,8 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
+diff --git a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
+index 65bfb3b..a5e6962 100644
+--- a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
++++ b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.nuspec b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.nuspec
+index 783d9db..f1193bd 100644
+--- a/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.nuspec
++++ b/src/SourceLink.Vsts.Git/Microsoft.SourceLink.Vsts.Git.nuspec
+@@ -9,9 +9,8 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+     <file src="$ProjectDirectory$\buildCrossTargeting\*.*" target="buildCrossTargeting" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
+diff --git a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
+index df36573..e37e305 100644
+--- a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
++++ b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net461;netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+ 
+     <!-- Using an explicit nuspec file since NuGet Pack target currently doesn't support including dependencies in tools packages -->
+diff --git a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.nuspec b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.nuspec
+index 06c212b..d1f6b93 100644
+--- a/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.nuspec
++++ b/src/SourceLink.Vsts.Tfvc/Microsoft.SourceLink.Vsts.Tfvc.nuspec
+@@ -9,8 +9,7 @@
+   </metadata>
+   <files>
+     <file src="netcoreapp2.0\publish\**\Microsoft.SourceLink.*" target="tools\netcoreapp2.0" />
+-    <file src="net461\**\Microsoft.SourceLink.*" target="tools\net461" />
+ 
+     <file src="$ProjectDirectory$\build\*.*" target="build" />
+   </files>
+-</package>
+\ No newline at end of file
++</package>
 -- 
-2.18.0
+2.7.4
 

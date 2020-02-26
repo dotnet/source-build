@@ -1,27 +1,14 @@
-From 3464f2cbadc3a0c3f6598cec86ab207a69064c3e Mon Sep 17 00:00:00 2001
+From 8bce1be7a386524ecae9404d3122454a76301dd7 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Fri, 7 Feb 2020 17:21:48 +0000
 Subject: [PATCH 4/4] remove-helix-dependency
 
 ---
- eng/Tools.props | 1 -
- global.json     | 1 -
- 2 files changed, 2 deletions(-)
+ global.json | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/eng/Tools.props b/eng/Tools.props
-index b8c99b0323..eff36ffe08 100644
---- a/eng/Tools.props
-+++ b/eng/Tools.props
-@@ -9,7 +9,6 @@
- 
-   <ItemGroup>
-     <PackageReference Include="Microsoft.DotNet.Build.Tasks.Packaging" Version="$(MicrosoftDotNetBuildTasksPackagingVersion)" />
--    <PackageDownload Include="Microsoft.DotNet.Helix.Sdk" Version="[$(MicrosoftDotNetHelixSdkVersion)]" />
-     <PackageReference Include="Microsoft.NETCore.Platforms" Version="$(MicrosoftNETCorePlatformsVersion)" />
-   </ItemGroup>
- </Project>
 diff --git a/global.json b/global.json
-index 085e2a284d..6bb64c8482 100644
+index 085e2a2..6bb64c8 100644
 --- a/global.json
 +++ b/global.json
 @@ -8,7 +8,6 @@
@@ -33,5 +20,5 @@ index 085e2a284d..6bb64c8482 100644
      "Microsoft.Build.Traversal": "2.0.2"
    }
 -- 
-2.21.0
+2.7.4
 

@@ -80,16 +80,32 @@ function BuildRefPkgs {
     LogMessage "Copy $refPkgSourceDir to $refPkgsDir"
     cp -r $refPkgSourceDir $refPkgsDir
 
-    LogMessage "Un-tar sdk into $stage1SdkInstallDir"
-    if [ -d "$stage1SdkInstallDir" ]; then
-        rm -rf $stage1SdkInstallDir
+    LogMessage "Copy coreclr-tools to $refPkgsDir/source-built"
+    cp -r $stage1Dir/Tools/source-built/coreclr-tools/ $refPkgsDir/source-built
+
+    LogMessage "Un-tar private source-built artifacts into $refPkgsDir/source-built/"
+    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --directory $refPkgsDir/source-built/
+
+    LogMessage "Un-tar sdk into $refPkgsDir/.dotnet/"
+    if [ -d "$refPkgsDir/.dotnet/" ]; then
+        rm -rf $refPkgsDir/.dotnet/
     fi
-    mkdir $stage1SdkInstallDir
-    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $stage1SdkInstallDir
+    mkdir $refPkgsDir/.dotnet/
+    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $refPkgsDir/.dotnet/
+
+    LogMessage "Update SDK version in global.json file"
+    sdkVer=`ls $refPkgsDir/.dotnet/sdk`
+    LogMessage "    Sdk version = [$sdkVer]"
+    sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdkVer\"|g" $refPkgsDir/global.json
 
     LogMessage "Build stage1 ref-pkgs"
     pushd $refPkgsDir
-    ./build.sh --with-packages $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --with-sdk $stage1SdkInstallDir
+    ./build.sh
+    popd
+
+    LogMessage "Package built reference packages into new tarball"
+    pushd $refPkgsDir/artifacts/reference-packages
+    tar --numeric-owner -czf $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
     popd
 
     LogMessage "Completing Step2 - Build Reference Packages" 
@@ -123,22 +139,45 @@ function buildFinalSdk {
     fi
 
     if [ "${1-default}" != "test" ]; then
-        LogMessage "Copy $tarballSourceDir to $finalSdkDir"
-        cp -r $tarballSourceDir $finalSdkDir
+    LogMessage "Copy $tarballSourceDir to $finalSdkDir"
+    cp -r $tarballSourceDir $finalSdkDir
     fi
 
     LogMessage "Remove archive packages, source-built packages and SDK from final-sdk dir"
-    rm -rf $finalSdkDir/packages/archive
+    rm -rf $finalSdkDir/packages/archive/*
     rm -rf $finalSdkDir/packages/source-built/*
     rm -rf $finalSdkDir/.dotnet
 
-    LogMessage "Install previously source-built archive from $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz to $stage1SourceBuiltArtifactsInstallDir"
-    mkdir -p $stage1SourceBuiltArtifactsInstallDir
-    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz --directory $stage1SourceBuiltArtifactsInstallDir
+    LogMessage "Copy stage1 coreclr-tools to $finalSdkDir/packages/source-built"
+    cp -r $stage1Dir/Tools/source-built/coreclr-tools $finalSdkDir/packages/source-built
+
+    LogMessage "Copy source-built packages archive from $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz to $finalSdkDir/packages/archive"
+    cp $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz $finalSdkDir/packages/archive
+
+    LogMessage "Extract .NET Core SDK from $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz to $finalSdkDir/.dotnet/"
+    if [ -d "$finalSdkDir/.dotnet/" ]; then
+        rm -rf $finalSdkDir/.dotnet/
+    fi
+    mkdir $finalSdkDir/.dotnet/
+    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $finalSdkDir/.dotnet/
+
+    LogMessage "Copy reference packages from $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz to $finalSdkDir/packages/archive"
+    cp $refPkgsDir/artifacts/Private.SourceBuild.ReferencePackages.bootstrap.tar.gz $finalSdkDir/packages/archive
+
+    LogMessage "Update version of SDK and arcade in global.json"
+    arcadeName=$(tar -tf $finalSdkDir/packages/archive/Private.SourceBuilt.Artifacts*.tar.gz Microsoft.DotNet.Arcade.Sdk.*.nupkg)
+    arcadeVer=${arcadeName//Microsoft.DotNet.Arcade.Sdk.}
+    arcadeVer=${arcadeVer//.nupkg}
+    LogMessage "    Arcade version = [$arcadeVer]"
+    sed -i "s|\(\"Microsoft.DotNet.Arcade.Sdk\": \"\)[^\"]*\"|\1$arcadeVer\"|g" $finalSdkDir/global.json
+
+    sdkVer=$(ls $finalSdkDir/.dotnet/sdk)
+    LogMessage "    Sdk version = [$sdkVer]"
+    sed -i "s|\"dotnet\": \".*|\"dotnet\": \"$sdkVer\"|g" $finalSdkDir/global.json
 
     LogMessage "Build final sdk"
     pushd $finalSdkDir
-    ./build.sh --with-ref-packages $refPkgsDir/artifacts/reference-packages --with-packages $stage1SourceBuiltArtifactsInstallDir --with-sdk $stage1SdkInstallDir
+    ./build.sh
     popd
 
     LogMessage "Completing Step3 - Build final sdk"
@@ -166,8 +205,6 @@ refPkgSourceDir="$(abspath $3)"
 startStep="${4:-}"
 
 stage1Dir="$bootstrapDir/stage1-sdk"
-stage1SdkInstallDir="$bootstrapDir/stage1-sdk-install"
-stage1SourceBuiltArtifactsInstallDir="$bootstrapDir/stage1-source-built-artifacts-install"
 refPkgsDir="$bootstrapDir/reference-packages"
 finalSdkDir="$bootstrapDir/final-sdk"
 
