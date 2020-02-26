@@ -1,4 +1,4 @@
-From 4ffe64a8df883980482e50e73184d613e6438f77 Mon Sep 17 00:00:00 2001
+From eacd12705bfd0aff4f0be7f16326a7a5c1b7a264 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 29 Oct 2019 18:19:03 +0000
 Subject: [PATCH 02/15] Use non-portable NETCoreAppRuntime for crossgen
@@ -21,7 +21,7 @@ index 8e7bb0ecd5..fca75d926c 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 4a7b1c9c4f..b63c15c275 100644
+index 6cd9a075a4..a0eb33f690 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -107,7 +107,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
