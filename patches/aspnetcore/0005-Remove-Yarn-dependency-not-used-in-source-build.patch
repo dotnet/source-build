@@ -1,7 +1,7 @@
-From 3b94eb32dfd8f1383f332962bbe81a9e21914038 Mon Sep 17 00:00:00 2001
+From d2a9fb1009234f6f39eddaf2a2d877c2cd5074b8 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 23 Sep 2019 16:21:28 -0500
-Subject: [PATCH 5/9] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 05/11] Remove Yarn dependency - not used in source-build
 
 ---
  eng/targets/Npm.Common.targets                                 | 3 ---
@@ -25,7 +25,7 @@ index 062a9d3a8f..3f91b02d42 100644
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
 diff --git a/global.json b/global.json
-index fa652db0a9..f02c60c4fc 100644
+index fff34b8301..7d64bc3d3c 100644
 --- a/global.json
 +++ b/global.json
 @@ -24,7 +24,6 @@
@@ -33,8 +33,8 @@ index fa652db0a9..f02c60c4fc 100644
    },
    "msbuild-sdks": {
 -    "Yarn.MSBuild": "1.15.2",
-     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19474.3",
-     "Microsoft.DotNet.Helix.Sdk": "2.0.0-beta.19474.3"
+     "Microsoft.DotNet.Arcade.Sdk": "1.0.0-beta.19607.3",
+     "Microsoft.DotNet.Helix.Sdk": "2.0.0-beta.19607.3"
    }
 diff --git a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
 index b6e0c32519..7393c8531e 100644

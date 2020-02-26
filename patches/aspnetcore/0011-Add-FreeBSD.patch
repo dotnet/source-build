@@ -1,17 +1,17 @@
-From 457e4bcc40228d64bb98c4e35937d31b4cc76599 Mon Sep 17 00:00:00 2001
+From 0f40b8fe697dd82dbee40de07fcfb93478c7b884 Mon Sep 17 00:00:00 2001
 From: Tomas Weinfurt <tweinfurt@yahoo.com>
 Date: Wed, 13 Nov 2019 22:32:02 -0800
-Subject: [PATCH] Add FreeBSD
+Subject: [PATCH 11/11] Add FreeBSD
 
 ---
  Directory.Build.props | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 80e6bb14f0..76b1b4451b 100644
+index e860686f20..1fbf2c2665 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -115,6 +115,7 @@
+@@ -108,6 +108,7 @@
    <PropertyGroup>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
@@ -19,7 +19,7 @@ index 80e6bb14f0..76b1b4451b 100644
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
      <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
-@@ -125,6 +126,7 @@
+@@ -118,6 +119,7 @@
        win-x86;
        win-arm;
        osx-x64;
@@ -28,5 +28,5 @@ index 80e6bb14f0..76b1b4451b 100644
        linux-musl-arm64;
        linux-x64;
 -- 
-2.23.0
+2.18.0
 
