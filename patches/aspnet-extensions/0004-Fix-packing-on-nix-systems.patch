@@ -1,7 +1,7 @@
-From 09795b550c1cd32faeaf4d122d6bfd47a5e362ef Mon Sep 17 00:00:00 2001
+From c0265c1207e17a6545f9aa67ec1fb371b3fd36ef Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Thu, 23 Jan 2020 21:04:40 -0600
-Subject: [PATCH] Fix packing on *nix systems
+Subject: [PATCH 4/4] Fix packing on *nix systems
 
 Without this fix, the nupkg will be missing files if packed on *nix systems
 ---
@@ -11,10 +11,10 @@ Without this fix, the nupkg will be missing files if packed on *nix systems
  3 files changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
-index 9a752c3e6..1f34d6dd9 100644
+index 3d01ccf30..5aa6d060d 100644
 --- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
 +++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.csproj
-@@ -27,9 +27,7 @@
+@@ -25,9 +25,7 @@
  
    <ItemGroup>
      <NuspecProperty Include="AssemblyName=$(AssemblyName)" />
@@ -22,17 +22,17 @@ index 9a752c3e6..1f34d6dd9 100644
 -    <NuspecProperty Include="OutputSymbol=$(OutputPath)**\$(AssemblyName).pdb" />
 -    <NuspecProperty Include="OutputDocumentation=$(OutputPath)**\$(AssemblyName).xml" />
 +    <NuspecProperty Include="OutputPath=$(OutputPath)" />
-     <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.dll"/>
-     <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.1\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
-     <NuspecProperty Include="PackageIcon=$(PackageIconFullPath)" />
+     <NuspecProperty Include="TaskAssemblyNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.dll"/>
+     <NuspecProperty Include="TaskSymbolNetStandard=$(ArtifactsDir)bin\$(AssemblyName).Manifest.Task\$(Configuration)\netstandard2.0\$(AssemblyName).Manifest.Task.pdb" Condition="'$(DebugType)'!='embedded'"/>
+   </ItemGroup>
 diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
-index 7e2fa61df..c1af0040a 100644
+index 958cebb7b..022e332d6 100644
 --- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
 +++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.multitarget.nuspec
 @@ -14,9 +14,9 @@
-   </metadata>
  
    <files>
+     $CommonFileElements$
 -    <file src="$OutputBinary$" target="lib\" />
 -    <file src="$OutputSymbol$" target="lib\" />
 -    <file src="$OutputDocumentation$" target="lib\" />
@@ -41,15 +41,15 @@ index 7e2fa61df..c1af0040a 100644
 +    <file src="$OutputPath$**\$AssemblyName$.xml" target="lib\" />
      <file src="build\**\*" target="build\" />
      <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
-     <file src="$PackageIcon$" target="" />
+     <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
 diff --git a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
-index 590b84c9a..c27cffcce 100644
+index 057de99b8..cbedac6db 100644
 --- a/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
 +++ b/src/FileProviders/Embedded/src/Microsoft.Extensions.FileProviders.Embedded.netcoreapp3.0.nuspec
 @@ -11,9 +11,9 @@
-   </metadata>
  
    <files>
+     $CommonFileElements$
 -    <file src="$OutputBinary$" target="lib\" />
 -    <file src="$OutputSymbol$" target="lib\" />
 -    <file src="$OutputDocumentation$" target="lib\" />
@@ -58,7 +58,7 @@ index 590b84c9a..c27cffcce 100644
 +    <file src="$OutputPath$**\$AssemblyName$.xml" target="lib\" />
      <file src="build\**\*" target="build\" />
      <file src="buildMultiTargeting\**\*" target="buildMultiTargeting\" />
-     <file src="$PackageIcon$" target="" />
+     <file src="$TaskAssemblyNetStandard$" target="tasks\netstandard2.0\$AssemblyName$.Manifest.Task.dll" />
 -- 
-2.23.0.windows.1
+2.18.0
 
