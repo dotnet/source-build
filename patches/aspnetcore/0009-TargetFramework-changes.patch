@@ -1,7 +1,7 @@
-From ba06c858dd36a7d53d73a0fe16afec6c07244c81 Mon Sep 17 00:00:00 2001
+From b0f7f3c2d7b9d7eb5d5494328aac1073dd582150 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Thu, 14 Nov 2019 21:04:08 +0000
-Subject: [PATCH 09/13] TargetFramework changes
+Subject: [PATCH 09/15] TargetFramework changes
 
 ---
  .../ref/Microsoft.AspNetCore.Components.Authorization.csproj  | 4 ++--
@@ -20,7 +20,7 @@ Subject: [PATCH 09/13] TargetFramework changes
  13 files changed, 26 insertions(+), 26 deletions(-)
 
 diff --git a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
-index 513c24575d..c22ea5fe96 100644
+index 3a91e8a4b8..5e6c8fb34c 100644
 --- a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
 +++ b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
 @@ -1,9 +1,9 @@
@@ -33,10 +33,10 @@ index 513c24575d..c22ea5fe96 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Components.Authorization.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Authorization"  />
-     <Reference Include="Microsoft.AspNetCore.Components"  />
+     <Reference Include="Microsoft.AspNetCore.Authorization" />
+     <Reference Include="Microsoft.AspNetCore.Components" />
 diff --git a/src/Components/Forms/ref/Microsoft.AspNetCore.Components.Forms.csproj b/src/Components/Forms/ref/Microsoft.AspNetCore.Components.Forms.csproj
-index cc3fcfda27..5f2f35e54c 100644
+index 2ef391ee71..8f199d6035 100644
 --- a/src/Components/Forms/ref/Microsoft.AspNetCore.Components.Forms.csproj
 +++ b/src/Components/Forms/ref/Microsoft.AspNetCore.Components.Forms.csproj
 @@ -1,9 +1,9 @@
@@ -49,10 +49,10 @@ index cc3fcfda27..5f2f35e54c 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Components.Forms.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Components"  />
-     <Reference Include="System.ComponentModel.Annotations"  />
+     <Reference Include="Microsoft.AspNetCore.Components" />
+     <Reference Include="System.ComponentModel.Annotations" />
 diff --git a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
-index cba25041e3..00e1e6b5b8 100644
+index 18b1e18b02..13a6a503eb 100644
 --- a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
 +++ b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
 @@ -1,9 +1,9 @@
@@ -65,10 +65,10 @@ index cba25041e3..00e1e6b5b8 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Components.Web.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Components"  />
-     <Reference Include="Microsoft.AspNetCore.Components.Forms"  />
+     <Compile Include="../src/Properties/AssemblyInfo.cs" />
+     <Reference Include="Microsoft.AspNetCore.Components" />
 diff --git a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
-index 9408c35dad..bc40c3586d 100644
+index 06e7d533c7..91b47483f9 100644
 --- a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
 +++ b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
 @@ -1,9 +1,9 @@
@@ -81,10 +81,10 @@ index 9408c35dad..bc40c3586d 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.DataProtection.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Cryptography.Internal"  />
-     <Reference Include="Microsoft.AspNetCore.DataProtection.Abstractions"  />
+     <Compile Include="Microsoft.AspNetCore.DataProtection.Manual.cs" />
+     <Compile Include="../src/Properties/AssemblyInfo.cs" />
 diff --git a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
-index 8edb1af38e..07fda33d8d 100644
+index 49dd84084b..42e3a30cc5 100644
 --- a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
 +++ b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
 @@ -1,9 +1,9 @@
@@ -97,10 +97,10 @@ index 8edb1af38e..07fda33d8d 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.DataProtection.Extensions.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.DataProtection"  />
-     <Reference Include="Microsoft.Extensions.DependencyInjection"  />
+     <Compile Include="Microsoft.AspNetCore.DataProtection.Extensions.Manual.cs" />
+     <Compile Include="../src/Properties/AssemblyInfo.cs" />
 diff --git a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
-index ca82096556..aa47f4b34d 100644
+index f2b88f0ca1..d312e44940 100644
 --- a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
 +++ b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
 @@ -1,9 +1,9 @@
@@ -113,10 +113,10 @@ index ca82096556..aa47f4b34d 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Http.Features.netstandard2.0.cs" />
-     <Reference Include="Microsoft.Extensions.Primitives"  />
-     <Reference Include="System.IO.Pipelines"  />
+     <Reference Include="Microsoft.Extensions.Primitives" />
+     <Reference Include="System.IO.Pipelines" />
 diff --git a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
-index ae16fce673..4ffec37568 100644
+index 1fc6eeebc2..9bd6ba236a 100644
 --- a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
 +++ b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
 @@ -1,9 +1,9 @@
@@ -129,10 +129,10 @@ index ae16fce673..4ffec37568 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.Extensions.Identity.Core.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation"  />
-     <Reference Include="Microsoft.Extensions.Logging"  />
+     <Compile Include="Microsoft.Extensions.Identity.Core.Manual.cs" />
+     <Compile Include="../src/Properties/AssemblyInfo.cs" />
 diff --git a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
-index f490a31256..0618562899 100644
+index 81e68a47ce..f277fc6634 100644
 --- a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
 +++ b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
 @@ -1,9 +1,9 @@
@@ -145,10 +145,10 @@ index f490a31256..0618562899 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.Extensions.Identity.Stores.netstandard2.0.cs" />
-     <Reference Include="Microsoft.Extensions.Logging"  />
-     <Reference Include="Microsoft.Extensions.Identity.Core"  />
+     <Compile Include="Microsoft.Extensions.Identity.Stores.Manual.cs" />
+     <Reference Include="Microsoft.Extensions.Caching.Abstractions" />
 diff --git a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
-index 1c742a823a..d8e894652e 100644
+index b0cf327ff4..6c84d4e54d 100644
 --- a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
 +++ b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
 @@ -1,9 +1,9 @@
@@ -161,10 +161,10 @@ index 1c742a823a..d8e894652e 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Authorization.netstandard2.0.cs" />
-     <Compile Include="Microsoft.AspNetCore.Authorization.Manual.cs" />
-     <Reference Include="Microsoft.AspNetCore.Metadata"  />
+     <Compile Include="../src/Properties/AssemblyInfo.cs" />
+     <Reference Include="Microsoft.AspNetCore.Metadata" />
 diff --git a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
-index 290b58c7fe..b3ea5b17d6 100644
+index c6a77eb8ef..9eccf06da0 100644
 --- a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
 +++ b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
 @@ -1,9 +1,9 @@
@@ -177,10 +177,10 @@ index 290b58c7fe..b3ea5b17d6 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Connections.Abstractions.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Http.Features"  />
-     <Reference Include="Microsoft.Extensions.ActivatorUtilities.Sources"  />
+     <Reference Include="Microsoft.AspNetCore.Http.Features" />
+     <Reference Include="Microsoft.Extensions.ActivatorUtilities.Sources" />
 diff --git a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
-index 9955ca7202..5f8564703e 100644
+index 8ae1a927db..ca3ba9ad87 100644
 --- a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
 +++ b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
 @@ -1,9 +1,9 @@
@@ -193,10 +193,10 @@ index 9955ca7202..5f8564703e 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.Http.Connections.Common.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Connections.Abstractions"  />
-     <Reference Include="System.Text.Json"  />
+     <Reference Include="Microsoft.AspNetCore.Connections.Abstractions" />
+     <Reference Include="System.Text.Json" />
 diff --git a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
-index 94da81a8e3..5e83d7b1b3 100644
+index 19480b336f..2d45dbe1f3 100644
 --- a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
 +++ b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
 @@ -1,9 +1,9 @@
@@ -209,10 +209,10 @@ index 94da81a8e3..5e83d7b1b3 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.SignalR.Protocols.Json.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.SignalR.Common"  />
+     <Reference Include="Microsoft.AspNetCore.SignalR.Common" />
    </ItemGroup>
 diff --git a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
-index fdc6d747c7..1960a04139 100644
+index ce6ebe8ce1..91d7996a3c 100644
 --- a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
 +++ b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
 @@ -1,9 +1,9 @@
@@ -225,8 +225,8 @@ index fdc6d747c7..1960a04139 100644
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 +  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.SignalR.Common.netstandard2.0.cs" />
-     <Reference Include="Microsoft.AspNetCore.Connections.Abstractions"  />
-     <Reference Include="Microsoft.Extensions.Options"  />
+     <Reference Include="Microsoft.AspNetCore.Connections.Abstractions" />
+     <Reference Include="Microsoft.Extensions.Options" />
 -- 
-2.18.0
+2.21.0
 

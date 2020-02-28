@@ -147,7 +147,7 @@
 
   <Target Name="DownloadSourceBuildReferencePackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingReferencePackages)' != 'true'">
     <DownloadFile 
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
@@ -155,7 +155,7 @@
 
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT'">
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'">
     <DownloadFile 
           SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
