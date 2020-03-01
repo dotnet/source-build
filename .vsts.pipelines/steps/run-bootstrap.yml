@@ -1,15 +1,14 @@
-# Delete some files from the default image since we're tight on disk space.
-# List is from https://github.com/microsoft/azure-pipelines-image-generation/pull/1231#issuecomment-537174621
-
 # Extract the tarball fetched from the previous Offline stage 
 steps:
 - script: |
       set -ex 
+      mount
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       mkdir -p /bst/sb/tarball
-      tar -xvf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
-      rm -rf "/bst/Tarball centos71 Offline"'
+      tar -xf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz" -C /bst/sb/tarball --no-same-owner --strip-components=1
+      rm -rf "/bst/Tarball centos71 Offline/$(tarballName).tar.gz"'
+      df -h
   displayName: Unpack Tarball
   condition: always()
 
@@ -19,6 +18,7 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       /bst/sb/tarball/tool-bootstrapping/bootstrap.sh /bst/bootstrap_dir /bst/sb/tarball /bst/source-build-reference-packages 1'
+      df -h
   displayName: Build stage1
   condition: succeeded()
 
@@ -84,16 +84,18 @@ steps:
   displayName: Build stage1 source-build-reference-packages
   condition: succeeded()
 
-# Copy ref-packages tarball to drop directory.
+# Create and copy ref-packages tarball to drop directory.
 - script: |
     set -ex
     df -h
     $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
       mkdir -p /drop/tarball/reference-packages
       pushd /bst/bootstrap_dir/reference-packages
+      tar --numeric-owner -czf Private.SourceBuild.ReferencePackages.bootstrap.tar.gz *.nupkg
       find . \( \
         -iname 'Private.SourceBuild.ReferencePackages.bootstrap.tar.gz' \) \
         -exec cp {} /drop/tarball/reference-packages \;
+      rm -rf Private.SourceBuild.ReferencePackages.bootstrap.tar.gz
       popd"
     du -h $(rootDirectory) | sort -h | tail -n 50
   displayName: Copy ref-packages tarball 
@@ -105,10 +107,11 @@ steps:
       set -ex 
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      rm -rf /bst/source-build-reference-packages/* 
+      rm -rf /bst/source-build-reference-packages/*
+      rm -rf /bst/source-build-reference-packages/.git
       pushd /bst/bootstrap_dir/reference-packages
-      echo "Removing everything in reference-packages except artifacts"
-      find . -type f -not -name '*SourceBuild.ReferencePackages.bootstrap.tar.gz' -delete
+      echo "Removing everything in reference-packages except nupkg artifacts"
+      find . -type f -not -name '*.nupkg' -delete
       popd'
   displayName: Clean all except tarball in source-build-reference-packages
   condition: always()
@@ -175,6 +178,17 @@ steps:
   displayName: Copy final-stage tarball artifacts
   condition: always()
   continueOnError: true
+
+- script: |
+      set -ex
+      mount
+      df -h
+      $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
+      tar -xf "/bst/Tarball centos71 Offline/$(tarballName)-smoke-test-prereqs.tar.gz" -C /bst/bootstrap_dir/final-sdk --no-same-owner --strip-components=1
+      rm -rf "/bst/Tarball centos71 Offline/$(tarballName)-smoke-test-prereqs.tar.gz"'
+      df -h
+  displayName: Unpack smoke test prereqs
+  condition: always()
 
 - script: |
       set -ex 

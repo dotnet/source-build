@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SourceDirectory>coreclr</SourceDirectory>
+    <PortableBuild>true</PortableBuild>
+    <BuildingPortableRuntime>true</BuildingPortableRuntime>
+    <UseSystemLibraries>false</UseSystemLibraries>
+  </PropertyGroup>
+
+  <Import Project="coreclr.common.props" />
+
+  <ItemGroup>
+    <RepositoryReference Include="linker" />
+    <RepositoryReference Include="roslyn" />
+  </ItemGroup>
+
+  <Target Name="CopyTools"
+          AfterTargets="Package">
+    <PropertyGroup>
+      <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'FreeBSD'">so</AssemblyExtension>
+      <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
+      <AssemblyExtension Condition="'$(AssemblyExtension)' == ''">please define AssemblyExtension for $(TargetOS)</AssemblyExtension>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ilasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/ildasm" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.$(AssemblyExtension)" />
+      <CoreClrTools Include="$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/System.Private.CoreLib.dll" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Copying source-built ILAsm and ILDasm '@(CoreClrTools)' to '$(CoreClrDestinationDir)'" />
+
+    <Copy SourceFiles="@(CoreClrTools)" DestinationFolder="$(CoreClrDestinationDir)" />
+  </Target>
+
+  <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="RemoveBuiltPackagesFromCache">
+    <ItemGroup>
+      <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
+      <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(DirsToDelete)" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+
+  <Target Name="GatherBuiltPackages" AfterTargets="Build" BeforeTargets="CopyPackage">
+    <ItemGroup>
+      <_BuiltPackages Include="$(PackagesOutput)/*linux*.nupkg" Exclude="$(PackagesOutput)/*.symbols.nupkg"/>
+      <AllPackages Include="$(ProjectDirectory)/**/*.nupkg" />
+    </ItemGroup>
+  </Target>
+</Project>
