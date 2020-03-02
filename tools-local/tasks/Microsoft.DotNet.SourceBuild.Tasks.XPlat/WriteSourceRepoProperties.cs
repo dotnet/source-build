@@ -165,7 +165,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         private static string[] GetRepoNamesOrDefault(Dependency dependency)
         {
-            return dependency.RepoName ?? GetDefaultRepoNameFromUrl(dependency.Uri);
+            return dependency.RepoNames ?? GetDefaultRepoNameFromUrl(dependency.Uri);
         }
 
         private static string DeriveRepoGitDirPath(string gitDirPath, string repoUrl)
