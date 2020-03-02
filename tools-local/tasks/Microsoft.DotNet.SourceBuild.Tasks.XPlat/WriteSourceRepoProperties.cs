@@ -50,22 +50,24 @@ namespace Microsoft.DotNet.Build.Tasks
                 string repoGitDir = DeriveRepoGitDirPath(ClonedSubmoduleGitRootDirectory, dep.Uri);
                 if (Directory.Exists(repoGitDir))
                 {
-                    string repoName = GetRepoNameOrDefault(dep);
-                    string safeRepoName = repoName.Replace("-", "");
-                    try
+                    foreach (string repoName in GetRepoNamesOrDefault(dep))
                     {
-                        WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
-                        WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
-                        if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                        string safeRepoName = repoName.Replace("-", "");
+                        try
                         {
-                            HandleSubmodules(repoPath, repoGitDir, dep);
+                            WriteMinimalMetadata(repoPath, dep.Uri, dep.Sha);
+                            WriteSourceBuildMetadata(SourceBuildMetadataDir, repoGitDir, dep);
+                            if (File.Exists(Path.Combine(repoPath, ".gitmodules")))
+                            {
+                                HandleSubmodules(repoPath, repoGitDir, dep);
+                            }
+                            allRepoProps[$"{safeRepoName}GitCommitHash"] = dep.Sha;
+                            allRepoProps[$"{safeRepoName}OutputPackageVersion"] = dep.Version;
                         }
-                        allRepoProps[$"{safeRepoName}GitCommitHash"] = dep.Sha;
-                        allRepoProps[$"{safeRepoName}OutputPackageVersion"] = dep.Version;
-                    }
-                    catch (Exception e)
-                    {
-                        Log.LogErrorFromException(e, true, true, null);
+                        catch (Exception e)
+                        {
+                            Log.LogErrorFromException(e, true, true, null);
+                        }
                     }
                 }
                 else
@@ -82,20 +84,23 @@ namespace Microsoft.DotNet.Build.Tasks
 
         private void WriteSourceBuildMetadata(string sourceBuildMetadataPath, string repoGitDir, Dependency dependency)
         {
-            string propsPath = Path.Combine(sourceBuildMetadataPath, $"{GetRepoNameOrDefault(dependency)}.props");
-            string commitCount = GetCommitCount(repoGitDir, dependency.Sha);
-            DerivedVersion derivedVersion = GetVersionInfo(dependency.Version, commitCount);
-            var repoProps = new Dictionary<string, string>
+            foreach (string repoName in GetRepoNamesOrDefault(dependency))
             {
-                ["GitCommitHash"] = dependency.Sha,
-                ["GitCommitCount"] = commitCount,
-                ["GitCommitDate"] = GetCommitDate(repoGitDir, dependency.Sha),
-                ["OfficialBuildId"] = derivedVersion.OfficialBuildId,
-                ["OutputPackageVersion"] = dependency.Version,
-                ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel,
-                ["IsStable"] = string.IsNullOrWhiteSpace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
-            };
-            WritePropsFile(propsPath, repoProps);
+                string propsPath = Path.Combine(sourceBuildMetadataPath, $"{repoName}.props");
+                string commitCount = GetCommitCount(repoGitDir, dependency.Sha);
+                DerivedVersion derivedVersion = GetVersionInfo(dependency.Version, commitCount);
+                var repoProps = new Dictionary<string, string>
+                {
+                    ["GitCommitHash"] = dependency.Sha,
+                    ["GitCommitCount"] = commitCount,
+                    ["GitCommitDate"] = GetCommitDate(repoGitDir, dependency.Sha),
+                    ["OfficialBuildId"] = derivedVersion.OfficialBuildId,
+                    ["OutputPackageVersion"] = dependency.Version,
+                    ["PreReleaseVersionLabel"] = derivedVersion.PreReleaseVersionLabel,
+                    ["IsStable"] = string.IsNullOrWhiteSpace(derivedVersion.PreReleaseVersionLabel) ? "true" : "false",
+                };
+                WritePropsFile(propsPath, repoProps);
+            }
         }
 
 
@@ -149,16 +154,16 @@ namespace Microsoft.DotNet.Build.Tasks
             throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
         }
 
-        private static string GetDefaultRepoNameFromUrl(string repoUrl)
+        private static string[] GetDefaultRepoNameFromUrl(string repoUrl)
         {
             if (repoUrl.EndsWith(".git"))
             {
                 repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
             }
-            return repoUrl.Substring(repoUrl.LastIndexOf("/") + 1);
+            return new[] { repoUrl.Substring(repoUrl.LastIndexOf("/") + 1) };
         }
 
-        private static string GetRepoNameOrDefault(Dependency dependency)
+        private static string[] GetRepoNamesOrDefault(Dependency dependency)
         {
             return dependency.RepoName ?? GetDefaultRepoNameFromUrl(dependency.Uri);
         }

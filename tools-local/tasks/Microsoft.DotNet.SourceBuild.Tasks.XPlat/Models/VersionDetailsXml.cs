@@ -24,7 +24,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.Models
         // Uri type isn't serializable, so use a string instead
         public string Uri { get; set; }
         public string Sha { get; set; }
-        public string RepoName { get; set; }
+        public string[] RepoName { get; set; }
 
         public override string ToString()
         {
