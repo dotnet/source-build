@@ -25,7 +25,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.Models
         public string Uri { get; set; }
         public string Sha { get; set; }
         [XmlElement("RepoName")]
-        public string[] RepoNames { get; set; }
+        public List<string> RepoNames { get; set; }
 
         public override string ToString()
         {

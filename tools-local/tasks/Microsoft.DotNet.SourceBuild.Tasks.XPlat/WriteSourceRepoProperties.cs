@@ -163,7 +163,7 @@ namespace Microsoft.DotNet.Build.Tasks
             return new[] { repoUrl.Substring(repoUrl.LastIndexOf("/") + 1) };
         }
 
-        private static string[] GetRepoNamesOrDefault(Dependency dependency)
+        private static IEnumerable<string> GetRepoNamesOrDefault(Dependency dependency)
         {
             return dependency.RepoNames ?? GetDefaultRepoNameFromUrl(dependency.Uri);
         }
