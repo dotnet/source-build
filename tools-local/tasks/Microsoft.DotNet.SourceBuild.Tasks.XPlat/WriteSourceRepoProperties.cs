@@ -35,6 +35,7 @@ namespace Microsoft.DotNet.Build.Tasks
         public override bool Execute()
         {
             var serializer = new XmlSerializer(typeof(VersionDetails));
+
             VersionDetails versionDetails = null;
             using (var stream = File.OpenRead(VersionDetailsFile))
             {
@@ -154,18 +155,18 @@ namespace Microsoft.DotNet.Build.Tasks
             throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
         }
 
-        private static string[] GetDefaultRepoNameFromUrl(string repoUrl)
+        private static string GetDefaultRepoNameFromUrl(string repoUrl)
         {
             if (repoUrl.EndsWith(".git"))
             {
                 repoUrl = repoUrl.Substring(0, repoUrl.Length - ".git".Length);
             }
-            return new[] { repoUrl.Substring(repoUrl.LastIndexOf("/") + 1) };
+            return repoUrl.Substring(repoUrl.LastIndexOf("/") + 1);
         }
 
         private static IEnumerable<string> GetRepoNamesOrDefault(Dependency dependency)
         {
-            return dependency.RepoNames ?? GetDefaultRepoNameFromUrl(dependency.Uri);
+            return dependency.RepoNames ?? new[] { GetDefaultRepoNameFromUrl(dependency.Uri) };
         }
 
         private static string DeriveRepoGitDirPath(string gitDirPath, string repoUrl)

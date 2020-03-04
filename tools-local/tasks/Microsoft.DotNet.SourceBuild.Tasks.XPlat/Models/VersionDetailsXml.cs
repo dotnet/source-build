@@ -21,11 +21,15 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.Models
         public string Name { get; set; }
         [XmlAttribute]
         public string Version { get; set; }
+        [XmlAttribute]
+        public string CoherentParentDependency { get; set; }
+        [XmlAttribute]
+        public bool Pinned { get; set; }
         // Uri type isn't serializable, so use a string instead
         public string Uri { get; set; }
         public string Sha { get; set; }
         [XmlElement("RepoName")]
-        public List<string> RepoNames { get; set; }
+        public string[] RepoNames { get; set; }
 
         public override string ToString()
         {
