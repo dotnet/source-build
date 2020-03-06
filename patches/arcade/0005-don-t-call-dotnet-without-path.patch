@@ -1,4 +1,4 @@
-From c8ad3664426e1280a2b7f7480e3af81a891cab81 Mon Sep 17 00:00:00 2001
+From 3cf08e831614f3f16389f085ff9688a40357b86f Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 10 Oct 2019 00:36:49 -0500
 Subject: [PATCH 05/13] don't call dotnet without path
@@ -8,10 +8,10 @@ Subject: [PATCH 05/13] don't call dotnet without path
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/eng/common/tools.sh b/eng/common/tools.sh
-index 757d5b9e..5a4cfeb1 100755
+index 94965a8f..8e14f8b6 100755
 --- a/eng/common/tools.sh
 +++ b/eng/common/tools.sh
-@@ -340,9 +340,9 @@ function MSBuild {
+@@ -362,9 +362,9 @@ function MSBuild {
  
      # Work around issues with Azure Artifacts credential provider
      # https://github.com/dotnet/arcade/issues/3932
@@ -25,5 +25,5 @@ index 757d5b9e..5a4cfeb1 100755
      local toolset_dir="${_InitializeToolset%/*}"
      local logger_path="$toolset_dir/$_InitializeBuildToolFramework/Microsoft.DotNet.Arcade.Sdk.dll"
 -- 
-2.18.0
+2.21.0
 
