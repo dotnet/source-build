@@ -52,11 +52,12 @@
 
         <!-- Tier 3 -->
 
-        <RepositoryReference Include="aspnet-extensions" />
+        <RepositoryReference Include="runtime" />
+        <RepositoryReference Include="runtime-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
 
         <!-- Tier 4 -->
 
-        <RepositoryReference Include="runtime" />
+        <RepositoryReference Include="aspnet-extensions" />
 
         <!-- Tier 5 -->
 
