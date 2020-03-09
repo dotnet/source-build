@@ -12,6 +12,7 @@
       <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
       <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
       <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
+      <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux' and ('$(PortableBuild)' == 'true' or '$(BuildingPortableRuntime)' == 'true')">linux-$(Platform)</OverrideTargetRid>
   </PropertyGroup>
 
   <!-- Build arguments -->
