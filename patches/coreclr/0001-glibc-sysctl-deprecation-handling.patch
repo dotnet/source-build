@@ -1,0 +1,31 @@
+From f2a4abfda4f2dea0d1bece590222b304b6242cf3 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Fri, 6 Mar 2020 18:25:45 +0000
+Subject: [PATCH] glibc sysctl deprecation handling
+
+---
+ src/pal/src/misc/sysinfo.cpp | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/src/pal/src/misc/sysinfo.cpp b/src/pal/src/misc/sysinfo.cpp
+index 495cc8bb94..0afb14a73a 100644
+--- a/src/pal/src/misc/sysinfo.cpp
++++ b/src/pal/src/misc/sysinfo.cpp
+@@ -26,9 +26,12 @@ Revision History:
+ #include <errno.h>
+ #include <unistd.h>
+ #include <sys/types.h>
+-#if HAVE_SYSCTL
++
++#if HAVE_SYSCONF
++// <unistd.h> already included
++#elif HAVE_SYSCTL
+ #include <sys/sysctl.h>
+-#elif !HAVE_SYSCONF
++#else
+ #error Either sysctl or sysconf is required for GetSystemInfo.
+ #endif
+ 
+-- 
+2.21.0
+
