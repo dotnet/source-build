@@ -43,9 +43,21 @@
   </Target>
 
   <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="RemoveBuiltPackagesFromCache">
+    <!-- Make a copy of the portable build logs -->
+    <PropertyGroup>
+      <PortableLogDir>$(ProjectDirectory)artifacts/portableLog</PortableLogDir>
+    </PropertyGroup>
     <ItemGroup>
-      <DirsToDelete Include="$(ProjectDirectory)artifacts" Condition="Exists('$(ProjectDirectory)artifacts')" />
+      <FilesToCopy Include="$(ProjectDirectory)artifacts/log/**/*" />
+    </ItemGroup>
+    <MakeDir Directories="$(PortableLogDir)" Condition="Exists('$(ProjectDirectory)artifacts')" />
+    <Copy SourceFiles="@(FilesToCopy)" DestinationFolder="$(PortableLogDir)/%(RecursiveDir)" Condition="Exists('$(PortableLogDir)')" />
+
+    <!-- Cleanup everything else -->
+    <ItemGroup>
+      <DirsToDelete Include="$([System.IO.Directory]::GetDirectories(&quot;$(ProjectDirectory)artifacts/&quot;))" Condition="Exists('$(ProjectDirectory)artifacts')" />
       <DirsToDelete Include="$(ProjectDirectory)bin" Condition="Exists('$(ProjectDirectory)bin')" />
+      <DirsToDelete Remove="$(PortableLogDir)" />
     </ItemGroup>
 
     <RemoveDir Directories="@(DirsToDelete)" />
