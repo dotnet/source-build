@@ -39,45 +39,41 @@
         <RepositoryReference Include="newtonsoft-json901" />
         <RepositoryReference Include="standard" />
         <RepositoryReference Include="xliff-tasks" />
-
         <RepositoryReference Include="clicommandlineparser" />
         <RepositoryReference Include="roslyn" />
 
         <!-- Tier 2 -->
+        <RepositoryReference Include="linker" />
+        <RepositoryReference Include="runtime" />
+        <RepositoryReference Include="runtime-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
         <RepositoryReference Include="msbuild" />
-        <RepositoryReference Include="nuget-client" />
-        <RepositoryReference Include="websdk" />
-
         <RepositoryReference Include="templating" />
+        <RepositoryReference Include="nuget-client" />
 
         <!-- Tier 3 -->
 
-        <RepositoryReference Include="runtime" />
-        <RepositoryReference Include="runtime-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+        <RepositoryReference Include="aspnet-extensions" />
+        <!--RepositoryReference Include="aspnetcore-tooling" /-->
+        <!--RepositoryReference Include="aspnetcore" /-->
+        <!--RepositoryReference Include="websdk" /-->
 
         <!-- Tier 4 -->
 
-        <RepositoryReference Include="aspnet-extensions" />
+        <!--RepositoryReference Include="sdk" /-->
+        <!--RepositoryReference Include="vstest" /-->
+        <!--RepositoryReference Include="fsharp" /-->
 
         <!-- Tier 5 -->
 
-        <RepositoryReference Include="aspnetcore-tooling" />
-        <RepositoryReference Include="sdk" />
-        <RepositoryReference Include="vstest" />
-        <RepositoryReference Include="fsharp" />
+        <!--RepositoryReference Include="cli" /-->
 
         <!-- Tier 6 -->
 
-        <RepositoryReference Include="aspnetcore" />
-        <RepositoryReference Include="cli" />
+        <!--RepositoryReference Include="toolset" /-->
 
         <!-- Tier 7 -->
 
-        <RepositoryReference Include="toolset" />
-
-        <!-- Tier 8 -->
-
-        <RepositoryReference Include="core-sdk" />
+        <!--RepositoryReference Include="core-sdk" /-->
 
         <!-- Package source-build artifacts -->
 
