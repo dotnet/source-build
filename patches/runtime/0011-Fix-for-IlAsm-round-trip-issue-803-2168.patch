@@ -1,0 +1,26 @@
+From 239401af15ee2b39879a1d3152b599df828b701c Mon Sep 17 00:00:00 2001
+From: Brian Sullivan <briansul@microsoft.com>
+Date: Mon, 27 Jan 2020 11:01:25 -0800
+Subject: [PATCH] Fix for IlAsm round-trip issue #803 (#2168)
+
+Remove the unnecessary assignment m_pCustomDescrList = NULL;
+from the method RecordTypeConstraints that was added with my original fix.
+---
+ src/coreclr/src/ilasm/assembler.cpp | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/coreclr/src/ilasm/assembler.cpp b/src/coreclr/src/ilasm/assembler.cpp
+index a4a83a1..252a07a 100644
+--- a/src/coreclr/src/ilasm/assembler.cpp
++++ b/src/coreclr/src/ilasm/assembler.cpp
+@@ -2452,7 +2452,6 @@ void Assembler::RecordTypeConstraints(GenericParamConstraintList* pGPCList, int
+                 }
+             }
+         }
+-        m_pCustomDescrList = NULL;
+     }
+ }
+ 
+-- 
+1.8.3.1
+
