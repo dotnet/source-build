@@ -1,7 +1,7 @@
-From 89c20530991b37ca40a36c2ac3ec59a62ae0e22f Mon Sep 17 00:00:00 2001
+From 30743ed0e9410e90b7608e1f3f0df42106354972 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 24 Jan 2020 15:49:45 +0000
-Subject: [PATCH 8/8] Remove fallback folder to pick up correct
+Subject: [PATCH 8/9] Remove fallback folder to pick up correct
  libhostpolicy.so
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 8/8] Remove fallback folder to pick up correct
  1 file changed, 2 deletions(-)
 
 diff --git a/src/pkg/packaging-tools/framework.sharedfx.props b/src/pkg/packaging-tools/framework.sharedfx.props
-index 02e0aa2..315b072 100644
+index 02e0aa2b..315b0724 100644
 --- a/src/pkg/packaging-tools/framework.sharedfx.props
 +++ b/src/pkg/packaging-tools/framework.sharedfx.props
 @@ -26,8 +26,6 @@
@@ -22,5 +22,5 @@ index 02e0aa2..315b072 100644
      <EnsureRuntimePackageDependencies>false</EnsureRuntimePackageDependencies>
      <!-- Use a project-local packages folder. 'p', not 'packages': max path breathing room. -->
 -- 
-2.7.4
+2.21.0
 
