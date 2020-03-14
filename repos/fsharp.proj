@@ -8,6 +8,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:FSharpSourceBuild=true</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetBuildFromSource=true</BuildCommandArgs>
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
