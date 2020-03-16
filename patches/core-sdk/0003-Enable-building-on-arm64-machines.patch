@@ -1,7 +1,7 @@
-From d4daccc3d0dd1f29676d5a124e27ba55906f093b Mon Sep 17 00:00:00 2001
+From 2fda49794f6bc526ba024f4ec6f4c94178421375 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 8 Oct 2019 17:02:29 -0400
-Subject: [PATCH 3/8] Enable building on arm64 machines
+Subject: [PATCH 3/9] Enable building on arm64 machines
 
 With this commit, I can build core-sdk on RHEL 8 on arm64 directly,
 without cross compilation.
@@ -29,24 +29,24 @@ be special-cased for arm64 or or not.
  4 files changed, 11 insertions(+), 6 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index fe43161..b173893 100644
+index fe43161d7..b17389329 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -8,6 +8,12 @@
+@@ -7,6 +7,12 @@
+     <PackageLicenseExpression>MIT</PackageLicenseExpression>
    </PropertyGroup>
  
-   <PropertyGroup>
++  <PropertyGroup>
 +    <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
 +    <Architecture Condition="'$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
 +    <Architecture Condition="'$(Architecture)' == ''">x64</Architecture>
 +  </PropertyGroup>
 +
-+  <PropertyGroup>
+   <PropertyGroup>
      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
      <DebugType>embedded</DebugType>
-     <DebugSymbols>true</DebugSymbols>
 diff --git a/src/redist/targets/Crossgen.targets b/src/redist/targets/Crossgen.targets
-index 47adeab..3fccba0 100644
+index 47adeabea..3fccba0e6 100644
 --- a/src/redist/targets/Crossgen.targets
 +++ b/src/redist/targets/Crossgen.targets
 @@ -5,14 +5,14 @@
@@ -68,7 +68,7 @@ index 47adeab..3fccba0 100644
        <SharedFrameworkNameVersionPath>$(RedistLayoutPath)shared/$(SharedFrameworkName)/$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedFrameworkNameVersionPath>
        <DIASymReaderCrossgenFilter>*</DIASymReaderCrossgenFilter>
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index ed591f2..632357b 100644
+index b1f5d5772..3cdaef7ea 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
 @@ -42,11 +42,11 @@
@@ -86,7 +86,7 @@ index ed591f2..632357b 100644
        <AlternateArchitecture Condition="'$(Architecture)' == 'x86'">x64</AlternateArchitecture>
        <AlternateArchitecture Condition="'$(Architecture)' == 'x64'">x86</AlternateArchitecture>
 diff --git a/src/redist/targets/GetRuntimeInformation.targets b/src/redist/targets/GetRuntimeInformation.targets
-index bdc42db..6e010c5 100644
+index bdc42db26..6e010c5ce 100644
 --- a/src/redist/targets/GetRuntimeInformation.targets
 +++ b/src/redist/targets/GetRuntimeInformation.targets
 @@ -13,7 +13,6 @@
@@ -98,5 +98,5 @@ index bdc42db..6e010c5 100644
      </PropertyGroup>
      
 -- 
-2.7.4
+2.21.0
 

@@ -1,0 +1,29 @@
+From 6f4f047612a882e2ebe5a779c8375230c7937a39 Mon Sep 17 00:00:00 2001
+From: Aditya Aggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 16 Mar 2020 04:52:15 +0000
+Subject: [PATCH 9/9] remove unneeded feeds
+
+---
+ NuGet.config | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index f568fffd0..886adabd7 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -6,12 +6,6 @@
+   <!-- Only specify feed for Arcade SDK (see https://github.com/Microsoft/msbuild/issues/2982) -->
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-pub-dotnet-templating-4609143" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-46091435/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-core-setup-4a9f85e" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-4a9f85e9/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-0f7f38c" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-0f7f38c4/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-aspnetcore-64a7f37" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-aspnetcore-64a7f37e/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <!-- 3.0.3 runtme pack/apphost packs are needed for tests, and not on nuget.org yet or other feeds below. Darc cannot see that due to nonstandard way these are pulled in to a non-3.0 branch -->
+     <add key="darc-pub-dotnet-core-setup-c03f2fe" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-c03f2fe6/nuget/v3/index.json" />
+     <add key="darc-pub-dotnet-aspnetcore-bd1e14b" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-aspnetcore-bd1e14b7/nuget/v3/index.json" />
+-- 
+2.21.0
+
