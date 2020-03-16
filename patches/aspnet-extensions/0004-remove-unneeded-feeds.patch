@@ -1,0 +1,29 @@
+From bf15241e67930b1275c07c8a492bac42d1a1e5f5 Mon Sep 17 00:00:00 2001
+From: Aditya Aggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 16 Mar 2020 04:44:40 +0000
+Subject: [PATCH 4/4] remove unneeded feeds
+
+---
+ NuGet.config | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index 95c349a87..300765e80 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -2,12 +2,6 @@
+ <configuration>
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-pub-dotnet-core-setup-4a9f85e" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-4a9f85e9/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-e946ceb-1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-e946cebe-1/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-8a3ffed" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-8a3ffed5/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-0f7f38c" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-0f7f38c4/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <add key="dotnet3" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
+     <add key="dotnet3-transport" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3-transport/nuget/v3/index.json" />
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+-- 
+2.21.0
+
