@@ -1,7 +1,7 @@
-From 68ef8b67ed549ea76791d4e9706e5e790ffa2644 Mon Sep 17 00:00:00 2001
+From 9d38a4668f51e90d0b455cf76141ee0bad1be218 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Mon, 5 Aug 2019 18:21:28 +0000
-Subject: [PATCH 2/4] Enable tests for CoreFX in s-b
+Subject: [PATCH 2/8] Enable tests for CoreFX in s-b
 
 ---
  Directory.Build.props | 9 +++++++++
@@ -10,10 +10,10 @@ Subject: [PATCH 2/4] Enable tests for CoreFX in s-b
  3 files changed, 12 insertions(+), 2 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 0272828bbd..61df83ee4b 100644
+index d5b446ae74..b4dd085c1b 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -350,6 +350,15 @@
+@@ -343,6 +343,15 @@
      <PackageConflictPlatformManifests Include="$(PlatformManifestFile)" />
    </ItemGroup>
  
@@ -57,5 +57,5 @@ index af8d308269..30932b8447 100644
  
    <!-- Don't build System.Text.Encodings.Web tools as part of build; they're intended to be run manually. -->
 -- 
-2.18.0
+2.21.0
 

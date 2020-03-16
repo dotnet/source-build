@@ -1,7 +1,7 @@
-From 8ccaaf1a5d607c601790f033c49f126d5c69d79b Mon Sep 17 00:00:00 2001
+From 1bcbde692121c8fb06aaa1e044572d8db117207e Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
-Subject: [PATCH 13/15] Support building for arm64 on arm64 (*nix)
+Subject: [PATCH 13/16] Support building for arm64 on arm64 (*nix)
 
 This commit allows ASP.NET Core to be built on arm64 machines directly,
 without relying on cross-compilation.
@@ -36,7 +36,7 @@ work on arm64.
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 9ab5379da7..440558e8c6 100644
+index 277357c3a5..6316903619 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -113,6 +113,7 @@
@@ -48,7 +48,7 @@ index 9ab5379da7..440558e8c6 100644
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index b63c15c275..39f78a11b0 100644
+index a0eb33f690..665df9db9e 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -97,15 +97,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -72,7 +72,7 @@ index b63c15c275..39f78a11b0 100644
  
      <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
      <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-@@ -303,7 +305,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -309,7 +311,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
    <PropertyGroup>
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
      <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>

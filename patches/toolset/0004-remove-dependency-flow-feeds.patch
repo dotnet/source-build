@@ -1,0 +1,30 @@
+From 6a7227a05280b9f44c2da0c56fae35c4ec478821 Mon Sep 17 00:00:00 2001
+From: Aditya Aggarwal <aditya.aggarwal@microsoft.com>
+Date: Fri, 13 Mar 2020 18:37:29 +0000
+Subject: [PATCH 4/4] remove dependency flow feeds
+
+---
+ NuGet.config | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index 7097f6dc8..fb19b849d 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -3,13 +3,6 @@
+   <!-- Only specify feed for RepoToolset SDK (see https://github.com/Microsoft/msbuild/issues/2982) -->
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-pub-microsoft-msbuild-e901037-3" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-microsoft-msbuild-e901037f-3/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-core-setup-4a9f85e" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-4a9f85e9/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-e946ceb-1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-e946cebe-1/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-corefx-0f7f38c" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-0f7f38c4/nuget/v3/index.json" />
+-    <add key="darc-pub-dotnet-aspnetcore-tooling-5ecfad7" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-aspnetcore-tooling-5ecfad7e/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet-tools" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+     <add key="dotnet3.1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
+-- 
+2.21.0
+

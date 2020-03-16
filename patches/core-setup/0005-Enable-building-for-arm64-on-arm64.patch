@@ -1,7 +1,7 @@
-From c02027bfee1c523006430183d37c1b61072d5ed8 Mon Sep 17 00:00:00 2001
+From fb8395ddec5344e2a73fe05828477de3a095656d Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Fri, 4 Oct 2019 16:08:59 -0400
-Subject: [PATCH] Enable building for arm64 on arm64
+Subject: [PATCH 5/9] Enable building for arm64 on arm64
 
 To enable building core-setup on arm64 machines (not cross compiled), we need
 to do a few things:
@@ -28,7 +28,7 @@ to do a few things:
  2 files changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index a53af2f09f..a7e9169c91 100644
+index a53af2f0..a7e9169c 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -94,6 +94,8 @@
@@ -48,10 +48,10 @@ index a53af2f09f..a7e9169c91 100644
 \ No newline at end of file
 +</Project>
 diff --git a/src/pkg/packaging-tools/framework.dependency.targets b/src/pkg/packaging-tools/framework.dependency.targets
-index 3e7afc5483..14ac018b02 100644
+index 3c34242d..96a982d4 100644
 --- a/src/pkg/packaging-tools/framework.dependency.targets
 +++ b/src/pkg/packaging-tools/framework.dependency.targets
-@@ -254,7 +254,7 @@
+@@ -248,7 +248,7 @@
      <PropertyGroup>
        <_crossDir Condition="'$(TargetArchitecture)' == 'arm' AND '$(OS)' == 'Windows_NT'">/x86_arm</_crossDir>
        <_crossDir Condition="'$(TargetArchitecture)' == 'arm' AND '$(OS)' != 'Windows_NT'">/x64_arm</_crossDir>
@@ -60,7 +60,7 @@ index 3e7afc5483..14ac018b02 100644
      </PropertyGroup>
  
      <ItemGroup>
-@@ -272,7 +272,6 @@
+@@ -266,7 +266,6 @@
        <!-- Find crossgen tool assets in package cache to allow ExcludeAssets=All. -->
        <_runtimeCLR Include="$(_runtimePackageDir)**/$(LibraryFilePrefix)coreclr$(LibraryFileExtension)" />
        <_runtimeCoreLib Include="$(_runtimePackageDir)**/native/System.Private.CoreLib.dll" />
@@ -68,7 +68,7 @@ index 3e7afc5483..14ac018b02 100644
        <_fxSystemRuntime Include="$(_corefxPackageDir)**/System.Runtime.dll" />
        <_windowsWinMD Include="$(_winmdPackageDir)**/Windows.winmd" />
        <_diaSymReaderAssembly Include="$(_diaSymReaderPackageDir)**\Microsoft.DiaSymReader.Native.*.dll" />
-@@ -287,8 +286,8 @@
+@@ -281,8 +280,8 @@
        <_coreLibDirectory>%(_runtimeCoreLib.RootDir)%(_runtimeCoreLib.Directory)</_coreLibDirectory>
      </PropertyGroup>
  
@@ -79,3 +79,6 @@ index 3e7afc5483..14ac018b02 100644
        <_jitPath Condition="'$(_crossDir)' != ''">$(_jitPackageDir)runtimes$(_crossDir)/native/$(LibraryFilePrefix)clrjit$(LibraryFileExtension)</_jitPath>
      </PropertyGroup>
  
+-- 
+2.21.0
+
