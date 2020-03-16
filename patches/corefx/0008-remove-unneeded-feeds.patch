@@ -1,0 +1,26 @@
+From 25d7847ca15928c660aa3d87ce6d8e0e128f7364 Mon Sep 17 00:00:00 2001
+From: Aditya Aggarwal <aditya.aggarwal@microsoft.com>
+Date: Mon, 16 Mar 2020 03:45:21 +0000
+Subject: [PATCH 8/8] remove unneeded feeds
+
+---
+ NuGet.config | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index e105915bd6..20fbe5705d 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -6,9 +6,6 @@
+   </fallbackPackageFolders>
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-pub-dotnet-standard-a5b5f2e" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-standard-a5b5f2e1/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <add key="dotnet3" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet-tools" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+-- 
+2.21.0
+

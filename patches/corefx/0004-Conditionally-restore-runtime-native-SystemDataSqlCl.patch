@@ -1,14 +1,14 @@
-From 065e2cc1a6919226988c309a909eb4ad1a0d2726 Mon Sep 17 00:00:00 2001
+From 9127c5dfdb541daf46e240730ddf4c35f524ec29 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 19 Nov 2019 20:16:20 +0000
-Subject: [PATCH] Conditionally restore runtime native SystemDataSqlClient
+Subject: [PATCH 4/8] Conditionally restore runtime native SystemDataSqlClient
 
 ---
  external/runtime/runtime.depproj | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/external/runtime/runtime.depproj b/external/runtime/runtime.depproj
-index 52460d2..40a6e72 100644
+index 52460d28f1..40a6e728d3 100644
 --- a/external/runtime/runtime.depproj
 +++ b/external/runtime/runtime.depproj
 @@ -9,6 +9,7 @@
@@ -28,5 +28,5 @@ index 52460d2..40a6e72 100644
      <PackageReference Include="Microsoft.NETCore.DotNetHostPolicy" Version="$(MicrosoftNETCoreDotNetHostPolicyPackageVersion)" />
      <!-- We do not need apphost.exe and the 3.0 SDK will actually remove it.
 -- 
-1.8.3.1
+2.21.0
 

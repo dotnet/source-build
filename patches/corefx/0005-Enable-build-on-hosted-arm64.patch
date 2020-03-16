@@ -1,7 +1,7 @@
-From d36274c31cc30a946c023b7a5bb5c6fa1ff86625 Mon Sep 17 00:00:00 2001
+From 62b2032cec3353c13af8c2412658323cf1b4719c Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 20 Aug 2019 13:40:19 -0400
-Subject: [PATCH] Enable build on hosted arm64
+Subject: [PATCH 5/8] Enable build on hosted arm64
 
 This is attempt #2. The first attempt was commit
 176da26d634fd760d7c8c99956f2e8d3f7d485e7.
@@ -15,7 +15,7 @@ Use the HostArch for the tool runtime instead of assuming x64.
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index fe1f406a02d7..dae20af84cc1 100644
+index b4dd085c1b..37e04cf8d6 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -64,9 +64,9 @@
@@ -31,7 +31,7 @@ index fe1f406a02d7..dae20af84cc1 100644
      <ArchGroup Condition="'$(ArchGroup)' == ''">x64</ArchGroup>
  
      <!-- Initialize BuildConfiguration from the individual properties if it wasn't already explicitly set -->
-@@ -135,9 +135,10 @@
+@@ -149,9 +149,10 @@
      <_runtimeOS Condition="'$(_runtimeOS)' == 'tizen.4.0.0'">linux</_runtimeOS>
      <_runtimeOS Condition="'$(_runtimeOS)' == 'tizen.5.0.0'">linux</_runtimeOS>
      <_runtimeOS Condition="'$(PortableBuild)' == 'true'">$(_portableOS)</_runtimeOS>
@@ -44,3 +44,6 @@ index fe1f406a02d7..dae20af84cc1 100644
  
      <!-- There are no WebAssembly tools, so treat them as Windows -->
      <ToolRuntimeRID Condition="'$(RuntimeOS)' == 'WebAssembly'">win-x64</ToolRuntimeRID>
+-- 
+2.21.0
+
