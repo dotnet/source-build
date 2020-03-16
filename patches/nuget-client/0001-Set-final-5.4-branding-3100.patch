@@ -1,0 +1,25 @@
+From b45cf29bf2bb511e8d4af63d5aa6c939309a1a8c Mon Sep 17 00:00:00 2001
+From: Andy Zivkovic <zivkan@users.noreply.github.com>
+Date: Tue, 29 Oct 2019 06:18:31 -0700
+Subject: [PATCH] Set final 5.4 branding (#3100)
+
+---
+ build/config.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/config.props b/build/config.props
+index 5bcc5c6..a5ec763 100644
+--- a/build/config.props
++++ b/build/config.props
+@@ -26,7 +26,7 @@
+     changes we might have made. -->
+     <NetCoreAssemblyBuildNumber Condition=" '$(NetCoreAssemblyBuildNumber)' == '' ">0</NetCoreAssemblyBuildNumber>
+ 
+-    <IsEscrowMode>false</IsEscrowMode>
++    <IsEscrowMode>true</IsEscrowMode>
+ 
+     <!-- Visual Studio Insertion Logic -->    
+     <VsTargetMajorVersion>$([MSBuild]::Add(11, $(MajorNuGetVersion)))</VsTargetMajorVersion>
+-- 
+1.8.3.1
+
