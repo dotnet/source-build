@@ -1,25 +1,27 @@
-From 39454b764f63713b462ff398a1b95205e0c0dafb Mon Sep 17 00:00:00 2001
+From ebc46a245362a3d30fa3acbda6d5556c3590a8f3 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 19 Nov 2019 00:34:09 -0600
-Subject: [PATCH 5/8] Use variable source-build sets for ASP.NET
+Subject: [PATCH] Use variable source-build sets for ASP.NET
 
 ---
- src/redist/targets/GenerateLayout.targets | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/redist/targets/GenerateLayout.targets | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 632357b..9c56b25 100644
+index da0f2ad..e98b630 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -11,7 +11,7 @@
+@@ -11,8 +11,8 @@
  
    <PropertyGroup>
      <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
--    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
+-    <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreTargetingPackx6450PackageVersion)</AspNetCoreBlobVersion>
+-    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
 +    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreAppRuntimewinx64PackageVersion)</AspNetCoreBlobVersion>
-     <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
++    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
+     <WindowsDesktopBlobVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</WindowsDesktopBlobVersion>
  
      <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
 -- 
-2.7.4
+1.8.3.1
 
