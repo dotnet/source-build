@@ -1,7 +1,7 @@
-From 55681c787fc3b7f468f71937d8b6cc84bd988f7b Mon Sep 17 00:00:00 2001
+From ee3efcb6178a29138d13600298b7a68de183e98e Mon Sep 17 00:00:00 2001
 From: Eugene Rozenfeld <erozen@microsoft.com>
 Date: Tue, 4 Apr 2017 23:27:47 -0700
-Subject: [PATCH 1/4] Add an option to use reflection heuristics during marking
+Subject: [PATCH] Add an option to use reflection heuristics during marking
  step.
 
 This change adds a -h option that can specify heuristics for keeping
@@ -23,9 +23,9 @@ linker invocation.
 
 https://github.com/dotnet/source-build/issues/777 tracks removing this patch.
 ---
- .../MarkStepWithReflectionHeuristics.cs       | 98 +++++++++++++++++++
- src/linker/Linker/Driver.cs                   | 22 +++++
- 2 files changed, 120 insertions(+)
+ .../MarkStepWithReflectionHeuristics.cs            | 98 ++++++++++++++++++++++
+ src/linker/Linker/Driver.cs                        | 26 ++++++
+ 2 files changed, 124 insertions(+)
  create mode 100644 src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
 
 diff --git a/src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs b/src/linker/Linker.Steps/MarkStepWithReflectionHeuristics.cs
@@ -133,24 +133,28 @@ index 0000000..ff5a3e7
 +	}
 +}
 diff --git a/src/linker/Linker/Driver.cs b/src/linker/Linker/Driver.cs
-index fd3c585..ed9a203 100644
+index c1e429f..612f3d1 100644
 --- a/src/linker/Linker/Driver.cs
 +++ b/src/linker/Linker/Driver.cs
-@@ -338,6 +338,10 @@ namespace Mono.Linker {
- 					case 'v':
- 						context.KeepMembersForDebugger = bool.Parse (GetParam ());
- 						break;
-+					case 'h':
-+						ICollection<string> reflectionHeuristics = ParseReflectionHeuristics (GetParam ());
-+						p.ReplaceStep (typeof (MarkStep), new MarkStepWithReflectionHeuristics (reflectionHeuristics));
-+						break;
- 					default:
- 						Usage ("Unknown option: `" + token [1] + "'");
- 						break;
-@@ -503,6 +507,15 @@ namespace Mono.Linker {
+@@ -463,6 +463,10 @@ namespace Mono.Linker {
+ 								return false;
+ 
+ 							continue;
++					    case 'h':
++                            ICollection<string> reflectionHeuristics = ParseReflectionHeuristics (GetParam ());
++                            p.ReplaceStep (typeof (MarkStep), new MarkStepWithReflectionHeuristics (reflectionHeuristics));
++                            continue;
+ 						case "?":
+ 						case "help":
+ 							Usage ();
+@@ -689,7 +693,20 @@ namespace Mono.Linker {
+ 
  			return assemblies;
  		}
- 
++<<<<<<< HEAD
+ #endif
++=======
++
 +		protected static ICollection<string> ParseReflectionHeuristics(string str)
 +		{
 +			HashSet<string> heuristics = new HashSet<string> (StringComparer.OrdinalIgnoreCase);
@@ -160,11 +164,12 @@ index fd3c585..ed9a203 100644
 +
 +			return heuristics;
 +		}
++>>>>>>> Add an option to use reflection heuristics during marking step.
  
  		AssemblyAction ParseAssemblyAction (string s)
  		{
-@@ -602,6 +615,15 @@ namespace Mono.Linker {
- 			Console.WriteLine ("  --dependencies-file <path> Specify the dependencies output. Defaults to 'output/linker-dependencies.xml.gz'");
+@@ -881,6 +898,15 @@ namespace Mono.Linker {
+ 			Console.WriteLine ("  --dependencies-file PATH   Specify the dependencies output. Defaults to 'output/linker-dependencies.xml.gz'");
  			Console.WriteLine ("  --dump-dependencies        Dump dependencies for the linker analyzer tool");
  			Console.WriteLine ("  --reduced-tracing          Reduces dependency output related to assemblies that will not be modified");
 +			Console.WriteLine ("   -h                  List of reflection heuristics separated with a comma.");
@@ -177,8 +182,8 @@ index fd3c585..ed9a203 100644
 +			Console.WriteLine ("                                               where an instance member has been marked but");
 +			Console.WriteLine ("                                               none of the instance constructors have been marked");
  			Console.WriteLine ("");
+ 		}
  
- 			Environment.Exit (1);
 -- 
-2.21.0
+1.8.3.1
 

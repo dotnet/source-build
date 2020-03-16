@@ -1,25 +1,26 @@
-From ab69f4b33a058f58fcc9b03d18b41e884ddfd9e0 Mon Sep 17 00:00:00 2001
+From 1a67d7ad94ba8acc1ed9e9d87edd6ea4bfb851af Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 20 Jun 2019 14:33:10 -0500
-Subject: [PATCH 3/4] Don't add sources when building offline.
+Subject: [PATCH] Don't add sources when building offline.
 
 ---
- eng/Versions.props | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ eng/Versions.props | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 4593f38..16a5c20 100644
+index 419ba90..dd4099f 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -12,7 +12,7 @@
+@@ -12,5 +12,9 @@
+     <SystemReflectionMetadataVersion>1.5.0</SystemReflectionMetadataVersion>
+     <MicrosoftBuildFrameworkVersion>15.4.8</MicrosoftBuildFrameworkVersion>
      <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
-   </PropertyGroup>
-   <PropertyGroup>
--    <RestoreSources>
 +    <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">
-       $(RestoreSources);
-       https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json
-     </RestoreSources>
++      $(RestoreSources);
++      https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json
++    </RestoreSources>
+   </PropertyGroup>
+ </Project>
 -- 
-2.21.0
+1.8.3.1
 
