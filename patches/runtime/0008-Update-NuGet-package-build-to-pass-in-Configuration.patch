@@ -1,4 +1,4 @@
-From d4a502a9df2b7b0e371888da6df3bc2208015700 Mon Sep 17 00:00:00 2001
+From 5bb41902eeffbe9461a80039a1beb3d50006c6f2 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 14 Feb 2020 21:02:33 +0000
 Subject: [PATCH] Update NuGet package build to pass in Configuration
@@ -8,15 +8,15 @@ Subject: [PATCH] Update NuGet package build to pass in Configuration
  1 file changed, 1 insertion(+)
 
 diff --git a/src/coreclr/build.sh b/src/coreclr/build.sh
-index 769c3bb..517366e 100755
+index 15e9126..5a6fa32 100755
 --- a/src/coreclr/build.sh
 +++ b/src/coreclr/build.sh
-@@ -444,6 +444,7 @@ generate_NugetPackages()
-     $__RepoRootDir/eng/common/build.sh -r -b -projects $__SourceDir/.nuget/packages.builds \
-                                        -verbosity minimal -bl:$__LogsDir/Nuget_$__BuildOS__$__BuildArch__$__BuildType.binlog \
+@@ -302,6 +302,7 @@ generate_NugetPackages()
+     "$__RepoRootDir"/eng/common/build.sh -r -b -projects "$__SourceDir"/.nuget/packages.builds \
+                                        -verbosity minimal -bl:"$__LogsDir/Nuget_$__TargetOS__$__BuildArch__$__BuildType.binlog" \
                                         /p:PortableBuild=true \
 +                                       /p:Configuration=$__BuildType \
-                                        /p:__IntermediatesDir=$__IntermediatesDir /p:__RootBinDir=$__RootBinDir /p:__DoCrossArchBuild=$__CrossBuild \
+                                        /p:"__IntermediatesDir=$__IntermediatesDir" /p:"__RootBinDir=$__RootBinDir" /p:"__DoCrossArchBuild=$__CrossBuild" \
                                         $__CommonMSBuildArgs $__UnprocessedBuildArgs
  
 -- 

@@ -1,14 +1,14 @@
-From b6c16879ceab05c1ded066e2cd236358cae0d633 Mon Sep 17 00:00:00 2001
+From 48a12686a536912f7b26c4c224d4de03edbf8172 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 7 Jan 2020 20:35:28 +0000
 Subject: [PATCH] Conditionally override PackageVersion properties
 
 ---
- src/coreclr/dependencies.props | 8 ++++----
+ src/coreclr/dependencies.props                     |    8 +-
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/coreclr/dependencies.props b/src/coreclr/dependencies.props
-index 6336b79..7172cf6 100644
+index 06a25f2..cf22341 100644
 --- a/src/coreclr/dependencies.props
 +++ b/src/coreclr/dependencies.props
 @@ -7,10 +7,10 @@
@@ -16,11 +16,11 @@ index 6336b79..7172cf6 100644
    <!-- Tests/infrastructure dependency versions. -->
    <PropertyGroup>
 -    <XunitPerformanceApiPackageVersion>1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
--    <MicrosoftDiagnosticsTracingTraceEventPackageVersion>2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
+-    <MicrosoftDiagnosticsTracingTraceEventPackageVersion>2.0.49</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
 -    <MicrosoftDiagnosticsToolsRuntimeClientVersion>1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
 -    <CommandLineParserVersion>2.2.0</CommandLineParserVersion>
 +    <XunitPerformanceApiPackageVersion Condition="'$(XunitPerformanceApiPackageVersion)' == ''">1.0.0-beta-build0015</XunitPerformanceApiPackageVersion>
-+    <MicrosoftDiagnosticsTracingTraceEventPackageVersion Condition="'$(MicrosoftDiagnosticsTracingTraceEventPackageVersion)' == ''">2.0.43</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
++    <MicrosoftDiagnosticsTracingTraceEventPackageVersion Condition="'$(MicrosoftDiagnosticsTracingTraceEventPackageVersion)' == ''">2.0.49</MicrosoftDiagnosticsTracingTraceEventPackageVersion>
 +    <MicrosoftDiagnosticsToolsRuntimeClientVersion Condition="'$(MicrosoftDiagnosticsToolsRuntimeClientVersion)' == ''">1.0.4-preview6.19326.1</MicrosoftDiagnosticsToolsRuntimeClientVersion>
 +    <CommandLineParserVersion Condition="'$(CommandLineParserVersion)' == ''">2.2.0</CommandLineParserVersion>
  
