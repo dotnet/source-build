@@ -1,17 +1,15 @@
-# DRAFT
-
-**This is a proposal, checked in for reference and review. It has not been
-ratified.**
-
 # Arcade-powered source-build
 
-Source-build existing outside the Microsoft build process impedes efforts to
-maintain the source-buildability of .NET Core. Integration into the normal build
-process is driven by two major goals:
+Source-build existing as a process outside the Microsoft build impedes efforts
+to maintain the source-buildability of .NET Core. Integration into the normal
+build process is driven by two major goals:
 
-1. Official build. When the .NET Core SDK official build completes, its
-   artifacts include validated, ship-ready source-build outputs, in addition to
-   the Microsoft build outputs.
+1. When the .NET Core SDK **official build** completes, its artifacts include
+   validated, ship-ready source-build outputs, in addition to the Microsoft
+   build outputs.
+
+   * **Official builds** produce the signed bits released by Microsoft, running
+     on a daily or per-commit basis depending on repo and point in time.
 
    * This has two core benefits over the current situation: we know immediately
      whether an SDK can be source-built cleanly, and the status is as visible as
@@ -31,8 +29,13 @@ process is driven by two major goals:
      source-build tarball availability, as long as we treat a source-build
      failure as seriously as a Microsoft build failure.
 
-2. PR validation. Every repo involved in source-build validates
-   source-buildability in its PR validation build.
+2. Every repo involved in source-build validates source-buildability in its **PR
+   validation** build.
+
+   * **PR validation** builds run on each pull request submitted to a
+     repository, and is typically required to succeed to merge. There are also
+     **rolling builds** that run lower-priority and slower tests after each
+     merge.
 
    * This allows developers and release owners to understand the source-build
      impact of changes, reducing the frequency the source-build servicing team
