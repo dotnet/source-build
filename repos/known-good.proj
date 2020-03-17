@@ -47,7 +47,7 @@
         <RepositoryReference Include="nuget-client" />
         <RepositoryReference Include="websdk" />
         <RepositoryReference Include="coreclr" />
-        <RepositoryReference Include="coreclr-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+        <RepositoryReference Include="coreclr-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
 
         <RepositoryReference Include="templating" />
 
@@ -55,12 +55,12 @@
 
         <RepositoryReference Include="aspnet-extensions" />
         <RepositoryReference Include="corefx" />
-        <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+        <RepositoryReference Include="corefx-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
 
         <!-- Tier 4 -->
 
         <RepositoryReference Include="core-setup" />
-        <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+        <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
 
         <!-- Tier 5 -->
 
