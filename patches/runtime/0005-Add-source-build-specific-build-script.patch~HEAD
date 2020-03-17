@@ -1,19 +1,19 @@
-From eb2cbc80bba5df54198ed681f114368f25624214 Mon Sep 17 00:00:00 2001
+From 405de3bac3020a85cca3a3029f9e4e129544e950 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 15 Jan 2020 15:14:54 +0000
 Subject: [PATCH] Add source-build specific build script
 
 ---
- build-source-build.sh | 64 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ build-source-build.sh | 70 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
  create mode 100755 build-source-build.sh
 
 diff --git a/build-source-build.sh b/build-source-build.sh
 new file mode 100755
-index 0000000..1607ef2
+index 0000000..229ae10
 --- /dev/null
 +++ b/build-source-build.sh
-@@ -0,0 +1,64 @@
+@@ -0,0 +1,70 @@
 +#!/usr/bin/env bash
 +
 +source="${BASH_SOURCE[0]}"
@@ -75,9 +75,15 @@ index 0000000..1607ef2
 +echo "librariesArgs = [$librariesArgs]"
 +echo "installerArgs = [$installerArgs]"
 +
-+$scriptroot/src/coreclr/build.sh $coreclrArgs
-+$scriptroot/libraries.sh $librariesArgs
-+$scriptroot/installer.sh $installerArgs
++echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory coreclr -subset runtime-corelib-nativecorelib-packages $coreclrArgs"
++$scriptroot/build.sh $commonArgs -subsetcategory coreclr -subset runtime-corelib-nativecorelib-packages $coreclrArgs
++find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "coreclrBuild.binlog" * {} \;
++#echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory libraries -subset all $librariesArgs"
++#$scriptroot/build.sh $commonArgs -subsetcategory libraries $librariesArgs
++#find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "librariesBuild.binlog" * {} \;
++#$scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs
++#echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs"
++#find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
 -- 
 1.8.3.1
 
