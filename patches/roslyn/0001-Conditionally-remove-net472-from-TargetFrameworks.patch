@@ -1,4 +1,4 @@
-From 636698993f3294d2c783aee1586d62aa81e5d502 Mon Sep 17 00:00:00 2001
+From d05b6baf69fee7ba95e1c9f10d875231ecae18ad Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Mon, 15 Jul 2019 19:26:42 +0000
 Subject: [PATCH] Conditionally remove net472 from TargetFrameworks
@@ -8,20 +8,20 @@ Subject: [PATCH] Conditionally remove net472 from TargetFrameworks
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 6ce7baa..878f2ac 100644
+index 88954e8..5f8c77e 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 @@ -2,6 +2,7 @@
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
-     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+     <TargetFrameworks>$(RoslynPortableTargetFrameworks)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.1</TargetFrameworks>
  
      <IsPackable>true</IsPackable>
      <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
-@@ -46,7 +47,7 @@
-       <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/netcoreapp2.1/bincore"/>
-       <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/netcoreapp2.1/bincore/runtimes"/>
+@@ -51,7 +52,7 @@
+       <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/netcoreapp3.1/bincore"/>
+       <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/netcoreapp3.1/bincore/runtimes"/>
       
 -      <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472'" TargetDir="build" />
 +      <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472' or '$(DotNetBuildFromSource)' == 'true'" TargetDir="build" />

@@ -1,4 +1,4 @@
-From da85454fd715f57968df3aa1b032d0fe3f958ad0 Mon Sep 17 00:00:00 2001
+From 7a3159f14b63ae7bf701ae1147366817068b74cc Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 23 Oct 2019 13:58:31 -0500
 Subject: [PATCH] .NET Core only for VBCSCompiler
@@ -10,7 +10,7 @@ Subject: [PATCH] .NET Core only for VBCSCompiler
  3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
-index 20b207b..83c5b20 100644
+index 9195d75..9568de5 100644
 --- a/src/Compilers/CSharp/csc/csc.csproj
 +++ b/src/Compilers/CSharp/csc/csc.csproj
 @@ -8,7 +8,7 @@
@@ -20,10 +20,10 @@ index 20b207b..83c5b20 100644
 -    <TargetFrameworks>$(RoslynPortableTargetFrameworks)</TargetFrameworks>
 +    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
      <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
-   </PropertyGroup>
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-index a199b3f..14f1d15 100644
+index cc5ee38..18755b9 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 @@ -5,7 +5,7 @@
@@ -34,9 +34,9 @@ index a199b3f..14f1d15 100644
 +    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
      <UseVSHostingProcess>false</UseVSHostingProcess>
      <ServerGarbageCollection>true</ServerGarbageCollection>
-     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+     <UseAppHost>false</UseAppHost>
 diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
-index 99df382..d648681 100644
+index 7ff1e0b..3d260d4 100644
 --- a/src/Compilers/VisualBasic/vbc/vbc.csproj
 +++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
 @@ -7,7 +7,7 @@
@@ -46,8 +46,8 @@ index 99df382..d648681 100644
 -    <TargetFrameworks>$(RoslynPortableTargetFrameworks)</TargetFrameworks>
 +    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
      <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
      <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
-   </PropertyGroup>
 -- 
 1.8.3.1
 

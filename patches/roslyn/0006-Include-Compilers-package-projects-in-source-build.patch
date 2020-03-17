@@ -1,4 +1,4 @@
-From 03e30b5df6c29538b6363f491b02103a74c72272 Mon Sep 17 00:00:00 2001
+From a6f5787a435be106400bc8e70d0398c61f222145 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Mon, 25 Nov 2019 17:10:34 +0000
 Subject: [PATCH] Include Compilers package projects in source-build
@@ -9,18 +9,18 @@ Subject: [PATCH] Include Compilers package projects in source-build
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
-index 3873372..a9269aa 100644
+index a7802b0..dcb5df0 100644
 --- a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
 +++ b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
 @@ -4,6 +4,7 @@
-     <TargetFramework>netcoreapp2.1</TargetFramework>
+     <TargetFramework>netcoreapp3.1</TargetFramework>
  
      <IsPackable>true</IsPackable>
 +    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
      <NuspecPackageId>Microsoft.NETCore.Compilers</NuspecPackageId>
      <IncludeBuildOutput>false</IncludeBuildOutput>
      <DevelopmentDependency>true</DevelopmentDependency>
-@@ -16,7 +17,6 @@
+@@ -17,7 +18,6 @@
    <ItemGroup>
      <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj"/>
      <ProjectReference Include="..\..\Compilers\VisualBasic\vbc\vbc.csproj"/>
@@ -29,18 +29,18 @@ index 3873372..a9269aa 100644
      <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj"/>
    </ItemGroup>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 878f2ac..e7fcbb8 100644
+index 5f8c77e..2178f6f 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 @@ -5,6 +5,7 @@
-     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.1</TargetFrameworks>
  
      <IsPackable>true</IsPackable>
 +    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
      <NuspecPackageId>Microsoft.Net.Compilers.Toolset</NuspecPackageId>
      <IncludeBuildOutput>false</IncludeBuildOutput>
      <DevelopmentDependency>true</DevelopmentDependency>
-@@ -26,7 +27,6 @@
+@@ -31,7 +32,6 @@
    <ItemGroup>
      <ProjectReference Include="..\..\Compilers\CSharp\csc\csc.csproj" PrivateAssets="All"/>
      <ProjectReference Include="..\..\Compilers\VisualBasic\vbc\vbc.csproj" PrivateAssets="All"/>
