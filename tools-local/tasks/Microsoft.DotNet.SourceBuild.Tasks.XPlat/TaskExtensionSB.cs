@@ -11,11 +11,11 @@ namespace Microsoft.Build.Tasks
     /// <summary>
     /// A small intermediate class for MSBuild tasks, see also TaskLoadInSeparateAppDomainExtension
     /// </summary>
-    public abstract class TaskExtension : Task
+    public abstract class TaskExtensionSB : Task
     {
         #region Constructors
 
-        internal TaskExtension() :
+        internal TaskExtensionSB() :
             base(AssemblyResources.PrimaryResources, "MSBuild.")
         {
             _logExtension = new TaskLoggingHelperExtension(
