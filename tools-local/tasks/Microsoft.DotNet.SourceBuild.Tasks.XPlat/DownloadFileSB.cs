@@ -1,3 +1,10 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+
+/// This task is sourced from https://github.com/microsoft/msbuild/blob/04e508c36f9c1fe826264aef7c26ffb8f16e9bdc/src/Tasks/DownloadFile.cs
+/// It alleviates the problem of time outs on DownloadFile Task. We are not the version of msbuild that has this fix, hence we have to locally 
+/// build it to get rid of the issue. 
+
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using System;
@@ -8,8 +15,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
-namespace Microsoft.DotNet.SourceBuild.Tasks.XPlat
+namespace Microsoft.Build.Tasks
 {
+    /// <summary>
+    /// Represents a task that can download a file.
+    /// </summary>
     public sealed class DownloadFileSB : TaskExtension, ICancelableTask
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
