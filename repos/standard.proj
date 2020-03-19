@@ -28,12 +28,13 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildArguments)</BuildCommand>
 
-    <BuildPackagesCommand></BuildPackagesCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
-    <PackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</PackagesOutput>
+    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
 
     <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
@@ -45,6 +46,13 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
+  
   <ItemGroup>
     <RepositoryReference Include="arcade" />
   </ItemGroup>
