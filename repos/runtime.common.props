@@ -22,12 +22,6 @@
       <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
       <!-- coreclr -->
-      <CoreClrBuildArguments>$(Platform) -$(Configuration) skiptests</CoreClrBuildArguments>
-      <CoreClrBuildArguments Condition="'$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) -ignoreWarnings</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) -skipmanagedtools</CoreClrBuildArguments>
-      <CoreClrBuildArguments Condition="'$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) -skiprestore</CoreClrBuildArguments>
-      <CoreClrBuildArguments Condition="'$(SkipDisablePgo)' != 'true'">$(CoreClrBuildArguments) -nopgooptimize</CoreClrBuildArguments>
-      <CoreClrBuildArguments Condition="'$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) msbuildonunsupportedplatform</CoreClrBuildArguments>
       <!-- coreclr build fails when passing this flag after this PR https://github.com/dotnet/coreclr/pull/26082 -->
       <!-- <CoreClrBuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</CoreClrBuildArguments> -->
       <CoreClrBuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64' ">$(CoreClrBuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</CoreClrBuildArguments>
@@ -35,18 +29,11 @@
 
       <!-- Portable builds only apply to Linux - Mac and Windows are both always portable.
           Additionally, Linux builds are portable by default and only have a switch to turn it off -->
-      <CoreClrBuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(CoreClrBuildArguments) -PortableBuild=false</CoreClrBuildArguments>
+      <CoreClrBuildArguments Condition="'$(TargetOS)' == 'Linux' and '$(PortableBuild)' == 'false'">$(CoreClrBuildArguments) /p:PortableBuild=false</CoreClrBuildArguments>
 
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /bl</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:Configuration=$(Configuration)</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:RuntimeConfiguration=$(Configuration)</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:CoreCLRConfiguration=$(Configuration)</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:ILLinkTrimAssembly=false</CoreClrBuildArguments>
-      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:CheckCDefines=false</CoreClrBuildArguments>
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackagesDir=$(PackagesDir)</CoreClrBuildArguments>
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:ContinuousIntegrationBuild=true</CoreClrBuildArguments>
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</CoreClrBuildArguments>
-      <CoreClrBuildArguments Condition="'$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) -warnAsError:0</CoreClrBuildArguments>
 
       <!-- libraries -->
 
@@ -107,8 +94,10 @@
       <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
       <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
 
-      <BuildArguments>--configuration $(Configuration)</BuildArguments>
+      <BuildArguments>--arch $(Platform)</BuildArguments>
+      <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
       <BuildArguments>$(BuildArguments) --binaryLog</BuildArguments>
+      <BuildArguments>$(BuildArguments) --runtimeConfiguration $(Configuration)</BuildArguments>
 
       <BuildCommand>$(ProjectDirectory)build-source-build$(ShellExtension) $(BuildArguments) --coreclr-args $(CoreClrBuildArguments) --libraries-args $(LibrariesBuildArguments) --installer-args $(InstallerBuildArguments)</BuildCommand>
       <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
