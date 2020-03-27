@@ -46,9 +46,9 @@
         <RepositoryReference Include="linker" />
         <RepositoryReference Include="runtime" />
         <RepositoryReference Include="runtime-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
-        <RepositoryReference Include="msbuild" />
-        <RepositoryReference Include="templating" />
-        <RepositoryReference Include="nuget-client" />
+        <!--RepositoryReference Include="msbuild" /-->
+        <!--RepositoryReference Include="templating" /-->
+        <!--RepositoryReference Include="nuget-client" /-->
 
         <!-- Tier 3 -->
 
@@ -77,7 +77,7 @@
 
         <!-- Package source-build artifacts -->
 
-        <RepositoryReference Include="package-source-build" />
+        <!-- RepositoryReference Include="package-source-build" / -->
 
       </ItemGroup>
     </Otherwise>
