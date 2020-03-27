@@ -34,6 +34,9 @@
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackagesDir=$(PackagesDir)</CoreClrBuildArguments>
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:ContinuousIntegrationBuild=true</CoreClrBuildArguments>
       <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</CoreClrBuildArguments>
+      <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackageRid=$(OverrideTargetRid)</CoreClrBuildArguments>
+      <CoreClrBuildArguments Condition="'$(TargetOS)' != 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</CoreClrBuildArguments>
+      <CoreClrBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</CoreClrBuildArguments>
 
       <!-- libraries -->
 
@@ -42,7 +45,6 @@
       <LibrariesBuildArguments Condition="'$(PrepForTests)' == 'true'">$(LibrariesBuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build /p:IncludeTestUtils=true</LibrariesBuildArguments>
       <LibrariesBuildArguments Condition="'$(RunTests)' == 'true'">$(LibrariesBuildArguments)  $(FlagParameterPrefix)restore $(FlagParameterPrefix)buildtests $(FlagParameterPrefix)test /p:IncludeTestUtils=true</LibrariesBuildArguments>
       <LibrariesBuildArguments Condition="'$(RunTests)' == 'true' AND '$(DotNetRunningInDocker)' == '1' AND '$(TargetOS)' == 'Linux'">$(LibrariesBuildArguments) /p:TestRspFile=$(TestExclusionsDir)corefx/linux.docker.rsp</LibrariesBuildArguments>
-      <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ArchGroup=$(Platform)</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ConfigurationGroup=$(Configuration)</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PackageRid=$(OverrideTargetRid)</LibrariesBuildArguments>
       <!-- CoreFX parses this argument for a OS "family", i.e. rhel.7 to rhel.  OSX doesn't have the extra identifier so we need to include the
@@ -51,7 +53,6 @@
       <LibrariesBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(LibrariesBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</LibrariesBuildArguments>
-      <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ILLinkTrimAssembly=false</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllPackages=true</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</LibrariesBuildArguments>
       <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuiltSdkPackageOverride=""</LibrariesBuildArguments> <!-- Clear PackageOverride for Libraries - it only applies to coreclr -->
@@ -61,9 +62,6 @@
       <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:MicrosoftNETCoreDotNetHostPolicyPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</LibrariesBuildArguments>
 
       <LibrariesBuildArguments>$(LibrariesBuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</LibrariesBuildArguments>
-      <LibrariesBuildArguments>$(LibrariesBuildArguments) $(FlagParameterPrefix)binaryLog</LibrariesBuildArguments>
-      <LibrariesBuildArguments>$(LibrariesBuildArguments) $(FlagParameterPrefix)ci</LibrariesBuildArguments>
-      <LibrariesBuildArguments Condition="'$(OS)' != 'Windows_NT'">$(LibrariesBuildArguments) -warnAsError:0</LibrariesBuildArguments>
 
       <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:
@@ -94,12 +92,13 @@
       <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
       <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
 
-      <BuildArguments>--arch $(Platform)</BuildArguments>
-      <BuildArguments>$(BuildArguments) --configuration $(Configuration)</BuildArguments>
-      <BuildArguments>$(BuildArguments) --binaryLog</BuildArguments>
-      <BuildArguments>$(BuildArguments) --runtimeConfiguration $(Configuration)</BuildArguments>
+      <BuildArguments>$(FlagParameterPrefix)arch $(Platform)</BuildArguments>
+      <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</BuildArguments>
+      <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
+      <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
+      <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)runtimeConfiguration $(Configuration)</BuildArguments>
 
-      <BuildCommand>$(ProjectDirectory)build-source-build$(ShellExtension) $(BuildArguments) --coreclr-args $(CoreClrBuildArguments) --libraries-args $(LibrariesBuildArguments) --installer-args $(InstallerBuildArguments)</BuildCommand>
+      <BuildCommand>$(ProjectDirectory)build-source-build$(ShellExtension) $(BuildArguments) $(FlagParameterPrefix)coreclr-args $(CoreClrBuildArguments) $(FlagParameterPrefix)libraries-args $(LibrariesBuildArguments) $(FlagParameterPrefix)installer-args $(InstallerBuildArguments)</BuildCommand>
       <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
       <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
