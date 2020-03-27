@@ -35,6 +35,7 @@ jobs:
     generatePrebuiltBurndown: ${{ parameters.generatePrebuiltBurndown }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/sb/staging
+    systemLibunwind: ${{ parameters.systemLibunwind }}
     tarballName: tarball_$(Build.BuildId)
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
@@ -66,6 +67,7 @@ jobs:
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
+        /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
@@ -204,6 +206,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" -- \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
+        /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:FailOnPrebuiltBaselineError=true \
         $poisonArg
       du -h $(rootDirectory) | sort -h | tail -n 50
