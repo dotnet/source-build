@@ -13,7 +13,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
     reportPrebuiltLeaks: true
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: true }
@@ -25,7 +25,7 @@ jobs:
   parameters:
     job: centos71_BootStrap
     dependsOn: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
     matrix:
       Offline: { type: Offline}
 
@@ -44,7 +44,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: debian9
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-bfcd90a-20200121150012
     matrix:
       Production: {}
       Online: { type: Online }
@@ -52,7 +52,17 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: fedora30
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-bfcd90a-20200324132732
+    matrix:
+      Production: {}
+      Online: { type: Online }
+      Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
+
+- template: ../jobs/ci-linux.yml
+  parameters:
+    job: fedora31
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-31-02f7c7e-20200324132728
     matrix:
       Production: {}
       Online: { type: Online }
@@ -62,7 +72,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: ubuntu1804
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-f90bc20-20180320154721
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-85814b7-20200324125103
 
 - template: ../jobs/ci-local.yml
   parameters:
