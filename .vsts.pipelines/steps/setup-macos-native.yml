@@ -9,10 +9,16 @@ steps:
     }
     set -x
     # Work around brew bug: https://github.com/dotnet/coreclr/pull/21913
+    # Update to openSSL1.1 due to https://github.com/dotnet/runtime/blob/master/docs/workflow/requirements/macos-requirements.md#openssl
     brew update
     # Install macOS native dependencies not present in hosted pool.
     # Based on https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
+
     brew install icu4c openssl
+
+    # You might need to "link" pkg-config:
+    brew link pkg-config
+
     brew link --force icu4c
     # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
     brew install cmake pkgconfig openssl
@@ -20,4 +26,27 @@ steps:
     # Use 'for' to get last/latest openssl install dir.
     for openssl_path in $brew_openssl_paths; do :; done
     setvariable OPENSSL_ROOT_DIR "$openssl_path"
+
+    # We need to make the runtime libraries discoverable, as well as make
+    # pkg-config be able to find the headers and current ABI version.
+    #
+    # Ensure the paths we will need exist
+    mkdir -p /usr/local/lib/pkgconfig
+
+    # The rest of these instructions assume a default Homebrew path of
+    # `/usr/local/opt/<module>`, with `brew --prefix` returning `/usr/local`
+    # and `brew --prefix openssl` returning `/usr/local/opt/openssl@1.1`.
+    # In this case, `brew info openssl` shows:
+    # `openssl@1.1: stable 1.1.1d (bottled) [keg-only]`.
+
+    # Runtime dependencies
+    ln -s /usr/local/opt/openssl\@1.1/lib/libcrypto.1.1.dylib /usr/local/lib/
+    ln -s /usr/local/opt/openssl\@1.1/lib/libssl.1.1.dylib /usr/local/lib/
+
+    # Compile-time dependencies (for pkg-config)
+    ln -s /usr/local/opt/openssl\@1.1/lib/pkgconfig/libcrypto.pc /usr/local/lib/pkgconfig/
+    ln -s /usr/local/opt/openssl\@1.1/lib/pkgconfig/libssl.pc /usr/local/lib/pkgconfig/
+    ln -s /usr/local/opt/openssl\@1.1/lib/pkgconfig/openssl.pc /usr/local/lib/pkgconfig/
+
+
   displayName: Install native dependencies
