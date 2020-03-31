@@ -8,24 +8,26 @@ steps:
       )
     }
     set -x
+
     # Work around brew bug: https://github.com/dotnet/coreclr/pull/21913
-    # Update to openSSL1.1 due to https://github.com/dotnet/runtime/blob/master/docs/workflow/requirements/macos-requirements.md#openssl
     brew update
+
     # Install macOS native dependencies not present in hosted pool.
     # Based on https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
-
     brew install icu4c openssl
-
-    # You might need to "link" pkg-config:
-    brew link pkg-config
-
     brew link --force icu4c
+
     # Follow https://github.com/dotnet/corefx/blob/master/Documentation/building/unix-instructions.md#user-content-macos
     brew install cmake pkgconfig openssl
     brew_openssl_paths=$(brew info openssl | cut -d ' ' -f 1 | grep '^/.*/openssl/')
+
     # Use 'for' to get last/latest openssl install dir.
     for openssl_path in $brew_openssl_paths; do :; done
     setvariable OPENSSL_ROOT_DIR "$openssl_path"
+
+    # Update to openSSL1.1 due to https://github.com/dotnet/runtime/blob/master/docs/workflow/requirements/macos-requirements.md#openssl
+    # "link" pkg-config:
+    brew link pkg-config
 
     # We need to make the runtime libraries discoverable, as well as make
     # pkg-config be able to find the headers and current ABI version.
