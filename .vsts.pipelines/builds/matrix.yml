@@ -16,18 +16,18 @@ jobs:
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
     reportPrebuiltLeaks: true
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: true }
+      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../jobs/ci-linux_bootstrap.yml
-  parameters:
-    job: centos71_BootStrap
-    dependsOn: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-    matrix:
-      Offline: { type: Offline}
+#- template: ../jobs/ci-linux_bootstrap.yml
+#  parameters:
+#    job: centos71_BootStrap
+#    dependsOn: centos71
+#    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+#    matrix:
+#      Offline: { type: Offline}
 
 - template: ../jobs/ci-linux.yml
   parameters:
@@ -36,7 +36,7 @@ jobs:
     reportPrebuiltLeaks: false
     systemLibunwind: false
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: true }
+      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
