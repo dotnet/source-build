@@ -239,7 +239,9 @@ find "$PWD" -maxdepth 1 -type d | grep -v reference-assemblies | grep -v netcore
 popd
 
 echo 'Removing binaries from tarball src...'
-find $TARBALL_ROOT/src \( -type f \( \
+# coreclr and installer have two empty placeholder pdb files.  Exclude these directories.
+find $TARBALL_ROOT/src -not -path "*/src/coreclr/src/.nuget/*" -not -path "*/src/installer/pkg/*" \
+    \( -type f \( \
     -iname *.dll -o \
     -iname *.exe -o \
     -iname *.pdb -o \
