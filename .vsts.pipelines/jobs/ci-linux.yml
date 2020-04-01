@@ -109,7 +109,7 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run unit tests
-    condition: and(succeeded(), eq(variables['runUnitTests'], true))
+    condition: and(succeeded(), eq(variables['runUnitTests'], false))
     timeoutInMinutes: 120
     continueOnError: false
 
