@@ -14,7 +14,7 @@ jobs:
   parameters:
     job: centos71
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-    reportPrebuiltLeaks: true
+    reportPrebuiltLeaks: false
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
@@ -44,7 +44,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: debian9
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-bfcd90a-20200121150012
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-source-build-20200331133109-ed32d26
     matrix:
       Production: {}
       Online: { type: Online }
@@ -72,7 +72,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: ubuntu1804
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-85814b7-20200324125103
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
 
 - template: ../jobs/ci-local.yml
   parameters:
