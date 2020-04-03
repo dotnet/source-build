@@ -81,27 +81,6 @@
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
-  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building reference-only assemblies." />
-    <ItemGroup>
-      <IlSource Include="$(ReferencePackagesSourceDir)**/*.il" />
-      <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
-    </ItemGroup>
-
-    <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
-    <Exec Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
-    <NugetPack Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
-               OutputDirectory="$(ReferencePackagesDir)"
-               ExcludeEmptyDirectories="false"
-               CreateSymbolPackage="false" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
-  </Target>
-
-
   <Target Name="ExtractToolPackage"
           DependsOnTargets="UnpackTarballs;BuildTasks"
           Condition="'$(OfflineBuild)' == 'true'">

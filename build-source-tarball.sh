@@ -301,8 +301,6 @@ find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/nuget-packages -name '*.nu
 # Copy reference-packages from bin dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/packages/reference
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
 
 # Copy tarballs to ./packages/archive directory
 if [[ -d "$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs -iname '*.tar.gz')" ]]; then
@@ -339,14 +337,7 @@ if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   "$CLI_PATH/dotnet" publish -o $FULL_TARBALL_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection $SCRIPT_ROOT/tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj
 fi
 
-echo 'Removing reference-only packages from tarball prebuilts...'
-
-for ref_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
-do
-    if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
-        rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
-    fi
-done
+echo 'Removing reference packages from tarball prebuilts...'
 
 if [ -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
     allRefPkgs=(`ls "$CUSTOM_REF_PACKAGES_DIR"  | tr '[:upper:]' '[:lower:]'`)
@@ -403,35 +394,6 @@ if [ $SKIP_PREBUILT_ENFORCEMENT -ne 1 ]; then
     exit 1
   fi
 fi
-
-echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
-OLDIFS=$IFS
-
-allBuiltPkgs=(`ls $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
-pushd $TARBALL_ROOT/packages/reference/staging/
-ilSrcPaths=(`find . -maxdepth 2 -mindepth 2`)
-popd
-
-for path in ${ilSrcPaths[@]}; do
-    IFS='/'
-    read -a splitLine <<< "$path"
-    remove=false
-    if [[ " ${allRefPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        remove=true
-    fi
-    if [[ " ${allSourceBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        remove=true
-    fi
-    if [[ " ${allBuiltPkgs[@]} " =~ " ${splitLine[1]}.${splitLine[2]}.nupkg " ]]; then
-        remove=true
-    fi
-    if [[ "$remove" == "true" ]]; then
-        rm -rf "$TARBALL_ROOT/packages/reference/staging/$path"
-        rm -rf "$TARBALL_ROOT/packages/reference/source/$path"
-    fi
-done
-
-IFS=$OLDIFS
 
 echo 'Recording commits for the source-build repo and all submodules, to aid in reproducibility...'
 
