@@ -7,6 +7,7 @@
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+using Microsoft.DotNet.Build.Tasks;
 using System;
 using System.IO;
 using System.Net;
@@ -20,7 +21,7 @@ namespace Microsoft.Build.Tasks
     /// <summary>
     /// Represents a task that can download a file.
     /// </summary>
-    public sealed class DownloadFileSB : TaskExtensionSB, ICancelableTask
+    public sealed class DownloadFileSB : BuildTask, ICancelableTask
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
