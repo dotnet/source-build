@@ -16,7 +16,7 @@ jobs:
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
     reportPrebuiltLeaks: false
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: true }
+      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
@@ -36,7 +36,7 @@ jobs:
     reportPrebuiltLeaks: false
     systemLibunwind: false
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: true }
+      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
