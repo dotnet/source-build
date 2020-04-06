@@ -87,6 +87,8 @@ jobs:
     continueOnError: true
 
   # Run smoke tests. This is needed even in tarball legs to create the smoke-test-prereqs archive.
+# Temporarily disable smoke-tests until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1552
 #  - script: |
 #      set -ex
 #      df -h
@@ -107,7 +109,7 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run unit tests
-    condition: and(succeeded(), eq(variables['runUnitTests'], false))
+    condition: and(succeeded(), eq(variables['runUnitTests'], true))
     timeoutInMinutes: 120
     continueOnError: false
 
@@ -176,16 +178,24 @@ jobs:
       df -h
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
-        ##smokeTestPackages="$(tarballName)/packages/smoke-test-packages"
+        # Temporarily disable smoke-tests until entire product builds.
+        # See https://github.com/dotnet/source-build/issues/1552
+        ##smokeTestPackages="$(tarballName)/packages/smoke-test-packages" 
         # smokeTestPackages is a package cache, with redundant data and unnecessary structure. E.g.
         # $smokeTestPackages/name/version/name.version.nupkg <- We want this.
         # $smokeTestPackages/name/version/lib/net46/name.dll <- This is already in the nupkg.
         # This find moves the nupkg files into $smokeTestPackages:
+        # Temporarily disable smoke-tests until entire product builds.
+        # See https://github.com/dotnet/source-build/issues/1552
         ##find "$smokeTestPackages" -iname "*.nupkg" -exec mv {} "$smokeTestPackages" \;
         # This find removes all non-nupkg files, which are not wanted:
+        # Temporarily disable smoke-tests until entire product builds.
+        # See https://github.com/dotnet/source-build/issues/1552
         ##find "$smokeTestPackages" -not -iname "*.nupkg" -delete
         # Make one .tar.gz for build, another for extras necessary to smoke test:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(tarballName).tar.gz" "$(tarballName)"
+        # Temporarily disable smoke-tests until entire product builds.
+        # See https://github.com/dotnet/source-build/issues/1552
         ##tar --numeric-owner -zcf "/drop/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball to output
@@ -215,6 +225,8 @@ jobs:
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Run smoke tests.
+# Temporarily disable smoke-tests until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1552
 #  - script: |
 #      set -ex
 #      df -h
