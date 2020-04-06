@@ -14,13 +14,19 @@ jobs:
   parameters:
     job: centos71
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+# Temporarily disable reporting on prebuilt leaks until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1548
     reportPrebuiltLeaks: false
     matrix:
+# Temporarily disable unit tests until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1549
       Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
+# Temporarily disable bootstrap build until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1550
 #- template: ../jobs/ci-linux_bootstrap.yml
 #  parameters:
 #    job: centos71_BootStrap
@@ -33,10 +39,9 @@ jobs:
   parameters:
     job: centos8
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212
-    reportPrebuiltLeaks: false
     systemLibunwind: false
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
+      Production: {}
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
