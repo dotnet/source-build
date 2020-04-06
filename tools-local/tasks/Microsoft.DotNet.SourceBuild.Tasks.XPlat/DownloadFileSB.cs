@@ -83,7 +83,7 @@ namespace Microsoft.Build.Tasks
         {
             if (!Uri.TryCreate(SourceUrl, UriKind.Absolute, out Uri uri))
             {
-                Log.LogErrorWithCodeFromResources("DownloadFileSB.ErrorInvalidUrl", SourceUrl);
+                Log.LogError("MSB3921: The specified URL "{0}" is not valid.", SourceUrl);
                 return false;
             }
 
