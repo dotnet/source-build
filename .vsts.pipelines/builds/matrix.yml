@@ -23,17 +23,6 @@ jobs:
 
 - template: ../jobs/ci-linux.yml
   parameters:
-    job: centos8
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212
-    reportPrebuiltLeaks: true
-    matrix:
-      Production: {}
-      Online: { type: Online }
-      Offline: { type: Offline }
-      Offline Portable: { type: Offline Portable }
-
-- template: ../jobs/ci-linux.yml
-  parameters:
     job: debian9
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
     matrix:
