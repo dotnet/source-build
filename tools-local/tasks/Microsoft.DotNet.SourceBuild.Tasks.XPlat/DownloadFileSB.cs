@@ -109,7 +109,7 @@ namespace Microsoft.Build.Tasks
 
                     if (canRetry)
                     {
-                        Log.LogWarning("DownloadFileSB.Retrying {SourceUrl} {retryAttemptCount + 1} {RetryDelayMilliseconds} {actualException.Message}");
+                        Log.LogWarning($"DownloadFileSB.Retrying {SourceUrl} {retryAttemptCount + 1} {RetryDelayMilliseconds} {actualException.Message}");
 
                         try
                         {
@@ -123,7 +123,7 @@ namespace Microsoft.Build.Tasks
                     }
                     else
                     {
-                        Log.LogError("DownloadFileSB.ErrorDownloading {SourceUrl} {actualException.Message}");
+                        Log.LogError($"DownloadFileSB.ErrorDownloading {SourceUrl} {actualException.Message}");
                         break;
                     }
                 }
@@ -157,7 +157,7 @@ namespace Microsoft.Build.Tasks
 
                     if (!TryGetFileName(response, out string filename))
                     {
-                        Log.LogError("DownloadFileSB.ErrorUnknownFileName {SourceUrl} {nameof(DestinationFileName)}");
+                        Log.LogError($"DownloadFileSB.ErrorUnknownFileName {SourceUrl} {nameof(DestinationFileName)}");
                         return;
                     }
 
