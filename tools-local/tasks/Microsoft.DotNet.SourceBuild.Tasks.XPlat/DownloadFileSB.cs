@@ -109,7 +109,7 @@ namespace Microsoft.Build.Tasks
 
                     if (canRetry)
                     {
-                        Log.LogWarning($"DownloadFileSB.Retrying {SourceUrl} {retryAttemptCount + 1} {RetryDelayMilliseconds} {actualException.Message}");
+                        Log.LogWarning($"DownloadFileSB.Retrying {SourceUrl} {retryAttemptCount + 1} {RetryDelayMilliseconds} {actualException}");
 
                         try
                         {
@@ -123,7 +123,7 @@ namespace Microsoft.Build.Tasks
                     }
                     else
                     {
-                        Log.LogError($"DownloadFileSB.ErrorDownloading {SourceUrl} {actualException.Message}");
+                        Log.LogError($"DownloadFileSB.ErrorDownloading {SourceUrl} {actualException}");
                         break;
                     }
                 }
@@ -168,7 +168,7 @@ namespace Microsoft.Build.Tasks
                     // The file is considered up-to-date if its the same length.  This could be inaccurate, we can consider alternatives in the future
                     if (ShouldSkip(response, destinationFile))
                     {
-                        Log.LogMessageFromResources(MessageImportance.Normal, "DownloadFileSB.DidNotDownloadBecauseOfFileMatch", SourceUrl, destinationFile.FullName, nameof(SkipUnchangedFiles), "true");
+                        Log.LogMessage(MessageImportance.Normal, $"DownloadFileSB.DidNotDownloadBecauseOfFileMatch {SourceUrl}", destinationFile.FullName, nameof(SkipUnchangedFiles), "true");
 
                         DownloadedFile = new TaskItem(destinationFile.FullName);
 
@@ -181,7 +181,7 @@ namespace Microsoft.Build.Tasks
 
                         using (var target = new FileStream(destinationFile.FullName, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
-                            Log.LogMessageFromResources(MessageImportance.High, "DownloadFileSB.Downloading", SourceUrl, destinationFile.FullName, response.Content.Headers.ContentLength);
+                            Log.LogMessage(MessageImportance.High, $"DownloadFileSB.Downloading {SourceUrl}", destinationFile.FullName, response.Content.Headers.ContentLength);
 
                             using (Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                             {
