@@ -25,6 +25,8 @@ $SCRIPT_ROOT = "$PSScriptRoot"
 $SdkVersion = Get-Content (Join-Path $SCRIPT_ROOT "DotnetCLIVersion.txt")
 $env:SDK_VERSION = $SdkVersion
 
+[Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]::Tls12
+
 if ([string]::IsNullOrWhiteSpace($env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK) -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "0" -or $env:SOURCE_BUILD_SKIP_SUBMODULE_CHECK -eq "false")
 {
   Exec-Block { & $SCRIPT_ROOT\check-submodules.ps1 } | Out-Host
