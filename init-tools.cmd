@@ -13,7 +13,10 @@ set INIT_TOOLS_RESTORE_PROJECT=%~dp0init-tools.msbuild
 set BUILD_TOOLS_SEMAPHORE_DIR=%TOOLRUNTIME_DIR%\%BUILDTOOLS_VERSION%
 set BUILD_TOOLS_SEMAPHORE=%BUILD_TOOLS_SEMAPHORE_DIR%\init-tools.completed
 
-powershell -Command "[Net.ServicePointManager]::SecurityProtocol += [Net.SecurityProtocolType]::Tls12"
+:: Default Tls protocol for .NET Framework 4.5 does not allow for Tls1.2.
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+:: Enable 1.3 for systems that have 1.2 disabled
+[System.Net.ServicePointManager]::SecurityProtocol += [System.Net.SecurityProtocolType]::Tls13;
 
 :: if force option is specified then clean the tool runtime and build tools package directory to force it to get recreated
 if [%1]==[force] (
