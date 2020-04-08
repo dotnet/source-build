@@ -21,8 +21,8 @@
     <BuildPackagesCommandArgs>$(BuildPackagesCommandArgs) $(ProjectDirectory)src/ILLink.Tasks/ILLink.Tasks.csproj</BuildPackagesCommandArgs>
     <BuildPackagesCommand>$(DotNetCliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
 
-    <PackagesOutput>$(ProjectDirectory)src/ILLink.Tasks/bin/nupkgs</PackagesOutput>
-
+    <PackagesOutput>$(ProjectDirectory)artifacts/packages/illink_$(Configuration)/Shipping/</PackagesOutput>
+    
     <RepoApiImplemented>false</RepoApiImplemented>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>

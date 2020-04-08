@@ -1,0 +1,25 @@
+From 97f7c61a2258c944bd051aff6bd1173bd0e5d753 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 17 Jan 2020 11:00:40 +0000
+Subject: [PATCH] Import PackageVersions props if exists and update
+
+---
+ eng/Versions.props | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 80108f6..ae205c3 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -77,4 +77,8 @@
+     <MicrosoftDotNetSwaggerGeneratorMSBuildVersion>5.0.0-beta.20129.1</MicrosoftDotNetSwaggerGeneratorMSBuildVersion>
+     <XliffTasksVersion>1.0.0-beta.20129.1</XliffTasksVersion>
+   </PropertyGroup>
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
++  <PropertyGroup>
++    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
++  </PropertyGroup>
+ </Project>
+-- 
+1.8.3.1
+

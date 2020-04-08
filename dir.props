@@ -13,6 +13,7 @@
     <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
+    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == ''">$(UseSystemLibraries)</UseSystemLibunwind>
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
   </PropertyGroup>
 
@@ -100,10 +101,6 @@
     <RoslynDebugPathTargetDir>$(BaseOutputPath)roslyn-debug/</RoslynDebugPathTargetDir>
     <AspNetRazorBuildServerLogDir>$(BaseOutputPath)aspnet-debug</AspNetRazorBuildServerLogDir>
     <AspNetRazorBuildServerLogFile>$(AspNetRazorBuildServerLogDir)razor-build-server.log</AspNetRazorBuildServerLogFile>
-    <IlasmPath Condition="'$(OfflineBuild)' != 'true'">invalid: ILAsm is not expected to be needed in the online build</IlasmPath>
-    <IlasmPath Condition="'$(OfflineBuild)' == 'true'">$(PrebuiltSourceBuiltPackagesPath)coreclr-tools/ilasm</IlasmPath>
-    <IldasmPath Condition="'$(OfflineBuild)' != 'true'">$(ToolPackageExtractDir)coreclr-tools/ildasm</IldasmPath>
-    <IldasmPath Condition="'$(OfflineBuild)' == 'true'">invalid: ILDasm is not expected to be needed in the offline build</IldasmPath>
     <!-- Dir where git info is generated during online builds. -->
     <GitInfoOutputDir>$(BaseOutputPath)git-info/</GitInfoOutputDir>
     <!-- Dir where git info is placed inside the tarball. -->
@@ -134,15 +131,12 @@
     -->
     <ExternalTarballsDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</ExternalTarballsDir>
     <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
-    <ReferencePackagesStagingDir>$(ReferencePackagesBaseDir)staging/</ReferencePackagesStagingDir>
-    <ReferencePackagesSourceDir>$(ReferencePackagesBaseDir)source/</ReferencePackagesSourceDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
     <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' != ''">$(CustomReferencePackagesPath)/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>
     <SourceBuiltArtifactsTarballUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/</SourceBuiltArtifactsTarballUrl>
     <ReferencePackagesTarballName>Private.SourceBuild.ReferencePackages</ReferencePackagesTarballName>
     <ReferencePackagesTarballUrl>https://dotnetfeed.blob.core.windows.net/dotnet-core/assets/</ReferencePackagesTarballUrl>
-    <ReferencePackagesToDeleteDir>$(ReferencePackagesBaseDir)packages-to-delete/</ReferencePackagesToDeleteDir>
     <BaselineDataFile>$(ToolsLocalDir)prebuilt-baseline-</BaselineDataFile>
     <OfflineBaselineDataFile>$(BaselineDataFile)offline.xml</OfflineBaselineDataFile>
     <OnlineBaselineDataFile>$(BaselineDataFile)online.xml</OnlineBaselineDataFile>

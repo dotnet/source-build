@@ -1,0 +1,25 @@
+From 716dd289ad0682e0aaf43fc8afdc6ca1934c52fa Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 4 Sep 2019 16:09:32 -0500
+Subject: [PATCH] Pin S.R.Emit to a ref version.
+
+---
+ src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+index d192102..bf919d1 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+@@ -740,7 +740,7 @@
+     <PackageReference Include="System.Linq.Queryable" Version="$(SystemLinqExpressionsVersion)" />
+     <PackageReference Include="System.Net.Requests" Version="$(SystemNetRequestsVersion)" />
+     <PackageReference Include="System.Net.Security" Version="$(SystemNetSecurityVersion)" />
+-    <PackageReference Include="System.Reflection.Emit" Version="$(SystemReflectionEmitVersion)" />
++    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.Reflection.TypeExtensions" Version="$(SystemReflectionTypeExtensionsVersion)" />
+     <PackageReference Include="System.Runtime" Version="$(SystemRuntimeVersion)" />
+-- 
+1.8.3.1
+

@@ -7,7 +7,9 @@ parameters:
   scriptSuffix: null
   setupMac: false
   setupWindows: false
-  skipSmokeTest: false
+  # Temporarily disable smoke-tests until entire product builds.
+  # See https://github.com/dotnet/source-build/issues/1552
+  skipSmokeTest: true
   failOnPrebuiltBaselineError: true
 
 jobs:

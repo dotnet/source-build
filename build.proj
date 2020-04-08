@@ -4,7 +4,6 @@
   <Import Project="eng/Versions.props" Condition="'$(OfflineBuild)' != 'true'" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="CopyReferenceOnlyPackages" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
 
@@ -51,98 +50,6 @@
 
   <Target Name="Clean">
     <RemoveDir Directories="$(BaseOutputPath)" />
-  </Target>
-
-  <!--
-    Workaround: Skip Windows_NT.
-
-    When trying to CopyReferenceOnlyPackages, it gets errors like:
-
-      System.IO.IOException: The process cannot access the file
-      '<root>\packages\microsoft.codeanalysis.compilers\2.6.0-beta3-62316-02\microsoft.codeanalysis.compilers.nuspec'
-      because it is being used by another process.
-
-    We don't support producing a tarball on Windows, so there's little value in fixing this.
-  -->
-  <Target Name="CopyAndDisassembleReferenceOnlyPackages"
-          AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(ArchiveDownloadedPackages)' == 'true' and '$(OS)' != 'Windows_NT'">
-
-    <CopyReferenceOnlyPackages
-        PackageCacheDir="$(PackagesDir)"
-        DllDestinationDir="$(ReferencePackagesSourceDir)"
-        IdentifiedPackagesDir="$(ReferencePackagesToDeleteDir)"
-        DestinationDir="$(ReferencePackagesStagingDir)"
-        />
-
-    <!-- Ildasm has trouble writing to paths that are longer than 260 chars. (see https://github.com/dotnet/coreclr/issues/20397)
-         Create a temporary path to write il output which will then be copied back to the reference-packages/source dir.
-    -->
-    <PropertyGroup>
-      <TempPath>$([System.IO.Path]::GetTempPath())</TempPath>
-      <IldasmTempOutputFolderName>$([System.IO.Path]::GetRandomFileName())</IldasmTempOutputFolderName>
-      <IldasmTempOutputPath>$([System.IO.Path]::Combine($(TempPath),$(IldasmTempOutputFolderName)))/</IldasmTempOutputPath>
-    </PropertyGroup>
-    
-    <ItemGroup>
-      <ReferenceOnlyPackages Include="$(ReferencePackagesToDeleteDir)**/*.nupkg" />
-      <ReferenceOnlyPackageDlls Include="$(ReferencePackagesSourceDir)**/*.dll" />
-    </ItemGroup>
-
-    <Message Importance="High" Text="Reference-only Packages:" />
-    <Message Importance="High" Text="%(ReferenceOnlyPackages.Identity)" />
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembling @(ReferenceOnlyPackageDlls->Count()) dlls" />
-    <MakeDir Directories="$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)" />
-    <Exec Command="$(IldasmPath) %(ReferenceOnlyPackageDlls.Identity) -all -out=$(IldasmTempOutputPath)%(ReferenceOnlyPackageDlls.RecursiveDir)%(ReferenceOnlyPackageDlls.Filename).il" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Disassembly done." />
-
-    <ItemGroup>
-      <IlSourceFiles Include="$(IldasmTempOutputPath)/**/*.il" />
-      <OldLicenseFiles Include="$(ReferencePackagesStagingDir)/**/dotnet_library_license.txt" />
-      <OldLicenseFiles Include="$(ReferencePackagesStagingDir)/**/License.rtf" />
-      <RefAssyNuspecFiles Include="$(ReferencePackagesStagingDir)/**/*.nuspec" />
-    </ItemGroup>
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying @(IlSourceFiles->Count()) IL source files" />
-    <Copy SourceFiles="@(IlSourceFiles)" DestinationFiles="$(ReferencePackagesSourceDir)%(IlSourceFiles.RecursiveDir)%(IlSourceFiles.Filename).il" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Copying IL source files done." />
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source" />
-    <Delete Files="@(ReferenceOnlyPackageDlls)" />
-    <RemoveDir Directories="$(IldasmTempOutputPath)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Deleting disassembled dlls and temp il source done." />
-
-    <!-- Update licenseUrl to MIT license where needed in nuspec files -->
-    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
-        OldText="http://go.microsoft.com/fwlink/?LinkId=329770"
-        NewText="https://microsoft.mit-license.org/" />
-    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
-        OldText="https://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm"
-        NewText="https://microsoft.mit-license.org/" />
-    <ReplaceTextInFile InputFile="%(RefAssyNuspecFiles.Identity)"
-        OldText="http://go.microsoft.com/fwlink/?LinkId=529443"
-        NewText="https://microsoft.mit-license.org/" />
-  </Target>
-
-  <Target Name="ReplaceLicenseFiles"
-          AfterTargets="CopyAndDisassembleReferenceOnlyPackages"
-          Outputs="%(OldLicenseFiles.Identity)"
-          Condition="'$(OfflineBuild)' != 'true' and '$(ArchiveDownloadedPackages)' == 'true' and '$(OS)' != 'Windows_NT'">
-    <!-- Create Item of all unique directories containing old licenses -->
-    <CreateItem Include="%(OldLicenseFiles.RelativeDir)">
-       <Output TaskParameter="Include" ItemName="DestinationDirs" />
-    </CreateItem>
-
-    <PropertyGroup>
-      <DestinationDirIdentity>%(DestinationDirs.Identity)</DestinationDirIdentity>
-    </PropertyGroup>
-    <ItemGroup>
-        <NewLicenseFile Include="$(ProjectDir)LICENSE.txt" />
-    </ItemGroup>
-    <Copy SourceFiles="@(NewLicenseFile)" DestinationFiles="@(NewLicenseFile->'$(DestinationDirIdentity)%(RecursiveDir)%(Filename)%(Extension)')" />
-
-    <Delete Files="@(OldLicenseFiles)" />
   </Target>
 
   <Target Name="DownloadSourceBuildReferencePackages"

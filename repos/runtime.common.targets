@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddRidToRuntimeJson" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishCoreSetupBinaries" />
+
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="UpdateRuntimeGraph"
+          BeforeTargets="Build"
+          Condition="'$(_IsBootstrapping)' == 'true'">
+    <PropertyGroup>
+      <RuntimeJsonFile>$(ProjectDirectory)pkg/Microsoft.NETCore.Platforms/runtime.json</RuntimeJsonFile>
+    </PropertyGroup>
+
+    <Message Importance="High" Text="Adding rid, $(TargetRid), to $(RuntimeJsonFile)" />
+    <AddRidToRuntimeJson RuntimeJson="$(RuntimeJsonFile)"
+                         Rid="$(TargetRid)-$(Platform)" />
+  </Target>
+
+  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
+  <Target Name="PublishBinaries" AfterTargets="Package">
+    <ItemGroup>
+      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
+      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
+    </ItemGroup>
+    <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
+                              DestinationFolderTemplate="$(SourceBuiltRuntimeDir){version}/" >
+      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
+    </PublishCoreSetupBinaries>
+    <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
+  </Target>
+
+  <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
+    <ItemGroup>
+      <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
+      <_builtRuntimePackages>
+        <TransformedFileName>$([System.String]::Copy('%(FileName)').Replace('symbols', 'nupkg'))</TransformedFileName>
+      </_builtRuntimePackages>
+      <BinariesToCopy Include="$(SourceBuiltAssetsDir)*.*" Exclude="$(SourceBuiltAssetsDir)*.nupkg;$(SourceBuiltAssetsDir)*.requires_nupkg_signing" />
+      <BinariesToCopy Include="@(_builtRuntimePackages->'$(SourceBuiltPackagesPath)%(TransformedFileName)')" />
+    </ItemGroup>
+
+    <Copy SourceFiles="@(BinariesToCopy)"
+          DestinationFolder="$(OutputPath)runtime"
+          Condition="'@(BinariesToCopy)'!=''" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+</Project>

@@ -13,26 +13,43 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
-    reportPrebuiltLeaks: true
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+# Temporarily disable reporting on prebuilt leaks until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1548
+    reportPrebuiltLeaks: false
     matrix:
-      Production: { generatePrebuiltBurndown: true, runUnitTests: true }
+# Temporarily disable unit tests until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1549
+      Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../jobs/ci-linux_bootstrap.yml
+# Temporarily disable bootstrap build until entire product builds.
+# See https://github.com/dotnet/source-build/issues/1550
+#- template: ../jobs/ci-linux_bootstrap.yml
+#  parameters:
+#    job: centos71_BootStrap
+#    dependsOn: centos71
+#    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+#    matrix:
+#      Offline: { type: Offline}
+
+- template: ../jobs/ci-linux.yml
   parameters:
-    job: centos71_BootStrap
-    dependsOn: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
+    job: centos8
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-source-build-20200402192642-9e679d4
+    systemLibunwind: false
     matrix:
-      Offline: { type: Offline}
+      Production: {}
+      Online: { type: Online }
+      Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
 
 - template: ../jobs/ci-linux.yml
   parameters:
     job: debian9
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-source-build-20200331133109-ed32d26
     matrix:
       Production: {}
       Online: { type: Online }
@@ -40,7 +57,17 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: fedora30
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-bfcd90a-20200324132732
+    matrix:
+      Production: {}
+      Online: { type: Online }
+      Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
+
+- template: ../jobs/ci-linux.yml
+  parameters:
+    job: fedora31
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-31-02f7c7e-20200324132728
     matrix:
       Production: {}
       Online: { type: Online }
@@ -50,7 +77,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: ubuntu1804
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-f90bc20-20180320154721
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
 
 - template: ../jobs/ci-local.yml
   parameters:

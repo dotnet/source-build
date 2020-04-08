@@ -1,0 +1,43 @@
+From 3cd9847b9089138d3b94c52c3386a2cd4ff7693d Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Tue, 8 Oct 2019 17:02:29 -0400
+Subject: [PATCH] Enable building on arm64 machines
+
+With this commit, I can build core-sdk on RHEL 8 on arm64 directly,
+without cross compilation.
+
+Bump the sourcelink version to pick up the ability to parse git info
+without depending on libgit2sharp. This allows sourcelink to work on
+arm64. The version is the same as the one recently added to core-setup:
+https://github.com/dotnet/core-setup/pull/7696
+
+Introduce a new 'BuildArchitecture' msbuild property that contains the host
+architecture (arm64, x64, etc). This is the architecture of the
+currently running machine, and may be different from the architecture we
+are targetting in the case of cross compilation.
+
+There's a gotcha with BuildArchitecture: under Visual Studio (an x86) process,
+we generally want a x64 architecture. So try and restrict it to arm64 only.
+
+Use BuildArchitecture to determine whether _crossDir and LibCLRJitRid need to
+be special-cased for arm64 or or not.
+---
+ Directory.Build.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index e63ff82..b5fa4fe 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -9,7 +9,7 @@
+ 
+   <PropertyGroup>
+     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
+-    <Architecture Condition="'$(Architecture)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
++    <Architecture Condition="'$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Architecture>
+     <Architecture Condition="'$(Architecture)' == ''">x64</Architecture>
+   </PropertyGroup>
+ 
+-- 
+1.8.3.1
+
