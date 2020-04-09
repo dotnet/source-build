@@ -9,74 +9,32 @@ _The set of .NET Core versions that are being released as a unit._
 
 ## 1. Non MSRC releases
 
-1. - [ ] Verify that we are building with the appropriate stability and release tag (either none for RTM, or "preview1" etc).  This can apply to the SDK itself as well as the core-setup runtime component.
+1. - [ ] Incase of 2.x, run auto-update(refer docs). Incase of 3.X:
+      - [ ] if maestro auto-PR is active, then verify SHA1s in version.Details with manifest versions in VSU share dir (refer docs), make sure that we match the versions
+      - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent branch locally and run darc updates(refer docs). 
+          - [ ] Push this local branch upstream and start the release PR for the N version that is to be released.
+1. - [ ] Change the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` to match N-1 release artifacts, N being the version that is now being released.
+1. - [ ] Make sure that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer docs)
+1. - [ ] Verify that we are building with the appropriate stability and release tag (either none for RTM, or "preview1" etc).  This can apply to the SDK itself as well as the core-setup runtime component
         
             dotnet --info
             dotnet --version
 
       - [ ] Verify ASP.NET package versions used in templates are correct (dependencies.props may need to be updated)
       - [ ] Verify MS.NETCore.App packages versions used in downlevel templates are correct (dependencies.props may need to be updated)
-1. - [ ] Wait for .NET Core archive files (.zip, .tar.gz) to be available at blob storage location
-1. - [ ] Run `update-dependencies` tool to update all the necessary files to reflect the specified .NET Core versions (run this command for each version being released):
-      - [ ] `dotnet run --project .\eng\update-dependencies\update-dependencies.csproj --sdk-version <sdk> --runtime-version <runtime> --aspnet-version <runtime>`
-1. - [ ] Inspect generated changes for correctness
-1. - [ ] Commit generated changes
-1. - [ ] Create PR
-1. - [ ] Get PR signoff
-1. - [ ] Merge PR
-1. - [ ] Wait for changes to be mirrored to internal [dotnet-docker repo](https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet-docker) (internal MSFT link)
-1. - [ ] Build images - Queue build stage of [dotnet-docker pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=373) (internal MSFT link) with variables:
+1. - [ ] Complete prebuilt and poison audit (if applicable) 
+1. - [ ] Remove new prebuilts, if any. We worry about any new prebuilts that show up in offline builds. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
+1. - [ ] Tag runtime version (e.g." v2.1.0") with an annotated (preferably signed) tag including runtime and SDK versions, e.g. "Release for 2.1.0 runtime and 2.1.300 SDK."
+      - [ ] `git tag -s v<X.X.X-runtime/SDK> <SHA1>` . E.g - $ git tag -s v2.1.0-runtime c7012bcc8
+1. - [ ] Tag SDK version (e.g. "v2.1.300-SDK") with the same annotation, also preferably signed
+1. - [ ] Push these tags to GitHub
+      - [ ] `git push <remote> v2.1.0-runtime && git push <remote> v2.1.300-SDK`
+            
+            Do not use "git push --tags" unless you have a fresh repo with no other tags - this will push all your tags.
+1. - [ ] Notify the distro maintainer/s
+1. - [ ] Download the tarball from CI
+1. - [ ] Upload the tarball to Azure blob feed for source-build
 
-      All releases:
+            <Source-build-blob-feed-container>/redhat/<branch_version>/<SDK_version>/dotnet-<sdk_version>-<RID><version>.tar.gz
 
-          stages: build
-
-      Servicing release:
-
-          imageBuilder.pathArgs: --path '2.1*' --path '3.1*'
-
-      Preview release:
-
-          imageBuilder.pathArgs: --path '5.0*'
-1. - [ ] Wait for NuGet packages to be published during release tic-toc
-1. - [ ] Test and publish images - Queue build of [dotnet-docker pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=373) (internal MSFT link) with variables:
-
-      All releases:
-
-          stages: test;publish
-          sourceBuildId: <Build ID from the build stage>
-
-      Servicing release:
-
-          imageBuilder.pathArgs: --path '2.1*' --path '3.1*'
-
-      Preview release:
-
-          imageBuilder.pathArgs: --path '5.0*'
-1. - [ ] Confirm images have been ingested by MCR
-1. - [ ] Confirm READMEs have been updated in [Docker Hub](https://hub.docker.com/_/microsoft-dotnet-core)
-
-
-
-
-	1. Verify that we are building with the appropriate stability and release tag (either none for RTM, or "preview1" etc).  This can apply to the SDK itself as well as the core-setup runtime component.
-		a. dotnet --info
-		b. dotnet --version
-		c. Verify ASP.NET package versions used in templates are correct (dependencies.props may need to be updated)
-		d. Verify MS.NETCore.App packages versions used in downlevel templates are correct (dependencies.props may need to be updated)
-	2. Complete prebuilt and poison audit.
-	3. Tag runtime version (e.g." v2.1.0") with an annotated (preferably signed) tag including runtime and SDK versions, e.g. "Release for 2.1.0 runtime and 2.1.300 SDK."
-		a. git tag -s v2.1.0-runtime c7012bcc8
-	4. Tag SDK version (e.g. "v2.1.300-SDK") with the same annotation, also preferably signed.
-	5. Push these tags to GitHub.
-		a. git push <remote> v2.1.0-runtime && git push <remote> v2.1.300-SDK
-		b. Do not use "git push --tags" unless you have a fresh repo with no other tags - this will push all your tags.
-	6. Notify Omair/Red Hat.
-		a. Should we do this later? (?) - here seems good
-	7. Download the tarball from VSTS CI to your machine.
-		a. Which platform? (We only have centos now.) (?) - put platform and version in tarball name
-	8. Create a GitHub release for the runtime tag you just pushed - see instructions below.
-		a. Description (?) - CRummel to look into sourcing tags from other repos.  Or automated changelog?
-	9. Additionally upload the release tarball to dotnetcli Azure storage.
-		a. source-build container, virtual dir "red-hat/{release branch version}/{runtime tag without 'v'}/"
-Build from the release tarball on a clean Red Hat machine and upload the artifacts to dotnetcli Azure storage beside the tarball.
+1. - [ ] Similarly, download Private.SourceBuilt.Artifacts.XX.tar.gz from CI and upload it to source-built-artifacts blob container
