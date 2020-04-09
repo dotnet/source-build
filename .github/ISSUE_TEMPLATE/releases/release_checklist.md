@@ -7,7 +7,7 @@ _The set of .NET Core versions that are being released as a unit._
 * 2.1.X: <runtime/SDK>
 * 3.1.X: <runtime/SDK>
 
-## 1. Non MSRC releases
+
 
 1. - [ ] Incase of 2.x, run auto-update(refer docs). Incase of 3.X:
       - [ ] if maestro auto-PR is active, then verify SHA1s in version.Details with manifest versions in VSU share dir (refer docs), make sure that we match the versions
