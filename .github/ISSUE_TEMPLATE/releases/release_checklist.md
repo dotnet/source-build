@@ -39,7 +39,7 @@ _The set of .NET Core versions that are being released as a unit._
 1. - [ ] Download the tarball from CI
 1. - [ ] Upload the tarball to Azure blob feed for source-build
 
-            <Source-build-blob-feed-container>/redhat/<branch_version>/<SDK_version>/dotnet-<sdk_version>-<RID><RID_version>.tar.gz
+            <Source-build-blob-feed-container>/redhat/<branch_version>/<SDK_version>/dotnet-<sdk_version>-<RID>.tar.gz
 
 1. - [ ] Similarly, download Private.SourceBuilt.Artifacts.XX.tar.gz from CI and upload it to source-built-artifacts blob container
 1. - [ ] Write a post-mortem for the release
