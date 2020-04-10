@@ -25,7 +25,7 @@ _The set of .NET Core versions that are being released as a unit._
       - [ ] Verify MS.NETCore.App packages versions used in downlevel templates are correct (dependencies.props may need to be updated)
 1. - [ ] Complete prebuilt and poison audit. Review the baseline changes to find out if there are any new prebuilts. 
 1. - [ ] Remove new prebuilts, if any. Ideally any new prebuilts that show up in offline builds have to be removed. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
-1. - [ ] Stall tagging the release until we have the final validation. Incase of significant delays, notify(PR is ready, waiting on the final validation) the distro maintainer with PR link.
+1. - [ ] If significant delays are anticipated, notify the distro maintainer with PR link mentioning that a PR is ready, but we're waiting on the final validation. Do not tag the release until we have the final validation for the Microsoft build.
 1. - [ ] Re-validate the SHA1s in Versions file with the manifest in VSU share dir
 1. - [ ] Tag runtime version (e.g. "v2.1.0-runtime") with an annotated (preferably signed) tag including runtime and SDK versions, e.g. "Release for 2.1.0 runtime and 2.1.300 SDK."
       - `git tag -s v<X.X.X-runtime/SDK> <SHA1>` . E.g - $ git tag -s v2.1.0-runtime c7012bcc8
