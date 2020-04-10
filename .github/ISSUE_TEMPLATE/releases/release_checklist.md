@@ -13,8 +13,6 @@ _The set of .NET Core versions that are being released as a unit._
    - For 3.x:
      - [ ] if maestro auto-PR is active, then verify SHA1s in version.Details with manifest versions in VSU share dir (refer docs), make sure that we match the versions
      - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent version and run darc updates(refer docs). 
-      - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent version and run darc updates(refer docs). 
-     - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent version and run darc updates(refer docs). 
        - [ ] Push this local branch upstream and start the release PR for the N version that is to be released.
 1. - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` match N-1 release artifacts
 1. - [ ] Verify that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer OneNote)
