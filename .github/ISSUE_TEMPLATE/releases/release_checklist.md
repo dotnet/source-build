@@ -7,9 +7,7 @@ _The set of .NET Core versions that are being released as a unit._
 * 2.1.X: <runtime/SDK>
 * 3.1.X: <runtime/SDK>
 
-
-
-1. [ ] Update target branch to new version.
+1. - [ ] Update target branch to new version.
    - For 2.x:
      - [ ] If releasing 2.x, run auto-update (refer to docs).
    - For 3.x:
