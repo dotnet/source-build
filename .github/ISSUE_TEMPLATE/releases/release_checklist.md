@@ -16,13 +16,7 @@ _The set of .NET Core versions that are being released as a unit._
        - [ ] Push this local branch upstream and start the release PR for the N version that is to be released.
 1. - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` match N-1 release artifacts
 1. - [ ] Verify that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer OneNote)
-1. - [ ] Verify that we are building with the appropriate stability and release tag (either none for RTM, or "preview1" etc).  This can apply to the SDK itself as well as the core-setup runtime component. Using a local build:
-        
-            dotnet --info
-            dotnet --version
-
-      - [ ] Verify ASP.NET package versions used in templates are correct (dependencies.props may need to be updated)
-      - [ ] Verify MS.NETCore.App packages versions used in downlevel templates are correct (dependencies.props may need to be updated)
+1. - [ ] Build locally/in-CI and get to a clean build
 1. - [ ] Complete prebuilt and poison audit. Review the baseline changes to find out if there are any new prebuilts. 
 1. - [ ] Remove new prebuilts, if any. Ideally any new prebuilts that show up in offline builds have to be removed. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
 1. - [ ] If significant delays are anticipated, notify the distro maintainer with PR link mentioning that a PR is ready, but we're waiting on the final validation. Do not tag the release until we have the final validation for the Microsoft build.
