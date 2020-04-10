@@ -34,7 +34,7 @@ _The set of .NET Core versions that are being released as a unit._
       - `git push <remote> v2.1.0-runtime && git push <remote> v2.1.300-SDK`
             
         Do not use "git push --tags" unless you have a fresh repo with no other tags - this will push all your tags.
-1. - [ ] Incase there's a respin, retag the with the new changes. A sub-patch version tag for SDK and runtime would have to be generated. E.g - v2.1.300.1-SDK
+1. - [ ] If there's a respin, retag the with the new changes. A sub-patch version tag for SDK and runtime would have to be generated. E.g - v2.1.300.1-SDK
 1. - [ ] Notify the distro maintainer/s about the release tags
 1. - [ ] Download the tarball from CI
 1. - [ ] Upload the tarball to Azure blob feed for source-build
