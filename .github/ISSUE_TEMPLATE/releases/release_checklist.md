@@ -11,9 +11,9 @@ _The set of .NET Core versions that are being released as a unit._
 
 1. - [ ] Incase of 2.x, run auto-update(refer docs). Incase of 3.X:
       - [ ] if maestro auto-PR is active, then verify SHA1s in version.Details with manifest versions in VSU share dir (refer docs), make sure that we match the versions
-      - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent branch locally and run darc updates(refer docs). 
+      - [ ] in-case auto-PR updates are unavailable, checkout a local branch for the pertinent version and run darc updates(refer docs). 
           - [ ] Push this local branch upstream and start the release PR for the N version that is to be released.
-1. - [ ] Change the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` to match N-1 release artifacts, N being the version that is now being released.
+1. - [ ] Change the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` to match N-1 release artifacts
 1. - [ ] Make sure that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer docs)
 1. - [ ] Verify that we are building with the appropriate stability and release tag (either none for RTM, or "preview1" etc).  This can apply to the SDK itself as well as the core-setup runtime component
         
@@ -23,7 +23,7 @@ _The set of .NET Core versions that are being released as a unit._
       - [ ] Verify ASP.NET package versions used in templates are correct (dependencies.props may need to be updated)
       - [ ] Verify MS.NETCore.App packages versions used in downlevel templates are correct (dependencies.props may need to be updated)
 1. - [ ] Complete prebuilt and poison audit (if applicable) 
-1. - [ ] Remove new prebuilts, if any. We worry about any new prebuilts that show up in offline builds. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
+1. - [ ] Remove new prebuilts, if any. Ideally any new prebuilts that show up in offline builds have to be removed. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
 1. - [ ] Stall tagging the release until we have the final validation. Incase of significant delays, notify(PR is ready, waiting on the final validation) the distro maintainer with PR link.
 1. - [ ] Tag runtime version (e.g." v2.1.0") with an annotated (preferably signed) tag including runtime and SDK versions, e.g. "Release for 2.1.0 runtime and 2.1.300 SDK."
       - [ ] `git tag -s v<X.X.X-runtime/SDK> <SHA1>` . E.g - $ git tag -s v2.1.0-runtime c7012bcc8
@@ -32,7 +32,7 @@ _The set of .NET Core versions that are being released as a unit._
       - [ ] `git push <remote> v2.1.0-runtime && git push <remote> v2.1.300-SDK`
             
             Do not use "git push --tags" unless you have a fresh repo with no other tags - this will push all your tags.
-1. - [ ] Notify the distro maintainer/s
+1. - [ ] Notify the distro maintainer/s about the release tags
 1. - [ ] Download the tarball from CI
 1. - [ ] Upload the tarball to Azure blob feed for source-build
 
