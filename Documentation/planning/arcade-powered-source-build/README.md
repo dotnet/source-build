@@ -19,8 +19,9 @@ build process is driven by two major goals:
      owners, just as any other build failure, rather than fixed by source-build
      maintainers weeks to months after the fact using patches.
 
-   * Decisions about rebuilding the SDK close to release day don't need to
-     consider source-build status and respin time as external factors.
+   * Microsoft build process owners don't need to reject late build respins
+     based on manual post-build source-build efforts being projected to not
+     complete in time for release dates.
 
    * Rebuilding the SDK close to a release day doesn't cause setbacks to
      source-build maintainers by throwing away manual build uptake work.
