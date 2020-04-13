@@ -1,17 +1,18 @@
-# Servicing Granularity
+# Non-granular servicing readiness
 
-This doc describes the granularity difference between Microsoft servicing and
-source-build servicing, and the risk this causes. It proposes continuing with
-the current overall approach, but reducing risk by adding tests to the Microsoft
-build ensuring source-build doesn't get broken.
+This doc describes the risks caused by servicing granularity differences between
+Microsoft and source-build, and proposes reducing the risk by adding tests to
+the Microsoft build ensuring source-build's lack of granularity doesn't cause
+problems. Alternative approaches are discussed in
+[ServicingGranularity-RejectedApproaches.md](ServicingGranularity-RejectedApproaches.md).
 
-This is related to the problems in [source-build#923 "Figure out how
-source-build will work with CoreFX per-package servicing
+This is related to [source-build#923 "Figure out how source-build will work with
+CoreFX per-package servicing
 policy"](https://github.com/dotnet/source-build/issues/923).
 
 ## "Build only if changed" policy
 
-This is a maintenance strategy where if a product hasn't changed, it isn't
+This is a maintenance strategy where if a *product* hasn't changed, it isn't
 rebuilt and won't be rereleased under a new patch version.
 
 > A *product* for the sake of this doc is any released asset where an

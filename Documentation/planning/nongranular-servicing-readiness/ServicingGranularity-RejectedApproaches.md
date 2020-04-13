@@ -1,6 +1,6 @@
 # Servicing Granularity - Rejected Approaches
-See [ServicingGranularity.md](ServicingGranularity.md) for context on the
-servicing granularity problem. This document discusses rejected approaches.
+See [README.md](README.md) for context on the servicing granularity problem.
+This document discusses rejected approaches.
 
 # Switching to microsoft build granularity
 This section discusses the consequences of switching to the very granular
