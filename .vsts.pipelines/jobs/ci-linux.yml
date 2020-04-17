@@ -8,7 +8,7 @@ parameters:
   reportPrebuiltLeaks: false
   generatePrebuiltBurndown: false
   runUnitTests: false
-  buildPortableRuntime: false
+  alwaysBuildPortableRuntime: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -63,7 +63,7 @@ jobs:
       set -ex
       df -h
       portableRuntimeArg=
-      if [ "$(buildPortableRuntime)" = "true" ]; then
+      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
         portableRuntimeArg="/p:BuildPortableRuntime=true"
       fi
       if [ "$(sb.tarball)" != "true" ]; then
@@ -202,7 +202,7 @@ jobs:
       set -ex
       df -h
       portableRuntimeArg=
-      if [ "$(buildPortableRuntime)" = "true" ]; then
+      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
         portableRuntimeArg="/p:BuildPortableRuntime=true"
       fi
       networkArg=

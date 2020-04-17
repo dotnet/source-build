@@ -54,9 +54,9 @@ jobs:
     job: fedora30
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223
     matrix:
-      Production: { buildPortableRuntime: true }
+      Production: { alwaysBuildPortableRuntime: true }
       Online: { type: Online }
-      Offline: { type: Offline, buildPortableRuntime: true }
+      Offline: { type: Offline, alwaysBuildPortableRuntime: true }
       Offline Portable: { type: Offline Portable }
 
 - template: ../jobs/ci-linux.yml

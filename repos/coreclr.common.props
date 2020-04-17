@@ -2,6 +2,7 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
+    <UseSystemLibunwind Condition="'$(UseSytemLibunwind)' == ''">true</UseSystemLibunwind>
     <BuildArguments>$(Platform) $(Configuration) skiptests</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -ignoreWarnings</BuildArguments>
     <BuildArguments>$(BuildArguments) -skipmanagedtools</BuildArguments>

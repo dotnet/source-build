@@ -9,7 +9,7 @@
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="roslyn" />
     <RepositoryReference Include="standard" />
-    <RepositoryReference Include="core-setup-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
+    <RepositoryReference Include="core-setup-portable" Condition="'$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
   </ItemGroup>
 
   <Import Project="core-setup.common.targets" />
