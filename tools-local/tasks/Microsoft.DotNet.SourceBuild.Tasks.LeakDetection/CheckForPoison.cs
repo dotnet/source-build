@@ -156,8 +156,6 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
         internal static IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
-            var tempDirName = Path.GetRandomFileName();
-            var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), tempDirName));
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<string>(initialCandidates);
@@ -166,6 +164,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
             while (candidateQueue.Any())
             {
+                var tempDirName = Path.GetRandomFileName();
+                var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), tempDirName));
                 var checking = candidateQueue.Dequeue();
 
                 // if this is a zip or NuPkg, extract it, check for the poison marker, and
@@ -187,9 +187,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                         poisons.Add(result);
                     }
                 }
+                tempDir.Delete(true);
             }
 
-            tempDir.Delete(true);
             return poisons;
         }
 
