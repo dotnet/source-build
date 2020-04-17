@@ -13,7 +13,7 @@ jobs:
 - template: ../jobs/ci-linux.yml
   parameters:
     job: centos71
-    imageName: microsoft/dotnet-buildtools-prereqs:centos-7-b46d863-20180719033416
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
     reportPrebuiltLeaks: true
     matrix:
       Production: {}
@@ -23,16 +23,16 @@ jobs:
 
 - template: ../jobs/ci-linux.yml
   parameters:
-    job: debian82
-    imageName: microsoft/dotnet-buildtools-prereqs:debian-8.2-4e6e894-20181023212416
+    job: debian9
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-bfcd90a-20200121150012
     matrix:
       Production: {}
       Online: { type: Online }
 
 - template: ../jobs/ci-linux.yml
   parameters:
-    job: fedora29
-    imageName: microsoft/dotnet-buildtools-prereqs:fedora-29-2f0798a-20181105183801
+    job: fedora30
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-bfcd90a-20200324132732
     matrix:
       Production: {}
       Online: { type: Online }
@@ -41,8 +41,8 @@ jobs:
 
 - template: ../jobs/ci-linux.yml
   parameters:
-    job: ubuntu1604
-    imageName: microsoft/dotnet-buildtools-prereqs:ubuntu-16.04-c103199-20180628134544
+    job: ubuntu1804
+    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-85814b7-20200324125103
 
 - template: ../jobs/ci-local.yml
   parameters:

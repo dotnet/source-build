@@ -180,6 +180,33 @@ jobs:
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 
+  # Remove logs and reports 
+  - script: |
+      set -x
+      $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
+        find . \( \
+          -path './bin/*-report/*' -o \
+          -path './bin/msbuild-debug/*' -o \
+          -iname '*.binlog' -o \
+          -iname '*.log' \) \
+          -exec rm -rf {} \;"
+    displayName: Remove source-build logs
+    condition: always()
+    continueOnError: true
+  - script: |
+      set -x
+      $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
+        cd \"$(tarballName)\"
+        find . \( \
+          -path './bin/*-report/*' -o \
+          -path './bin/msbuild-debug/*' -o \
+          -iname '*.binlog' -o \
+          -iname '*.log' \) \
+          -exec rm -rf {} \;"
+    displayName: Remove tarball logs
+    condition: eq(variables['sb.tarball'], true)
+    continueOnError: true
+
   # Copy artifacts to staging - Copy to VSTS owned folder is done outside of docker so copied files
   # have correct ownership so VSTS can clean them up later.
   - task: CopyFiles@2
