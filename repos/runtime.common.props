@@ -88,8 +88,9 @@
     is already loaded
     -->
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</CommonBuildArguments>
 
-    <BuildCommand>$(ProjectDirectory)build-source-build$(ShellExtension) $(CommonBuildArguments) $(FlagParameterPrefix)coreclr-args $(CoreClrBuildArguments) $(FlagParameterPrefix)libraries-args $(LibrariesBuildArguments) $(FlagParameterPrefix)installer-args $(InstallerBuildArguments)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)build-source-build$(ShellExtension) $(CommonBuildArguments) $(FlagParameterPrefix)coreclr-args $(CoreClrBuildArguments) $(FlagParameterPrefix)libraries-args $(LibrariesBuildArguments) $(FlagParameterPrefix)installer-args $(InstallerBuildArguments) $(FlagParameterPrefix)additional-args</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension)</CleanCommand>
   </PropertyGroup>
@@ -121,6 +122,8 @@
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadeCoreFxTestingOverride)" />
     <UseSourceBuiltSdkOverride Include="@(ArcadePackagingOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeTargetFrameworkSdkOverride)" />
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSharedFrameworkSdkOverride)" />
   </ItemGroup>
 
   <!-- Environment Variables -->
