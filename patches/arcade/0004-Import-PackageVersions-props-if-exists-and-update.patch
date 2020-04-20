@@ -12,12 +12,12 @@ index 80108f6..ae205c3 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -77,4 +77,8 @@
-     <MicrosoftDotNetSwaggerGeneratorMSBuildVersion>5.0.0-beta.20129.1</MicrosoftDotNetSwaggerGeneratorMSBuildVersion>
-     <XliffTasksVersion>1.0.0-beta.20129.1</XliffTasksVersion>
+     <MicrosoftDotNetSwaggerGeneratorMSBuildVersion>5.0.0-beta.20152.4</MicrosoftDotNetSwaggerGeneratorMSBuildVersion>
+     <XliffTasksVersion>1.0.0-beta.20152.1</XliffTasksVersion>
    </PropertyGroup>
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
 +  <PropertyGroup>
-+    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
++    <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
 +  </PropertyGroup>
  </Project>
 -- 
