@@ -95,9 +95,9 @@ index 0000000..758cd7b
 +echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory libraries $librariesArgs $additionalArgs"
 +$scriptroot/build.sh $commonArgs -subsetcategory libraries $librariesArgs $additionalArgs
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "librariesBuild.binlog" * {} \;
-+#echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs $additionalArgs"
-+#$scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs $additionalArgs
-+#find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
++echo "Running command: $scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs $additionalArgs"
++$scriptroot/build.sh $commonArgs -subsetcategory installer -subset corehost-managed-depproj-pkgproj-bundle $installerArgs $additionalArgs
++find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
 -- 
 1.8.3.1
 
