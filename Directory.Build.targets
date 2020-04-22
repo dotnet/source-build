@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+
+  <Target Name="GetProdConBlobFeedUrl">
+    <PropertyGroup>
+      <ProdConBlobFeedUrl>$([System.IO.File]::ReadAllText('$(ProdConFeedPath)').Trim())</ProdConBlobFeedUrl>
+      <ProdConBlobFeedUrl Condition="'$(ProdConBlobFeedUrlPrefix)' != ''">$(ProdConBlobFeedUrl.Replace('https://dotnetfeed.blob.core.windows.net/', '$(ProdConBlobFeedUrlPrefix)'))</ProdConBlobFeedUrl>
+    </PropertyGroup>
+  </Target>
+
 </Project>
