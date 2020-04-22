@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="SetNuGetPackagesEnvironment" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
@@ -204,6 +206,24 @@
                                        AdditionalAssetDirs="@(_AdditionalAssetDirs)"
                                        RestoreSources="@(_DotNetRestoreSources)"
                                        OutputPath="$(RestoreSourcePropsPath)" />
+  </Target>
+
+  <!--
+    Generate blank directory build files above the repos, so they won't
+    automatically find the source-build directory build files ("escaping" their
+    directories and causing differences vs. ordinary build).
+  -->
+  <Target Name="PreventDirectoryBuildPropsTargetsEscape"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <DirectoryBuildFilename Include="Directory.Build.targets" />
+      <DirectoryBuildFilename Include="Directory.Build.props" />
+    </ItemGroup>
+
+    <WriteLinesToFile
+      Lines="&lt;Project /&gt;"
+      File="$([MSBuild]::NormalizePath('$(ClonedSubmoduleDirectory)', '%(DirectoryBuildFilename.Identity)'))"
+      Overwrite="True" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="BuildRepoReferences">

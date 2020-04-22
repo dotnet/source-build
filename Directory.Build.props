@@ -14,6 +14,7 @@
   <PropertyGroup>
     <Configuration Condition="$(Configuration) == ''">Release</Configuration>
 
+    <Platform Condition="'$(Platform)' == 'AnyCPU'"></Platform>
     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
@@ -32,16 +33,17 @@
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
-    <DotNetCliToolDir>$(ProjectDir).dotnet/</DotNetCliToolDir>
+    <DotNetCliToolDir>$([MSBuild]::NormalizeDirectory('$(DOTNET_INSTALL_DIR)'))</DotNetCliToolDir>
     <DotNetCliToolDir Condition="'$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
     <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
-    <PackagesDir>$(ProjectDir)packages/restored/</PackagesDir>
+    <PackagesDir Condition="'$(NuGetPackageRoot)' != ''">$(NuGetPackageRoot)</PackagesDir>
+    <PackagesDir Condition="'$(PackagesDir)' == ''">$(ProjectDir)packages/restored/</PackagesDir>
     <ArcadeBootstrapPackageDir>$(PackagesDir)ArcadeBootstrapPackage/</ArcadeBootstrapPackageDir>
-    <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
-    <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
     <!-- if we're not currently building,  Visual Studio will still set this -->
     <SDK_VERSION Condition="'$(SDK_VERSION)' == ''">$(NETCoreSdkVersion)</SDK_VERSION>
+    <DotNetSdkDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</DotNetSdkDir>
+    <DotNetSdkResolversDir>$(DotNetSdkDir)SdkResolvers/</DotNetSdkResolversDir>
     <SdkReferenceDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</SdkReferenceDir>
   </PropertyGroup>
 
@@ -67,7 +69,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <BaseOutputPath>$(ProjectDir)bin/</BaseOutputPath>
+    <BaseOutputPath>$(ArtifactsDir)</BaseOutputPath>
     <ClonedSubmoduleDirectory Condition="'$(ClonedSubmoduleDirectory)' == ''">$(BaseOutputPath)src/</ClonedSubmoduleDirectory>
     <ClonedSubmoduleGitRootDirectory Condition="'$(ClonedSubmoduleGitRootDirectory)' == ''">$(ProjectDir).git/modules/src/</ClonedSubmoduleGitRootDirectory>
     <ToolsDir>$(ProjectDir)Tools/</ToolsDir>
@@ -77,9 +79,9 @@
     <DarcInstallDir>$(DotNetCliToolDir)tools/</DarcInstallDir>
     <DarcVersion>$([System.IO.File]::ReadAllText('$(ProjectDir)DarcVersion.txt').Trim())</DarcVersion>
     <DarcDll>$(DotNetCliToolDir)tools/.store/microsoft.dotnet.darc/$(DarcVersion)/microsoft.dotnet.darc/$(DarcVersion)/tools/netcoreapp3.0/any/Microsoft.DotNet.Darc.dll</DarcDll>
-    <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/Debug/netstandard2.0/</TasksBinDir>
+    <TasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks/bin/$(Configuration)/netstandard2.0/</TasksBinDir>
     <SourceBuildTasksAssembly>$(TasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.dll</SourceBuildTasksAssembly>
-    <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/Debug/netstandard2.0/</XPlatTasksBinDir>
+    <XPlatTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.XPlat/bin/$(Configuration)/netstandard2.0/</XPlatTasksBinDir>
     <XPlatSourceBuildTasksAssembly>$(XPlatTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.XPlat.dll</XPlatSourceBuildTasksAssembly>
     <LeakDetectionTasksBinDir>$(TaskDirectory)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/</LeakDetectionTasksBinDir>
     <LeakDetectionTasksAssembly>$(LeakDetectionTasksBinDir)Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.dll</LeakDetectionTasksAssembly>
