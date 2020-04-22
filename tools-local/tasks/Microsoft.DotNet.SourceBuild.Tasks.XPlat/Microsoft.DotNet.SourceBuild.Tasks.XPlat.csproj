@@ -1,9 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
     <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
   </PropertyGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
@@ -30,7 +31,9 @@
   -->
   <ItemGroup>
     <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
-    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+    <SdkAssembly
+      Include="$(SdkReferenceDir)NuGet.*.dll"
+      Exclude="$(SdkReferenceDir)NuGet.CommandLine.XPlat.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,4 +41,5 @@
       <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
     </Reference>
   </ItemGroup>
+
 </Project>
