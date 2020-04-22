@@ -42,6 +42,9 @@ build process is driven by two major goals:
      impact of changes, reducing the frequency the source-build servicing team
      has to root-cause and patch over problems.
 
+   * Gives us a place to add additional checks in the future, such as
+     [nongranular servicing readiness](../nongranular-servicing-readiness/).
+
 This doc is about where we can start, what incremental progress would look like,
 and the vision.
 
