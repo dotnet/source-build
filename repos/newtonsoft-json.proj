@@ -29,7 +29,7 @@
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
-  <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
+  <Target Name="RepoRestore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) /v:$(LogVerbosity) /bl:restore.binlog $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"

@@ -174,7 +174,7 @@
     Dev scenario: rewrite a prebuilt-report. This makes it easy to add data to an existing
     prebuilt report without performing another full build. This doesn't reevalutate which packages
     are prebuilts or search the projects: it uses the existing usage.xml file to generate report
-    XMLs based on the info put in bin/.
+    XMLs based on the info put in artifacts/.
   -->
   <Target Name="RewritePrebuiltUsageReport">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />

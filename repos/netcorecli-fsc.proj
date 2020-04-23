@@ -10,7 +10,7 @@
     <ProjectDirectory>$(SubmoduleDirectory)$(RepositoryName)/</ProjectDirectory>
   </PropertyGroup>
 
-  <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
+  <Target Name="RepoRestore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore FSharp.NET.Sdk.csproj $(OutputArgs) /v:$(LogVerbosity) $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"

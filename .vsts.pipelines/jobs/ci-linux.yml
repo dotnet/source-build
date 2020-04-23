@@ -133,10 +133,10 @@ jobs:
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/logs
         find . \( \
-          -path './bin/*-report/*' -o \
-          -path './bin/msbuild-debug/*' -o \
-          -path './bin/roslyn-debug/*' -o \
-          -path './bin/aspnet-debug/*' -o \
+          -path './artifacts/*-report/*' -o \
+          -path './artifacts/msbuild-debug/*' -o \
+          -path './artifacts/roslyn-debug/*' -o \
+          -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/source-build/logs \;"
@@ -151,7 +151,7 @@ jobs:
       df -h
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p /logs/source-build/unit-tests-results
-        find bin/src/. \( \
+        find artifacts/src/. \( \
           -iname '*testResults.xml' \) \
           -exec cp {} --parents /logs/source-build/unit-tests-results \;"
       du -h $(rootDirectory) | sort -h | tail -n 50
@@ -163,8 +163,8 @@ jobs:
   - script: |
       set -ex
       df -h
-      sudo rm -rf $(rootDirectory)/sb/source-build/bin/src
-      sudo rm -rf $(rootDirectory)/sb/source-build/bin/obj
+      sudo rm -rf $(rootDirectory)/sb/source-build/artifacts/src
+      sudo rm -rf $(rootDirectory)/sb/source-build/artifacts/obj
       sudo rm -rf $(rootDirectory)/sb/source-build/.git
       sudo rm -rf $(rootDirectory)/sb/source-build/packages
       du -h $(rootDirectory) | sort -h | tail -n 50
@@ -239,10 +239,10 @@ jobs:
         mkdir -p /logs/tarball/logs
         cd \"$(tarballName)\"
         find . \( \
-          -path './bin/*-report/*' -o \
-          -path './bin/msbuild-debug/*' -o \
-          -path './bin/roslyn-debug/*' -o \
-          -path './bin/aspnet-debug/*' -o \
+          -path './artifacts/*-report/*' -o \
+          -path './artifacts/msbuild-debug/*' -o \
+          -path './artifacts/roslyn-debug/*' -o \
+          -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/tarball/logs \;"
@@ -258,7 +258,7 @@ jobs:
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p /drop/tarball/
         cd \"$(tarballName)\"
-        find ./bin \( \
+        find ./artifacts \( \
           -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
           -exec cp {} /drop/tarball/ \;"
       du -h $(rootDirectory) | sort -h | tail -n 50

@@ -129,7 +129,7 @@ Once the build is done, we will have a .NET Runtime containing the `Hashtable.PN
 
 ### How to use the produced Runtime
 
-The produced runtime will be under `bin/{architecture}/{configuration}/runtime`.
+The produced runtime will be under `artifacts/{architecture}/{configuration}/runtime`.
 
 Now create a new .NET Core project:
 ```console
