@@ -3,6 +3,7 @@
   <PropertyGroup>
     <ImportNetSdkFromRepoToolset>false</ImportNetSdkFromRepoToolset>
     <_SuppressSdkImports>true</_SuppressSdkImports>
+    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
   </PropertyGroup>
 
   <Import Condition="'$(SkipArcadeSdkImport)' != 'true'" Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
@@ -12,8 +13,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Configuration Condition="$(Configuration) == ''">Release</Configuration>
-
     <Platform Condition="'$(Platform)' == 'AnyCPU'"></Platform>
     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
@@ -189,7 +188,7 @@
      <ArmEnvironmentVariables Condition="'$(Platform)' == 'armel'">ROOTFS_DIR=$(BaseIntermediatePath)crossrootfs/armel</ArmEnvironmentVariables>
    </PropertyGroup>
 
-  <Import Project="$(TargetInfoProps)" Condition="$(GeneratingStaticPropertiesFile) != 'true' AND Exists('$(TargetInfoProps)')" />
+  <Import Project="$(TargetInfoProps)" Condition="'$(GeneratingStaticPropertiesFile)' != 'true' AND Exists('$(TargetInfoProps)')" />
 
   <PropertyGroup>
     <!-- known-good (repos/known-good.proj) conditionally includes submodules based on the platform,
