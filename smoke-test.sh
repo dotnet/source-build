@@ -338,6 +338,9 @@ fi
 mkdir -p "$testingDir"
 cd "$testingDir"
 
+# Create blank Directory.Build files to avoid traversing to source-build infra.
+echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
+
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
     OUTPUT_DIR="$SCRIPT_ROOT/artifacts/x64/$configuration/"
