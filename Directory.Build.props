@@ -47,6 +47,14 @@
     <SdkReferenceDir>$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</SdkReferenceDir>
   </PropertyGroup>
 
+  <!--
+    '.proj' has no DefaultLanguageSourceExtension, causing **/* to be collected
+    in Compile items! Avoid this by disabling the default items.
+  -->
+  <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.proj'">
+    <EnableDefaultItems>false</EnableDefaultItems>
+  </PropertyGroup>
+
   <PropertyGroup>
     <LogVerbosity Condition="'$(LogVerbosity)'==''">minimal</LogVerbosity>
   </PropertyGroup>
