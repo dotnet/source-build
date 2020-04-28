@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <BuildTasksTarget Include="Restore;Build" />
+    <BuildTasksTarget Include="Restore;Build;InstallResolver" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
@@ -32,18 +32,17 @@
     Inputs="$(TargetInfoProps)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
-    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;InstallSourceBuildSdkResolver;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
     <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
+  <Target Name="PrepareOfflineLocalTools"
+          DependsOnTargets="
+            ExtractToolPackage;
+            BuildXPlatTasks" />
+
   <Target Name="Clean">
     <Delete Files="$(BuildCompetedSuccessSemaphore)" />
-  </Target>
-
-  <Target Name="InstallSourceBuildSdkResolver">
-    <MSBuild
-      Projects="tasks\SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.csproj"
-      Targets="InstallResolver" />
   </Target>
 
   <Target Name="UnpackTarballs" 
@@ -70,6 +69,7 @@
     <MSBuild
       Projects="tasks\Microsoft.DotNet.SourceBuild.Tasks\Microsoft.DotNet.SourceBuild.Tasks.csproj"
       Targets="%(BuildTasksTarget.Identity)"
+      SkipNonexistentTargets="true"
       Properties="
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
@@ -81,6 +81,7 @@
         tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj;
         tasks\SourceBuild.MSBuildSdkResolver\SourceBuild.MSBuildSdkResolver.csproj"
       Targets="%(BuildTasksTarget.Identity)"
+      SkipNonexistentTargets="true"
       Properties="
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
@@ -124,7 +125,7 @@
 
 
   <Target Name="ExtractToolPackage"
-          DependsOnTargets="UnpackTarballs;BuildTasks"
+          DependsOnTargets="UnpackTarballs;BuildXPlatTasks"
           Condition="'$(OfflineBuild)' == 'true'">
     <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
