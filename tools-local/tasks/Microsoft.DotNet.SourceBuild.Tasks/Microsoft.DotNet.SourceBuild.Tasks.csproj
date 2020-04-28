@@ -32,21 +32,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <!--
-    Use some assemblies from the SDK, instead of package references. This ensures they match what's
-    found when the task is loaded by the SDK's MSBuild.
-  -->
   <ItemGroup>
-    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
-    <SdkAssembly
-      Include="$(SdkReferenceDir)NuGet.*.dll"
-      Exclude="$(SdkReferenceDir)NuGet.CommandLine.XPlat.dll" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="@(SdkAssembly -> '%(FileName)')">
-      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
-    </Reference>
+    <Reference Include="@(SdkAssemblyReference)" />
   </ItemGroup>
 
 </Project>
