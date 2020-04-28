@@ -378,7 +378,7 @@ done
 echo 'Removing known extra packages from tarball prebuilts...'
 while IFS= read -r packagePattern
 do
-    if [[ "$packagePattern" =~ ^# ]]; then
+    if [[ "$packagePattern" = "" ]] || [[ "$packagePattern" =~ ^# ]]; then
         continue
     fi
     rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
