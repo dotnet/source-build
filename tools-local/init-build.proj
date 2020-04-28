@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-    <BuildTasksOfflineSources>&quot;$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)&quot;</BuildTasksOfflineSources>
+    <BuildTasksOfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</BuildTasksOfflineSources>
   </PropertyGroup>
 
   <Target Name="Build"

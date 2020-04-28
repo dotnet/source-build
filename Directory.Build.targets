@@ -1,6 +1,6 @@
 <Project>
 
-  <Import Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+  <Import Condition="'$(SkipArcadeSdkImport)' != 'true'" Project="Sdk.targets" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
   <Target Name="GetProdConBlobFeedUrl">
     <PropertyGroup>

@@ -5,7 +5,7 @@
     <_SuppressSdkImports>true</_SuppressSdkImports>
   </PropertyGroup>
 
-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+  <Import Condition="'$(SkipArcadeSdkImport)' != 'true'" Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
   <PropertyGroup>
     <!-- Fake, for SDK. -->
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -33,8 +33,9 @@
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
     <KeysDir>$(ProjectDir)keys/</KeysDir>
-    <DotNetCliToolDir>$([MSBuild]::NormalizeDirectory('$(DOTNET_INSTALL_DIR)'))</DotNetCliToolDir>
-    <DotNetCliToolDir Condition="'$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
+    <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == '' and '$(CustomDotNetSdkDir)' != ''">$([MSBuild]::EnsureTrailingSlash('$(CustomDotNetSdkDir)'))</DotNetCliToolDir>
+    <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == '' and '$(DOTNET_INSTALL_DIR)' != ''">$([MSBuild]::NormalizeDirectory('$(DOTNET_INSTALL_DIR)'))</DotNetCliToolDir>
+    <DotNetCliToolDir Condition="'$(DotNetCliToolDir)' == ''">$(ProjectDir).dotnet/</DotNetCliToolDir>
     <DotnetToolCommand>$(DotNetCliToolDir)dotnet</DotnetToolCommand>
     <PatchesDir>$(ProjectDir)patches/</PatchesDir>
     <PackagesDir Condition="'$(NuGetPackageRoot)' != ''">$(NuGetPackageRoot)</PackagesDir>
@@ -74,6 +75,12 @@
     <SubmoduleDirectory Condition="'$(SubmoduleDirectory)' == ''">$(ProjectDir)src/</SubmoduleDirectory>
     <GitModulesPath>$(ProjectDir).gitmodules</GitModulesPath>
     <ProdConFeedPath>$(ProjectDir)ProdConFeed.txt</ProdConFeedPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Init basic Arcade props, if the project importing this file doesn't use Arcade. -->
+    <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$(ProjectDir)artifacts/</ArtifactsDir>
+    <RepositoryEngineeringDir Condition="'$(RepositoryEngineeringDir)' == ''">$(ProjectDir)eng/</RepositoryEngineeringDir>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -1,7 +1,6 @@
 <Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
-
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="CopyReferenceOnlyPackages" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
