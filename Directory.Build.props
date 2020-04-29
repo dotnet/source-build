@@ -28,6 +28,11 @@
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
   </PropertyGroup>
 
+  <!-- This repo's projects are entirely infrastructure and do not ship. -->
+  <PropertyGroup>
+    <IsShipping>false</IsShipping>
+  </PropertyGroup>
+
   <PropertyGroup>
     <ProjectDir>$(MSBuildThisFileDirectory)</ProjectDir>
     <TargetsDir>$(ProjectDir)targets/</TargetsDir>
