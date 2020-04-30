@@ -32,16 +32,6 @@
     <GitCommitDateNoDashes>$(GitCommitDate.Replace('-', ''))</GitCommitDateNoDashes>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <VersionFilename>Latest_Packages.txt</VersionFilename>
-    <VersionFileDirectory>$(LocalBuildInfoRoot)</VersionFileDirectory>
-    <VersionFileLocation Condition="'$(VersionFileLocation)' == ''">$(VersionFileDirectory)$(RepositoryOrganization)/$(RepositoryName)/$(RepositoryBranch)/$(VersionFilename)</VersionFileLocation>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <OrchestratedManifestBuildName Condition="'$(OrchestratedManifestBuildName)' == ''">$(RepositoryName)</OrchestratedManifestBuildName>
-  </PropertyGroup>
-
   <!-- A human-readable description of what's building and why. -->
   <PropertyGroup>
     <ProjectBuildReason>'$(RepositoryName)'</ProjectBuildReason>

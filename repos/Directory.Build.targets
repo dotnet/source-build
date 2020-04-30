@@ -309,14 +309,6 @@
     <Delete Files="@(_FilesToDelete)" />
   </Target>
 
-  <Target Name="WriteVersions"
-          AfterTargets="CopyPackage"
-          DependsOnTargets="GatherBuiltPackages">
-    <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
-                       OutputPath="$(VersionFileLocation)"
-                       Condition="'@(_BuiltPackages)'!=''" />
-  </Target>
-
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
@@ -495,7 +487,6 @@
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
-  <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />
   <Target Name="GetOfficialBuildId" Outputs="$(OfficialBuildId)" />
   <Target Name="GetRepositoryReferences" Outputs="@(RepositoryReference)" />
 
