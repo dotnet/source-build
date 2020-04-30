@@ -50,31 +50,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DotNetToolPath=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DotNetTool=$(DotNetCliToolDir)dotnet" />
-    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' != 'arcade'" />
-    <EnvironmentVariables Include="BUILD_TOOLS_TOOL_DIR=$(ProjectDir)Tools/source-build/" Condition="'$(RepositoryName)' == 'arcade'" />
-    <EnvironmentVariables Include="BUILDTOOLS_SKIP_CROSSGEN=1" />
-    <!-- New env-var names to replace the ones above over time -->
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
+
+    <!-- Ensure the SDK (Core-SDK/Installer) doesn't add an online source. -->
     <EnvironmentVariables Include="AddDotnetfeedProjectSource=false" Condition="'$(OfflineBuild)' == 'true'" />
-    <EnvironmentVariables Include="DotNetCoreSdkDir=$(DotNetCliToolDir)" />
-    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/" Condition="'$(RepositoryName)' == 'arcade'" />
-    <EnvironmentVariables Include="DotNetBuildToolsDir=$(ProjectDir)Tools/source-built" Condition="'$(RepositoryName)' != 'arcade'" />
-    <!-- DotNetRoot is used by Arcade vs DotNetCoreSdkDir for BuildTools -->
-    <EnvironmentVariables Include="DotNetRoot=$(DotNetCliToolDir)" />
+
+    <!-- Arcade tools.sh picks up DotNetCoreSdkDir, but we can pass DOTNET_INSTALL_DIR directly. -->
+    <EnvironmentVariables Include="DOTNET_INSTALL_DIR=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DOTNET_PATH=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="DOTNET_HOST_PATH=$(DotNetCliToolDir)dotnet" />
+
     <!-- _InitializeDotNetCli is used by websdk and templating to decide whether to init the SDK -->
     <EnvironmentVariables Include="_InitializeDotNetCli=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="_DotNetInstallDir=$(DotNetCliToolDir)" />
     <EnvironmentVariables Include="_InitializeToolset=$(ProjectDir)Tools/source-built/Microsoft.DotNet.Arcade.Sdk/tools/Build.proj" Condition="'$(UseBootstrapArcade)' != 'true'" />
-    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)" Condition="'$(RepositoryName)' == 'arcade'" />
-    <EnvironmentVariables Include="BuildToolsPackageDir=$(ToolsDir)source-built" Condition="'$(RepositoryName)' != 'arcade'" />
 
+    <!--
+      With ProdCon v2, stabilization options are checked in, unlike ProdCon v1. These should be
+      deprecated but are left in to avoid potentially regressing edge-case versioning.
+    -->
     <EnvironmentVariables Include="StabilizePackageVersion=$(IsStable)" Condition="'$(IsStable)' != '' and '$(IsToolingProject)' != 'true'" />
     <EnvironmentVariables Include="PB_IsStable=$(IsStable)" Condition="'$(IsStable)' != '' and '$(IsToolingProject)' != 'true'" />
     <EnvironmentVariables Include="IsStableBuild=$(IsStable)" Condition="'$(IsStable)' != '' and '$(IsToolingProject)' != 'true'" />
@@ -82,6 +78,12 @@
     <EnvironmentVariables Include="DropSuffix=true" Condition="'$(IsStable)' == 'true' and '$(IsToolingProject)' != 'true'" />
 
     <EnvironmentVariables Include="DotNetUseShippingVersions=true" />
+
+    <EnvironmentVariables Include="PreReleaseVersionLabel=$(PreReleaseVersionLabel)" />
+    <EnvironmentVariables Include="PackageVersionStamp=$(PreReleaseVersionLabel)" />
+    <EnvironmentVariables Include="PB_VersionStamp=$(PreReleaseVersionLabel)" />
+
+    <!-- We pass '-ci', but also apply ci mode via env var for edge cases. (E.g. misbehaving inner builds.) -->
     <EnvironmentVariables Include="ContinuousIntegrationBuild=true" />
 
     <!-- Turn off node reuse for source build because repos use conflicting versions 
@@ -89,9 +91,14 @@
          See https://github.com/dotnet/source-build/issues/541 -->
     <EnvironmentVariables Include="MSBUILDDISABLENODEREUSE=1" />
 
-    <!-- some repos do this in a separate process -->
+    <!--
+      Apply official build versioning to match Microsoft build. These are based on build date, so
+      need to be parsed from Maestro++ auto-update and passed through.
+    -->
     <EnvironmentVariables Include="OfficialBuildId=$(OfficialBuildId)" />
     <EnvironmentVariables Include="BUILD_BUILDNUMBER=$(OfficialBuildId)" />
+
+    <!-- Give build access to commit info without necessarily requiring git queries. -->
     <EnvironmentVariables Include="GitCommitCount=$(GitCommitCount)" />
     <EnvironmentVariables Include="GitCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GitInfoCommitHash=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
@@ -99,12 +106,11 @@
     <EnvironmentVariables Include="RepositoryCommit=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="COMMIT_SHA=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
     <EnvironmentVariables Include="GIT_COMMIT=$(GitCommitHash)" Condition="'$(GitCommitHash)' != ''" />
-    <EnvironmentVariables Include="PreReleaseVersionLabel=$(PreReleaseVersionLabel)" />
-    <EnvironmentVariables Include="PackageVersionStamp=$(PreReleaseVersionLabel)" />
-    <EnvironmentVariables Include="PB_VersionStamp=$(PreReleaseVersionLabel)" />
     <EnvironmentVariables Include="RepositoryType=Git" />
+
     <EnvironmentVariables Include="DeterministicSourcePaths=true" Condition="'$(DeterministicBuildOptOut)' != 'true'" />
     <EnvironmentVariables Include="DeterministicSourcePaths=false" Condition="'$(DeterministicBuildOptOut)' == 'true'" />
+
     <EnvironmentVariables Include="SourceRoot=$(ProjectDirectory)" />
   </ItemGroup>
 
