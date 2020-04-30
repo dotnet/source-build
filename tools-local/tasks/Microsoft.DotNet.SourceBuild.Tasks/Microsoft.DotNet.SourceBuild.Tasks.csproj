@@ -5,7 +5,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <CoreSetupPlatformAbstractionsPath Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)core-setup.$(coresetupGitCommitHash)/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
     <CoreSetupPlatformAbstractionsPath Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)core-setup.$(coresetupGitCommitHash)/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
-    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
+    <OutputPath>$(TasksBinDir)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
