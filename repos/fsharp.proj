@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
