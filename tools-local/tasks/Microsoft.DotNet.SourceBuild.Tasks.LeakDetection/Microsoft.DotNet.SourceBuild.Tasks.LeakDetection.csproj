@@ -1,13 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
-    <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
-  </PropertyGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
+    <OutputPath>$(LeakDetectionTasksBinDir)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,18 +29,8 @@
     <ProjectReference Include="../Microsoft.DotNet.SourceBuild.Tasks.XPlat/Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj" />
   </ItemGroup>
 
-  <!--
-    Use some assemblies from the SDK, instead of package references. This ensures they match what's
-    found when the task is loaded by the SDK's MSBuild.
-  -->
   <ItemGroup>
-    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
-    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+    <Reference Include="@(SdkAssemblyReference)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="@(SdkAssembly -> '%(FileName)')">
-      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>

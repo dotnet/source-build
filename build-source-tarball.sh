@@ -160,8 +160,8 @@ DARC_DLL="$CLI_PATH/tools/.store/microsoft.dotnet.darc/$DarcVersion/microsoft.do
 
 if [ $SKIP_BUILD -ne 1 ]; then
 
-    if [ -e "$SCRIPT_ROOT/bin" ]; then
-        rm -rf "$SCRIPT_ROOT/bin"
+    if [ -e "$SCRIPT_ROOT/artifacts" ]; then
+        rm -rf "$SCRIPT_ROOT/artifacts"
     fi
 
     $SCRIPT_ROOT/clean.sh
@@ -170,11 +170,11 @@ fi
 
 mkdir -p "$TARBALL_ROOT"
 
-# We need to keep bin/src/<repo>/.git around for sourcelink metadata but we can delete
+# We need to keep artifacts/src/<repo>/.git around for sourcelink metadata but we can delete
 # just about everything else, Darc will pull it from the copy in .git/modules.
 # This list of extensions is everything over 6MB or so.
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
-    find $SCRIPT_ROOT/bin/src \( -type f \( \
+    find $SCRIPT_ROOT/artifacts/src \( -type f \( \
         -iname '*.dll' -o \
         -iname '*.exe' -o \
         -iname '*.pdb' -o \
@@ -257,8 +257,8 @@ fi
 
 echo 'Copying sourcelink metadata to tarball...'
 pushd $SCRIPT_ROOT
-for srcDir in `find bin/src -name '.git' -type d`; do
-  newPath=`echo $srcDir | sed 's/^bin\///' | sed 's/\.git$//'`
+for srcDir in `find artifacts/src -name '.git' -type d`; do
+  newPath=`echo $srcDir | sed 's/^artifacts\///' | sed 's/\.git$//'`
   cp -r $srcDir $TARBALL_ROOT/$newPath
 done
 popd
@@ -286,7 +286,7 @@ cp -r $SCRIPT_ROOT/tools-local $TARBALL_ROOT/
 rm -rf $TARBALL_ROOT/tools-local/arcade-services/
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/bin
 rm -rf $TARBALL_ROOT/tools-local/tasks/*/obj
-cp -r $SCRIPT_ROOT/bin/git-info $TARBALL_ROOT/
+cp -r $SCRIPT_ROOT/artifacts/git-info $TARBALL_ROOT/
 
 cp $SCRIPT_ROOT/support/tarball/build.sh $TARBALL_ROOT/build.sh
 cp -r $SCRIPT_ROOT/support/tarball/tool-bootstrapping/ $TARBALL_ROOT
@@ -294,22 +294,22 @@ cp -r $SCRIPT_ROOT/support/tarball/tool-bootstrapping/ $TARBALL_ROOT
 mkdir -p $TARBALL_ROOT/packages/prebuilt
 mkdir -p $TARBALL_ROOT/packages/source-built
 find $SCRIPT_ROOT/packages/restored/ -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
-find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
+find $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/nuget-packages -name '*.nupkg' -exec cp {} $TARBALL_ROOT/packages/prebuilt/ \;
 
-# Copy reference-packages from bin dir to reference-packages directory.
+# Copy reference-packages from artifacts dir to reference-packages directory.
 # See corresponding change in dir.props to change ReferencePackagesBasePath conditionally in offline build.
 mkdir -p $TARBALL_ROOT/packages/reference
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
+cp -r $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/reference-packages/source $TARBALL_ROOT/packages/reference/source
+cp -r $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/reference-packages/staging $TARBALL_ROOT/packages/reference/staging
 
 # Copy tarballs to ./packages/archive directory
-if [[ -d "$SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs -iname '*.tar.gz')" ]]; then
+if [[ -d "$SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/external-tarballs" && ! -z "$(find $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/external-tarballs -iname '*.tar.gz')" ]]; then
     mkdir -p $TARBALL_ROOT/packages/archive
-    cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
+    cp -r $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/external-tarballs/*.tar.gz $TARBALL_ROOT/packages/archive/
 fi
 
-# Copy generated source from bin to src/generatedSrc
-cp -r $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
+# Copy generated source from artifacts to src/generatedSrc
+cp -r $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/generatedSrc $TARBALL_ROOT/src/generatedSrc
 
 if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/packages
@@ -317,7 +317,7 @@ fi
 
 echo 'Removing source-built packages from tarball prebuilts...'
 
-for built_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for built_package in $(find $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $built_package) ]; then
         rm $TARBALL_ROOT/packages/prebuilt/$(basename $built_package)
@@ -328,8 +328,8 @@ do
 done
 
 # Setup package version props to include both source-built and running PackageVersions.props
-mkdir --parents $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
-cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/bin/obj/$targetArchitecture/Release/
+mkdir --parents $TARBALL_ROOT/artifacts/obj/$targetArchitecture/Release/
+cp $SCRIPT_ROOT/support/tarball/PackageVersions.props $TARBALL_ROOT/artifacts/obj/$targetArchitecture/Release/
 
 if [ $INCLUDE_LEAK_DETECTION -eq 1 ]; then
   echo 'Building leak detection MSBuild tasks...'
@@ -339,7 +339,7 @@ fi
 
 echo 'Removing reference-only packages from tarball prebuilts...'
 
-for ref_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
+for ref_package in $(find $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/reference-packages/packages-to-delete/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
 do
     if [ -e $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package) ]; then
         rm $TARBALL_ROOT/packages/prebuilt/$(basename $ref_package)
@@ -378,7 +378,7 @@ done
 echo 'Removing known extra packages from tarball prebuilts...'
 while IFS= read -r packagePattern
 do
-    if [[ "$packagePattern" =~ ^# ]]; then
+    if [[ "$packagePattern" = "" ]] || [[ "$packagePattern" =~ ^# ]]; then
         continue
     fi
     rm -f $TARBALL_ROOT/packages/prebuilt/$packagePattern
@@ -405,7 +405,7 @@ fi
 echo 'Removing source-built, previously source-built packages and reference packages from il pkg src...'
 OLDIFS=$IFS
 
-allBuiltPkgs=(`ls $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
+allBuiltPkgs=(`ls $SCRIPT_ROOT/artifacts/obj/$targetArchitecture/Release/blob-feed/packages/*.nupkg | xargs -n1 basename | tr '[:upper:]' '[:lower:]'`)
 pushd $TARBALL_ROOT/packages/reference/staging/
 ilSrcPaths=(`find . -maxdepth 2 -mindepth 2`)
 popd

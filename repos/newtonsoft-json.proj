@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
+
   <PropertyGroup>
     <SourceDirectory>Newtonsoft.Json</SourceDirectory>
   </PropertyGroup>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
   
   <!--The Library Frameworks was added to environment variables so as to override the frameworks in newtonsoft csproj-->
   <!--The semicolons were added with encoding so as to avoid conflicts in MSBuild shell-->
@@ -29,12 +29,12 @@
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
-  <Target Name="Restore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
+  <Target Name="RepoRestore" BeforeTargets="Build" DependsOnTargets="UpdateNuGetConfig">
     <Exec Command="$(DotnetToolCommand) restore $(NewtonsoftJsonProjectPath) $(DotnetToolCommandArguments) /v:$(LogVerbosity) /bl:restore.binlog $(RedirectRepoOutputToLog)"
           WorkingDirectory="$(ProjectDirectory)"
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
   </Target>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

@@ -30,10 +30,10 @@ steps:
       mkdir -p /logs/stage1-sdk/logs
       pushd /bst/bootstrap_dir/stage1-sdk
       find . \( \
-        -path './bin/*-report/*' -o \
-        -path './bin/msbuild-debug/*' -o \
-        -path './bin/roslyn-debug/*' -o \
-        -path './bin/aspnet-debug/*' -o \
+        -path './artifacts/*-report/*' -o \
+        -path './artifacts/msbuild-debug/*' -o \
+        -path './artifacts/roslyn-debug/*' -o \
+        -path './artifacts/aspnet-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
         -exec cp {} --parents /logs/stage1-sdk/logs \;
@@ -49,9 +49,9 @@ steps:
       df -h 
       $(docker.run) --network=none $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
       pushd /bst/bootstrap_dir/stage1-sdk
-      echo "Removing everything in stage-1sdk except Tools and bin directory"
+      echo "Removing everything in stage-1sdk except Tools and artifacts directory"
       shopt -s extglob
-      rm -rvf !("Tools"|"bin")
+      rm -rvf !("Tools"|"artifacts")
       shopt -u extglob
       popd'
   displayName: Clean all except tarball in stage1
@@ -134,10 +134,10 @@ steps:
       mkdir -p /logs/final-sdk/logs
       pushd /bst/bootstrap_dir/final-sdk
       find . \( \
-        -path './bin/*-report/*' -o \
-        -path './bin/msbuild-debug/*' -o \
-        -path './bin/roslyn-debug/*' -o \
-        -path './bin/aspnet-debug/*' -o \
+        -path './artifacts/*-report/*' -o \
+        -path './artifacts/msbuild-debug/*' -o \
+        -path './artifacts/roslyn-debug/*' -o \
+        -path './artifacts/aspnet-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
         -exec cp {} --parents /logs/final-sdk/logs \;
