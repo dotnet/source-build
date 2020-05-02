@@ -9,9 +9,12 @@
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -NoTest $(BuildArguments)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="DOTNET_TOOL_DIR=$(DotNetCliToolDir)" />
+  </ItemGroup>
 
   <ItemGroup>
     <RepositoryReference Include="newtonsoft-json" />

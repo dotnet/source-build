@@ -20,9 +20,6 @@
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
-    <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
-    <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
-
     <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
     <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
     <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
@@ -116,7 +113,6 @@
     <GeneratedSourcePathOnline>$(IntermediatePath)generatedSrc</GeneratedSourcePathOnline>
     <GeneratedSourcePathOffline>$(SubmoduleDirectory)generatedSrc</GeneratedSourcePathOffline>
     <LocalBlobStorageRoot>$(IntermediatePath)blobs/</LocalBlobStorageRoot>
-    <LocalBuildInfoRoot>$(IntermediatePath)build-info/</LocalBuildInfoRoot>
     <LocalNuGetPackagesRoot>$(IntermediatePath)nuget-packages/</LocalNuGetPackagesRoot>
     <SourceBuiltBlobFeedDir>$(IntermediatePath)blob-feed/</SourceBuiltBlobFeedDir>
     <SourceBuiltPackagesPath>$(SourceBuiltBlobFeedDir)packages/</SourceBuiltPackagesPath>

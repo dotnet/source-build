@@ -36,7 +36,6 @@
     <EnvironmentExternalRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentExternalRestoreSources>
     <EnvironmentExternalRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentExternalRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentExternalRestoreSources>
 
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <!-- This project builds zips, not NuGet packages. -->
     <SkipEnsurePackagesCreated>true</SkipEnsurePackagesCreated>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>

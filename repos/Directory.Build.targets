@@ -309,14 +309,6 @@
     <Delete Files="@(_FilesToDelete)" />
   </Target>
 
-  <Target Name="WriteVersions"
-          AfterTargets="CopyPackage"
-          DependsOnTargets="GatherBuiltPackages">
-    <WriteVersionsFile NugetPackages="@(_BuiltPackages)"
-                       OutputPath="$(VersionFileLocation)"
-                       Condition="'@(_BuiltPackages)'!=''" />
-  </Target>
-
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
@@ -390,25 +382,6 @@
     <ItemGroup>
       <EnvironmentVariables Include="NUGET_PACKAGES=$(LocalNuGetPackagesRootForRepository)" />
     </ItemGroup>
-  </Target>
-
-  <Target Name="BootstrapBuildTools" BeforeTargets="Build"
-         Condition="'$(SkipBootstrapBuildTools)' != 'true' and '$(_IsBootstrapping)' == 'true'">
-   <PropertyGroup>
-     <ProjectToolsDir>$(ProjectDirectory)Tools/</ProjectToolsDir>
-   </PropertyGroup>
-   <RemoveDir Directories="$(ProjectToolsDir)" />
-   <MakeDir Directories="$(ProjectToolsDir)" />
-   <ItemGroup>
-     <BuildToolsFile Include="$(BootstrapBuildToolsDir)/**" />
-     <BuildToolsFile Include="$(ProjectDirectory)Tools-Override/**" />
-   </ItemGroup>
-
-   <Copy SourceFiles="@(BuildToolsFile)"
-         DestinationFiles="@(BuildToolsFile->'$(ProjectToolsDir)%(RecursiveDir)%(Filename)%(Extension)')" />
-
-   <Copy SourceFiles="$(BootstrapBuildToolsDir)/BuildToolsVersion.txt"
-         DestinationFolder="$(ProjectDirectory)" />
   </Target>
 
   <Target Name="SetSourceBuiltSdkOverrides"
@@ -514,7 +487,6 @@
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />
-  <Target Name="GetOrchestratedManifestBuildName" Outputs="$(OrchestratedManifestBuildName)" />
   <Target Name="GetOfficialBuildId" Outputs="$(OfficialBuildId)" />
   <Target Name="GetRepositoryReferences" Outputs="@(RepositoryReference)" />
 
