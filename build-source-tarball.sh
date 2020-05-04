@@ -315,6 +315,17 @@ if [ -e $SCRIPT_ROOT/testing-smoke/smoke-test-packages ]; then
     cp -rf $SCRIPT_ROOT/testing-smoke/smoke-test-packages $TARBALL_ROOT/packages
 fi
 
+echo 'Saving off required arcade prebuilts...'
+mkdir -p $TARBALL_ROOT/packages/arcadeRequired
+while IFS= read -r packagePattern
+do
+    if [[ "$packagePattern" =~ ^# ]]; then
+        continue
+    fi
+    cp -f $TARBALL_ROOT/packages/prebuilt/$packagePattern $TARBALL_ROOT/packages/arcadeRequired/
+done < $SCRIPT_ROOT/support/arcade-required-prebuilts.txt
+
+
 echo 'Removing source-built packages from tarball prebuilts...'
 
 for built_package in $(find $SCRIPT_ROOT/bin/obj/$targetArchitecture/Release/blob-feed/packages/ -name '*.nupkg' | tr '[:upper:]' '[:lower:]')
