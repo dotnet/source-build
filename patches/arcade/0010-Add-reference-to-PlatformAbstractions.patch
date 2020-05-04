@@ -1,14 +1,15 @@
-From 75487513ada7c1dafaeb7aff7f287f9c178e4623 Mon Sep 17 00:00:00 2001
+From 434e87ebcc4760970fffd7ba85ca48894495a2c6 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 1 Apr 2020 16:32:18 +0000
 Subject: [PATCH] Add reference to PlatformAbstractions
-Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj doesn't have a reference 
-to PlatformAbstractions. It builds in the production build because it has a 
-reference to Microsoft.Extensions.DependencyModel, which also brought in 
-PlatformAbstractions. That dependency has been removed with 
-https://github.com/dotnet/core-setup/pull/5218. 
-The tarball build uses a newer version of Microsoft.Extensions.DependencyModel 
-with the dependency removed, so an explicit dependency needs to be added now until 
+
+Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj doesn't have a reference
+to PlatformAbstractions. It builds in the production build because it has a
+reference to Microsoft.Extensions.DependencyModel, which also brought in
+PlatformAbstractions. That dependency has been removed with
+https://github.com/dotnet/core-setup/pull/5218.
+The tarball build uses a newer version of Microsoft.Extensions.DependencyModel
+with the dependency removed, so an explicit dependency needs to be added now until
 Arcade removes their dependency on PlatormAbstractions.
 ---
  .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj              | 1 +
