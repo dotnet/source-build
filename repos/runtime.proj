@@ -10,7 +10,7 @@
       <RepositoryReference Include="newtonsoft-json" />
       <RepositoryReference Include="newtonsoft-json901" />
       <RepositoryReference Include="roslyn" />
-      <RepositoryReference Include="runtime-portable" Condition="'$(PortableBuild)' != 'true' and '$(TargetOS)' == 'Linux' and '$(SkipPortableRuntimeBuild)' != 'true'" />
+      <RepositoryReference Include="runtime-portable" Condition="'$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
   </ItemGroup>
 
   <Import Project="runtime.common.targets" />

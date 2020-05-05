@@ -8,6 +8,7 @@ parameters:
   reportPrebuiltLeaks: false
   generatePrebuiltBurndown: false
   runUnitTests: false
+  alwaysBuildPortableRuntime: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -61,6 +62,10 @@ jobs:
   - script: |
       set -ex
       df -h
+      portableRuntimeArg=
+      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
+        portableRuntimeArg="/p:BuildPortableRuntime=true"
+      fi
       if [ "$(sb.tarball)" != "true" ]; then
         failOnBaselineError=true
       fi
@@ -71,7 +76,8 @@ jobs:
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
-        /p:AzDoPat=$(System.AccessToken)
+        /p:AzDoPat=$(System.AccessToken) \
+        $portableRuntimeArg
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 180
@@ -205,6 +211,10 @@ jobs:
   - script: |
       set -ex
       df -h
+      portableRuntimeArg=
+      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
+        portableRuntimeArg="/p:BuildPortableRuntime=true"
+      fi
       networkArg=
       if [ "$(sb.tarballOffline)" = "true" ]; then
         networkArg="--network=none"
@@ -218,7 +228,8 @@ jobs:
         /p:PortableBuild=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:FailOnPrebuiltBaselineError=true \
-        $poisonArg
+        $poisonArg \
+        $portableRuntimeArg
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
     timeoutInMinutes: 150
