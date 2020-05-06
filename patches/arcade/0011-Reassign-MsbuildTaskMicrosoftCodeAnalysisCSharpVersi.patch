@@ -1,0 +1,25 @@
+From 199a64bb7cde3dc2ce0171338006c32f9600027f Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 6 May 2020 15:02:25 +0000
+Subject: [PATCH] Reassign MsbuildTaskMicrosoftCodeAnalysisCSharpVersion in
+ offline build
+
+---
+ src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+index 04b4d46..00a413d 100644
+--- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
++++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+@@ -7,6 +7,7 @@
+     <PackageType>MSBuildSdk</PackageType>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <IsPackable>true</IsPackable>
++    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildOffline)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+
