@@ -66,7 +66,8 @@ jobs:
       fi
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
+        /p:BuildPortableRuntime=$(sb.portable) \
+        /p:BuildPortableSdk=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
@@ -117,7 +118,7 @@ jobs:
   - script: |
       set -ex
       df -h
-      args="--skip-build --minimize-disk-usage"
+      args="--skip-build --minimize-disk-usage --skip-prebuilt-check"
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         args="$args --enable-leak-detection"
       fi
@@ -215,7 +216,8 @@ jobs:
       fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" -- \
         /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
+        /p:BuildPortableRuntime=$(sb.portable) \
+        /p:BuildPortableSdk=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:FailOnPrebuiltBaselineError=true \
         $poisonArg

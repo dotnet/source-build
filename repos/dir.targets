@@ -109,6 +109,11 @@
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+                            SourceName="ExtraSources"
+                            SourcePath="$(ExtraRestoreSourcePath)"
+                            Condition="'$(ExtraRestoreSourcePath)' != ''" />
   </Target>
 
   <Target Name="UpdateGlobalJsonVersions"
@@ -191,6 +196,7 @@
   <Target Name="CreateCombinedRestoreSourceAndVersionProps"
           BeforeTargets="Build">
     <ItemGroup>
+      <_DotNetRestoreSources Include="$(ExtraRestoreSourcePath)" Condition="'$(ExtraRestoreSourcePath)' != ''"/>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
       <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>

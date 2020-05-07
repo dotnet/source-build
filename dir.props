@@ -10,11 +10,13 @@
     <!-- true if we have bootstrapped buildtools (usually on an unsupported platform -->
     <_IsBootstrapping Condition="'$(BootstrapBuildToolsDir)' != ''">true</_IsBootstrapping>
 
-    <PortableBuild Condition="'$(OS)' == 'Windows_NT'">true</PortableBuild>
-    <PortableBuild Condition="'$(PortableBuild)' == ''">false</PortableBuild>
-    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableBuild)' != 'true'">true</UseSystemLibraries>
-    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == ''">$(UseSystemLibraries)</UseSystemLibunwind>
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+    
+    <!-- new supported portable/nonportable options.  These control whether to build portable runtime
+         or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
+         no longer be passed in.  -->
+    <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == ''">false</BuildPortableRuntime>
+    <BuildPortableSdk Condition="'$(BuildPortableSdk)' == ''">false</BuildPortableSdk>
   </PropertyGroup>
 
   <PropertyGroup>
