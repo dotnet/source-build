@@ -21,7 +21,8 @@ jobs:
   variables:
     args.build: >
       /p:Configuration=$(sb.configuration)
-      /p:PortableBuild=$(sb.portable)
+      /p:BuildPortableRuntime=$(sb.portable) \
+      /p:BuildPortableSdk=$(sb.portable) \
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       /p:AzDoPat=$(System.AccessToken)

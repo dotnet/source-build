@@ -8,7 +8,6 @@ parameters:
   reportPrebuiltLeaks: false
   generatePrebuiltBurndown: false
   runUnitTests: false
-  alwaysBuildPortableRuntime: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -62,22 +61,18 @@ jobs:
   - script: |
       set -ex
       df -h
-      portableRuntimeArg=
-      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
-        portableRuntimeArg="/p:BuildPortableRuntime=true"
-      fi
       if [ "$(sb.tarball)" != "true" ]; then
         failOnBaselineError=true
       fi
       $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
         /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
+        /p:BuildPortableRuntime=$(sb.portable) \
+        /p:BuildPortableSdk=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
-        /p:AzDoPat=$(System.AccessToken) \
-        $portableRuntimeArg
+        /p:AzDoPat=$(System.AccessToken)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 180
@@ -211,10 +206,6 @@ jobs:
   - script: |
       set -ex
       df -h
-      portableRuntimeArg=
-      if [ "$(alwaysBuildPortableRuntime)" = "true" ]; then
-        portableRuntimeArg="/p:BuildPortableRuntime=true"
-      fi
       networkArg=
       if [ "$(sb.tarballOffline)" = "true" ]; then
         networkArg="--network=none"
@@ -225,11 +216,11 @@ jobs:
       fi
       $(docker.run) $(docker.tb.map) $(docker.tb.work) $networkArg $(imageName) "$(tarballName)/build.sh" -- \
         /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
+        /p:BuildPortableRuntime=$(sb.portable) \
+        /p:BuildPortableSdk=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
         /p:FailOnPrebuiltBaselineError=true \
-        $poisonArg \
-        $portableRuntimeArg
+        $poisonArg 
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build tarball
     timeoutInMinutes: 150

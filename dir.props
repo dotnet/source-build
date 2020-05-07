@@ -12,19 +12,11 @@
 
     <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
     
-    <!-- new supported portable/nonportable options, default based on old options if set, otherwise just regular defaults -->
-    <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == '' and '$(PortableBuild)' == 'false'">false</BuildPortableRuntime>
-    <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == '' and '$(PortableBuild)' == 'true'">true</BuildPortableRuntime>
+    <!-- new supported portable/nonportable options.  These control whether to build portable runtime
+         or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
+         no longer be passed in.  -->
     <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == ''">false</BuildPortableRuntime>
-    <BuildNonPortableRuntime Condition="'$(BuildNonPortableRuntime)' == '' and '$(PortableBuild)' == 'false'">true</BuildNonPortableRuntime>
-    <BuildNonPortableRuntime Condition="'$(BuildNonPortableRuntime)' == '' and '$(PortableBuild)' == 'true'">false</BuildNonPortableRuntime>
-    <BuildNonPortableRuntime Condition="'$(BuildNonPortableRuntime)' == ''">true</BuildNonPortableRuntime>
-    <BuildPortableSdk Condition="'$(BuildPortableSdk)' == '' and '$(PortableBuild)' == 'false'">false</BuildPortableSdk>
-    <BuildPortableSdk Condition="'$(BuildPortableSdk)' == '' and '$(PortableBuild)' == 'true'">true</BuildPortableSdk>
     <BuildPortableSdk Condition="'$(BuildPortableSdk)' == ''">false</BuildPortableSdk>
-    <BuildNonPortableSdk Condition="'$(BuildNonPortableSdk)' == '' and '$(PortableBuild)' == 'false'">true</BuildNonPortableSdk>
-    <BuildNonPortableSdk Condition="'$(BuildNonPortableSdk)' == '' and '$(PortableBuild)' == 'true'">false</BuildNonPortableSdk>
-    <BuildNonPortableSdk Condition="'$(BuildNonPortableSdk)' == ''">true</BuildNonPortableSdk>
   </PropertyGroup>
 
   <PropertyGroup>

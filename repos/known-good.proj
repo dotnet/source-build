@@ -43,7 +43,7 @@
 
         <!-- Tier 2 -->
         <RepositoryReference Include="linker" />
-        <RepositoryReference Include="runtime" Condition="'$(BuildNonPortableRuntime)' == 'true'"/>
+        <RepositoryReference Include="runtime" />
         <RepositoryReference Include="runtime-portable" Condition="'$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
         <!--RepositoryReference Include="msbuild" /-->
         <!--RepositoryReference Include="templating" /-->
