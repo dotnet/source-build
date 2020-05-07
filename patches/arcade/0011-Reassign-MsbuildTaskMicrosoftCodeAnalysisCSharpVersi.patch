@@ -3,6 +3,9 @@ From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 6 May 2020 15:02:25 +0000
 Subject: [PATCH] Reassign MsbuildTaskMicrosoftCodeAnalysisCSharpVersion in
  offline build
+ Arcade has a special version prop for CodeAnalysis.CSharp in GenFacades
+ to try to match the version loaded by msbuild.  In the offline build, this
+ is simply the source-built version. 
 
 ---
  src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj | 1 +

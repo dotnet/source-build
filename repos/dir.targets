@@ -113,7 +113,7 @@
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="ExtraSources"
                             SourcePath="$(ExtraRestoreSourcePath)"
-                            Condition="'$(OfflineBuild)' == 'true' AND '$(ExtraRestoreSourcePath)' != ''" />
+                            Condition="'$(ExtraRestoreSourcePath)' != ''" />
   </Target>
 
   <Target Name="UpdateGlobalJsonVersions"
