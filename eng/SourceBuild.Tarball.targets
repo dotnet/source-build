@@ -1,0 +1,375 @@
+<Project>
+
+  <Target Name="PackSourceBuildTarball"
+          Condition="'$(PackSourceBuildTarball)' == 'true'"
+          DependsOnTargets="
+            GetTarballDirProps;
+            AddTarballSource;
+            AddTarballSourcelinkMetadata;
+            AddTarballTools;
+            AddTarballGeneratedSource;
+            AddTarballPackages;
+            AddTarballExternalTarballs;
+            AddTarballIlSrc;
+            AddTarballCommitInfo;
+            AddTarballLeakDetection;
+            CopyTarballFiles;
+            RemoveTarballKnownExtraPrebuilts;
+            ForbidPrebuilts;
+            "
+          AfterTargets="Execute" />
+
+  <Import Project="SourceBuild.Tarball.KnownExtraPrebuilts.targets" />
+
+  <Import
+    Project="SourceBuild.Tarball.DestructiveCleanup.targets"
+    Condition="'$(DestructiveIntermediateClean)' == 'true'"/>
+
+  <Target Name="GetTarballDirProps">
+    <PropertyGroup>
+      <TarballRootDir>$([MSBuild]::NormalizeDirectory('$(TarballRoot)'))</TarballRootDir>
+      <TarballSourceDir>$([MSBuild]::NormalizeDirectory('$(TarballRootDir)', 'src'))</TarballSourceDir>
+      <TarballPrebuiltPackageDir>$([MSBuild]::NormalizeDirectory('$(TarballRootDir)', 'packages', 'prebuilt'))</TarballPrebuiltPackageDir>
+    </PropertyGroup>
+  </Target>
+
+  <Target Name="AddTarballSource"
+          DependsOnTargets="
+            GetTarballDirProps;
+            GetCommonDarcCloneCommand"
+          Condition="'$(SkipAddTarballSource)' != 'true'">
+    <!--
+      Use Git to put sources in the tarball. This ensure it's fresh, without having to clean and
+      reset the working dir. This helps preserve diagnostic information if the tarball build doesn't
+      work.
+    -->
+    <Exec
+      Command="git --work-tree=&quot;$(TarballRootDir)&quot; checkout HEAD -- src"
+      WorkingDirectory="$(ProjectDir)" />
+
+    <!--
+      Now re-uberclone into the tarball src directory. Since we reuse the .gitdirs, this shouldn't
+      hit the network at all.
+    -->
+    <Exec
+      Command="$(DarcCloneCommand) --repos-folder $(TarballSourceDir)"
+      WorkingDirectory="$(ProjectDir)" />
+
+    <Message Importance="High" Text="Darc clone into tarball complete." />
+
+    <ItemGroup>
+      <TarballSrcBinaryExtension Include="
+        .dll;
+        .Dll;
+        .exe;
+        .pdb;
+        .mdb;
+        .zip;
+        .nupkg" />
+
+      <TarballSrcBinaryToRemove Include="$(TarballSourceDir)**\*%(TarballSrcBinaryExtension.Identity)" />
+    </ItemGroup>
+
+    <Delete Files="@(TarballSrcBinaryToRemove)" />
+
+    <ItemGroup>
+      <MasterRepositoryDirToRemove
+        Include="$([System.IO.Directory]::GetDirectories('$(TarballSourceDir)'))" />
+
+      <!-- Keep known source dirs and non-master repo dirs. -->
+      <MasterRepositoryDirToRemove Remove="$(TarballSourceDir)reference-assemblies" />
+      <MasterRepositoryDirToRemove Remove="$(TarballSourceDir)netcorecli-fsc" />
+      <MasterRepositoryDirToRemove Remove="$(TarballSourceDir)package-source-build" />
+      <MasterRepositoryDirToRemove
+        Remove="@(MasterRepositoryDirToRemove)"
+        Condition="
+          $([System.Text.RegularExpressions.Regex]::IsMatch(
+            '%(Identity)',
+            '\.[A-Fa-f0-9]{40}$'))" />
+    </ItemGroup>
+
+    <RemoveDir Directories="@(MasterRepositoryDirToRemove)" />
+  </Target>
+
+  <Target Name="AddTarballSourcelinkMetadata">
+    <ItemGroup>
+      <ArtifactsGitDir Include="$(ClonedSubmoduleDirectory)**\.git\**\*" />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(ArtifactsGitDir)"
+      DestinationFiles="@(ArtifactsGitDir -> '$(TarballSourceDir)%(RecursiveDir)%(Filename)%(Extension)')" />
+  </Target>
+
+  <Target Name="AddTarballTools">
+    <ItemGroup>
+      <TarballRootToolFile
+        Include="
+          $(ProjectDir)*.proj;
+          $(ProjectDir)*.props;
+          $(ProjectDir)*.targets;
+          $(ProjectDir)global.json;
+          $(ProjectDir)DarcVersion.txt;
+          $(ProjectDir)ProdConFeed.txt;
+          $(ProjectDir)smoke-test*;
+          $(ProjectDir)eng\**;
+          $(ProjectDir)keys\**;
+          $(ProjectDir)patches\**;
+          $(ProjectDir)scripts\**;
+          $(ProjectDir)repos\**;
+          $(ProjectDir)tools-local\**;
+          "
+        Exclude="
+          $(ProjectDir)tools-local\arcade-services\**;
+          $(ProjectDir)tools-local\tasks\*\bin\**;
+          $(ProjectDir)tools-local\tasks\*\obj\**;
+          " />
+
+      <TarballRootToolFile
+        Include="$(DotNetCliToolDir)**"
+        Exclude="
+          $(DotNetCliToolDir)shared\2.1.0\**;
+          $(DotNetCliToolDir)tools\**;
+          "
+        Condition="'$(CustomDotNetSdkDir)' == ''"/>
+
+      <TarballCopyFile
+        Include="@(TarballRootToolFile)"
+        RelativeDestination="$([MSBuild]::MakeRelative('$(ProjectDir)', '%(Identity)'))" />
+
+      <TarballGitInfoFile Include="$(ProjectDir)artifacts\git-info\**" />
+      <TarballCopyFile
+        Include="@(TarballGitInfoFile)"
+        RelativeDestination="git-info\%(RecursiveDir)%(Filename)%(Extension)" />
+
+      <TarballBootstrappingToolFile Include="$(ProjectDir)support\tarball\tool-bootstrapping/**;" />
+      <TarballCopyFile
+        Include="@(TarballBootstrappingToolFile)"
+        RelativeDestination="tool-bootstrapping\%(RecursiveDir)%(Filename)%(Extension)" />
+
+      <TarballCopyFile
+        Include="$(ProjectDir)support/tarball/build.sh"
+        RelativeDestination="build.sh" />
+
+      <!-- Setup package version props to include both source-built and running PackageVersions.props -->
+      <TarballCopyFile
+        Include="$(ProjectDir)support\tarball\PackageVersions.props"
+        RelativeRoot="artifacts/obj/$(Platform)/Release/" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddTarballPackages">
+    <!-- Remove reference-packages from tarball prebuilts...-->
+    <ItemGroup Condition="'$(CustomRefPackagesDir)' != ''">
+      <ExcludePrebuiltPackageFile Include="$(CustomRefPackagesDir)**\*.nupkg" />
+    </ItemGroup>
+
+    <Exec
+      Command="tar -tf $(ExternalTarballsDir)Private.SourceBuild.ReferencePackages.*.tar.gz | tr '[:upper:]' '[:lower:]'"
+      ConsoleToMsBuild="true"
+      StandardOutputImportance="low"
+      Condition="'$(CustomRefPackagesDir)' == ''">
+      <Output TaskParameter="ConsoleOutput" ItemName="SourceBuildReferencePackageFile" />
+    </Exec>
+
+    <!-- Remove previously source-built packages from tarball prebuilts... -->
+    <ItemGroup Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' != ''">
+      <ExcludePrebuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
+    </ItemGroup>
+
+    <Exec
+      Command="tar -tf $(ExternalTarballsDir)Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'"
+      ConsoleToMsBuild="true"
+      StandardOutputImportance="low"
+      Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' == ''">
+      <Output TaskParameter="ConsoleOutput" ItemName="PreviouslySourceBuiltPackageFile" />
+    </Exec>
+
+    <!-- Add packages to the tarball. -->
+    <ItemGroup>
+      <!-- Set up prebuilt nupkg filenames from tarballs to exclude. -->
+      <SourceBuildReferencePackageFilename Include="@(SourceBuildReferencePackageFile -> '%(Filename)')" />
+      <PreviouslySourceBuiltPackageFilename Include="@(PreviouslySourceBuiltPackageFile -> '%(Filename)')" />
+
+      <!-- Remove source-built packages from tarball prebuilts... -->
+      <SourceBuiltPackageFile Include="$(SourceBuiltPackagesPath)**\*.nupkg" />
+      <SourceBuiltPackageFilename Include="@(SourceBuiltPackageFile -> '%(Filename)')" />
+
+      <!-- Remove reference-only packages from tarball prebuilts... -->
+      <RefOnlyPackageFile Include="$(ReferencePackagesToDeleteDir)**\*.nupkg" />
+      <RefOnlyPackageFilename Include="@(RefOnlyPackageFile -> '%(Filename)')" />
+
+      <!-- Find prebuilts and smoke-test prebuilts to copy (with exclusions). -->
+      <PrebuiltPackageFile
+        Include="
+          $(ProjectDir)packages\restored\**\*.nupkg;
+          $(LocalNuGetPackagesRoot)**\*.nupkg;
+          " />
+      <PrebuiltPackageFile
+        RelativeDestination="packages\prebuilt\%(Filename)%(Extension)" />
+
+      <SmokeTestPackageFile
+        Include="$(ProjectDir)testing-smoke\smoke-test-packages\**"
+        RelativeRoot="packages\smoke-test-packages\" />
+
+      <!-- Set identity to the filename to allow for Remove, but keep old identity to swap back. -->
+      <IncludedPrebuiltPackageFilename
+        Include="
+          @(PrebuiltPackageFile -> '%(Filename)');
+          @(SmokeTestPackageFile -> '%(Filename)');
+          "
+        OriginalIdentity="%(Identity)" />
+
+      <IncludedPrebuiltPackageFilename Remove="
+        @(SourceBuiltPackageFilename);
+        @(SourceBuildReferencePackageFilename);
+        @(PreviouslySourceBuiltPackageFilename);
+        @(RefOnlyPackageFilename);
+        " />
+
+      <IncludedPrebuiltPackageFile
+        Include="@(IncludedPrebuiltPackageFilename -> '%(OriginalIdentity)')" />
+
+      <!-- Add prebuilt packages to tarball. -->
+      <TarballCopyFile Include="@(IncludedPrebuiltPackageFile)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddTarballExternalTarballs">
+    <ItemGroup>
+      <ExternalTarballFile
+        Include="$(ExternalTarballsDir)*.tar.gz"
+        RelativeRoot="packages\archive\" />
+
+      <TarballCopyFile Include="@(ExternalTarballFile);" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddTarballIlSrc"
+          DependsOnTargets="AddTarballPackages">
+    <ItemGroup>
+      <!--
+        The il directories are decomposed into id/version, so assemble package names to see what
+        should be excluded.
+      -->
+      <IlSrcIdDir Include="$([System.IO.Directory]::GetDirectories('$(ReferencePackagesBaseDir)staging\'))" />
+      <IlSrcIdVersionDir
+        Include="$([System.IO.Directory]::GetDirectories('%(IlSrcIdDir.Identity)'))"
+        Id="$([System.IO.Path]::GetFileName('%(IlSrcIdDir.Identity)'))" />
+      <IlSrcIdVersionDir Version="$([System.IO.Path]::GetFileName('%(Identity)'))" />
+
+      <IlSrcIdVersionDirNupkgFilename
+        Include="@(IlSrcIdVersionDir -> '%(Id).%(Version)')"
+        OriginalPath="%(Identity)" />
+
+      <!-- Remove source-built, previously source-built packages and reference packages from il pkg src... -->
+      <IlSrcIdVersionDirNupkgFilename Remove="
+        @(SourceBuiltPackageFilename);
+        @(SourceBuildReferencePackageFilename);
+        @(PreviouslySourceBuiltPackageFilename);
+        " />
+
+      <IlSrcPrebuiltDir Include="@(IlSrcIdVersionDirNupkgFilename -> '%(OriginalPath)\')" />
+
+      <RefPackageSourceFile
+        Include="$(ReferencePackagesBaseDir)source\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\**"
+        Condition="'@(IlSrcPrebuiltDir)' != ''"
+        Orig="%(IlSrcPrebuiltDir.Identity)"
+        RelativeRoot="packages\reference\source\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\" />
+
+      <RefPackageStagingFile
+        Include="%(IlSrcPrebuiltDir.Identity)**"
+        Condition="'@(IlSrcPrebuiltDir)' != ''"
+        Orig="%(IlSrcPrebuiltDir.Identity)"
+        RelativeRoot="packages\reference\staging\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\" />
+
+      <TarballCopyFile Include="
+        @(RefPackageSourceFile);
+        @(RefPackageStagingFile);
+        " />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="AddTarballGeneratedSource">
+    <ItemGroup>
+      <TarballCopyFile
+        Include="$(GeneratedSourcePathOnline)**"
+        RelativeRoot="src\generatedSrc\" />
+    </ItemGroup>
+  </Target>
+
+  <!--
+    Record commits for the source-build repo and all submodules, to aid in reproducibility...
+  -->
+  <Target Name="AddTarballCommitInfo"
+          Condition="'$(SkipAddTarballCommitInfo)' != 'true'">
+    <PropertyGroup>
+      <SourceBuildInfoFile>$(TarballRootDir)source-build-info.txt</SourceBuildInfoFile>
+    </PropertyGroup>
+
+    <Exec
+      Command="(
+        echo 'source-build:';
+        echo ' '%24(git rev-parse HEAD)' . ('%24(git describe --always HEAD)')';
+        echo ''
+        echo 'submodules:'
+        echo %24(git submodule status --recursive)
+        ) > $(SourceBuildInfoFile)"
+      WorkingDirectory="$(ProjectDir)"
+      StandardOutputImportance="low" />
+  </Target>
+
+  <Target Name="AddTarballLeakDetection"
+          Condition="'$(IncludeLeakDetection)' == 'true'">
+    <PropertyGroup>
+      <LeakDetectionProjectFile>$(ProjectDir)tools-local\tasks\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj</LeakDetectionProjectFile>
+    </PropertyGroup>
+
+    <MSBuild
+      Projects="$(LeakDetectionProjectFile)"
+      Targets="Restore"
+      Properties="RestoreSources=$(TarballRootDir)packages/source-built%3B$(TarballRootDir)packages/prebuilt"/>
+
+    <MSBuild
+      Projects="$(LeakDetectionProjectFile)"
+      Targets="Publish"
+      Properties="OutputPath=$(TarballRootDir)tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection"/>
+  </Target>
+
+  <Target Name="CopyTarballFiles">
+    <ItemGroup>
+      <TarballCopyFile
+        Condition="
+          '%(TarballCopyFile.RelativeDestination)' == '' and
+          '%(TarballCopyFile.RelativeRoot)' != ''"
+        RelativeDestination="%(TarballCopyFile.RelativeRoot)%(TarballCopyFile.RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+
+    <Copy
+      SourceFiles="@(TarballCopyFile)"
+      DestinationFiles="@(TarballCopyFile -> '$(TarballRootDir)%(RelativeDestination)')" />
+  </Target>
+
+  <!-- Check for any remaining prebuilts... -->
+  <Target Name="ForbidPrebuilts"
+          Condition="'$(SkipPrebuiltEnforcement)' != 'true'">
+    <ItemGroup>
+      <!--
+        'Exclude' is an escape hatch for prebuilts, but none are allowed as of writing this target.
+        If necessary, define a target in a separate targets file (to avoid clutter) that sets up the
+        exclusion items and runs with BeforeTargets="ForbidPrebuilts".
+      -->
+      <ForbiddenPrebuiltPackageFile
+        Include="$(TarballPrebuiltPackageDir)**\*.nupkg"
+        Exclude="@(AllowedPrebuiltPackageFile)" />
+    </ItemGroup>
+
+    <PropertyGroup Condition="'@(ForbiddenPrebuiltPackageFile)' != ''">
+      <PrebuiltErrorText>Detected forbidden prebuilts. They must be removed, or explicitly allowed (see target for details):</PrebuiltErrorText>
+      <PrebuiltErrorText>$(PrebuiltErrorText)%0A@(ForbiddenPrebuiltPackageFile -> '%(Identity)', '%0A')</PrebuiltErrorText>
+    </PropertyGroup>
+
+    <Error Text="$(PrebuiltErrorText)" Condition="'$(PrebuiltErrorText)' != ''" />
+  </Target>
+
+</Project>
