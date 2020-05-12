@@ -4,7 +4,7 @@
     Below are some destructive cleanup steps that we optionally perform during tarball creation.
     These are used in CI to avoid filling up disk space, when we have weak build agents. These steps
     are not generally suitable for dev scenarios because they delete intermediate data that might
-    have taken quite a while to download or create.
+    have taken quite a while to download or create, and Git data that may be in-progress work.
   -->
 
   <!--
@@ -59,12 +59,11 @@
 
       <!-- Delete the master copies - we only need the specific hashes. -->
       <LocalGitDirToRemove
-        Include="$(TarballSourceDir)*"
+        Include="$([System.IO.Directory]::GetDirectories('$(TarballSourceDir)'))"
         Exclude="
           $(TarballSourceDir)reference-assemblies;
           $(TarballSourceDir)netcorecli-fsc"
         Condition="
-          $([System.IO.Directory]::Exists('%(Identity)')) and
           !$([System.Text.RegularExpressions.Regex]::IsMatch(
             '%(Identity)',
             '\.[A-Fa-f0-9]{40}'))" />
