@@ -53,29 +53,11 @@
 
   <Target Name="DestructiveIntermediateCleanTarballSource"
           AfterTargets="AddTarballSource">
-    <ItemGroup>
-      <!-- Now we don't need .git/modules/src anymore. -->
-      <LocalGitDirToRemove Include="$(ClonedSubmoduleGitRootDirectory)" />
+    <!-- Now we don't need .git/modules/src anymore. -->
+    <RemoveDir Directories="$(ClonedSubmoduleGitRootDirectory)" />
 
-      <!-- Delete the master copies - we only need the specific hashes. -->
-      <LocalGitDirToRemove
-        Include="$([System.IO.Directory]::GetDirectories('$(TarballSourceDir)'))"
-        Exclude="
-          $(TarballSourceDir)reference-assemblies;
-          $(TarballSourceDir)netcorecli-fsc"
-        Condition="
-          !$([System.Text.RegularExpressions.Regex]::IsMatch(
-            '%(Identity)',
-            '\.[A-Fa-f0-9]{40}'))" />
-    </ItemGroup>
-
-    <RemoveDir Directories="@(LocalGitDirToRemove)" />
-
-    <ItemGroup>
-      <TarballCoreClrTestsDir Include="$(TarballSourceDir)coreclr.*/tests" />
-    </ItemGroup>
-
-    <RemoveDir Directories="@(TarballCoreClrTestsDir)" />
+    <!-- we don't build CoreCLR tests right now and they have a lot of them - ~380MB -->
+    <Exec Command="rm -rf '$(TarballSourceDir)coreclr.'*'/tests'" />
   </Target>
 
 </Project>
