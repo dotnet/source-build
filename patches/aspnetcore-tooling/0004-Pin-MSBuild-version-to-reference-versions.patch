@@ -1,7 +1,7 @@
-From 7aaf76c72b2b5bb9781eca190ae59920e8def8b8 Mon Sep 17 00:00:00 2001
-From: adaggarwal <aditya.aggarwal@microsoft.com>
-Date: Wed, 13 Nov 2019 16:35:48 +0000
-Subject: [PATCH 4/4] Pin MSBuild version to reference versions
+From 266ab46a74e95417479013537d09594043772105 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 15 May 2020 16:32:21 +0000
+Subject: [PATCH] Pin MSBuild version to reference versions
 
 ---
  src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj  | 4 ++--
@@ -24,7 +24,7 @@ index 4f8ecce..5a433ed 100644
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net472'" />
  
 diff --git a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
-index 128866b..5abcc32 100644
+index 3ea0d8e..74fc451 100644
 --- a/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
 +++ b/src/Razor/src/Microsoft.VisualStudio.LanguageServices.Razor/Microsoft.VisualStudio.LanguageServices.Razor.csproj
 @@ -18,8 +18,8 @@
@@ -35,9 +35,9 @@ index 128866b..5abcc32 100644
 -    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" />
 +    <PackageReference Include="Microsoft.Build" Version="15.7.179" />
 +    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
-     <PackageReference Include="Microsoft.CodeAnalysis" Version="$(VSIX_MicrosoftCodeAnalysisPackageVersion)" />
-     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(VSIX_MicrosoftCodeAnalysisAnalyzersPackageVersion)" NoWarn="NU1608" />
-     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(VSIX_MicrosoftCodeAnalysisCommonPackageVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis" Version="$(Tooling_MicrosoftCodeAnalysisPackageVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(Tooling_MicrosoftCodeAnalysisAnalyzersPackageVersion)" NoWarn="NU1608" />
+     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(Tooling_MicrosoftCodeAnalysisCommonPackageVersion)" />
 -- 
-2.7.4
+1.8.3.1
 

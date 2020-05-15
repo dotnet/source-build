@@ -1,6 +1,6 @@
-From 1f973c3a7fc244321a48a5ef9fc819f9df74999b Mon Sep 17 00:00:00 2001
-From: Nikola Milosavljevic <nikolam@microsoft.com>
-Date: Tue, 17 Sep 2019 19:13:32 +0000
+From 0fbce434cd42d87a97ef0cfe8b747ebbbd5ec6e1 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 15 May 2020 17:37:14 +0000
 Subject: [PATCH] Do not build NET Fx binaries in source build
 
 ---
@@ -9,27 +9,27 @@ Subject: [PATCH] Do not build NET Fx binaries in source build
  2 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
-index 9cb703b..dc53155 100644
+index c1d6278..a1a1248 100644
 --- a/build/common.project.props
 +++ b/build/common.project.props
-@@ -15,7 +15,9 @@
+@@ -16,7 +16,9 @@
      <NETCoreTargetFramework>netcoreapp2.1</NETCoreTargetFramework>
      <NetStandardVersion>netstandard2.0</NetStandardVersion>
      <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFramework)</TargetFrameworksExe>
 +    <TargetFrameworksExe Condition="'$(DotNetBuildFromSource)' == 'true'">$(NETCoreTargetFramework)</TargetFrameworksExe>
      <TargetFrameworksLibrary>$(NETFXTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
-+    <TargetFrameworksLibrary Condition="'$(DotNetBuildFromSource)' == 'true'">$(NetStandardVersion)</TargetFrameworksLibrary> 
++    <TargetFrameworksLibrary Condition="'$(DotNetBuildFromSource)' == 'true'">$(NetStandardVersion)</TargetFrameworksLibrary>
      <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
      <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
      <SolutionFile>$(RepositoryRootDirectory)$(RepositoryName).sln</SolutionFile>
 diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
-index 3db2db2..340b774 100644
+index 94af373..0730a3a 100644
 --- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 +++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 @@ -4,7 +4,8 @@
  
    <PropertyGroup>
-     <Description>The understanding of target frameworks for NuGet.Packaging.</Description>
+     <Description>NuGet's understanding of target frameworks.</Description>
 -    <TargetFrameworks>$(TargetFrameworksLibrary);net40</TargetFrameworks>
 +    <TargetFrameworks>$(TargetFrameworksLibrary)</TargetFrameworks>
 +    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' != 'true'">$(TargetFrameworks);net40</TargetFrameworks>

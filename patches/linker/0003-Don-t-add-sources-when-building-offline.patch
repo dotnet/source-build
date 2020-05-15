@@ -1,6 +1,6 @@
-From 1a67d7ad94ba8acc1ed9e9d87edd6ea4bfb851af Mon Sep 17 00:00:00 2001
-From: Chris Rummel <crummel@microsoft.com>
-Date: Thu, 20 Jun 2019 14:33:10 -0500
+From e9489f4725e6ba261818b074836ada1f6656a946 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 15 May 2020 17:16:40 +0000
 Subject: [PATCH] Don't add sources when building offline.
 
 ---
@@ -8,13 +8,13 @@ Subject: [PATCH] Don't add sources when building offline.
  1 file changed, 4 insertions(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 419ba90..dd4099f 100644
+index 9c23b0c..f569224 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -12,5 +12,9 @@
-     <SystemReflectionMetadataVersion>1.5.0</SystemReflectionMetadataVersion>
-     <MicrosoftBuildFrameworkVersion>15.4.8</MicrosoftBuildFrameworkVersion>
-     <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
+@@ -23,5 +23,9 @@
+     <MicrosoftDotNetApiCompatVersion>5.0.0-beta.20201.2</MicrosoftDotNetApiCompatVersion>
+     <!-- We depend on (and redistribute) the official Mono.Cecil NuGet package built from https://github.com/jbevain/cecil -->
+     <MonoCecilVersion>0.11.2</MonoCecilVersion>
 +    <RestoreSources Condition="'$(DotNetBuildOffline)' != 'true'">
 +      $(RestoreSources);
 +      https://dotnetfeed.blob.core.windows.net/dotnet-coreclr/index.json

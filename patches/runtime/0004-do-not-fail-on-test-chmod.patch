@@ -1,6 +1,6 @@
-From f6ecdd9b9bec7b3d9749955b2c0b70f2a2c90b3b Mon Sep 17 00:00:00 2001
+From 4aafc84e554477eacb75885a6f129f9376f486f0 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
-Date: Tue, 7 Jan 2020 20:44:38 +0000
+Date: Fri, 15 May 2020 16:02:54 +0000
 Subject: [PATCH] do not fail on test chmod
 
 ---
@@ -8,18 +8,18 @@ Subject: [PATCH] do not fail on test chmod
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/restore/runtime/runtime.depproj
-index 0abad68..846c296 100644
+index 3179312..b88c71f 100644
 --- a/src/libraries/restore/runtime/runtime.depproj
 +++ b/src/libraries/restore/runtime/runtime.depproj
-@@ -70,7 +70,7 @@
+@@ -65,7 +65,7 @@
            SkipUnchangedFiles="true"
            UseHardlinksIfPossible="$(UseHardlink)" />
  
--    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension)" Condition="'$(TargetOS)' != 'Windows_NT'"/>
-+    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension) || true" Condition="'$(TargetOS)' != 'Windows_NT'"/>
+-    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension)" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
++    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension) || true" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
    </Target>
  
-   <Target Name="OverrideRuntimeCoreCLR"
+   <Target Name="SetupRuntimePackNative"
 -- 
 1.8.3.1
 
