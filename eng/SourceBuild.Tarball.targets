@@ -161,7 +161,7 @@
   <Target Name="AddTarballPackages">
     <!-- Remove reference-packages from tarball prebuilts...-->
     <ItemGroup Condition="'$(CustomRefPackagesDir)' != ''">
-      <ExcludePrebuiltPackageFile Include="$(CustomRefPackagesDir)**\*.nupkg" />
+      <SourceBuildReferencePackageFile Include="$(CustomRefPackagesDir)**\*.nupkg" />
     </ItemGroup>
 
     <Exec
@@ -174,7 +174,7 @@
 
     <!-- Remove previously source-built packages from tarball prebuilts... -->
     <ItemGroup Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' != ''">
-      <ExcludePrebuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
+      <PreviouslySourceBuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
     </ItemGroup>
 
     <Exec
