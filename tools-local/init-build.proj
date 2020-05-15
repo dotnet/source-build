@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <Target Name="Build"
-    Inputs="$(TargetInfoProps)"
+    Inputs="$(MSBuildThisFile)"
     Outputs="$(BuildCompetedSuccessSemaphore)"
     >
     <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;ExtractToolPackage;InstallSourceBuildSdkResolver;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
