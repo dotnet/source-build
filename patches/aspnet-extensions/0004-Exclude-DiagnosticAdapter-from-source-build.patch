@@ -1,0 +1,26 @@
+From c12a7ef7bcc068523cd4157afd62d8569db96ef5 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 14 May 2020 18:13:54 +0000
+Subject: [PATCH] Exclude DiagnosticAdapter from source build This project is
+ used for tests only, which aren't built in source-build.  Plus, it is being
+ removed from aspnet-extensions in preview4.
+
+---
+ src/DiagnosticAdapter/ref/Microsoft.Extensions.DiagnosticAdapter.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/DiagnosticAdapter/ref/Microsoft.Extensions.DiagnosticAdapter.csproj b/src/DiagnosticAdapter/ref/Microsoft.Extensions.DiagnosticAdapter.csproj
+index 57dd0b0..4c81d3b 100644
+--- a/src/DiagnosticAdapter/ref/Microsoft.Extensions.DiagnosticAdapter.csproj
++++ b/src/DiagnosticAdapter/ref/Microsoft.Extensions.DiagnosticAdapter.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netcoreapp2.0</TargetFrameworks>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.DiagnosticAdapter.netstandard2.0.cs" />
+-- 
+1.8.3.1
+

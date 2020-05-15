@@ -53,7 +53,7 @@ index e5e8d92..b0a7c5e 100644
      <!-- Paths to tools, tasks, and extensions are calculated relative to the RazorSdkDirectoryRoot. This can be modified to test a local build. -->
      <RazorSdkDirectoryRoot Condition="'$(RazorSdkDirectoryRoot)'==''">$(MSBuildThisFileDirectory)..\..\</RazorSdkDirectoryRoot>
      <RazorSdkBuildTasksDirectoryRoot Condition="'$(RazorSdkBuildTasksDirectoryRoot)'==''">$(RazorSdkDirectoryRoot)tasks\</RazorSdkBuildTasksDirectoryRoot>
--    <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">netcoreapp3.1</_RazorSdkTasksTFM>
+-    <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">netcoreapp5.0</_RazorSdkTasksTFM>
 -    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net46</_RazorSdkTasksTFM>
 +    <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(DefaultNetCoreTargetFramework)</_RazorSdkTasksTFM>
 +    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net472</_RazorSdkTasksTFM>
