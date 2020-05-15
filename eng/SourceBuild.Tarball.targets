@@ -159,7 +159,7 @@
   </Target>
 
   <Target Name="AddTarballPackages">
-    <!-- Remove reference-packages from tarball prebuilts...-->
+    <!-- Find reference-packages to exclude from tarball prebuilts...-->
     <ItemGroup Condition="'$(CustomRefPackagesDir)' != ''">
       <SourceBuildReferencePackageFile Include="$(CustomRefPackagesDir)**\*.nupkg" />
     </ItemGroup>
@@ -172,7 +172,11 @@
       <Output TaskParameter="ConsoleOutput" ItemName="SourceBuildReferencePackageFile" />
     </Exec>
 
-    <!-- Remove previously source-built packages from tarball prebuilts... -->
+    <ItemGroup>
+      <SourceBuildReferencePackageFilename Include="@(SourceBuildReferencePackageFile -> '%(Filename)')" />
+    </ItemGroup>
+
+    <!-- Find previously source-built packages to exclude from tarball prebuilts... -->
     <ItemGroup Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' != ''">
       <PreviouslySourceBuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
     </ItemGroup>
@@ -185,17 +189,16 @@
       <Output TaskParameter="ConsoleOutput" ItemName="PreviouslySourceBuiltPackageFile" />
     </Exec>
 
-    <!-- Add packages to the tarball. -->
     <ItemGroup>
-      <!-- Set up prebuilt nupkg filenames from tarballs to exclude. -->
-      <SourceBuildReferencePackageFilename Include="@(SourceBuildReferencePackageFile -> '%(Filename)')" />
       <PreviouslySourceBuiltPackageFilename Include="@(PreviouslySourceBuiltPackageFile -> '%(Filename)')" />
+    </ItemGroup>
 
-      <!-- Remove source-built packages from tarball prebuilts... -->
+    <ItemGroup>
+      <!-- Find source-built packages to exclude from tarball prebuilts... -->
       <SourceBuiltPackageFile Include="$(SourceBuiltPackagesPath)**\*.nupkg" />
       <SourceBuiltPackageFilename Include="@(SourceBuiltPackageFile -> '%(Filename)')" />
 
-      <!-- Remove reference-only packages from tarball prebuilts... -->
+      <!-- Find reference-only packages to exclude from tarball prebuilts... -->
       <RefOnlyPackageFile Include="$(ReferencePackagesToDeleteDir)**\*.nupkg" />
       <RefOnlyPackageFilename Include="@(RefOnlyPackageFile -> '%(Filename)')" />
 
@@ -220,6 +223,7 @@
           "
         OriginalIdentity="%(Identity)" />
 
+      <!-- Exclude prebuilt nupkgs supplied a different way or not actually needed as prebuilts. -->
       <IncludedPrebuiltPackageFilename Remove="
         @(SourceBuiltPackageFilename);
         @(SourceBuildReferencePackageFilename);
