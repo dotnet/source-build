@@ -20,6 +20,7 @@
           AfterTargets="Execute" />
 
   <Import Project="SourceBuild.Tarball.KnownExtraPrebuilts.targets" />
+  <Import Project="SourceBuild.Tarball.AllowedPrebuilts.targets" />
 
   <Import
     Project="SourceBuild.Tarball.DestructiveCleanup.targets"
@@ -68,6 +69,11 @@
         .nupkg" />
 
       <TarballSrcBinaryToRemove Include="$(TarballSourceDir)**\*%(TarballSrcBinaryExtension.Identity)" />
+
+      <!-- CoreCLR and Installer have two empty placeholder PDB files. Keep them. -->
+      <TarballSrcBinaryToRemove Remove="
+        $(TarballSourceDir)coreclr\src\.nuget\**\*%(TarballSrcBinaryExtension.Identity);
+        $(TarballSourceDir)installer\pkg\**\*%(TarballSrcBinaryExtension.Identity)" />
     </ItemGroup>
 
     <Delete Files="@(TarballSrcBinaryToRemove)" />
@@ -198,10 +204,6 @@
       <SourceBuiltPackageFile Include="$(SourceBuiltPackagesPath)**\*.nupkg" />
       <SourceBuiltPackageFilename Include="@(SourceBuiltPackageFile -> '%(Filename)')" />
 
-      <!-- Find reference-only packages to exclude from tarball prebuilts... -->
-      <RefOnlyPackageFile Include="$(ReferencePackagesToDeleteDir)**\*.nupkg" />
-      <RefOnlyPackageFilename Include="@(RefOnlyPackageFile -> '%(Filename)')" />
-
       <!-- Find prebuilts and smoke-test prebuilts to copy (with exclusions). -->
       <PrebuiltPackageFile
         Include="
@@ -233,6 +235,18 @@
 
       <IncludedPrebuiltPackageFile
         Include="@(IncludedPrebuiltPackageFilename -> '%(OriginalIdentity)')" />
+
+      <!--
+        These Arcade prebuilts cannot be ref-pkgs because they get included in Arcade.
+        This should be temporary until nuget is built in 5.0.
+      -->
+      <ArcadePrebuiltPackageFilename Include="
+        nuget.versioning.4.4.0;
+        system.memory.4.5.3;
+        " />
+      <IncludedPrebuiltPackageFile
+        Include="$(ProjectDir)packages\restored\**\%(ArcadePrebuiltPackageFilename.Identity).nupkg"
+        RelativeRoot="packages\arcadeRequired\" />
 
       <!-- Add prebuilt packages to tarball. -->
       <TarballCopyFile Include="@(IncludedPrebuiltPackageFile)" />
