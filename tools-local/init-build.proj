@@ -169,38 +169,12 @@
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
   </Target>
 
-  <Target Name="AcquireDarc" Condition="'$(OfflineBuild)' != 'true'">
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Installing Darc." />
-    <Exec Command="$(RepositoryEngineeringDir)common/darc-init.sh --darcversion $(DarcVersion) --toolpath $(DarcInstallDir)" />
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done installing Darc." />
-  </Target>
-
-  <Target Name="FetchSources" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc">
+  <Target Name="FetchSources"
+          Condition="'$(OfflineBuild)' != 'true'"
+          DependsOnTargets="GetCommonDarcCloneCommand">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
-    <PropertyGroup>
-      <DarcCloneArguments>clone</DarcCloneArguments>
-      <DarcCloneArguments>$(DarcCloneArguments) --repos-folder $(ClonedSubmoduleDirectory)</DarcCloneArguments>
-      <DarcCloneArguments>$(DarcCloneArguments) --git-dir-folder $(ClonedSubmoduleGitRootDirectory)</DarcCloneArguments>
-      <DarcCloneArguments>$(DarcCloneArguments) --include-toolset</DarcCloneArguments>
-      <IgnoredRepos/>
-      <IgnoredRepos>$(IgnoredRepos);https://dev.azure.com/dnceng/internal/_git/dotnet-optimization</IgnoredRepos>
-      <IgnoredRepos>$(IgnoredRepos);https://dev.azure.com/devdiv/DevDiv/_git/DotNet-Trusted</IgnoredRepos>
-      <IgnoredRepos>$(IgnoredRepos);https://devdiv.visualstudio.com/DevDiv/_git/DotNet-Trusted</IgnoredRepos>
-      <IgnoredRepos>$(IgnoredRepos);https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-optimization</IgnoredRepos>
-      <IgnoredRepos>$(IgnoredRepos);https://dev.azure.com/dnceng/internal/_git/dotnet-core-setup</IgnoredRepos>
-      <IgnoredRepos>$(IgnoredRepos);https://github.com/dotnet/source-build-reference-packages</IgnoredRepos>
-      <DarcCloneArguments>$(DarcCloneArguments) --ignore-repos "$(IgnoredRepos)"</DarcCloneArguments>
-      <!-- required so Darc doesn't throw an error for missing auth -->
-      <AzDoPat Condition="'$(AzDoPat)' == ''">bogus</AzDoPat>
-      <DarcCloneArguments>$(DarcCloneArguments) --azdev-pat $(AzDoPat)</DarcCloneArguments>
-      <DarcCloneArguments>$(DarcCloneArguments) --github-pat bogus</DarcCloneArguments>
-      <!-- depth 0 should be sufficient for us since we explictly declare all our dependencies -->
-      <DarcCloneArguments>$(DarcCloneArguments) --depth 0</DarcCloneArguments>
-      <DarcCloneArguments>$(DarcCloneArguments) --debug</DarcCloneArguments>
-      <DarcCloneCommand>$(DotNetCliToolDir)dotnet $(DarcDll) $(DarcCloneArguments)</DarcCloneCommand>
-    </PropertyGroup>
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
-    <Exec Command="$(DarcCloneCommand)" WorkingDirectory="$(ProjectDir)"  />
+    <Exec Command="$(DarcCloneCommand) --repos-folder $(DarcCloneReposFolder)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
   </Target>
 
