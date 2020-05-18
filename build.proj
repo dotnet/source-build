@@ -1,11 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" InitialTargets="PrepareOutput" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="dir.props" />
-  <Import Project="eng/Versions.props" Condition="'$(OfflineBuild)' != 'true'" />
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="DownloadFileSB" />
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -55,7 +56,7 @@
   <Target Name="DownloadSourceBuildReferencePackages"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingReferencePackages)' != 'true'">
-    <DownloadFile 
+    <DownloadFileSB 
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
   </Target>
@@ -63,7 +64,7 @@
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'">
-    <DownloadFile 
+    <DownloadFileSB 
           SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
           DestinationFolder="$(ExternalTarballsDir)" />
   </Target>
@@ -79,7 +80,7 @@
     Dev scenario: rewrite a prebuilt-report. This makes it easy to add data to an existing
     prebuilt report without performing another full build. This doesn't reevalutate which packages
     are prebuilts or search the projects: it uses the existing usage.xml file to generate report
-    XMLs based on the info put in bin/.
+    XMLs based on the info put in artifacts/.
   -->
   <Target Name="RewritePrebuiltUsageReport">
     <MSBuild Projects="repos\$(RootRepo).proj" Targets="ReportPrebuiltUsage" />
@@ -151,7 +152,5 @@
                    Items="@(ItemsToPublish)"
                    Overwrite="true" />
   </Target>
-
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
 
 </Project>

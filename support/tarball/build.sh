@@ -90,6 +90,7 @@ else
 fi
 
 packageVersionsPath=''
+restoredPackagesDir="$SCRIPT_ROOT/packages/restored"
 
 if [ -d "$SCRIPT_ROOT/packages/archive" ]; then
   sourceBuiltArchive=`find $SCRIPT_ROOT/packages/archive -maxdepth 1 -name 'Private.SourceBuilt.Artifacts*.tar.gz'`
@@ -114,6 +115,13 @@ arcadeSdkLine=`grep -m 1 'MicrosoftDotNetArcadeSdkVersion' "$packageVersionsPath
 versionPattern="<MicrosoftDotNetArcadeSdkVersion>(.*)</MicrosoftDotNetArcadeSdkVersion>"
 if [[ $arcadeSdkLine =~ $versionPattern ]]; then
   export ARCADE_BOOTSTRAP_VERSION=${BASH_REMATCH[1]}
+
+  # Ensure that by default, the bootstrap version of the Arcade SDK is used. Source-build infra
+  # projects use bootstrap Arcade SDK, and would fail to find it in the tarball build. The repo
+  # projects overwrite this so that they use the source-built Arcade SDK instad.
+  export SOURCE_BUILT_SDK_ID_ARCADE=Microsoft.DotNet.Arcade.Sdk
+  export SOURCE_BUILT_SDK_VERSION_ARCADE=$ARCADE_BOOTSTRAP_VERSION
+  export SOURCE_BUILT_SDK_DIR_ARCADE=$restoredPackagesDir/ArcadeBootstrapPackage/microsoft.dotnet.arcade.sdk/$ARCADE_BOOTSTRAP_VERSION
 fi
 
 sourceLinkLine=`grep -m 1 'MicrosoftSourceLinkCommonVersion' "$packageVersionsPath"`
@@ -132,9 +140,9 @@ echo "Found bootstrap SDK $SDK_VERSION, bootstrap Arcade $ARCADE_BOOTSTRAP_VERSI
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-export NUGET_PACKAGES="$SCRIPT_ROOT/packages/restored/"
+export NUGET_PACKAGES=$restoredPackagesDir/
 
-$CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:BuildXPlatTasks.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:BuildXPlatTasks ${MSBUILD_ARGUMENTS[@]} "$@"
+$CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:BuildXPlatTasks.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:PrepareOfflineLocalTools ${MSBUILD_ARGUMENTS[@]} "$@"
 
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:initWriteDynamicPropsToStaticPropsFiles.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:WriteDynamicPropsToStaticPropsFiles /p:GeneratingStaticPropertiesFile=true ${MSBUILD_ARGUMENTS[@]} "$@"
 $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:build.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"

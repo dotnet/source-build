@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <!-- We use dotnet-cli to build BuildTasks, so we need to disable BuildTools Roslyn properties. -->
-    <DisableBuildToolsRoslynVersion>true</DisableBuildToolsRoslynVersion>
-  </PropertyGroup>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <InstallerPlatformAbstractionsPath Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)runtime.$(runtimeGitCommitHash)/src/installer/managed/Microsoft.DotNet.PlatformAbstractions/</InstallerPlatformAbstractionsPath>
     <InstallerPlatformAbstractionsPath Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)runtime.$(runtimeGitCommitHash)/src/installer/managed/Microsoft.DotNet.PlatformAbstractions/</InstallerPlatformAbstractionsPath>
-    <OutputPath>$(MSBuildThisFileDirectory)bin/$(Configuration)</OutputPath>
+    <OutputPath>$(TasksBinDir)</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,18 +32,8 @@
     </PackageReference>
   </ItemGroup>
 
-  <!--
-    Use some assemblies from the SDK, instead of package references. This ensures they match what's
-    found when the task is loaded by the SDK's MSBuild.
-  -->
   <ItemGroup>
-    <SdkAssembly Include="$(SdkReferenceDir)Newtonsoft.Json.dll" />
-    <SdkAssembly Include="$(SdkReferenceDir)NuGet.*.dll" />
+    <Reference Include="@(SdkAssemblyReference)" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="@(SdkAssembly -> '%(FileName)')">
-      <HintPath>$(SdkReferenceDir)%(Identity).dll</HintPath>
-    </Reference>
-  </ItemGroup>
 </Project>

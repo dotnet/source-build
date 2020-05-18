@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <!-- Include extra arcade required prebuilts in offline build only-->
@@ -27,7 +26,6 @@
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
 
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
 
     <!-- we need to use a prebuilt Arcade to build Arcade -->
@@ -53,5 +51,5 @@
     <RepositoryReference Include="sourcelink" />
   </ItemGroup>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

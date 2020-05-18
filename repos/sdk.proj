@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <BuildCommandArgs>--pack --configuration $(Configuration)</BuildCommandArgs>
@@ -11,13 +10,13 @@
     <BuildCommandArgs>$(BuildCommandArgs) -bl</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
 
     <!-- Pass in package version props using the Product Construction (ProdCon) API. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:PB_PackageVersionPropsUrl=file:%2F%2F$(PackageVersionPropsPath)</BuildCommandArgs>
 
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <OrchestratedManifestBuildName>dotnet/sdk</OrchestratedManifestBuildName>
     <!-- NuGet SDK resolver only checks nuget.config files. https://github.com/Microsoft/msbuild/issues/2914 -->
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
@@ -51,5 +50,5 @@
     <RepositoryReference Include="nuget-client" />
   </ItemGroup>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
