@@ -10,7 +10,6 @@
             AddTarballGeneratedSource;
             AddTarballPackages;
             AddTarballExternalTarballs;
-            AddTarballIlSrc;
             AddTarballCommitInfo;
             AddTarballLeakDetection;
             CopyTarballFiles;
@@ -260,51 +259,6 @@
         RelativeRoot="packages\archive\" />
 
       <TarballCopyFile Include="@(ExternalTarballFile);" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="AddTarballIlSrc"
-          DependsOnTargets="AddTarballPackages">
-    <ItemGroup>
-      <!--
-        The il directories are decomposed into id/version, so assemble package names to see what
-        should be excluded.
-      -->
-      <IlSrcIdDir Include="$([System.IO.Directory]::GetDirectories('$(ReferencePackagesBaseDir)staging\'))" />
-      <IlSrcIdVersionDir
-        Include="$([System.IO.Directory]::GetDirectories('%(IlSrcIdDir.Identity)'))"
-        Id="$([System.IO.Path]::GetFileName('%(IlSrcIdDir.Identity)'))" />
-      <IlSrcIdVersionDir Version="$([System.IO.Path]::GetFileName('%(Identity)'))" />
-
-      <IlSrcIdVersionDirNupkgFilename
-        Include="@(IlSrcIdVersionDir -> '%(Id).%(Version)')"
-        OriginalPath="%(Identity)" />
-
-      <!-- Remove source-built, previously source-built packages and reference packages from il pkg src... -->
-      <IlSrcIdVersionDirNupkgFilename Remove="
-        @(SourceBuiltPackageFilename);
-        @(SourceBuildReferencePackageFilename);
-        @(PreviouslySourceBuiltPackageFilename);
-        " />
-
-      <IlSrcPrebuiltDir Include="@(IlSrcIdVersionDirNupkgFilename -> '%(OriginalPath)\')" />
-
-      <RefPackageSourceFile
-        Include="$(ReferencePackagesBaseDir)source\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\**"
-        Condition="'@(IlSrcPrebuiltDir)' != ''"
-        Orig="%(IlSrcPrebuiltDir.Identity)"
-        RelativeRoot="packages\reference\source\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\" />
-
-      <RefPackageStagingFile
-        Include="%(IlSrcPrebuiltDir.Identity)**"
-        Condition="'@(IlSrcPrebuiltDir)' != ''"
-        Orig="%(IlSrcPrebuiltDir.Identity)"
-        RelativeRoot="packages\reference\staging\%(IlSrcPrebuiltDir.Id)\%(IlSrcPrebuiltDir.Version)\" />
-
-      <TarballCopyFile Include="
-        @(RefPackageSourceFile);
-        @(RefPackageStagingFile);
-        " />
     </ItemGroup>
   </Target>
 
