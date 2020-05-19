@@ -69,10 +69,10 @@
 
       <TarballSrcBinaryToRemove Include="$(TarballSourceDir)**\*%(TarballSrcBinaryExtension.Identity)" />
 
-      <!-- CoreCLR and Installer have two empty placeholder PDB files. Keep them. -->
+      <!-- Runtime coreclr and installer parts have empty placeholder PDB files. Keep them. -->
       <TarballSrcBinaryToRemove Remove="
-        $(TarballSourceDir)coreclr\src\.nuget\**\*%(TarballSrcBinaryExtension.Identity);
-        $(TarballSourceDir)installer\pkg\**\*%(TarballSrcBinaryExtension.Identity)" />
+        $(TarballSourceDir)runtime*\src\coreclr\src\.nuget\**\*%(TarballSrcBinaryExtension.Identity);
+        $(TarballSourceDir)runtime*\src\installer\pkg\**\*%(TarballSrcBinaryExtension.Identity)" />
     </ItemGroup>
 
     <Delete Files="@(TarballSrcBinaryToRemove)" />
