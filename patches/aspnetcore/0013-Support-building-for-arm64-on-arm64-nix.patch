@@ -1,4 +1,4 @@
-From 1bcbde692121c8fb06aaa1e044572d8db117207e Mon Sep 17 00:00:00 2001
+From 0397d5feee81bd680d08031b5b78d368b6974532 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
 Subject: [PATCH 13/16] Support building for arm64 on arm64 (*nix)
@@ -36,10 +36,10 @@ work on arm64.
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 277357c3a5..6316903619 100644
+index c02d9fd5cd..3596f3e768 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -113,6 +113,7 @@
+@@ -110,6 +110,7 @@
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('FreeBSD'))">freebsd</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
@@ -48,7 +48,7 @@ index 277357c3a5..6316903619 100644
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index a0eb33f690..665df9db9e 100644
+index 2f4d5d7886..d17536b86d 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -97,15 +97,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -72,7 +72,7 @@ index a0eb33f690..665df9db9e 100644
  
      <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
      <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-@@ -309,7 +311,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -303,7 +305,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
    <PropertyGroup>
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
      <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>
@@ -84,5 +84,5 @@ index a0eb33f690..665df9db9e 100644
  
    <ItemGroup>
 -- 
-2.21.0
+2.18.0
 

@@ -1,7 +1,7 @@
-From 62b2032cec3353c13af8c2412658323cf1b4719c Mon Sep 17 00:00:00 2001
+From df94ae653f5c08f284a21c11343d63845f05bda5 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 20 Aug 2019 13:40:19 -0400
-Subject: [PATCH 5/8] Enable build on hosted arm64
+Subject: [PATCH 5/7] Enable build on hosted arm64
 
 This is attempt #2. The first attempt was commit
 176da26d634fd760d7c8c99956f2e8d3f7d485e7.
@@ -45,5 +45,5 @@ index b4dd085c1b..37e04cf8d6 100644
      <!-- There are no WebAssembly tools, so treat them as Windows -->
      <ToolRuntimeRID Condition="'$(RuntimeOS)' == 'WebAssembly'">win-x64</ToolRuntimeRID>
 -- 
-2.21.0
+2.18.0
 

@@ -1,4 +1,4 @@
-From e11bf42b9a50898217ac89ca5b3d64c7f9731972 Mon Sep 17 00:00:00 2001
+From 9a7a6d1a47367d7aef96cf7cc2f8a29b81b22ae4 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 29 Oct 2019 18:19:03 +0000
 Subject: [PATCH 02/16] Use non-portable NETCoreAppRuntime for crossgen
@@ -21,7 +21,7 @@ index 8e7bb0ecd5..fca75d926c 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 6cd9a075a4..a0eb33f690 100644
+index d6a90fc286..2f4d5d7886 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -107,7 +107,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -45,5 +45,5 @@ index 6cd9a075a4..a0eb33f690 100644
      <ProjectReference Condition="'$(BuildIisNativeProjects)' == 'true' AND '$(BuildNative)' != 'false' AND '$(VCTargetsPath)' != ''" Include="$(RepoRoot)src\Servers\IIS\AspNetCoreModuleV2\InProcessRequestHandler\InProcessRequestHandler.vcxproj">
        <SetPlatform>Platform=$(TargetArchitecture)</SetPlatform>
 -- 
-2.21.0
+2.18.0
 
