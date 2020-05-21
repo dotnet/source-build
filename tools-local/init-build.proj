@@ -83,7 +83,7 @@
   </Target>
 
   <Target Name="ExtractToolPackage"
-          DependsOnTargets="UnpackTarballs"
+          DependsOnTargets="UnpackTarballs;BuildXPlatTasks"
           Condition="'$(OfflineBuild)' == 'true'">
     <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
