@@ -90,10 +90,10 @@ jobs:
       # Copy all these files to the logs dir, preserving relative path.
       mkdir -p "$(logsDirectory)"
       find . \( \
-        -path './bin/*-report/*' -o \
-        -path './bin/msbuild-debug/*' -o \
-        -path './bin/roslyn-debug/*' -o \
-         -path './bin/aspnet-debug/*' -o \
+        -path './artifacts/*-report/*' -o \
+        -path './artifacts/msbuild-debug/*' -o \
+        -path './artifacts/roslyn-debug/*' -o \
+         -path './artifacts/aspnet-debug/*' -o \
         -iname '*.binlog' -o \
         -iname '*.log' \) \
         -exec $copyWithParents "$(logsDirectory)" \;

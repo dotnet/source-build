@@ -1,5 +1,5 @@
 <Project>
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="Build">
     <ItemGroup>
@@ -45,5 +45,5 @@ graph [ dpi = 150 ]
     <Message Condition="'$(GraphVizDir)' != ''" Importance="High" Text="$(MSBuildProjectName) -> $(GraphVizPngFile)" />
   </Target>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

@@ -7,7 +7,7 @@ VERSION_PREFIX=3.1
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=3.0.0-preview8-28405-07
-__ROOT_REPO=$(cat "$SCRIPT_ROOT/bin/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+__ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -338,9 +338,12 @@ fi
 mkdir -p "$testingDir"
 cd "$testingDir"
 
+# Create blank Directory.Build files to avoid traversing to source-build infra.
+echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
+
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/bin/x64/$configuration/"
+    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/x64/$configuration/"
     DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
 
     mkdir -p "$cliDir"
@@ -357,7 +360,7 @@ echo SDK under test is:
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
-SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/bin/obj/x64/$configuration/blob-feed/packages/"
+SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/x64/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 # OSX also requires DOTNET_ROOT to be on the PATH
 if [ `uname` == 'Darwin' ]; then

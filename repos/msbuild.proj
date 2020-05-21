@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
     <ShippingPackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</ShippingPackagesOutput>
@@ -32,11 +31,6 @@
 
     <SourceOverrideRepoApiImplemented>true</SourceOverrideRepoApiImplemented>
     <RepoApiImplemented>false</RepoApiImplemented>
-    <!--
-      MSBuild is part of ProdCon, but that branch doesn't build from source yet.
-    <OrchestratedManifestBuildName>Microsoft/msbuild</OrchestratedManifestBuildName>
-    -->
-    <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
 
@@ -109,5 +103,5 @@
     End workaround: https://github.com/dotnet/source-build/issues/933
   -->
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.targets))/dir.targets" />
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

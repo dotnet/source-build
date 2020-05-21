@@ -30,10 +30,10 @@ The test build supports categorically circumventing the tests as well. For e.g -
 
 Test results are currently located in the collateral that coreFX tests produce within source-build after the test build completes. They are located in:
 
-`source-build/bin/src/corefx.<SHA1>/artifacts/bin/<Package>.Tests/netcore-app-Unix-Debug/testResults.xml`
+`source-build/artifacts/src/corefx.<SHA1>/artifacts/bin/<Package>.Tests/netcore-app-Unix-Debug/testResults.xml`
 
 Example:
 ```
-source-build/bin/src/corefx.4ac4c0367003fe3973a3648eb0715ddb0e3bbcea/artifacts/bin/
+source-build/artifacts/src/corefx.4ac4c0367003fe3973a3648eb0715ddb0e3bbcea/artifacts/bin/
 System.Net.Security.Tests/netcoreapp-Unix-Debug/testResults.xml for details!
 ```

@@ -85,11 +85,11 @@ function BuildRefPkgs {
         rm -rf $stage1SdkInstallDir
     fi
     mkdir $stage1SdkInstallDir
-    tar -xzf $stage1Dir/bin/x64/Release/dotnet-sdk-3*.tar.gz --directory $stage1SdkInstallDir
+    tar -xzf $stage1Dir/artifacts/x64/Release/dotnet-sdk-3*.tar.gz --directory $stage1SdkInstallDir
 
     LogMessage "Build stage1 ref-pkgs"
     pushd $refPkgsDir
-    ./build.sh --with-packages $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --with-sdk $stage1SdkInstallDir
+    ./build.sh --with-packages $stage1Dir/artifacts/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --with-sdk $stage1SdkInstallDir
     popd
 
     LogMessage "Completing Step2 - Build Reference Packages" 
@@ -132,9 +132,9 @@ function buildFinalSdk {
     rm -rf $finalSdkDir/packages/source-built/*
     rm -rf $finalSdkDir/.dotnet
 
-    LogMessage "Install previously source-built archive from $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz to $stage1SourceBuiltArtifactsInstallDir"
+    LogMessage "Install previously source-built archive from $stage1Dir/artifacts/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz to $stage1SourceBuiltArtifactsInstallDir"
     mkdir -p $stage1SourceBuiltArtifactsInstallDir
-    tar -xzf $stage1Dir/bin/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz --directory $stage1SourceBuiltArtifactsInstallDir
+    tar -xzf $stage1Dir/artifacts/x64/Release/Private.SourceBuilt.Artifacts*.tar.gz --directory $stage1SourceBuiltArtifactsInstallDir
 
     LogMessage "Build final sdk"
     pushd $finalSdkDir
