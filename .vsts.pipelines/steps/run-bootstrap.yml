@@ -170,7 +170,7 @@ steps:
     $(docker.run) $(docker.bst.map) $(docker.drop.map) $(docker.bst.work) $(imageName) /bin/bash -c "
       mkdir -p /drop/tarball/final
       pushd /bst/bootstrap_dir/final-sdk
-      find ./bin \( \
+      find ./artifacts \( \
         -iname 'dotnet-sdk*.tar.gz' -o \
         -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
         -exec cp {} /drop/tarball/final \;"
