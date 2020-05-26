@@ -29,6 +29,7 @@ Source-build solves common challenges that most developers encounter when trying
 
 * .NET Core is composed of many repositories that need to be built at a specific combination of commits.
 * Each repository's build output needs to flow into the next repository's build.
+* By default, most .NET Core repositories download prebuilt binary dependencies from online sources. These are forbidden by typical Linux distribution rules, and interfere with build output flow.
 * Nearly all .NET Core repositories require the .NET Core SDK to build. This is a circular dependency, which presents a bootstrapping problem.
 
 The source-build repository contains scripts and build logic to help Linux distribution maintainers address these challenges.
