@@ -35,4 +35,4 @@ The source-build repository contains scripts and build logic to help Linux distr
 
 ## License
 
-.NET (including the source-build repo) is licensed under the [MIT](LICENSE.txt) license.
+This repo is licensed under the [MIT](LICENSE.txt) license.
