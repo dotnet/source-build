@@ -1,0 +1,24 @@
+From eddecae729a675dcfa6bf981422d6e766449e85c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 27 May 2020 11:24:34 -0500
+Subject: [PATCH 6/6] Add S.Collections.Immutable ref.
+
+---
+ .../src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj   | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+index 5a433ed10..96d9e9023 100644
+--- a/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
++++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/Microsoft.NET.Sdk.Razor.csproj
+@@ -19,6 +19,7 @@
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" Condition="'$(TargetFramework)'=='net472'" />
+ 
+     <ProjectReference Include="..\Microsoft.AspNetCore.Mvc.Razor.Extensions\Microsoft.AspNetCore.Mvc.Razor.Extensions.csproj" ReferenceOutputAssembly="false" Condition="'$(TargetFramework)'=='$(DefaultNetCoreTargetFramework)'" />
+-- 
+2.18.0
+
