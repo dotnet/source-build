@@ -1,72 +1,16 @@
-From 9a82382b92e0570e091c510b3963edf017eb2304 Mon Sep 17 00:00:00 2001
+From 856b19fcc94c8960f856cace7c85944cc121bf50 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 1 May 2020 12:47:34 -0500
 Subject: [PATCH 8/8] S.Reflection.Metadata fullfx reverts
 
 ---
- src/System.Collections.Immutable/ref/Configurations.props     | 2 --
- .../ref/System.Collections.Immutable.csproj                   | 4 ++--
- src/System.Collections.Immutable/src/Configurations.props     | 2 --
  .../src/System.Collections.Immutable.csproj                   | 4 ++--
  src/System.Reflection.Metadata/ref/Configurations.props       | 2 --
  .../ref/System.Reflection.Metadata.csproj                     | 4 ++--
  src/System.Reflection.Metadata/src/Configurations.props       | 2 --
  .../src/System.Reflection.Metadata.csproj                     | 2 +-
- 8 files changed, 7 insertions(+), 15 deletions(-)
+ 5 files changed, 5 insertions(+), 9 deletions(-)
 
-diff --git a/src/System.Collections.Immutable/ref/Configurations.props b/src/System.Collections.Immutable/ref/Configurations.props
-index 189010f4b7..3e0bc47baf 100644
---- a/src/System.Collections.Immutable/ref/Configurations.props
-+++ b/src/System.Collections.Immutable/ref/Configurations.props
-@@ -4,12 +4,10 @@
-       netstandard1.0;
-       netstandard1.3;
-       netstandard;
--      net461;
-     </PackageConfigurations>
-     <BuildConfigurations>
-       $(PackageConfigurations);
-       netcoreapp;
--      netfx;
-       uap-Windows_NT;
-     </BuildConfigurations>
-   </PropertyGroup>
-diff --git a/src/System.Collections.Immutable/ref/System.Collections.Immutable.csproj b/src/System.Collections.Immutable/ref/System.Collections.Immutable.csproj
-index 57d6cad831..59bbc3202e 100644
---- a/src/System.Collections.Immutable/ref/System.Collections.Immutable.csproj
-+++ b/src/System.Collections.Immutable/ref/System.Collections.Immutable.csproj
-@@ -1,7 +1,7 @@
- <Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-     <ProjectGuid>{C7EFF4EE-70DC-453B-B817-4AF67921AB03}</ProjectGuid>
--    <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;netstandard1.0-Debug;netstandard1.0-Release;netstandard1.3-Debug;netstandard1.3-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release;net461-Debug;net461-Release;netfx-Debug;netfx-Release</Configurations>
-+    <Configurations>netcoreapp-Debug;netcoreapp-Release;netstandard-Debug;netstandard-Release;netstandard1.0-Debug;netstandard1.0-Release;netstandard1.3-Debug;netstandard1.3-Release;uap-Windows_NT-Debug;uap-Windows_NT-Release</Configurations>
-   </PropertyGroup>
-   <ItemGroup>
-     <Compile Include="System.Collections.Immutable.cs" />
-@@ -29,4 +29,4 @@
-     <Reference Include="System.Memory" />
-     <Reference Include="netstandard" />
-   </ItemGroup>
--</Project>
-\ No newline at end of file
-+</Project>
-diff --git a/src/System.Collections.Immutable/src/Configurations.props b/src/System.Collections.Immutable/src/Configurations.props
-index f07f91fbed..3e0bc47baf 100644
---- a/src/System.Collections.Immutable/src/Configurations.props
-+++ b/src/System.Collections.Immutable/src/Configurations.props
-@@ -4,11 +4,9 @@
-       netstandard1.0;
-       netstandard1.3;
-       netstandard;
--      net461;
-     </PackageConfigurations>
-     <BuildConfigurations>
-       $(PackageConfigurations);
--      netfx;
-       netcoreapp;
-       uap-Windows_NT;
-     </BuildConfigurations>
 diff --git a/src/System.Collections.Immutable/src/System.Collections.Immutable.csproj b/src/System.Collections.Immutable/src/System.Collections.Immutable.csproj
 index 63c6bebfdb..410d46bed7 100644
 --- a/src/System.Collections.Immutable/src/System.Collections.Immutable.csproj
