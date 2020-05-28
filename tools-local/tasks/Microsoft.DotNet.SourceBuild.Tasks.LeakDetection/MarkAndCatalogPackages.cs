@@ -56,13 +56,16 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <summary>
         /// Use this directory instead of the system temp directory for staging.
         /// Intended for Linux systems with limited /tmp space, like Azure VMs.
-        /// This directory must exist.
         /// </summary>
         public string OverrideTempPath { get; set; }
 
         public override bool Execute()
         {
             var tempDirName = Path.GetRandomFileName();
+            if (!string.IsNullOrWhiteSpace(OverrideTempPath))
+            {
+                Directory.CreateDirectory(OverrideTempPath);
+            }
             var tempDir = Directory.CreateDirectory(Path.Combine(OverrideTempPath ?? Path.GetTempPath(), tempDirName));
 
             var packageEntries = new List<CatalogPackageEntry>();
