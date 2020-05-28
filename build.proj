@@ -124,7 +124,8 @@
     <CheckForPoison FilesToCheck="@(FinalCliTarball)"
                     HashCatalogFilePath="$(PoisonReportDataFile)"
                     MarkerFileName="$(PoisonMarkerFile)"
-                    PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
+                    PoisonReportOutputFilePath="$(PoisonUsageReportFile)"
+                    OverrideTempPath="$(LeakDetectionTempPath)" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
