@@ -51,6 +51,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// </summary>
         public bool FailOnPoisonFound { get; set; }
 
+        /// <summary>
+        /// Use this directory instead of the system temp directory for staging.
+        /// Intended for Linux systems with limited /tmp space, like Azure VMs.
+        /// </summary>
+        public string OverrideTempPath { get; set; }
+
         private static readonly string[] ZipFileExtensions =
         {
             ".zip",
@@ -153,25 +159,29 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <param name="catalogedPackagesFilePath">File path to the file hash catalog</param>
         /// <param name="markerFileName">Marker file name to check for in poisoned nupkgs</param>
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
-        internal static IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
+        internal IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<string>(initialCandidates);
             // avoid collisions between nupkgs with the same name
             var dirCounter = 0;
+            if (!string.IsNullOrWhiteSpace(OverrideTempPath))
+            {
+                Directory.CreateDirectory(OverrideTempPath);
+            }
+            var tempDirName = Path.GetRandomFileName();
+            var tempDir = Directory.CreateDirectory(Path.Combine(OverrideTempPath ?? Path.GetTempPath(), tempDirName));
 
             while (candidateQueue.Any())
             {
-                var tempDirName = Path.GetRandomFileName();
-                var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), tempDirName));
                 var checking = candidateQueue.Dequeue();
 
                 // if this is a zip or NuPkg, extract it, check for the poison marker, and
                 // add its contents to the list to be checked.
                 if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
                 {
-                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(checking) + "." + (++dirCounter).ToString());
+                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetRandomFileName(), Path.GetFileNameWithoutExtension(checking) + "." + (++dirCounter).ToString());
                     PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
                     {
@@ -186,8 +196,9 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                         poisons.Add(result);
                     }
                 }
-                tempDir.Delete(true);
             }
+
+            tempDir.Delete(true);
 
             return poisons;
         }
