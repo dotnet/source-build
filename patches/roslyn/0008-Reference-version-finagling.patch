@@ -1,12 +1,19 @@
-From 80fc50f87a7b3fc14876f5e0062fe04806e5a181 Mon Sep 17 00:00:00 2001
+From c7b710aa0d909bdae86a149ce04723f901add093 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 10 May 2020 22:01:06 -0500
 Subject: [PATCH 8/8] Reference version finagling
 
 ---
- eng/Versions.props                                        | 2 +-
- src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ eng/Versions.props                                            | 2 +-
+ src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj     | 4 ++--
+ .../Microsoft.CodeAnalysis.Debugging.Package.csproj           | 4 ++--
+ .../Microsoft.CodeAnalysis.PooledObjects.Package.csproj       | 4 ++--
+ .../Core/Microsoft.CodeAnalysis.EditorFeatures.csproj         | 4 ++--
+ .../Microsoft.CodeAnalysis.FunctionResolver.csproj            | 4 ++--
+ .../Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj    | 2 +-
+ src/Tools/BuildBoss/BuildBoss.csproj                          | 2 +-
+ .../Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj      | 4 ++--
+ 9 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
 index 3b80e7eda1..1e5bb3e0c7 100644
@@ -22,18 +29,140 @@ index 3b80e7eda1..1e5bb3e0c7 100644
      <SystemTextEncodingCodePagesVersion>4.5.1</SystemTextEncodingCodePagesVersion>
      <SystemTextEncodingExtensionsVersion>4.3.0</SystemTextEncodingExtensionsVersion>
 diff --git a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
-index 17db99fc4b..5e721ffe0e 100644
+index 17db99fc4b..6729b9d07c 100644
 --- a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
 +++ b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
-@@ -39,7 +39,7 @@
+@@ -38,8 +38,8 @@
+       will import everything but content files from Microsoft.CodeAnalysis.Analyzers, specifically, analyzers.
      -->
      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" PrivateAssets="ContentFiles" />
-     <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
 -    <PackageReference Include="System.Memory" Version="$(SystemMemoryVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
 +    <PackageReference Include="System.Memory" Version="4.5.4" />
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
      <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafeVersion)" />
      <PackageReference Include="System.Threading.Tasks.Extensions" Version="$(SystemThreadingTasksExtensionsVersion)" />
+diff --git a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
+index 8a99faa199..0faa37bd51 100644
+--- a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
++++ b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
+@@ -19,9 +19,9 @@
+     <NoWarn>$(NoWarn);NU5128</NoWarn>
+   </PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
+     <ProjectReference Include="..\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.Package.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
+index 40692205a1..3569e18316 100644
+--- a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
++++ b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
+@@ -19,9 +19,9 @@
+     <NoWarn>$(NoWarn);NU5128</NoWarn>
+   </PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+   </ItemGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.Debugging.Package"/>
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+index 32f4ae0c4d..96e570e9e5 100644
+--- a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
++++ b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+@@ -27,7 +27,7 @@
+     <Reference Include="System" />
+     <Reference Include="System.ComponentModel.Composition" />
+     <Reference Include="System.Core" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="$(MicrosoftVisualStudioImageCatalogVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="$(MicrosoftVisualStudioImagingVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="$(MicrosoftVisualStudioLanguageStandardClassificationVersion)" />
+@@ -115,4 +115,4 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
+index 50ab8f0a8d..3e3673ecb0 100644
+--- a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
++++ b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
+@@ -47,7 +47,7 @@
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.ExpressionEvaluator.FunctionResolver.UnitTests" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Engine-implementation" Version="$(MicrosoftVisualStudioDebuggerEngineimplementationVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Metadata-implementation">
+@@ -56,4 +56,4 @@
+     </PackageReference>
+   </ItemGroup>
+   <Import Project="$(RepositoryEngineeringDir)targets\Vsdconfig.targets" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
+index e2d52e1b7b..f5f5a665fe 100644
+--- a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
++++ b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
+@@ -20,7 +20,7 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Reference Include="System" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Metadata-implementation" Version="$(MicrosoftVisualStudioDebuggerMetadataimplementationVersion)" />
+   </ItemGroup>
+   <ItemGroup Label="Linked Files">
+diff --git a/src/Tools/BuildBoss/BuildBoss.csproj b/src/Tools/BuildBoss/BuildBoss.csproj
+index e531135abe..72f14a5f52 100644
+--- a/src/Tools/BuildBoss/BuildBoss.csproj
++++ b/src/Tools/BuildBoss/BuildBoss.csproj
+@@ -15,7 +15,7 @@
+     <Reference Include="System.Xml.Linq" />
+     <Reference Include="WindowsBase" />
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerVersion)" />
+     <PackageReference Include="Mono.Options" Version="$(MonoOptionsVersion)" />
+diff --git a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+index 4bf2c81a6d..6e6238f71a 100644
+--- a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
++++ b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+@@ -31,7 +31,7 @@
+     <Reference Include="System" />
+     <Reference Include="System.Core" />
+     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="$(MicrosoftVisualStudioCodingConventionsVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="$(MicrosoftVisualStudioTelemetryVersion)" />
+   </ItemGroup>
+@@ -51,4 +51,4 @@
+     <InternalsVisibleTo Include="Roslyn.Services.UnitTests.Utilities" />
+     <InternalsVisibleTo Include="Microsoft.VisualStudio.Completion.Tests" Key="$(CompletionTestsKey)" WorkItem="https://github.com/dotnet/roslyn/issues/35081" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
 -- 
 2.18.0
 

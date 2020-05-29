@@ -1,15 +1,15 @@
-From 03e30b5df6c29538b6363f491b02103a74c72272 Mon Sep 17 00:00:00 2001
+From 6590071197e0e051b31f3e6098f791102a2811a8 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Mon, 25 Nov 2019 17:10:34 +0000
-Subject: [PATCH] Include Compilers package projects in source-build
+Subject: [PATCH 7/8] Include Compilers package projects in source-build
 
 ---
- .../Microsoft.NETCore.Compilers.Package.csproj                          | 2 +-
- .../Microsoft.Net.Compilers.Toolset.Package.csproj                      | 2 +-
+ .../Microsoft.NETCore.Compilers.Package.csproj                  | 2 +-
+ .../Microsoft.Net.Compilers.Toolset.Package.csproj              | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
-index 3873372..a9269aa 100644
+index 38733725c7..9b56c82bf0 100644
 --- a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
 +++ b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
 @@ -4,6 +4,7 @@
@@ -29,7 +29,7 @@ index 3873372..a9269aa 100644
      <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj"/>
    </ItemGroup>
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 878f2ac..e7fcbb8 100644
+index 878f2ace98..65330a7ffc 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 @@ -5,6 +5,7 @@
@@ -49,5 +49,5 @@ index 878f2ac..e7fcbb8 100644
      <ProjectReference Include="..\..\Compilers\Server\VBCSCompiler\VBCSCompiler.csproj" PrivateAssets="All"/>
  
 -- 
-1.8.3.1
+2.18.0
 
