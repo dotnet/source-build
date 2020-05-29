@@ -6,6 +6,20 @@
     <Platform>AnyCPU</Platform>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <SdkReferenceDir Condition="'$(SDK_VERSION)' != ''">$(DotNetCliToolDir)sdk/$(SDK_VERSION)/</SdkReferenceDir>
+  </PropertyGroup>
+
+  <!--
+    If building in Visual Studio and the current SDK version isn't located in the repo (e.g. due to
+    roll-forward using a global install) or SDK_VERSION isn't defined at all, try searching for any
+    version to use as a fallback. The match just needs to be good enough to develop in: there isn't
+    a scenario where we build a task in Visual Studio then try to run it.
+  -->
+  <PropertyGroup Condition="!Exists('$(SdkReferenceDir)') and '$(VisualStudioVersion)' != ''">
+    <SdkReferenceDir>$(DotNetCliToolDir)sdk\*\</SdkReferenceDir>
+  </PropertyGroup>
+
   <!--
     Use some assemblies from the SDK, instead of package references. This ensures they match what's
     found when the task is loaded by the SDK's MSBuild.
