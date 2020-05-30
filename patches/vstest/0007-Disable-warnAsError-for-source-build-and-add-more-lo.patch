@@ -44,7 +44,7 @@ index 39a04ada..382d9c2f 100755
          log "$dotnet pack --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version" \
          && $dotnet restore $stagingDir/${i} \
 -        && $dotnet pack --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version
-+        && $dotnet /bl:pack.binlog pack --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version
++        && $dotnet pack /bl:pack.binlog --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version
      done
  
      log "Create-NugetPackages: Elapsed $(( SECONDS - start ))s."
