@@ -1,22 +1,22 @@
-From e45fac66805a4ec0262391dda414a5a80b05379e Mon Sep 17 00:00:00 2001
+From 37b8bfc35f96a0dc3055776778b3be8f978dd472 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Wed, 20 Nov 2019 22:32:33 +0000
-Subject: [PATCH] Import PackageVersions props if exists
+Subject: [PATCH 5/8] Import PackageVersions props if exists
 
 ---
  eng/Versions.props | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 4e6836d..450705b 100644
+index 5aa6e9ec03..3b80e7eda1 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -322,4 +322,5 @@
+@@ -321,4 +321,5 @@
      -->
      <UsingToolMicrosoftNetCompilers Condition="'$(BootstrapBuildPath)' == ''">true</UsingToolMicrosoftNetCompilers>
    </PropertyGroup>
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
  </Project>
 -- 
-1.8.3.1
+2.18.0
 

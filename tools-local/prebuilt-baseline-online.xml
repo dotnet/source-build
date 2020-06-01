@@ -3,20 +3,20 @@
   <ProjectDirectories>
     <Dir>bin/src/ApplicationInsights-dotnet.53b80940842204f78708a538628288ff5d741a1d/</Dir>
     <Dir>bin/src/arcade.15f00efd583eab4372b2e9ca25bd80ace5b119ad/</Dir>
-    <Dir>bin/src/extensions.7d9baaf617741d775578c8018729ac5b75734c69/</Dir>
+    <Dir>bin/src/dotnet-extensions.3b1f2b7cd3f3a3de66e94c73435e7c6deac775bb/</Dir>
     <Dir>bin/src/xdt.c01a538851a8ab1a1fbeb2e6243f391fff7587b4/</Dir>
-    <Dir>bin/src/aspnetcore-tooling.5ecfad7e0515ee580f7e1b51d1558fc2a1d27ee5/</Dir>
-    <Dir>bin/src/aspnetcore.64a7f37e8afb060f3dbf8a679e1f7112a4558562/</Dir>
-    <Dir>bin/src/cli.8f624d0138a176b89b415c37d7d3285a940d1780/</Dir>
+    <Dir>bin/src/dotnet-aspnetcore-tooling.a8242d79df31dbff528c185dd62c290b7cc262de/</Dir>
+    <Dir>bin/src/dotnet-aspnetcore.35628a67800a3e269eb375989d2fffa9d67b8dbf/</Dir>
+    <Dir>bin/src/dotnet-cli.1afb98ab831b1a5c52675a2391365f999aeb9859/</Dir>
     <Dir>bin/src/cliCommandLineParser.0e89c2116ad28e404ba56c14d1c3f938caa25a01/</Dir>
     <Dir>bin/src/common.6e37cdfe96ac8b06a923242120169fafacd720e6/</Dir>
-    <Dir>bin/src/core-sdk.abf73fdb91629e10df642815218ba5522fd13b54/</Dir>
-    <Dir>bin/src/core-setup.4a9f85e9f89d7f686fef2ae2109d876b1e2eed2a/</Dir>
-    <Dir>bin/src/core-setup.4a9f85e9f89d7f686fef2ae2109d876b1e2eed2a/</Dir>
-    <Dir>bin/src/coreclr.c5d3d752260383fbed72ba2b4d86d82fea673c76/</Dir>
-    <Dir>bin/src/coreclr.c5d3d752260383fbed72ba2b4d86d82fea673c76/</Dir>
-    <Dir>bin/src/corefx.8a3ffed558ddf943c1efa87d693227722d6af094/</Dir>
-    <Dir>bin/src/corefx.8a3ffed558ddf943c1efa87d693227722d6af094/</Dir>
+    <Dir>bin/src/dotnet-installer.0cf4df563ae73624abaa57158d99fb522d4536a1/</Dir>
+    <Dir>bin/src/dotnet-core-setup.0c2e69caa609d5164e16df91d6d646eb9ed74640/</Dir>
+    <Dir>bin/src/dotnet-core-setup.0c2e69caa609d5164e16df91d6d646eb9ed74640/</Dir>
+    <Dir>bin/src/coreclr.05e3582c126663120b82a2eec8fd12dcb6929064/</Dir>
+    <Dir>bin/src/coreclr.05e3582c126663120b82a2eec8fd12dcb6929064/</Dir>
+    <Dir>bin/src/dotnet-corefx.059a4a19e602494bfbed473dbbb18f2dbfbd0878/</Dir>
+    <Dir>bin/src/dotnet-corefx.059a4a19e602494bfbed473dbbb18f2dbfbd0878/</Dir>
     <Dir>bin/src/fsharp.dc86ab5d2c46e9a7c49290e7e2270ab1eeb0c61e/</Dir>
     <Dir>bin/src/known-good-tests./</Dir>
     <Dir>bin/src/known-good./</Dir>
@@ -28,13 +28,13 @@
     <Dir>bin/src/NuGet.Client.6f8eb3a2e1db6b458451b9cfd2a4f5557769b041/</Dir>
     <Dir>src/package-source-build/</Dir>
     <Dir>bin/src/roslyn.d8180a5ecafb92adcfbfe8cf9199eb23be1a1ccf/</Dir>
-    <Dir>bin/src/sdk.ab04d19191b70ce82adc3830fdea05eec952505f/</Dir>
+    <Dir>bin/src/dotnet-sdk.99d7f3290a766fe288678650bd1f2af760b44212/</Dir>
     <Dir>bin/src/sourcelink.f175b06862f889474b689a57527e489101c774cc/</Dir>
     <Dir>bin/src/standard.a5b5f2e1e369972c8ff1e2183979fab6099f52ef/</Dir>
-    <Dir>bin/src/templating.46091435536c53242905ab4e991bdc0bac153e64/</Dir>
-    <Dir>bin/src/toolset.0e71a8b3f024bbebf7bc7506ac3fbb8c60c55c1e/</Dir>
+    <Dir>bin/src/dotnet-templating.d503e3a0aeafd9cd580d44495aafc116b5f71588/</Dir>
+    <Dir>bin/src/dotnet-toolset.91f740fe926973a5ffefbddbfb9db61a737022dd/</Dir>
     <Dir>bin/src/vstest.55e7e45431c9c05656c999b902686e7402664573/</Dir>
-    <Dir>bin/src/websdk.699b7bad4d82e7f36a8def94c1718cb9f352eae1/</Dir>
+    <Dir>bin/src/dotnet-websdk.8d1ef114fbf7afc33420ae2121984c04dbb04e56/</Dir>
     <Dir>bin/src/xliff-tasks.173ee3bd61c9549557eefa3cfb718bdef157cb87/</Dir>
     <Dir>Tools/</Dir>
     <Dir>tools-local/tasks/</Dir>
@@ -58,6 +58,7 @@
     <Usage Id="MicroBuild.Core.Sentinel" Version="1.0.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.AspNetCore.App.Ref" Version="3.0.1" />
     <Usage Id="Microsoft.AspNetCore.App.Ref" Version="3.1.3" />
+    <Usage Id="Microsoft.Bcl.AsyncInterfaces" Version="1.1.0" />
     <Usage Id="Microsoft.Build" Version="15.7.179" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.CentralPackageVersions" Version="2.0.1" />
     <Usage Id="Microsoft.Build.Framework" Version="15.1.548" IsDirectDependency="true" />
@@ -72,7 +73,7 @@
     <Usage Id="Microsoft.CodeAnalysis.Analyzers" Version="2.6.1" />
     <Usage Id="Microsoft.CodeAnalysis.Common" Version="2.9.0" />
     <Usage Id="Microsoft.CodeAnalysis.CSharp" Version="2.9.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.CSharp" Version="4.0.1" IsDirectDependency="true" />
+    <Usage Id="Microsoft.CSharp" Version="4.0.1" />
     <Usage Id="Microsoft.CSharp" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DiaSymReader.Pdb2Pdb" Version="1.1.0-beta1-62506-02" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.Docker.Sdk" Version="1.1.0" />
@@ -80,34 +81,35 @@
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta3" />
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta4" />
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="2.0.0-preview8.19373.1" />
-    <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.20113.5" IsDirectDependency="true" />
+    <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.20213.4" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.SignTool" Version="1.0.0-beta.19359.6" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4-20181009-2100240" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.2.2" Version="1.0.2-beta4.19155.2" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.3.0" Version="1.0.2-beta4.19354.2" />
-    <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.3.1" Version="1.0.2-beta4.20105.2" />
+    <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.3.1" Version="1.0.2-beta4.20176.1" />
     <Usage Id="Microsoft.DotNet.Web.ItemTemplates" Version="2.1.14" />
     <Usage Id="Microsoft.DotNet.Web.ItemTemplates" Version="2.2.8" />
     <Usage Id="Microsoft.DotNet.Web.ItemTemplates" Version="3.0.1" />
-    <Usage Id="Microsoft.DotNet.Web.ItemTemplates" Version="3.1.3" />
+    <Usage Id="Microsoft.DotNet.Web.ItemTemplates" Version="3.1.4" />
     <Usage Id="Microsoft.DotNet.Web.ProjectTemplates.2.1" Version="2.1.14" />
     <Usage Id="Microsoft.DotNet.Web.ProjectTemplates.2.2" Version="2.2.8" />
     <Usage Id="Microsoft.DotNet.Web.ProjectTemplates.3.0" Version="3.0.1" />
-    <Usage Id="Microsoft.DotNet.Web.ProjectTemplates.3.1" Version="3.1.3" />
+    <Usage Id="Microsoft.DotNet.Web.ProjectTemplates.3.1" Version="3.1.4" />
     <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates.2.1" Version="2.1.14" />
     <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates.2.2" Version="2.2.8" />
     <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.0" Version="3.0.1" />
-    <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.1" Version="3.1.3" />
+    <Usage Id="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.1" Version="3.1.4" />
     <Usage Id="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.0-rc2.19462.10" />
-    <Usage Id="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.20127.4" />
+    <Usage Id="Microsoft.Dotnet.WinForms.ProjectTemplates" Version="4.8.1-servicing.20213.2" />
     <Usage Id="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.0.0" />
-    <Usage Id="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.3-servicing.20128.4" />
+    <Usage Id="Microsoft.DotNet.Wpf.ProjectTemplates" Version="3.1.4-servicing.20213.3" />
     <Usage Id="Microsoft.Extensions.DependencyModel" Version="2.1.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.NETCore.App" Version="2.0.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETCore.App" Version="2.1.0" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETCore.App.Ref" Version="3.0.0" />
+    <Usage Id="Microsoft.NETCore.App.Ref" Version="3.1.0" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="2.0.0" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="2.1.0" />
     <Usage Id="Microsoft.NETCore.DotNetAppHost" Version="3.1.0-preview3.19553.2" />
@@ -144,6 +146,7 @@
     <Usage Id="NETStandard.Library" Version="2.0.1" />
     <Usage Id="NETStandard.Library" Version="2.0.3" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="NETStandard.Library.NETFramework" Version="2.0.1-servicing-26011-01" IsDirectDependency="true" />
+    <Usage Id="NETStandard.Library.Ref" Version="2.1.0" />
     <Usage Id="NuGet.Build.Tasks" Version="5.1.0+08414feaac77473f29f6ac182ab4c390ecd3542f" />
     <Usage Id="NuGet.Commands" Version="5.1.0+08414feaac77473f29f6ac182ab4c390ecd3542f" />
     <Usage Id="NuGet.Common" Version="5.1.0+08414feaac77473f29f6ac182ab4c390ecd3542f" />
@@ -161,7 +164,7 @@
     <Usage Id="NUnit3.DotNetNew.Template" Version="1.5.3" />
     <Usage Id="NUnit3.DotNetNew.Template" Version="1.6.0" />
     <Usage Id="NUnit3.DotNetNew.Template" Version="1.6.5" />
-    <Usage Id="NUnit3.DotNetNew.Template" Version="1.7.1" />
+    <Usage Id="NUnit3.DotNetNew.Template" Version="1.7.2" />
     <Usage Id="runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" Rid="debian.8-x64" />
     <Usage Id="runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" Rid="debian.8-x64" />
     <Usage Id="runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.0" Rid="fedora.23-x64" />
@@ -205,6 +208,7 @@
     <Usage Id="System.Buffers" Version="4.3.0" />
     <Usage Id="System.Buffers" Version="4.4.0" />
     <Usage Id="System.Buffers" Version="4.5.0" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="System.Buffers" Version="4.5.1" />
     <Usage Id="System.CodeDom" Version="4.4.0" />
     <Usage Id="System.Collections" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Collections" Version="4.3.0" />
@@ -217,10 +221,10 @@
     <Usage Id="System.Collections.Immutable" Version="1.5.0" />
     <Usage Id="System.Collections.NonGeneric" Version="4.0.1" />
     <Usage Id="System.Collections.NonGeneric" Version="4.3.0" />
-    <Usage Id="System.Collections.Specialized" Version="4.3.0" IsDirectDependency="true" />
+    <Usage Id="System.Collections.Specialized" Version="4.3.0" />
     <Usage Id="System.ComponentModel" Version="4.3.0" />
     <Usage Id="System.ComponentModel.Primitives" Version="4.3.0" />
-    <Usage Id="System.ComponentModel.TypeConverter" Version="4.3.0" IsDirectDependency="true" />
+    <Usage Id="System.ComponentModel.TypeConverter" Version="4.3.0" />
     <Usage Id="System.Composition" Version="1.0.31" />
     <Usage Id="System.Composition.AttributedModel" Version="1.0.31" />
     <Usage Id="System.Composition.Convention" Version="1.0.31" />
@@ -239,14 +243,14 @@
     <Usage Id="System.Diagnostics.Process" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Process" Version="4.3.0" />
     <Usage Id="System.Diagnostics.StackTrace" Version="4.3.0" IsDirectDependency="true" />
-    <Usage Id="System.Diagnostics.TextWriterTraceListener" Version="4.0.0" IsDirectDependency="true" />
+    <Usage Id="System.Diagnostics.TextWriterTraceListener" Version="4.0.0" />
     <Usage Id="System.Diagnostics.Tools" Version="4.0.1" />
     <Usage Id="System.Diagnostics.Tools" Version="4.3.0" />
     <Usage Id="System.Diagnostics.TraceSource" Version="4.0.0" />
-    <Usage Id="System.Diagnostics.TraceSource" Version="4.3.0" IsDirectDependency="true" />
+    <Usage Id="System.Diagnostics.TraceSource" Version="4.3.0" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Tracing" Version="4.3.0" />
-    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" IsDirectDependency="true" />
+    <Usage Id="System.Dynamic.Runtime" Version="4.0.11" />
     <Usage Id="System.Dynamic.Runtime" Version="4.3.0" />
     <Usage Id="System.Globalization" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Globalization" Version="4.3.0" />
@@ -269,13 +273,14 @@
     <Usage Id="System.IO.Pipes.AccessControl" Version="4.3.0" />
     <Usage Id="System.Linq" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Linq" Version="4.3.0" />
-    <Usage Id="System.Linq.Expressions" Version="4.1.0" IsDirectDependency="true" />
+    <Usage Id="System.Linq.Expressions" Version="4.1.0" />
     <Usage Id="System.Linq.Expressions" Version="4.3.0" />
     <Usage Id="System.Linq.Parallel" Version="4.0.1" />
     <Usage Id="System.Linq.Queryable" Version="4.3.0" />
     <Usage Id="System.Memory" Version="4.5.1" />
     <Usage Id="System.Memory" Version="4.5.2" />
     <Usage Id="System.Memory" Version="4.5.3" />
+    <Usage Id="System.Memory" Version="4.5.4" />
     <Usage Id="System.Net.Http" Version="4.1.0" />
     <Usage Id="System.Net.Http" Version="4.3.0" />
     <Usage Id="System.Net.Http" Version="4.3.4" />
@@ -290,7 +295,7 @@
     <Usage Id="System.Net.WebHeaderCollection" Version="4.3.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.4.0" />
     <Usage Id="System.Numerics.Vectors" Version="4.5.0" />
-    <Usage Id="System.ObjectModel" Version="4.0.12" IsDirectDependency="true" />
+    <Usage Id="System.ObjectModel" Version="4.0.12" />
     <Usage Id="System.ObjectModel" Version="4.3.0" />
     <Usage Id="System.Private.DataContractSerialization" Version="4.1.1" />
     <Usage Id="System.Reflection" Version="4.1.0" IsDirectDependency="true" />
@@ -320,6 +325,7 @@
     <Usage Id="System.Runtime" Version="4.3.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.0" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.3" />
     <Usage Id="System.Runtime.CompilerServices.Unsafe" Version="4.7.0" />
     <Usage Id="System.Runtime.Extensions" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.Extensions" Version="4.3.0" />
@@ -334,7 +340,7 @@
     <Usage Id="System.Runtime.Numerics" Version="4.0.1" />
     <Usage Id="System.Runtime.Numerics" Version="4.3.0" />
     <Usage Id="System.Runtime.Serialization.Formatters" Version="4.3.0" IsDirectDependency="true" />
-    <Usage Id="System.Runtime.Serialization.Primitives" Version="4.1.1" IsDirectDependency="true" />
+    <Usage Id="System.Runtime.Serialization.Primitives" Version="4.1.1" />
     <Usage Id="System.Runtime.Serialization.Primitives" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.Serialization.Xml" Version="4.1.1" />
     <Usage Id="System.Security.AccessControl" Version="4.3.0" />
@@ -383,8 +389,9 @@
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.9.0" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.0.0" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.3.0" />
-    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.2" />
+    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.2" IsDirectDependency="true" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.3" />
+    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <Usage Id="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <Usage Id="System.Threading.Thread" Version="4.0.0" />
     <Usage Id="System.Threading.Thread" Version="4.3.0" />
@@ -396,10 +403,10 @@
     <Usage Id="System.ValueTuple" Version="4.4.0" />
     <Usage Id="System.Xml.ReaderWriter" Version="4.0.11" IsDirectDependency="true" />
     <Usage Id="System.Xml.ReaderWriter" Version="4.3.0" />
-    <Usage Id="System.Xml.XDocument" Version="4.0.11" IsDirectDependency="true" />
+    <Usage Id="System.Xml.XDocument" Version="4.0.11" />
     <Usage Id="System.Xml.XDocument" Version="4.3.0" />
     <Usage Id="System.Xml.XmlDocument" Version="4.0.1" />
-    <Usage Id="System.Xml.XmlDocument" Version="4.3.0" IsDirectDependency="true" />
+    <Usage Id="System.Xml.XmlDocument" Version="4.3.0" />
     <Usage Id="System.Xml.XmlSerializer" Version="4.0.11" />
     <Usage Id="System.Xml.XPath" Version="4.3.0" />
     <Usage Id="System.Xml.XPath.XDocument" Version="4.3.0" />

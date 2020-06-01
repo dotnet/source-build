@@ -1,0 +1,26 @@
+From 04335702ca2c608c56c86db09cc9e3a2a4801549 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 1 May 2020 15:28:31 -0500
+Subject: [PATCH 2/2] Remove authed feed
+
+---
+ NuGet.config | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/NuGet.config b/NuGet.config
+index c3d2c2a..58ed1bd 100644
+--- a/NuGet.config
++++ b/NuGet.config
+@@ -2,9 +2,6 @@
+ <configuration>
+   <packageSources>
+     <clear />
+-    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
+-    <add key="darc-int-dotnet-aspnetcore-35628a6" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-35628a67/nuget/v3/index.json" />
+-    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
+     <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet-eng" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json" />
+     <add key="dotnet3.1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3.1/nuget/v3/index.json" />
+-- 
+2.18.0
+

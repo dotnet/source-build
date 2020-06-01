@@ -1,28 +1,28 @@
-From fd07ca9fe759244d6d60cef6102a54e3c5e1a6ef Mon Sep 17 00:00:00 2001
-From: Aditya Aggarwal <aditya.aggarwal@microsoft.com>
-Date: Mon, 16 Mar 2020 04:44:40 +0000
-Subject: [PATCH 4/4] remove unneeded feeds
+From c74df63e84314332d6cec6612e54922358374686 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 2 May 2020 06:41:24 -0500
+Subject: [PATCH 4/4] Remove authed feeds
 
 ---
  NuGet.config | 5 -----
  1 file changed, 5 deletions(-)
 
 diff --git a/NuGet.config b/NuGet.config
-index 74a78f54c..300765e80 100644
+index 5d01004cd..fb19b849d 100644
 --- a/NuGet.config
 +++ b/NuGet.config
-@@ -2,11 +2,6 @@
- <configuration>
+@@ -3,11 +3,6 @@
+   <!-- Only specify feed for RepoToolset SDK (see https://github.com/Microsoft/msbuild/issues/2982) -->
    <packageSources>
      <clear />
 -    <!--Begin: Package sources managed by Dependency Flow automation. Do not edit the sources below.-->
--    <add key="darc-pub-dotnet-corefx-8a3ffed" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-corefx-8a3ffed5/nuget/v3/index.json" />
 -    <add key="darc-int-dotnet-core-setup-0c2e69c" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-0c2e69ca/nuget/v3/index.json" />
 -    <add key="darc-int-dotnet-corefx-059a4a1" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-corefx-059a4a19/nuget/v3/index.json" />
+-    <add key="darc-int-dotnet-aspnetcore-tooling-a8242d7" value="https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-a8242d79/nuget/v3/index.json" />
 -    <!--End: Package sources managed by Dependency Flow automation. Do not edit the sources above.-->
-     <add key="dotnet3" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
-     <add key="dotnet3-transport" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3-transport/nuget/v3/index.json" />
      <add key="dotnet-core" value="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+     <add key="dotnet-tools" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+     <add key="dotnet3.1" value="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet3/nuget/v3/index.json" />
 -- 
 2.18.0
 

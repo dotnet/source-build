@@ -1,14 +1,14 @@
-From 636698993f3294d2c783aee1586d62aa81e5d502 Mon Sep 17 00:00:00 2001
+From 6ecae5b3385045c80ece89f979ec6503eaa52a65 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Mon, 15 Jul 2019 19:26:42 +0000
-Subject: [PATCH] Conditionally remove net472 from TargetFrameworks
+Subject: [PATCH 1/8] Conditionally remove net472 from TargetFrameworks
 
 ---
- .../Microsoft.Net.Compilers.Toolset.Package.csproj                     | 3 ++-
+ .../Microsoft.Net.Compilers.Toolset.Package.csproj             | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
-index 6ce7baa..878f2ac 100644
+index 6ce7baa6c2..878f2ace98 100644
 --- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 +++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
 @@ -2,6 +2,7 @@
@@ -29,5 +29,5 @@ index 6ce7baa..878f2ac 100644
        <TfmSpecificPackageFile Include="@(_File)" PackagePath="%(_File.TargetDir)/%(_File.RecursiveDir)%(_File.FileName)%(_File.Extension)" />
      </ItemGroup>
 -- 
-1.8.3.1
+2.18.0
 

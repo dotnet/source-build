@@ -41,6 +41,8 @@
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)binaryLog</BuildArguments>
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)ci</BuildArguments>
     <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) -warnAsError:0</BuildArguments>
+    <!-- some projects still set TreatWarningsAsErrors, override them -->
+    <BuildArguments Condition="'$(OS)' != 'Windows_NT'">$(BuildArguments) /p:TreatWarningsAsErrors=false</BuildArguments>
 
     <!--
       Disable node reuse (in the new/Arcade way) to avoid errors like this:

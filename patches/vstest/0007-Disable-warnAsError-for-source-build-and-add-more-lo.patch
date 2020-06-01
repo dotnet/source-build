@@ -1,0 +1,53 @@
+From 28726f9cb8133c0750a03cc06d52e71c97384892 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 19 Mar 2020 09:37:25 -0500
+Subject: [PATCH 7/7] Disable warnAsError for source-build and add more
+ logging.
+
+---
+ scripts/build.sh | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/scripts/build.sh b/scripts/build.sh
+index 39a04ada..382d9c2f 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -249,7 +249,7 @@ function invoke_build()
+         if [[ $TP_USE_REPO_API = 0 ]]; then
+             $dotnet build $TPB_Solution --configuration $TPB_Configuration -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild || failed=true
+         else
+-            $dotnet build $TPB_Build_From_Source_Solution /bl:build.binlog --configuration $TPB_Configuration -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild -p:DotNetBuildFromSource=true || failed=true
++            $dotnet build $TPB_Build_From_Source_Solution /bl:build.binlog --configuration $TPB_Configuration -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild -p:DotNetBuildFromSource=true -p:TreatWarningsAsErrors=false || failed=true
+        fi
+     else
+         find . -name "$PROJECT_NAME_PATTERNS" | xargs -L 1 $dotnet build --configuration $TPB_Configuration -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild
+@@ -298,7 +298,7 @@ function publish_package()
+         for project in "${projects[@]}" ;
+         do
+             log ".. Package: Publish $project"
+-            $dotnet publish $project --configuration $TPB_Configuration --framework $framework --output $packageDir -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild
++            $dotnet publish /bl:publish1.binlog $project --configuration $TPB_Configuration --framework $framework --output $packageDir -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild -p:TreatWarningsAsErrors=false
+         done
+ 
+         # Copy TestHost for desktop targets
+@@ -332,7 +332,7 @@ function publish_package()
+     log ".. Package: Publish testhost.csproj"
+     local projectToPackage=$TP_ROOT_DIR/src/testhost/testhost.csproj
+     local packageOutputPath=$TP_OUT_DIR/$TPB_Configuration/Microsoft.TestPlatform.TestHost/$TPB_TargetFrameworkCore
+-    $dotnet publish $projectToPackage --configuration $TPB_Configuration --framework $TPB_TargetFrameworkCore --output $packageOutputPath -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild
++    $dotnet publish /bl:publish2.binlog $projectToPackage --configuration $TPB_Configuration --framework $TPB_TargetFrameworkCore --output $packageOutputPath -v:minimal -p:Version=$TPB_Version -p:CIBuild=$TPB_CIBuild -p:LocalizedBuild=$TPB_LocalizedBuild -p:TreatWarningsAsErrors=false
+ 
+     # For libraries that are externally published, copy the output into artifacts. These will be signed and packaged independently.
+     packageName="Microsoft.TestPlatform.Build"
+@@ -395,7 +395,7 @@ function create_package()
+     for i in ${projectFiles[@]}; do
+         log "$dotnet pack --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version" \
+         && $dotnet restore $stagingDir/${i} \
+-        && $dotnet pack --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version
++        && $dotnet pack /bl:pack.binlog --no-build $stagingDir/${i} -o $packageOutputDir -p:Version=$TPB_Version
+     done
+ 
+     log "Create-NugetPackages: Elapsed $(( SECONDS - start ))s."
+-- 
+2.18.0
+

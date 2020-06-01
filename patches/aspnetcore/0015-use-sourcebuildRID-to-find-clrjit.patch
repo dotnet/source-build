@@ -1,4 +1,4 @@
-From 6e10b2f5fc8c7f7216d201a144f3dab38002be69 Mon Sep 17 00:00:00 2001
+From e6348d73179db8fbd653aa23379721c0a015c0ce Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Sat, 8 Feb 2020 06:43:48 +0000
 Subject: [PATCH 15/16] use-sourcebuildRID-to-find-clrjit
@@ -8,10 +8,10 @@ Subject: [PATCH 15/16] use-sourcebuildRID-to-find-clrjit
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 665df9db9e..3b802bc146 100644
+index d17536b86d..a631541ccb 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -312,7 +312,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -306,7 +306,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
      <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>
      <!-- Pick the right coreclr jit based on whether we are cross-compiling or not -->
@@ -21,5 +21,5 @@ index 665df9db9e..3b802bc146 100644
    </PropertyGroup>
  
 -- 
-2.21.0
+2.18.0
 
