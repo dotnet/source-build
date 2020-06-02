@@ -50,7 +50,6 @@
     <LibrariesBuildArguments Condition="'$(TargetOS)' != 'OSX'">$(LibrariesBuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(LibrariesBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</LibrariesBuildArguments>
-    <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ILAsmToolPath=$(ToolPackageExtractDir)coreclr-tools/</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllPackages=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:VersionSuffix="$(PreReleaseVersionLabel)"</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuiltSdkPackageOverride=""</LibrariesBuildArguments>    <!-- Clear PackageOverride for Libraries - it only applies to coreclr -->
