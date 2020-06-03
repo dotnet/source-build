@@ -21,7 +21,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 2 | linker | X | 3 | | | | | |
 | 2 | runtime | X | 10 | | | | | |
 | 2 | msbuild | X | 4 | | | | | |
-| 2 | nuget-client | X | 8 | | | | | |
+| 2 | NuGet.Client | X | 8 | | | | | |
 | 3 | extensions |  | 1 | | | | | |
 | 3 | aspnetcore-tooling |  | 3 | | | | | |
 | 3 | aspnetcore |  | 11 | | | | | |
@@ -33,10 +33,10 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 5 | installer |  | 5 | | | | | |
 
 ## Stage descriptions:
-  - **(1) Build from Source 5.0** – Get repo building from source with 5.0 source
+  - **(1) Build from Source 5.0** – Get repo building from source with 5.0 source in dotnet/source-build.
   - **(2) Patch Removal** – Incorporate patches required to build from source into the repo code base.
-  - **(3) Move Build Params to Eng Dir** – All source-build specific build parameter from repos/<reponame>.proj moved from source-build repo to repo /eng directory.
+  - **(3) Move Build Params to Eng Dir** – Move all source-build specific build parameter from `/repos/<reponame>.proj` in source-build repo to repo `/eng` directory.
   - **(4) Input Intermediate Packages Available** – Indicates upstream intermediate packages are available, and work on this repo can begin.
-  - **(5) Official build** – Repo builds in official build, producing source-built intermediate packages.
-  - **(6) Source-build PR validation** – Azdo build jobs are added to ensure build-from-source continues running
-  - **(7) Prebuilt check / enforcement** – Adds a check to PR validation to ensure that no prebuilts are included when building repo
+  - **(5) Official build** – Build source-built intermediate packages in official build.
+  - **(6) Source-build PR validation** – Add AzDO build jobs to PR validation to ensure build-from-source continues running without avoidable regressions.
+  - **(7) Prebuilt check / enforcement** – Add a check to PR validation to ensure that no prebuilts are included when building repo.
