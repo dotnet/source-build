@@ -11,7 +11,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | Tools | sourcelink | ✔️ | 4 | | | | | |
 | Tools | arcade | ✔️ | 11 | | | | | |
 | 1 | application-insights | ✔️ | ✔️ | | | | | |
-| 1 | aspnet-✔️dt | ✔️ | 2 | | | | | |
+| 1 | aspnet-xdt | ✔️ | 2 | | | | | |
 | 1 | newtonsoft-json | ✔️ | ✔️ | | | | | |
 | 1 | netcorecli-fsc | ✔️ | ✔️ | | | | | |
 | 1 | newtonsoft-json901 | ✔️ | ✔️ | | | | | |
