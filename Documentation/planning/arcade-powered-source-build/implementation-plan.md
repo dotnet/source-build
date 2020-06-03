@@ -5,28 +5,28 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 > ![](img/implementation-plan-graph.png)
 > [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
 
-| Tier | Repo | (Stage 1) Build from source - 5.0 | (Stage 2) Patch Removal | (Stage 3) Move build params to eng dir | (Stage 4) Input Intermediate Packages Available | (Stage 5) Official build | (Stage 6) Source-build PR validation | (Stage 7) Prebuilt check / enforcement |
+| Tier | Repo | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Patch Removal | (Stage 3)<br>Move build params to eng dir | (Stage 4)<br>Input Intermediate Packages Available | (Stage 5)<br>Official build | (Stage 6)<br>Source-build PR validation | (Stage 7)<br>Prebuilt check / enforcement |
 | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | X | - | | | | | |
-| Tools | sourcelink | X | 4 | | | | | |
-| Tools | arcade | X | 11 | | | | | |
-| 1 | application-insights | X | - | | | | | |
-| 1 | aspnet-xdt | X | 2 | | | | | |
-| 1 | newtonsoft-json | X | - | | | | | |
-| 1 | netcorecli-fsc | X | - | | | | | |
-| 1 | newtonsoft-json901 | X | - | | | | | |
-| 1 | xliff-tasks | X | 1 | | | | | |
-| 1 | clicommandlineparser | X | 1 | | | | | |
-| 1 | roslyn | X | 4 | | | | | |
-| 2 | linker | X | 3 | | | | | |
-| 2 | runtime | X | 10 | | | | | |
-| 2 | msbuild | X | 4 | | | | | |
-| 2 | NuGet.Client | X | 8 | | | | | |
+| sbrp | Source-build-reference-packages | ✔️ | ✔️ | | | | | |
+| Tools | sourcelink | ✔️ | 4 | | | | | |
+| Tools | arcade | ✔️ | 11 | | | | | |
+| 1 | application-insights | ✔️ | ✔️ | | | | | |
+| 1 | aspnet-✔️dt | ✔️ | 2 | | | | | |
+| 1 | newtonsoft-json | ✔️ | ✔️ | | | | | |
+| 1 | netcorecli-fsc | ✔️ | ✔️ | | | | | |
+| 1 | newtonsoft-json901 | ✔️ | ✔️ | | | | | |
+| 1 | xliff-tasks | ✔️ | 1 | | | | | |
+| 1 | clicommandlineparser | ✔️ | 1 | | | | | |
+| 1 | roslyn | ✔️ | 4 | | | | | |
+| 2 | linker | ✔️ | 3 | | | | | |
+| 2 | runtime | ✔️ | 10 | | | | | |
+| 2 | msbuild | ✔️ | 4 | | | | | |
+| 2 | NuGet.Client | ✔️ | 8 | | | | | |
+| 2 | templating |  | ✔️ | | | | | |
 | 3 | extensions |  | 1 | | | | | |
 | 3 | aspnetcore-tooling |  | 3 | | | | | |
 | 3 | aspnetcore |  | 11 | | | | | |
 | 3 | websdk |  | 1 | | | | | |
-| 2 | templating |  | - | | | | | |
 | 4 | sdk |  | 2 + 3(cli) + 3(toolset) | | | | | |
 | 4 | vstest |  | 6 | | | | | |
 | 4 | fsharp |  | 2 | | | | | |
