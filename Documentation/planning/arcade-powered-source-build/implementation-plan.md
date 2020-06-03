@@ -5,7 +5,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 > ![](img/implementation-plan-graph.png)
 > [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
 
-| Tier | Repo | (1) Build from source - 5.0 | (2) Patch Removal | (3) Move build params to eng dir | (4) Input Intermediate Packages Available | (5) Official build | (6) Source-build PR validation | (7) Prebuilt check / enforcement |
+| Tier | Repo | (Stage 1) Build from source - 5.0 | (Stage 2) Patch Removal | (Stage 3) Move build params to eng dir | (Stage 4) Input Intermediate Packages Available | (Stage 5) Official build | (Stage 6) Source-build PR validation | (Stage 7) Prebuilt check / enforcement |
 | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | X | - | | | | | |
 | Tools | sourcelink | X | 4 | | | | | |
