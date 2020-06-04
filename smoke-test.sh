@@ -2,7 +2,6 @@
 set -euo pipefail
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
-TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=3.1
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
@@ -61,9 +60,9 @@ while :; do
         break
     fi
 
-    lowerI="$(echo $1 | awk '{print tolower($0)}')"
+    lowerI="$(echo "$1" | awk '{print tolower($0)}')"
     case $lowerI in
-        -?|-h|--help)
+        "-?"|-h|--help)
             usage
             exit 0
             ;;
@@ -363,7 +362,7 @@ export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/x64/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 # OSX also requires DOTNET_ROOT to be on the PATH
-if [ `uname` == 'Darwin' ]; then
+if [ "$(uname)" == 'Darwin' ]; then
     export PATH="$dotnetDir:$PATH"
 fi
 
@@ -403,5 +402,9 @@ if [ "$excludeOnlineTests" == "false" ]; then
     copyRestoredPackages
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
+
+fullSdkVersion="$($dotnetDir/dotnet --version)"
+"$SCRIPT_ROOT/scripts/fetch-microsoft-sdk.sh" "$fullSdkVersion" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz"
+"$SCRIPT_ROOT/scripts/compare-builds.sh" "$dotnetDir" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz" || true
 
 echo "ALL TESTS PASSED!"
