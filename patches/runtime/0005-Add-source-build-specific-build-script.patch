@@ -99,8 +99,8 @@ index 0000000..758cd7b
 +echo "Running command: $scriptroot/build.sh $commonArgs -subset libs $librariesArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
 +$scriptroot/build.sh $commonArgs -subset libs $librariesArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "librariesBuild.binlog" * {} \;
-+echo "Running command: $scriptroot/build.sh $commonArgs -subset installer.corehost+installer.managed+installer.depproj+installer.pkgproj+installer.bundle $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
-+$scriptroot/build.sh $commonArgs -subset installer.corehost+installer.managed+installer.depproj+installer.pkgproj+installer.bundle $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
++echo "Running command: $scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
++$scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
 -- 
 1.8.3.1
