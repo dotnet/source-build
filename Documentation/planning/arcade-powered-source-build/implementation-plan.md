@@ -10,7 +10,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | sbrp | Source-build-reference-packages | Dan Seefeldt | ✔️ | ✔️ | | | | | |
 | Tools | sourcelink | Tomas Matousek | ✔️ | 4 | | | | | |
 | Tools | arcade | Mark Wilkie | ✔️ | 11 | | | | | |
-| 1 | application-insights |  | ✔️ | ✔️ | | | | | |
+| 1 | application-insights | Reiley Yang | ✔️ | ✔️ | | | | | |
 | 1 | aspnet-xdt | Vijay Ramakrishnan | ✔️ | 2 | | | | | |
 | 1 | newtonsoft-json | Chris Rummel | ✔️ | ✔️ | | | | | |
 | 1 | netcorecli-fsc | Chris Rummel | ✔️ | ✔️ | | | | | |
