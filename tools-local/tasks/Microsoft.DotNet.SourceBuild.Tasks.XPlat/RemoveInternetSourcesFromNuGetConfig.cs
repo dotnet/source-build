@@ -22,6 +22,8 @@ namespace Microsoft.DotNet.Build.Tasks
         [Required]
         public string NuGetConfigFile { get; set; }
 
+        public bool OfflineBuild { get; set; }
+
         public override bool Execute()
         {
             XDocument d = XDocument.Load(NuGetConfigFile);
@@ -31,7 +33,14 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 if (e.Name == "add")
                 {
-                    return !(e.Attribute("value").Value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || e.Attribute("value").Value.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+                    if (OfflineBuild)
+                    {
+                        return !(e.Attribute("value").Value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || e.Attribute("value").Value.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+                    }
+                    else
+                    {
+                        return !(e.Attribute("value").Value.StartsWith("https://pkgs.dev.azure.com/dnceng/_packaging", StringComparison.OrdinalIgnoreCase));
+                    }
                 }
 
                 return true;

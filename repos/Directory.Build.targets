@@ -89,7 +89,7 @@
     </ItemGroup>
 
     <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                                          Condition="'$(OfflineBuild)' != ''" />
+                                          OfflineBuild="$(OfflineBuild)" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="prebuilt"
