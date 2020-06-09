@@ -1,0 +1,418 @@
+From 522da14354efd91667f3a87cd47aedd6b564b3e6 Mon Sep 17 00:00:00 2001
+From: Viktor Hofer <viktor.hofer@microsoft.com>
+Date: Mon, 4 May 2020 11:45:15 +0200
+Subject: [PATCH] Update SDK and remove RID calculation in favor of
+ RuntimeInformation (#35538)
+
+* Remove GetTargetMachineInfo from runtime
+
+* Update bootstrapped SDK
+
+* Remove unused prop
+
+* Rename RuntimeRID to HostRuntimeIdentifier
+
+* Remove yml tmp copying
+
+* Update SDK
+
+* Move RuntimeOS into libraries
+
+* Fix RuntimeOS move
+---
+ Build.proj                                    |  1 -
+ Directory.Build.props                         |  1 -
+ eng/Configurations.props                      |  4 +-
+ eng/pipelines/installer/jobs/base-job.yml     |  1 -
+ .../jobs/steps/build-linux-package.yml        | 13 ----
+ eng/pipelines/libraries/build-job.yml         |  6 --
+ eng/restore/runtimeprops.targets              |  7 --
+ global.json                                   |  4 +-
+ src/installer/Directory.Build.props           | 13 ++--
+ src/installer/Directory.Build.targets         |  4 +-
+ src/installer/pkg/Directory.Build.targets     |  1 +
+ src/installer/test/Directory.Build.targets    |  6 +-
+ src/libraries/Directory.Build.props           |  4 +-
+ .../dev/master-build-deb-rpm-docker.sh        | 10 +--
+ .../installer.tasks/GetTargetMachineInfo.cs   | 67 -------------------
+ .../installer.tasks/installer.tasks.csproj    | 28 +-------
+ 16 files changed, 18 insertions(+), 152 deletions(-)
+ delete mode 100644 eng/restore/runtimeprops.targets
+ delete mode 100644 tools-local/tasks/installer.tasks/GetTargetMachineInfo.cs
+
+diff --git a/Build.proj b/Build.proj
+index 0ecff09e855..047ec19ac49 100644
+--- a/Build.proj
++++ b/Build.proj
+@@ -29,7 +29,6 @@
+   <!-- Upfront restore hooks -->
+   <Import Project="$(RepositoryEngineeringDir)restore\docs.targets" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   <Import Project="$(RepositoryEngineeringDir)restore\optimizationData.targets" Condition="'$(DotNetBuildFromSource)' != 'true' and '$(EnableNgenOptimization)' == 'true'" />
+-  <Import Project="$(RepositoryEngineeringDir)restore\runtimeprops.targets" />
+ 
+   <!--
+     Use synthetic inputs/outputs to avoid building it all the time. This should let devs build with
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 3dc091c09a1..0d16a8347b4 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -41,7 +41,6 @@
+     <InstallerTasksOutputPath>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'installer.tasks'))</InstallerTasksOutputPath>
+     <InstallerTasksAssemblyPath Condition="'$(MSBuildRuntimeType)' == 'Core'">$([MSBuild]::NormalizePath('$(InstallerTasksOutputPath)', 'Debug', 'netstandard2.0', 'installer.tasks.dll'))</InstallerTasksAssemblyPath>
+     <InstallerTasksAssemblyPath Condition="'$(MSBuildRuntimeType)' != 'Core'">$([MSBuild]::NormalizePath('$(InstallerTasksOutputPath)', 'Debug', 'net46', 'installer.tasks.dll'))</InstallerTasksAssemblyPath>
+-    <HostMachineInfoProps>$(ArtifactsObjDir)HostMachineInfo.props</HostMachineInfoProps>
+ 
+     <DocsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'docs'))</DocsDir>
+     <ManPagesDir>$([MSBuild]::NormalizeDirectory('$(DocsDir)', 'manpages'))</ManPagesDir>
+diff --git a/eng/Configurations.props b/eng/Configurations.props
+index b4417f2205e..da060d6dbff 100644
+--- a/eng/Configurations.props
++++ b/eng/Configurations.props
+@@ -13,7 +13,6 @@
+     <RepoTasksDir>$([MSBuild]::NormalizeDirectory('$(RepoToolsLocalDir)', 'tasks'))</RepoTasksDir>
+     <IbcOptimizationDataDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'ibc'))</IbcOptimizationDataDir>
+     <XmlDocDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsBinDir)', 'docs'))</XmlDocDir>
+-    <RuntimePropsFile>$([MSBuild]::NormalizePath('$(ArtifactsDir)', 'tmp', '$(Configuration)', 'RuntimeOS.props'))</RuntimePropsFile>
+   </PropertyGroup>
+ 
+   <!-- The TFMs to build and test against. -->
+@@ -37,6 +36,9 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
++    <HostRuntimeIdentifier Condition="'$(HostRuntimeIdentifier)' == '' and '$(MSBuildRuntimeType)' == 'core'">$([System.Runtime.InteropServices.RuntimeInformation]::RuntimeIdentifier)</HostRuntimeIdentifier>
++    <HostRuntimeIdentifier Condition="'$(HostRuntimeIdentifier)' == '' and '$(MSBuildRuntimeType)' != 'core'">win-$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant)</HostRuntimeIdentifier>
++
+     <TargetOS Condition="'$(TargetOS)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">OSX</TargetOS>
+     <TargetOS Condition="'$(TargetOS)' == '' and $([MSBuild]::IsOSPlatform('FREEBSD'))">FreeBSD</TargetOS>
+     <TargetOS Condition="'$(TargetOS)' == '' and $([MSBuild]::IsOSPlatform('NETBSD'))">NetBSD</TargetOS>
+diff --git a/eng/pipelines/installer/jobs/base-job.yml b/eng/pipelines/installer/jobs/base-job.yml
+index 1925d1ae018..71e6b8d8d03 100644
+--- a/eng/pipelines/installer/jobs/base-job.yml
++++ b/eng/pipelines/installer/jobs/base-job.yml
+@@ -448,7 +448,6 @@ jobs:
+       # independent installers on this leg, but we need to do it somewhere.)
+       - template: steps/build-linux-package.yml
+         parameters:
+-          buildTraversalBuildDependencies: true
+           distroRid: ${{ packageBuild.imageRid }}
+           image: ${{ packageBuild.image }}
+           packageStepDescription: Runtime Deps, Runtime, Framework Packs installers
+diff --git a/eng/pipelines/installer/jobs/steps/build-linux-package.yml b/eng/pipelines/installer/jobs/steps/build-linux-package.yml
+index e9e342b618c..c6ae12827dc 100644
+--- a/eng/pipelines/installer/jobs/steps/build-linux-package.yml
++++ b/eng/pipelines/installer/jobs/steps/build-linux-package.yml
+@@ -1,5 +1,4 @@
+ parameters:
+-  buildTraversalBuildDependencies: false
+   distroRid: null
+   image: null
+   outputRidArg: ''
+@@ -8,18 +7,6 @@ parameters:
+   subsetArg: ''
+ 
+ steps:
+-- ${{ if eq(parameters.buildTraversalBuildDependencies, true) }}:
+-  - script: |
+-      set -x
+-      df -h
+-      $(DockerRunMSBuild) ${{ parameters.image }} $(MSBuildScript) \
+-        --ci \
+-        /root/runtime/tools-local/tasks/installer.tasks/installer.tasks.csproj \
+-        /t:Restore /t:Build /t:CreateHostMachineInfoFile \
+-        $(CommonMSBuildArgs) \
+-        /bl:msbuild.${{ parameters.distroRid }}.traversaldependencies.binlog
+-    displayName: ====== Build traversal build dependencies - ${{ parameters.distroRid }}
+-
+ - script: |
+     set -x
+     df -h
+diff --git a/eng/pipelines/libraries/build-job.yml b/eng/pipelines/libraries/build-job.yml
+index c541e688803..eb835ac0a12 100644
+--- a/eng/pipelines/libraries/build-job.yml
++++ b/eng/pipelines/libraries/build-job.yml
+@@ -145,12 +145,6 @@ jobs:
+               targetFolder: $(Build.ArtifactStagingDirectory)/artifacts/packages
+             condition: and(succeeded(), eq(variables['_librariesBuildProducedPackages'], true))
+ 
+-          - task: CopyFiles@2
+-            displayName: Prepare tmp assets to publish
+-            inputs:
+-              sourceFolder: $(Build.SourcesDirectory)/artifacts/tmp
+-              targetFolder: $(Build.ArtifactStagingDirectory)/artifacts/tmp
+-
+           - template: /eng/pipelines/common/upload-artifact-step.yml
+             parameters:
+               rootFolder: $(Build.ArtifactStagingDirectory)/artifacts
+diff --git a/eng/restore/runtimeprops.targets b/eng/restore/runtimeprops.targets
+deleted file mode 100644
+index 945d0830f8c..00000000000
+--- a/eng/restore/runtimeprops.targets
++++ /dev/null
+@@ -1,7 +0,0 @@
+-<Project Sdk="Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk">
+-
+-  <Target Name="GenerateRuntimeOSPropsFileBeforeRestore"
+-          DependsOnTargets="GenerateRuntimeOSPropsFile"
+-          BeforeTargets="Restore" />
+-
+-</Project>
+\ No newline at end of file
+diff --git a/global.json b/global.json
+index 1c7dd9061e2..400b6e77a94 100644
+--- a/global.json
++++ b/global.json
+@@ -1,11 +1,11 @@
+ {
+   "sdk": {
+-    "version": "5.0.100-preview.4.20202.8",
++    "version": "5.0.100-preview.5.20228.8",
+     "allowPrerelease": true,
+     "rollForward": "major"
+   },
+   "tools": {
+-    "dotnet": "5.0.100-preview.4.20202.8"
++    "dotnet": "5.0.100-preview.5.20228.8"
+   },
+   "native-tools": {
+     "cmake": "3.14.2",
+diff --git a/src/installer/Directory.Build.props b/src/installer/Directory.Build.props
+index 364b1f92b99..0fac6da8048 100644
+--- a/src/installer/Directory.Build.props
++++ b/src/installer/Directory.Build.props
+@@ -81,11 +81,8 @@
+     <ExeSuffix Condition="'$(TargetOS)' == 'Windows_NT'">.exe</ExeSuffix>
+   </PropertyGroup>
+ 
+-  <Import Project="$(HostMachineInfoProps)"
+-          Condition="Exists('$(HostMachineInfoProps)')" />
+-
+-  <PropertyGroup Condition="'$(OutputRid)' == '' and '$(HostMachineRid)' != ''">
+-    <OutputRid>$(HostMachineRid.Remove($(HostMachineRid.LastIndexOf('-'))))-$(TargetArchitecture)</OutputRid>
++  <PropertyGroup Condition="'$(OutputRid)' == '' and '$(HostRuntimeIdentifier)' != ''">
++    <OutputRid>$(HostRuntimeIdentifier.Remove($(HostRuntimeIdentifier.LastIndexOf('-'))))-$(TargetArchitecture)</OutputRid>
+   </PropertyGroup>
+ 
+   <!-- Portable -->
+@@ -291,9 +288,9 @@
+       </PropertyGroup>
+       <PropertyGroup Condition="'$(PortableBuild)' == 'true'">
+         <HostMachineRidTargetsDebianPackages Condition="
+-          $(HostMachineRid.StartsWith('debian')) or
+-          $(HostMachineRid.StartsWith('ubuntu')) or
+-          $(HostMachineRid.StartsWith('linuxmint'))">true</HostMachineRidTargetsDebianPackages>
++          $(HostRuntimeIdentifier.StartsWith('debian')) or
++          $(HostRuntimeIdentifier.StartsWith('ubuntu')) or
++          $(HostRuntimeIdentifier.StartsWith('linuxmint'))">true</HostMachineRidTargetsDebianPackages>
+         <!-- If the build machine isn't known to be Debian-based, try to build RPM packages. -->
+         <HostMachineRidTargetsRpmPackages Condition="'$(HostMachineRidTargetsDebianPackages)' != 'true'">true</HostMachineRidTargetsRpmPackages>
+       </PropertyGroup>
+diff --git a/src/installer/Directory.Build.targets b/src/installer/Directory.Build.targets
+index 20b134d708c..7a859d808b2 100644
+--- a/src/installer/Directory.Build.targets
++++ b/src/installer/Directory.Build.targets
+@@ -12,10 +12,8 @@
+   <!-- Provide default targets which can be hooked onto or overridden as necessary -->
+   <Target Name="Pack" />
+ 
++  <!-- Remove after https://github.com/dotnet/arcade/pull/5365 is merged. -->
+   <UsingTask TaskName="GenerateGuidFromName" AssemblyFile="$(InstallerTasksAssemblyPath)" />
+-  <UsingTask TaskName="GenerateMsiVersion" AssemblyFile="$(InstallerTasksAssemblyPath)" />
+-  <UsingTask TaskName="GetTargetMachineInfo" AssemblyFile="$(InstallerTasksAssemblyPath)" />
+-  <UsingTask TaskName="RegenerateReadmeTable" AssemblyFile="$(InstallerTasksAssemblyPath)" />
+ 
+   <!-- Common target to find all sfxproj. In a target to avoid evaluating for every project. -->
+   <Target Name="GetSharedFrameworkProjects">
+diff --git a/src/installer/pkg/Directory.Build.targets b/src/installer/pkg/Directory.Build.targets
+index e19dd327b12..0dd8ca63aef 100644
+--- a/src/installer/pkg/Directory.Build.targets
++++ b/src/installer/pkg/Directory.Build.targets
+@@ -112,6 +112,7 @@
+   </Target>
+ 
+   <UsingTask TaskName="GenerateCurrentVersion" AssemblyFile="$(InstallerTasksAssemblyPath)" />
++  <UsingTask TaskName="GenerateMsiVersion" AssemblyFile="$(InstallerTasksAssemblyPath)" />
+ 
+   <Target Name="GenerateMsiVersionString">
+     <PropertyGroup>
+diff --git a/src/installer/test/Directory.Build.targets b/src/installer/test/Directory.Build.targets
+index da534ca0055..82a7c6d4e60 100644
+--- a/src/installer/test/Directory.Build.targets
++++ b/src/installer/test/Directory.Build.targets
+@@ -121,12 +121,8 @@
+   </Target>
+ 
+   <Target Name="DetermineTestOutputDirectory">
+-    <GetTargetMachineInfo>
+-      <Output TaskParameter="RuntimeIdentifier" PropertyName="_HostRid" />
+-    </GetTargetMachineInfo>
+-
+     <PropertyGroup>
+-      <TestTargetRid Condition="'$(TestTargetRid)' == ''">$(_HostRid)</TestTargetRid>
++      <TestTargetRid Condition="'$(TestTargetRid)' == ''">$(HostRuntimeIdentifier)</TestTargetRid>
+       <TestsOutputName Condition="'$(TestsOutputName)' == ''">$(MSBuildProjectName)</TestsOutputName>
+ 
+       <TestsOutputRootDir Condition="'$(TestsOutputRootDir)' == ''">$(ArtifactsDir)tests/$(Configuration)/</TestsOutputRootDir>
+diff --git a/src/libraries/Directory.Build.props b/src/libraries/Directory.Build.props
+index 09ade10ad7e..ec3fe48b6f5 100644
+--- a/src/libraries/Directory.Build.props
++++ b/src/libraries/Directory.Build.props
+@@ -26,7 +26,9 @@
+     <GeneratePlatformNotSupportedAssemblyHeaderFile>$(RepositoryEngineeringDir)LicenseHeader.txt</GeneratePlatformNotSupportedAssemblyHeaderFile>
+   </PropertyGroup>
+ 
+-  <Import Project="$(RuntimePropsFile)" Condition="Exists('$(RuntimePropsFile)')"/>
++  <PropertyGroup>
++    <RuntimeOS Condition="'$(RuntimeOS)' == '' and '$(HostRuntimeIdentifier)' != ''">$(HostRuntimeIdentifier.Remove($(HostRuntimeIdentifier.LastIndexOf('-'))))</RuntimeOS>
++  </PropertyGroup>
+ 
+   <Import Sdk="Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk" Project="Sdk.props" />
+   
+diff --git a/tools-local/scripts/dev/master-build-deb-rpm-docker.sh b/tools-local/scripts/dev/master-build-deb-rpm-docker.sh
+index e96460ece18..feb9747aa71 100755
+--- a/tools-local/scripts/dev/master-build-deb-rpm-docker.sh
++++ b/tools-local/scripts/dev/master-build-deb-rpm-docker.sh
+@@ -62,18 +62,10 @@ package() {
+     shift
+ 
+     containerized "$image" bash -c "
+-        eng/common/msbuild.sh \
+-            tools-local/tasks/installer.tasks/installer.tasks.csproj \
+-            /t:Restore /t:Build /t:CreateHostMachineInfoFile \
+-            /p:Configuration=Release \
+-            /p:TargetOS=Linux \
+-            /p:PortableBuild=false \
+-            /p:TargetArchitecture=x64 \
+-            /bl:artifacts/msbuild.$name.traversaldependencies.binlog;
+         ./build.sh \
+             --ci \
++            --subset installer
+             /p:OfficialBuildId=20190101.1 \
+-            /p:Subset=Installer \
+             /p:UsePrebuiltPortableBinariesForInstallers=true \
+             /p:SharedFrameworkPublishDir=/work/artifacts/obj/linux-x64.Release/sharedFrameworkPublish/ \
+             /p:InstallerSourceOSPlatformConfig=linux-x64.Release \
+diff --git a/tools-local/tasks/installer.tasks/GetTargetMachineInfo.cs b/tools-local/tasks/installer.tasks/GetTargetMachineInfo.cs
+deleted file mode 100644
+index 67aa53b36ec..00000000000
+--- a/tools-local/tasks/installer.tasks/GetTargetMachineInfo.cs
++++ /dev/null
+@@ -1,67 +0,0 @@
+-﻿// Licensed to the .NET Foundation under one or more agreements.
+-// The .NET Foundation licenses this file to you under the MIT license.
+-// See the LICENSE file in the project root for more information.
+-
+-using Microsoft.Build.Framework;
+-using System.Runtime.InteropServices;
+-
+-namespace Microsoft.DotNet.Build.Tasks
+-{
+-    public class GetTargetMachineInfo : BuildTask
+-    {
+-        [Output]
+-        public string TargetOS { get; set; }
+-
+-        [Output]
+-        public string TargetArch { get; set; }
+-
+-        [Output]
+-        public string RuntimeIdentifier { get; set; }
+-
+-        public override bool Execute()
+-        {
+-            switch (RuntimeInformation.OSArchitecture)
+-            {
+-                case Architecture.X64:
+-                    TargetArch = "x64";
+-                    break;
+-                case Architecture.X86:
+-                    TargetArch = "x86";
+-                    break;
+-                case Architecture.Arm:
+-                    TargetArch = "arm";
+-                    break;
+-                case Architecture.Arm64:
+-                    TargetArch = "arm64";
+-                    break;
+-            }
+-
+-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+-                TargetOS = "Windows_NT";
+-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+-                TargetOS = "Linux";
+-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+-                TargetOS = "OSX";
+-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("FREEBSD")))
+-                TargetOS = "FreeBSD";
+-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Create("NETBSD")))
+-                TargetOS = "NetBSD";
+-
+-            RuntimeIdentifier = Microsoft.DotNet.PlatformAbstractions.RuntimeEnvironment.GetRuntimeIdentifier();
+-
+-            if (TargetArch == null)
+-            {
+-                Log.LogError("{0} is null", nameof(TargetArch));
+-                return false;
+-            }
+-
+-            if (TargetOS == null)
+-            {
+-                Log.LogError("{0} is null", nameof(TargetOS));
+-                return false;
+-            }
+-
+-            return true;
+-        }
+-    }
+-}
+diff --git a/tools-local/tasks/installer.tasks/installer.tasks.csproj b/tools-local/tasks/installer.tasks/installer.tasks.csproj
+index 2ed742bb359..356f22ac74e 100644
+--- a/tools-local/tasks/installer.tasks/installer.tasks.csproj
++++ b/tools-local/tasks/installer.tasks/installer.tasks.csproj
+@@ -1,5 +1,4 @@
+-﻿<Project Sdk="Microsoft.NET.Sdk">
+-
++<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);net46</TargetFrameworks>
+@@ -14,7 +13,6 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(RefOnlyNugetProjectModelVersion)" />
+     <PackageReference Include="NuGet.Packaging" Version="$(RefOnlyNugetPackagingVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.7.0" />
+@@ -44,28 +42,4 @@
+       </ItemGroup>
+     </Otherwise>
+   </Choose>
+-
+-  <UsingTask TaskName="GetTargetMachineInfo"
+-             AssemblyFile="$(InstallerTasksAssemblyPath)" />
+-  <Target Name="CreateHostMachineInfoFile"
+-          AfterTargets="DispatchToInnerBuilds">
+-    <GetTargetMachineInfo>
+-      <Output PropertyName="HostMachineRid" TaskParameter="RuntimeIdentifier" />
+-    </GetTargetMachineInfo>
+-
+-    <PropertyGroup>
+-      <HostMachineInfoPropsContent>
+-&lt;Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"&gt;
+-  &lt;PropertyGroup&gt;
+-    &lt;HostMachineRid&gt;$(HostMachineRid)&lt;/HostMachineRid&gt;
+-  &lt;/PropertyGroup&gt;
+-&lt;/Project&gt;
+-      </HostMachineInfoPropsContent>
+-    </PropertyGroup>
+-
+-    <WriteLinesToFile File="$(HostMachineInfoProps)"
+-                      Lines="$(HostMachineInfoPropsContent)"
+-                      Overwrite="True" />
+-  </Target>
+-
+ </Project>
+-- 
+2.18.2
+
