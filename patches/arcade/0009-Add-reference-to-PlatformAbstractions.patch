@@ -1,0 +1,32 @@
+From db4c528bb2335f791f46f76f62f392597e298ef0 Mon Sep 17 00:00:00 2001  
+From: dseefeld <dseefeld@microsoft.com> 
+Date: Wed, 1 Apr 2020 16:32:18 +0000    
+Subject: [PATCH] Add reference to PlatformAbstractions  
+
+Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj doesn't have a reference    
+to PlatformAbstractions. It builds in the production build because it has a 
+reference to Microsoft.Extensions.DependencyModel, which also brought in    
+PlatformAbstractions. That dependency has been removed with 
+https://github.com/dotnet/core-setup/pull/5218. 
+The tarball build uses a newer version of Microsoft.Extensions.DependencyModel  
+with the dependency removed, so an explicit dependency needs to be added now until  
+Arcade removes their dependency on PlatormAbstractions.
+---
+ .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj              | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+index 36c9b5f..d2e1526 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+@@ -19,6 +19,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsVersion)" />
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
+     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildVersion)" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
+-- 
+1.8.3.1
+
