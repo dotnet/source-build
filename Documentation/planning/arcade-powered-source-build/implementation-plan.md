@@ -51,9 +51,9 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 
 | Stage(s) | Start | End |
 | --- | :---: | :---: |
-| Stage 1 - Build from Source 5.0 | 5/28 | 6/29 |
-| Stage 2 - Patch Removal | 6/16 | 7/23 |
-| Stages 3-5 - Get into Official Build | 6/25 | 9/16 |
-| Stages 6-7 - PR Validation / Prebuilt check | 7/28 | 10/5 |
+| Stage 1 - Build from Source 5.0 | 2020-05-28 | 2020-06-29 |
+| Stage 2 - Patch Removal | 2020-06-16 | 2020-07-23 |
+| Stages 3-5 - Get into Official Build | 2020-06-25 | 2020-09-16 |
+| Stages 6-7 - PR Validation / Prebuilt check | 2020-07-28 | 2020-10-05 |
 
 
