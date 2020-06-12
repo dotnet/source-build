@@ -7,30 +7,30 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 
 | Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Patch Removal | (Stage 3)<br>Move build params to eng dir | (Stage 4)<br>Input Intermediate Packages Available | (Stage 5)<br>Official build | (Stage 6)<br>Source-build PR validation | (Stage 7)<br>Prebuilt check / enforcement |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | Dan Seefeldt | ✔️ | ✔️ | | | | | |
-| Tools | sourcelink | Tomas Matousek | ✔️ | 4 | | | | | |
-| Tools | arcade | Mark Wilkie | ✔️ | 11 | | | | | |
-| 1 | application-insights | Reiley Yang | ✔️ | ✔️ | | | | | |
-| 1 | aspnet-xdt | Vijay Ramakrishnan | ✔️ | 2 | | | | | |
-| 1 | newtonsoft-json | Chris Rummel | ✔️ | ✔️ | | | | | |
-| 1 | netcorecli-fsc | Chris Rummel | ✔️ | ✔️ | | | | | |
-| 1 | newtonsoft-json901 | Chris Rummel | ✔️ | ✔️ | | | | | |
-| 1 | xliff-tasks | William Li | ✔️ | 1 | | | | | |
-| 1 | clicommandlineparser | Sarah Oslund | ✔️ | 1 | | | | | |
-| 1 | roslyn | Fred Silberberg | ✔️ | 4 | | | | | |
-| 2 | linker | Dan Seefeldt | ✔️ | 3 | | | | | |
-| 2 | runtime | Jared Parsons | ✔️ | 10 | | | | | |
-| 2 | msbuild | Ben Villalobos | ✔️ | 4 | | | | | |
-| 2 | NuGet.Client | Fernando Aguilar Reyes | ✔️ | 8 | | | | | |
-| 2 | templating | Jose Aguilar | ✔️ | ✔️ | | | | | |
-| 3 | extensions | John Luo | ⏱ | 1 | | | | | |
-| 3 | aspnetcore-tooling | John Luo | ⏱ | 3 | | | | | |
-| 3 | aspnetcore | John Luo | ⏱ | 11 | | | | | |
-| 3 | websdk | Vijay Ramakrishnan | ⏱ | 1 | | | | | |
-| 4 | sdk | Sarah Oslund |  | 2 + 3(cli) + 3(toolset) | | | | | |
-| 4 | vstest | Sarabjot Singh |  | 6 | | | | | |
-| 4 | fsharp | Brett Forsgren |  | 2 | | | | | |
-| 5 | installer | Sarah Oslund |  | 5 | | | | | |
+| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | | | | | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | 4 | | | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | 11 | | | | | |
+| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | | |
+| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | 2 | | | | | |
+| 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
+| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
+| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
+| 1 | xliff-tasks | [William Li](https://github.com/wli3) | ✔️ | 1 | | | | | |
+| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 1 | | | | | |
+| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | 4 | | | | | |
+| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | 3 | | | | | |
+| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | 10 | | | | | |
+| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | 4 | | | | | |
+| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | 8 | | | | | |
+| 2 | templating | [Jose Aguilar](https://github.com/donJoseLuis) | ✔️ | ✔️ | | | | | |
+| 3 | extensions | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 1 | | | | | |
+| 3 | aspnetcore-tooling | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 3 | | | | | |
+| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 11 | | | | | |
+| 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ⏱ | 1 | | | | | |
+| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) |  | 2 + 3(cli) + 3(toolset) | | | | | |
+| 4 | vstest | [Sarabjot Singh](https://github.com/singhsarab) |  | 6 | | | | | |
+| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) |  | 2 | | | | | |
+| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) |  | 5 | | | | | |
 
 | Status | Description |
 | --- | --- |
