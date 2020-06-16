@@ -1,4 +1,4 @@
-From 5028e1b949e7988bdf3d768acd19ebf5d6e25939 Mon Sep 17 00:00:00 2001
+From 4f46cb228a382807f04959a64506b3baf89a6f14 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 23 Jan 2020 20:32:29 +0000
 Subject: [PATCH 14/16] Only build for netcoreapp
@@ -27,9 +27,7 @@ Subject: [PATCH 14/16] Only build for netcoreapp
  .../content/WebApi-FSharp/appsettings.json    |   4 +-
  .../appsettings.Development.json              |   6 +-
  .../appsettings.Development.json              |   6 +-
- .../content/Angular-CSharp/appsettings.json   |   6 +-
  .../React-CSharp/appsettings.Development.json |   6 +-
- .../content/React-CSharp/appsettings.json     |   6 +-
  .../appsettings.Development.json              |   6 +-
  .../ReactRedux-CSharp/appsettings.json        |   6 +-
  .../Microsoft.AspNetCore.Authorization.csproj |   1 +
@@ -37,7 +35,7 @@ Subject: [PATCH 14/16] Only build for netcoreapp
  ....AspNetCore.Http.Connections.Common.csproj |   1 +
  ...t.AspNetCore.SignalR.Protocols.Json.csproj |   1 +
  ...Microsoft.AspNetCore.SignalR.Common.csproj |   1 +
- 33 files changed, 138 insertions(+), 126 deletions(-)
+ 31 files changed, 132 insertions(+), 120 deletions(-)
 
 diff --git a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
 index 5e6c8fb34c..5cf3f1eedb 100644
@@ -507,23 +505,6 @@ index c9719186fb..a1213fe246 100644
      }
  ////#if (IndividualLocalAuth)
  //  },
-diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
-index 8861bc9d6c..7bed5bd8f8 100644
---- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
-+++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/Angular-CSharp/appsettings.json
-@@ -10,9 +10,9 @@
- ////#endif
-   "Logging": {
-       "LogLevel": {
--      "Default": "Information",
--      "Microsoft": "Warning",
--      "Microsoft.Hosting.Lifetime": "Information"
-+      "Default": "Information",
-+      "Microsoft": "Warning",
-+      "Microsoft.Hosting.Lifetime": "Information"
-       }
-     },
- ////#if (IndividualLocalAuth)
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
 index c9719186fb..a1213fe246 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.Development.json
@@ -541,23 +522,6 @@ index c9719186fb..a1213fe246 100644
      }
  ////#if (IndividualLocalAuth)
  //  },
-diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
-index 8861bc9d6c..7bed5bd8f8 100644
---- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
-+++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/React-CSharp/appsettings.json
-@@ -10,9 +10,9 @@
- ////#endif
-   "Logging": {
-       "LogLevel": {
--      "Default": "Information",
--      "Microsoft": "Warning",
--      "Microsoft.Hosting.Lifetime": "Information"
-+      "Default": "Information",
-+      "Microsoft": "Warning",
-+      "Microsoft.Hosting.Lifetime": "Information"
-       }
-     },
- ////#if (IndividualLocalAuth)
 diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json b/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
 index dba68eb124..8983e0fc1c 100644
 --- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/content/ReactRedux-CSharp/appsettings.Development.json
@@ -653,5 +617,5 @@ index 91d7996a3c..21dad45218 100644
    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
      <Compile Include="Microsoft.AspNetCore.SignalR.Common.netstandard2.0.cs" />
 -- 
-2.18.0
+2.21.0
 

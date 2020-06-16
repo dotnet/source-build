@@ -1,4 +1,4 @@
-From 0397d5feee81bd680d08031b5b78d368b6974532 Mon Sep 17 00:00:00 2001
+From b5e4f7ee1af325f8cabb3bbba6cf442e793d5108 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
 Subject: [PATCH 13/16] Support building for arm64 on arm64 (*nix)
@@ -36,7 +36,7 @@ work on arm64.
  2 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index c02d9fd5cd..3596f3e768 100644
+index 4000049e52..1f94f9c854 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -110,6 +110,7 @@
@@ -48,10 +48,10 @@ index c02d9fd5cd..3596f3e768 100644
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
 diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index 2f4d5d7886..d17536b86d 100644
+index 75b8e5515e..b0a999453d 100644
 --- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -97,15 +97,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -98,15 +98,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <PathSeparator Condition="'$(PathSeparator)' == ''">:</PathSeparator>
      <PathSeparator Condition=" '$(TargetOsName)' == 'win' ">%3B</PathSeparator>
  
@@ -66,13 +66,13 @@ index 2f4d5d7886..d17536b86d 100644
      <CrossgenToolPackagePath>$(CrossgenToolFileName)</CrossgenToolPackagePath>
      <!-- Disambiguated RID-specific crossgen executable relative path -->
 -    <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'linux-arm' ">x64_arm\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
--    <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'linux-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-musl-arm64' ">x64_arm64\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
+-    <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-musl-arm64' ">x64_arm64\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
 -    <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm' ">x86_arm\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
 +    <CrossgenToolPackagePath Condition=" '$(CrossCompileDirectory)' != '' ">$(CrossCompileDirectory)\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
  
      <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
      <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-@@ -303,7 +305,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -309,7 +311,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
    <PropertyGroup>
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
      <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>
@@ -84,5 +84,5 @@ index 2f4d5d7886..d17536b86d 100644
  
    <ItemGroup>
 -- 
-2.18.0
+2.21.0
 
