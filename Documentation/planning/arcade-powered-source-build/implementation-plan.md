@@ -23,9 +23,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | 4 | | | | | |
 | 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | 8 | | | | | |
 | 2 | templating | [Jose Aguilar](https://github.com/donJoseLuis) | ✔️ | ✔️ | | | | | |
-| 3 | extensions | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 1 | | | | | |
-| 3 | aspnetcore-tooling | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 3 | | | | | |
-| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 11 | | | | | |
+| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 14 | | | | | |
 | 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ⏱ | 1 | | | | | |
 | 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) |  | 2 + 3(cli) + 3(toolset) | | | | | |
 | 4 | vstest | [Sarabjot Singh](https://github.com/singhsarab) |  | 6 | | | | | |
