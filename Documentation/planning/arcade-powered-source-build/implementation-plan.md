@@ -26,7 +26,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ⏱ | 14 | | | | | |
 | 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ⏱ | 1 | | | | | |
 | 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) |  | 2 + 3(cli) + 3(toolset) | | | | | |
-| 4 | vstest | [Sarabjot Singh](https://github.com/singhsarab) |  | 6 | | | | | |
+| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) |  | 6 | | | | | |
 | 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) |  | 2 | | | | | |
 | 5 | installer | [Sarah Oslund](https://github.com/sfoslund) |  | 5 | | | | | |
 
