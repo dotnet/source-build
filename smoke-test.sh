@@ -174,8 +174,8 @@ function doCommand() {
             binlogHttpsPart="https"
         fi
 
-        # double-hyphen and space in the binlog path screw up MSBuild argument parsing
-        binlog=$(echo "$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_$1.binlog" | sed 's/--/_/g ; s/ /_/g')
+        binlogPrefix="$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_"
+        binlog="${binlogPrefix}$1.binlog"
         echo "    running $1" | tee -a "$logFile"
 
         if [ "$1" == "new" ]; then
@@ -206,15 +206,15 @@ function doCommand() {
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
         elif [ "$1" == "publish" ]; then
-            binlogPrefix=$(echo "$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_" | sed 's/--/_/g ; s/ /_/g')
+            runPublishScenarios() {
+                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
+                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
+                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
+            }
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" | tee -a "$logFile"
-                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" | tee -a "$logFile"
-                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" | tee -a "$logFile"
+                runPublishScenarios | tee -a "$logFile"
             else
-                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" >> "$logFile" 2>&1
-                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" >> "$logFile" 2>&1
-                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" >> "$logFile" 2>&1
+                runPublishScenarios >> "$logFile" 2>&1
             fi
         else
             if [ "$projectOutput" == "true" ]; then
