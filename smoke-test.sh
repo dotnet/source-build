@@ -205,6 +205,17 @@ function doCommand() {
             $killCommand
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
+        elif [ "$1" == "publish" ]; then
+            binlogPrefix=$(echo "$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_" | sed 's/--/_/g ; s/ /_/g')
+            if [ "$projectOutput" == "true" ]; then
+                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" | tee -a "$logFile"
+                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" | tee -a "$logFile"
+                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" | tee -a "$logFile"
+            else
+                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog" >> "$logFile" 2>&1
+                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog" >> "$logFile" 2>&1
+                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog" >> "$logFile" 2>&1
+            fi
         else
             if [ "$projectOutput" == "true" ]; then
                 "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
@@ -243,18 +254,18 @@ function setupDevCerts() {
 function runAllTests() {
     # Run tests for each language and template
     if [ "$excludeNonWebTests" == "false" ]; then
-        doCommand C# console new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-        doCommand C# classlib new restore build "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
+        doCommand C# console new restore build run publish
+        doCommand C# classlib new restore build publish
         doCommand C# xunit new restore test
         doCommand C# mstest new restore test
 
-        doCommand VB console new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-        doCommand VB classlib new restore build "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
+        doCommand VB console new restore build run publish
+        doCommand VB classlib new restore build publish
         doCommand VB xunit new restore test
         doCommand VB mstest new restore test
 
-        doCommand F# console new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-        doCommand F# classlib new restore build "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
+        doCommand F# console new restore build run publish
+        doCommand F# classlib new restore build publish
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
     fi
@@ -284,14 +295,14 @@ function resetCaches() {
 }
 
 function runWebTests() {
-    doCommand C# web "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-    doCommand C# mvc "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-    doCommand C# webapi "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-    doCommand C# razor "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
+    doCommand C# web "$@" new restore build run publish
+    doCommand C# mvc "$@" new restore build run publish
+    doCommand C# webapi "$@" new restore build run publish
+    doCommand C# razor "$@" new restore build run publish
 
-    doCommand F# web "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-    doCommand F# mvc "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
-    doCommand F# webapi "$@" new restore build run "publish --self-contained false" "publish --self-contained true -r linux-x64" "publish --self-contained true -r $targetRid"
+    doCommand F# web "$@" new restore build run publish
+    doCommand F# mvc "$@" new restore build run publish
+    doCommand F# webapi "$@" new restore build run publish
 }
 
 function resetCaches() {
