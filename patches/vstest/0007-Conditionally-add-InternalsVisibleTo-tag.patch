@@ -1,0 +1,25 @@
+From 35117d3d316f6d79663529ca135c5da1b94fee12 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 22 Jun 2020 17:41:45 -0400
+Subject: [PATCH] Conditionally add InternalsVisibleTo tag
+
+---
+ .../Microsoft.TestPlatform.Common.csproj                        | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.TestPlatform.Common/Microsoft.TestPlatform.Common.csproj b/src/Microsoft.TestPlatform.Common/Microsoft.TestPlatform.Common.csproj
+index b6287a72..581ab33f 100644
+--- a/src/Microsoft.TestPlatform.Common/Microsoft.TestPlatform.Common.csproj
++++ b/src/Microsoft.TestPlatform.Common/Microsoft.TestPlatform.Common.csproj
+@@ -47,7 +47,7 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <InternalsVisibleTo Include="Microsoft.TestPlatform.Common.UnitTests" />
++    <InternalsVisibleTo Condition="'$(DotNetBuildFromSource)' != 'true'" Include="Microsoft.TestPlatform.Common.UnitTests" />
+   </ItemGroup>
+   <Import Project="$(TestPlatformRoot)scripts\build\TestPlatform.targets" />
+ </Project>
+-- 
+2.18.2
+
