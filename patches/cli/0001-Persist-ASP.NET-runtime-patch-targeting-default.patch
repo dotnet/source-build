@@ -7,20 +7,17 @@ Let the CLI build take a default value for TargetLatestAspNetCoreRuntimePatch in
 
 https://github.com/dotnet/cli/issues/9469 is required to remove this patch.
 ---
- build/MSBuildExtensions.targets | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ build/MSBuildExtensions.targets | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/build/MSBuildExtensions.targets b/build/MSBuildExtensions.targets
-index 73b6f88a2..6fc609c30 100644
+index 2c1e3b733..36a63ffa9 100644
 --- a/build/MSBuildExtensions.targets
 +++ b/build/MSBuildExtensions.targets
-@@ -199,9 +199,17 @@ Copyright (c) .NET Foundation. All rights reserved.
-     <DefaultPatchVersionForAspNetCoreApp2_1>$(_DefaultPatchVersionForAspNetCoreApp2_1)</DefaultPatchVersionForAspNetCoreApp2_1>
- 
-     <!-- Latest patch versions for each minor version of .NET Core -->
-    <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(MicrosoftNETCoreAppLatestVersion1_0)</LatestPatchVersionForNetCore1_0>
-    <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(MicrosoftNETCoreAppLatestVersion1_1)</LatestPatchVersionForNetCore1_1>
-    <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(MicrosoftNETCoreAppLatestVersion2_0)</LatestPatchVersionForNetCore2_0>
+@@ -202,6 +202,14 @@ Copyright (c) .NET Foundation. All rights reserved.
+     <LatestPatchVersionForNetCore1_0 Condition="'%24(LatestPatchVersionForNetCore1_0)' == ''">$(MicrosoftNETCoreAppLatestVersion1_0)</LatestPatchVersionForNetCore1_0>
+     <LatestPatchVersionForNetCore1_1 Condition="'%24(LatestPatchVersionForNetCore1_1)' == ''">$(MicrosoftNETCoreAppLatestVersion1_1)</LatestPatchVersionForNetCore1_1>
+     <LatestPatchVersionForNetCore2_0 Condition="'%24(LatestPatchVersionForNetCore2_0)' == ''">$(MicrosoftNETCoreAppLatestVersion2_0)</LatestPatchVersionForNetCore2_0>
 +
 +    <!-- In source-build, override the default behavior to always target the latest ASP.NET Core runtime.
 +         Normally, a published application will use the latest patch version of the shared ASP.NET framework.
@@ -33,5 +30,5 @@ index 73b6f88a2..6fc609c30 100644
  </Project>
  ]]>
 -- 
-2.21.0
+2.26.2.windows.1
 
