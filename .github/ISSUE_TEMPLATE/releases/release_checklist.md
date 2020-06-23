@@ -14,10 +14,16 @@ _The set of .NET Core versions that are being released as a unit._
      - [ ] if maestro auto-PR is active, then verify SHA1s in version.Details with manifest versions in VSU share dir (refer docs), make sure that we match the versions
      - [ ] if auto-PR updates are unavailable, checkout a local branch for the pertinent version and run darc updates(refer docs). 
        - [ ] Push this local branch upstream and start the release PR for the N version that is to be released.
-1. - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` match N-1 release artifacts
-1. - [ ] Verify that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer OneNote)
+1. - [ ] Version updates and confirmations
+   - For 2.x:
+       - [ ] Verify that `source-build/ProdConFeed.txt` contains the latest feed required for the release. For info on latest feed (refer OneNote).
+       - [ ] Verify/update the ASP.NET versions (`MicrosoftAspNetCoreAllPackageVersion` and `MicrosoftAspNetCoreAppPackageVersion`) in dependencies.props.
+       - [ ] Verify/update the `OfficialBuildId`s in updated repos (usually coreclr, corefx, core-setup).
+   - For 3.x:
+       - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` match N-1 release artifacts.
 1. - [ ] Build locally/in-CI and get to a clean build
-1. - [ ] Complete prebuilt and poison audit. Review the baseline changes to find out if there are any new prebuilts. 
+1. - [ ] Complete prebuilt and poison audit. Review the baseline changes to find out if there are any new prebuilts.
+1. - [ ] Verify the the packs included in the SDK are from source-build-reference-packages, not source-build, and have XML documentation comments. 
 1. - [ ] Remove new prebuilts, if any. Ideally any new prebuilts that show up in offline builds have to be removed. In some cases, new prebuilts show up in Production builds but gets purged in offline builds automatically as they are not packaged(they may not be needed for the actual build).
 1. - [ ] If significant delays are anticipated, notify the distro maintainer with PR link mentioning that a PR is ready, but we're waiting on the final validation. Do not tag the release until we have the final validation for the Microsoft build.
 1. - [ ] Re-validate the SHA1s in Versions file with the manifest in VSU share dir
@@ -37,3 +43,7 @@ _The set of .NET Core versions that are being released as a unit._
 
 1. - [ ] Similarly, download Private.SourceBuilt.Artifacts.XX.tar.gz from CI and upload it to source-built-artifacts blob container
 1. - [ ] Write a post-mortem for the release
+
+### Additional notes
+
+See the .NET Core A&D OneNote -> Tarball section -> Source-build release checklist.
