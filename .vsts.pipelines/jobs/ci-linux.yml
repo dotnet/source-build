@@ -81,32 +81,24 @@ jobs:
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     displayName: Run smoke-test
 
-   # Copy source-buid logs
+  # Copy source-build logs
   - script: |
       set -x
+      logDir=/logs/source-build/logs
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs
-        find \"\$PWD\" \( \
+        mkdir -p $logDir
+        find \"\$PWD\" \
+          -depth \
+          \( \
           -path './bin/*-report/*' -o \
           -path './bin/msbuild-debug/*' -o \
           -iname '*.binlog' -o \
-          -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;"
-    displayName: Copy source-build logs
-    condition: always()
-    continueOnError: true
-
-  # Delete local copy of source-build logs
-  - script: |
-      set -x
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        find \"\$PWD\" \( \
-          -path './bin/*-report/*' -o \
-          -path './bin/msbuild-debug/*' -o \
-          -iname '*.binlog' -o \
-          -iname '*.log' \) \
+          -iname '*.log' \
+          \) \
+          -exec echo Copying and removing {} \; \
+          -exec cp {} --parents $logDir \; \
           -exec rm -rf {} \;"
-    displayName: Remove source-build logs
+    displayName: Copy source-build logs
     condition: always()
     continueOnError: true
 
@@ -187,31 +179,22 @@ jobs:
   # Copy tarball logs and reports to staging directory.
   - script: |
       set -x
+      logDir=/logs/tarball/logs
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/tarball/logs
+        mkdir -p $logDir
         cd \"$(tarballName)\"
-        find \"\$PWD\" \( \
+        find \"\$PWD\" \
+          -depth \
+          \( \
           -path './bin/*-report/*' -o \
           -path './bin/msbuild-debug/*' -o \
           -iname '*.binlog' -o \
-          -iname '*.log' \) \
-          -exec cp {} --parents /logs/tarball/logs \;"
-    displayName: Copy tarball logs
-    condition: eq(variables['sb.tarball'], true)
-    continueOnError: true
-
-  # Remove tarball logs and reports
-  - script: |
-      set -x
-      $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        cd \"$(tarballName)\"
-        find \"\$PWD\" \( \
-          -path './bin/*-report/*' -o \
-          -path './bin/msbuild-debug/*' -o \
-          -iname '*.binlog' -o \
-          -iname '*.log' \) \
+          -iname '*.log' \
+          \) \
+          -exec echo Copying and removing {} \; \
+          -exec cp {} --parents $logDir \; \
           -exec rm -rf {} \;"
-    displayName: Remove tarball logs
+    displayName: Copy tarball logs
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 
