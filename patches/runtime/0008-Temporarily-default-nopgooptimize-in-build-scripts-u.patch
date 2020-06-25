@@ -1,8 +1,8 @@
-From ebbb04befc71870f8f19c034fd25e54f28f2cae3 Mon Sep 17 00:00:00 2001
+From 1d8c9265bd3f6aedb13fa2f040f7e2976001ab6d Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 25 Mar 2020 15:22:44 +0000
-Subject: [PATCH] Temporarily default nopgooptimize in build scripts until
- https://github.com/dotnet/runtime/issues/34069 is fixed.
+Subject: [PATCH 08/15] Temporarily default nopgooptimize in build scripts
+ until https://github.com/dotnet/runtime/issues/34069 is fixed.
 
 ---
  src/coreclr/build-runtime.sh | 4 ++--
@@ -10,10 +10,10 @@ Subject: [PATCH] Temporarily default nopgooptimize in build scripts until
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/coreclr/build-runtime.sh b/src/coreclr/build-runtime.sh
-index 0ac62ff..8e6dad4 100755
+index 24bb0067380..6c8b10672f5 100755
 --- a/src/coreclr/build-runtime.sh
 +++ b/src/coreclr/build-runtime.sh
-@@ -158,7 +158,7 @@ __CrossBuild=0
+@@ -154,7 +154,7 @@ __CrossBuild=0
  __DistroRid=""
  __PgoInstrument=0
  __PgoOptDataPath=""
@@ -22,7 +22,7 @@ index 0ac62ff..8e6dad4 100755
  __PortableBuild=1
  __ProjectDir="$__ProjectRoot"
  __RootBinDir="$__RepoRootDir/artifacts"
-@@ -169,7 +169,7 @@ __SkipCrossArchNative=0
+@@ -165,7 +165,7 @@ __SkipCrossArchNative=0
  __SkipGenerateVersion=0
  __SkipManaged=0
  __SkipRestore=""
@@ -32,7 +32,7 @@ index 0ac62ff..8e6dad4 100755
  __StaticAnalyzer=0
  __UnprocessedBuildArgs=
 diff --git a/src/coreclr/build.sh b/src/coreclr/build.sh
-index 5a6fa32..406b9a7 100755
+index 1ce18640e17..d60fcd33d59 100755
 --- a/src/coreclr/build.sh
 +++ b/src/coreclr/build.sh
 @@ -429,7 +429,7 @@ __OfficialBuildIdArg=""
@@ -54,5 +54,5 @@ index 5a6fa32..406b9a7 100755
  __StaticAnalyzer=0
  __UnprocessedBuildArgs=
 -- 
-1.8.3.1
+2.17.1
 

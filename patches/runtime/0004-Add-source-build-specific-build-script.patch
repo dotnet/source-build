@@ -1,16 +1,16 @@
-From 219a109c9537a5da21a0ba6b611f01db7794dae0 Mon Sep 17 00:00:00 2001
+From 38f4b2ce1396937413bfc38c9922b422753c58f8 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 15 Jan 2020 15:14:54 +0000
-Subject: [PATCH] Add source-build specific build script
+Subject: [PATCH 04/15] Add source-build specific build script
 
 ---
- build-source-build.sh | 87 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ build-source-build.sh | 87 +++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 87 insertions(+)
  create mode 100755 build-source-build.sh
 
 diff --git a/build-source-build.sh b/build-source-build.sh
 new file mode 100755
-index 0000000..758cd7b
+index 00000000000..93d42f9e0a6
 --- /dev/null
 +++ b/build-source-build.sh
 @@ -0,0 +1,87 @@
@@ -101,7 +101,6 @@ index 0000000..758cd7b
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "librariesBuild.binlog" * {} \;
 +echo "Running command: $scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
 +$scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
-+find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
 -- 
-1.8.3.1
+2.17.1
 

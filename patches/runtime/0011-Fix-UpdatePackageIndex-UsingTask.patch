@@ -1,16 +1,16 @@
-From 1e81879f94fe1edea8f0bb96f663baf0b2d22ff4 Mon Sep 17 00:00:00 2001
+From ef2efbdf951e99b5f4bc99ad0743d3a609b7de29 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 4 Jun 2020 14:06:16 +0000
-Subject: [PATCH] Fix UpdatePackageIndex UsingTask
-Based on runtime PR: https://github.com/dotnet/runtime/pull/37369
+Subject: [PATCH 11/15] Fix UpdatePackageIndex UsingTask
 
+Based on runtime PR: https://github.com/dotnet/runtime/pull/37369
 ---
  eng/restore/harvestPackages.targets   | 10 ++--------
  src/libraries/libraries-packages.proj |  9 ++++++++-
  2 files changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/eng/restore/harvestPackages.targets b/eng/restore/harvestPackages.targets
-index 152888c..29b9747 100644
+index 152888c9597..29b97472c84 100644
 --- a/eng/restore/harvestPackages.targets
 +++ b/eng/restore/harvestPackages.targets
 @@ -1,11 +1,4 @@
@@ -34,7 +34,7 @@ index 152888c..29b9747 100644
 +</Project>
 +
 diff --git a/src/libraries/libraries-packages.proj b/src/libraries/libraries-packages.proj
-index f1ed352..51af452 100644
+index f1ed35266b0..51af4524be3 100644
 --- a/src/libraries/libraries-packages.proj
 +++ b/src/libraries/libraries-packages.proj
 @@ -6,6 +6,13 @@
@@ -61,5 +61,5 @@ index f1ed352..51af452 100644
            BeforeTargets="Build"
            Condition="'$(DotNetFinalVersionKind)' == 'release'">
 -- 
-1.8.3.1
+2.17.1
 
