@@ -1,7 +1,7 @@
-From b5e4f7ee1af325f8cabb3bbba6cf442e793d5108 Mon Sep 17 00:00:00 2001
+From b4edaceb9bd193ee8f687fa31ca43251998e5232 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Mon, 11 Nov 2019 13:37:40 -0500
-Subject: [PATCH 13/16] Support building for arm64 on arm64 (*nix)
+Subject: [PATCH] Support building for arm64 on arm64 (*nix)
 
 This commit allows ASP.NET Core to be built on arm64 machines directly,
 without relying on cross-compilation.
@@ -47,10 +47,10 @@ index 4000049e52..1f94f9c854 100644
      <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
      <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
  
-diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 index 75b8e5515e..b0a999453d 100644
---- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-+++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -98,15 +98,17 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <PathSeparator Condition="'$(PathSeparator)' == ''">:</PathSeparator>
      <PathSeparator Condition=" '$(TargetOsName)' == 'win' ">%3B</PathSeparator>
@@ -84,5 +84,5 @@ index 75b8e5515e..b0a999453d 100644
  
    <ItemGroup>
 -- 
-2.21.0
+2.25.2
 
