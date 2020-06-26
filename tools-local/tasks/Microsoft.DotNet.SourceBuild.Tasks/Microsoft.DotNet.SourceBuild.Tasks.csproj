@@ -3,9 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <CoreSetupPlatformAbstractionsPath Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)core-setup.$(coresetupGitCommitHash)/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
-    <CoreSetupPlatformAbstractionsPath Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)core-setup.$(coresetupGitCommitHash)/src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
     <OutputPath>$(TasksBinDir)</OutputPath>
+
+    <SubRepoDir Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)</SubRepoDir>
+    <SubRepoDir Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)</SubRepoDir>
+
+    <CoreSetupGitHubDir>$(SubRepoDir)core-setup.$(coresetupGitCommitHash)/</CoreSetupGitHubDir>
+    <CoreSetupInternalDir>$(SubRepoDir)dotnet-core-setup.$(coresetupGitCommitHash)/</CoreSetupInternalDir>
+
+    <CoreSetupRepoDir Condition="Exists('$(CoreSetupGitHubDir)')">$(CoreSetupGitHubDir)</CoreSetupRepoDir>
+    <CoreSetupRepoDir Condition="Exists('$(CoreSetupInternalDir)')">$(CoreSetupInternalDir)</CoreSetupRepoDir>
+
+    <CoreSetupPlatformAbstractionsPath>$(CoreSetupRepoDir)src/managed/Microsoft.DotNet.PlatformAbstractions/</CoreSetupPlatformAbstractionsPath>
   </PropertyGroup>
 
   <ItemGroup>
