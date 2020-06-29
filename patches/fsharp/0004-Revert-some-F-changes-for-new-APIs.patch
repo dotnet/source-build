@@ -1,0 +1,70 @@
+From 10a406e1b68e29aa97cdcaddd354c0916b6829df Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 29 Jun 2020 18:31:35 +0000
+Subject: [PATCH 4/4] Revert some F# changes for new APIs.
+
+---
+ src/absil/ilreflect.fs | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/absil/ilreflect.fs b/src/absil/ilreflect.fs
+index 7f048dd5b..d2010a9dc 100644
+--- a/src/absil/ilreflect.fs
++++ b/src/absil/ilreflect.fs
+@@ -1568,7 +1568,7 @@ let rec buildMethodPass2 cenv tref (typB: TypeBuilder) emEnv (mdef: ILMethodDef)
+           // Method generic type parameters         
+           buildGenParamsPass1 emEnv methB.DefineGenericParametersAndLog mdef.GenericParams
+           let genArgs = getGenericArgumentsOfMethod methB 
+-          let emEnv = envPushTyvars emEnv (Array.append (getGenericArgumentsOfType (typB.AsType())) genArgs)
++          let emEnv = envPushTyvars emEnv (Array.append (getGenericArgumentsOfType (typB)) genArgs)
+           buildGenParamsPass1b cenv emEnv genArgs mdef.GenericParams
+ 
+           // Set parameter and return types (may depend on generic args)
+@@ -1615,7 +1615,7 @@ let rec buildMethodPass3 cenv tref modB (typB: TypeBuilder) emEnv (mdef: ILMetho
+        
+           let methB = envGetMethB emEnv mref
+           let emEnv = envPushTyvars emEnv (Array.append
+-                                             (getGenericArgumentsOfType (typB.AsType()))
++                                             (getGenericArgumentsOfType (typB))
+                                              (getGenericArgumentsOfMethod methB))
+ 
+           if not (Array.isEmpty mdef.Return.CustomAttrs.AsArray) then
+@@ -1718,7 +1718,7 @@ let buildEventPass3 cenv (typB: TypeBuilder) emEnv (eventDef: ILEventDef) =
+ //----------------------------------------------------------------------------
+   
+ let buildMethodImplsPass3 cenv _tref (typB: TypeBuilder) emEnv (mimpl: IL.ILMethodImplDef) =
+-    let bodyMethInfo = convMethodRef cenv emEnv (typB.AsType()) mimpl.OverrideBy.MethodRef // doc: must be MethodBuilder
++    let bodyMethInfo = convMethodRef cenv emEnv (typB) mimpl.OverrideBy.MethodRef // doc: must be MethodBuilder
+     let (OverridesSpec (mref, dtyp)) = mimpl.Overrides
+     let declMethTI = convType cenv emEnv dtyp 
+     let declMethInfo = convMethodRef cenv emEnv declMethTI mref
+@@ -1822,7 +1822,7 @@ and buildTypeTypeDef cenv emEnv modB (typB: TypeBuilder) nesting tdef =
+ let rec buildTypeDefPass1b cenv nesting emEnv (tdef: ILTypeDef) = 
+     let tref = mkRefForNestedILTypeDef ILScopeRef.Local (nesting, tdef)
+     let typB = envGetTypB emEnv tref
+-    let genArgs = getGenericArgumentsOfType (typB.AsType())
++    let genArgs = getGenericArgumentsOfType (typB)
+     let emEnv = envPushTyvars emEnv genArgs
+     // Parent may reference types being defined, so has to come after it's Pass1 creation 
+     tdef.Extends |> Option.iter (fun ty -> typB.SetParentAndLog (convType cenv emEnv ty))
+@@ -1840,7 +1840,7 @@ let rec buildTypeDefPass1b cenv nesting emEnv (tdef: ILTypeDef) =
+ let rec buildTypeDefPass2 cenv nesting emEnv (tdef: ILTypeDef) = 
+     let tref = mkRefForNestedILTypeDef ILScopeRef.Local (nesting, tdef)
+     let typB = envGetTypB emEnv tref
+-    let emEnv = envPushTyvars emEnv (getGenericArgumentsOfType (typB.AsType()))
++    let emEnv = envPushTyvars emEnv (getGenericArgumentsOfType (typB))
+     // add interface impls
+     tdef.Implements |> convTypes cenv emEnv |> List.iter (fun implT -> typB.AddInterfaceImplementationAndLog implT)
+     // add methods, properties
+@@ -1860,7 +1860,7 @@ let rec buildTypeDefPass2 cenv nesting emEnv (tdef: ILTypeDef) =
+ let rec buildTypeDefPass3 cenv nesting modB emEnv (tdef: ILTypeDef) =
+     let tref = mkRefForNestedILTypeDef ILScopeRef.Local (nesting, tdef)
+     let typB = envGetTypB emEnv tref
+-    let emEnv = envPushTyvars emEnv (getGenericArgumentsOfType (typB.AsType()))
++    let emEnv = envPushTyvars emEnv (getGenericArgumentsOfType (typB))
+     // add method bodies, properties, events
+     tdef.Methods |> Seq.iter (buildMethodPass3 cenv tref modB typB emEnv)
+     tdef.Properties.AsList |> List.iter (buildPropertyPass3 cenv tref typB emEnv)
+-- 
+2.17.1
+
