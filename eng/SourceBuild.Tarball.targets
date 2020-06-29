@@ -161,7 +161,7 @@
   <Target Name="AddTarballPackages">
     <!-- Find reference-packages to exclude from tarball prebuilts...-->
     <ItemGroup Condition="'$(CustomRefPackagesDir)' != ''">
-      <SourceBuildReferencePackageFile Include="$(CustomRefPackagesDir)**\*.nupkg" />
+      <SourceBuildReferencePackageFile Include="$([MSBuild]::NormalizeDirectory('$(CustomRefPackagesDir)'))**\*.nupkg" />
     </ItemGroup>
 
     <Exec
@@ -178,7 +178,7 @@
 
     <!-- Find previously source-built packages to exclude from tarball prebuilts... -->
     <ItemGroup Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' != ''">
-      <PreviouslySourceBuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
+      <PreviouslySourceBuiltPackageFile Include="$([MSBuild]::NormalizeDirectory('$(CustomPreviouslySourceBuiltPackagesDir)'))**\*.nupkg" />
     </ItemGroup>
 
     <Exec
