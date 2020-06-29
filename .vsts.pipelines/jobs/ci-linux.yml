@@ -40,11 +40,19 @@ jobs:
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
+    # Preserve the NuGet authentication env vars into the Docker container.
+    # The 'NuGetAuthenticate' build step may have set these.
+    PreserveNuGetAuthDockerArgs: >-
+      -e VSS_NUGET_URI_PREFIXES
+      -e VSS_NUGET_ACCESSTOKEN
 
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
   - template: ../steps/docker-cleanup-linux.yml
   - template: ../steps/calculate-config-flags.yml
+
+  - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - task: NuGetAuthenticate@0
 
   # Create working directory and copy source into it.
   - script: |
@@ -64,7 +72,7 @@ jobs:
       if [ "$(sb.tarball)" != "true" ]; then
         failOnBaselineError=true
       fi
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(PreserveNuGetAuthDockerArgs) $(imageName) ./build.sh \
         /p:Configuration=$(sb.configuration) \
         /p:PortableBuild=$(sb.portable) \
         /p:UseSystemLibunwind=$(systemLibunwind) \
@@ -90,7 +98,7 @@ jobs:
   - script: |
       set -ex
       df -h
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(PreserveNuGetAuthDockerArgs) $(imageName) ./build.sh \
         --run-smoke-test \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
