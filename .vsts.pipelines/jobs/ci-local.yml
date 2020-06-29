@@ -35,6 +35,11 @@ jobs:
     # Default type, can be overridden by matrix legs.
     type: Production
 
+    ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
+      InternalPackageFeedPatEnv: ''
+    ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      InternalPackageFeedPatEnv: $(dn-bot-dnceng-artifact-feeds-rw)
+
   steps:
   - checkout: self
     clean: true
@@ -64,6 +69,8 @@ jobs:
 
   # Build source-build.
   - script: ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+    env:
+      internalPackageFeedPat: $(InternalPackageFeedPatEnv)
     displayName: Build source-build
     timeoutInMinutes: 150
 
@@ -72,6 +79,8 @@ jobs:
   # Run smoke tests.
   - ${{ if ne(parameters.skipSmokeTest, true) }}:
     - bash: ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+      env:
+        internalPackageFeedPat: $(InternalPackageFeedPatEnv)
       displayName: Run smoke-test
 
   # Gather artifacts. Uses git bash on Windows.
