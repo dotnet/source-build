@@ -125,7 +125,7 @@ jobs:
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         args="$args --enable-leak-detection"
       fi
-      $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
+      $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(SetInternalPackageFeedPatDockerArg) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         $args
       du -h $(rootDirectory) | sort -h | tail -n 50
