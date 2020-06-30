@@ -306,7 +306,7 @@ function resetCaches() {
 
     # Copy NuGet plugins if running user has HOME. In particular, the auth plugin.
     if [ "${executingUserHome:-}" ]; then
-        cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/"
+        cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/" || :
     fi
 }
 
