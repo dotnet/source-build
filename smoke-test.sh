@@ -8,6 +8,7 @@ VERSION_PREFIX=3.1
 DEV_CERTS_VERSION_DEFAULT=3.0.0-preview8-28405-07
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 targetRid=$(cat "$SCRIPT_ROOT/artifacts/obj/x64/Release/TargetInfo.props" | grep -i targetrid | sed -E 's|\s*</?TargetRid>\s*||g')
+executingUserHome=${HOME:-}
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -283,16 +284,6 @@ function runAllTests() {
     fi
 }
 
-function resetCaches() {
-    rm -rf "$testingHome"
-    mkdir "$testingHome"
-
-    HOME="$testingHome"
-
-    # clean restore path
-    rm -rf "$restoredPackagesDir"
-}
-
 function runWebTests() {
     doCommand C# web "$@" new restore build run publish
     doCommand C# mvc "$@" new restore build run publish
@@ -312,6 +303,11 @@ function resetCaches() {
 
     # clean restore path
     rm -rf "$restoredPackagesDir"
+
+    # Copy NuGet plugins if running user has HOME. In particular, the auth plugin.
+    if [ "${executingUserHome:-}" ]; then
+        cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/"
+    fi
 }
 
 function setupProdConFeed() {
