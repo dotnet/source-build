@@ -12,12 +12,8 @@ else
     set +e
     set -x
 
-    # In Ubuntu 18.04, curl uses libcurl4. Make sure libcurl3 doesn't interfere.
-    apt remove -y libcurl3
     apt update && apt install -y curl
-
     apk update && apk upgrade && apk add curl
-
     exit 0
   )
 fi
