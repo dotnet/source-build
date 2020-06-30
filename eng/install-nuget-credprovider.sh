@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-set -e
 
-# This script installs the NuGet Credential Provider.
+# This script installs the NuGet Credential Provider. It is intended for use on CI machines only.
+
+# Originally copied from https://github.com/dotnet/core-setup/blob/aa28510afc9b986c6837db6784d816fe4a66c7d0/eng/install-nuget-credprovider.sh
+
+set -e
 
 # Install curl if necessary. Dependency exists inside downloaded script.
 if command -v curl > /dev/null; then
@@ -11,7 +14,6 @@ else
   (
     set +e
     set -x
-
     apt update && apt install -y curl
     apk update && apk upgrade && apk add curl
     exit 0
