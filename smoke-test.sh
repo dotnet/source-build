@@ -304,8 +304,8 @@ function resetCaches() {
     # clean restore path
     rm -rf "$restoredPackagesDir"
 
-    # Copy NuGet plugins if running user has HOME. In particular, the auth plugin.
-    if [ "${executingUserHome:-}" ]; then
+    # Copy NuGet plugins if running user has HOME and we have auth. In particular, the auth plugin.
+    if [ "${internalPackageFeedPat:-}" ] && [ "${executingUserHome:-}" ]; then
         cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/" || :
     fi
 }
