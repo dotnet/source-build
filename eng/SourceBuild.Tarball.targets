@@ -297,7 +297,8 @@
   </Target>
 
   <Target Name="AddTarballLeakDetection"
-          Condition="'$(IncludeLeakDetection)' == 'true'">
+          Condition="'$(IncludeLeakDetection)' == 'true'"
+          DependsOnTargets="CopyTarballFiles">
     <PropertyGroup>
       <LeakDetectionProjectFile>$(ProjectDir)tools-local\tasks\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection\Microsoft.DotNet.SourceBuild.Tasks.LeakDetection.csproj</LeakDetectionProjectFile>
     </PropertyGroup>
@@ -305,12 +306,12 @@
     <MSBuild
       Projects="$(LeakDetectionProjectFile)"
       Targets="Restore"
-      Properties="RestoreSources=$(TarballRootDir)packages/source-built%3B$(TarballRootDir)packages/prebuilt"/>
+      Properties="RestoreSources=$(SourceBuiltPackagesPath)%3B$(TarballRootDir)packages/prebuilt%3bhttps://api.nuget.org/v3/index.json"/>
 
     <MSBuild
       Projects="$(LeakDetectionProjectFile)"
       Targets="Publish"
-      Properties="OutputPath=$(TarballRootDir)tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection"/>
+      Properties="OutputPath=$(TarballRootDir)tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/"/>
   </Target>
 
   <Target Name="CopyTarballFiles">
