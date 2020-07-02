@@ -230,15 +230,15 @@
       <!--
         Set up filename-based items, in order to filter out some packages that aren't necessary as
         prebuilts, or are generated/acquired another way.
-
-        For internal builds, all smoke-test packages should be kept. Ordinarily, they can be
-        restored during smoke-test execution, but any packages that are acquired from the internal
-        source might not be available on public feeds yet.
       -->
       <IncludedPrebuiltPackageCandidate Include="@(PrebuiltPackageFile)" />
 
-      <IncludedPrebuiltPackageCandidate Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != ''" />
-      <IncludedPrebuiltPackageFile Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' == ''" />
+      <!--
+        For internal builds, all smoke-test packages should be kept. For external builds, they can
+        be restored during smoke-test execution from public sources, so can be pruned.
+      -->
+      <IncludedPrebuiltPackageFile Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != ''" />
+      <IncludedPrebuiltPackageCandidate Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' == ''" />
 
       <IncludedPrebuiltPackageFilename
         Include="@(IncludedPrebuiltPackageCandidate -> '%(Filename)')"
