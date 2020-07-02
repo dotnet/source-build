@@ -4,7 +4,7 @@
   <PropertyGroup>
      <OverrideTargetRid>$(TargetRid)</OverrideTargetRid>
      <OverrideTargetRid Condition="'$(TargetOS)' == 'OSX'">osx-x64</OverrideTargetRid>
-     <OSNameOverride>$(TargetRid.Substring(0, $(TargetRid.IndexOf("-"))))</OSNameOverride>
+     <OSNameOverride>$(TargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</OSNameOverride>
  
      <RuntimeArg>--runtime-id $(OverrideTargetRid)</RuntimeArg>
      <RuntimeArg Condition="'$(TargetOS)' == 'Linux'">--runtime-id $(TargetRid)</RuntimeArg>
