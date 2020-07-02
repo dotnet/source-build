@@ -224,18 +224,26 @@
         RelativeDestination="packages\prebuilt\%(Filename)%(Extension)" />
 
       <SmokeTestPackageFile
-        Include="$(ProjectDir)testing-smoke\smoke-test-packages\**"
+        Include="$(ProjectDir)testing-smoke\smoke-test-packages\**\*.nupkg"
         RelativeRoot="packages\smoke-test-packages\" />
 
-      <!-- Set identity to the filename to allow for Remove, but keep old identity to swap back. -->
+      <!--
+        Set up filename-based items, in order to filter out some packages that aren't necessary as
+        prebuilts, or are generated/acquired another way.
+
+        For internal builds, all smoke-test packages should be kept. Ordinarily, they can be
+        restored during smoke-test execution, but any packages that are acquired from the internal
+        source might not be available on public feeds yet.
+      -->
+      <IncludedPrebuiltPackageCandidate Include="@(PrebuiltPackageFile)" />
+
+      <IncludedPrebuiltPackageCandidate Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != ''" />
+      <IncludedPrebuiltPackageFile Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' == ''" />
+
       <IncludedPrebuiltPackageFilename
-        Include="
-          @(PrebuiltPackageFile -> '%(Filename)');
-          @(SmokeTestPackageFile -> '%(Filename)');
-          "
+        Include="@(IncludedPrebuiltPackageCandidate -> '%(Filename)')"
         OriginalIdentity="%(Identity)" />
 
-      <!-- Exclude prebuilt nupkgs supplied a different way or not actually needed as prebuilts. -->
       <IncludedPrebuiltPackageFilename Remove="
         @(SourceBuiltPackageFilename);
         @(SourceBuildReferencePackageFilename);
