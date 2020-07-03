@@ -72,3 +72,14 @@ jobs:
     scriptPrefix: ./
     scriptSuffix: .sh
     setupMac: true
+
+- template: ../jobs/prepare-artifacts.yml
+  parameters:
+    # Gather from all jobs that have offline in the matrix. This also defines dependencies.
+    gatherJobs:
+    - job: centos71
+    - job: centos8
+    - job: debian9
+      artifactName: Tarball debian9 Online
+    - job: fedora30
+    gatherPortableJob: centos71

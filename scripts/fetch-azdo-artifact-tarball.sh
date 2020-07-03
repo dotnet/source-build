@@ -1,16 +1,20 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+# Library. Source this script or copy-paste it into a shell to import its functions.
 
-# Logic is encapsulated to make this function easy to copy-paste to a machine that doesn't have a
-# clone of this repository. This may be common when downloading a tarball.
+# Set up AzDO authentication if not already done in this environment, download a file, and extract
+# it to the current dir. Logic is encapsulated to make this function easy to copy-paste to a machine
+# that doesn't have a clone of this repository, which is common when downloading a tarball onto a
+# fresh machine to validate it.
+#
+# Usage: download_tarball <url>
+#   url: the URL to download. Wrap it in single quotes to avoid issues with special chars.
 download_tarball() {
+  [ "${azdo_build_pat:-}" ] || read -p 'AzDO dnceng PAT with build read permission: ' -s azdo_build_pat
   (
     set -euo pipefail
     url=$1
     temp_name=${temp_name:-tarball.tar.gz}
-
-    [ "$azdo_build_pat" ] || read -p 'AzDO dnceng PAT with build read permission: ' -s azdo_build_pat
 
     echo; echo 'Starting download...'
 
@@ -30,5 +34,3 @@ download_tarball() {
     echo 'Complete!'
   )
 }
-
-download_tarball "$@"
