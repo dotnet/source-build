@@ -14,9 +14,7 @@ jobs:
   parameters:
     job: centos71
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-# Temporarily disable reporting on prebuilt leaks until entire product builds.
-# See https://github.com/dotnet/source-build/issues/1548
-    reportPrebuiltLeaks: false
+    reportPrebuiltLeaks: true
     matrix:
 # Temporarily disable unit tests until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1549

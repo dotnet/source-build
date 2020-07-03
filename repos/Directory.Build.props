@@ -41,6 +41,7 @@
 
   <ItemGroup>
     <EnvironmentVariables Include="DotNetBuildFromSource=true" />
+    <EnvironmentVariables Include="DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)" />
     <EnvironmentVariables Include="DotNetRestorePackagesPath=$(PackagesDir)" />
     <EnvironmentVariables Include="DotNetBuildOffline=true" Condition="'$(OfflineBuild)' == 'true'" />
 

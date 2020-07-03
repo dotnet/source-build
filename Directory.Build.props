@@ -20,7 +20,7 @@
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
+    <UseStableVersions Condition="'$(UseStableVersions)' == ''">false</UseStableVersions>
 
     <!-- new supported portable/nonportable options.  These control whether to build portable runtime
          or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
@@ -121,7 +121,7 @@
     <PrebuiltSourceBuiltPackagesPath>$(ProjectDir)packages/source-built/</PrebuiltSourceBuiltPackagesPath>
     <PrebuiltSourceBuiltPackagesPath Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(CustomPrebuiltSourceBuiltPackagesPath)/</PrebuiltSourceBuiltPackagesPath>
     <SourceBuiltTarBallPath>$(OutputPath)</SourceBuiltTarBallPath>
-    <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Toolset/</SourceBuiltToolsetDir>
+    <SourceBuiltToolsetDir>$(LocalBlobStorageRoot)Sdk/</SourceBuiltToolsetDir>
     <SourceBuiltRuntimeDir>$(LocalBlobStorageRoot)Runtime/</SourceBuiltRuntimeDir>
     <SourceBuiltAspNetCoreRuntime>$(LocalBlobStorageRoot)aspnetcore/Runtime/</SourceBuiltAspNetCoreRuntime>
     <RestoreSourcePropsPath>$(IntermediatePath)RestoreSources.props</RestoreSourcePropsPath>

@@ -1,0 +1,25 @@
+From 7fa334b14bd8f4e3e388f0f297fef736db80feaa Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 29 Jun 2020 16:50:04 +0000
+Subject: [PATCH 3/3] Use source-built S.R.Emit version.
+
+---
+ .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+index f138fba02..9b33f9488 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+@@ -753,7 +753,7 @@
+     <PackageReference Include="System.Linq.Queryable" Version="$(SystemLinqExpressionsVersion)" />
+     <PackageReference Include="System.Net.Requests" Version="$(SystemNetRequestsVersion)" />
+     <PackageReference Include="System.Net.Security" Version="$(SystemNetSecurityVersion)" />
+-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
++    <PackageReference Include="System.Reflection.Emit" Version="$(SystemReflectionEmitVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.Reflection.TypeExtensions" Version="$(SystemReflectionTypeExtensionsVersion)" />
+     <PackageReference Include="System.Runtime" Version="$(SystemRuntimeVersion)" />
+-- 
+2.17.1
+

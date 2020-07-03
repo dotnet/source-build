@@ -1,0 +1,28 @@
+From a8652c57b0498d55ba3669e10043e218acbf2b5f Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 29 Jun 2020 18:47:02 -0400
+Subject: [PATCH] Use PVP for PlatformAbstractions and NuGet.Versioning
+
+---
+ src/core-sdk-tasks/core-sdk-tasks.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/core-sdk-tasks/core-sdk-tasks.csproj b/src/core-sdk-tasks/core-sdk-tasks.csproj
+index d6c8968d4..28b6bde5d 100644
+--- a/src/core-sdk-tasks/core-sdk-tasks.csproj
++++ b/src/core-sdk-tasks/core-sdk-tasks.csproj
+@@ -10,9 +10,9 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" />
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
+     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+-    <PackageReference Include="NuGet.Versioning" Version="4.3.0" />
++    <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersioningPackageVersion)" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
+     <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+-- 
+2.18.2
+

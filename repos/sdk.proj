@@ -24,6 +24,7 @@
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</PackagesOutput>
+    <ToolsetZipOutputDir>$(ProjectDirectory)artifacts/packages/Release/NonShipping/</ToolsetZipOutputDir>
 
     <EnvironmentRestoreSources>$(SourceBuiltPackagesPath)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
@@ -48,7 +49,24 @@
     <RepositoryReference Include="newtonsoft-json" />
     <RepositoryReference Include="newtonsoft-json901" />
     <RepositoryReference Include="nuget-client" />
+    <RepositoryReference Include="vstest" />
+    <RepositoryReference Include="fsharp" />
   </ItemGroup>
+
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishToolsetBinaries" />
+
+  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
+  <Target Name="PublishBinaries" AfterTargets="Build">
+    <ItemGroup>
+      <ToolsetZips Include="$(ToolsetZipOutputDir)dotnet-*.zip" />
+    </ItemGroup>
+    <Message Importance="High" Text="Publishing @(ToolsetZips) from $(ToolsetZipOutputDir) to $(LocalBlobStorageRoot)Sdk/{version}/" />
+    <PublishToolsetBinaries Binaries="@(ToolsetZips)"
+                            DestinationFolderTemplate="$(SourceBuiltToolsetDir){version}/">
+      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
+    </PublishToolsetBinaries>
+    <Message Text="Published toolset binaries version $(PublishedVersion)" Importance="High" />
+  </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

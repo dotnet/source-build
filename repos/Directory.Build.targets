@@ -300,7 +300,13 @@
           Condition="'@(_BuiltPackages)'!=''"
           DependsOnTargets="GatherBuiltPackages">
 
-    <ReadNuGetPackageInfos PackagePaths="@(_BuiltPackages)">
+    <ItemGroup>
+        <!-- Excluding Arcade here will keep it in the cache, because that's where we're running from.
+             Subsequent projects will get Arcade from Tools/source-built. -->
+        <PackagePaths Include="@(_BuiltPackages)" Exclude="$(PackagesOutput)/Microsoft.DotNet.Arcade.Sdk.*.nupkg" />
+    </ItemGroup>
+
+    <ReadNuGetPackageInfos PackagePaths="@(PackagePaths)">
       <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
     </ReadNuGetPackageInfos>
 

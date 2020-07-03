@@ -8,20 +8,20 @@ Subject: [PATCH 11/15] Add FreeBSD
  1 file changed, 2 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 38e2f770c5..9ab5379da7 100644
+index be7a5a3..5ab07ca 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -111,6 +111,7 @@
+@@ -115,6 +115,7 @@
    <PropertyGroup>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</TargetOsName>
 +    <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('FreeBSD'))">freebsd</TargetOsName>
      <TargetOsName Condition=" '$(TargetOsName)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</TargetOsName>
+     <BuildArchitecture>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</BuildArchitecture>
      <TargetArchitecture Condition="'$(TargetArchitecture)' == ''">x64</TargetArchitecture>
-     <TargetRuntimeIdentifier>$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
-@@ -121,6 +122,7 @@
-       win-x86;
+@@ -127,6 +128,7 @@
        win-arm;
+       win-arm64;
        osx-x64;
 +      freebsd-x64;
        linux-musl-x64;

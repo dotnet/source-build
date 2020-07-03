@@ -1,0 +1,25 @@
+From 7d397d666fb8a8a39cbd2e18bcb3c973cf477120 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 24 Jan 2020 19:01:58 +0000
+Subject: [PATCH 05/15] Add trailing path separator to repo_root
+
+---
+ eng/common/build.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/common/build.sh b/eng/common/build.sh
+index 36f9aa0462e..96e4572dc42 100755
+--- a/eng/common/build.sh
++++ b/eng/common/build.sh
+@@ -186,7 +186,7 @@ function Build {
+   MSBuild $_InitializeToolset \
+     $bl \
+     /p:Configuration=$configuration \
+-    /p:RepoRoot="$repo_root" \
++    /p:RepoRoot="$repo_root/" \
+     /p:Restore=$restore \
+     /p:Build=$build \
+     /p:Rebuild=$rebuild \
+-- 
+2.17.1
+

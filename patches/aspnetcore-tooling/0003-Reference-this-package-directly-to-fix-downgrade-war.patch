@@ -1,0 +1,23 @@
+From fa817fa2f7acfadf7ce4626f7eb7e271d3523d52 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 26 Jun 2020 14:59:28 +0000
+Subject: [PATCH 3/3] Reference this package directly to fix downgrade warning.
+
+---
+ .../Microsoft.CodeAnalysis.Razor.csproj                          | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Razor/src/Microsoft.CodeAnalysis.Razor/Microsoft.CodeAnalysis.Razor.csproj b/src/Razor/src/Microsoft.CodeAnalysis.Razor/Microsoft.CodeAnalysis.Razor.csproj
+index 5a294ccb6..725f48000 100644
+--- a/src/Razor/src/Microsoft.CodeAnalysis.Razor/Microsoft.CodeAnalysis.Razor.csproj
++++ b/src/Razor/src/Microsoft.CodeAnalysis.Razor/Microsoft.CodeAnalysis.Razor.csproj
+@@ -12,5 +12,6 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(Runtime_MicrosoftCodeAnalysisCommonPackageVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(Runtime_MicrosoftCodeAnalysisCSharpPackageVersion)" />
++    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafePackageVersion)" />
+   </ItemGroup>
+ </Project>
+-- 
+2.17.1
+

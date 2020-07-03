@@ -1,0 +1,24 @@
+From 84824077583e5afdc30028a5d4d6bc87a95b2594 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 20 Apr 2020 15:09:58 +0000
+Subject: [PATCH 10/15] Remove import of PackageVersionProps from
+ eng/Vervsions.props It should be imported by Arcade SDK
+
+---
+ eng/Versions.props | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 0bf1b1b7daa..eb866a69686 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -148,6 +148,4 @@
+     <MicrosoftNETCoreRuntimeCoreCLRPackage>Microsoft.NETCore.Runtime.CoreCLR</MicrosoftNETCoreRuntimeCoreCLRPackage>
+     <MicrosoftTargetingPackPrivateWinRTPackage>Microsoft.TargetingPack.Private.WinRT</MicrosoftTargetingPackPrivateWinRTPackage>
+   </PropertyGroup>
+-  <!-- Override isolated build dependency versions with versions from Repo API. -->
+-  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+ </Project>
+-- 
+2.17.1
+

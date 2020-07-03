@@ -1,0 +1,65 @@
+From ef2efbdf951e99b5f4bc99ad0743d3a609b7de29 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 4 Jun 2020 14:06:16 +0000
+Subject: [PATCH 11/15] Fix UpdatePackageIndex UsingTask
+
+Based on runtime PR: https://github.com/dotnet/runtime/pull/37369
+---
+ eng/restore/harvestPackages.targets   | 10 ++--------
+ src/libraries/libraries-packages.proj |  9 ++++++++-
+ 2 files changed, 10 insertions(+), 9 deletions(-)
+
+diff --git a/eng/restore/harvestPackages.targets b/eng/restore/harvestPackages.targets
+index 152888c9597..29b97472c84 100644
+--- a/eng/restore/harvestPackages.targets
++++ b/eng/restore/harvestPackages.targets
+@@ -1,11 +1,4 @@
+ ﻿<Project InitialTargets="AddPackageDownload">
+-  <PropertyGroup>
+-    <PackagingTaskAssembly>$(NuGetPackageRoot)microsoft.dotnet.build.tasks.packaging\$(MicrosoftDotNetBuildTasksPackagingVersion)\tools\</PackagingTaskAssembly>
+-    <PackagingTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'core'">$(PackagingTaskAssembly)netcoreapp2.1\</PackagingTaskAssembly>
+-    <PackagingTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'core'">$(PackagingTaskAssembly)net472\</PackagingTaskAssembly>
+-    <PackagingTaskAssembly>$(PackagingTaskAssembly)Microsoft.DotNet.Build.Tasks.Packaging.dll</PackagingTaskAssembly>
+-  </PropertyGroup>
+-
+   <UsingTask TaskName="GetLastStablePackage" AssemblyFile="$(PackagingTaskAssembly)"/>
+   <Target Name="AddPackageDownload">
+     <ItemGroup>
+@@ -37,4 +30,5 @@
+       </PackageDownload>
+     </ItemGroup>
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
++
+diff --git a/src/libraries/libraries-packages.proj b/src/libraries/libraries-packages.proj
+index f1ed35266b0..51af4524be3 100644
+--- a/src/libraries/libraries-packages.proj
++++ b/src/libraries/libraries-packages.proj
+@@ -6,6 +6,13 @@
+     <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(AdditionalBuildTargetFrameworks);package-$(Configuration)</AdditionalBuildTargetFrameworks>
+   </PropertyGroup>
+ 
++  <PropertyGroup>
++    <PackagingTaskAssembly>$(NuGetPackageRoot)microsoft.dotnet.build.tasks.packaging\$(MicrosoftDotNetBuildTasksPackagingVersion)\tools\</PackagingTaskAssembly>
++    <PackagingTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'core'">$(PackagingTaskAssembly)netcoreapp2.1\</PackagingTaskAssembly>
++    <PackagingTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'core'">$(PackagingTaskAssembly)net472\</PackagingTaskAssembly>
++    <PackagingTaskAssembly>$(PackagingTaskAssembly)Microsoft.DotNet.Build.Tasks.Packaging.dll</PackagingTaskAssembly>
++  </PropertyGroup>
++
+   <ItemGroup>
+     <ProjectReference Include="$(PkgDir)*\*.proj" Exclude="$(PkgDir)test\*" />
+     <ProjectReference Include="$(MSBuildThisFileDirectory)*\pkg\**\*.pkgproj" Condition="'$(BuildAllConfigurations)' == 'true' or '$(DotNetBuildFromSource)' == 'true'" />
+@@ -24,7 +31,7 @@
+     ones that might do this. After we ship a stable set of packages this target should be ran and the
+     changes to the package index should be commited to the repo.
+   -->
+-  <UsingTask TaskName="UpdatePackageIndex" AssemblyFile="$(PackagingTaskDir)Microsoft.DotNet.Build.Tasks.Packaging.dll"/>
++  <UsingTask TaskName="UpdatePackageIndex" AssemblyFile="$(PackagingTaskAssembly)"/>
+   <Target Name="UpdatePackageIndexWithStableVersions"
+           BeforeTargets="Build"
+           Condition="'$(DotNetFinalVersionKind)' == 'release'">
+-- 
+2.17.1
+
