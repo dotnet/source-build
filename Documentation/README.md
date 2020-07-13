@@ -4,7 +4,9 @@ The following document includes documentation for the build scripts. Over time, 
 
 ## Building the .NET Core SDK
 
-The scripts are supported on Windows, macOS and Linux. The scripts are based on PowerShell on Windows and Bash on macOS and Linux.
+The scripts are supported on macOS and Linux. The scripts are based on Bash on macOS and Linux.
+
+> The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
 ### Syncing
 
@@ -19,6 +21,20 @@ git submodule update --init --recursive
 ```console
 ./build.{cmd|sh}
 ```
+
+Once the build is successful, the built SDK tarball is placed at:
+
+```
+artifacts/${ARCHITECTURE}/Release/dotnet-sdk-${SDK_VERSION}-${RUNTIME_ID}.tar.gz
+```
+
+- `${ARCHITECTURE}` is your platform architecture (probably `x64`)
+- `${SDK_VERSION}` is the SDK version you are building
+- `${RUNTIME_ID}` is your OS name and architecture (something like `debian.9-x64` or `fedora.33-x64`)
+
+For example, building a 3.1.105 SDK on an x64 (aka x86\_64) platform running Fedora 32 will produce `artifacts/x64/Release/dotnet-sdk-3.1.105-fedora.32-x64.tar.gz`.
+
+If you are interested in "installing" this SDK system wide or making a Linux package out of the SDK, please see [Packaging and Installation](packaging-installation.md).
 
 ## Building one repo
 
