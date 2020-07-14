@@ -9,7 +9,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | | | | | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | 4 | | | | | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | 11 | | | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ⏱ 11 | | | | | |
 | 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | 2 | | | | | |
 | 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
@@ -17,18 +17,18 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
 | 1 | xliff-tasks | [William Li](https://github.com/wli3) | ✔️ | 1 | | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 1 | | | | | |
-| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | 4 | | | | | |
+| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | 5 | | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | 3 | | | | | |
-| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | 10 | | | | | |
+| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | 15 | | | | | |
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | 4 | | | | | |
-| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | 8 | | | | | |
+| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | ⏱ 10 | | | | | |
 | 2 | templating | [Jose Aguilar](https://github.com/donJoseLuis) | ✔️ | ✔️ | | | | | |
-| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | 14 | | | | | |
+| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | 13 | | | | | |
 | 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | 1 | | | | | |
-| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 2 + 3(cli) + 3(toolset) | | | | | |
-| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | 6 | | | | | |
-| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | 2 | | | | | |
-| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 5 | | | | | |
+| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 9 | | | | | |
+| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | 7 | | | | | |
+| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | 4 | | | | | |
+| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 3 | | | | | |
 
 | Status | Description |
 | --- | --- |
