@@ -17,6 +17,18 @@ The scripts are written for Bash and supported on macOS and Linux. See [Document
 ./build.sh
 ```
 
+Once the build is successful, the built SDK tarball is placed at:
+
+```
+artifacts/${ARCHITECTURE}/Release/dotnet-sdk-${SDK_VERSION}-${RUNTIME_ID}.tar.gz
+```
+
+- `${ARCHITECTURE}` is your platform architecture (probably `x64`)
+- `${SDK_VERSION}` is the SDK version you are building
+- `${RUNTIME_ID}` is your OS name and architecture (something like `debian.9-x64` or `fedora.33-x64`)
+
+For example, building a 3.1.105 SDK on an x64 (aka x86\_64) platform running Fedora 32 will produce `artifacts/x64/Release/dotnet-sdk-3.1.105-fedora.32-x64.tar.gz`.
+
 ## Goals
 
 The key goal of this repository is to satisfy the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have two main principles: consistent reproducibility, and source code for everything.

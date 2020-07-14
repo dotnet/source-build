@@ -6,8 +6,35 @@ VERSION_PREFIX=3.1
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=3.0.0-preview8-28405-07
+
+# Use uname to determine what the CPU is.
+cpuName=$(uname -p)
+# Some Linux platforms report unknown for platform, but the arch for machine.
+if [[ "$cpuName" == "unknown" ]]; then
+  cpuName=$(uname -m)
+fi
+
+case $cpuName in
+  aarch64)
+    buildArch=arm64
+    ;;
+  amd64|x86_64)
+    buildArch=x64
+    ;;
+  armv*l)
+    buildArch=arm
+    ;;
+  i686)
+    buildArch=x86
+    ;;
+  *)
+    echo "Unknown CPU $cpuName detected, treating it as x64"
+    buildArch=x64
+    ;;
+esac
+
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
-targetRid=$(cat "$SCRIPT_ROOT/artifacts/obj/x64/Release/TargetInfo.props" | grep -i targetrid | sed -E 's|\s*</?TargetRid>\s*||g')
+targetRid=$(cat "$SCRIPT_ROOT/artifacts/obj/${buildArch}/Release/TargetInfo.props" | grep -i targetrid | sed -E 's|\s*</?TargetRid>\s*||g')
 executingUserHome=${HOME:-}
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
@@ -209,7 +236,7 @@ function doCommand() {
             runPublishScenarios() {
                 "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
                 "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
-                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
+                "${dotnetCmd}" publish --self-contained true -r linux-${buildArch} /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
             }
             if [ "$projectOutput" == "true" ]; then
                 runPublishScenarios | tee -a "$logFile"
@@ -356,7 +383,7 @@ echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/x64/$configuration/"
+    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/${buildArch}/$configuration/"
     DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
 
     mkdir -p "$cliDir"
@@ -373,7 +400,7 @@ echo SDK under test is:
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
-SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/x64/$configuration/blob-feed/packages/"
+SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/${buildArch}/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 # OSX also requires DOTNET_ROOT to be on the PATH
 if [ "$(uname)" == 'Darwin' ]; then
