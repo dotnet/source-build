@@ -1,0 +1,27 @@
+From ecdec45084cba9ca97ab6e49087e3429ac5d99e7 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 15 Jul 2020 15:04:11 -0400
+Subject: [PATCH] Remove extra packagIcon item from packaging
+
+---
+ eng/Package.props | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/eng/Package.props b/eng/Package.props
+index 92ea6aa..e893bf3 100644
+--- a/eng/Package.props
++++ b/eng/Package.props
+@@ -14,8 +14,4 @@
+     <PackageIconFullPath>$(MSBuildThisFileDirectory)packageIcon.png</PackageIconFullPath>
+     <PackageTags>WebSdk</PackageTags>
+   </PropertyGroup>
+-
+-   <ItemGroup>
+-    <None Include="$(PackageIconFullPath)" Pack="true" PackagePath="\"/>
+-  </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.2
+
