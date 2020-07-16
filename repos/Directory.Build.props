@@ -11,8 +11,23 @@
 
   <PropertyGroup>
     <SourceDirectory Condition="'$(SourceDirectory)' == ''">$(RepositoryName)</SourceDirectory>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == '' and '$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)$(SourceDirectory).$(GitCommitHash)/</ProjectDirectory>
-    <ProjectDirectory Condition="'$(ProjectDirectory)' == '' and '$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)$(SourceDirectory).$(GitCommitHash)/</ProjectDirectory>
+
+    <InternalRepoPrefix Condition="'$(InternalRepoPrefix)' == ''">dotnet-</InternalRepoPrefix>
+
+    <!-- Where submodules (source trees) are stored in the current build type. -->
+    <CurrentSubmoduleDirectory Condition="'$(OfflineBuild)' != 'true'">$(ClonedSubmoduleDirectory)</CurrentSubmoduleDirectory>
+    <CurrentSubmoduleDirectory Condition="'$(OfflineBuild)' == 'true'">$(SubmoduleDirectory)</CurrentSubmoduleDirectory>
+
+    <!--
+      Try the ordinary GitHub-style repo name, and the name with the internal repo prefix. Use the
+      GitHub style as the default to keep the build error familiar if neither exists.
+    -->
+    <GitHubProjectDirectory>$(CurrentSubmoduleDirectory)$(SourceDirectory).$(GitCommitHash)/</GitHubProjectDirectory>
+    <InternalProjectDirectory>$(CurrentSubmoduleDirectory)$(InternalRepoPrefix)$(SourceDirectory).$(GitCommitHash)/</InternalProjectDirectory>
+
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == '' and Exists('$(InternalProjectDirectory)')">$(InternalProjectDirectory)</ProjectDirectory>
+    <ProjectDirectory Condition="'$(ProjectDirectory)' == ''">$(GitHubProjectDirectory)</ProjectDirectory>
+
     <MinimalConsoleLogOutput Condition="'$(MinimalConsoleLogOutput)' == ''">true</MinimalConsoleLogOutput>
     <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
     <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>

@@ -1,18 +1,18 @@
-From 423375a1b0bcbb45312e0fd26cf1e69650a75ce5 Mon Sep 17 00:00:00 2001
+From 50078a0bb200b751f8db8baf6ade96135b2bfbc3 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Tue, 29 Oct 2019 18:19:03 +0000
-Subject: [PATCH 02/16] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
- eng/Dependencies.props                                    | 1 +
- src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj | 6 ++++--
+ eng/Dependencies.props                                      | 1 +
+ .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj | 6 ++++--
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 73ffdde39f..9d0ba32204 100644
+index 22235e50c4..7085e9dbde 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -114,6 +114,7 @@ and are generated based on the last package release.
+@@ -115,6 +115,7 @@ and are generated based on the last package release.
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-x64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
      <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
@@ -20,10 +20,10 @@ index 73ffdde39f..9d0ba32204 100644
    </ItemGroup>
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
-diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 index 3451584734..75b8e5515e 100644
---- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-+++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -108,7 +108,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-arm64' OR '$(TargetRuntimeIdentifier)' == 'linux-musl-arm64' ">x64_arm64\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
      <CrossgenToolPackagePath Condition=" '$(TargetRuntimeIdentifier)' == 'win-arm' ">x86_arm\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
@@ -45,5 +45,5 @@ index 3451584734..75b8e5515e 100644
      <ProjectReference Condition="'$(BuildIisNativeProjects)' == 'true' AND '$(BuildNative)' != 'false' AND '$(VCTargetsPath)' != ''" Include="$(RepoRoot)src\Servers\IIS\AspNetCoreModuleV2\InProcessRequestHandler\InProcessRequestHandler.vcxproj">
        <SetPlatform>Platform=$(TargetArchitecture)</SetPlatform>
 -- 
-2.21.0
+2.25.2
 

@@ -9,13 +9,13 @@
           DependsOnTargets="GetTarballDirProps">
     <ItemGroup>
       <KnownExtraPrebuiltFile Include="
-        $(TarballPrebuiltPackageDir)dotnet-dev-certs.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)dotnet-user-secrets.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)dotnet-watch.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.analyzers.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.developercertificates.xplat.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.mvc.analyzers.3.0.0-rc2.19465.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.mvc.api.analyzers.3.0.0-rc2.19465.2.nupkg;
+        $(TarballPrebuiltPackageDir)dotnet-dev-certs.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)dotnet-user-secrets.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)dotnet-watch.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.analyzers.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.developercertificates.xplat.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.mvc.analyzers.3.1.6-servicing.20326.1.nupkg;
+        $(TarballPrebuiltPackageDir)microsoft.aspnetcore.mvc.api.analyzers.3.1.6-servicing.20326.1.nupkg;
         $(TarballPrebuiltPackageDir)microsoft.codeanalysis.analyzers.2.6.1.nupkg;
         $(TarballPrebuiltPackageDir)microsoft.codeanalysis.common.2.9.0.nupkg;
         $(TarballPrebuiltPackageDir)microsoft.codeanalysis.csharp.2.9.0.nupkg;
@@ -54,6 +54,17 @@
         $(TarballPrebuiltPackageDir)system.xml.xpath.4.3.0.nupkg;
         $(TarballPrebuiltPackageDir)system.xml.xpath.xdocument.4.3.0.nupkg;
         $(TarballPrebuiltPackageDir)vswhere.2.6.7.nupkg;
+        " />
+      <!--
+        Remove packages that have had a new release during servicing, and we want to use the
+        source-built version while building the tarball.
+
+        For example, a dependency on A/1.0.0 is checked into the repos, but now we build A/1.0.1 and
+        we have A/1.0.1 as previously-source-built. During the tarball build, we can use A/1.0.1
+        fine, but need to remove A/1.0.0 manually from the production build.
+      -->
+      <KnownExtraPrebuiltFile Include="
+        $(TarballPrebuiltPackageDir)microsoft.bcl.asyncinterfaces.1.1.0.nupkg;
         " />
       <!--
         Remove source-link packages to throw away tooling that Arcade imports unconditionally in the

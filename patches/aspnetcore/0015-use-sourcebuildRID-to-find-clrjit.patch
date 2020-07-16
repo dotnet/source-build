@@ -1,17 +1,17 @@
-From e6348d73179db8fbd653aa23379721c0a015c0ce Mon Sep 17 00:00:00 2001
+From 23b5259a5b45c180d8d11504e378942322370852 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Sat, 8 Feb 2020 06:43:48 +0000
-Subject: [PATCH 15/16] use-sourcebuildRID-to-find-clrjit
+Subject: [PATCH] use-sourcebuildRID-to-find-clrjit
 
 ---
- src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj | 2 +-
+ .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj     | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-index d17536b86d..a631541ccb 100644
---- a/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-+++ b/src/Framework/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -306,7 +306,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+index b0a999453d..8f478c0426 100644
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+@@ -312,7 +312,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <CrossgenToolDir>$(IntermediateOutputPath)crossgen\</CrossgenToolDir>
      <CrossgenPlatformAssembliesDir>$(IntermediateOutputPath)platformAssemblies\</CrossgenPlatformAssembliesDir>
      <!-- Pick the right coreclr jit based on whether we are cross-compiling or not -->
@@ -21,5 +21,5 @@ index d17536b86d..a631541ccb 100644
    </PropertyGroup>
  
 -- 
-2.18.0
+2.25.2
 

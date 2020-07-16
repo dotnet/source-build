@@ -102,6 +102,21 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$scriptroot/packages/restored/"
 
+if [ "${internalPackageFeedPat:-}" ]; then
+  echo "Setting up NuGet credential provider using PAT from env var 'internalPackageFeedPat'..."
+  . "$scriptroot/eng/install-nuget-credprovider.sh"
+  # TODO: Read these from nuget.config
+  # The internal transport isn't added by Darc, though, so it will still need special-casing.
+  export VSS_NUGET_EXTERNAL_FEED_ENDPOINTS='{"endpointCredentials": [
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-3a2d6426/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-be18161f/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-3acd9b0c/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-d63ec4a1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-62c098bc/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
+  ]}'
+fi
+
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
