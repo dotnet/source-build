@@ -12,6 +12,32 @@ __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # r
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
+# Use uname to determine what the CPU is.
+cpuName=$(uname -p)
+# Some Linux platforms report unknown for platform, but the arch for machine.
+if [[ "$cpuName" == "unknown" ]]; then
+  cpuName=$(uname -m)
+fi
+
+case $cpuName in
+  aarch64)
+    buildArch=arm64
+    ;;
+  amd64|x86_64)
+    buildArch=x64
+    ;;
+  armv*l)
+    buildArch=arm
+    ;;
+  i686)
+    buildArch=x86
+    ;;
+  *)
+    echo "Unknown CPU $cpuName detected, treating it as x64"
+    buildArch=x64
+    ;;
+esac
+
 projectOutput=false
 keepProjects=false
 dotnetDir=""
@@ -343,7 +369,7 @@ echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/x64/$configuration/"
+    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/$buildArch/$configuration/"
     DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
 
     mkdir -p "$cliDir"
@@ -360,7 +386,7 @@ echo SDK under test is:
 
 # setup restore path
 export NUGET_PACKAGES="$restoredPackagesDir"
-SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/x64/$configuration/blob-feed/packages/"
+SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/$buildArch/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 # OSX also requires DOTNET_ROOT to be on the PATH
 if [ `uname` == 'Darwin' ]; then
