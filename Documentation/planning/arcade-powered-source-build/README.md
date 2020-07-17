@@ -52,21 +52,25 @@ and the vision.
 
 The output of source-build is a set of tarballs that can be used to build the
 .NET Core SDK from source. We can move the current behavior of source-build to
-the Core-SDK official build. That is, Core-SDK clones all constituent repos,
-applies patches, builds each repo using customized build commands, and produces
-the source-build tarballs as artifacts.
+the dotnet/installer official build. That is, dotnet/installer clones all
+constituent repos, applies patches, builds each repo using customized build
+commands, and produces the source-build tarballs as artifacts.
 
-This immediately makes the dotnet/source-build repo unnecessary: it only held
-the source-build orchestration behavior.
+This immediately makes the dotnet/source-build repo unnecessary for 5.0: it only
+held the source-build orchestration behavior.
 
-This needs more work to meet our goals due to build performance. It is simply
-too slow (> 2hrs) to build all constituent repos within one official build. It
-needs to be fast enough that it is reasonable for the entire official build to
-be rejected when the source-build fails.
+The migration work will be done in a new dev branch. It's expected that the dev
+branch will trail significantly behind the active 5.0 working branch: due to
+churn with 5.0 auto-updates and the full source-build being way too slow to put
+as a PR validation step in dotnet/installer, source-build would probably always
+fail if we tried to apply it to the mainline 5.0 branch.
 
-> Note: practically, the source-build official build should run in an
-> independent build pipeline at first: the long build time would interfere with
-> other .NET 5 work if integrated directly.
+Putting source-build infrastructure into dotnet/installer doesn't directly
+accomplish any of our goals. However, it gives us a testbed for infrastructure
+that we need to move to dotnet/arcade, so we can be reasonably sure it will work
+when we roll it out to each repository. Eventually, the build performance will
+improve enough that source-build *can* run in PR validation. At that point, the
+dev branch can be merged and our goals will be accomplished.
 
 For more info, see [source-build-in-pipeline.md].
 
@@ -97,22 +101,23 @@ Related work, but not necessary to meet our goals:
 ## Incremental progress
 
 ### The performance gap
-We need to avoid building all constituent repos in the Core-SDK build. To do
-this, each repo needs to produce intermediate source-built artifacts during its
-official build, to be consumed by downstream repos. On the other end,
+We need to avoid building all constituent repos in the dotnet/installer build.
+To do this, each repo needs to produce intermediate source-built artifacts
+during its official build, to be consumed by downstream repos. On the other end,
 source-build needs to support restoring from an intermediate artifact.
 
-To make incremental progress, we should pick one of Core-SDK's upstreams, and
-add source-build functionality that produces source-built intermediates.
-Core-SDK should consume them. We should choose a leaf in the source-build
-dependency graph, say, Linker. When Core-SDK is looking at the build graph to
-determine which repos to build, instead of building Linker, it should restore
-the Linker intermediate artifact. Once we have this flow working, the
-functionality should be integrated into Arcade SDK for easy onboarding.
+To make incremental progress, we should pick an upstream of dotnet/installer,
+and add source-build functionality that produces source-built intermediates.
+dotnet/installer should consume them. We should choose a leaf in the
+source-build dependency graph, dotnet/source-build-reference-packages (SBRP).
+When dotnet/installer looks at the build graph to determine which repos to
+build, instead of building SBRP, it should restore the SBRP intermediate
+artifact. Once we have this flow working, the functionality should be integrated
+into Arcade SDK for easy onboarding.
 
-Then, working from the bottom (leaves) upward (towards Core-SDK), more repos
-should consume and produce source-built intermediates in their official builds.
-When this completes, each repo only needs to build itself. See
+Then, working from the bottom (leaves) upward (towards dotnet/installer), more
+repos should consume and produce source-built intermediates in their official
+builds. When this completes, each repo only needs to build itself. See
 [incremental-official.md] for more details about this process.
 
 It is possible to instead only implement official source-build in a handful of
@@ -125,11 +130,11 @@ discussed in [incremental-official-chunked.md], and is not recommended.
 > it might be better to simply rebuild it whenever the outputs are needed.
 
 ### Getting into Arcade
-The initial plan to run source-build in Core-SDK doesn't assume any changes to
-Arcade: this should be possible due to the extension points that already exist
-in the Arcade SDK. Once we have that, it will be clearer what logic is missing,
-and how to add it. This allows us to migrate source-build logic incrementally
-and in parallel with other work.
+The initial plan to run source-build in dotnet/installer doesn't assume any
+changes to Arcade: this should be possible due to the extension points that
+already exist in the Arcade SDK. Once we have that, it will be clearer what
+logic is missing, and how to add it. This allows us to migrate source-build
+logic incrementally and in parallel with other work.
 
 For more info, see [in-arcade.md].
 
@@ -172,3 +177,17 @@ A: We shouldn't! But if we have to, use a forked branch. See
 [incremental-official.md]: incremental-official.md
 [source-build-in-pipeline.md]: source-build-in-pipeline.md
 [speculative-build.md]: speculative-build.md
+
+---
+
+## Revisions:
+
+**2020-07-15** dagood  
+Removed the plan to test every added intermediate nupkg all the way downstream
+in dotnet/installer. Looking at it after some hands-on work has been done, we
+don't think this end-to-end integration test is actually feasible. Not running
+these tests creates some uncertainty, but it seems acceptable. We will likely
+end up with a backlog of unknown issues to work through once we start building a
+tarball in dotnet/installer. They *may* have been avoided with testing. We don't
+expect this will be disruptive enough to make it worth trying to more
+exhaustively find some way to get end-to-end testing feasible.

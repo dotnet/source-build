@@ -1,22 +1,20 @@
 # Incremental improvements to source-build in official builds
 
-We can add official source-build to repos one at a time. This is effectively a
-build cache, and adding each repo provides incremental benefit to build times
-for official and local builds alike.
+We can add official source-build to repos one at a time. This incrementally
+creates a tree of cached builds.
 
 ## Dependency leaves
 
 The following diagram is the source-build intermediate output flow in 3.1, with
-leaf nodes colored gold and the Core-SDK product at the top:
+leaf nodes colored gold and the Core-SDK (dotnet/installer) product at the top:
 
 > ![](img/official-leaves.svg)
 > [source (img/official-leaves.dot)](img/official-leaves.dot)
 
-Initially, Core-SDK is the only node performing source-build, and it builds all
-constituent repos from source. To reduce that build time, source-build must be
-distributed amongst the repos. We should do this by repeatedly adding
-source-build functionality to leaf repos (removing completed repos from the
-graph) until every repo runs source-build.
+To build up the tree of cached builds, source-build must be distributed amongst
+the repos. We should do this by repeatedly adding source-build functionality to
+leaf repos (removing completed repos from the graph) until every repo runs
+source-build.
 
 > Note: the .NET Core build does have circular dependencies, so technically no
 > repos are pure leaves. For example, compiling C# in the leaves above requires
@@ -28,23 +26,30 @@ graph) until every repo runs source-build.
 ## Leaf first
 
 The reason to add source-build to leaf official builds first is that they don't
-require any source-built intermedaite assets. We can add source-build to their
+require any source-built intermediate assets. We can add source-build to their
 official builds without yet implementing the logic to fetch intermediate assets.
+Once the leaves are added, we can onboard the repos that depend on those leaves
+and have them restore the necessary source-build intermediate nupkgs.
 
 It is possible to pick a non-leaf repo, however it needs to get its
 prerequisites from somewhere. It would need to build every repo from source.
 (Depending on something like Microsoft-built NuGet packages defeats the point.)
 See [incremental-official-chunked.md](incremental-official-chunked.md) for an
 exploration of the idea of building small sets of repos from source at the same
-time: it's a much costlier approach than it may seem.
+time: it's a much costlier approach than it may seem. We plan not to do this.
 
-## Consume intermediates in Core-SDK
+## Consume intermediates in dotnet/installer
 
-After a leaf starts producing source-built intermediates, we should update
-Core-SDK to consume it. This is basically a build cache: when intermediates
-exist, use them rather than source-building the target repo. This lets us
-prototype the infrastructure to consume source-built prebuilts before we roll it
-out across multiple repos.
+After the dotnet/source-build-reference-packages (SBRP) leaf starts producing
+source-built intermediates, we should update dotnet/installer to consume it.
+This way we validate the intermediate nupkg infrastructure and get a chance to
+move it into dotnet/arcade before we roll it out across multiple repos.
+
+Note that we only plan to do this partially cached source-build with a single
+leaf and dependency, SBRP => dotnet/installer. We won't repeat the exercise with
+other intermediate nupkgs that will be incrementally added, because it's not yet
+feasible at this point in the plan to keep source-build in dotnet/installer up
+to date with the work being done in 5.0 branches.
 
 Once it works, intermediate consumption support should be added to the Arcade
 SDK to allow for rollout.
