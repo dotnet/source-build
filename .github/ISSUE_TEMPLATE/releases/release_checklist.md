@@ -15,10 +15,10 @@
 -->
 # {runtime-version} / {sdk-version}
 
-1.  - [ ] Create a doc to take ongoing notes on problems with the process, workarounds, and fixes.
+1.  - [ ] Create a page at ".NET Core A&D" OneNote -> "Servicing" section -> "{Month} {YYYY}" to take ongoing notes on problems with the process, workarounds, and fixes.
       - This is useful to make sure context is available to review later. It may end up blank if the release goes very smoothly.
-      - The common location is ".NET Core A&D" OneNote -> "Servicing" section -> "{Month} {YYYY}".
-        - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
+      - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
+      - [Non-Internal] File GitHub issues as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
 1.  - [ ] [Internal] Ensure internal/release/X.Y branch is up to date with mirrored release/X.Y branch.
 1.  - [ ] Update to new version.
       - [2.1] [/Documentation/servicing/update-2.1.md](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/update-2.1.md)
