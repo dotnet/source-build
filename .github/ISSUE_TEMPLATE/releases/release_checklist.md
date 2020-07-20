@@ -86,6 +86,8 @@
 1.  - [ ] [Internal] Send the tarball to partners. Include info about how certain we are that this will be the final Microsoft build.
       - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
 1.  - [ ] SYNC POINT: Wait for Microsoft build release.
+      - Wait for dotnet/announcements post. <kbd>Watch</kbd> the repo to get emails so you don't have to poll.
+        - Example: <https://github.com/dotnet/announcements/issues/160>.
 1.  - [ ] [Internal] [3.1] In a dev branch on your GitHub fork of source-build, clean up.
       - [ ] [Internal] [3.1] Convert internal URIs to public in `eng/Version.Details.xml`.
         - `https://dev.azure.com/dnceng/internal/_git/<org>-<repo>` => `https://github.com/<org>/<repo>`
