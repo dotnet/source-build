@@ -5,7 +5,7 @@ Set up a signing key if you haven't already:
 - Adding to GitHub: <https://docs.github.com/en/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account>
 
 ## Create tags
-Create annotated and signed tags with a shared message that includes both the runtime and SDK versions, e.g. "Release for 2.1.0 runtime and 2.1.300 SDK."
+Create annotated and signed tags with a shared message that includes both the runtime and SDK versions, e.g. `Source-build 2.1.0 runtime and 2.1.300 SDK`.
 
 You can paste this and fill in the prompts to do this:
 
@@ -13,7 +13,7 @@ You can paste this and fill in the prompts to do this:
 read -p 'Runtime version (X.Y.Z): ' runtimeVersion; \
 read -p 'SDK version (X.Y.BZZ): ' sdkVersion; \
 read -p 'Commit: ' commit; \
-message="Release for $runtimeVersion runtime and $sdkVersion SDK."; \
+message="Source-build ${runtimeVersion} runtime and ${sdkVersion} SDK"; \
 git tag -s "v${runtimeVersion}-runtime" $commit -m "$message"; \
 git tag -s "v${sdkVersion}-SDK" $commit -m "$message"; \
 echo "$message"

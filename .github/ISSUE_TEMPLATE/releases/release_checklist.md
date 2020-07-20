@@ -98,6 +98,12 @@
 1.  - [ ] [Internal] When CI is green and two reviewers approve, merge.
       - Avoid squash/rebase: nice to preserve commit hashes. However, there are no known dependencies on *source-build* commits being preserved.
 1.  - [ ] Create and push tags on the post-merge commit. [/Documentation/servicing/tagging.md](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/tagging.md)
+1.  - [ ] Create a GitHub release on the tag with SDK versioning.
+      - Go to <https://github.com/dotnet/source-build/tags>
+      - Expand the SDK-versioned tag's message and copy it
+      - Click <kbd>...</kbd> on the right on the SDK-versioned tag and press "Create release"
+      - Paste into the release title
+      - Click submit.
 1.  - [ ] Notify distro maintainers and partners about the release tags
 1.  - [ ] [3.1] Download Private.SourceBuilt.Artifacts.XX.tar.gz files from offline CI legs.
 1.  - [ ] [3.1] Merge Private.SourceBuilt.Artifacts.XX.tar.gz files.
