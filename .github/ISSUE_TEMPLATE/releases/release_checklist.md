@@ -32,10 +32,10 @@
           - Ensure auth details are **not** included in this file.
         - [ ] Verify/update the ASP.NET versions (`MicrosoftAspNetCoreAllPackageVersion` and `MicrosoftAspNetCoreAppPackageVersion`) in dependencies.props.
         - [ ] Verify/update the `OfficialBuildId`s in updated repos (usually coreclr, corefx, core-setup).
-        - [ ] Update the `DotnetCLIVersion.txt` SDK version to N-1.
+        - [ ] Update the `DotnetCLIVersion.txt` SDK version to N-1: the latest released "2.1.XYY" SDK version, where "2.1.X" matches the SDK we're building.
       - [3.1]
         - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` matches N-1 release artifacts.
-        - [ ] Update the `global.json` SDK version to N-1.
+        - [ ] Update the `global.json` SDK version to N-1: the latest released "3.1.XYY" SDK version, where "3.1.X" matches the SDK we're building.
 1.  - [ ] Regenerate patches as necessary.
       - Run `./build.sh /t:CloneOnly /t:ApplyPatches` to minimally clone and attempt patch application to see what, if anything, needs to be regenerated.
       - ASP.NET will always need to be regenerated because it contains a version number that needs to be updated.
