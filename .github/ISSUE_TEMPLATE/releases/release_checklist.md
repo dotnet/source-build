@@ -126,6 +126,7 @@
 1.  - [ ] [3.1] Merge Private.SourceBuilt.Artifacts.XX.tar.gz files.
       - Make sure the centos7 portable offline one is the one that ends up in `coreclr-tooling`.
 1.  - [ ] [3.1] Upload merged Private.SourceBuilt.Artifacts.XX.tar.gz file to dotnetcli account source-built-artifacts blob container.
+      - Never overwrite a tarball. Use a sub-patch version if one already exists, e.g. `0.1.0-3.1.105.1`.
 1.  - [ ] If there's a respin (for any reason: source-build infra fixes or upstream repo problems):
       - Go back in this process checklist as far as necessary.
       - When tagging, make sure to create a new tag. A sub-patch version tag for SDK and runtime must be generated. E.g - v2.1.300.1-SDK
