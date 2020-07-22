@@ -116,7 +116,8 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
-    <NugetPack Condition="'%(ReferenceAssemblyDirectories.Identity)' != ''" Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
+    <NugetPack Condition="'%(ReferenceAssemblyDirectories.Identity)' != ''" 
+               Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
                OutputDirectory="$(ReferencePackagesDir)"
                ExcludeEmptyDirectories="false"
                CreateSymbolPackage="false" />
