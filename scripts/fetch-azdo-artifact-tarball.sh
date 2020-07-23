@@ -23,6 +23,7 @@ download_tarball() {
       echo "Extracted using tar -xf"
     # Fall back to 'gunzip' as an intermediate to avoid problems found
     # decompressing archives with 'tar' when downloaded directly from AzDO.
+    # AzDO seems to double-compress the tar.gz: https://superuser.com/a/841876
     elif gunzip -d < "$temp_name" | tar -zx; then
       echo "Extracted using gunzip"
     else
