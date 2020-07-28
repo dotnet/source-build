@@ -108,11 +108,12 @@ if [ "${internalPackageFeedPat:-}" ]; then
   # TODO: Read these from nuget.config
   # The internal transport isn't added by Darc, though, so it will still need special-casing.
   export VSS_NUGET_EXTERNAL_FEED_ENDPOINTS='{"endpointCredentials": [
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-3a2d6426/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-be18161f/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-3acd9b0c/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-d63ec4a1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-62c098bc/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-2cb6ddf0/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-784b0ffa/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-fcfdef8d-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-fcfdef8d/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-1c22292b/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-1bf292d4/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
 fi
