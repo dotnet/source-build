@@ -87,7 +87,7 @@ jobs:
       logDir=/logs/source-build/logs
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
         mkdir -p $logDir
-        find \"\$PWD\" \
+        find . \
           -depth \
           \( \
           -path './bin/*-report/*' -o \
@@ -183,7 +183,7 @@ jobs:
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
         mkdir -p $logDir
         cd \"$(tarballName)\"
-        find \"\$PWD\" \
+        find . \
           -depth \
           \( \
           -path './bin/*-report/*' -o \
