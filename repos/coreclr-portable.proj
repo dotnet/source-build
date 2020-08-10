@@ -15,7 +15,9 @@
   </ItemGroup>
 
   <Target Name="CopyTools"
-          AfterTargets="Package">
+          AfterTargets="Package"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CopyToolsRepoSuccessSemaphore)">
     <PropertyGroup>
       <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
       <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
@@ -34,6 +36,8 @@
     <Message Importance="High" Text="Copying source-built ILAsm and ILDasm '@(CoreClrTools)' to '$(CoreClrDestinationDir)'" />
 
     <Copy SourceFiles="@(CoreClrTools)" DestinationFolder="$(CoreClrDestinationDir)" />
+
+    <Touch Files="$(CopyToolsRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="RemoveBuiltPackagesFromCache">

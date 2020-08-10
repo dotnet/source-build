@@ -32,6 +32,34 @@
     <RepoConsoleLogFile>$(LoggingDir)$(RepositoryName).log</RepoConsoleLogFile>
     <RedirectRepoOutputToLog Condition="'$(MinimalConsoleLogOutput)' == 'true'">&gt;&gt; $(RepoConsoleLogFile) 2&gt;&amp;1</RedirectRepoOutputToLog>
     <IsStable Condition="'$(UseStableVersions)' == 'true'">true</IsStable>
+
+    <!--
+      Repo specific semaphore paths for incremental build
+    -->
+    <RepoCompletedSemaphorePath>$(CompletedSemaphorePath)$(RepositoryName)/</RepoCompletedSemaphorePath>
+    <ApplyPatchesRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)ApplyPatches.complete</ApplyPatchesRepoSuccessSemaphore>
+    <UpdateNuGetConfigRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete</UpdateNuGetConfigRepoSuccessSemaphore>
+    <UpdateGlobalJsonVersionsRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete</UpdateGlobalJsonVersionsRepoSuccessSemaphore>
+    <CreateBuildOutputPropsRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete</CreateBuildOutputPropsRepoSuccessSemaphore>
+    <CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete</CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore>
+    <CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete</CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore>
+    <PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete</PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore>
+    <BuildRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)Build.complete</BuildRepoSuccessSemaphore>
+    <PackageRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)Package.complete</PackageRepoSuccessSemaphore>
+    <CopyPackageRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CopyPackage.complete</CopyPackageRepoSuccessSemaphore>
+    <RemoveBuiltPackagesFromCacheRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete</RemoveBuiltPackagesFromCacheRepoSuccessSemaphore>
+    <ExtractToolPackageRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)ExtractToolPackage.complete</ExtractToolPackageRepoSuccessSemaphore>
+    <EnsurePackagesCreatedRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete</EnsurePackagesCreatedRepoSuccessSemaphore>
+    <WritePrebuiltUsageDataRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete</WritePrebuiltUsageDataRepoSuccessSemaphore>
+    <ReportPrebuiltUsageRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete</ReportPrebuiltUsageRepoSuccessSemaphore>
+
+    <!-- Project specific semaphores -->
+    <PublishBinariesRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)PublishBinaries.complete</PublishBinariesRepoSuccessSemaphore>
+    <CopyBinariesToBinFolderRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete</CopyBinariesToBinFolderRepoSuccessSemaphore>
+    <CopyTarBallRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CopyTarBall.complete</CopyTarBallRepoSuccessSemaphore>
+    <CopyToolsRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)CopyTools.complete</CopyToolsRepoSuccessSemaphore>
+    <ExtractCentralPackageVersionsSdkPackageRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)ExtractCentralPackageVersionsSdkPackage.complete</ExtractCentralPackageVersionsSdkPackageRepoSuccessSemaphore>
+    <ExtractLinkerPackageToCacheRepoSuccessSemaphore>$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete</ExtractLinkerPackageToCacheRepoSuccessSemaphore>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(OS)' == 'Windows_NT'">

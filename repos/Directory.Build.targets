@@ -1,4 +1,4 @@
-<Project InitialTargets="SetNuGetPackagesEnvironment">
+<Project InitialTargets="SetNuGetPackagesEnvironment;SetupRepoSemaphorePath">
 
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
@@ -57,6 +57,10 @@
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
   </PropertyGroup>
 
+  <Target Name="SetupRepoSemaphorePath">
+    <MakeDir Directories="$(RepoCompletedSemaphorePath)" />
+  </Target>
+
   <Target Name="BuildRepoReferences" Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
     <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
     <ItemGroup>
@@ -66,10 +70,14 @@
     <MSBuild Projects="@(_DependentProject)" Targets="Build" BuildInParallel="$(BuildInParallel)" StopOnFirstFailure="true" />
   </Target>
 
-  <Target Name="ApplyPatches" Condition="Exists('$(PatchesDir)$(RepositoryName)') and '$(SkipPatches)' != 'true'">
-    <ItemGroup>
-      <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
-    </ItemGroup>
+  <ItemGroup  Condition="Exists('$(PatchesDir)$(RepositoryName)')" >
+    <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
+  </ItemGroup>
+
+  <Target Name="ApplyPatches" 
+          Condition="'@(PatchesToApply)' != '' and '$(SkipPatches)' != 'true'"
+          Inputs="@(PatchesToApply)"
+          Outputs="$(ApplyPatchesRepoSuccessSemaphore)" >
 
     <PropertyGroup>
       <PatchCommand>git --work-tree=$(ProjectDirectory) apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
@@ -78,11 +86,15 @@
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
           WorkingDirectory="$(ProjectDirectory)"
           Condition="'@(PatchesToApply)' != ''" />
+
+    <Touch Files="$(ApplyPatchesRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
-          Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''">
+          Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(UpdateNuGetConfigRepoSuccessSemaphore)">
     <!-- Update the detected or manually specified NuGetConfigFile, but also allow multiple. -->
     <ItemGroup>
       <NuGetConfigFiles Include="$(NuGetConfigFile)" />
@@ -123,11 +135,15 @@
       NuGetConfigFile="%(NuGetConfigFiles.Identity)"
       SourceName="dotnet3.1-internal-transport"
       SourcePath="https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json" />
+
+    <Touch Files="$(UpdateNuGetConfigRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="UpdateGlobalJsonVersions"
           BeforeTargets="Build"
-          Condition="'$(GlobalJsonFile)' != ''">
+          Condition="'$(GlobalJsonFile)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(UpdateGlobalJsonVersionsRepoSuccessSemaphore)">
     <ItemGroup>
       <_PossibleCliVersionJsonPath Include="sdk.version" />
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
@@ -137,10 +153,14 @@
                 PathToAttribute="%(_PossibleCliVersionJsonPath.Identity)"
                 NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
+
+    <Touch Files="$(UpdateGlobalJsonVersionsRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
-          BeforeTargets="Build">
+          BeforeTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CreateBuildOutputPropsRepoSuccessSemaphore)">
     <PropertyGroup>
       <_PackageVersionPropsBackupPath>$(PackageVersionPropsPath).pre.$(RepositoryName).xml</_PackageVersionPropsBackupPath>
     </PropertyGroup>
@@ -178,12 +198,15 @@
       <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
     </GetSourceBuiltNupkgCacheConflicts>
 
+    <Touch Files="$(CreateBuildOutputPropsRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="CheckSourceBuiltNupkgConflictUsages"
           DependsOnTargets="GetAllProjectDirectories"
           AfterTargets="CreateBuildOutputProps"
-          Condition="'@(ConflictingPackageInfos)' != ''">
+          Condition="'@(ConflictingPackageInfos)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore)">
     <PropertyGroup>
       <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
       <_ReportDataFile>$(_ReportDir)usage.xml</_ReportDataFile>
@@ -200,10 +223,14 @@
 
     <Warning Text="Detected packages in the cache that should be source-built, but contents don't match. See $(_ReportDir) for usage details:" />
     <Warning Text="%(ConflictingPackageInfos.PackageId)/%(ConflictingPackageInfos.PackageVersion) : %(ConflictingPackageInfos.WarningMessage)" />
+
+    <Touch Files="$(CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="CreateCombinedRestoreSourceAndVersionProps"
-          BeforeTargets="Build">
+          BeforeTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore)">
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
@@ -218,6 +245,8 @@
                                        AdditionalAssetDirs="@(_AdditionalAssetDirs)"
                                        RestoreSources="@(_DotNetRestoreSources)"
                                        OutputPath="$(RestoreSourcePropsPath)" />
+
+    <Touch Files="$(CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <!--
@@ -226,7 +255,9 @@
     directories and causing differences vs. ordinary build).
   -->
   <Target Name="PreventDirectoryBuildPropsTargetsEscape"
-          BeforeTargets="Build">
+          BeforeTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore)">
     <ItemGroup>
       <DirectoryBuildFilename Include="Directory.Build.targets" />
       <DirectoryBuildFilename Include="Directory.Build.props" />
@@ -236,9 +267,14 @@
       Lines="&lt;Project /&gt;"
       File="$([MSBuild]::NormalizePath('$(ClonedSubmoduleDirectory)', '%(DirectoryBuildFilename.Identity)'))"
       Overwrite="True" />
+
+    <Touch Files="$(PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
-  <Target Name="Build" DependsOnTargets="BuildRepoReferences">
+  <Target Name="Build" 
+          DependsOnTargets="BuildRepoReferences"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(BuildRepoSuccessSemaphore)">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildCommand) $(RepoApiArgs)" Condition="'$(BuildCommand)' != ''" />
@@ -248,6 +284,8 @@
     <Message Importance="High" Text="    %(EnvironmentVariables.Identity)" />
     <CallTarget Targets="RepoBuild" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)...done" />
+
+    <Touch Files="$(BuildRepoSuccessSemaphore)" AlwaysCreate="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -271,7 +309,10 @@
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)')" />
   </Target>
 
-  <Target Name="Package" AfterTargets="Build" Condition="'$(BuildPackagesCommand)' != ''">
+  <Target Name="Package" AfterTargets="Build" 
+          Condition="'$(BuildPackagesCommand)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(PackageRepoSuccessSemaphore)">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildPackagesCommand)" />
@@ -283,6 +324,8 @@
           EnvironmentVariables="@(EnvironmentVariables)"
           IgnoreStandardErrorWarningFormat="true" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)...done" />
+
+    <Touch Files="$(PackageRepoSuccessSemaphore)" AlwaysCreate="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -297,16 +340,22 @@
   <Target Name="CopyPackage"
           AfterTargets="Package"
           Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
-          DependsOnTargets="GatherBuiltPackages">
+          DependsOnTargets="GatherBuiltPackages"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CopyPackageRepoSuccessSemaphore)">
     <Copy SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
+
+    <Touch Files="$(CopyPackageRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="RemoveBuiltPackagesFromCache"
           AfterTargets="Package"
           Condition="'@(_BuiltPackages)'!=''"
-          DependsOnTargets="GatherBuiltPackages">
+          DependsOnTargets="GatherBuiltPackages"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RemoveBuiltPackagesFromCacheRepoSuccessSemaphore)">
 
     <ReadNuGetPackageInfos PackagePaths="@(_BuiltPackages)">
       <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
@@ -321,12 +370,16 @@
     </ItemGroup>
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
     <Delete Files="@(_FilesToDelete)" />
+          
+    <Touch Files="$(RemoveBuiltPackagesFromCacheRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
-          Condition="'@(BuiltSdkPackageOverride)' != ''">
+          Condition="'@(BuiltSdkPackageOverride)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(ExtractToolPackageRepoSuccessSemaphore)">
     <ItemGroup>
       <_ToolPackage
         Condition="'%(BuiltSdkPackageOverride.Version)' == ''"
@@ -348,11 +401,15 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
+          
+    <Touch Files="$(ExtractToolPackageRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="EnsurePackagesCreated"
           AfterTargets="CopyPackage"
-          Condition="'$(SkipEnsurePackagesCreated)' != 'true'">
+          Condition="'$(SkipEnsurePackagesCreated)' != 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(EnsurePackagesCreatedRepoSuccessSemaphore)">
     <ItemGroup>
       <JustSourceBuiltPackages
         Include="$(SourceBuiltPackagesPath)*.nupkg"
@@ -377,6 +434,8 @@
 
     <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
     <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
+
+    <Touch Files="$(EnsurePackagesCreatedRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
@@ -410,7 +469,9 @@
   </Target>
 
   <Target Name="WritePrebuiltUsageData"
-          DependsOnTargets="GetAllProjectDirectories">
+          DependsOnTargets="GetAllProjectDirectories"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(WritePrebuiltUsageDataRepoSuccessSemaphore)">
     <!-- Save the PVP snapshot of each build step to be evaluated while building the report. -->
     <ItemGroup>
       <PackageVersionPropsSnapshotFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
@@ -456,7 +517,9 @@
       IgnoredProjectAssetsJsonFiles="@(IgnoredProjectAssetsJsonFiles)"
       DataFile="$(PackageReportDataFile)"
       ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
-  </Target>
+      
+    <Touch Files="$(WritePrebuiltUsageDataRepoSuccessSemaphore)" AlwaysCreate="true" />
+</Target>
 
   <Target Name="GetAllProjectDirectories">
     <ItemGroup>
@@ -471,7 +534,9 @@
     </MSBuild>
   </Target>
 
-  <Target Name="ReportPrebuiltUsage">
+  <Target Name="ReportPrebuiltUsage"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(ReportPrebuiltUsageRepoSuccessSemaphore)">
     <PropertyGroup>
       <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
@@ -498,6 +563,8 @@
       OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
       AllowTestProjectUsage="$(AllowTestProjectUsage)"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
+      
+    <Touch Files="$(ReportPrebuiltUsageRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

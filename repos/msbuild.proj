@@ -81,7 +81,9 @@
 
   <Target Name="ExtractCentralPackageVersionsSdkPackage"
           BeforeTargets="SetSourceBuiltSdkOverrides"
-          Condition="'$(OfflineBuild)' == 'true'">
+          Condition="'$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(ExtractCentralPackageVersionsSdkPackageRepoSuccessSemaphore)">
     <ItemGroup>
       <_CentralVersionsToolPackage
         Include="$(ReferencePackagesDir)%(CentralPackageVersionsSdkOverride.Identity)*.nupkg"
@@ -98,6 +100,8 @@
       SourceArchive="@(_CentralVersionsToolPackage)"
       DestinationDirectory="$(CentralVersionsSdkDir)"
       OverwriteDestination="true" />
+ 
+    <Touch Files="$(ExtractCentralPackageVersionsSdkPackageRepoSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
   <!--
     End workaround: https://github.com/dotnet/source-build/issues/933
