@@ -31,6 +31,16 @@ if [ -z "${HOME:-}" ]; then
     mkdir "$HOME"
 fi
 
+# If .git doesn't exist at the repo root, create it. It's required for the build to work. The very
+# prominent source tar.gz and zip files created by GitHub don't include it, so it's worth having a
+# fallback here. See https://github.com/dotnet/source-build/issues/1646 for details.
+if [ ! -e "$scriptroot/.git" ]; then
+  (
+    cd "$scriptroot"
+    git init
+  )
+fi
+
 if grep -q '\(/docker/\|/docker-\)' "/proc/1/cgroup"; then
     export DotNetRunningInDocker=1
 fi
