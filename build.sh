@@ -19,6 +19,9 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$SCRIPT_ROOT/packages/"
 
+# Ensure Azure DevOps' BUILD_BUILDNUMBER isn't used
+export BUILD_BUILDNUMBER=
+
 source "$SCRIPT_ROOT/init-tools.sh"
 
 CLIPATH="$SCRIPT_ROOT/Tools/dotnetcli"
