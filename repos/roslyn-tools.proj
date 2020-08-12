@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
-    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration) /p:BUILD_BUILDNUMBER=</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <UsesRepoToolset>true</UsesRepoToolset>
     <BuiltToolPackageId>$(RepoToolsetPackageId)</BuiltToolPackageId>
