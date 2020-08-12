@@ -1,0 +1,23 @@
+From 1d2ac4c1ff9da833c7fed9c5b12463c17efc53bb Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 3 Aug 2020 19:01:37 -0400
+Subject: [PATCH] Ignore NU5125 error
+
+---
+ Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index d219e0b..ca7d388 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -4,5 +4,6 @@
+   <PropertyGroup>
+     <RepositoryUrl>https://github.com/dotnet/CliCommandLineParser</RepositoryUrl>
+     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
++    <NoWarn>$(NoWarn);NU5125</NoWarn>
+   </PropertyGroup>
+ </Project>
+-- 
+1.8.3.1
+
