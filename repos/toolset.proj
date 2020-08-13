@@ -70,7 +70,7 @@
   <Target Name="PublishBinaries" 
           AfterTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(PublishBinariesRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
     <ItemGroup>
       <ToolsetZips Include="$(ToolsetZipOutputDir)dotnet-*.zip" />
     </ItemGroup>
@@ -81,7 +81,7 @@
     </PublishToolsetBinaries>
     <Message Text="Published toolset binaries version $(PublishedVersion)" Importance="High" />
 
-    <Touch Files="$(PublishBinariesRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

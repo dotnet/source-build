@@ -143,6 +143,6 @@ mkdir -p "$FULL_TARBALL_ROOT"
 MAIN_BUILD_ARGS+=( "/p:TarballRoot=$FULL_TARBALL_ROOT" )
 MAIN_BUILD_ARGS+=( "/p:PackSourceBuildTarball=true" )
 
-$SCRIPT_ROOT/build.sh ${MAIN_BUILD_ARGS[@]} /bl:BuildTarball_$(date +"%m%d%H%M%S").binlog "$@"
+$SCRIPT_ROOT/build.sh ${MAIN_BUILD_ARGS[@]} /bl:$SCRIPT_ROOT/artifacts/log/Debug/BuildTarball_$(date +"%m%d%H%M%S").binlog "$@"
 
 echo "Done. Tarball created: $TARBALL_ROOT"

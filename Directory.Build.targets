@@ -1,8 +1,4 @@
-<Project InitialTargets="SetupSemaphorePath">
-
-  <Target Name="SetupSemaphorePath">
-    <MakeDir Directories="$(CompletedSemaphorePath)" />
-  </Target>
+<Project>
 
   <Target Name="RemoveUninteresingToolingPackageReferences"
           BeforeTargets="CollectPackageReferences">
@@ -19,12 +15,12 @@
             '$(OfflineBuild)' != 'true' and
             '$(SkipAcquireDarc)' != 'true'"
           Inputs="$(MSBuildThisFileDirectory)tools-local\acquire-darc\acquire-darc.proj"
-          Outputs="$(AcquireDarcSuccessSemaphore)">
+          Outputs="$(CompletedSemaphorePath)AcquireDarc.complete">
     <MSBuild
       Projects="$(MSBuildThisFileDirectory)tools-local\acquire-darc\acquire-darc.proj"
       Targets="AcquireDarcCore" />
 
-    <Touch Files="$(AcquireDarcSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)AcquireDarc.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetCommonDarcCloneCommand" DependsOnTargets="AcquireDarc">

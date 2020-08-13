@@ -8,7 +8,7 @@
   <Target Name="PublishBinaries" 
           AfterTargets="Package"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(PublishBinariesRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
     <ItemGroup>
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
@@ -19,13 +19,13 @@
     </PublishCoreSetupBinaries>
     <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
 
-    <Touch Files="$(PublishBinariesRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="CopyBinariesToBinFolder" 
           AfterTargets="PublishBinaries"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(CopyBinariesToBinFolderRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete">
     <ItemGroup>
       <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
       <_builtRuntimePackages>
@@ -39,7 +39,7 @@
           DestinationFolder="$(OutputPath)runtime"
           Condition="'@(BinariesToCopy)'!=''" />
 
-    <Touch Files="$(CopyBinariesToBinFolderRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="SetOutputList" AfterTargets="RepoBuild">

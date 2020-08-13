@@ -35,7 +35,7 @@
   <Target Name="ExtractLinkerPackageToCache"
           AfterTargets="Package"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(ExtractLinkerPackageToCacheRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete">
     <PropertyGroup>
       <ILLinkTasksPackageFile>$(PackagesOutput)/$(ILLinkTasksPackageId).$(OutputPackageVersion).nupkg</ILLinkTasksPackageFile>
       <ILLinkTasksPackageIdToLower>$(ILLinkTasksPackageId.ToLowerInvariant())</ILLinkTasksPackageIdToLower>
@@ -47,7 +47,7 @@
                                DestinationDirectory="$(PackagesDir)$(ILLinkTasksPackageIdToLower)/$(OutputPackageVersion)/"
                                OverwriteDestination="true" />
  
-    <Touch Files="$(ExtractLinkerPackageToCacheRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete" Lines="complete" Overwrite="true" />
  </Target>
 
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->

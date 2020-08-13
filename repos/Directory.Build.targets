@@ -1,4 +1,4 @@
-<Project InitialTargets="SetNuGetPackagesEnvironment;SetupRepoSemaphorePath">
+<Project InitialTargets="SetNuGetPackagesEnvironment">
 
   <ItemGroup Condition="'$(OfflineBuild)' == 'true'">
     <EnvironmentVariables Include="LatestCommit=$(GitCommitHash)" />
@@ -57,10 +57,6 @@
     <RepoApiArgs>$(RepoApiArgs) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</RepoApiArgs>
   </PropertyGroup>
 
-  <Target Name="SetupRepoSemaphorePath">
-    <MakeDir Directories="$(RepoCompletedSemaphorePath)" />
-  </Target>
-
   <Target Name="BuildRepoReferences" Condition="'@(RepositoryReference)' != '' and '$(SkipRepoReferences)' != 'true'">
     <Message Importance="High" Text="Building dependencies [@(RepositoryReference)] needed by '$(RepositoryName)'." />
     <ItemGroup>
@@ -77,7 +73,7 @@
   <Target Name="ApplyPatches" 
           Condition="'@(PatchesToApply)' != '' and '$(SkipPatches)' != 'true'"
           Inputs="@(PatchesToApply)"
-          Outputs="$(ApplyPatchesRepoSuccessSemaphore)" >
+          Outputs="$(RepoCompletedSemaphorePath)ApplyPatches.complete" >
 
     <PropertyGroup>
       <PatchCommand>git --work-tree=$(ProjectDirectory) apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
@@ -87,14 +83,14 @@
           WorkingDirectory="$(ProjectDirectory)"
           Condition="'@(PatchesToApply)' != ''" />
 
-    <Touch Files="$(ApplyPatchesRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
           Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(UpdateNuGetConfigRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete">
     <!-- Update the detected or manually specified NuGetConfigFile, but also allow multiple. -->
     <ItemGroup>
       <NuGetConfigFiles Include="$(NuGetConfigFile)" />
@@ -136,14 +132,14 @@
       SourceName="dotnet3.1-internal-transport"
       SourcePath="https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json" />
 
-    <Touch Files="$(UpdateNuGetConfigRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="UpdateGlobalJsonVersions"
           BeforeTargets="Build"
           Condition="'$(GlobalJsonFile)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(UpdateGlobalJsonVersionsRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete">
     <ItemGroup>
       <_PossibleCliVersionJsonPath Include="sdk.version" />
       <_PossibleCliVersionJsonPath Include="tools.dotnet" />
@@ -154,13 +150,13 @@
                 NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
 
-    <Touch Files="$(UpdateGlobalJsonVersionsRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
           BeforeTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(CreateBuildOutputPropsRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete">
     <PropertyGroup>
       <_PackageVersionPropsBackupPath>$(PackageVersionPropsPath).pre.$(RepositoryName).xml</_PackageVersionPropsBackupPath>
     </PropertyGroup>
@@ -198,7 +194,7 @@
       <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
     </GetSourceBuiltNupkgCacheConflicts>
 
-    <Touch Files="$(CreateBuildOutputPropsRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="CheckSourceBuiltNupkgConflictUsages"
@@ -206,7 +202,7 @@
           AfterTargets="CreateBuildOutputProps"
           Condition="'@(ConflictingPackageInfos)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete">
     <PropertyGroup>
       <_ReportDir>$(ConflictingPackageReportDir)before-$(RepositoryName)/</_ReportDir>
       <_ReportDataFile>$(_ReportDir)usage.xml</_ReportDataFile>
@@ -224,13 +220,13 @@
     <Warning Text="Detected packages in the cache that should be source-built, but contents don't match. See $(_ReportDir) for usage details:" />
     <Warning Text="%(ConflictingPackageInfos.PackageId)/%(ConflictingPackageInfos.PackageVersion) : %(ConflictingPackageInfos.WarningMessage)" />
 
-    <Touch Files="$(CheckSourceBuiltNupkgConflictUsagesRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="CreateCombinedRestoreSourceAndVersionProps"
           BeforeTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete">
     <ItemGroup>
       <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
       <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
@@ -246,7 +242,7 @@
                                        RestoreSources="@(_DotNetRestoreSources)"
                                        OutputPath="$(RestoreSourcePropsPath)" />
 
-    <Touch Files="$(CreateCombinedRestoreSourceAndVersionPropsRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <!--
@@ -257,7 +253,7 @@
   <Target Name="PreventDirectoryBuildPropsTargetsEscape"
           BeforeTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete">
     <ItemGroup>
       <DirectoryBuildFilename Include="Directory.Build.targets" />
       <DirectoryBuildFilename Include="Directory.Build.props" />
@@ -268,13 +264,13 @@
       File="$([MSBuild]::NormalizePath('$(ClonedSubmoduleDirectory)', '%(DirectoryBuildFilename.Identity)'))"
       Overwrite="True" />
 
-    <Touch Files="$(PreventDirectoryBuildPropsTargetsEscapeRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="Build" 
           DependsOnTargets="BuildRepoReferences"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(BuildRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)Build.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildCommand) $(RepoApiArgs)" Condition="'$(BuildCommand)' != ''" />
@@ -285,7 +281,7 @@
     <CallTarget Targets="RepoBuild" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)...done" />
 
-    <Touch Files="$(BuildRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Build.complete" Lines="complete" Overwrite="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -312,7 +308,7 @@
   <Target Name="Package" AfterTargets="Build" 
           Condition="'$(BuildPackagesCommand)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(PackageRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)Package.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)" />
     <Message Importance="High" Text="Running command:" />
     <Message Importance="High" Text="  $(BuildPackagesCommand)" />
@@ -325,7 +321,7 @@
           IgnoreStandardErrorWarningFormat="true" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)...done" />
 
-    <Touch Files="$(PackageRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Package.complete" Lines="complete" Overwrite="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -342,12 +338,12 @@
           Condition="'$(OutputPlacementRepoApiImplemented)' != 'true' AND ('$(PackagesOutput)' != '' OR '@(PackagesOutputList)' != '')"
           DependsOnTargets="GatherBuiltPackages"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(CopyPackageRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)CopyPackage.complete">
     <Copy SourceFiles="@(_BuiltPackages)"
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
 
-    <Touch Files="$(CopyPackageRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyPackage.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="RemoveBuiltPackagesFromCache"
@@ -355,7 +351,7 @@
           Condition="'@(_BuiltPackages)'!=''"
           DependsOnTargets="GatherBuiltPackages"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RemoveBuiltPackagesFromCacheRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete">
 
     <ReadNuGetPackageInfos PackagePaths="@(_BuiltPackages)">
       <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
@@ -371,7 +367,7 @@
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
     <Delete Files="@(_FilesToDelete)" />
           
-    <Touch Files="$(RemoveBuiltPackagesFromCacheRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="ExtractToolPackage"
@@ -379,7 +375,7 @@
           AfterTargets="Build"
           Condition="'@(BuiltSdkPackageOverride)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(ExtractToolPackageRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete">
     <ItemGroup>
       <_ToolPackage
         Condition="'%(BuiltSdkPackageOverride.Version)' == ''"
@@ -402,14 +398,14 @@
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
           
-    <Touch Files="$(ExtractToolPackageRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="EnsurePackagesCreated"
           AfterTargets="CopyPackage"
           Condition="'$(SkipEnsurePackagesCreated)' != 'true'"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(EnsurePackagesCreatedRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete">
     <ItemGroup>
       <JustSourceBuiltPackages
         Include="$(SourceBuiltPackagesPath)*.nupkg"
@@ -435,7 +431,7 @@
     <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
     <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
 
-    <Touch Files="$(EnsurePackagesCreatedRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
@@ -471,7 +467,7 @@
   <Target Name="WritePrebuiltUsageData"
           DependsOnTargets="GetAllProjectDirectories"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(WritePrebuiltUsageDataRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete">
     <!-- Save the PVP snapshot of each build step to be evaluated while building the report. -->
     <ItemGroup>
       <PackageVersionPropsSnapshotFiles Include="$(IntermediatePath)PackageVersions.props.pre.*.xml" />
@@ -518,7 +514,7 @@
       DataFile="$(PackageReportDataFile)"
       ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
       
-    <Touch Files="$(WritePrebuiltUsageDataRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete" Lines="complete" Overwrite="true" />
 </Target>
 
   <Target Name="GetAllProjectDirectories">
@@ -536,7 +532,7 @@
 
   <Target Name="ReportPrebuiltUsage"
           Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(ReportPrebuiltUsageRepoSuccessSemaphore)">
+          Outputs="$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete">
     <PropertyGroup>
       <FailOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' == ''">false</FailOnPrebuiltBaselineError>
     </PropertyGroup>
@@ -564,7 +560,7 @@
       AllowTestProjectUsage="$(AllowTestProjectUsage)"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
       
-    <Touch Files="$(ReportPrebuiltUsageRepoSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

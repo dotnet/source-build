@@ -1,4 +1,4 @@
-<Project InitialTargets="SetupSemaphorePath">
+<Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <UsingTask AssemblyFile="$(LeakDetectionTasksAssembly)" TaskName="CheckForPoison" />
@@ -8,10 +8,6 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="DownloadFileSB" />
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-
-  <Target Name="SetupSemaphorePath">
-    <MakeDir Directories="$(CompletedSemaphorePath)" />
-  </Target>
 
   <Target Name="Build" DependsOnTargets="PrepareOutput;InitBuild">
     <Message Text="Build Environment: $(Platform) $(Configuration) $(TargetOS) $(TargetRid)" />
@@ -73,7 +69,7 @@
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true' and '$(ArchiveDownloadedPackages)' == 'true' and '$(OS)' != 'Windows_NT'"
           Inputs="$(MSBuildProjectFullPath)" 
-          Outputs="$(CopyAndDisassembleReferenceOnlyPackagesSuccessSemaphore)" >
+          Outputs="$(CompletedSemaphorePath)CopyAndDisassembleReferenceOnlyPackages.complete" >
 
     <CopyReferenceOnlyPackages
         PackageCacheDir="$(PackagesDir)"
@@ -131,7 +127,7 @@
         OldText="http://go.microsoft.com/fwlink/?LinkId=529443"
         NewText="https://microsoft.mit-license.org/" />
         
-    <Touch Files="$(CopyAndDisassembleReferenceOnlyPackagesSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)CopyAndDisassembleReferenceOnlyPackages.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="ReplaceLicenseFiles"
@@ -158,7 +154,7 @@
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingReferencePackages)' != 'true'"
           Inputs="$(MSBuildProjectFullPath)" 
-          Outputs="$(DownloadSourceBuildReferencePackagesSuccessSemaphore)" >
+          Outputs="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" >
     <PropertyGroup Condition="'$(DownloadSourceBuildReferencePackagesTimeoutSeconds)' == ''">
       <DownloadSourceBuildReferencePackagesTimeoutSeconds>600</DownloadSourceBuildReferencePackagesTimeoutSeconds>
     </PropertyGroup>
@@ -168,14 +164,14 @@
           DestinationFolder="$(ExternalTarballsDir)"
           TimeoutSeconds="$(DownloadSourceBuildReferencePackagesTimeoutSeconds)" />
           
-    <Touch Files="$(DownloadSourceBuildReferencePackagesSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
           Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'"
           Inputs="$(MSBuildProjectFullPath)" 
-          Outputs="$(DownloadSourceBuiltArtifactsSuccessSemaphore)" >
+          Outputs="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" >
     <PropertyGroup Condition="'$(DownloadSourceBuiltArtifactsTimeoutSeconds)' == ''">
       <DownloadSourceBuiltArtifactsTimeoutSeconds>1500</DownloadSourceBuiltArtifactsTimeoutSeconds>
     </PropertyGroup>
@@ -185,7 +181,7 @@
           DestinationFolder="$(ExternalTarballsDir)"
           TimeoutSeconds="$(DownloadSourceBuiltArtifactsTimeoutSeconds)" />
           
-    <Touch Files="$(DownloadSourceBuiltArtifactsSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
@@ -209,7 +205,7 @@
           AfterTargets="Build"
           Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)" 
-          Outputs="$(ReportPoisonUsageSuccessSemaphore)" >
+          Outputs="$(CompletedSemaphorePath)ReportPoisonUsage.complete" >
     <ItemGroup>
       <FinalCliTarball Include="$(SourceBuiltTarBallPath)**/*$(TarBallExtension)" />
     </ItemGroup>
@@ -218,12 +214,12 @@
                     MarkerFileName="$(PoisonMarkerFile)"
                     PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
           
-    <Touch Files="$(ReportPoisonUsageSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="GeneratePrebuiltBurndownData"
           Inputs="$(MSBuildProjectFullPath)" 
-          Outputs="$(GeneratePrebuiltBurndownDataSuccessSemaphore)" >
+          Outputs="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" >
     <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
                             PrebuiltBaselineFile="$(OnlineBaselineDataFile)"
                             OutputFilePath="$(OnlinePrebuiltBurndownDataFile)" />
@@ -231,7 +227,7 @@
                             PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
                             OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
           
-    <Touch Files="$(GeneratePrebuiltBurndownDataSuccessSemaphore)" AlwaysCreate="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" Lines="complete" Overwrite="true" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
