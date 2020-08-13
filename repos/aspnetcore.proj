@@ -88,7 +88,7 @@
     <Copy SourceFiles="@(ExtraAspNetFiles)" DestinationFolder="$(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Condition="'@(ExtraAspNetFiles)' != ''" />
     <Message Text="Published extra ASP.NET files @(ExtraAspNetFiles) to $(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Importance="High" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

@@ -37,7 +37,7 @@
 
     <Copy SourceFiles="@(CoreClrTools)" DestinationFolder="$(CoreClrDestinationDir)" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTools.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTools.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CleanupRepoForNonPortableBuild" AfterTargets="RemoveBuiltPackagesFromCache">

@@ -47,7 +47,7 @@
                                DestinationDirectory="$(PackagesDir)$(ILLinkTasksPackageIdToLower)/$(OutputPackageVersion)/"
                                OverwriteDestination="true" />
  
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete" Overwrite="true" />
  </Target>
 
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->

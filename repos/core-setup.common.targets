@@ -19,7 +19,7 @@
     </PublishCoreSetupBinaries>
     <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CopyBinariesToBinFolder" 
@@ -39,7 +39,7 @@
           DestinationFolder="$(OutputPath)runtime"
           Condition="'@(BinariesToCopy)'!=''" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete" Overwrite="true" />
   </Target>
 
   <Target Name="SetOutputList" AfterTargets="RepoBuild">

@@ -20,7 +20,7 @@
       Projects="$(MSBuildThisFileDirectory)tools-local\acquire-darc\acquire-darc.proj"
       Targets="AcquireDarcCore" />
 
-    <WriteLinesToFile File="$(CompletedSemaphorePath)AcquireDarc.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)AcquireDarc.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetCommonDarcCloneCommand" DependsOnTargets="AcquireDarc">

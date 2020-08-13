@@ -83,7 +83,7 @@
           WorkingDirectory="$(ProjectDirectory)"
           Condition="'@(PatchesToApply)' != ''" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Overwrite="true" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"
@@ -132,7 +132,7 @@
       SourceName="dotnet3.1-internal-transport"
       SourcePath="https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete" Overwrite="true" />
   </Target>
 
   <Target Name="UpdateGlobalJsonVersions"
@@ -150,7 +150,7 @@
                 NewAttributeValue="$(SDK_VERSION)"
                 SkipUpdateIfMissingKey="true" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CreateBuildOutputProps"
@@ -194,7 +194,7 @@
       <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
     </GetSourceBuiltNupkgCacheConflicts>
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CheckSourceBuiltNupkgConflictUsages"
@@ -220,7 +220,7 @@
     <Warning Text="Detected packages in the cache that should be source-built, but contents don't match. See $(_ReportDir) for usage details:" />
     <Warning Text="%(ConflictingPackageInfos.PackageId)/%(ConflictingPackageInfos.PackageVersion) : %(ConflictingPackageInfos.WarningMessage)" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CreateCombinedRestoreSourceAndVersionProps"
@@ -242,7 +242,7 @@
                                        RestoreSources="@(_DotNetRestoreSources)"
                                        OutputPath="$(RestoreSourcePropsPath)" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete" Overwrite="true" />
   </Target>
 
   <!--
@@ -264,7 +264,7 @@
       File="$([MSBuild]::NormalizePath('$(ClonedSubmoduleDirectory)', '%(DirectoryBuildFilename.Identity)'))"
       Overwrite="True" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete" Overwrite="true" />
   </Target>
 
   <Target Name="Build" 
@@ -281,7 +281,7 @@
     <CallTarget Targets="RepoBuild" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)...done" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Build.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Build.complete" Overwrite="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -321,7 +321,7 @@
           IgnoreStandardErrorWarningFormat="true" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packaging $(ProjectBuildReason)...done" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Package.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)Package.complete" Overwrite="true" />
     <OnError ExecuteTargets="ReportRepoError" />
   </Target>
 
@@ -343,7 +343,7 @@
           DestinationFolder="$(SourceBuiltPackagesPath)"
           Condition="'@(_BuiltPackages)'!=''" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyPackage.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyPackage.complete" Overwrite="true" />
   </Target>
 
   <Target Name="RemoveBuiltPackagesFromCache"
@@ -367,7 +367,7 @@
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
     <Delete Files="@(_FilesToDelete)" />
           
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
   </Target>
 
   <Target Name="ExtractToolPackage"
@@ -398,7 +398,7 @@
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
           
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
   <Target Name="EnsurePackagesCreated"
@@ -431,7 +431,7 @@
     <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
     <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete" Overwrite="true" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >
@@ -514,7 +514,7 @@
       DataFile="$(PackageReportDataFile)"
       ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
       
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete" Overwrite="true" />
 </Target>
 
   <Target Name="GetAllProjectDirectories">
@@ -560,7 +560,7 @@
       AllowTestProjectUsage="$(AllowTestProjectUsage)"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
       
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetProjectDirectory" Outputs="$(ProjectDirectory)" />

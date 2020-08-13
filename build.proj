@@ -127,7 +127,7 @@
         OldText="http://go.microsoft.com/fwlink/?LinkId=529443"
         NewText="https://microsoft.mit-license.org/" />
         
-    <WriteLinesToFile File="$(CompletedSemaphorePath)CopyAndDisassembleReferenceOnlyPackages.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)CopyAndDisassembleReferenceOnlyPackages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="ReplaceLicenseFiles"
@@ -164,7 +164,7 @@
           DestinationFolder="$(ExternalTarballsDir)"
           TimeoutSeconds="$(DownloadSourceBuildReferencePackagesTimeoutSeconds)" />
           
-    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="DownloadSourceBuiltArtifacts"
@@ -181,7 +181,7 @@
           DestinationFolder="$(ExternalTarballsDir)"
           TimeoutSeconds="$(DownloadSourceBuiltArtifactsTimeoutSeconds)" />
           
-    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" Overwrite="true" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
@@ -214,7 +214,7 @@
                     MarkerFileName="$(PoisonMarkerFile)"
                     PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
           
-    <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GeneratePrebuiltBurndownData"
@@ -227,7 +227,7 @@
                             PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
                             OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
           
-    <WriteLinesToFile File="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" Overwrite="true" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">

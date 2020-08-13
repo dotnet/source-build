@@ -53,7 +53,7 @@
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
 
-    <WriteLinesToFile File="$(CompletedSemaphorePath)UnpackTarballs.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)UnpackTarballs.complete" Overwrite="true" />
   </Target>
 
   <Target Name="BuildTasks" 
@@ -72,7 +72,7 @@
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
  
-    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildTasks.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildTasks.complete" Overwrite="true" />
   </Target>
 
   <Target Name="BuildXPlatTasks" 
@@ -89,7 +89,7 @@
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
 
-    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetRepoProjects">
@@ -130,7 +130,7 @@
                CreateSymbolPackage="false" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
         
-    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildReferenceAssemblies.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildReferenceAssemblies.complete" Overwrite="true" />
   </Target>
 
 
@@ -143,7 +143,7 @@
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
                                OverwriteDestination="true" />
         
-    <WriteLinesToFile File="$(CompletedSemaphorePath)ExtractToolPackage.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
   <Target Name="WriteDynamicPropsToStaticPropsFiles" 
@@ -176,7 +176,7 @@
     <MakeDir Directories="$(IntermediatePath)" Condition="!Exists('$(IntermediatePath)')" />
     <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
         
-    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteDynamicPropsToStaticPropsFiles.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteDynamicPropsToStaticPropsFiles.complete" Overwrite="true" />
   </Target>
 
   <Target Name="PoisonPrebuiltPackages" 
@@ -190,7 +190,7 @@
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltPackages)" CatalogOutputFilePath="$(PoisonReportDataFile)" MarkerFileName="$(PoisonMarkerFile)" />
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
         
-    <WriteLinesToFile File="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="FetchSources"
@@ -203,7 +203,7 @@
     <Exec Command="$(DarcCloneCommand) --repos-folder $(DarcCloneReposFolder)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
 
-    <WriteLinesToFile File="$(CompletedSemaphorePath)FetchSources.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)FetchSources.complete" Overwrite="true" />
   </Target>
 
   <Target Name="WriteSourceLinkMetadata" 
@@ -219,7 +219,7 @@
        SourceBuildMetadataDir="$(GitInfoOutputDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done writing out SourceLink metadata." />
 
-    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteSourceLinkMetadata.complete" Lines="complete" Overwrite="true" />
+    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteSourceLinkMetadata.complete" Overwrite="true" />
   </Target>
 
 </Project>
