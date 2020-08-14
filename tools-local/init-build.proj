@@ -16,10 +16,6 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="NuGetPack" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
 
-  <PropertyGroup>
-    <BuildCompetedSuccessSemaphore>$(BaseIntermediatePath)/init-build-proj.complete</BuildCompetedSuccessSemaphore>
-  </PropertyGroup>
-
   <ItemGroup>
     <BuildTasksTarget Include="Restore;Build;InstallResolver" />
   </ItemGroup>
@@ -28,12 +24,8 @@
     <BuildTasksOfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</BuildTasksOfflineSources>
   </PropertyGroup>
 
-  <Target Name="Build"
-    Inputs="$(TargetInfoProps)"
-    Outputs="$(BuildCompetedSuccessSemaphore)"
-    >
+  <Target Name="Build">
     <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
-    <Touch Files="$(BuildCompetedSuccessSemaphore)" AlwaysCreate="true" />
   </Target>
 
   <Target Name="PrepareOfflineLocalTools"
@@ -42,11 +34,13 @@
             BuildXPlatTasks" />
 
   <Target Name="Clean">
-    <Delete Files="$(BuildCompetedSuccessSemaphore)" />
+    <Delete Files="$(CompletedSemaphorePath)*.*" />
   </Target>
 
   <Target Name="UnpackTarballs" 
-          Condition="'$(OfflineBuild)' == 'true'">
+          Condition="'$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)" 
+          Outputs="$(CompletedSemaphorePath)UnpackTarballs.complete" >
     <MakeDir Directories="$(ReferencePackagesDir)"  Condition="'$(CustomReferencePackagesPath)' == ''" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
           WorkingDirectory="$(ReferencePackagesDir)"
@@ -58,9 +52,13 @@
           Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)UnpackTarballs.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="BuildTasks">
+  <Target Name="BuildTasks" 
+          Inputs="$(MSBuildProjectFullPath)" 
+          Outputs="$(CompletedSemaphorePath)BuildTasks.complete" >
     <!--
       __ToolInitPhase ensures MSBuild reruns all the targets for each BuildTasksTarget. If we don't
       alter the global properties, we get a "hit" in MSBuild's target cache, and the props/targets
@@ -73,9 +71,14 @@
       Properties="
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
+ 
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildTasks.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="BuildXPlatTasks" DependsOnTargets="UnpackTarballs">
+  <Target Name="BuildXPlatTasks" 
+          DependsOnTargets="UnpackTarballs"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)BuildXPlatTasks.complete">
     <MSBuild
       Projects="
         tasks\Microsoft.DotNet.SourceBuild.Tasks.XPlat\Microsoft.DotNet.SourceBuild.Tasks.XPlat.csproj;
@@ -85,6 +88,8 @@
       Properties="
         RestoreSources=$(BuildTasksOfflineSources);
         __ToolInitPhase=%(BuildTasksTarget.Identity)" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildXPlatTasks.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetRepoProjects">
@@ -103,7 +108,10 @@
      <Exec Condition="'$(Platform)' == 'armel'" Command="$(ArmEnvironmentVariables) $(ProjectDir)cross/armel/tizen-build-rootfs.sh" />
   </Target>
 
-  <Target Name="BuildReferenceAssemblies" Condition="'$(OfflineBuild)' == 'true'">
+  <Target Name="BuildReferenceAssemblies" 
+          Condition="'$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)BuildReferenceAssemblies.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building reference-only assemblies." />
     <ItemGroup>
       <IlSource Include="$(ReferencePackagesSourceDir)**/*.il" />
@@ -122,18 +130,27 @@
                ExcludeEmptyDirectories="false"
                CreateSymbolPackage="false" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done packing reference-only packages." />
+        
+    <WriteLinesToFile File="$(CompletedSemaphorePath)BuildReferenceAssemblies.complete" Overwrite="true" />
   </Target>
 
 
   <Target Name="ExtractToolPackage"
           DependsOnTargets="UnpackTarballs;BuildXPlatTasks"
-          Condition="'$(OfflineBuild)' == 'true'">
+          Condition="'$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)ExtractToolPackage.complete">
     <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
                                OverwriteDestination="true" />
+        
+    <WriteLinesToFile File="$(CompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="WriteDynamicPropsToStaticPropsFiles" DependsOnTargets="BuildTasks">
+  <Target Name="WriteDynamicPropsToStaticPropsFiles" 
+          DependsOnTargets="BuildTasks"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)WriteDynamicPropsToStaticPropsFiles.complete">
     <GetHostInformation Condition="'$(TargetRid)' == ''">
       <Output PropertyName="TargetRid" TaskParameter="Rid" />
     </GetHostInformation>
@@ -159,27 +176,42 @@
     </PropertyGroup>
     <MakeDir Directories="$(IntermediatePath)" Condition="!Exists('$(IntermediatePath)')" />
     <WriteLinesToFile File="$(TargetInfoProps)" Lines="$(TargetInfoPropsContent)" Overwrite="True" />
+        
+    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteDynamicPropsToStaticPropsFiles.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="PoisonPrebuiltPackages" Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'">
+  <Target Name="PoisonPrebuiltPackages" 
+          Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete">
     <ItemGroup>
       <PrebuiltPackages Include="$(PrebuiltPackagesPath)**/*.nupkg" />
       <PrebuiltSourceBuiltPackages Include="$(PrebuiltSourceBuiltPackagesPath)**/*.nupkg" />
     </ItemGroup>
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltPackages)" CatalogOutputFilePath="$(PoisonReportDataFile)" MarkerFileName="$(PoisonMarkerFile)" />
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
+        
+    <WriteLinesToFile File="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="FetchSources"
           Condition="'$(OfflineBuild)' != 'true'"
-          DependsOnTargets="GetCommonDarcCloneCommand">
+          DependsOnTargets="GetCommonDarcCloneCommand"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)FetchSources.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Getting source code for repos in Version.Details.xml." />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Running Darc command: '$(DarcCloneCommand)' from working dir $(ProjectDir)" />
     <Exec Command="$(DarcCloneCommand) --repos-folder $(DarcCloneReposFolder)" WorkingDirectory="$(ProjectDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)FetchSources.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="WriteSourceLinkMetadata" Condition="'$(OfflineBuild)' != 'true'" DependsOnTargets="AcquireDarc;FetchSources">
+  <Target Name="WriteSourceLinkMetadata" 
+          Condition="'$(OfflineBuild)' != 'true'" 
+          DependsOnTargets="AcquireDarc;FetchSources"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)WriteSourceLinkMetadata.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Writing out SourceLink metadata." />
     <WriteSourceRepoProperties
        VersionDetailsFile="$(RepositoryEngineeringDir)Version.Details.xml"
@@ -187,6 +219,8 @@
        ClonedSubmoduleDirectory="$(ClonedSubmoduleDirectory)"
        SourceBuildMetadataDir="$(GitInfoOutputDir)" />
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done writing out SourceLink metadata." />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)WriteSourceLinkMetadata.complete" Overwrite="true" />
   </Target>
 
 </Project>

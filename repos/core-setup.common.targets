@@ -5,7 +5,10 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishCoreSetupBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" AfterTargets="Package">
+  <Target Name="PublishBinaries" 
+          AfterTargets="Package"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
     <ItemGroup>
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
       <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
@@ -15,9 +18,14 @@
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishCoreSetupBinaries>
     <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="CopyBinariesToBinFolder" AfterTargets="PublishBinaries">
+  <Target Name="CopyBinariesToBinFolder" 
+          AfterTargets="PublishBinaries"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete">
     <ItemGroup>
       <_builtRuntimePackages Include="$(SourceBuiltAssetsDir)*.symbols.nupkg" />
       <_builtRuntimePackages>
@@ -30,6 +38,8 @@
     <Copy SourceFiles="@(BinariesToCopy)"
           DestinationFolder="$(OutputPath)runtime"
           Condition="'@(BinariesToCopy)'!=''" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete" Overwrite="true" />
   </Target>
 
   <Target Name="SetOutputList" AfterTargets="RepoBuild">
