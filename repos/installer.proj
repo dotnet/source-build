@@ -99,7 +99,10 @@
     <EnvironmentVariables Include="CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS=true" />
   </ItemGroup>
 
-  <Target Name="CopyTarBall" AfterTargets="CopyPackage">
+  <Target Name="CopyTarBall" 
+          AfterTargets="CopyPackage"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)CopyTarBall.complete">
     <ItemGroup>
       <CliTarBalls Include="$(TarBallOutput)*$(TarBallExtension)" />
     </ItemGroup>
@@ -107,6 +110,8 @@
     <Copy SourceFiles="@(CliTarBalls)"
           DestinationFolder="$(SourceBuiltTarBallPath)"
           Condition="'@(CliTarBalls)'!=''" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTarBall.complete" Overwrite="true" />          
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

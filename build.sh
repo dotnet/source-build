@@ -111,5 +111,5 @@ scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 if [ "$alternateTarget" == "true" ]; then
   "$CLIPATH/dotnet" $SDKPATH/MSBuild.dll "$scriptroot/build.proj" /bl:source-build-test.binlog /flp:v=diag /clp:v=m "$@"
 else
-  "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false -bl /flp:v=diag "$@"
+  "$scriptroot/eng/common/build.sh" --restore --build -c Release --warnaserror false /bl:$scriptroot/artifacts/log/Debug/Build_$(date +"%m%d%H%M%S").binlog /flp:v=diag "$@"
 fi

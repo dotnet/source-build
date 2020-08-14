@@ -56,7 +56,10 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishToolsetBinaries" />
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" AfterTargets="Build">
+  <Target Name="PublishBinaries" 
+          AfterTargets="Build"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
     <ItemGroup>
       <ToolsetZips Include="$(ToolsetZipOutputDir)dotnet-*.zip" />
     </ItemGroup>
@@ -66,6 +69,8 @@
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishToolsetBinaries>
     <Message Text="Published toolset binaries version $(PublishedVersion)" Importance="High" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
