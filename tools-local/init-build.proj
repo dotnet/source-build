@@ -118,13 +118,14 @@
       <ReferenceAssemblyDirectories Include ="$(ReferencePackagesStagingDir)/**/*.nuspec" />
     </ItemGroup>
 
-    <MakeDir Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
-    <Exec Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
+    <MakeDir Condition="'%(IlSource.RecursiveDir)' != ''" Directories="$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)" />
+    <Exec Condition="'%(IlSource.Identity)' != ''" Command="$(IlasmPath) %(IlSource.Identity) -dll -quiet -nologo -output=$(ReferencePackagesStagingDir)%(IlSource.RecursiveDir)%(IlSource.Filename).dll" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done building reference-only assemblies." />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Packing reference-only packages." />
-    <NugetPack Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
+    <NugetPack Condition="'%(ReferenceAssemblyDirectories.Identity)' != ''" 
+               Nuspecs="%(ReferenceAssemblyDirectories.Identity)"
                OutputDirectory="$(ReferencePackagesDir)"
                ExcludeEmptyDirectories="false"
                CreateSymbolPackage="false" />

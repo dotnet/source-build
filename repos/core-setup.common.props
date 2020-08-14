@@ -18,6 +18,7 @@
     <BuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(BuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildDebPackage=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:BuildAllPackages=true</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:AlwaysPackEvenIfNotServicing=true</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:RestoreAllBuildRids=false</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:OutputRid=$(OverrideTargetRid)</BuildArguments>
     <BuildArguments>$(BuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</BuildArguments>
