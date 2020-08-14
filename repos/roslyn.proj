@@ -10,11 +10,12 @@
 
     <!-- Versioning args. -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:OfficialBuild=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:EnableNgenOptimization=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:ApplyPartialNgenOptimization=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:EnablePartialNgenOptimization=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishWindowsPdb=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:DotNetBuildFromSource=true</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:UsingToolMicrosoftNetCompilers=false</BuildCommandArgs>
+<!--    <BuildCommandArgs>$(BuildCommandArgs) /p:UsingToolMicrosoftNetCompilers=false</BuildCommandArgs> -->
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
