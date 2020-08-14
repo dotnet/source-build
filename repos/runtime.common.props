@@ -33,6 +33,7 @@
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackagesDir=$(PackagesDir)</CoreClrBuildArguments>
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:ContinuousIntegrationBuild=true</CoreClrBuildArguments>
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackageRid=$(OverrideTargetRid)</CoreClrBuildArguments>
+    <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:NoPgoOptimize=true</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' != 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</CoreClrBuildArguments>
 
@@ -71,6 +72,7 @@
     <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
 
     <CommonBuildArguments>$(FlagParameterPrefix)arch $(Platform)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) /p:VersionSuffix=$(PreReleaseVersionLabel)</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)binaryLog</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)ci</CommonBuildArguments>
