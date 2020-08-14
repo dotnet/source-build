@@ -1,0 +1,26 @@
+From be9c3f6dadb94a34f4280671b7d9b144c1fc4578 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 12 Aug 2020 10:44:51 -0500
+Subject: [PATCH 7/7] Add S.R.Metadata reference for sourcelink-added
+ attribute.
+
+---
+ src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+index 94af37322..2f678570e 100644
+--- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
++++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+@@ -4,7 +4,7 @@
+ 
+   <PropertyGroup>
+     <Description>NuGet's understanding of target frameworks.</Description>
+-    <TargetFrameworks>$(TargetFrameworksLibrary);net40</TargetFrameworks>
++    <TargetFrameworks>$(TargetFrameworksLibrary)</TargetFrameworks>
+     <TargetFramework />
+     <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
+     <LangVersion>5</LangVersion>
+-- 
+2.18.0
+

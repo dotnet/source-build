@@ -1,0 +1,26 @@
+From ffa530524533b20089305da136f6e2b2695debf7 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 18 Jun 2019 16:51:33 -0500
+Subject: [PATCH 1/7] experimental nuget patch
+
+---
+ .../NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj       | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+index 390da2f9e..48cc61de8 100644
+--- a/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
++++ b/src/NuGet.Core/NuGet.Build.Tasks.Pack/NuGet.Build.Tasks.Pack.csproj
+@@ -170,9 +170,6 @@
+       <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)**\NuGet*.resources.dll">
+         <PackagePath>CoreCLR/</PackagePath>
+       </TfmSpecificPackageFile>
+-      <TfmSpecificPackageFile Include="$(OutputPath)\$(ILMergeSubpath)**\*.dll" Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">
+-        <PackagePath>CoreCLR/</PackagePath>
+-      </TfmSpecificPackageFile>
+     </ItemGroup>    
+   </Target>
+ 
+-- 
+2.18.0
+

@@ -1,0 +1,35 @@
+From da6a0c21e47af1573436a0e4c394993faff6dc05 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Thu, 14 Nov 2019 21:06:36 +0000
+Subject: [PATCH 08/13] Revert to reference versions of source-built packages
+
+---
+ eng/tools/RepoTasks/RepoTasks.csproj | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index 68d4cd23fb..3cacb7d190 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -12,14 +12,14 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="NuGet.Build.Tasks" Version="5.3.0" />
++    <PackageReference Include="NuGet.Build.Tasks" Version="5.1.0" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
+-    <PackageReference Include="Microsoft.Build.Framework" Version="16.3.0" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.3.0" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.3.0" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+-- 
+2.18.0
+

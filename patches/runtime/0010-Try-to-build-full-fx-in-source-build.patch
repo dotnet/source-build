@@ -1,0 +1,25 @@
+From 2685adb449b87402e45066afb937c16c09a164ec Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 12 Aug 2020 17:08:06 -0500
+Subject: [PATCH 10/11] Try to build full-fx in source-build.
+
+---
+ src/libraries/Directory.Build.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libraries/Directory.Build.targets b/src/libraries/Directory.Build.targets
+index 98ee9430888..be38658a772 100644
+--- a/src/libraries/Directory.Build.targets
++++ b/src/libraries/Directory.Build.targets
+@@ -234,7 +234,7 @@
+   <PropertyGroup>
+     <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetCoreAppCurrent)' and '$(ExcludeCurrentNetCoreAppFromPackage)' == 'true' and
+ '$(DotNetBuildFromSource)' != 'true'">true</ExcludeFromPackage>
+-    <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetFrameworkCurrent)' and '$(ExcludeCurrentFullFrameworkFromPackage)' == 'true'">true</ExcludeFromPackage>
++    <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetFrameworkCurrent)' and '$(ExcludeCurrentFullFrameworkFromPackage)' == 'true' and '$(DotNetBuildFromSource)' != 'true'">true</ExcludeFromPackage>
+   </PropertyGroup>
+ 
+   <!-- The Default behavior in VS is to show files for the first target framework in TargetFrameworks property.
+-- 
+2.18.0
+

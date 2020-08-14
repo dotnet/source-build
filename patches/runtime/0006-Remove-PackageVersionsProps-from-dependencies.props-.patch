@@ -1,0 +1,26 @@
+From 848e42f210e988c82d07678c87f6142cc1f67868 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 20 Apr 2020 14:46:43 +0000
+Subject: [PATCH 06/11] Remove PackageVersionsProps from dependencies.props It
+ should be included with eng/Versions.props instead
+
+---
+ src/coreclr/dependencies.props | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/coreclr/dependencies.props b/src/coreclr/dependencies.props
+index dcc5c07ccf5..e816ee9545b 100644
+--- a/src/coreclr/dependencies.props
++++ b/src/coreclr/dependencies.props
+@@ -37,8 +37,4 @@
+     </DependencyBuildInfo>
+   </ItemGroup>
+ 
+-  <!-- Override isolated build dependency versions with versions from Repo API. -->
+-  <Import Project="$(DotNetPackageVersionPropsPath)"
+-          Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+-
+ </Project>
+-- 
+2.18.0
+

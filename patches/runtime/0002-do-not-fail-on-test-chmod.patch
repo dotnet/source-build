@@ -1,0 +1,25 @@
+From 302c19093479ec6dc69ba916f7c3950a4a3e940e Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 15 May 2020 16:02:54 +0000
+Subject: [PATCH 02/11] do not fail on test chmod
+
+---
+ src/libraries/restore/runtime/runtime.depproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/restore/runtime/runtime.depproj
+index bbd53cb11b4..3249841e1e6 100644
+--- a/src/libraries/restore/runtime/runtime.depproj
++++ b/src/libraries/restore/runtime/runtime.depproj
+@@ -56,7 +56,7 @@
+           SkipUnchangedFiles="true"
+           UseHardlinksIfPossible="$(UseHardlink)" />
+ 
+-    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension)" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
++    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension) || true" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
+   </Target>
+ 
+   <Target Name="SetupRuntimePackNative"
+-- 
+2.18.0
+

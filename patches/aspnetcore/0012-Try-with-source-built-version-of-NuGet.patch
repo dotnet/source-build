@@ -1,0 +1,29 @@
+From 1dbb9e2fa25c8814909d05e3830664c286ed4359 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 28 Jun 2020 18:41:22 +0000
+Subject: [PATCH 12/13] Try with source-built version of NuGet.
+
+---
+ eng/tools/RepoTasks/RepoTasks.csproj | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index 3cacb7d190..8230c1790b 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -17,9 +17,9 @@
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
+-    <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" />
+-    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="15.7.179" />
+-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
++    <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkPackageVersion)" />
++    <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCorePackageVersion)" />
++    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCorePackageVersion)" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+-- 
+2.18.0
+
