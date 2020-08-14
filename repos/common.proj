@@ -6,7 +6,7 @@
     <RepositoryBranch>servicing/1.0.x</RepositoryBranch>
     <PackagesOutput>$(ProjectDirectory)artifacts/build/</PackagesOutput>
     <BuildArguments>/p:Configuration=$(Configuration)</BuildArguments>
-    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) -NoTest $(BuildArguments)</BuildCommand>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
