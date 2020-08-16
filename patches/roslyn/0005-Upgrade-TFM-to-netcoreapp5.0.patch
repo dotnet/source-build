@@ -1,0 +1,1575 @@
+From b80b0c461eef9c9dac3c86b12c29a23b5213c667 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 23 Jun 2020 20:53:38 +0000
+Subject: [PATCH 5/5] Upgrade TFM to netcoreapp5.0.
+
+---
+ eng/targets/Imports.targets                   |  4 +--
+ .../CSharp/Portable/CodeGen/Optimizer.cs      |  2 +-
+ .../EditAndContinue/CSharpSymbolMatcher.cs    |  8 ++---
+ .../Portable/Emitter/NoPia/EmbeddedType.cs    |  2 +-
+ .../Emitter/NoPia/EmbeddedTypesManager.cs     |  4 +--
+ .../Portable/FlowAnalysis/AbstractFlowPass.cs |  2 +-
+ ...yncIteratorMethodToStateMachineRewriter.cs |  2 +-
+ .../AsyncMethodToStateMachineRewriter.cs      |  2 +-
+ .../IteratorMethodToStateMachineRewriter.cs   |  2 +-
+ .../MethodToStateMachineRewriter.cs           |  6 ++--
+ .../Microsoft.CodeAnalysis.CSharp.csproj      |  2 +-
+ .../Source/SourceMemberContainerSymbol.cs     |  2 +-
+ .../Source/TypeParameterConstraintClause.cs   |  2 +-
+ .../CSharp/Portable/Symbols/TypeMap.cs        | 10 +++---
+ src/Compilers/CSharp/csc/csc.csproj           |  4 +--
+ .../Microsoft.Build.Tasks.CodeAnalysis.csproj |  4 +--
+ .../Core/Portable/CodeGen/ItemTokenMap.cs     |  2 +-
+ .../Core/Portable/CodeGen/LocalSlotManager.cs |  2 +-
+ .../Core/Portable/CodeGen/TokenMap.cs         |  2 +-
+ .../Collections/IOrderedReadOnlySet.cs        |  2 +-
+ .../Core/Portable/Collections/OrderedSet.cs   |  2 +-
+ .../Portable/CommandLine/CommonCompiler.cs    |  4 +--
+ .../Core/Portable/Compilation/Compilation.cs  |  2 +-
+ .../DiagnosticAnalyzer/AnalyzerDriver.cs      |  2 +-
+ .../Portable/Emit/CommonPEModuleBuilder.cs    |  4 +--
+ .../Emit/NoPia/EmbeddedTypesManager.cs        | 10 +++---
+ .../Portable/Microsoft.CodeAnalysis.csproj    |  2 +-
+ .../Server/VBCSCompiler/VBCSCompiler.csproj   |  6 ++--
+ .../Portable/Binding/Binder_Query.vb          |  6 ++--
+ .../Portable/Binding/MemberSemanticModel.vb   |  2 +-
+ .../Portable/Compilation/MethodCompiler.vb    |  4 +--
+ .../Compilation/TypeCompilationState.vb       |  6 ++--
+ .../VisualBasicSymbolMatcher.vb               |  8 ++---
+ .../Portable/Emit/NoPia/EmbeddedType.vb       |  2 +-
+ .../Emit/NoPia/EmbeddedTypesManager.vb        |  4 +--
+ .../Portable/Emit/PEModuleBuilder.vb          |  2 +-
+ .../Portable/Emit/SymbolTranslator.vb         |  2 +-
+ ...syncRewriter.AsyncMethodToClassRewriter.vb |  2 +-
+ ...rRewriter.IteratorMethodToClassRewriter.vb |  2 +-
+ .../LambdaRewriter/LambdaRewriter.Analysis.vb | 14 ++++----
+ .../LocalRewriter_LocalDeclaration.vb         |  2 +-
+ ...riter.StateMachineMethodToClassRewriter.vb |  4 +--
+ .../StateMachineRewriter.vb                   |  2 +-
+ .../Microsoft.CodeAnalysis.VisualBasic.vbproj |  4 +--
+ .../Operations/VisualBasicOperationFactory.vb |  2 +-
+ .../BlockContexts/CompilationUnitContext.vb   |  6 ++--
+ .../Portable/Semantics/OverloadResolution.vb  |  2 +-
+ .../TypeInference/TypeArgumentInference.vb    |  2 +-
+ .../Symbols/Tuples/TupleTypeSymbol.vb         |  4 +--
+ src/Compilers/VisualBasic/vbc/vbc.csproj      |  4 +--
+ ....CodeAnalysis.CSharp.EditorFeatures.csproj |  8 ++---
+ ...crosoft.CodeAnalysis.EditorFeatures.csproj |  8 ++---
+ ...ft.CodeAnalysis.EditorFeatures.Text.csproj |  2 +-
+ ...Analysis.VisualBasic.EditorFeatures.vbproj |  8 ++---
+ ...rosoft.CodeAnalysis.CSharp.Features.csproj |  4 +--
+ .../Microsoft.CodeAnalysis.Features.csproj    |  2 +-
+ ...odeAnalysis.LanguageServer.Protocol.csproj |  6 ++--
+ ...t.CodeAnalysis.VisualBasic.Features.vbproj |  2 +-
+ .../HostProcess/InteractiveHost64.csproj      |  4 +--
+ src/Interactive/csi/csi.csproj                |  8 ++---
+ src/Interactive/vbi/vbi.vbproj                |  8 ++---
+ ...Microsoft.NETCore.Compilers.Package.csproj |  2 +-
+ .../CoreClrCompilerArtifacts.targets          | 36 +++++++++----------
+ ...osoft.Net.Compilers.Toolset.Package.csproj | 20 +++++------
+ .../Microsoft.Net.Compilers.Toolset.props     |  2 +-
+ ...osoft.CodeAnalysis.CSharp.Scripting.csproj |  4 +--
+ .../Microsoft.CodeAnalysis.Scripting.csproj   |  2 +-
+ ....CodeAnalysis.VisualBasic.Scripting.vbproj |  4 +--
+ ...soft.CodeAnalysis.CSharp.Workspaces.csproj |  4 +--
+ ...oft.CodeAnalysis.Workspaces.MSBuild.csproj |  2 +-
+ .../Microsoft.CodeAnalysis.Workspaces.csproj  |  2 +-
+ ...soft.CodeAnalysis.Remote.Workspaces.csproj |  4 +--
+ ...soft.CodeAnalysis.Remote.ServiceHub.csproj |  6 ++--
+ ...CodeAnalysis.VisualBasic.Workspaces.vbproj |  4 +--
+ 74 files changed, 168 insertions(+), 168 deletions(-)
+
+diff --git a/eng/targets/Imports.targets b/eng/targets/Imports.targets
+index 506d618cea3..4d50500bec7 100644
+--- a/eng/targets/Imports.targets
++++ b/eng/targets/Imports.targets
+@@ -23,7 +23,7 @@
+       Only generate our runtimeconfig.json files for net core apps. It's unnecessary in desktop projects
+       but gets included in lots of output items like VSIX.
+     -->
+-    <GenerateRuntimeConfigurationFiles Condition="'$(TargetFramework)' != 'netcoreapp3.1'">false</GenerateRuntimeConfigurationFiles>
++    <GenerateRuntimeConfigurationFiles Condition="'$(TargetFramework)' != 'netcoreapp5.0'">false</GenerateRuntimeConfigurationFiles>
+ 
+     <!--
+       When building a .NET Core exe make sure to include the template runtimeconfig.json file 
+@@ -36,7 +36,7 @@
+       This condition will be evaluated multiple times in multi-targeted projects hence need to be careful
+       to only set in the inner builds, not the outer build where only $(TargetFrameworks) is defined.
+     -->
+-    <DisableNullableWarnings Condition="'$(DisableNullableWarnings)' == '' AND $(TargetFrameworks.Contains('netcoreapp3.1')) AND '$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp3.1'">true</DisableNullableWarnings>
++    <DisableNullableWarnings Condition="'$(DisableNullableWarnings)' == '' AND $(TargetFrameworks.Contains('netcoreapp5.0')) AND '$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp5.0'">true</DisableNullableWarnings>
+ 
+     <!--
+       Disable code style analyzers in "older" targets for a multi-targeted project. These analyzers don't
+diff --git a/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs b/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
+index bc54d3f5a97..e8a1dc6b169 100644
+--- a/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
++++ b/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
+@@ -404,7 +404,7 @@ internal sealed class StackOptimizerPass1 : BoundTreeRewriter
+         // we do that by placing a fake dummy local at one end of a branch and force that it is accessible at another.
+         // if any stack local tries to intervene and misbalance the stack, it will clash with the dummy and will be rejected.
+         private readonly SmallDictionary<object, DummyLocal> _dummyVariables =
+-            new SmallDictionary<object, DummyLocal>(ReferenceEqualityComparer.Instance);
++            new SmallDictionary<object, DummyLocal>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+ 
+         // fake local that represents the eval stack.
+diff --git a/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs b/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
+index 394c33edc6f..55b9c72d52f 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
+@@ -90,7 +90,7 @@ private abstract class MatchDefs
+             public MatchDefs(EmitContext sourceContext)
+             {
+                 _sourceContext = sourceContext;
+-                _matches = new ConcurrentDictionary<Cci.IDefinition, Cci.IDefinition>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Cci.IDefinition, Cci.IDefinition>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+             }
+ 
+             public Cci.IDefinition VisitDef(Cci.IDefinition def)
+@@ -306,8 +306,8 @@ private sealed class MatchSymbols : CSharpSymbolVisitor<Symbol>
+                 _otherAssembly = otherAssembly;
+                 _otherSynthesizedMembersOpt = otherSynthesizedMembersOpt;
+                 _comparer = new SymbolComparer(this, deepTranslatorOpt);
+-                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer.Instance);
+-                _otherMembers = new ConcurrentDictionary<ISymbolInternal, IReadOnlyDictionary<string, ImmutableArray<ISymbolInternal>>>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Symbol, Symbol>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++                _otherMembers = new ConcurrentDictionary<ISymbolInternal, IReadOnlyDictionary<string, ImmutableArray<ISymbolInternal>>>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+             }
+ 
+             internal bool TryGetAnonymousTypeName(AnonymousTypeManager.AnonymousTypeTemplateSymbol type, out string name, out int index)
+@@ -938,7 +938,7 @@ internal sealed class DeepTranslator : CSharpSymbolVisitor<Symbol>
+ 
+             public DeepTranslator(NamedTypeSymbol systemObject)
+             {
+-                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Symbol, Symbol>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+                 _systemObject = systemObject;
+             }
+ 
+diff --git a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
+index 70bbbf6b476..b4b7e0ce051 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
+@@ -56,7 +56,7 @@ public void EmbedAllMembersOfImplementedInterface(SyntaxNode syntaxNodeOpt, Diag
+         protected override int GetAssemblyRefIndex()
+         {
+             ImmutableArray<AssemblySymbol> refs = TypeManager.ModuleBeingBuilt.SourceModule.GetReferencedAssemblySymbols();
+-            return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer.Instance);
++            return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+         }
+ 
+         protected override bool IsPublic
+diff --git a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
+index 4785f8e1335..3902bc5d533 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
+@@ -18,8 +18,8 @@ namespace Microsoft.CodeAnalysis.CSharp.Emit.NoPia
+     internal sealed class EmbeddedTypesManager :
+         EmbeddedTypesManager<PEModuleBuilder, ModuleCompilationState, EmbeddedTypesManager, SyntaxNode, CSharpAttributeData, Symbol, AssemblySymbol, NamedTypeSymbol, FieldSymbol, MethodSymbol, EventSymbol, PropertySymbol, ParameterSymbol, TypeParameterSymbol, EmbeddedType, EmbeddedField, EmbeddedMethod, EmbeddedEvent, EmbeddedProperty, EmbeddedParameter, EmbeddedTypeParameter>
+     {
+-        private readonly ConcurrentDictionary<AssemblySymbol, string> _assemblyGuidMap = new ConcurrentDictionary<AssemblySymbol, string>(ReferenceEqualityComparer.Instance);
+-        private readonly ConcurrentDictionary<Symbol, bool> _reportedSymbolsMap = new ConcurrentDictionary<Symbol, bool>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<AssemblySymbol, string> _assemblyGuidMap = new ConcurrentDictionary<AssemblySymbol, string>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<Symbol, bool> _reportedSymbolsMap = new ConcurrentDictionary<Symbol, bool>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+         private NamedTypeSymbol _lazySystemStringType = ErrorTypeSymbol.UnknownResultType;
+         private readonly MethodSymbol[] _lazyWellKnownTypeMethods;
+ 
+diff --git a/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs b/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
+index 9446fafccf2..57f8ed89085 100644
+--- a/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
++++ b/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
+@@ -206,7 +206,7 @@ protected void Unsplit()
+             this.methodMainNode = node;
+             this.firstInRegion = firstInRegion;
+             this.lastInRegion = lastInRegion;
+-            _loopHeadState = new Dictionary<BoundLoopStatement, TLocalState>(ReferenceEqualityComparer.Instance);
++            _loopHeadState = new Dictionary<BoundLoopStatement, TLocalState>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+             TrackingRegions = trackRegions;
+             _nonMonotonicTransfer = nonMonotonicTransferFunction;
+         }
+diff --git a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
+index 92db5c7c1c8..15736f1323f 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
+@@ -49,7 +49,7 @@ internal sealed class AsyncIteratorMethodToStateMachineRewriter : AsyncMethodToS
+             SyntheticBoundNodeFactory F,
+             FieldSymbol state,
+             FieldSymbol builder,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            Roslyn.Utilities.IReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
+index 75a1cb66ee9..a20ae830766 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
+@@ -69,7 +69,7 @@ internal class AsyncMethodToStateMachineRewriter : MethodToStateMachineRewriter
+             SyntheticBoundNodeFactory F,
+             FieldSymbol state,
+             FieldSymbol builder,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            Roslyn.Utilities.IReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
+index de5a1082eef..32a06c3da09 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
+@@ -58,7 +58,7 @@ internal sealed partial class IteratorMethodToStateMachineRewriter : MethodToSta
+             MethodSymbol originalMethod,
+             FieldSymbol state,
+             FieldSymbol current,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            Roslyn.Utilities.IReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
+index fa506d51312..cc61152d506 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
+@@ -112,7 +112,7 @@ protected virtual void CloseTryCatchBlocks()
+         /// <summary>
+         /// The set of local variables and parameters that were hoisted and need a proxy.
+         /// </summary>
+-        private readonly IReadOnlySet<Symbol> _hoistedVariables;
++        private readonly Roslyn.Utilities.IReadOnlySet<Symbol> _hoistedVariables;
+ 
+         private readonly SynthesizedLocalOrdinalsDispenser _synthesizedLocalOrdinals;
+         private int _nextFreeHoistedLocalSlot;
+@@ -122,7 +122,7 @@ protected virtual void CloseTryCatchBlocks()
+             SyntheticBoundNodeFactory F,
+             MethodSymbol originalMethod,
+             FieldSymbol state,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            Roslyn.Utilities.IReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+@@ -188,7 +188,7 @@ protected override NamedTypeSymbol ContainingType
+             get { return OriginalMethod.ContainingType; }
+         }
+ 
+-        internal IReadOnlySet<Symbol> HoistedVariables
++        internal Roslyn.Utilities.IReadOnlySet<Symbol> HoistedVariables
+         {
+             get
+             {
+diff --git a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
+index 51dc95ba257..6837404b62d 100644
+--- a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
++++ b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.CSharp</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <CodeAnalysisRuleSet>..\CSharpCodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+     <ApplyNgenOptimization Condition="'$(TargetFramework)' == 'netstandard2.0'">partial</ApplyNgenOptimization>
+diff --git a/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs b/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
+index 5e82a3b7a16..d57f9a33fa7 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
+@@ -2104,7 +2104,7 @@ private void CheckFiniteFlatteningGraph(DiagnosticBag diagnostics)
+         {
+             Debug.Assert(ReferenceEquals(this, this.OriginalDefinition));
+             if (AllTypeArgumentCount() == 0) return;
+-            var instanceMap = new Dictionary<NamedTypeSymbol, NamedTypeSymbol>(ReferenceEqualityComparer.Instance);
++            var instanceMap = new Dictionary<NamedTypeSymbol, NamedTypeSymbol>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+             instanceMap.Add(this, this);
+             foreach (var m in this.GetMembersUnordered())
+             {
+diff --git a/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs b/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
+index a4c88a7551e..b658bfe3b17 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
+@@ -130,7 +130,7 @@ internal sealed class TypeParameterConstraintClause
+ 
+             if (isValueTypeOverride == null)
+             {
+-                var isValueTypeOverrideBuilder = new Dictionary<TypeParameterSymbol, bool>(typeParameters.Length, ReferenceEqualityComparer.Instance);
++                var isValueTypeOverrideBuilder = new Dictionary<TypeParameterSymbol, bool>(typeParameters.Length, Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+                 foreach (TypeParameterSymbol typeParameter in typeParameters)
+                 {
+diff --git a/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs b/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
+index ca63f6c528b..c2d2487be44 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
+@@ -46,7 +46,7 @@ internal TypeMap(ImmutableArray<TypeParameterSymbol> from, ImmutableArray<TypePa
+         }
+ 
+         private TypeMap(SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> mapping)
+-            : base(new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(mapping, ReferenceEqualityComparer.Instance))
++            : base(new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(mapping, Roslyn.Utilities.ReferenceEqualityComparer.Instance))
+         {
+             // mapping contents are read-only hereafter
+         }
+@@ -55,8 +55,8 @@ private TypeMap(SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> mappin
+         {
+             var substituted = containingType as SubstitutedNamedTypeSymbol;
+             return (object)substituted != null ?
+-                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(substituted.TypeSubstitution.Mapping, ReferenceEqualityComparer.Instance) :
+-                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(substituted.TypeSubstitution.Mapping, Roslyn.Utilities.ReferenceEqualityComparer.Instance) :
++                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+         }
+ 
+         internal TypeMap(NamedTypeSymbol containingType, ImmutableArray<TypeParameterSymbol> typeParameters, ImmutableArray<TypeWithAnnotations> typeArguments)
+@@ -74,7 +74,7 @@ internal TypeMap(NamedTypeSymbol containingType, ImmutableArray<TypeParameterSym
+         }
+ 
+         private static readonly SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> s_emptyDictionary =
+-            new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++            new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+         private TypeMap()
+             : base(s_emptyDictionary)
+@@ -191,7 +191,7 @@ internal TypeMap WithAlphaRename(MethodSymbol oldOwner, Symbol newOwner, out Imm
+ 
+         private static SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> ConstructMapping(ImmutableArray<TypeParameterSymbol> from, ImmutableArray<TypeWithAnnotations> to)
+         {
+-            var mapping = new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++            var mapping = new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+             Debug.Assert(from.Length == to.Length);
+ 
+diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
+index 01e6741bb09..72f4acd4378 100644
+--- a/src/Compilers/CSharp/csc/csc.csproj
++++ b/src/Compilers/CSharp/csc/csc.csproj
+@@ -8,7 +8,7 @@
+     <Prefer32Bit>false</Prefer32Bit>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.CSharp.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;net472</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+@@ -18,7 +18,7 @@
+     <ProjectReference Include="..\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
++    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp5.0'" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
+diff --git a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+index 9802a8ebac0..4d9e52b78ba 100644
+--- a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
++++ b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+@@ -6,7 +6,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.BuildTasks</RootNamespace>
+     <DefaultLanguage>en-US</DefaultLanguage>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <Nullable>enable</Nullable>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+     <AssemblyVersion/>
+@@ -54,7 +54,7 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildFrameworkVersion)" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" ExcludeAssets="Runtime" />
+-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
++    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp5.0'" />
+   </ItemGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.Build.Tasks.CodeAnalysis.UnitTests" />
+diff --git a/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs b/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
+index 1e1175c08c2..c0c78dddff4 100644
+--- a/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
++++ b/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
+@@ -20,7 +20,7 @@ namespace Microsoft.CodeAnalysis.CodeGen
+     /// </summary>
+     internal sealed class ItemTokenMap<T> where T : class
+     {
+-        private readonly ConcurrentDictionary<T, uint> _itemToToken = new ConcurrentDictionary<T, uint>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<T, uint> _itemToToken = new ConcurrentDictionary<T, uint>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+         private readonly ArrayBuilder<T> _items = new ArrayBuilder<T>();
+ 
+         public uint GetOrAddTokenFor(T item)
+diff --git a/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs b/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
+index b28f13d1b3e..40f99533c94 100644
+--- a/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
++++ b/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
+@@ -95,7 +95,7 @@ public LocalSlotManager(VariableSlotAllocator? slotAllocator)
+                 var map = _localMap;
+                 if (map == null)
+                 {
+-                    map = new Dictionary<ILocalSymbolInternal, LocalDefinition>(ReferenceEqualityComparer.Instance);
++                    map = new Dictionary<ILocalSymbolInternal, LocalDefinition>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+                     _localMap = map;
+                 }
+ 
+diff --git a/src/Compilers/Core/Portable/CodeGen/TokenMap.cs b/src/Compilers/Core/Portable/CodeGen/TokenMap.cs
+index 49df6575297..e59e1cc618c 100644
+--- a/src/Compilers/Core/Portable/CodeGen/TokenMap.cs
++++ b/src/Compilers/Core/Portable/CodeGen/TokenMap.cs
+@@ -24,7 +24,7 @@ namespace Microsoft.CodeAnalysis.CodeGen
+     /// </summary>
+     internal sealed class TokenMap
+     {
+-        private readonly ConcurrentDictionary<object, uint> _itemIdentityToToken = new ConcurrentDictionary<object, uint>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<object, uint> _itemIdentityToToken = new ConcurrentDictionary<object, uint>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+         private readonly Dictionary<object, uint> _itemToToken;
+         private readonly ArrayBuilder<object> _items = new ArrayBuilder<object>();
+diff --git a/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs b/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
+index 4657da780d9..c85a77db041 100644
+--- a/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
++++ b/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
+@@ -9,7 +9,7 @@
+ 
+ namespace Microsoft.CodeAnalysis.Collections
+ {
+-    internal interface IOrderedReadOnlySet<T> : IReadOnlySet<T>, IReadOnlyList<T>
++    internal interface IOrderedReadOnlySet<T> : Roslyn.Utilities.IReadOnlySet<T>, IReadOnlyList<T>
+     {
+     }
+ }
+diff --git a/src/Compilers/Core/Portable/Collections/OrderedSet.cs b/src/Compilers/Core/Portable/Collections/OrderedSet.cs
+index 20fb33a2537..3004f386abf 100644
+--- a/src/Compilers/Core/Portable/Collections/OrderedSet.cs
++++ b/src/Compilers/Core/Portable/Collections/OrderedSet.cs
+@@ -12,7 +12,7 @@
+ 
+ namespace Microsoft.CodeAnalysis.Collections
+ {
+-    internal sealed class OrderedSet<T> : IEnumerable<T>, IReadOnlySet<T>, IReadOnlyList<T>, IOrderedReadOnlySet<T>
++    internal sealed class OrderedSet<T> : IEnumerable<T>, Roslyn.Utilities.IReadOnlySet<T>, IReadOnlyList<T>, IOrderedReadOnlySet<T>
+     {
+         private readonly HashSet<T> _set;
+         private readonly ArrayBuilder<T> _list;
+diff --git a/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs b/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
+index dd529858235..646fc9319f2 100644
+--- a/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
++++ b/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
+@@ -79,7 +79,7 @@ internal abstract partial class CommonCompiler
+         /// The set of source file paths that are in the set of embedded paths.
+         /// This is used to prevent reading source files that are embedded twice.
+         /// </summary>
+-        public IReadOnlySet<string> EmbeddedSourcePaths { get; }
++        public Roslyn.Utilities.IReadOnlySet<string> EmbeddedSourcePaths { get; }
+ 
+         private readonly HashSet<Diagnostic> _reportedDiagnostics = new HashSet<Diagnostic>();
+ 
+@@ -475,7 +475,7 @@ private ImmutableArray<EmbeddedText> AcquireEmbeddedTexts(Compilation compilatio
+             OrderedSet<string> embeddedFiles,
+             DiagnosticBag diagnostics);
+ 
+-        private static IReadOnlySet<string> GetEmbeddedSourcePaths(CommandLineArguments arguments)
++        private static Roslyn.Utilities.IReadOnlySet<string> GetEmbeddedSourcePaths(CommandLineArguments arguments)
+         {
+             if (arguments.EmbeddedFiles.IsEmpty)
+             {
+diff --git a/src/Compilers/Core/Portable/Compilation/Compilation.cs b/src/Compilers/Core/Portable/Compilation/Compilation.cs
+index 87711070086..9a9c922c8ea 100644
+--- a/src/Compilers/Core/Portable/Compilation/Compilation.cs
++++ b/src/Compilers/Core/Portable/Compilation/Compilation.cs
+@@ -987,7 +987,7 @@ public INamedTypeSymbol CreateNativeIntegerTypeSymbol(bool signed)
+         // is that there are maybe a couple dozen analyzers in the solution and each one has
+         // ~0-2 unique well-known types, and the chance of hash collision is very low.
+         private ConcurrentCache<string, INamedTypeSymbol?> _getTypeCache =
+-            new ConcurrentCache<string, INamedTypeSymbol?>(50, ReferenceEqualityComparer.Instance);
++            new ConcurrentCache<string, INamedTypeSymbol?>(50, Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+         /// <summary>
+         /// Gets the type within the compilation's assembly and all referenced assemblies (other than
+diff --git a/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs b/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
+index 3ed956d7c6e..8beab69943f 100644
+--- a/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
++++ b/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
+@@ -210,7 +210,7 @@ protected AnalyzerDriver(ImmutableArray<DiagnosticAnalyzer> analyzers, AnalyzerM
+             _severityFilter = severityFilter;
+             _hasDiagnosticSuppressors = this.Analyzers.Any(a => a is DiagnosticSuppressor);
+             _programmaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Suppression>() : null;
+-            _diagnosticsProcessedForProgrammaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Diagnostic>(ReferenceEqualityComparer.Instance) : null;
++            _diagnosticsProcessedForProgrammaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Diagnostic>(Roslyn.Utilities.ReferenceEqualityComparer.Instance) : null;
+         }
+ 
+         /// <summary>
+diff --git a/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs b/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
+index 2f161c26af0..fbe7139c3b1 100644
+--- a/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
++++ b/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
+@@ -64,7 +64,7 @@ internal abstract class CommonPEModuleBuilder : Cci.IUnit, Cci.IModuleReference
+             DebugDocumentsBuilder = new DebugDocumentsBuilder(compilation.Options.SourceReferenceResolver, compilation.IsCaseSensitive);
+             OutputKind = outputKind;
+             SerializationProperties = serializationProperties;
+-            _methodBodyMap = new ConcurrentDictionary<IMethodSymbolInternal, Cci.IMethodBody>(ReferenceEqualityComparer.Instance);
++            _methodBodyMap = new ConcurrentDictionary<IMethodSymbolInternal, Cci.IMethodBody>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+             EmitOptions = emitOptions;
+         }
+ 
+@@ -739,7 +739,7 @@ public ImmutableArray<ISymbolInternal> GetAllMembers()
+         }
+ 
+         private readonly ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions> _synthesizedTypeMembers =
+-            new ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions>(ReferenceEqualityComparer.Instance);
++            new ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+         private ConcurrentDictionary<INamespaceSymbolInternal, ConcurrentQueue<INamespaceOrTypeSymbolInternal>> _lazySynthesizedNamespaceMembers;
+ 
+diff --git a/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs b/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
+index 1429a9b9d0e..97be84c4607 100644
+--- a/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
++++ b/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
+@@ -64,11 +64,11 @@ internal abstract partial class EmbeddedTypesManager<
+     {
+         public readonly TPEModuleBuilder ModuleBeingBuilt;
+ 
+-        public readonly ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType> EmbeddedTypesMap = new ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TFieldSymbol, TEmbeddedField> EmbeddedFieldsMap = new ConcurrentDictionary<TFieldSymbol, TEmbeddedField>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod> EmbeddedMethodsMap = new ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty> EmbeddedPropertiesMap = new ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TEventSymbol, TEmbeddedEvent> EmbeddedEventsMap = new ConcurrentDictionary<TEventSymbol, TEmbeddedEvent>(ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType> EmbeddedTypesMap = new ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TFieldSymbol, TEmbeddedField> EmbeddedFieldsMap = new ConcurrentDictionary<TFieldSymbol, TEmbeddedField>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod> EmbeddedMethodsMap = new ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty> EmbeddedPropertiesMap = new ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TEventSymbol, TEmbeddedEvent> EmbeddedEventsMap = new ConcurrentDictionary<TEventSymbol, TEmbeddedEvent>(Roslyn.Utilities.ReferenceEqualityComparer.Instance);
+ 
+         private ImmutableArray<TEmbeddedType> _frozen;
+ 
+diff --git a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
+index de357e2be6d..11cea3d1a82 100644
+--- a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
++++ b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);COMPILERCORE</DefineConstants>
+     <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
+     <NoStdLib>true</NoStdLib>
+diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+index 3fde7d77d3d..d8cce621577 100644
+--- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
++++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <LargeAddressAware>true</LargeAddressAware>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <UseVSHostingProcess>false</UseVSHostingProcess>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+@@ -17,8 +17,8 @@
+     <ProjectReference Include="..\..\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'netcoreapp3.1'" />
+-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
++    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' != 'netcoreapp5.0'" />
++    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp5.0'" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
+diff --git a/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb b/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
+index a09ab6c59fa..92d9ed1898a 100644
+--- a/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
++++ b/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
+@@ -3754,9 +3754,9 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Public Overrides Function VisitRangeVariable(node As BoundRangeVariable) As BoundNode
+                     Dim rangeVariable As RangeVariableSymbol = node.RangeVariable
+ 
+-                    If _outerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    If _outerRangeVariables.IndexOf(rangeVariable, Roslyn.Utilities.ReferenceEqualityComparer.Instance) >= 0 Then
+                         _side = _side Or Result.Outer
+-                    ElseIf _innerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    ElseIf _innerRangeVariables.IndexOf(rangeVariable, Roslyn.Utilities.ReferenceEqualityComparer.Instance) >= 0 Then
+                         _side = _side Or Result.Inner
+                     End If
+ 
+@@ -3806,7 +3806,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Public Overrides Function VisitRangeVariable(node As BoundRangeVariable) As BoundNode
+                     Dim rangeVariable As RangeVariableSymbol = node.RangeVariable
+ 
+-                    If _badRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    If _badRangeVariables.IndexOf(rangeVariable, Roslyn.Utilities.ReferenceEqualityComparer.Instance) >= 0 Then
+                         ReportDiagnostic(_diagnostics, node.Syntax, _errorInfo)
+                     End If
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb b/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
+index bf7d8e86314..a5df9729769 100644
+--- a/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
++++ b/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
+@@ -1214,7 +1214,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         '' map, so that we can answer GetEnclosingBinder questions.
+ 
+         ' The bound nodes associated with syntaxnode, from highest in the tree to lowest.
+-        Private ReadOnly _guardedNodeMap As New SmallDictionary(Of SyntaxNode, ImmutableArray(Of BoundNode))(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _guardedNodeMap As New SmallDictionary(Of SyntaxNode, ImmutableArray(Of BoundNode))(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+         Private ReadOnly _guardedQueryBindersMap As New Dictionary(Of SyntaxNode, ImmutableArray(Of Binder))()
+         Private ReadOnly _guardedAnonymousTypeBinderMap As New Dictionary(Of FieldInitializerSyntax, Binder.AnonymousTypeFieldInitializerBinder)()
+diff --git a/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb b/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
+index 8be57efdf07..f7cbe65f9fa 100644
+--- a/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
++++ b/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
+@@ -322,7 +322,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+ 
+         Private Sub ProcessEmbeddedMethods()
+             Dim manager = _compilation.EmbeddedSymbolManager
+-            Dim processedSymbols As New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Dim processedSymbols As New ConcurrentSet(Of Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+ 
+             Dim methodOrdinal = 0
+@@ -1775,7 +1775,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                    Not node.Method.IsShared AndAlso node.Method.OriginalDefinition.ContainingType Is _containingType Then
+ 
+                     If _calledMethods Is Nothing Then
+-                        _calledMethods = New HashSet(Of MethodSymbol)(ReferenceEqualityComparer.Instance)
++                        _calledMethods = New HashSet(Of MethodSymbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                     End If
+ 
+                     _calledMethods.Add(node.Method.OriginalDefinition)
+diff --git a/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb b/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
+index da4c143a616..b3f7182c61a 100644
+--- a/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
++++ b/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
+@@ -48,7 +48,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         ''' <summary>
+         ''' A mapping from (source) iterator or async methods to the compiler-generated classes that implement them.
+         ''' </summary>
+-        Public ReadOnly StateMachineImplementationClass As New Dictionary(Of MethodSymbol, NamedTypeSymbol)(ReferenceEqualityComparer.Instance)
++        Public ReadOnly StateMachineImplementationClass As New Dictionary(Of MethodSymbol, NamedTypeSymbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+         ''' <summary> 
+         ''' Map of 'MyBase' or 'MyClass' call wrappers; actually each method symbol will 
+@@ -134,7 +134,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+ #End If
+ 
+             If _initializeComponentCallTree Is Nothing Then
+-                _initializeComponentCallTree = New Dictionary(Of MethodSymbol, ImmutableArray(Of MethodSymbol))(ReferenceEqualityComparer.Instance)
++                _initializeComponentCallTree = New Dictionary(Of MethodSymbol, ImmutableArray(Of MethodSymbol))(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+             End If
+ 
+             _initializeComponentCallTree.Add(method, callees)
+@@ -147,7 +147,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Return False
+             End If
+ 
+-            Return CallsInitializeComponent(method, New HashSet(Of MethodSymbol)(ReferenceEqualityComparer.Instance))
++            Return CallsInitializeComponent(method, New HashSet(Of MethodSymbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance))
+         End Function
+ 
+         Private Function CallsInitializeComponent(method As MethodSymbol, visited As HashSet(Of MethodSymbol)) As Boolean
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb b/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
+index fc56440ef51..661fd72a43f 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
+@@ -74,7 +74,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+ 
+             Public Sub New(sourceContext As EmitContext)
+                 Me._sourceContext = sourceContext
+-                Me._matches = New ConcurrentDictionary(Of Cci.IDefinition, Cci.IDefinition)(ReferenceEqualityComparer.Instance)
++                Me._matches = New ConcurrentDictionary(Of Cci.IDefinition, Cci.IDefinition)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+             End Sub
+ 
+             Public Function VisitDef(def As Cci.IDefinition) As Cci.IDefinition
+@@ -248,8 +248,8 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+                 _otherAssembly = otherAssembly
+                 _otherSynthesizedMembersOpt = otherSynthesizedMembersOpt
+                 _comparer = New SymbolComparer(Me, deepTranslatorOpt)
+-                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
+-                _otherMembers = New ConcurrentDictionary(Of ISymbolInternal, IReadOnlyDictionary(Of String, ImmutableArray(Of ISymbolInternal)))(ReferenceEqualityComparer.Instance)
++                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
++                _otherMembers = New ConcurrentDictionary(Of ISymbolInternal, IReadOnlyDictionary(Of String, ImmutableArray(Of ISymbolInternal)))(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+             End Sub
+ 
+             Friend Function TryGetAnonymousTypeName(type As AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol, <Out> ByRef name As String, <Out> ByRef index As Integer) As Boolean
+@@ -680,7 +680,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+             Private ReadOnly _systemObject As NamedTypeSymbol
+ 
+             Public Sub New(systemObject As NamedTypeSymbol)
+-                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
++                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                 _systemObject = systemObject
+             End Sub
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
+index 141577fe4a9..81d7a0081e7 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
+@@ -48,7 +48,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit.NoPia
+ 
+         Protected Overrides Function GetAssemblyRefIndex() As Integer
+             Dim refs = TypeManager.ModuleBeingBuilt.SourceModule.GetReferencedAssemblySymbols()
+-            Return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer.Instance)
++            Return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+         End Function
+ 
+         Protected Overrides ReadOnly Property IsPublic As Boolean
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
+index 840f68d521b..01d5ceb436d 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
+@@ -13,8 +13,8 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit.NoPia
+     Friend NotInheritable Class EmbeddedTypesManager
+         Inherits Microsoft.CodeAnalysis.Emit.NoPia.EmbeddedTypesManager(Of PEModuleBuilder, ModuleCompilationState, EmbeddedTypesManager, SyntaxNode, VisualBasicAttributeData, Symbol, AssemblySymbol, NamedTypeSymbol, FieldSymbol, MethodSymbol, EventSymbol, PropertySymbol, ParameterSymbol, TypeParameterSymbol, EmbeddedType, EmbeddedField, EmbeddedMethod, EmbeddedEvent, EmbeddedProperty, EmbeddedParameter, EmbeddedTypeParameter)
+ 
+-        Private ReadOnly _assemblyGuidMap As New ConcurrentDictionary(Of AssemblySymbol, String)(ReferenceEqualityComparer.Instance)
+-        Private ReadOnly _reportedSymbolsMap As New ConcurrentDictionary(Of Symbol, Boolean)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _assemblyGuidMap As New ConcurrentDictionary(Of AssemblySymbol, String)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
++        Private ReadOnly _reportedSymbolsMap As New ConcurrentDictionary(Of Symbol, Boolean)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+         Private _lazySystemStringType As NamedTypeSymbol = ErrorTypeSymbol.UnknownResultType
+         Private ReadOnly _lazyWellKnownTypeMethods As MethodSymbol()
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb b/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
+index 4b24ef0f290..3a4a9df7d61 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
+@@ -18,7 +18,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+         Inherits PEModuleBuilder(Of VisualBasicCompilation, SourceModuleSymbol, AssemblySymbol, TypeSymbol, NamedTypeSymbol, MethodSymbol, SyntaxNode, NoPia.EmbeddedTypesManager, ModuleCompilationState)
+ 
+         ' Not many methods should end up here.
+-        Private ReadOnly _disableJITOptimization As ConcurrentDictionary(Of MethodSymbol, Boolean) = New ConcurrentDictionary(Of MethodSymbol, Boolean)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _disableJITOptimization As ConcurrentDictionary(Of MethodSymbol, Boolean) = New ConcurrentDictionary(Of MethodSymbol, Boolean)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+         ' Gives the name of this module (may not reflect the name of the underlying symbol).
+         ' See Assembly.MetadataName.
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb b/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
+index 5c03d518f25..bacbb30c1bf 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
+@@ -38,7 +38,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+             Debug.Assert(symbol.ContainingModule Is Me.SourceModule)
+ 
+             If _addedEmbeddedSymbols Is Nothing Then
+-                Interlocked.CompareExchange(_addedEmbeddedSymbols, New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer.Instance), Nothing)
++                Interlocked.CompareExchange(_addedEmbeddedSymbols, New ConcurrentSet(Of Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance), Nothing)
+             End If
+ 
+             Dim manager = SourceModule.ContainingSourceAssembly.DeclaringCompilation.EmbeddedSymbolManager
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
+index 5af5c2cc0ca..7ef6a515907 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
+@@ -64,7 +64,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                            F As SyntheticBoundNodeFactory,
+                            state As FieldSymbol,
+                            builder As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As Roslyn.Utilities.IReadOnlySet(Of Symbol),
+                            nonReusableLocalProxies As Dictionary(Of Symbol, CapturedSymbolOrExpression),
+                            synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
+index 52b80e5587b..4988d82ec97 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
+@@ -28,7 +28,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                            F As SyntheticBoundNodeFactory,
+                            state As FieldSymbol,
+                            current As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As Roslyn.Utilities.IReadOnlySet(Of Symbol),
+                            localProxies As Dictionary(Of Symbol, FieldSymbol),
+                            SynthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb b/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
+index 9281b7c4553..746ed47f718 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
+@@ -48,19 +48,19 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' For each statement with captured variables, identifies the nearest enclosing statement with captured variables.
+             ''' </summary>
+             Friend blockParent As Dictionary(Of BoundNode, BoundNode) = New Dictionary(Of BoundNode, BoundNode)()
+-            Friend lambdaParent As Dictionary(Of LambdaSymbol, MethodSymbol) = New Dictionary(Of LambdaSymbol, MethodSymbol)(ReferenceEqualityComparer.Instance)
++            Friend lambdaParent As Dictionary(Of LambdaSymbol, MethodSymbol) = New Dictionary(Of LambdaSymbol, MethodSymbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' For each captured variable, identifies the statement in which it will be moved to a frame class.  This is
+             ''' normally the block where the variable is introduced, but method parameters are moved
+             ''' to a frame class within the body of the method.
+             ''' </summary>
+-            Friend variableScope As Dictionary(Of Symbol, BoundNode) = New Dictionary(Of Symbol, BoundNode)(ReferenceEqualityComparer.Instance)
++            Friend variableScope As Dictionary(Of Symbol, BoundNode) = New Dictionary(Of Symbol, BoundNode)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' For a given label, the nearest enclosing block that captures variables
+             ''' </summary>
+-            Friend labelBlock As Dictionary(Of LabelSymbol, BoundNode) = New Dictionary(Of LabelSymbol, BoundNode)(ReferenceEqualityComparer.Instance)
++            Friend labelBlock As Dictionary(Of LabelSymbol, BoundNode) = New Dictionary(Of LabelSymbol, BoundNode)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' For a given goto, the nearest enclosing block that captures variables
+@@ -101,17 +101,17 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' <summary>
+             ''' The set of captured variables seen in the method body.
+             ''' </summary>
+-            Friend capturedVariables As HashSet(Of Symbol) = New HashSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Friend capturedVariables As HashSet(Of Symbol) = New HashSet(Of Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' For each lambda in the code, the set of variables that it captures.
+             ''' </summary>
+-            Friend capturedVariablesByLambda As MultiDictionary(Of LambdaSymbol, Symbol) = New MultiDictionary(Of LambdaSymbol, Symbol)(ReferenceEqualityComparer.Instance)
++            Friend capturedVariablesByLambda As MultiDictionary(Of LambdaSymbol, Symbol) = New MultiDictionary(Of LambdaSymbol, Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' The set of variables that were declared anywhere inside an expression lambda.
+             ''' </summary>
+-            Friend ReadOnly declaredInsideExpressionLambda As New HashSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Friend ReadOnly declaredInsideExpressionLambda As New HashSet(Of Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+             ''' <summary>
+             ''' Set to true while we are analyzing the interior of an expression lambda.
+@@ -165,7 +165,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' Create the optimized plan for the location of lambda methods and whether scopes need access to parent scopes
+             '''  </summary>
+             Friend Sub ComputeLambdaScopesAndFrameCaptures()
+-                lambdaScopes = New Dictionary(Of LambdaSymbol, BoundNode)(ReferenceEqualityComparer.Instance)
++                lambdaScopes = New Dictionary(Of LambdaSymbol, BoundNode)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                 needsParentFrame = New HashSet(Of BoundNode)
+ 
+                 For Each kvp In capturedVariablesByLambda
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
+index 7fec8327b7e..e62a6a56b12 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
+@@ -130,7 +130,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             Debug.Assert(localSymbol.IsStatic)
+ 
+             If _staticLocalMap Is Nothing Then
+-                _staticLocalMap = New Dictionary(Of LocalSymbol, KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField))(ReferenceEqualityComparer.Instance)
++                _staticLocalMap = New Dictionary(Of LocalSymbol, KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField))(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+             End If
+ 
+             Dim result As New KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField)(
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
+index dd0ac987a42..4781d08dc12 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
+@@ -62,14 +62,14 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' <summary>
+             ''' The set of local variables and parameters that were hoisted and need a proxy.
+             ''' </summary>
+-            Private ReadOnly _hoistedVariables As IReadOnlySet(Of Symbol) = Nothing
++            Private ReadOnly _hoistedVariables As Roslyn.Utilities.IReadOnlySet(Of Symbol) = Nothing
+ 
+             Private ReadOnly _synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser
+             Private _nextFreeHoistedLocalSlot As Integer
+ 
+             Public Sub New(F As SyntheticBoundNodeFactory,
+                            stateField As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As Roslyn.Utilities.IReadOnlySet(Of Symbol),
+                            initialProxies As Dictionary(Of Symbol, TProxy),
+                            synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
+index 5ba8b540387..1dc85780178 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
+@@ -32,7 +32,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         Protected StateField As FieldSymbol
+         Protected nonReusableLocalProxies As Dictionary(Of Symbol, TProxy)
+         Protected nextFreeHoistedLocalSlot As Integer
+-        Protected hoistedVariables As IReadOnlySet(Of Symbol)
++        Protected hoistedVariables As Roslyn.Utilities.IReadOnlySet(Of Symbol)
+         Protected InitialParameters As Dictionary(Of Symbol, TProxy)
+ 
+         Protected Sub New(body As BoundStatement,
+diff --git a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
+index 25243e68430..8d665ad5ba5 100644
+--- a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
++++ b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
+@@ -3,7 +3,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <NoWarn>$(NoWarn);42014</NoWarn>
+     <CodeAnalysisRuleSet>..\BasicCodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+@@ -79,4 +79,4 @@
+     </None>
+   </ItemGroup>
+   <Import Project="..\BasicAnalyzerDriver\BasicAnalyzerDriver.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb b/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
+index 70fd9df876c..260d0982901 100644
+--- a/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
++++ b/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
+@@ -55,7 +55,7 @@ Namespace Microsoft.CodeAnalysis.Operations
+ 
+             If _lazyPlaceholderToParentMap Is Nothing Then
+                 Threading.Interlocked.CompareExchange(_lazyPlaceholderToParentMap,
+-                                                      New ConcurrentDictionary(Of BoundValuePlaceholderBase, BoundNode)(concurrencyLevel:=2, capacity:=10, comparer:=ReferenceEqualityComparer.Instance),
++                                                      New ConcurrentDictionary(Of BoundValuePlaceholderBase, BoundNode)(concurrencyLevel:=2, capacity:=10, comparer:=Roslyn.Utilities.ReferenceEqualityComparer.Instance),
+                                                       Nothing)
+             End If
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb b/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
+index 94ca4007d10..63af663df80 100644
+--- a/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
++++ b/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
+@@ -164,7 +164,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ 
+                 If notClosedIfDirectives IsNot Nothing Then
+                     rewriter._notClosedIfDirectives =
+-                        New HashSet(Of IfDirectiveTriviaSyntax)(ReferenceEqualityComparer.Instance)
++                        New HashSet(Of IfDirectiveTriviaSyntax)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+                     For Each node In notClosedIfDirectives
+                         rewriter._notClosedIfDirectives.Add(node)
+@@ -173,7 +173,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ 
+                 If notClosedRegionDirectives IsNot Nothing Then
+                     rewriter._notClosedRegionDirectives =
+-                        New HashSet(Of RegionDirectiveTriviaSyntax)(ReferenceEqualityComparer.Instance)
++                        New HashSet(Of RegionDirectiveTriviaSyntax)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ 
+                     For Each node In notClosedRegionDirectives
+                         rewriter._notClosedRegionDirectives.Add(node)
+@@ -205,7 +205,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ #If DEBUG Then
+             ' NOTE: the logic is heavily relying on the fact that green nodes in 
+             ' NOTE: one single tree are not reused, the following code assert this
+-            Private ReadOnly _processedNodesWithoutDuplication As HashSet(Of VisualBasicSyntaxNode) = New HashSet(Of VisualBasicSyntaxNode)(ReferenceEqualityComparer.Instance)
++            Private ReadOnly _processedNodesWithoutDuplication As HashSet(Of VisualBasicSyntaxNode) = New HashSet(Of VisualBasicSyntaxNode)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+ #End If
+ 
+             Public Overrides Function VisitCompilationUnit(node As CompilationUnitSyntax) As VisualBasicSyntaxNode
+diff --git a/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb b/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
+index 5509d712336..2631ad00a16 100644
+--- a/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
++++ b/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
+@@ -3327,7 +3327,7 @@ Bailout:
+                             If bound IsNot Nothing AndAlso (bound.MethodConversionKind And MethodConversionKind.AllErrorReasons) = MethodConversionKind.Error_SubToFunction AndAlso
+                                (Not bound.Diagnostics.HasAnyErrors) Then
+                                 If asyncLambdaSubToFunctionMismatch Is Nothing Then
+-                                    asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer.Instance)
++                                    asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                                 End If
+ 
+                                 asyncLambdaSubToFunctionMismatch.Add(unbound)
+diff --git a/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb b/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
+index b7b178b76c7..1ead87f3547 100644
+--- a/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
++++ b/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
+@@ -2246,7 +2246,7 @@ HandleAsAGeneralExpression:
+ 
+                                     If Not boundLambda.HasErrors AndAlso Not boundLambda.Diagnostics.HasAnyErrors() Then
+                                         If _asyncLambdaSubToFunctionMismatch Is Nothing Then
+-                                            _asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer.Instance)
++                                            _asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                                         End If
+ 
+                                         _asyncLambdaSubToFunctionMismatch.Add(unboundLambda)
+diff --git a/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb b/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
+index 696afefae03..1fecf9270d2 100644
+--- a/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
++++ b/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
+@@ -714,7 +714,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+                         Case SymbolKind.Field
+                             Dim field = DirectCast(member, FieldSymbol)
+ 
+-                            Dim tupleFieldIndex = currentFieldsForElements.IndexOf(field, ReferenceEqualityComparer.Instance)
++                            Dim tupleFieldIndex = currentFieldsForElements.IndexOf(field, Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+                             If tupleFieldIndex >= 0 Then
+                                 ' This is a tuple backing field
+ 
+@@ -880,7 +880,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+         End Sub
+ 
+         Private Function ComputeDefinitionToMemberMap() As SmallDictionary(Of Symbol, Symbol)
+-            Dim smallDictionary As SmallDictionary(Of Symbol, Symbol) = New SmallDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
++            Dim smallDictionary As SmallDictionary(Of Symbol, Symbol) = New SmallDictionary(Of Symbol, Symbol)(Roslyn.Utilities.ReferenceEqualityComparer.Instance)
+             Dim originalDefinition As NamedTypeSymbol = Me._underlyingType.OriginalDefinition
+             Dim members As ImmutableArray(Of Symbol) = Me.GetMembers()
+             Dim i As Integer = members.Length - 1
+diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
+index 48843d2c542..39421f60b45 100644
+--- a/src/Compilers/VisualBasic/vbc/vbc.csproj
++++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
+@@ -7,7 +7,7 @@
+     <RootNamespace>Microsoft.CodeAnalysis.VisualBasic.CommandLine</RootNamespace>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.VisualBasic.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+@@ -17,7 +17,7 @@
+     <ProjectReference Include="..\Portable\Microsoft.CodeAnalysis.VisualBasic.vbproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
++    <PackageReference Include="System.IO.Pipes.AccessControl" Version="$(SystemIOPipesAccessControlVersion)" Condition="'$(TargetFramework)' == 'netcoreapp5.0'" />
+   </ItemGroup>
+   <ItemGroup>
+     <Compile Include="..\..\Shared\RuntimeHostInfo.cs" />
+diff --git a/src/EditorFeatures/CSharp/Microsoft.CodeAnalysis.CSharp.EditorFeatures.csproj b/src/EditorFeatures/CSharp/Microsoft.CodeAnalysis.CSharp.EditorFeatures.csproj
+index 42fbeff2a4f..fc2845acd5e 100644
+--- a/src/EditorFeatures/CSharp/Microsoft.CodeAnalysis.CSharp.EditorFeatures.csproj
++++ b/src/EditorFeatures/CSharp/Microsoft.CodeAnalysis.CSharp.EditorFeatures.csproj
+@@ -4,13 +4,13 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Editor.CSharp</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+-    <!-- Workaround dependencies that do not yet support netcoreapp3.1 https://github.com/dotnet/roslyn/issues/45114 -->
++    <!-- Workaround dependencies that do not yet support netcoreapp5.0 https://github.com/dotnet/roslyn/issues/45114 -->
+     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+-    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp3.1'">net472;$(AssetTargetFallback)</AssetTargetFallback>
++    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp5.0'">$(AssetTargetFallback)</AssetTargetFallback>
+ 
+     <!-- NuGet -->
+     <IsPackable>true</IsPackable>
+@@ -56,4 +56,4 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+index d1a791db1db..f04c734c954 100644
+--- a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
++++ b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+@@ -4,14 +4,14 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Editor</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <DefineConstants>$(DefineConstants);EDITOR_FEATURES</DefineConstants>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+-    <!-- Workaround dependencies that do not yet support netcoreapp3.1 https://github.com/dotnet/roslyn/issues/45114 -->
++    <!-- Workaround dependencies that do not yet support netcoreapp5.0 https://github.com/dotnet/roslyn/issues/45114 -->
+     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+-    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp3.1'">net472;$(AssetTargetFallback)</AssetTargetFallback>
++    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp5.0'">$(AssetTargetFallback)</AssetTargetFallback>
+ 
+     <!-- NuGet -->
+     <PackageId>Microsoft.CodeAnalysis.EditorFeatures.Common</PackageId>
+@@ -114,4 +114,4 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj b/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
+index edc6e416875..82548954a6b 100644
+--- a/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
++++ b/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Text</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+     <!-- NuGet -->
+diff --git a/src/EditorFeatures/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.EditorFeatures.vbproj b/src/EditorFeatures/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.EditorFeatures.vbproj
+index 26589a53a06..35c8d6a36ab 100644
+--- a/src/EditorFeatures/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.EditorFeatures.vbproj
++++ b/src/EditorFeatures/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.EditorFeatures.vbproj
+@@ -3,13 +3,13 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <RootNamespace></RootNamespace>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+-    <!-- Workaround dependencies that do not yet support netcoreapp3.1 https://github.com/dotnet/roslyn/issues/45114 -->
++    <!-- Workaround dependencies that do not yet support netcoreapp5.0 https://github.com/dotnet/roslyn/issues/45114 -->
+     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+-    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp3.1'">net472;$(AssetTargetFallback)</AssetTargetFallback>
++    <AssetTargetFallback  Condition="'$(TargetFramework)' == 'netcoreapp5.0'">$(AssetTargetFallback)</AssetTargetFallback>
+ 
+     <!-- NuGet -->
+     <IsPackable>true</IsPackable>
+@@ -65,4 +65,4 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj b/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
+index d97e9949126..b85b7dc7316 100644
+--- a/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
++++ b/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.CSharp</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+     <!-- NuGet -->
+@@ -67,4 +67,4 @@
+   <Import Project="..\..\..\Compilers\CSharp\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\Analyzers\CSharpAnalyzers.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\CodeFixes\CSharpCodeFixes.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Features/Core/Portable/Microsoft.CodeAnalysis.Features.csproj b/src/Features/Core/Portable/Microsoft.CodeAnalysis.Features.csproj
+index ee8ddc5854f..c7107b4d4a5 100644
+--- a/src/Features/Core/Portable/Microsoft.CodeAnalysis.Features.csproj
++++ b/src/Features/Core/Portable/Microsoft.CodeAnalysis.Features.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     
+diff --git a/src/Features/LanguageServer/Protocol/Microsoft.CodeAnalysis.LanguageServer.Protocol.csproj b/src/Features/LanguageServer/Protocol/Microsoft.CodeAnalysis.LanguageServer.Protocol.csproj
+index 9451b0ff045..504e6afccdd 100644
+--- a/src/Features/LanguageServer/Protocol/Microsoft.CodeAnalysis.LanguageServer.Protocol.csproj
++++ b/src/Features/LanguageServer/Protocol/Microsoft.CodeAnalysis.LanguageServer.Protocol.csproj
+@@ -4,11 +4,11 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.LanguageServer</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+ 
+-    <!-- Workaround dependencies that do not yet support netcoreapp3.1 https://github.com/dotnet/roslyn/issues/45114 -->
++    <!-- Workaround dependencies that do not yet support netcoreapp5.0 https://github.com/dotnet/roslyn/issues/45114 -->
+     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+-    <AssetTargetFallback Condition="'$(TargetFramework)' == 'netcoreapp3.1'">net472;$(AssetTargetFallback)</AssetTargetFallback>
++    <AssetTargetFallback Condition="'$(TargetFramework)' == 'netcoreapp5.0'">$(AssetTargetFallback)</AssetTargetFallback>
+ 
+     <IsPackable>true</IsPackable>
+     <PackageDescription>
+diff --git a/src/Features/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Features.vbproj b/src/Features/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Features.vbproj
+index 828bd70a7b7..649af84da72 100644
+--- a/src/Features/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Features.vbproj
++++ b/src/Features/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Features.vbproj
+@@ -3,7 +3,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <RootNamespace></RootNamespace>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+diff --git a/src/Interactive/HostProcess/InteractiveHost64.csproj b/src/Interactive/HostProcess/InteractiveHost64.csproj
+index d0db53fc5e6..37015c71376 100644
+--- a/src/Interactive/HostProcess/InteractiveHost64.csproj
++++ b/src/Interactive/HostProcess/InteractiveHost64.csproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <Prefer32Bit>false</Prefer32Bit>
+     <OutputType>Exe</OutputType>
+-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+     <UseWindowsForms>true</UseWindowsForms>
+ 
+@@ -45,4 +45,4 @@
+       </_PublishedFiles>
+     </ItemGroup>
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Interactive/csi/csi.csproj b/src/Interactive/csi/csi.csproj
+index 3970bb4e9ea..293d59204e2 100644
+--- a/src/Interactive/csi/csi.csproj
++++ b/src/Interactive/csi/csi.csproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <RootNamespace>CSharpInteractive</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Label="Project References">
+     <ProjectReference Include="..\..\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+@@ -18,11 +18,11 @@
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="App.config" />
+-    <None Include="csi.coreclr.rsp" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
++    <None Include="csi.coreclr.rsp" Condition="'$(TargetFramework)' == 'netcoreapp5.0'">
+       <Link>csi.rsp</Link>
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+-    <None Include="csi.desktop.rsp" Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
++    <None Include="csi.desktop.rsp" Condition="'$(TargetFramework)' != 'netcoreapp5.0'">
+       <Link>csi.rsp</Link>
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+@@ -31,4 +31,4 @@
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.CSharp.Scripting.Desktop.UnitTests" />
+   </ItemGroup>
+   <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Interactive/vbi/vbi.vbproj b/src/Interactive/vbi/vbi.vbproj
+index 5bbdf7f03a7..d3883f60335 100644
+--- a/src/Interactive/vbi/vbi.vbproj
++++ b/src/Interactive/vbi/vbi.vbproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <StartupObject>Sub Main</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <RootNamespace></RootNamespace>
+   </PropertyGroup>
+   <ItemGroup Label="Project References">
+@@ -19,11 +19,11 @@
+   </ItemGroup>
+   <ItemGroup>
+     <None Include="App.config" />
+-    <None Include="vbi.coreclr.rsp" Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
++    <None Include="vbi.coreclr.rsp" Condition="'$(TargetFramework)' == 'netcoreapp5.0'">
+       <Link>vbi.rsp</Link>
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+-    <None Include="vbi.desktop.rsp" Condition="'$(TargetFramework)' != 'netcoreapp3.1'">
++    <None Include="vbi.desktop.rsp" Condition="'$(TargetFramework)' != 'netcoreapp5.0'">
+       <Link>vbi.rsp</Link>
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+@@ -34,4 +34,4 @@
+   <ItemGroup>
+     <Folder Include="My Project\" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
+index dcb5df09f24..7d105bb6b13 100644
+--- a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
++++ b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <TargetFramework>netcoreapp5.0</TargetFramework>
+ 
+     <IsPackable>true</IsPackable>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets b/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
+index 45590df74bb..6200a49c3a9 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/CoreClrCompilerArtifacts.targets
+@@ -3,36 +3,36 @@
+ <Project>
+   <Target Name="InitializeCoreClrCompilerArtifacts">
+     <ItemGroup>
+-      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp3.1\publish\*.targets" />
+-      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp3.1\publish\Microsoft.Build.Tasks.CodeAnalysis.dll" />
+-      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp3.1\publish\**\Microsoft.Build.Tasks.CodeAnalysis.resources.dll" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp5.0\publish\*.targets" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp5.0\publish\Microsoft.Build.Tasks.CodeAnalysis.dll" />
++      <CoreClrCompilerToolsArtifact Include="$(ArtifactsBinDir)Microsoft.Build.Tasks.CodeAnalysis\$(Configuration)\netcoreapp5.0\publish\**\Microsoft.Build.Tasks.CodeAnalysis.resources.dll" />
+ 
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp3.1\Microsoft.CodeAnalysis.dll" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp3.1\**\Microsoft.CodeAnalysis.resources.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp5.0\Microsoft.CodeAnalysis.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis\$(Configuration)\netcoreapp5.0\**\Microsoft.CodeAnalysis.resources.dll" />
+ 
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.dll" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netcoreapp3.1\**\Microsoft.CodeAnalysis.CSharp.resources.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netcoreapp5.0\Microsoft.CodeAnalysis.CSharp.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.CSharp\$(Configuration)\netcoreapp5.0\**\Microsoft.CodeAnalysis.CSharp.resources.dll" />
+ 
+       <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.VisualBasic\$(Configuration)\netstandard2.0\Microsoft.CodeAnalysis.VisualBasic.dll" />
+       <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)Microsoft.CodeAnalysis.VisualBasic\$(Configuration)\netstandard2.0\**\Microsoft.CodeAnalysis.VisualBasic.resources.dll" />
+ 
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp3.1\publish\csc.dll" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp3.1\publish\csc.deps.json" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp3.1\publish\csc.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp5.0\publish\csc.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp5.0\publish\csc.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp5.0\publish\csc.runtimeconfig.json" />
+ 
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp3.1\publish\vbc.dll" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp3.1\publish\vbc.deps.json" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp3.1\publish\vbc.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp5.0\publish\vbc.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp5.0\publish\vbc.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)vbc\$(Configuration)\netcoreapp5.0\publish\vbc.runtimeconfig.json" />
+ 
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp3.1\publish\VBCSCompiler.dll" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp3.1\publish\VBCSCompiler.deps.json" />
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp3.1\publish\VBCSCompiler.runtimeconfig.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp5.0\publish\VBCSCompiler.dll" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp5.0\publish\VBCSCompiler.deps.json" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)VBCSCompiler\$(Configuration)\netcoreapp5.0\publish\VBCSCompiler.runtimeconfig.json" />
+ 
+       <!-- References that are either not in the target framework or are a higher version -->
+       <!-- N.B.: The backslashes below cannot be replaced with forward slashes.
+          https://github.com/NuGet/Home/issues/3584 -->
+-      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp3.1\publish\System.*.dll"/>
+-      <CoreClrCompilerBinRuntimesArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp3.1\publish\runtimes\**" />
++      <CoreClrCompilerBinArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp5.0\publish\System.*.dll"/>
++      <CoreClrCompilerBinRuntimesArtifact Include="$(ArtifactsBinDir)csc\$(Configuration)\netcoreapp5.0\publish\runtimes\**" />
+     </ItemGroup>
+   </Target>
+ </Project>
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+index cefd5f48e0f..f1b78440f46 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+@@ -1,8 +1,8 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;net472</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp5.0</TargetFrameworks>
+ 
+     <IsPackable>true</IsPackable>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+@@ -26,7 +26,7 @@
+     <NoWarn>$(NoWarn);NU5100;NU5128</NoWarn>
+ 
+     <_DependsOn Condition="'$(TargetFramework)' == 'net472'">InitializeDesktopCompilerArtifacts</_DependsOn>
+-    <_DependsOn Condition="'$(TargetFramework)' == 'netcoreapp3.1'">InitializeCoreClrCompilerArtifacts</_DependsOn>
++    <_DependsOn Condition="'$(TargetFramework)' == 'netcoreapp5.0'">InitializeCoreClrCompilerArtifacts</_DependsOn>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+@@ -39,18 +39,18 @@
+                       Targets="Publish"
+                       ReferenceOutputAssembly="false"
+                       SkipGetTargetFrameworkProperties="true"
+-                      Condition="'$(TargetFramework)' == 'netcoreapp3.1'"
+-                      SetTargetFramework="TargetFramework=netcoreapp3.1" />
++                      Condition="'$(TargetFramework)' == 'netcoreapp5.0'"
++                      SetTargetFramework="TargetFramework=netcoreapp5.0" />
+   </ItemGroup>
+ 
+   <Target Name="_GetFilesToPackage" DependsOnTargets="$(_DependsOn)">
+     <ItemGroup>
+       <_File Include="@(DesktopCompilerArtifact)" TargetDir="tasks/net472"/>
+       <_File Include="@(DesktopCompilerResourceArtifact)" TargetDir="tasks/net472"/>
+-      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/netcoreapp3.1"/>
+-      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/netcoreapp3.1"/>
+-      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/netcoreapp3.1/bincore"/>
+-      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/netcoreapp3.1/bincore/runtimes"/>
++      <_File Include="@(CoreClrCompilerBuildArtifact)" TargetDir="tasks/netcoreapp5.0"/>
++      <_File Include="@(CoreClrCompilerToolsArtifact)" TargetDir="tasks/netcoreapp5.0"/>
++      <_File Include="@(CoreClrCompilerBinArtifact)" TargetDir="tasks/netcoreapp5.0/bincore"/>
++      <_File Include="@(CoreClrCompilerBinRuntimesArtifact)" TargetDir="tasks/netcoreapp5.0/bincore/runtimes"/>
+      
+       <_File Include="$(MSBuildProjectDirectory)\build\**\*.*" Condition="'$(TargetFramework)' == 'net472' or '$(DotNetBuildFromSource)' == 'true'" TargetDir="build" />
+      
+@@ -59,5 +59,5 @@
+   </Target>
+ 
+   <Import Project="DesktopCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'net472'" />
+-  <Import Project="CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'netcoreapp3.1'" />
++  <Import Project="CoreClrCompilerArtifacts.targets" Condition="'$(TargetFramework)' == 'netcoreapp5.0'" />
+ </Project>
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/build/Microsoft.Net.Compilers.Toolset.props b/src/NuGet/Microsoft.Net.Compilers.Toolset/build/Microsoft.Net.Compilers.Toolset.props
+index 157388e0be7..ee94791e0c1 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/build/Microsoft.Net.Compilers.Toolset.props
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/build/Microsoft.Net.Compilers.Toolset.props
+@@ -2,7 +2,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">netcoreapp3.1</_RoslynTargetDirectoryName>   
++    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">netcoreapp5.0</_RoslynTargetDirectoryName>   
+     <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_RoslynTargetDirectoryName>   
+     <_RoslynTasksDirectory>$(MSBuildThisFileDirectory)..\tasks\$(_RoslynTargetDirectoryName)\</_RoslynTasksDirectory>
+     <RoslynTasksAssembly>$(_RoslynTasksDirectory)Microsoft.Build.Tasks.CodeAnalysis.dll</RoslynTasksAssembly> 
+diff --git a/src/Scripting/CSharp/Microsoft.CodeAnalysis.CSharp.Scripting.csproj b/src/Scripting/CSharp/Microsoft.CodeAnalysis.CSharp.Scripting.csproj
+index 9aaeb054682..fda1e60688c 100644
+--- a/src/Scripting/CSharp/Microsoft.CodeAnalysis.CSharp.Scripting.csproj
++++ b/src/Scripting/CSharp/Microsoft.CodeAnalysis.CSharp.Scripting.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.CSharp.Scripting</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+ 
+     <!-- NuGet -->
+     <IsPackable>true</IsPackable>
+@@ -43,4 +43,4 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpVersion)" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj b/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
+index 2484760d8b2..08de45fa8e1 100644
+--- a/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
++++ b/src/Scripting/Core/Microsoft.CodeAnalysis.Scripting.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Scripting</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);SCRIPTING</DefineConstants>
+ 
+     <!-- NuGet -->
+diff --git a/src/Scripting/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.Scripting.vbproj b/src/Scripting/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.Scripting.vbproj
+index 1dd7d1435ab..41a8a8cc56e 100644
+--- a/src/Scripting/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.Scripting.vbproj
++++ b/src/Scripting/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.Scripting.vbproj
+@@ -3,7 +3,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <VBRuntime>None</VBRuntime>
+     <RootNamespace></RootNamespace>
+   </PropertyGroup>
+@@ -33,4 +33,4 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.VisualBasic" Version="$(MicrosoftVisualBasicVersion)" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+index ad75c19fd68..57e22b6a319 100644
+--- a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
++++ b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.CSharp</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+     <!-- NuGet -->
+@@ -58,4 +58,4 @@
+   </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj b/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
+index 4f635d489ac..d46938d0764 100644
+--- a/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
++++ b/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);WORKSPACE_MSBUILD</DefineConstants>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+ 
+diff --git a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+index d700dd56b44..0590c220be3 100644
+--- a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
++++ b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);WORKSPACE</DefineConstants>
+     <GeneratePerformanceSensitiveAttribute>true</GeneratePerformanceSensitiveAttribute>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+diff --git a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+index 70e0b8e9fa7..ac6cfb3485c 100644
+--- a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
++++ b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Remote</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+ 
+     <!-- NuGet -->
+@@ -53,4 +53,4 @@
+     <InternalsVisibleTo Include="Roslyn.Services.UnitTests.Utilities" />
+     <InternalsVisibleTo Include="Microsoft.VisualStudio.Completion.Tests" Key="$(CompletionTestsKey)" WorkItem="https://github.com/dotnet/roslyn/issues/35081" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Workspaces/Remote/ServiceHub/Microsoft.CodeAnalysis.Remote.ServiceHub.csproj b/src/Workspaces/Remote/ServiceHub/Microsoft.CodeAnalysis.Remote.ServiceHub.csproj
+index 77504a5dac3..55388dbf818 100644
+--- a/src/Workspaces/Remote/ServiceHub/Microsoft.CodeAnalysis.Remote.ServiceHub.csproj
++++ b/src/Workspaces/Remote/ServiceHub/Microsoft.CodeAnalysis.Remote.ServiceHub.csproj
+@@ -4,12 +4,12 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Remote</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+ 
+-    <!-- Workaround dependencies that do not yet support netcoreapp3.1 https://github.com/dotnet/roslyn/issues/45114 -->
++    <!-- Workaround dependencies that do not yet support netcoreapp5.0 https://github.com/dotnet/roslyn/issues/45114 -->
+     <NoWarn>NU1701;$(NoWarn)</NoWarn>
+-    <AssetTargetFallback Condition="'$(TargetFramework)' == 'netcoreapp3.1'">net472;$(AssetTargetFallback)</AssetTargetFallback>
++    <AssetTargetFallback Condition="'$(TargetFramework)' == 'netcoreapp5.0'">$(AssetTargetFallback)</AssetTargetFallback>
+ 
+     <!-- NuGet -->
+     <IsPackable>true</IsPackable>
+diff --git a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
+index 946169e6d65..ed9289a709c 100644
+--- a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
++++ b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
+@@ -3,7 +3,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;netstandard2.0</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0;netstandard2.0</TargetFrameworks>
+     <RootNamespace></RootNamespace>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+@@ -54,4 +54,4 @@
+   </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\VisualBasic\VisualBasicCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\VisualBasic\VisualBasicWorkspaceExtensions.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+
