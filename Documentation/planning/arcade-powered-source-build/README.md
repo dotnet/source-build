@@ -1,3 +1,5 @@
+> For the arcade-powered source-build status doc, see [implementation-plan.md](implementation-plan.md).
+
 # Arcade-powered source-build
 
 Source-build existing as a process outside the Microsoft build impedes efforts
