@@ -1,6 +1,6 @@
-From 7e4c6f052471c5959535ddf421d9549f77331225 Mon Sep 17 00:00:00 2001
+From 1c1ca96983c7000fbc0d358942f6d8321ac27887 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Mon, 3 Aug 2020 15:43:31 -0500
+Date: Tue, 18 Aug 2020 10:37:21 -0500
 Subject: [PATCH] Upgrade net46 to net472.
 
 ---
@@ -46,13 +46,13 @@ index ba32df8e2..4f8eccee6 100644
  
      <Copy SourceFiles="@(ProjectOutput)" DestinationFiles="$(SdkOutputPath)tasks\%(RecursiveDir)%(FileName)%(Extension)" SkipUnchangedFiles="true">
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
-index e5e8d926a..05a8899f6 100644
+index 0b6cf4555..133fa7759 100644
 --- a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 +++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 @@ -31,7 +31,7 @@ Copyright (c) .NET Foundation. All rights reserved.
      <RazorSdkDirectoryRoot Condition="'$(RazorSdkDirectoryRoot)'==''">$(MSBuildThisFileDirectory)..\..\</RazorSdkDirectoryRoot>
      <RazorSdkBuildTasksDirectoryRoot Condition="'$(RazorSdkBuildTasksDirectoryRoot)'==''">$(RazorSdkDirectoryRoot)tasks\</RazorSdkBuildTasksDirectoryRoot>
-     <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">netcoreapp3.1</_RazorSdkTasksTFM>
+     <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">net5.0</_RazorSdkTasksTFM>
 -    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net46</_RazorSdkTasksTFM>
 +    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net472</_RazorSdkTasksTFM>
      <RazorSdkBuildTasksAssembly>$(RazorSdkBuildTasksDirectoryRoot)$(_RazorSdkTasksTFM)\Microsoft.NET.Sdk.Razor.Tasks.dll</RazorSdkBuildTasksAssembly>
