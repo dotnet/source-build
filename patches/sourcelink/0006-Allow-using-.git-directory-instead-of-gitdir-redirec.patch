@@ -1,0 +1,28 @@
+From 878c2c66dbf82b90bd16536439c039c94bac7457 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 4 Aug 2020 20:28:53 -0500
+Subject: [PATCH 6/6] Allow using .git directory instead of gitdir redirect in
+ submodules.
+
+---
+ src/Microsoft.Build.Tasks.Git/GitDataReader/GitRepository.cs | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/Microsoft.Build.Tasks.Git/GitDataReader/GitRepository.cs b/src/Microsoft.Build.Tasks.Git/GitDataReader/GitRepository.cs
+index 196c57d..1427005 100644
+--- a/src/Microsoft.Build.Tasks.Git/GitDataReader/GitRepository.cs
++++ b/src/Microsoft.Build.Tasks.Git/GitDataReader/GitRepository.cs
+@@ -209,6 +209,10 @@ private string ReadHeadCommitSha()
+         /// <returns>Null if the HEAD tip reference can't be resolved.</returns>
+         internal string ReadSubmoduleHeadCommitSha(string submoduleWorkingDirectoryFullPath)
+         {
++            if (Directory.Exists(Path.Combine(submoduleWorkingDirectoryFullPath, ".git")))
++            {
++                return File.ReadAllText(Path.Combine(submoduleWorkingDirectoryFullPath, ".git", "HEAD"));
++            }
+             var gitDirectory = ReadDotGitFile(Path.Combine(submoduleWorkingDirectoryFullPath, GitDirName));
+             if (!IsGitDirectory(gitDirectory, out var commonDirectory))
+             {
+-- 
+2.18.0
+
