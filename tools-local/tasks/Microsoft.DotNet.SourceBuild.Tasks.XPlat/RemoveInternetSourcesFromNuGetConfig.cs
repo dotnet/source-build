@@ -13,14 +13,19 @@ using Microsoft.Build.Utilities;
 namespace Microsoft.DotNet.Build.Tasks
 {
     /*
-     * This task adds a source to a well-formed NuGet.Config file. If a source with `SourceName` is already present, then
-     * the path of the source is changed. Otherwise, the source is added as the first source in the list, after any clear
-     * elements (if present).
+     * This task removes internet sources from a given NuGet.config.  In the offline build mode, it removes all
+     * feeds that begin with http or https.  In the online build mode, it removes only the internal dnceng feeds that
+     * source-build does not have access to.
      */
     public class RemoveInternetSourcesFromNuGetConfig : Task
     {
         [Required]
         public string NuGetConfigFile { get; set; }
+
+        /// <summary>
+        /// Whether to work in offline mode (remove all internet sources) or online mode (remove only authenticated sources)
+        /// </summary>
+        public bool OfflineBuild { get; set; }
 
         public override bool Execute()
         {
@@ -31,7 +36,15 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 if (e.Name == "add")
                 {
-                    return !(e.Attribute("value").Value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || e.Attribute("value").Value.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+                    string feedUrl = e.Attribute("value").Value;
+                    if (OfflineBuild)
+                    {
+                        return !(feedUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || feedUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase));
+                    }
+                    else
+                    {
+                        return !(feedUrl.StartsWith("https://pkgs.dev.azure.com/dnceng/_packaging", StringComparison.OrdinalIgnoreCase));
+                    }
                 }
 
                 return true;

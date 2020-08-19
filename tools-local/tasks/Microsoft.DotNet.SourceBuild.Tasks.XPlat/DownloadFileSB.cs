@@ -1,9 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-/// This task is sourced from https://github.com/microsoft/msbuild/blob/04e508c36f9c1fe826264aef7c26ffb8f16e9bdc/src/Tasks/DownloadFile.cs
-/// It alleviates the problem of time outs on DownloadFile Task. We are not the version of msbuild that has this fix, hence we have to locally 
-/// build it to get rid of the issue. 
+// This task is sourced from https://github.com/microsoft/msbuild/blob/04e508c36f9c1fe826264aef7c26ffb8f16e9bdc/src/Tasks/DownloadFile.cs
+// Contains further modifications in followup commits.
+// It alleviates the problem of time outs on DownloadFile Task. We are not the version of msbuild that has this fix, hence we have to locally 
+// build it to get rid of the issue. 
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -64,6 +65,14 @@ namespace Microsoft.Build.Tasks
         public string SourceUrl { get; set; }
 
         /// <summary>
+        /// Gets or sets the timeout for a successful download. If exceeded, the download continues
+        /// for another two timeout durations before failing. This makes it sometimes possible to
+        /// determine whether the timeout is just a little too short, or if the download would never
+        /// have finished.
+        /// </summary>
+        public string TimeoutSeconds { get; set; }
+
+        /// <summary>
         /// Gets or sets a <see cref="HttpMessageHandler"/> to use.  This is used by unit tests to mock a connection to a remote server.
         /// </summary>
         internal HttpMessageHandler HttpMessageHandler { get; set; }
@@ -88,10 +97,25 @@ namespace Microsoft.Build.Tasks
             }
 
             int retryAttemptCount = 0;
-            
+
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
-            while(true)
+            var startTime = DateTime.UtcNow;
+
+            // Use the same API for the "success timeout" and the "would it ever succeed" timeout.
+            var timeout = TimeSpan.Zero;
+            var successCancellationTokenSource = new CancellationTokenSource();
+
+            if (double.TryParse(TimeoutSeconds, out double timeoutSeconds))
+            {
+                timeout = TimeSpan.FromSeconds(timeoutSeconds);
+                Log.LogMessage(MessageImportance.High, $"DownloadFileSB timeout set to {timeout}");
+
+                successCancellationTokenSource.CancelAfter(timeout);
+                _cancellationTokenSource.CancelAfter((int)(timeout.TotalMilliseconds * 3));
+            }
+
+            while (true)
             {
                 try
                 {
@@ -127,6 +151,35 @@ namespace Microsoft.Build.Tasks
                         break;
                     }
                 }
+            }
+
+            var finishTime = DateTime.UtcNow;
+
+            if (successCancellationTokenSource.IsCancellationRequested)
+            {
+                string error = $"{TimeoutSeconds} second timeout exceeded";
+
+                if (!_cancellationTokenSource.IsCancellationRequested)
+                {
+                    error +=
+                        $", but download completed after {finishTime - startTime}. " +
+                        $"Try increasing timeout from {TimeoutSeconds} if this is acceptable.";
+                }
+                else
+                {
+                    error +=
+                        $", and didn't complete within leeway after {finishTime - startTime}. " +
+                        $"The download was likely never going to terminate. Investigate logs and " +
+                        $"add additional logging if necessary.";
+                }
+
+                Log.LogError(error);
+            }
+            else
+            {
+                Log.LogMessage(
+                    MessageImportance.High,
+                    $"DownloadFileSB.Downloading Complete! Elapsed: {finishTime - startTime}");
             }
 
             return !_cancellationTokenSource.IsCancellationRequested && !Log.HasLoggedErrors;
@@ -175,18 +228,57 @@ namespace Microsoft.Build.Tasks
                         return;
                     }
 
+                    var progressMonitorCancellationTokenSource = new CancellationTokenSource();
+                    CancellationToken progressMonitorToken = progressMonitorCancellationTokenSource.Token;
+
                     try
                     {
                         cancellationToken.ThrowIfCancellationRequested();
 
+                        var startTime = DateTime.UtcNow;
+
+                        var progressMonitor = Task.Run(
+                            async () =>
+                            {
+                                while (!progressMonitorToken.IsCancellationRequested)
+                                {
+                                    destinationFile.Refresh();
+                                    if (destinationFile.Exists)
+                                    {
+                                        long current = destinationFile.Length;
+                                        long total = response.Content.Headers.ContentLength ?? 1;
+                                        var elapsed = DateTime.UtcNow - startTime;
+                                        double kbytesPerSecond = current / elapsed.TotalSeconds / 1000.0;
+
+                                        Log.LogMessage(
+                                            MessageImportance.High,
+                                            $"Progress... {elapsed}, " +
+                                            $"current file size {current / (double)total:00.0%} " +
+                                            $"({destinationFile.Length:#,0} / {total:#,0}) " +
+                                            $"~ {kbytesPerSecond:#,0.00} kB/s");
+                                    }
+                                    await Task.Delay(TimeSpan.FromSeconds(5), progressMonitorToken);
+                                }
+                            },
+                            progressMonitorToken)
+                            .ConfigureAwait(false);
+
                         using (var target = new FileStream(destinationFile.FullName, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
-                            Log.LogMessage(MessageImportance.High, $"DownloadFileSB.Downloading {SourceUrl}", destinationFile.FullName, response.Content.Headers.ContentLength);
+                            Log.LogMessage(
+                                MessageImportance.High,
+                                $"DownloadFileSB.Downloading {SourceUrl} to " +
+                                $"{destinationFile.FullName}");
+
+                            Log.LogMessage( MessageImportance.Low, $"All response headers:\n{response.Headers}");
+                            Log.LogMessage( MessageImportance.Low, $"All content headers:\n{response.Content.Headers}");
 
                             using (Stream responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false))
                             {
                                 await responseStream.CopyToAsync(target, 1024, cancellationToken).ConfigureAwait(false);
                             }
+
+                            Log.LogMessage(MessageImportance.High, $"DownloadFileSB.StreamCopyComplete {SourceUrl}");
 
                             DownloadedFile = new TaskItem(destinationFile.FullName);
                         }
@@ -200,6 +292,8 @@ namespace Microsoft.Build.Tasks
                             // on success but we are concerned about the added I/O
                             destinationFile.Delete();
                         }
+
+                        progressMonitorCancellationTokenSource.Cancel();
                     }
                 }
             }

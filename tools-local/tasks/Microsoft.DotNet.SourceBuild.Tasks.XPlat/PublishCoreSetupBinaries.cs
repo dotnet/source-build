@@ -28,7 +28,9 @@ namespace Microsoft.DotNet.Build.Tasks
         //   dotnet-runtime-rhel.7-x64.2.0.0-preview2-25401-9.tar.gz
         //   dotnet-runtime-2.0.0-preview2-25401-9-rhel.7-x64.tar.gz
         // the "semver" capture would be 2.0.0-preview2-25401-9 in this case.
-        protected virtual string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+(-|\.)[0-9]+(-|\.)[0-9]+((-|\.)[0-9]+)?)?)";
+        protected virtual string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(([-.])[A-Za-z0-9]+)*)";
+
+        protected string[] BadAtoms = new[] { "-x64", ".x64", ".tar", ".gz", "-rhel.7", "-rhel.8", ".rhel.7", ".rhel.8", "-centos.7", "-centos.8", ".centos.7", ".centos.8", "-linux", ".linux", ".ubuntu.18.04", "-ubuntu.18.04", "-debian.9", ".debian.9" };
 
         public override bool Execute()
         {
@@ -40,18 +42,9 @@ namespace Microsoft.DotNet.Build.Tasks
                 string binaryFileName = Path.GetFileName(binaryFullPath);
                 string version = Regex.Match(binaryFileName, VersionMatchRegex).Groups["semver"].Value;
 
-                // workaround the RID being included for now - regex needs to be reworked for stable versions
-                if (version.EndsWith("-linux"))
+                foreach (var ba in BadAtoms)
                 {
-                    version = version.Substring(0, version.Length - "-linux".Length);
-                }
-                if (version.EndsWith("-osx"))
-                {
-                    version = version.Substring(0, version.Length - "-osx".Length);
-                }
-                if (version.Contains("-ubuntu"))
-                {
-                    version = version.Substring(0, version.IndexOf("-ubuntu"));
+                    version = version.Replace(ba, "");
                 }
 
                 if (version == "")
