@@ -1,7 +1,7 @@
-From 4975e1c067c6ae2975fe2673b8f179380c9c27d5 Mon Sep 17 00:00:00 2001
+From fc961ab0c8d37ce58a74d60f837c048a9940a8db Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 25 Jun 2020 23:03:13 +0000
-Subject: [PATCH 09/11] Update for source-built MS.Private.CoreFx.NetCoreApp
+Subject: [PATCH 10/10] Update for source-built MS.Private.CoreFx.NetCoreApp
  that only supports netcoreapp3.1.
 
 ---
@@ -9,7 +9,7 @@ Subject: [PATCH 09/11] Update for source-built MS.Private.CoreFx.NetCoreApp
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/restore/runtime/runtime.depproj
-index 3249841e1e6..2bcb1c61560 100644
+index 3249841e1e6..0b2e6625522 100644
 --- a/src/libraries/restore/runtime/runtime.depproj
 +++ b/src/libraries/restore/runtime/runtime.depproj
 @@ -6,7 +6,7 @@
@@ -17,7 +17,7 @@ index 3249841e1e6..2bcb1c61560 100644
      <BinPlaceNative>true</BinPlaceNative>
      <BinPlaceRuntime>false</BinPlaceRuntime>
 -    <TargetFrameworks>netcoreapp3.0-Windows_NT;netcoreapp3.0-Unix;$(netcoreappCurrent)-Windows_NT;$(netcoreappCurrent)-Unix</TargetFrameworks>
-+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks>netcoreapp5.0-Windows_NT;netcoreapp5.0-Unix;$(netcoreappCurrent)-Windows_NT;$(netcoreappCurrent)-Unix</TargetFrameworks>
    </PropertyGroup>
  
    <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
