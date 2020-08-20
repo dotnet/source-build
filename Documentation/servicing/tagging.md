@@ -35,4 +35,11 @@ git push 'git@github.com:dotnet/source-build' "v${runtimeVersion}-runtime" && \
 git push 'git@github.com:dotnet/source-build' "v${sdkVersion}-SDK"
 ```
 
+If `upstream` is configured as `dotnet/source-build` command can be:
+
+```sh
+git push upstream "v${runtimeVersion}-runtime" && \
+git push upstream "v${sdkVersion}-SDK"
+```
+
 **Do not use "git push --tags"**. Unless you have a fresh repo with no other tags, this will push all your tags. This risks messing up existing tags on the remote.
