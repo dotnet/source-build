@@ -15,7 +15,7 @@
 -->
 # {runtime-version} / {sdk-version}
 
-1.  - [ ] Create a page at ".NET Core A&D" OneNote -> "Servicing" section -> "{Month} {YYYY}" to take ongoing notes on problems with the process, workarounds, and fixes.
+1.  - [ ] Create a page at ".NET Core A&D" OneNote -> "Servicing" section -> "Post Mortem" -> "{Month} {YYYY}" to take ongoing notes on problems with the process, workarounds, and fixes.
       - This is useful to make sure context is available to review later. It may end up blank if the release goes very smoothly.
       - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
       - [Non-Internal] File GitHub issues as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
@@ -36,13 +36,18 @@
       - [3.1]
         - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` matches N-1 release artifacts.
         - [ ] Update the `global.json` SDK version to N-1: the latest released "3.1.XYY" SDK version, where "3.1.X" matches the SDK we're building.
-1.  - [ ] Regenerate patches as necessary.
-      - Run `./build.sh /t:CloneOnly /t:ApplyPatches` to minimally clone and attempt patch application to see what, if anything, needs to be regenerated.
-      - ASP.NET will always need to be regenerated because it contains a version number that needs to be updated.
 1.  - [ ] [2.1] Fetch internal git data for submodules.
       1.  Run `git submodule update --init --recursive` and see errors due to missing commits.
       1.  Run `fetch-vsts-commits.sh` with a PAT to automatically fetch internal refs.
+      1.  Run `git submodule update --init --recursive` again to update failed submodules.
           * If some refs are still missing on unusual repos, those repos may need to be set up in `fetch-vsts-commits.sh`.
+1.  - [ ] Regenerate patches as necessary.
+      - Run `./build.sh` to begin clone and patch application and see what, if anything, needs to be regenerated.  Issue to track re-patching workflow: [#1468](https://github.com/dotnet/source-build/issues/1468)
+      - [3.1] ASP.NET will always need to be regenerated because it contains a version number that needs to be updated.  The version should be updated to the SDK version being built.  See https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0007-Fix-version-number.patch
+1.  - [ ] [Internal] [3.1] Update internal feed list in `.\build.sh`
+      - Internal feeds are listed under `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`
+      - Make sure to keep `dotnet3.1-internal-transport` in the list
+      - Issue tracking this: [#1674](https://github.com/dotnet/source-build/issues/1674)
 1.  - [ ] Start building locally (for quick diagnosis) and in CI (for super clean build) and iterate towards a green build.
       - [Internal] [3.1] Set environment variable `internalPackageFeedPat` to dnceng internal PAT with package read and code read access.
         - E.g. run `export internalPackageFeedPat;read internalPackageFeedPat` and paste the PAT. This sets up your running shell for an authenticated build. Passing `/p:` isn't sufficient.
@@ -65,9 +70,9 @@
 1.  - [ ] Complete manual validation steps
       - [ ] Ask for confirmation on poison report.
         - Confirm with team how to check this for a specific build/release.
-      - [ ] Verify the packs included in the SDK are from source-build-reference-packages, not source-build.
+      - [ ] [3.1] Verify the packs included in the SDK are from source-build-reference-packages, not source-build.
         - E.g. in `testing-smoke/builtCli`, run `find . -iname System.IO.Pipelines.dll -exec sha256sum {} \; | sort` and look at file origin based on checksum of the file in the SDK.
-      - [ ] Verify the packs included in the SDK have XML documentation comments. 
+      - [ ] Verify the packs included in the SDK have XML documentation comments. Presence of XML files in the SDK dir is adequate.  Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
       - [ ] Re-validate the SHA1s in Versions file with the manifest in VSU share dir.
       - [ ] [3.1] Review the file list diff between Microsoft-built SDK and source-built SDK in smoke-test output.
         - [Internal] [3.1] For internal builds, smoke-test fails to acquire the Microsoft-built SDK. Manually acquire the Microsoft-built SDK from the build email you should have received, then run `scripts/compare-builds.sh` yourself to get the output to review.
@@ -84,7 +89,7 @@
         - Rename tarball and smoke-test prereqs to human-friendly names. Refer to previous release email for naming pattern.
           - Can use <https://github.com/dagood/terminal-setup/blob/master/bash-util/rename-inner-targz> to do this.
 1.  - [ ] Upload tarballs and smoke-test prereqs to blob storage.
-1.  - [ ] Coordinate with team and complete manual distributed smoke-testing. Suggested assignment below, but it's flexible.
+1.  - [ ] Coordinate with team and complete manual distributed smoke-testing. Suggested assignment below, but it's flexible.  Send email with direct links to artifacts from green PR.
       - [2.1]
         - [ ] RHEL7 and RHEL8 VMs - crummel
         - [ ] RHEL docker - dleeapho
@@ -122,9 +127,7 @@
       - Paste into the release title
       - Click submit.
 1.  - [ ] Notify distro maintainers and partners about the release tags
-1.  - [ ] [3.1] Download Private.SourceBuilt.Artifacts.XX.tar.gz files from offline CI legs.
-1.  - [ ] [3.1] Merge Private.SourceBuilt.Artifacts.XX.tar.gz files.
-      - Make sure the centos7 portable offline one is the one that ends up in `coreclr-tooling`.
+1.  - [ ] [3.1] Download merged Private.SourceBuilt.Artifacts.XX.tar.gz files from the prepare-artifacts leg in source-build-rolling-CI.
 1.  - [ ] [3.1] Upload merged Private.SourceBuilt.Artifacts.XX.tar.gz file to dotnetcli account source-built-artifacts blob container.
       - Never overwrite a tarball. Use a sub-patch version if one already exists, e.g. `0.1.0-3.1.105.1`.
 1.  - [ ] If there's a respin (for any reason: source-build infra fixes or upstream repo problems):
