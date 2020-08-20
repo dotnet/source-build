@@ -1,17 +1,17 @@
-From e94909a2144362df64606d61f391f1ea5930a369 Mon Sep 17 00:00:00 2001
+From c539b20a044d2156a815ae795dc03878b86e24e2 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 1 Jul 2020 21:40:38 +0000
-Subject: [PATCH 8/9] Exclude System.Text.Json when calling PublishTestCli
+Subject: [PATCH] Exclude System.Text.Json when calling PublishTestCli
 
 ---
  src/Layout/redist/targets/GenerateLayout.targets | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
-index 6641b42d7..43c7a58cb 100644
+index 37a0db7..1259b22 100644
 --- a/src/Layout/redist/targets/GenerateLayout.targets
 +++ b/src/Layout/redist/targets/GenerateLayout.targets
-@@ -92,6 +92,7 @@
+@@ -66,6 +66,7 @@
        <TestCliBitsToExclude Include="$(TestCliNuGetDirectory)System.Memory.dll" />
        <TestCliBitsToExclude Include="$(TestCliNuGetDirectory)System.Runtime.CompilerServices.Unsafe.dll" />
        <TestCliBitsToExclude Include="$(TestCliNuGetDirectory)NuGet.Frameworks.dll" />
@@ -20,5 +20,5 @@ index 6641b42d7..43c7a58cb 100644
                     Exclude="@(TestCliBitsToExclude)" />
      </ItemGroup>
 -- 
-2.18.0
+1.8.3.1
 

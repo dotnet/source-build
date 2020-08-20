@@ -1,17 +1,17 @@
-From 97490403d76af67cdfc106d6db3b745c3a04e583 Mon Sep 17 00:00:00 2001
+From 9d35d66fc01e022a2bce3a6dee9db7f44da5831d Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Thu, 14 Nov 2019 16:57:39 +0000
-Subject: [PATCH 04/13] Exclude some projects from source-build
+Subject: [PATCH 06/15] Exclude some projects from source-build
 
 ---
  Directory.Build.props | 2 ++
  1 file changed, 2 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 3857d9c35b..4687bd3741 100644
+index 563894e4e5..38e2f770c5 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -20,9 +20,11 @@
+@@ -18,9 +18,11 @@
      <IsUnitTestProject>false</IsUnitTestProject>
      <IsUnitTestProject Condition="'$(IsSpecificationTestProject)' != 'true' and ( $(MSBuildProjectName.EndsWith('Tests')) or $(MSBuildProjectName.EndsWith('.Test')) or $(MSBuildProjectName.EndsWith('.FunctionalTest')) )">true</IsUnitTestProject>
      <IsTestAssetProject Condition="$(RepoRelativeProjectDir.Contains('testassets'))">true</IsTestAssetProject>
@@ -24,5 +24,5 @@ index 3857d9c35b..4687bd3741 100644
      <!--
        Following logic mimics core-setup approach as well as
 -- 
-2.18.0
+2.21.0
 

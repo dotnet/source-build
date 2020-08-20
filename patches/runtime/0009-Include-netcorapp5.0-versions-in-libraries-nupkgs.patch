@@ -1,7 +1,7 @@
-From 0592577e9dae13d4040a1c5b2ecfcc781a0f76f8 Mon Sep 17 00:00:00 2001
+From 0ee81fc90db6ecf40b863659c27d2c54cd66197a Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 11 Jun 2020 12:15:06 -0400
-Subject: [PATCH 09/10] Include netcorapp5.0 versions in libraries nupkgs
+Subject: [PATCH 13/15] Include netcorapp5.0 versions in libraries nupkgs
 
 Assets for netcoreapp3.0 are not built in source-build because we don't
 have references for past netcoreapp versions.  That leaves the packages
@@ -15,10 +15,10 @@ build, only for the source-build build.
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/src/libraries/Directory.Build.targets b/src/libraries/Directory.Build.targets
-index 728194da1c9..98ee9430888 100644
+index 16af4c2e85b..e54dc3e8699 100644
 --- a/src/libraries/Directory.Build.targets
 +++ b/src/libraries/Directory.Build.targets
-@@ -232,7 +232,8 @@
+@@ -228,7 +228,8 @@
    </Choose>
    
    <PropertyGroup>
@@ -29,5 +29,5 @@ index 728194da1c9..98ee9430888 100644
    </PropertyGroup>
  
 -- 
-2.18.0
+2.17.1
 

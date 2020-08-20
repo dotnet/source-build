@@ -1,14 +1,14 @@
-From 9e0419775719db81624c6195b7ed8df5790e32f9 Mon Sep 17 00:00:00 2001
+From 52ef0c42eed4277fc54eeb0c74f1e01300ea30eb Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 25 Jun 2020 19:56:39 +0000
-Subject: [PATCH 6/9] Update roslyn build path to include netcoreapp5.0
+Subject: [PATCH] Update roslyn build path to include netcoreapp5.0
 
 ---
  src/Layout/redist/targets/GenerateLayout.targets | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
-index 10729093c..6641b42d7 100644
+index eb72ffb..37a0db7 100644
 --- a/src/Layout/redist/targets/GenerateLayout.targets
 +++ b/src/Layout/redist/targets/GenerateLayout.targets
 @@ -20,7 +20,7 @@
@@ -21,5 +21,5 @@ index 10729093c..6641b42d7 100644
      <Error Condition="'@(RoslynBits)' == ''" Text="Something moved around in Roslyn package, adjust code here accordingly. TFM change?" />
      <Copy SourceFiles="@(RoslynBits)" DestinationFiles="@(RoslynBits->'$(RoslynDirectory)/%(RecursiveDir)%(Filename)%(Extension)')" />
 -- 
-2.18.0
+1.8.3.1
 

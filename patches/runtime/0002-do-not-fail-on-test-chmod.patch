@@ -1,17 +1,17 @@
-From a2ca2c9122736a0ff5c03265b7af4f733f536aaf Mon Sep 17 00:00:00 2001
+From 521ab62a78b4fcfcb5709502f0b5619b11f9c7d8 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 15 May 2020 16:02:54 +0000
-Subject: [PATCH 02/10] do not fail on test chmod
+Subject: [PATCH 03/15] do not fail on test chmod
 
 ---
  src/libraries/restore/runtime/runtime.depproj | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/restore/runtime/runtime.depproj
-index bbd53cb11b4..3249841e1e6 100644
+index 3179312c073..b88c71fa8df 100644
 --- a/src/libraries/restore/runtime/runtime.depproj
 +++ b/src/libraries/restore/runtime/runtime.depproj
-@@ -56,7 +56,7 @@
+@@ -65,7 +65,7 @@
            SkipUnchangedFiles="true"
            UseHardlinksIfPossible="$(UseHardlink)" />
  
@@ -21,5 +21,5 @@ index bbd53cb11b4..3249841e1e6 100644
  
    <Target Name="SetupRuntimePackNative"
 -- 
-2.18.0
+2.17.1
 

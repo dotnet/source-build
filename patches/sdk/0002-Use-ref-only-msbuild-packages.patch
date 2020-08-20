@@ -1,18 +1,18 @@
-From 5c8453fdd66ce2157e9a74377fc38af2087a5fca Mon Sep 17 00:00:00 2001
+From 93bdc4e3d6a3522f026615d7478d686ab1fd9357 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Wed, 21 Aug 2019 21:36:24 +0000
-Subject: [PATCH 2/9] Use ref-only msbuild packages
+Subject: [PATCH] Use ref-only msbuild packages
 
 ---
- .../Microsoft.NET.Build.Extensions.Tasks.csproj            | 5 +++--
- .../Microsoft.NET.Build.Tasks.csproj                       | 7 ++++---
+ .../Microsoft.NET.Build.Extensions.Tasks.csproj                    | 5 +++--
+ .../Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj     | 7 ++++---
  2 files changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/src/Tasks/Microsoft.NET.Build.Extensions.Tasks/Microsoft.NET.Build.Extensions.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Extensions.Tasks/Microsoft.NET.Build.Extensions.Tasks.csproj
-index 20d6fd9a0..ff2cd522c 100644
+index 4cce45c..e12d840 100644
 --- a/src/Tasks/Microsoft.NET.Build.Extensions.Tasks/Microsoft.NET.Build.Extensions.Tasks.csproj
 +++ b/src/Tasks/Microsoft.NET.Build.Extensions.Tasks/Microsoft.NET.Build.Extensions.Tasks.csproj
-@@ -44,8 +44,9 @@
+@@ -40,8 +40,9 @@
    </ItemDefinitionGroup>
  
    <ItemGroup>
@@ -25,10 +25,10 @@ index 20d6fd9a0..ff2cd522c 100644
    </ItemGroup>
  
 diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-index e9e6f8937..94467319e 100644
+index d231008..c3a41aa 100644
 --- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 +++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-@@ -42,9 +42,10 @@
+@@ -37,9 +37,10 @@
    </ItemDefinitionGroup>
  
    <ItemGroup>
@@ -43,5 +43,5 @@ index e9e6f8937..94467319e 100644
      <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
      <PackageReference Include="Microsoft.NET.HostModel" Version="$(MicrosoftNETHostModelVersion)" />
 -- 
-2.18.0
+1.8.3.1
 

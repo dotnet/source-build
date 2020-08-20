@@ -1,14 +1,14 @@
-From f91713cd144c79ceb03a7bccad4dfe7bd5e8fedc Mon Sep 17 00:00:00 2001
-From: adaggarwal <aditya.aggarwal@microsoft.com>
-Date: Sat, 7 Mar 2020 03:46:07 +0000
-Subject: [PATCH 4/4] Don't attempt to update icon
+From 72664a1af65826bf5882c68c41710ee3151a4af2 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 17 Jan 2020 11:46:30 +0000
+Subject: [PATCH] Don't attempt to update icon
 
 ---
- .../src/GenerateNuSpec.cs                                     | 4 ----
+ src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs | 4 ----
  1 file changed, 4 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
-index 8e84afb9..b6d15313 100644
+index 8e84afb..b6d1531 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
 +++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
 @@ -203,10 +203,6 @@ private Manifest CreateManifest()
@@ -23,5 +23,5 @@ index 8e84afb9..b6d15313 100644
              manifestMetadata.UpdateMember(x => x.Language, Language);
  
 -- 
-2.18.0
+1.8.3.1
 
