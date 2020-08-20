@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DirectedGraph Layout="Sugiyama" ZoomLevel="-1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
-    <Node Id="application-insights" Category="Stage2" Label="application-insights" />
+    <Node Id="source-build-reference-packages" Category="Stage5" Label="source-build-reference-packages" />
+    <Node Id="application-insights" Category="Stage1" Label="application-insights" />
     <Node Id="arcade" Category="Stage1" Label="arcade" />
     <Node Id="aspnet-extensions" Category="Stage1" Label="extensions" />
     <Node Id="aspnet-xdt" Category="Stage1" Label="aspnet-xdt" />
@@ -12,9 +13,9 @@
     <Node Id="fsharp" Category="Stage1" Label="fsharp" />
     <Node Id="linker" Category="Stage1" Label="linker" />
     <Node Id="msbuild" Category="Stage1" Label="msbuild" />
-    <Node Id="netcorecli-fsc" Category="Stage2" Label="netcorecli-fsc" />
-    <Node Id="newtonsoft-json" Category="Stage2" Label="newtonsoft-json" />
-    <Node Id="newtonsoft-json901" Category="Stage2" Label="newtonsoft-json901" />
+    <Node Id="netcorecli-fsc" Category="Stage1" Label="netcorecli-fsc" />
+    <Node Id="newtonsoft-json" Category="Stage1" Label="newtonsoft-json" />
+    <Node Id="newtonsoft-json901" Category="Stage1" Label="newtonsoft-json901" />
     <Node Id="nuget-client" Category="Stage1" Label="nuget-client" />
     <Node Id="roslyn" Category="Stage1" Label="roslyn" />
     <Node Id="runtime" Category="Stage1" Label="runtime" />
@@ -24,7 +25,7 @@
     <Node Id="templating" Category="Stage1" Label="templating" />
     <Node Id="vstest" Category="Stage1" Label="vstest" />
     <Node Id="websdk" Category="Stage1" Label="websdk" />
-    <Node Id="xliff-tasks" Category="Stage2" Label="xliff-tasks" />
+    <Node Id="xliff-tasks" Category="Stage1" Label="xliff-tasks" />
   </Nodes>
   <Links>
     <Link Source="application-insights" Target="sdk" />
@@ -117,29 +118,25 @@
       <Condition Expression="HasCategory('Stage1')" />
       <Setter Property="Background" Value="#FFD0CECE" />
     </Style>
-    <Style TargetType="Node" GroupLabel="Stage2 - Patch Removal" ValueLabel="True">
+    <Style TargetType="Node" GroupLabel="Stage2 - Input intermediate pkgs" ValueLabel="True">
       <Condition Expression="HasCategory('Stage2')" />
       <Setter Property="Background" Value="#FFF7CAAC" />
     </Style>
-    <Style TargetType="Node" GroupLabel="Stage3 - Build params to Eng dir" ValueLabel="True">
+    <Style TargetType="Node" GroupLabel="Stage3 - Merge to dev branch" ValueLabel="True">
       <Condition Expression="HasCategory('Stage3')" />
       <Setter Property="Background" Value="#FFFFE599" />
     </Style>
-    <Style TargetType="Node" GroupLabel="Stage4 - Input intermediate pkgs" ValueLabel="True">
+    <Style TargetType="Node" GroupLabel="Stage4 - Setup CI / Mock official build" ValueLabel="True">
       <Condition Expression="HasCategory('Stage4')" />
       <Setter Property="Background" Value="#FFF0FE86" />
     </Style>
-    <Style TargetType="Node" GroupLabel="Stage5 - Official build" ValueLabel="True">
+    <Style TargetType="Node" GroupLabel="Stage5 - Validate / Merge to 5.0" ValueLabel="True">
       <Condition Expression="HasCategory('Stage5')" />
       <Setter Property="Background" Value="#FFB4C6E7" />
     </Style>
-    <Style TargetType="Node" GroupLabel="Stage6 - Source-build PR validation" ValueLabel="True">
+    <Style TargetType="Node" GroupLabel="Stage6 - Prebuilt baseline enforcment" ValueLabel="True">
       <Condition Expression="HasCategory('Stage6')" />
       <Setter Property="Background" Value="#FFCFAFE7" />
-    </Style>
-    <Style TargetType="Node" GroupLabel="Stage7 - Prebuilt check / enforcement" ValueLabel="True">
-      <Condition Expression="HasCategory('Stage7')" />
-      <Setter Property="Background" Value="#FFA8D08D" />
     </Style>
   </Styles>
 </DirectedGraph>
