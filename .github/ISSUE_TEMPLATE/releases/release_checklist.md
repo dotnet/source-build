@@ -40,7 +40,7 @@
       1.  Run `git submodule update --init --recursive` and see errors due to missing commits.
       1.  Run `fetch-vsts-commits.sh` with a PAT to automatically fetch internal refs.
       1.  Run `git submodule update --init --recursive` again to update failed submodules.
-          * If some refs are still missing on unusual repos, those repos may need to be set up in `fetch-vsts-commits.sh`.
+          * If some refs are still missing on unusual repos, those repos may need to be set up in `fetch-vsts-commits.sh`.  Note: Repos in `fetch-vsts-commits.sh` don't need to be cleaned up.  
 1.  - [ ] Regenerate patches as necessary.
       - Run `./build.sh` to begin clone and patch application and see what, if anything, needs to be regenerated.  Issue to track re-patching workflow: [#1468](https://github.com/dotnet/source-build/issues/1468)
       - [3.1] ASP.NET will always need to be regenerated because it contains a version number that needs to be updated.  The version should be updated to the SDK version being built.  See https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0007-Fix-version-number.patch
