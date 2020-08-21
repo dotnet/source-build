@@ -5,9 +5,9 @@
 1.  Open https://dev.azure.com/dnceng/internal/_build/index?definitionId=248
 1.  Find the ProdCon build number, in the format `YYYYMMDD-##`.
     * This is the date of the first time this build spun. If the date seems old, this is probably because it's been respun.
-1.  Press "Queue new build"
+1.  Press "Run pipeline"
 1.  Set the `pb.manifest.build` variable to the `YYYYMMDD-##` build number.
-1.  Press "Queue"
+1.  Press "Run"
 1.  Open the build and wait for it to complete.
 1.  Find the auto-update PR at <https://dev.azure.com/dnceng/internal/_git/dotnet-source-build/pullrequests?_a=active>.
 
