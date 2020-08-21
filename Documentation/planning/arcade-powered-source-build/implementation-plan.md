@@ -5,30 +5,30 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 > ![](img/implementation-plan-graph.png)
 > [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
 
-| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Patch Removal | (Stage 3)<br>Move build params to eng dir | (Stage 4)<br>Input Intermediate Packages Available | (Stage 5)<br>Official build | (Stage 6)<br>Source-build PR validation | (Stage 7)<br>Prebuilt check / enforcement |
-| --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | | | | | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | 4 | | | | | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ⏱ 11 | | | | | |
-| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | | |
-| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | 2 | | | | | |
-| 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
-| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
-| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | | |
-| 1 | xliff-tasks | [William Li](https://github.com/wli3) | ✔️ | 1 | | | | | |
-| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 1 | | | | | |
-| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | 5 | | | | | |
-| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | 3 | | | | | |
-| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | 15 | | | | | |
-| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | 4 | | | | | |
-| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | ⏱ 10 | | | | | |
-| 2 | templating | [Jose Aguilar](https://github.com/donJoseLuis) | ✔️ | ✔️ | | | | | |
-| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | 13 | | | | | |
-| 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | 1 | | | | | |
-| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 9 | | | | | |
-| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | 7 | | | | | |
-| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | 4 | | | | | |
-| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | 3 | | | | | |
+| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra into dev branch | (Stage 4)<br>Merge CI, generate mock official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
+| --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
+| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ⏱ [#1715](https://github.com/dotnet/source-build/issues/1715) | ✔️ | ✔️ | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
+| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | | | | | |
+| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
+| 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
+| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
+| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
+| 1 | xliff-tasks | [William Li](https://github.com/wli3) | ✔️ | | | | | |
+| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
+| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
+| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
+| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | | | | | |
+| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | | | | | |
+| 2 | templating | [Jose Aguilar](https://github.com/donJoseLuis) | ✔️ | | | | | |
+| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | | | | | |
+| 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
+| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | | | | | |
+| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | | | | | |
+| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 
 | Status | Description |
 | --- | --- |
@@ -37,21 +37,9 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | ❗ | At Risk |
 
 ## Stage descriptions:
-  - **(1) Build from Source 5.0** – Get repo building from source with 5.0 source in dotnet/source-build.
-  - **(2) Patch Removal** – Incorporate patches required to build from source into the repo code base.
-  - **(3) Move Build Params to Eng Dir** – Move all source-build specific build parameter from `/repos/<reponame>.proj` in source-build repo to repo `/eng` directory.
-  - **(4) Input Intermediate Packages Available** – Indicates upstream intermediate packages are available, and work on this repo can begin.
-  - **(5) Official build** – Build source-built intermediate packages in official build.
-  - **(6) Source-build PR validation** – Add AzDO build jobs to PR validation to ensure build-from-source continues running without avoidable regressions.
-  - **(7) Prebuilt check / enforcement** – Add a check to PR validation to ensure that no prebuilts are included when building repo.
-
-## Key Milestone Dates:
-
-| Stage(s) | Start | End |
-| --- | :---: | :---: |
-| Stage 1 - Build from Source 5.0 | 2020-05-28 | 2020-06-29 |
-| Stage 2 - Patch Removal | 2020-06-16 | 2020-07-23 |
-| Stages 3-5 - Get into Official Build | 2020-06-25 | 2020-09-16 |
-| Stages 6-7 - PR Validation / Prebuilt check | 2020-07-28 | 2020-10-05 |
-
-
+  - **(1) Build from source 5.0** – Get repo building from source with 5.0 source in dotnet/source-build.
+  - **(2) Input intermediate packages available** – Indicates upstream intermediate packages are available, and work on this repo can begin.
+  - **(3) Merge patches & local build infra into dev branch** – Repo owner has created source-build dev branch.  Move all source-build specific build parameters from `/repos/<reponame>.proj` in source-build repo to repo `/eng` directory and add repo-specific patches into source-build dev branch.
+  - **(4) Merge CI, generate mock official build** – PR validation and Official Build CI jobs added to source-build dev branch and run to generate intermediate package for repo. 
+  - **(5) Validate & merge dev branch into 5.0** – Build logs and intermediate package reviewed and validated by source-build team.  Source-build changes are live for repo in 5.0 branch.  Build source-built intermediate packages in official build.
+  - **(6) Prebuilt baseline enforcement** – Prebuilt checks enforcment enabled in PR validation builds.  Builds fail if new prebuilts are introduced.
