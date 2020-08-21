@@ -15,7 +15,7 @@
 -->
 # {runtime-version} / {sdk-version}
 
-1.  - [ ] Create a page at ".NET Core A&D" OneNote -> "Servicing" section -> "Post Mortem" -> "{Month} {YYYY}" to take ongoing notes on problems with the process, workarounds, and fixes.
+1.  - [ ] Create a page at ".NET Core A&D" OneNote -> "Servicing" section -> "Retrospective" -> "{Month} {YYYY}" to take ongoing notes on problems with the process, workarounds, and fixes.
       - This is useful to make sure context is available to review later. It may end up blank if the release goes very smoothly.
       - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
       - [Non-Internal] File GitHub issues as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
@@ -72,7 +72,7 @@
         - Confirm with team how to check this for a specific build/release.
       - [ ] [3.1] Verify the packs included in the SDK are from source-build-reference-packages, not source-build.
         - E.g. in `testing-smoke/builtCli`, run `find . -iname System.IO.Pipelines.dll -exec sha256sum {} \; | sort` and look at file origin based on checksum of the file in the SDK.
-      - [ ] Verify the packs included in the SDK have XML documentation comments. Presence of XML files in the SDK dir is adequate.  Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
+      - [ ] [3.1] Verify the packs included in the SDK have XML documentation comments. Presence of XML files in the SDK dir is adequate.  Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
       - [ ] Re-validate the SHA1s in Versions file with the manifest in VSU share dir.
       - [ ] [3.1] Review the file list diff between Microsoft-built SDK and source-built SDK in smoke-test output.
         - [Internal] [3.1] For internal builds, smoke-test fails to acquire the Microsoft-built SDK. Manually acquire the Microsoft-built SDK from the build email you should have received, then run `scripts/compare-builds.sh` yourself to get the output to review.

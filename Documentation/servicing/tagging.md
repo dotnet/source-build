@@ -35,7 +35,7 @@ git push 'git@github.com:dotnet/source-build' "v${runtimeVersion}-runtime" && \
 git push 'git@github.com:dotnet/source-build' "v${sdkVersion}-SDK"
 ```
 
-If `upstream` is configured as `dotnet/source-build` command can be:
+If `upstream` is configured as `dotnet/source-build`, you can use that instead. You may need to do this, for example, if you don't use SSH authentication. If this applies to you, run this command instead of the fully-specified push:
 
 ```sh
 git push upstream "v${runtimeVersion}-runtime" && \
