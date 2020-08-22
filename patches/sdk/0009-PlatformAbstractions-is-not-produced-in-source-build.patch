@@ -1,22 +1,30 @@
-From 85a0f4e16ec8840eb6a76a043c48c079e4c73348 Mon Sep 17 00:00:00 2001
+From cb2edccb7532f86b3f766a9a6154f8fea80995a4 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 12 Aug 2020 14:26:52 -0500
-Subject: [PATCH 9/9] PlatformAbstractions is not produced in source-build
+Subject: [PATCH 10/10] PlatformAbstractions is not produced in source-build
 
 ---
- .../Microsoft.NET.Build.Tasks.csproj                          | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ src/Layout/redist/redist.csproj                                 | 2 +-
+ .../Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/src/Layout/redist/redist.csproj b/src/Layout/redist/redist.csproj
+index c3940776b..e46938bae 100644
+--- a/src/Layout/redist/redist.csproj
++++ b/src/Layout/redist/redist.csproj
+@@ -20,7 +20,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
+-    <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />
++  <!--  <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />-->
+     <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(MicrosoftBuildNuGetSdkResolverPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" ExcludeAssets="All" />
+     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
 diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-index 94467319e..7c565a36e 100644
+index 8fe20f35d..c0c3bdea0 100644
 --- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 +++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-@@ -1,4 +1,4 @@
--﻿<?xml version="1.0" encoding="utf-8"?>
-+﻿<?xml version="1.0" encoding="utf-8"?>
- <!-- Copyright (c) .NET Foundation and contributors. All rights reserved. Licensed under the MIT license. See License.txt in the project root for full license information. -->
- <Project>
- 
 @@ -47,7 +47,7 @@
      <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" ExcludeAssets="Runtime" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" ExcludeAssets="Runtime" />

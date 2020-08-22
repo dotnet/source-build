@@ -250,13 +250,8 @@ namespace Microsoft.DotNet.Build.Tasks
         private void WriteGitCommitMarkerFileForSubmodule(string sourceDirPath, string gitDirPath, string parentRepoSha, string submoduleName, string submodulePath)
         {
             var submoduleSha = GetSubmoduleCommit(gitDirPath, parentRepoSha, submodulePath);
-            var headDirectory = Path.Combine(sourceDirPath, ".git", "modules", submoduleName);
+            var headDirectory = Path.Combine(sourceDirPath, submodulePath, ".git");
             var headPath = Path.Combine(headDirectory, "HEAD");
-            Directory.CreateDirectory(headDirectory);
-            File.WriteAllText(headPath, submoduleSha);
-
-            headDirectory = Path.Combine(sourceDirPath, submodulePath, ".git");
-            headPath = Path.Combine(headDirectory, "HEAD");
             Directory.CreateDirectory(headDirectory);
             File.WriteAllText(headPath, submoduleSha);
         }

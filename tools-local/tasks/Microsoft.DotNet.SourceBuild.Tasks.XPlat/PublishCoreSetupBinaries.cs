@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -30,7 +31,19 @@ namespace Microsoft.DotNet.Build.Tasks
         // the "semver" capture would be 2.0.0-preview2-25401-9 in this case.
         protected virtual string VersionMatchRegex => @"(\.|-)(?'semver'[0-9]+\.[0-9]+\.[0-9]+(([-.])[A-Za-z0-9]+)*)";
 
-        protected string[] BadAtoms = new[] { "-x64", ".x64", ".tar", ".gz", "-rhel.7", "-rhel.8", ".rhel.7", ".rhel.8", "-centos.7", "-centos.8", ".centos.7", ".centos.8", "-linux", ".linux", ".ubuntu.18.04", "-ubuntu.18.04", "-debian.9", ".debian.9" };
+        // The regular expression is even more of a mess when we try to account for every RID and suffix that may exist.
+        // This is a list of bad stuff we should remove that's never part of a version number.  If adding to it, it
+        // should include the delimiter immediately beofre the RID, arch, or extension.
+        protected string[] BadAtoms = new[] { "-x64", ".x64",
+                                              ".tar", ".gz",
+                                              "-rhel.7", "-rhel.8",
+                                              ".rhel.7", ".rhel.8",
+                                              "-centos.7", "-centos.8",
+                                              ".centos.7", ".centos.8",
+                                              "-linux", ".linux",
+                                              ".ubuntu.18.04", "-ubuntu.18.04",
+                                              "-debian.9", ".debian.9",
+                                            };
 
         public override bool Execute()
         {
@@ -42,9 +55,12 @@ namespace Microsoft.DotNet.Build.Tasks
                 string binaryFileName = Path.GetFileName(binaryFullPath);
                 string version = Regex.Match(binaryFileName, VersionMatchRegex).Groups["semver"].Value;
 
-                foreach (var ba in BadAtoms)
+                while (BadAtoms.Any(ba => version.Contains(ba)))
                 {
-                    version = version.Replace(ba, "");
+                    foreach (var ba in BadAtoms)
+                    {
+                        version = version.Replace(ba, "");
+                    }
                 }
 
                 if (version == "")

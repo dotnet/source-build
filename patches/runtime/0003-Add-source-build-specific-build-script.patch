@@ -101,6 +101,7 @@ index 00000000000..db23d3032ac
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "librariesBuild.binlog" * {} \;
 +echo "Running command: $scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
 +$scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+installers+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
++find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
 -- 
 2.18.0
 
