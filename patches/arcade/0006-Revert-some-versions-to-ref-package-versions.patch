@@ -1,12 +1,13 @@
-From 1282931656bcdeaaf6d350076b98c3285ddfe3d1 Mon Sep 17 00:00:00 2001
+From eb3a0be460304f8da07bf1d2cffdb9618d369b4a Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 23 Aug 2020 17:24:18 -0500
-Subject: [PATCH 6/6] Revert some versions to ref package versions.
+Subject: [PATCH 5/6] Revert some versions to ref package versions.
 
 ---
  .../Microsoft.DotNet.Arcade.Sdk.csproj                        | 4 ++--
+ .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj   | 2 +-
  .../tasks/Microsoft.DotNet.NuGetRepack.Tasks.csproj           | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 index cba46334..5e878073 100644
@@ -30,8 +31,21 @@ index cba46334..5e878073 100644
      <PackageReference Include="System.Threading.Tasks.Extensions" Version="$(SystemThreadingTasksExtensionVersion)" />
    </ItemGroup>
  
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+index b36e7323..24a4a2c4 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>net472;netcoreapp5.0</TargetFrameworks>
+     <LangVersion>preview</LangVersion>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+ 
 diff --git a/src/Microsoft.DotNet.NuGetRepack/tasks/Microsoft.DotNet.NuGetRepack.Tasks.csproj b/src/Microsoft.DotNet.NuGetRepack/tasks/Microsoft.DotNet.NuGetRepack.Tasks.csproj
-index 136a3546..95f03819 100644
+index 136a3546..0947f767 100644
 --- a/src/Microsoft.DotNet.NuGetRepack/tasks/Microsoft.DotNet.NuGetRepack.Tasks.csproj
 +++ b/src/Microsoft.DotNet.NuGetRepack/tasks/Microsoft.DotNet.NuGetRepack.Tasks.csproj
 @@ -15,7 +15,7 @@
