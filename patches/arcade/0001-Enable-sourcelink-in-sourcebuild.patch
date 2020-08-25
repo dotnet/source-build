@@ -13,12 +13,12 @@ index 550ad298..8d31d833 100644
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/RepositoryInfo.targets
 @@ -4,23 +4,11 @@
    <!--
-     Include both GitHub and Azure DevOps (formerly VSTS) packages to enable SourceLink in repositories that mirror to Azure DevOps (formerly VSTS).
+     Include both GitHub and Azure DevOps packages to enable SourceLink in repositories that mirror to Azure DevOps.
    -->
 -  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
 +  <ItemGroup>
      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
-     <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+     <PackageReference Include="Microsoft.SourceLink.AzureRepos.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
    </ItemGroup>
  
 -  <!--
