@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Temporary version of darc init for source-build until https://github.com/dotnet/arcade/pull/6055 is complete.
 source="${BASH_SOURCE[0]}"
 darcVersion=''
 versionEndpoint="https://maestro-prod.westus2.cloudapp.azure.com/api/assets/darc-version?api-version=2019-01-16"
