@@ -1,0 +1,31 @@
+From af031b51511a210b4a496107a1229ae3a4598c46 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 1 Sep 2020 15:44:55 -0500
+Subject: [PATCH 10/10] Remove duplicate property
+
+---
+ src/libraries/Native/native-binplace.proj | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/libraries/Native/native-binplace.proj b/src/libraries/Native/native-binplace.proj
+index f8a558defe3..09cbac7080f 100644
+--- a/src/libraries/Native/native-binplace.proj
++++ b/src/libraries/Native/native-binplace.proj
+@@ -2,7 +2,6 @@
+   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>$(NetCoreAppCurrent);netstandard2.0;$(NetFrameworkCurrent)</TargetFrameworks>
+     <TargetFramework>$(BuildTargetFramework)</TargetFramework>
+     <BinPlaceRuntime>false</BinPlaceRuntime>
+     <BinPlaceNative>true</BinPlaceNative>
+@@ -32,4 +31,4 @@
+ 
+   <Target Name="Build" DependsOnTargets="BinPlace" />
+   <Target Name="CreateManifestResourceNames" />
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+

@@ -1,0 +1,25 @@
+From 2cc5df80750de41544cd2a784ee1cf812e94295d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 2 Sep 2020 08:24:20 -0500
+Subject: [PATCH 13/13] testing tfm fix
+
+---
+ .../src/System.Security.Cryptography.OpenSsl.csproj             | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libraries/System.Security.Cryptography.OpenSsl/src/System.Security.Cryptography.OpenSsl.csproj b/src/libraries/System.Security.Cryptography.OpenSsl/src/System.Security.Cryptography.OpenSsl.csproj
+index 1edf80722b5..c49ff5bca11 100644
+--- a/src/libraries/System.Security.Cryptography.OpenSsl/src/System.Security.Cryptography.OpenSsl.csproj
++++ b/src/libraries/System.Security.Cryptography.OpenSsl/src/System.Security.Cryptography.OpenSsl.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>$(NetCoreAppCurrent)-Unix;$(NetCoreAppCurrent)-Browser;$(NetCoreAppCurrent);netcoreapp3.0-Unix;netcoreapp3.0;netstandard2.0;net47;$(NetFrameworkCurrent)</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent)-Unix;$(NetCoreAppCurrent);netcoreapp3.0-Unix;netcoreapp3.0;netstandard2.0;net47;$(NetFrameworkCurrent)</TargetFrameworks>
+     <ExcludeCurrentFullFrameworkFromPackage>true</ExcludeCurrentFullFrameworkFromPackage>
+     <ExcludeCurrentNetCoreAppFromPackage>true</ExcludeCurrentNetCoreAppFromPackage>
+     <Nullable>enable</Nullable>
+-- 
+2.18.0
+
