@@ -1,17 +1,17 @@
-From 865c08ee0df93337ce36f4b9467748b3a6a5286b Mon Sep 17 00:00:00 2001
+From 166f18cb451a3e6a00676cb918b8ef16a92fe99a Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 15 May 2020 16:38:48 +0000
-Subject: [PATCH] Exclude analyzer for source-build
+Subject: [PATCH 03/11] Exclude analyzer for source-build
 
 ---
  Directory.Build.props | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 6e658ac..851d142 100644
+index 21ae56027b..86dbc3c929 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -111,7 +111,8 @@
+@@ -146,7 +146,8 @@
        AND '$(IsBenchmarkProject)' != 'true'
        AND '$(IsTestAssetProject)' != 'true'
        AND '$(MSBuildProjectName)' != 'Internal.AspNetCore.Analyzers'
@@ -20,7 +20,7 @@ index 6e658ac..851d142 100644
 +      AND '$(DotNetBuildFromSource)' != 'true'">
      <ProjectReference
        Include="$(RepoRoot)src\Analyzers\Internal.AspNetCore.Analyzers\src\Internal.AspNetCore.Analyzers.csproj"
-       PrivateAssets="All"
+       ReferenceOutputAssembly="false"
 -- 
-1.8.3.1
+2.18.2
 

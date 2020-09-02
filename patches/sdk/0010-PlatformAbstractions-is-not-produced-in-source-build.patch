@@ -1,4 +1,4 @@
-From cb2edccb7532f86b3f766a9a6154f8fea80995a4 Mon Sep 17 00:00:00 2001
+From 1d7b4c71be9cb787c29da49d55140cabe79e7b6c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 12 Aug 2020 14:26:52 -0500
 Subject: [PATCH 10/10] PlatformAbstractions is not produced in source-build
@@ -22,10 +22,10 @@ index c3940776b..e46938bae 100644
      <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" ExcludeAssets="All" />
      <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
 diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-index 8fe20f35d..c0c3bdea0 100644
+index ecf56d956..59545bb39 100644
 --- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 +++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
-@@ -47,7 +47,7 @@
+@@ -50,7 +50,7 @@
      <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" ExcludeAssets="Runtime" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" ExcludeAssets="Runtime" />
      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
@@ -35,5 +35,5 @@ index 8fe20f35d..c0c3bdea0 100644
      <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
      <PackageReference Include="NuGet.Build.Tasks.Pack" Version="$(NuGetBuildTasksPackageVersion)" ExcludeAssets="All" />
 -- 
-2.18.0
+2.18.2
 

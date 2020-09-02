@@ -1,7 +1,7 @@
-From 03a3d383af5c0cbc74905242e72e74627da6bbfa Mon Sep 17 00:00:00 2001
+From c6e388ce1d0b0162bec22bc246fa9f3357889419 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 14 May 2020 16:29:28 +0000
-Subject: [PATCH 07/13] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 06/11] Remove Yarn dependency - not used in source-build
 
 ---
  eng/targets/Npm.Common.targets                                 | 3 ---
@@ -27,7 +27,7 @@ index f216bf5f9c..a35d50332e 100644
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
 diff --git a/global.json b/global.json
-index 26221c3cd3..56ea1ea012 100644
+index 6496dffe47..561d2c585c 100644
 --- a/global.json
 +++ b/global.json
 @@ -29,7 +29,6 @@
@@ -35,8 +35,8 @@ index 26221c3cd3..56ea1ea012 100644
    },
    "msbuild-sdks": {
 -    "Yarn.MSBuild": "1.15.2",
-     "Microsoft.DotNet.Arcade.Sdk": "5.0.0-beta.20316.1",
-     "Microsoft.DotNet.Helix.Sdk": "5.0.0-beta.20316.1"
+     "Microsoft.DotNet.Arcade.Sdk": "5.0.0-beta.20377.2",
+     "Microsoft.DotNet.Helix.Sdk": "5.0.0-beta.20364.3"
    }
 diff --git a/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj b/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
 index 4b27caa77b..f6b1a7c4aa 100644
@@ -91,7 +91,7 @@ index 20ad3236ae..2d49061095 100644
      <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
      <Yarn Command="install --mutex network" />
 diff --git a/src/Shared/E2ETesting/E2ETesting.targets b/src/Shared/E2ETesting/E2ETesting.targets
-index d0fa6cb856..27c31b167f 100644
+index 76ced2cce9..eaecb913a9 100644
 --- a/src/Shared/E2ETesting/E2ETesting.targets
 +++ b/src/Shared/E2ETesting/E2ETesting.targets
 @@ -1,7 +1,4 @@
@@ -103,5 +103,5 @@ index d0fa6cb856..27c31b167f 100644
    <ItemGroup>
      <None Update="e2eTestSettings*.json">
 -- 
-2.18.0
+2.18.2
 

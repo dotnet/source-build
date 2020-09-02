@@ -1,7 +1,7 @@
-From 8c9511e3263150edd0c3ecee3884b8b57be046c8 Mon Sep 17 00:00:00 2001
+From d9b0376293f4267ccb00c7a4cf2441702c747a8a Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
-Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH 01/11] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
  eng/Dependencies.props                                      | 1 +
@@ -9,41 +9,42 @@ Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index a17d547052..508907c47a 100644
+index 8fc6f8364f..85fec29a91 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -100,6 +100,7 @@ and are generated based on the last package release.
-     <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
-     <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-x64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
-     <LatestPackageReference Include="microsoft.netcore.app.runtime.linux-musl-arm64" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
+@@ -179,6 +179,7 @@ and are generated based on the last package release.
+     <LatestPackageReference Include="xunit.extensibility.core" />
+     <LatestPackageReference Include="xunit.extensibility.execution" />
+     <LatestPackageReference Include="Microsoft.Data.SqlClient" />
 +    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(SourceBuildRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
    </ItemGroup>
  
-   <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
+   <ItemGroup Label="Dependencies with versions.">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index ae75b05dad..4853b5474a 100644
+index f642976df3..c68128a917 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -108,7 +108,9 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <!-- Disambiguated RID-specific crossgen executable relative path -->
      <CrossgenToolPackagePath Condition=" '$(CrossCompileDirectory)' != '' ">$(CrossCompileDirectory)\$(CrossgenToolPackagePath)</CrossgenToolPackagePath>
  
--    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(RuntimeIdentifier)', '$(MicrosoftNETCoreAppRuntimeVersion)'))</RuntimePackageRoot>
 +    <MicrosoftNETCoreAppRuntimeIdentifier>$(RuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
 +    <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
-+    <RuntimePackageRoot>$([System.IO.Path]::Combine('$(NuGetPackageRoot)', 'microsoft.netcore.app.runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)', '$(MicrosoftNETCoreAppRuntimeVersion)'))</RuntimePackageRoot>
-     <RuntimePackageRoot>$([MSBuild]::EnsureTrailingSlash('$(RuntimePackageRoot)'))</RuntimePackageRoot>
-     <CrossgenToolPath>$([System.IO.Path]::Combine('$(RuntimePackageRoot)', 'tools', '$(CrossgenToolPackagePath)'))</CrossgenToolPath>
+     <!-- E.g. "PkgMicrosoft_NETCore_App_Runtime_win-x64" (set in obj/Microsoft.AspNetCore.App.Runtime.csproj.nuget.g.props). -->
+-    <RuntimePackageRootVariableName>PkgMicrosoft_NETCore_App_Runtime_$(RuntimeIdentifier)</RuntimePackageRootVariableName>
++    <RuntimePackageRootVariableName>PkgMicrosoft_NETCore_App_Runtime_$(MicrosoftNETCoreAppRuntimeIdentifier)</RuntimePackageRootVariableName>
+ 
      <AssetTargetFallback>$(AssetTargetFallback);native,Version=0.0</AssetTargetFallback>
-@@ -126,7 +128,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+ 
+@@ -122,7 +124,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
        <IncludeAssets>Runtime;Native</IncludeAssets>
      </Reference>
  
--    <Reference Include="microsoft.netcore.app.runtime.$(RuntimeIdentifier)" ExcludeAssets="All" PrivateAssets="All" />
-+    <Reference Include="microsoft.netcore.app.runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)" ExcludeAssets="All" PrivateAssets="All" />
- 
-     <ProjectReference Condition=" '$(BuildIisNativeProjects)' == 'true' AND $(BuildNative) "
-         Include="$(RepoRoot)src\Servers\IIS\AspNetCoreModuleV2\InProcessRequestHandler\InProcessRequestHandler.vcxproj">
+-    <Reference Include="Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)"
++    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)"
+         ExcludeAssets="All"
+         PrivateAssets="All"
+         GeneratePathProperty="true" />
 -- 
-2.18.0
+2.18.2
 

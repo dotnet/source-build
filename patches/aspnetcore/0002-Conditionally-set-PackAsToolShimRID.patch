@@ -1,17 +1,17 @@
-From 3e2e9bd0c0c01025a96ea8f658bbcb7a5ce31fb0 Mon Sep 17 00:00:00 2001
+From 254cc0c2c26126153a082145db7558ada87ff87a Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 31 Oct 2019 20:38:26 +0000
-Subject: [PATCH 03/15] Conditionally set PackAsToolShimRID
+Subject: [PATCH 02/11] Conditionally set PackAsToolShimRID
 
 ---
  Directory.Build.targets | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Directory.Build.targets b/Directory.Build.targets
-index 0e0db95ab3..854c5ea306 100644
+index d4a4e9a2a0..0980e5eda6 100644
 --- a/Directory.Build.targets
 +++ b/Directory.Build.targets
-@@ -45,7 +45,7 @@
+@@ -50,7 +50,7 @@
      <SuppressDependenciesWhenPacking Condition="'$(SuppressDependenciesWhenPacking)' == '' AND '$(IsAnalyzersProject)' == 'true'">true</SuppressDependenciesWhenPacking>
    </PropertyGroup>
  
@@ -21,5 +21,5 @@ index 0e0db95ab3..854c5ea306 100644
      <PackAsToolShimRuntimeIdentifiers>win-x64;win-x86</PackAsToolShimRuntimeIdentifiers>
    </PropertyGroup>
 -- 
-2.21.0
+2.18.2
 

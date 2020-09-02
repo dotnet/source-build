@@ -1,7 +1,7 @@
-From 2384e991f1e7c75014e34158cc4352918c15ab17 Mon Sep 17 00:00:00 2001
+From 2f6a1439a8d48fc5dd8c6b7b4b279dd200e1de40 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 28 Jun 2020 21:59:35 +0000
-Subject: [PATCH 7/9] Remove test project.
+Subject: [PATCH 08/10] Remove test project.
 
 ---
  sdk.sln                                       | 196 ------------------
@@ -13,7 +13,7 @@ Subject: [PATCH 7/9] Remove test project.
  delete mode 100644 src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
 
 diff --git a/sdk.sln b/sdk.sln
-index ee51d43bd..35e10ea76 100644
+index 08cd9a108..30662a0cf 100644
 --- a/sdk.sln
 +++ b/sdk.sln
 @@ -45,12 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{1FEED16D
@@ -100,7 +100,7 @@ index ee51d43bd..35e10ea76 100644
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSdk", "WebSdk", "{974F9450-8895-41D9-8328-D55AFF81A814}"
  	ProjectSection(SolutionItems) = preProject
  		src\WebSdk\CopyPackageLayout.targets = src\WebSdk\CopyPackageLayout.targets
-@@ -173,8 +119,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Web.Tasks
+@@ -174,8 +120,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Web.Tasks
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Worker.Tasks", "src\WebSdk\Worker\Tasks\Microsoft.NET.Sdk.Worker.Tasks.csproj", "{ACB5302C-8641-4E12-B7F7-0122D2A97C31}"
  EndProject
@@ -109,7 +109,7 @@ index ee51d43bd..35e10ea76 100644
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sdk", "Sdk", "{F717D467-EF88-49B9-AD67-55FC6350A9DE}"
  	ProjectSection(SolutionItems) = preProject
  		src\WebSdk\Publish\Sdk\Sdk.props = src\WebSdk\Publish\Sdk\Sdk.props
-@@ -268,54 +212,10 @@ Global
+@@ -269,54 +213,10 @@ Global
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -164,7 +164,7 @@ index ee51d43bd..35e10ea76 100644
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-@@ -356,74 +256,10 @@ Global
+@@ -357,74 +257,10 @@ Global
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -239,7 +239,7 @@ index ee51d43bd..35e10ea76 100644
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-@@ -440,10 +276,6 @@ Global
+@@ -441,10 +277,6 @@ Global
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -250,7 +250,7 @@ index ee51d43bd..35e10ea76 100644
  	EndGlobalSection
  	GlobalSection(SolutionProperties) = preSolution
  		HideSolutionNode = FALSE
-@@ -451,21 +283,10 @@ Global
+@@ -452,21 +284,10 @@ Global
  	GlobalSection(NestedProjects) = preSolution
  		{1FEED16D-E07D-47C1-BB4C-56CD9F42B53B} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5} = {1FEED16D-E07D-47C1-BB4C-56CD9F42B53B}
@@ -272,7 +272,7 @@ index ee51d43bd..35e10ea76 100644
  		{9CEF03F6-1A61-431A-8ABD-9095974629AE} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC} = {9CEF03F6-1A61-431A-8ABD-9095974629AE}
  		{2119E6E5-2B75-402A-AFF3-3E7E7B671B9B} = {9CEF03F6-1A61-431A-8ABD-9095974629AE}
-@@ -478,23 +299,7 @@ Global
+@@ -479,23 +300,7 @@ Global
  		{C2DF833D-2A83-408B-8122-3038ACDFDFD0} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
  		{AA273ACB-56FE-4F0C-8CC9-C2C45D31491D} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
  		{C687CA8D-9843-4045-BC20-917953F6C864} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
@@ -296,7 +296,7 @@ index ee51d43bd..35e10ea76 100644
  		{974F9450-8895-41D9-8328-D55AFF81A814} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{B1C96E63-6F34-4BFE-AD5B-091F8A86A704} = {974F9450-8895-41D9-8328-D55AFF81A814}
  		{0C6854E8-01E5-4F76-97A0-E1FCF5428B10} = {B1C96E63-6F34-4BFE-AD5B-091F8A86A704}
-@@ -506,7 +311,6 @@ Global
+@@ -507,7 +312,6 @@ Global
  		{518B88F4-D9C0-4865-8D33-9BB09F7D4A3E} = {5F8809DE-414C-42CB-A1BC-CF95267E6F49}
  		{CC92D8D8-5914-451E-8F8E-9623103BC186} = {27302615-7D46-499E-AC84-D3E193F9A62D}
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31} = {EBEF2950-E27B-4EB8-8F1C-2001984B4D41}
@@ -375,5 +375,5 @@ index 34d58c2f1..611b838eb 100644
          <Name>dotnet-outputsframeworkversion-netcoreapp1.0</Name>
          <ProjectName>dotnet-outputsframeworkversion-netcoreapp1.0.csproj</ProjectName>
 -- 
-2.18.0
+2.18.2
 
