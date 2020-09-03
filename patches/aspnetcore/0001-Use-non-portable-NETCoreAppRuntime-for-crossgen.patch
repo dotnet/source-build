@@ -1,4 +1,4 @@
-From d8b33b8753513c40274d2fe442e6135578f7aac8 Mon Sep 17 00:00:00 2001
+From 30844938279c57aa8ef0f5277be6657be265c15e Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
 Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
@@ -21,7 +21,7 @@ index 8fc6f8364f..feb519867c 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index f642976df3..c68128a917 100644
+index f642976df3..a23e8c28c4 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -32,7 +32,7 @@ index f642976df3..c68128a917 100644
 +    <MicrosoftNETCoreAppRuntimeIdentifier Condition="'$(TargetOsName)' != 'osx'">$(SourceBuildRuntimeIdentifier)</MicrosoftNETCoreAppRuntimeIdentifier>
      <!-- E.g. "PkgMicrosoft_NETCore_App_Runtime_win-x64" (set in obj/Microsoft.AspNetCore.App.Runtime.csproj.nuget.g.props). -->
 -    <RuntimePackageRootVariableName>PkgMicrosoft_NETCore_App_Runtime_$(RuntimeIdentifier)</RuntimePackageRootVariableName>
-+    <RuntimePackageRootVariableName>PkgMicrosoft_NETCore_App_Runtime_$(MicrosoftNETCoreAppRuntimeIdentifier)</RuntimePackageRootVariableName>
++    <RuntimePackageRootVariableName>PkgMicrosoft_NETCore_App_Runtime_$(MicrosoftNETCoreAppRuntimeIdentifier.Replace('.', '_'))</RuntimePackageRootVariableName>
  
      <AssetTargetFallback>$(AssetTargetFallback);native,Version=0.0</AssetTargetFallback>
  
@@ -41,7 +41,7 @@ index f642976df3..c68128a917 100644
      </Reference>
  
 -    <Reference Include="Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)"
-+    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)"
++    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier.Replace('.', '_'))"
          ExcludeAssets="All"
          PrivateAssets="All"
          GeneratePathProperty="true" />
