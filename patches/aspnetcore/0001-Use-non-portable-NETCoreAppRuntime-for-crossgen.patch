@@ -1,4 +1,4 @@
-From ddb4dc39b56c8ee3f27f7acb7b6cca2eafdf5c36 Mon Sep 17 00:00:00 2001
+From 77b1e19ae4f729b9c8dc9e4987dd4f0ccbb2e73d Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
 Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
@@ -9,19 +9,19 @@ Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 8fc6f8364f..85fec29a91 100644
+index 8fc6f8364f..8107003c09 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -179,6 +179,7 @@ and are generated based on the last package release.
-     <LatestPackageReference Include="xunit.extensibility.core" />
-     <LatestPackageReference Include="xunit.extensibility.execution" />
-     <LatestPackageReference Include="Microsoft.Data.SqlClient" />
+@@ -93,6 +93,7 @@ and are generated based on the last package release.
+     <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-arm64" />
+     <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-x64" />
+     <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-arm64" />
 +    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(SourceBuildRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
    </ItemGroup>
  
-   <ItemGroup Label="Dependencies with versions.">
+   <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index f642976df3..8494e6bf00 100644
+index f642976df3..c68128a917 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -41,7 +41,7 @@ index f642976df3..8494e6bf00 100644
      </Reference>
  
 -    <Reference Include="Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)"
-+    <PackageReference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)"
++    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)"
          ExcludeAssets="All"
          PrivateAssets="All"
          GeneratePathProperty="true" />
