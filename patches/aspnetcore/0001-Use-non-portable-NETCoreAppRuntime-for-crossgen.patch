@@ -1,4 +1,4 @@
-From 30844938279c57aa8ef0f5277be6657be265c15e Mon Sep 17 00:00:00 2001
+From 6e5decfb2df01f3912a3b17ea8845ace28bf5e3b Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
 Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
@@ -21,7 +21,7 @@ index 8fc6f8364f..feb519867c 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index f642976df3..a23e8c28c4 100644
+index f642976df3..fce47bf26a 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -41,7 +41,7 @@ index f642976df3..a23e8c28c4 100644
      </Reference>
  
 -    <Reference Include="Microsoft.NETCore.App.Runtime.$(RuntimeIdentifier)"
-+    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier.Replace('.', '_'))"
++    <Reference Include="Microsoft.NETCore.App.Runtime.$(MicrosoftNETCoreAppRuntimeIdentifier)"
          ExcludeAssets="All"
          PrivateAssets="All"
          GeneratePathProperty="true" />
