@@ -1,7 +1,14 @@
 From 2cc5df80750de41544cd2a784ee1cf812e94295d Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 2 Sep 2020 08:24:20 -0500
-Subject: [PATCH 13/13] testing tfm fix
+Subject: [PATCH 13/13] Remove -Browser TFM
+
+This gets treated the same as net5.0 for some reason, which causes
+errors like
+.dotnet/sdk/5.0.100-preview.8.20417.9/NuGet.RestoreEx.targets(10,5):
+error : Invalid restore input. Duplicate frameworks found: 'net5.0, net5.0, net5.0'. Input files:
+artifacts/src/runtime.bf456654f9a4f9a86c15d9d50095ff29cde5f0a4/src/libraries/Native/native-binplace.proj.
+[artifacts/src/runtime.bf456654f9a4f9a86c15d9d50095ff29cde5f0a4/Build.proj]
 
 ---
  .../src/System.Security.Cryptography.OpenSsl.csproj             | 2 +-

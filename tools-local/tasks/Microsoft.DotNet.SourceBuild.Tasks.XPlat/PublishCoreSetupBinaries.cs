@@ -33,7 +33,7 @@ namespace Microsoft.DotNet.Build.Tasks
 
         // The regular expression is even more of a mess when we try to account for every RID and suffix that may exist.
         // This is a list of bad stuff we should remove that's never part of a version number.  If adding to it, it
-        // should include the delimiter immediately beofre the RID, arch, or extension.
+        // should include the delimiter immediately before the RID, arch, or extension.
         protected string[] BadAtoms = new[] { "-x64", ".x64",
                                               ".tar", ".gz",
                                               "-rhel.7", "-rhel.8",

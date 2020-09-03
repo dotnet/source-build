@@ -3,6 +3,13 @@ From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 1 Sep 2020 15:44:55 -0500
 Subject: [PATCH 10/10] Remove duplicate property
 
+With both <TargetFramework> and <TargetFrameworks>, this is interpreted
+wrong, leading to errors like:
+.dotnet/sdk/5.0.100-preview.8.20417.9/NuGet.RestoreEx.targets(10,5):
+error : Invalid restore input. Duplicate frameworks found: 'net5.0, net5.0, net5.0'. Input files:
+/mnt/sdc/chris/dotnet_source-build/artifacts/src/runtime.bf456654f9a4f9a86c15d9d50095ff29cde5f0a4/src/libraries/Native/native-binplace.proj.
+[/mnt/sdc/chris/dotnet_source-build/artifacts/src/runtime.bf456654f9a4f9a86c15d9d50095ff29cde5f0a4/Build.proj]
+
 ---
  src/libraries/Native/native-binplace.proj | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
