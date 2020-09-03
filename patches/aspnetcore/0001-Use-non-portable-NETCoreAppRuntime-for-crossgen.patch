@@ -1,31 +1,22 @@
-From 1521e8559ec061a7209e56794a9ab97ecc522dda Mon Sep 17 00:00:00 2001
+From ffb115c1c9c0e831c90638688a1b22104e6acbe1 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
-Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
- eng/Dependencies.props                                      | 3 +++
+ eng/Dependencies.props                                      | 1 +
  .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj | 6 ++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 8fc6f8364f..84efbf7784 100644
+index 8fc6f8364f..1de2ec5854 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -12,6 +12,8 @@ and are generated based on the last package release.
-     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
-   </PropertyGroup>
- 
-+  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
-+
-   <ItemGroup Label=".NET team dependencies">
-     <LatestPackageReference Include="Microsoft.Azure.SignalR" />
-     <LatestPackageReference Include="Microsoft.Css.Parser" />
-@@ -93,6 +95,7 @@ and are generated based on the last package release.
+@@ -93,6 +93,7 @@ and are generated based on the last package release.
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-arm64" />
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-x64" />
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-arm64" />
-+    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(SourceBuildRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
++    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="microsoft.netcore.app.runtime.$(SourceBuildRuntimeIdentifier)" Version="5.0.0-preview.8.20407.11" />
    </ItemGroup>
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
