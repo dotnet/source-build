@@ -1,0 +1,38 @@
+From eabd8e4abbc9adccbc57147a79f5a7cc76af345d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 3 Sep 2020 06:29:25 -0500
+Subject: [PATCH 13/13] Fix a couple issues.
+
+---
+ .../Wasm.Performance/Driver/Wasm.Performance.Driver.csproj      | 1 +
+ src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs              | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj b/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
+index 66aea279ee..d8c17b57df 100644
+--- a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
++++ b/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
+@@ -9,6 +9,7 @@
+     <SignAssembly>false</SignAssembly>
+     <IsTestAssetProject>true</IsTestAssetProject>
+     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+diff --git a/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs b/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
+index b59e987686..b18e53e916 100644
+--- a/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
++++ b/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
+@@ -88,7 +88,7 @@ namespace Microsoft.JSInterop
+         public ValueTask<TValue> InvokeAsync<TValue>(string identifier, CancellationToken cancellationToken, object[] args)
+         {
+             var taskId = Interlocked.Increment(ref _nextPendingTaskId);
+-            var tcs = new TaskCompletionSource<TValue>(TaskContinuationOptions.RunContinuationsAsynchronously);
++            var tcs = new TaskCompletionSource<TValue>(TaskCreationOptions.RunContinuationsAsynchronously);
+             if (cancellationToken != default)
+             {
+                 _cancellationRegistrations[taskId] = cancellationToken.Register(() =>
+-- 
+2.18.0
+
