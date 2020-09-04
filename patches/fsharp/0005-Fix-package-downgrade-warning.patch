@@ -1,36 +1,54 @@
-From 7396449cd8503ff409352d2c7bf97f6a7d5257b1 Mon Sep 17 00:00:00 2001
+From d308fa5860ec8d5cdc4ce651420ac55fdda6d30c Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 3 Sep 2020 19:02:07 -0500
 Subject: [PATCH 5/5] Fix package downgrade warning
 
 ---
- .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj      | 2 +-
- .../FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec      | 2 +-
- src/fsharp/fsc/fsc.fsproj                                       | 1 +
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj    | 2 +-
+ .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj    | 4 ++--
+ .../FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec    | 4 ++--
+ src/fsharp/fsc/fsc.fsproj                                     | 1 +
+ 4 files changed, 6 insertions(+), 5 deletions(-)
 
+diff --git a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
+index fd77cbd9e..0b42d6fc0 100644
+--- a/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
++++ b/fcs/FSharp.Compiler.Service/FSharp.Compiler.Service.fsproj
+@@ -726,7 +726,7 @@
+     <PackageReference Include="FSharp.Core" Version="$(FcsFSharpCorePkgVersion)" />
+     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
+-    <PackageReference Include="System.Buffers" Version="4.5.0" />
++    <PackageReference Include="System.Buffers" Version="4.5.1" />
+     <PackageReference Include="System.Memory" Version="4.5.3" />
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildVersion)" />
 diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
-index ba4f03716..4aab5da50 100644
+index ba4f03716..46da3d5d0 100644
 --- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
 +++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
-@@ -781,7 +781,7 @@
+@@ -780,8 +780,8 @@
+     <PackageReference Include="System.Threading.Tasks.Parallel" Version="$(SystemThreadingTasksParallelVersion)" />
      <PackageReference Include="System.Threading.Thread" Version="$(SystemThreadingThreadVersion)" />
      <PackageReference Include="System.Threading.ThreadPool" Version="$(SystemThreadingThreadPoolVersion)" />
-     <PackageReference Include="System.Buffers" Version="$(SystemBuffersVersion)" />
+-    <PackageReference Include="System.Buffers" Version="$(SystemBuffersVersion)" />
 -    <PackageReference Include="System.Memory" Version="$(SystemMemoryVersion)" />
++    <PackageReference Include="System.Buffers" Version="4.5.1" />
 +    <PackageReference Include="System.Memory" Version="4.5.4" />
      <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildVersion)" />
      <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildVersion)" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" />
 diff --git a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
-index b96f90d2a..6731e364a 100644
+index b96f90d2a..366488b47 100644
 --- a/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
 +++ b/src/fsharp/FSharp.Compiler.nuget/Microsoft.FSharp.Compiler.nuspec
-@@ -23,7 +23,7 @@
+@@ -22,8 +22,8 @@
+                 <dependency id="System.Threading.Thread" version="4.3.0" />
                  <dependency id="System.Threading.ThreadPool" version="4.3.0" />
                  <dependency id="System.ValueTuple" version="4.4.0" />
-                 <dependency id="System.Buffers" version="4.5.0" />
+-                <dependency id="System.Buffers" version="4.5.0" />
 -                <dependency id="System.Memory" version="4.5.3" />
++                <dependency id="System.Buffers" version="4.5.1" />
 +                <dependency id="System.Memory" version="4.5.4" />
              </group>
          </dependencies>
