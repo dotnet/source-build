@@ -1,0 +1,37 @@
+From e381054f6a78fce0e3c4c90778b81db24a97b568 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 3 Sep 2020 19:02:07 -0500
+Subject: [PATCH 5/5] Fix package downgrade warning
+
+---
+ .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj       | 1 +
+ src/fsharp/fsc/fsc.fsproj                                        | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+index ba4f03716..636130f93 100644
+--- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
++++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
+@@ -785,6 +785,7 @@
+     <PackageReference Include="Microsoft.Build.Framework" Version="$(MicrosoftBuildVersion)" />
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildVersion)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildVersion)" />
++    <PackageReference Include="System.Memory" Version="4.5.4" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
+index 776cddc78..df16c1554 100644
+--- a/src/fsharp/fsc/fsc.fsproj
++++ b/src/fsharp/fsc/fsc.fsproj
+@@ -45,6 +45,7 @@
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.Runtime.Loader" Version="$(SystemRuntimeLoaderVersion)" />
+     <PackageReference Include="System.Security.Principal" Version="$(SystemSecurityPrincipalVersion)" />
++    <PackageReference Include="System.Memory" Version="4.5.4" />
+   </ItemGroup>
+ 
+ </Project>
+-- 
+2.18.0
+
