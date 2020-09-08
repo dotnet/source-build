@@ -1,0 +1,25 @@
+From 0f85807b2c27e881bfb0f367a8c002fb318a6573 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Tue, 8 Sep 2020 12:20:40 -0500
+Subject: [PATCH 11/11] Use source-built MSBuild for F#.
+
+---
+ eng/Versions.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index bdacff757..80702ba7e 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -16,7 +16,7 @@
+   </PropertyGroup>
+   <!-- Production Dependencies -->
+   <PropertyGroup>
+-    <FSharpBuildVersion>16.6</FSharpBuildVersion>
++    <FSharpBuildVersion>$(MicrosoftBuildPackageVersion)</FSharpBuildVersion>
+     <MicrosoftBuildVersion>15.4.8</MicrosoftBuildVersion>
+     <MicrosoftBuildFrameworkVersion>15.4.8</MicrosoftBuildFrameworkVersion>
+     <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
+-- 
+2.18.0
+
