@@ -141,7 +141,14 @@ namespace Microsoft.DotNet.Build.Tasks
                     }
                     else if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
                     {
-                        return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        if (datePart > 1 && datePart < 8 && buildPart > 1000 && buildPart < 10000)
+                        {
+                            return new DerivedVersion { OfficialBuildId = releaseParts[2], PreReleaseVersionLabel = $"{releaseParts[0]}.{releaseParts[1]}" };
+                        }
+                        else
+                        {
+                            return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        }
                     }
                 }
                 else if (releaseParts.Length == 4)
