@@ -4,22 +4,21 @@ Date: Tue, 8 Sep 2020 12:20:40 -0500
 Subject: [PATCH 11/11] Use source-built MSBuild for F#.
 
 ---
- eng/Versions.props | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ eng/Versions.props | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index bdacff757..80702ba7e 100644
+index bdacff7..ec1efc4 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -16,7 +16,7 @@
-   </PropertyGroup>
-   <!-- Production Dependencies -->
-   <PropertyGroup>
--    <FSharpBuildVersion>16.6</FSharpBuildVersion>
+@@ -92,6 +92,7 @@
+     <MicrosoftBuildVersion>$(MicrosoftBuildPackageVersion)</MicrosoftBuildVersion>
+     <MicrosoftBuildFrameworkVersion>$(MicrosoftBuildFrameworkPackageVersion)</MicrosoftBuildFrameworkVersion>
+     <MicrosoftBuildUtilitiesCoreVersion>$(MicrosoftBuildUtilitiesCorePackageVersion)</MicrosoftBuildUtilitiesCoreVersion>
 +    <FSharpBuildVersion>$(MicrosoftBuildPackageVersion)</FSharpBuildVersion>
-     <MicrosoftBuildVersion>15.4.8</MicrosoftBuildVersion>
-     <MicrosoftBuildFrameworkVersion>15.4.8</MicrosoftBuildFrameworkVersion>
-     <MicrosoftBuildUtilitiesCoreVersion>15.4.8</MicrosoftBuildUtilitiesCoreVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+     <!-- Dependencies from https://github.com/dotnet/CliCommandLineParser -->
 -- 
 2.18.0
 
