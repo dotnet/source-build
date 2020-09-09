@@ -36,9 +36,13 @@ jobs:
     type: Production
 
     ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
-      InternalPackageFeedPatEnv: ''
+      SetInternalPackageFeedPatBashCommand: ''
     ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-      InternalPackageFeedPatEnv: $(dn-bot-dnceng-artifact-feeds-rw)
+      # In the internal build, we have one definition that provides dn-bot-dnceng-artifact-feeds-rw,
+      # and another that doesn't (to be more like a public build). For the definition that doesn't
+      # define dn-bot-dnceng-artifact-feeds-rw, this line relies on the subshell to fail when it
+      # tries to find a command by that name and set internalPackageFeedPat to nothing.
+      SetInternalPackageFeedPatBashCommand: 'export internalPackageFeedPat=$(dn-bot-dnceng-artifact-feeds-rw)'
 
   steps:
   - checkout: self
@@ -68,9 +72,11 @@ jobs:
   - template: ../steps/check-space-powershell.yml
 
   # Build source-build.
-  - script: ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
-    env:
-      internalPackageFeedPat: $(InternalPackageFeedPatEnv)
+  - script: |
+      set -x
+      $(SetInternalPackageFeedPatBashCommand)
+      set -e
+      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
     timeoutInMinutes: 150
 
@@ -78,9 +84,11 @@ jobs:
 
   # Run smoke tests.
   - ${{ if ne(parameters.skipSmokeTest, true) }}:
-    - bash: ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
-      env:
-        internalPackageFeedPat: $(InternalPackageFeedPatEnv)
+    - bash: |
+        set -x
+        $(SetInternalPackageFeedPatBashCommand)
+        set -e
+        ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
       displayName: Run smoke-test
 
   # Gather artifacts. Uses git bash on Windows.

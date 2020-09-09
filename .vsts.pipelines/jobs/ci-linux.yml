@@ -44,6 +44,10 @@ jobs:
     ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
       SetInternalPackageFeedPatDockerArg: ''
     ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      # In the internal build, we have one definition that provides dn-bot-dnceng-artifact-feeds-rw,
+      # and another that doesn't (to be more like a public build). For the definition that doesn't
+      # define dn-bot-dnceng-artifact-feeds-rw, this line relies on the subshell to fail when it
+      # tries to find a command by that name and set internalPackageFeedPat to nothing.
       SetInternalPackageFeedPatDockerArg: >-
         -e internalPackageFeedPat=$(dn-bot-dnceng-artifact-feeds-rw)
 
