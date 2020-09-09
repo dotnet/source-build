@@ -1,0 +1,37 @@
+From 16cd6f6c480f50e5312815cf0a01cde0bee2d019 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 9 Sep 2020 09:55:42 -0500
+Subject: [PATCH 17/17] Skip some test projects
+
+---
+ eng/Subsets.props | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/eng/Subsets.props b/eng/Subsets.props
+index fa72f142f0c..17103c8c611 100644
+--- a/eng/Subsets.props
++++ b/eng/Subsets.props
+@@ -59,7 +59,7 @@
+     <DefaultMonoSubsets Condition="'$(MonoEnableLLVM)' == 'true' and '$(MonoLLVMDir)' == ''">mono.llvm+</DefaultMonoSubsets>
+     <DefaultMonoSubsets>$(DefaultMonoSubsets)mono.runtime+mono.corelib</DefaultMonoSubsets>
+ 
+-    <DefaultLibrariesSubsets>libs.depprojs+libs.native+libs.ref+libs.src+libs.pretest+libs.packages</DefaultLibrariesSubsets>
++    <DefaultLibrariesSubsets>libs.depprojs+libs.native+libs.ref+libs.src+libs.packages</DefaultLibrariesSubsets>
+ 
+     <DefaultInstallerSubsets>corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles+installers+installer.tests</DefaultInstallerSubsets>
+     <DefaultInstallerSubsets Condition="'$(RuntimeFlavor)' == 'Mono'">installer.pkgprojs</DefaultInstallerSubsets>
+@@ -153,10 +153,8 @@
+   <ItemGroup Condition="$(_subset.Contains('+clr.tools+'))">
+     <ProjectToBuild Include="$(CoreClrProjectRoot)src\tools\runincontext\runincontext.csproj;
+                              $(CoreClrProjectRoot)src\tools\r2rdump\R2RDump.csproj;
+-                             $(CoreClrProjectRoot)src\tools\dotnet-pgo\dotnet-pgo.csproj;
+-                             $(CoreClrProjectRoot)src\tools\r2rtest\R2RTest.csproj" Category="clr" BuildInParallel="true" />
++                             $(CoreClrProjectRoot)src\tools\dotnet-pgo\dotnet-pgo.csproj" Category="clr" BuildInParallel="true" />
+     <ProjectToBuild Include="$(CoreClrProjectRoot)src\tools\aot\crossgen2\crossgen2.csproj" Category="clr" />
+-    <ProjectToBuild Include="$(CoreClrProjectRoot)src\tools\aot\ILCompiler.TypeSystem.ReadyToRun.Tests\ILCompiler.TypeSystem.ReadyToRun.Tests.csproj" Test="true" Category="clr" Condition="'$(__DistroRid)' != 'linux-musl-x64'"/>
+   </ItemGroup>
+ 
+   <ItemGroup Condition="$(_subset.Contains('+clr.packages+'))">
+-- 
+2.18.0
+
