@@ -1,0 +1,26 @@
+From 893bccaed963504f49bd186f80f70b43d748a2ef Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 16 Aug 2020 18:29:04 -0500
+Subject: [PATCH 12/12] Disable ILRewrite step - this isn't built in
+ source-build so it fails.
+
+---
+ .../build/Microsoft.DotNet.GenFacadesILRewriter.targets         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacadesILRewriter.targets b/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacadesILRewriter.targets
+index 693b99ae..8baa85af 100644
+--- a/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacadesILRewriter.targets
++++ b/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacadesILRewriter.targets
+@@ -21,7 +21,7 @@
+           of the assembly compilation process.
+   -->
+   <PropertyGroup>
+-    <TargetsTriggeredByCompilation Condition="'$(DesignTimeBuild)' != 'true'">
++    <TargetsTriggeredByCompilation Condition="'$(DesignTimeBuild)' != 'true' and '$(DotNetBuildFromSource)' != 'true'">
+       $(TargetsTriggeredByCompilation);FillPartialFacadeUsingTask
+     </TargetsTriggeredByCompilation>
+   </PropertyGroup>
+-- 
+2.18.0
+

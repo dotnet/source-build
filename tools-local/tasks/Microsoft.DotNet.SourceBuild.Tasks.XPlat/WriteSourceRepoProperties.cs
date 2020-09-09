@@ -141,7 +141,22 @@ namespace Microsoft.DotNet.Build.Tasks
                     }
                     else if (int.TryParse(releaseParts[1], out int datePart) && int.TryParse(releaseParts[2], out int buildPart))
                     {
-                        return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        if (datePart > 1 && datePart < 8 && buildPart > 1000 && buildPart < 10000)
+                        {
+                            return new DerivedVersion { OfficialBuildId = releaseParts[2], PreReleaseVersionLabel = $"{releaseParts[0]}.{releaseParts[1]}" };
+                        }
+                        else
+                        {
+                            return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = releaseParts[0] };
+                        }
+                    }
+                }
+                else if (releaseParts.Length == 4)
+                {
+                    // new preview version style, e.g. 5.0.0-preview.7.20365.12
+                    if (int.TryParse(releaseParts[2], out int datePart) && int.TryParse(releaseParts[3], out int buildPart))
+                    {
+                        return new DerivedVersion { OfficialBuildId = $"20{((datePart / 1000))}{((datePart % 1000) / 50):D2}{(datePart % 50):D2}.{buildPart}", PreReleaseVersionLabel = $"{releaseParts[0]}.{releaseParts[1]}" };
                     }
                 }
             }
@@ -152,7 +167,7 @@ namespace Microsoft.DotNet.Build.Tasks
                 return new DerivedVersion { OfficialBuildId = DateTime.Now.ToString("yyyyMMdd.1"), PreReleaseVersionLabel = string.Empty };
             }
 
-            throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount})");
+            throw new FormatException($"Can't derive a build ID from version {version} (commit count {commitCount}, release {string.Join(";", nugetVersion.Release.Split('-', '.'))})");
         }
 
         private static string GetDefaultRepoNameFromUrl(string repoUrl)
@@ -242,7 +257,7 @@ namespace Microsoft.DotNet.Build.Tasks
         private void WriteGitCommitMarkerFileForSubmodule(string sourceDirPath, string gitDirPath, string parentRepoSha, string submoduleName, string submodulePath)
         {
             var submoduleSha = GetSubmoduleCommit(gitDirPath, parentRepoSha, submodulePath);
-            var headDirectory = Path.Combine(sourceDirPath, ".git", "modules", submoduleName);
+            var headDirectory = Path.Combine(sourceDirPath, submodulePath, ".git");
             var headPath = Path.Combine(headDirectory, "HEAD");
             Directory.CreateDirectory(headDirectory);
             File.WriteAllText(headPath, submoduleSha);

@@ -1,0 +1,37 @@
+From b993540bec1b2e7af94ab1d3128bf4f30d47f233 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 2 Sep 2020 07:24:30 -0500
+Subject: [PATCH 12/13] Add UsingToolNetFrameworkReferenceAssemblies.
+
+---
+ eng/Versions.props                            | 1 +
+ src/libraries/restore/runtime/runtime.depproj | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index facdb8e04ee..f035e2832e5 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -18,6 +18,7 @@
+     <UsingToolMicrosoftNetCompilers>true</UsingToolMicrosoftNetCompilers>
+     <UsingToolIbcOptimization>true</UsingToolIbcOptimization>
+     <UsingToolXliff>false</UsingToolXliff>
++    <UsingToolNetFrameworkReferenceAssemblies>true</UsingToolNetFrameworkReferenceAssemblies>
+     <!-- Blob storage container that has the "Latest" channel to publish to. -->
+     <ContainerName>dotnet</ContainerName>
+     <ChecksumContainerName>$(ContainerName)</ChecksumContainerName>
+diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/restore/runtime/runtime.depproj
+index 3441fe9399b..36e4bacdef2 100644
+--- a/src/libraries/restore/runtime/runtime.depproj
++++ b/src/libraries/restore/runtime/runtime.depproj
+@@ -26,6 +26,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Condition="'$(TargetFramework)' == 'netcoreapp3.0'" Include="Microsoft.Private.Corefx.NETCoreApp" Version="4.6.0-rc2.19462.14" />
++    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
+   </ItemGroup>
+ 
+   <!-- Setup the testing shared framework host -->
+-- 
+2.18.0
+

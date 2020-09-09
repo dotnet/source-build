@@ -1,0 +1,39 @@
+From 1d7b4c71be9cb787c29da49d55140cabe79e7b6c Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 12 Aug 2020 14:26:52 -0500
+Subject: [PATCH 10/10] PlatformAbstractions is not produced in source-build
+
+---
+ src/Layout/redist/redist.csproj                                 | 2 +-
+ .../Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Layout/redist/redist.csproj b/src/Layout/redist/redist.csproj
+index c3940776b..e46938bae 100644
+--- a/src/Layout/redist/redist.csproj
++++ b/src/Layout/redist/redist.csproj
+@@ -20,7 +20,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
+-    <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />
++  <!--  <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />-->
+     <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(MicrosoftBuildNuGetSdkResolverPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" ExcludeAssets="All" />
+     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
+diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
+index ecf56d956..59545bb39 100644
+--- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
++++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
+@@ -50,7 +50,7 @@
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" />
+     <PackageReference Include="Microsoft.NET.HostModel" Version="$(MicrosoftNETHostModelVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+     <PackageReference Include="NuGet.Build.Tasks.Pack" Version="$(NuGetBuildTasksPackageVersion)" ExcludeAssets="All" />
+-- 
+2.18.2
+

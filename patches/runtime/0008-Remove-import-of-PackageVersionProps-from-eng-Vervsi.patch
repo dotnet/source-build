@@ -1,0 +1,24 @@
+From a9992d0fc79eef985fa37d6df6c21837744e5c10 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 20 Apr 2020 15:09:58 +0000
+Subject: [PATCH 08/10] Remove import of PackageVersionProps from
+ eng/Vervsions.props It should be imported by Arcade SDK
+
+---
+ eng/Versions.props | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 51b09a0a719..0096e67c006 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -144,6 +144,4 @@
+     -->
+     <XmlDocFileRoot>$([MSBuild]::NormalizeDirectory('$(NuGetPackageRoot)', '$(MicrosoftPrivateIntellisensePackage)', '$(MicrosoftPrivateIntellisenseVersion)', 'IntellisenseFiles', 'net'))</XmlDocFileRoot>
+   </PropertyGroup>
+-  <!-- Override isolated build dependency versions with versions from Repo API. -->
+-  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+ </Project>
+-- 
+2.18.0
+

@@ -1,0 +1,24 @@
+From 503c436d368d1cd2185517f79e67bea26691ef10 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 6 Sep 2020 08:56:15 -0500
+Subject: [PATCH 14/14] Exclude internal analyzers from source-build
+
+---
+ .../src/Internal.AspNetCore.Analyzers.csproj                     | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Analyzers/Internal.AspNetCore.Analyzers/src/Internal.AspNetCore.Analyzers.csproj b/src/Analyzers/Internal.AspNetCore.Analyzers/src/Internal.AspNetCore.Analyzers.csproj
+index cf315eea41..afb0f035a5 100644
+--- a/src/Analyzers/Internal.AspNetCore.Analyzers/src/Internal.AspNetCore.Analyzers.csproj
++++ b/src/Analyzers/Internal.AspNetCore.Analyzers/src/Internal.AspNetCore.Analyzers.csproj
+@@ -17,6 +17,7 @@
+     <IsShippingPackage>false</IsShippingPackage>
+     <!-- This project needs an older version of M.CA.CSharp.Workspaces since it targets netstandard1.3 -->
+     <DisablePackageReferenceRestrictions>true</DisablePackageReferenceRestrictions>
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+2.18.0
+

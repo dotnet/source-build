@@ -1,0 +1,24 @@
+From 2de8b2502d555381534e88280d23b80684ffeffe Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 15 May 2020 16:42:32 +0000
+Subject: [PATCH 05/11] Fix version number
+
+This file is actually a very long minified JS file with a version number at the
+end. The file is treated as binary, making this patch less clear, but it's easy
+to update/reapply it with a text editor.
+---
+ .../Web.JS/dist/Release/blazor.server.js      | Bin 222914 -> 222915 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+diff --git a/src/Components/Web.JS/dist/Release/blazor.server.js b/src/Components/Web.JS/dist/Release/blazor.server.js
+index 88e7b2641792aba1e16885dbf988cca1208b9563..fff1486daaf106a4606ddc800f55adc29d74687f 100644
+GIT binary patch
+delta 37
+scmX?fmiO>k-i8*&7N#xC>(WF`^$he3bPI}7%Q92T^(>TXV>PY001ey>l>h($
+
+delta 36
+qcmX?nmiN$E-i8*&7N#xC>(WFF^ng&;#WgJ6Db&-)MX5Gc(;5Kx^b5-X
+
+-- 
+2.18.2
+

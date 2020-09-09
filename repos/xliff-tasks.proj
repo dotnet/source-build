@@ -7,6 +7,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /flp:Verbosity=Diag</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /bl</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:TreatWarningsAsErrors=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
 
     <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>

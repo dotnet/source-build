@@ -33,6 +33,8 @@
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackagesDir=$(PackagesDir)</CoreClrBuildArguments>
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:ContinuousIntegrationBuild=true</CoreClrBuildArguments>
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackageRid=$(OverrideTargetRid)</CoreClrBuildArguments>
+    <!-- PGO is disabled for now because the profiler only runs on Windows: https://github.com/dotnet/source-build/issues/247 -->
+    <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:NoPgoOptimize=true</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' != 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</CoreClrBuildArguments>
 
@@ -72,6 +74,8 @@
 
     <CommonBuildArguments>$(FlagParameterPrefix)arch $(Platform)</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) /p:RuntimeConfiguration=$(Configuration)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) /p:MicrosoftNetFrameworkReferenceAssembliesVersion=1.0.0</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)binaryLog</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)ci</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)runtimeConfiguration $(Configuration)</CommonBuildArguments>

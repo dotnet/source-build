@@ -1,0 +1,28 @@
+From 5279aebe9a3ebfeca7b000087c42aab73e59e2bb Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Thu, 14 Nov 2019 16:57:39 +0000
+Subject: [PATCH 04/11] Exclude some projects from source-build
+
+---
+ Directory.Build.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 86dbc3c929..908fa251c7 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -16,9 +16,11 @@
+     <IsUnitTestProject>false</IsUnitTestProject>
+     <IsUnitTestProject Condition="'$(IsSpecificationTestProject)' != 'true' and ( $(MSBuildProjectName.EndsWith('Tests')) or $(MSBuildProjectName.EndsWith('.Test')) or $(MSBuildProjectName.EndsWith('.FunctionalTest')) )">true</IsUnitTestProject>
+     <IsTestAssetProject Condition="$(RepoRelativeProjectDir.Contains('testassets'))">true</IsTestAssetProject>
++    <IsOtherTestProject Condition="$(MSBuildProjectName.Contains('IntegrationTesting')) or $(MSBuildProjectName.Contains('TestCommon'))">true</IsOtherTestProject>
+     <IsSampleProject Condition="$(RepoRelativeProjectDir.Contains('sample'))">true</IsSampleProject>
+     <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
+     <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
++    <ExcludeFromSourceBuild Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true' or '$(IsOtherTestProject)' == 'true'">true</ExcludeFromSourceBuild>
+ 
+     <!--
+       Following logic mimics core-setup approach as well as
+-- 
+2.18.2
+
