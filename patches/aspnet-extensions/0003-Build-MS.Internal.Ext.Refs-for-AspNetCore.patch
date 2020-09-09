@@ -1,23 +1,23 @@
-From ab847aa914da4ce93ade3dbe7bbc0ba7d262fec3 Mon Sep 17 00:00:00 2001
+From f62d5a7191b77650a464fcce8fd21d74ae98f18c Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Fri, 7 Feb 2020 20:55:51 +0000
-Subject: [PATCH 3/4] Build-MS.Internal.Ext.Refs-for-AspNetCore
+Subject: [PATCH 3/3] Build-MS.Internal.Ext.Refs-for-AspNetCore
 
 ---
  .../ref/Microsoft.Internal.Extensions.Refs.csproj           | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
-index c89ec063a..952d69edc 100644
+index c12cb4f4d..795121fa0 100644
 --- a/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
 +++ b/src/TargetingPack/Microsoft.Internal.Extensions.Refs/ref/Microsoft.Internal.Extensions.Refs.csproj
 @@ -4,11 +4,11 @@
      <TargetFramework>$(DefaultNetCoreTargetFramework)</TargetFramework>
  
-     <!-- Do not pack in servicing builds. -->
+     <!-- Do not pack in servicing builds except in special circumstances e.g. 3.1.8. -->
 -    <IsPackable>false</IsPackable>
 +    <IsPackable>true</IsPackable>
-     <IsPackable Condition=" '$(PatchVersion)' == '0' ">true</IsPackable>
+     <IsPackable Condition=" '$(PatchVersion)' == '0' OR '$(PatchVersion)' == '8' ">true</IsPackable>
      <IsShipping>false</IsShipping>
      <!-- This project is not included in the shared framework -->
 -    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
@@ -25,7 +25,7 @@ index c89ec063a..952d69edc 100644
      <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
  
      <!-- Subject to change: see https://github.com/dotnet/designs/pull/50 -->
-@@ -49,7 +49,7 @@
+@@ -55,7 +55,7 @@
      </BuildDependsOn>
  
      <!-- Suppresses building this project completely during servicing builds. -->
