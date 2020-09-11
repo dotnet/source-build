@@ -31,9 +31,9 @@
     <Delete Files="$(CompletedSemaphorePath)*.*" />
   </Target>
 
-  <Target Name="UnpackTarballs" 
+  <Target Name="UnpackTarballs"
           Condition="'$(OfflineBuild)' == 'true'"
-          Inputs="$(MSBuildProjectFullPath)" 
+          Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)UnpackTarballs.complete" >
     <MakeDir Directories="$(ReferencePackagesDir)"  Condition="'$(CustomReferencePackagesPath)' == ''" />
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(ReferencePackagesTarballName).*.tar.gz"
@@ -50,7 +50,7 @@
     <WriteLinesToFile File="$(CompletedSemaphorePath)UnpackTarballs.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="BuildXPlatTasks" 
+  <Target Name="BuildXPlatTasks"
           DependsOnTargets="UnpackTarballs"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)BuildXPlatTasks.complete">
@@ -91,11 +91,11 @@
     <ZipFileExtractToDirectory SourceArchive="$(PrebuiltSourceBuiltPackagesPath)Microsoft.DotNet.Arcade.Sdk.$(ARCADE_BOOTSTRAP_VERSION).nupkg"
                                DestinationDirectory="$(ArcadeBootstrapPackageDir)microsoft.dotnet.arcade.sdk/$(ARCADE_BOOTSTRAP_VERSION)/"
                                OverwriteDestination="true" />
-        
+
     <WriteLinesToFile File="$(CompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="PoisonPrebuiltPackages" 
+  <Target Name="PoisonPrebuiltPackages"
           Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete">
@@ -105,7 +105,7 @@
     </ItemGroup>
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltPackages)" CatalogOutputFilePath="$(PoisonReportDataFile)" MarkerFileName="$(PoisonMarkerFile)" />
     <MarkAndCatalogPackages PackagesToMark="@(PrebuiltSourceBuiltPackages)" CatalogOutputFilePath="$(SourceBuiltPoisonReportDataFile)" MarkerFileName="$(SourceBuiltPoisonMarkerFile)" />
-        
+
     <WriteLinesToFile File="$(CompletedSemaphorePath)PoisonPrebuiltPackages.complete" Overwrite="true" />
   </Target>
 
@@ -122,8 +122,8 @@
     <WriteLinesToFile File="$(CompletedSemaphorePath)FetchSources.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="WriteSourceLinkMetadata" 
-          Condition="'$(OfflineBuild)' != 'true'" 
+  <Target Name="WriteSourceLinkMetadata"
+          Condition="'$(OfflineBuild)' != 'true'"
           DependsOnTargets="AcquireDarc;FetchSources"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)WriteSourceLinkMetadata.complete">

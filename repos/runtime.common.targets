@@ -45,11 +45,11 @@
 
     <Copy SourceFiles="@(CoreClrTools)" DestinationFolder="$(CoreClrDestinationDir)" />
 
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTools.complete" Overwrite="true" />    
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTools.complete" Overwrite="true" />
   </Target>
 
   <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries" 
+  <Target Name="PublishBinaries"
           AfterTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
@@ -62,11 +62,11 @@
       <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
     </PublishCoreSetupBinaries>
     <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
-  
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="CopyBinariesToBinFolder" 
+  <Target Name="CopyBinariesToBinFolder"
           AfterTargets="PublishBinaries"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete">
@@ -82,7 +82,7 @@
     <Copy SourceFiles="@(BinariesToCopy)"
           DestinationFolder="$(OutputPath)runtime"
           Condition="'@(BinariesToCopy)'!=''" />
- 
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete" Overwrite="true" />
   </Target>
 

@@ -70,7 +70,7 @@
     <PatchesToApply Include="$(PatchesDir)$(RepositoryName)/*.patch" />
   </ItemGroup>
 
-  <Target Name="ApplyPatches" 
+  <Target Name="ApplyPatches"
           Condition="'@(PatchesToApply)' != '' and '$(SkipPatches)' != 'true'"
           Inputs="@(PatchesToApply)"
           Outputs="$(RepoCompletedSemaphorePath)ApplyPatches.complete" >
@@ -259,7 +259,7 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="Build" 
+  <Target Name="Build"
           DependsOnTargets="BuildRepoReferences"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)Build.complete">
@@ -297,7 +297,7 @@
     <Message Importance="High" Text="See '$(RepoConsoleLogFile)' for more information." Condition="Exists('$(RepoConsoleLogFile)')" />
   </Target>
 
-  <Target Name="Package" AfterTargets="Build" 
+  <Target Name="Package" AfterTargets="Build"
           Condition="'$(BuildPackagesCommand)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)Package.complete">
@@ -364,7 +364,7 @@
     </ItemGroup>
     <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
     <Delete Files="@(_FilesToDelete)" />
-          
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
   </Target>
 
@@ -395,7 +395,7 @@
     </ItemGroup>
 
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
-          
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
   </Target>
 
@@ -511,7 +511,7 @@
       IgnoredProjectAssetsJsonFiles="@(IgnoredProjectAssetsJsonFiles)"
       DataFile="$(PackageReportDataFile)"
       ProjectAssetsJsonArchiveFile="$(ProjectAssetsJsonArchiveFile)" />
-      
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)WritePrebuiltUsageData.complete" Overwrite="true" />
 </Target>
 
@@ -557,7 +557,7 @@
       OutputReportFile="$(PackageReportDir)baseline-comparison.xml"
       AllowTestProjectUsage="$(AllowTestProjectUsage)"
       ContinueOnError="$(ContinueOnPrebuiltBaselineError)" />
-      
+
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ReportPrebuiltUsage.complete" Overwrite="true" />
   </Target>
 
