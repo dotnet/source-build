@@ -48,7 +48,7 @@
                                OverwriteDestination="true" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete" Overwrite="true" />
- </Target>
+  </Target>
 
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->
   <Target Name="ReplaceNuspecDllIncludeLines" BeforeTargets="Build" Condition="'$(TargetOS)' != 'Windows_NT'">
