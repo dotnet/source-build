@@ -1,30 +1,37 @@
-From 66d0c4da113bb6456eb442a9fee458768e421e67 Mon Sep 17 00:00:00 2001
-From: dseefeld <dseefeld@microsoft.com>
-Date: Mon, 29 Jun 2020 18:07:47 -0400
-Subject: [PATCH 2/3] Add target rid to AppHostRuntimeIdentifiers
+From e09da5670bfc8df488b65aee94de992a1c75a6a4 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 14 Sep 2020 18:43:27 -0500
+Subject: [PATCH] Add target rid to NetCoreAppHostRids
 
-Updated from 3.1 patch at
-https://github.com/dotnet/source-build/blob/2d5b506b13a06adf36f0feb4982ceebb7fa27123/patches/core-sdk/0008-Add-target-rid-to-AppHostRuntimeIdentifiers.patch
 ---
- src/redist/targets/GenerateBundledVersions.targets | 5 +++++
- 1 file changed, 5 insertions(+)
+ src/redist/targets/GenerateBundledVersions.targets | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/src/redist/targets/GenerateBundledVersions.targets b/src/redist/targets/GenerateBundledVersions.targets
-index 7c6f72967..098960015 100644
+index 7c6f72967..3ee0284e1 100644
 --- a/src/redist/targets/GenerateBundledVersions.targets
 +++ b/src/redist/targets/GenerateBundledVersions.targets
-@@ -71,6 +71,11 @@
-           win-x86;
-           " />
+@@ -93,6 +93,20 @@
+       <NetCoreAppHostRids Include="@(NetCore5AppHostRids)" />
+       <NetCoreRuntimePackRids Include="@(NetCore5RuntimePackRids)" />
  
-+      <NetCore30RuntimePackRids Include="
-+          $(ProductMonikerRid);
-+          @(NetCoreRuntimePackRids)
-+          " />
++      <!--
++        In source-build, we build the current RID from source, which may be
++        non-portable and/or not an official RID. However, we can only use the
++        apphost pack, not the runtime pack, because:
++        - Apphost packs are distributed in the SDK.
++        - Runtime packs are not shipped with the SDK, only on NuGet.
 +
-       <NetCore31RuntimePackRids Include="@(NetCore30RuntimePackRids)"/>
- 
-       <NetCore5AppHostRids Include="@(NetCore31RuntimePackRids)"/>
++        Adding the ability to distribute and use source-built runtime packs is
++        tracked by: https://github.com/dotnet/source-build/issues/1215
++      -->
++      <NetCoreAppHostRids
++        Condition="'$(DotNetBuildFromSource)' == 'true'"
++        Include="$(ProductMonikerRid)" /> 
++
+       <AspNetCore30RuntimePackRids Include="
+         win-x64;
+         win-x86;
 -- 
-2.18.0
+2.27.0.windows.1
 
