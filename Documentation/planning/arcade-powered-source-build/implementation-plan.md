@@ -5,7 +5,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 > ![](img/implementation-plan-graph.png)
 > [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
 
-| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra into dev branch | (Stage 4)<br>Merge CI, generate mock official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
+| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate mock official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ⏱ [#1715](https://github.com/dotnet/source-build/issues/1715) | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | | |
@@ -37,9 +37,21 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | ❗ | At Risk |
 
 ## Stage descriptions:
-  - **(1) Build from source 5.0** – Get repo building from source with 5.0 source in dotnet/source-build.
-  - **(2) Input intermediate packages available** – Indicates upstream intermediate packages are available, and work on this repo can begin.
-  - **(3) Merge patches & local build infra into dev branch** – Repo owner has created source-build dev branch.  Move all source-build specific build parameters from `/repos/<reponame>.proj` in source-build repo to repo `/eng` directory and add repo-specific patches into source-build dev branch.
-  - **(4) Merge CI, generate mock official build** – PR validation and Official Build CI jobs added to source-build dev branch and run to generate intermediate package for repo. 
-  - **(5) Validate & merge dev branch into 5.0** – Build logs and intermediate package reviewed and validated by source-build team.  Source-build changes are live for repo in 5.0 branch.  Build source-built intermediate packages in official build.
-  - **(6) Prebuilt baseline enforcement** – Prebuilt checks enforcment enabled in PR validation builds.  Builds fail if new prebuilts are introduced.
+  - **(1) Build from source 5.0**
+    - Get repo building from source with 5.0 source in dotnet/source-build.
+  - **(2) Input intermediate packages available**
+    - Indicates upstream intermediate packages are available, and work on this repo can begin.
+  - **(3) Merge patches & local build infra**
+    - All source-build specific build parameters from `/repos/<reponame>.proj` in source-build repo moved to repo `/eng` directory.
+    - Repo-specific patches are incorporated.
+    - If necessary, create a dev branch to manage changes.
+  - **(4) Merge CI, generate mock official build**
+    - PR validation and Official Build CI jobs added to repo and run to generate intermediate package for repo.
+  - **(5) Validate & merge dev branch into 5.0**
+    - Build logs and intermediate package of an official build are reviewed and validated by source-build team.
+    - Source-build changes are live for the repo in the `main`/`master` branch.
+    - If a dev branch was created, it is merged into `main`/`master`.
+    - The changes are ported to the branch for `5.0`.
+  - **(6) Prebuilt baseline enforcement**
+    - Prebuilt check baseline is narrowed down to necessary packages.
+    - PR validation builds fail if new prebuilts are introduced.
