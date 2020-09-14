@@ -5,7 +5,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 > ![](img/implementation-plan-graph.png)
 > [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
 
-| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate mock official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
+| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ⏱ [#1715](https://github.com/dotnet/source-build/issues/1715) | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | | |
@@ -45,7 +45,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
     - All source-build specific build parameters from `/repos/<reponame>.proj` in source-build repo moved to repo `/eng` directory.
     - Repo-specific patches are incorporated.
     - If necessary, create a dev branch to manage changes.
-  - **(4) Merge CI, generate mock official build**
+  - **(4) Merge CI, generate official build**
     - PR validation and Official Build CI jobs added to repo and run to generate intermediate package for repo.
   - **(5) Validate & merge dev branch into 5.0**
     - Build logs and intermediate package of an official build are reviewed and validated by source-build team.
