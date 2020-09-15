@@ -16,7 +16,7 @@ index 8fc6f8364f..feb519867c 100644
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-arm64" />
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-x64" />
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-arm64" />
-+    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="Microsoft.NETCore.App.Runtime.$(SourceBuildRuntimeIdentifier)" Version="5.0.0-preview.8.20407.11" />
++    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="Microsoft.NETCore.App.Runtime.$(SourceBuildRuntimeIdentifier)" Version="$(MicrosoftNETCoreAppRuntimeVersion)" />
    </ItemGroup>
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">

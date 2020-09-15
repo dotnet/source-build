@@ -1,22 +1,23 @@
-From b5734097304d622f1c1586c0132ef76415630564 Mon Sep 17 00:00:00 2001
+From 44ca802ca518f232d9f8bac7bd313424aab7e9ca Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 7 Sep 2020 10:42:30 -0500
-Subject: [PATCH 10/10] Use source-built NuGet version
+Subject: [PATCH 07/10] Use source-built NuGet version
 
 ---
- eng/Versions.props | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ eng/Versions.props | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 17af1d42..e5f5bbba 100644
+index 17af1d42..c16bb1be 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -38,7 +38,7 @@
+@@ -38,7 +38,8 @@
      <NewtonsoftJsonVersion>9.0.1</NewtonsoftJsonVersion>
      <SystemTextJsonVersion>4.7.0</SystemTextJsonVersion>
      <NuGetVersioningVersion>4.4.0</NuGetVersioningVersion>
 -    <NuGetVersion>5.6.0-preview.2.6489</NuGetVersion>
-+    <NuGetVersion>5.8.0-preview.2.6776</NuGetVersion>
++    <NuGetVersion>$(NuGetVersioningPackageVersion)</NuGetVersion>
++    <NuGetVersion Condition="'$(NuGetVersion)' == ''">5.6.0-preview.2.6489</NuGetVersion>
      <OctokitVersion>0.32.0</OctokitVersion>
      <DotNetSleetLibVersion>2.2.143</DotNetSleetLibVersion>
      <SwashbuckleAspNetCoreSwaggerVersion>3.0.0</SwashbuckleAspNetCoreSwaggerVersion>
