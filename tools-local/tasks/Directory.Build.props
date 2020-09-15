@@ -35,9 +35,7 @@
       Include="$(SdkReferenceDir)NuGet.*.dll"
       Exclude="$(SdkReferenceDir)NuGet.CommandLine.XPlat.dll" />
 
-    <SdkAssemblyReference
-      Include="@(SdkAssembly -> '%(FileName)')"
-      HintPath="$(SdkReferenceDir)%(Identity).dll" />
+    <SdkAssemblyReference Include="@(SdkAssembly -> '%(FullPath)')" />
   </ItemGroup>
 
 </Project>
