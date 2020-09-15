@@ -8,6 +8,7 @@ using NuGet.Packaging.Core;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
@@ -17,8 +18,19 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         [Required]
         public string DataFile { get; set; }
 
-        [Required]
+        /// <summary>
+        /// The prebuilt baseline: an XML file that lists allowed prebuilt usage.
+        /// </summary>
         public string BaselineDataFile { get; set; }
+
+        /// <summary>
+        /// A hint path used in error messages to tell the user where to update the prebuilt
+        /// baseline data if a baseline validation error occurs. If there is no baseline data file
+        /// at all yet, the error indicates that one should be created at this location if the
+        /// prebuilt usage should be permitted.
+        /// </summary>
+        [Required]
+        public string BaselineDataUpdateHintFile { get; set; }
 
         [Required]
         public string OutputBaselineFile { get; set; }
@@ -31,8 +43,32 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         public override bool Execute()
         {
             var used = UsageData.Parse(XElement.Parse(File.ReadAllText(DataFile)));
-            var baseline = UsageData.Parse(XElement.Parse(File.ReadAllText(BaselineDataFile)));
 
+            string baselineText = string.IsNullOrEmpty(BaselineDataFile)
+                ? "<UsageData />"
+                : File.ReadAllText(BaselineDataFile);
+
+            var baseline = UsageData.Parse(XElement.Parse(baselineText));
+
+            UsageValidationData data = GetUsageValidationData(baseline, used);
+
+            Directory.CreateDirectory(Path.GetDirectoryName(OutputBaselineFile));
+            File.WriteAllText(OutputBaselineFile, data.ActualUsageData.ToXml().ToString());
+
+            Directory.CreateDirectory(Path.GetDirectoryName(OutputReportFile));
+            File.WriteAllText(OutputReportFile, data.Report.ToString());
+
+            return !Log.HasLoggedErrors;
+        }
+
+        public UsageValidationData GetUsageValidationData(UsageData baseline, UsageData used)
+        {
+            // Remove prebuilts from the used data if the baseline says to ignore them. Do this
+            // first, so the new generated baseline doesn't list usages that are ignored by a
+            // pattern anyway.
+            ApplyBaselineIgnorePatterns(used, baseline);
+
+            // Find new, removed, and unchanged usage after filtering patterns.
             Comparison<PackageIdentity> diff = Compare(
                 used.Usages.Select(u => u.GetIdentityWithoutRid()).Distinct(),
                 baseline.Usages.Select(u => u.GetIdentityWithoutRid()).Distinct());
@@ -57,6 +93,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
                             .Where(u => diff.Added.Contains(u.GetIdentityWithoutRid()))
                             .Select(u => u.ToXml())));
             }
+
             if (diff.Removed.Any())
             {
                 tellUserToUpdateBaseline = true;
@@ -66,6 +103,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
                 report.Add(new XElement("Removed", diff.Removed.Select(id => id.ToXElement())));
             }
+
             if (diff.Unchanged.Any())
             {
                 Log.LogMessage(
@@ -98,23 +136,55 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             {
                 usage.AssetsFile = null;
             }
+
+            used.ProjectDirectories = null;
             used.Usages = used.Usages.Distinct().ToArray();
-
-            Directory.CreateDirectory(Path.GetDirectoryName(OutputBaselineFile));
-            File.WriteAllText(OutputBaselineFile, used.ToXml().ToString());
-
-            Directory.CreateDirectory(Path.GetDirectoryName(OutputReportFile));
-            File.WriteAllText(OutputReportFile, report.ToString());
 
             if (tellUserToUpdateBaseline)
             {
-                Log.LogWarning(
-                    "Prebuilt usages are different from the baseline. If detected changes are " +
-                    "acceptable, update baseline with:\n" +
-                    $"cp '{OutputBaselineFile}' '{BaselineDataFile}'");
+                string baselineNotFoundWarning = "";
+                if (string.IsNullOrEmpty(BaselineDataFile))
+                {
+                    baselineNotFoundWarning =
+                        $"not expected, because no baseline file exists at '{BaselineDataUpdateHintFile}'";
+                }
+                else
+                {
+                    baselineNotFoundWarning =
+                        $"different from the baseline found at '{BaselineDataFile}'";
+                }
+
+                Log.LogMessage(
+                    MessageImportance.High,
+                    $"Prebuilt usages are {baselineNotFoundWarning}. If it's acceptable to " +
+                    "update the baseline, copy the contents of the automatically generated " +
+                    $"baseline '{OutputBaselineFile}'.");
             }
 
-            return !Log.HasLoggedErrors;
+            return new UsageValidationData
+            {
+                Report = report,
+                ActualUsageData = used
+            };
+        }
+
+        private static void ApplyBaselineIgnorePatterns(UsageData actual, UsageData baseline)
+        {
+            Regex[] ignoreUsageRegexes = baseline.IgnorePatterns.NullAsEmpty()
+                .Select(p => p.CreateRegex())
+                .ToArray();
+
+            actual.IgnorePatterns = baseline.IgnorePatterns;
+
+            var ignoredUsages = actual.Usages
+                .Where(usage =>
+                {
+                    string id = $"{usage.PackageIdentity.Id}/{usage.PackageIdentity.Version}";
+                    return ignoreUsageRegexes.Any(r => r.IsMatch(id));
+                })
+                .ToArray();
+
+            actual.Usages = actual.Usages.Except(ignoredUsages).ToArray();
         }
 
         private static Comparison<T> Compare<T>(IEnumerable<T> actual, IEnumerable<T> baseline)
