@@ -1,0 +1,26 @@
+From 4905e9ebb7a674b23594fe4b979b8120de2dc748 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 11 Sep 2020 10:31:18 -0500
+Subject: [PATCH 18/18] Don't include extra PackageIcon - Arcade does this
+ already.
+
+---
+ .../netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
+index e9fc92b2acb..08933b13365 100644
+--- a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
++++ b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
+@@ -38,7 +38,7 @@
+           DependsOnTargets="ConvertItems"
+           BeforeTargets="GetPackageFiles">
+     <ItemGroup>
+-      <RuntimeFile Include="@(File->HasMetadata('TargetPath'))" Exclude="$(PackageIconFullPath)" />
++      <RuntimeFile Include="@(File->HasMetadata('TargetPath'))" />
+       <File Remove="@(RuntimeFile)" />
+     </ItemGroup>
+ 
+-- 
+2.18.0
+
