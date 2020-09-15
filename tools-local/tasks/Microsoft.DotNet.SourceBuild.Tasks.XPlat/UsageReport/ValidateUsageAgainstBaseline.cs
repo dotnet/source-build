@@ -18,19 +18,8 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         [Required]
         public string DataFile { get; set; }
 
-        /// <summary>
-        /// The prebuilt baseline: an XML file that lists allowed prebuilt usage.
-        /// </summary>
-        public string BaselineDataFile { get; set; }
-
-        /// <summary>
-        /// A hint path used in error messages to tell the user where to update the prebuilt
-        /// baseline data if a baseline validation error occurs. If there is no baseline data file
-        /// at all yet, the error indicates that one should be created at this location if the
-        /// prebuilt usage should be permitted.
-        /// </summary>
         [Required]
-        public string BaselineDataUpdateHintFile { get; set; }
+        public string BaselineDataFile { get; set; }
 
         [Required]
         public string OutputBaselineFile { get; set; }
@@ -44,9 +33,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
         {
             var used = UsageData.Parse(XElement.Parse(File.ReadAllText(DataFile)));
 
-            string baselineText = string.IsNullOrEmpty(BaselineDataFile)
-                ? "<UsageData />"
-                : File.ReadAllText(BaselineDataFile);
+            string baselineText = File.ReadAllText(BaselineDataFile);
 
             var baseline = UsageData.Parse(XElement.Parse(baselineText));
 
@@ -142,23 +129,10 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
             if (tellUserToUpdateBaseline)
             {
-                string baselineNotFoundWarning = "";
-                if (string.IsNullOrEmpty(BaselineDataFile))
-                {
-                    baselineNotFoundWarning =
-                        $"not expected, because no baseline file exists at '{BaselineDataUpdateHintFile}'";
-                }
-                else
-                {
-                    baselineNotFoundWarning =
-                        $"different from the baseline found at '{BaselineDataFile}'";
-                }
-
-                Log.LogMessage(
-                    MessageImportance.High,
-                    $"Prebuilt usages are {baselineNotFoundWarning}. If it's acceptable to " +
-                    "update the baseline, copy the contents of the automatically generated " +
-                    $"baseline '{OutputBaselineFile}'.");
+                Log.LogWarning(
+                    "Prebuilt usages are different from the baseline found at " +
+                    $"'{BaselineDataFile}'. If it's acceptable to update the baseline, copy the " +
+                    $"contents of the automatically generated baseline '{OutputBaselineFile}'.");
             }
 
             return new UsageValidationData
