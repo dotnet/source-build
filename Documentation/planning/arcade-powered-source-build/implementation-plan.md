@@ -15,7 +15,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
 | 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
 | 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
-| 1 | xliff-tasks | [William Li](https://github.com/wli3) | ✔️ | | | | | |
+| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
