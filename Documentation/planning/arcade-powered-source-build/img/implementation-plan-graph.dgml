@@ -2,30 +2,31 @@
 <DirectedGraph Layout="Sugiyama" ZoomLevel="-1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
   <Nodes>
     <Node Id="source-build-reference-packages" Category="Stage5" Label="source-build-reference-packages" />
-    <Node Id="application-insights" Category="Stage1" Label="application-insights" />
+    <Node Id="application-insights" Category="Stage2" Label="application-insights" />
     <Node Id="arcade" Category="Stage1" Label="arcade" />
     <Node Id="aspnet-extensions" Category="Stage1" Label="extensions" />
     <Node Id="aspnet-xdt" Category="Stage1" Label="aspnet-xdt" />
     <Node Id="aspnetcore" Category="Stage1" Label="aspnetcore" />
     <Node Id="aspnetcore-tooling" Category="Stage1" Label="aspnetcore-tooling" />
+    <Node Id="cecil" Category="Stage0" Label="cecil" />
     <Node Id="clicommandlineparser" Category="Stage1" Label="clicommandlineparser" />
     <Node Id="core-sdk" Category="Stage1" Label="installer" />
     <Node Id="fsharp" Category="Stage1" Label="fsharp" />
     <Node Id="linker" Category="Stage1" Label="linker" />
     <Node Id="msbuild" Category="Stage1" Label="msbuild" />
-    <Node Id="netcorecli-fsc" Category="Stage1" Label="netcorecli-fsc" />
+    <Node Id="netcorecli-fsc" Category="Stage2" Label="netcorecli-fsc" />
     <Node Id="newtonsoft-json" Category="Stage1" Label="newtonsoft-json" />
-    <Node Id="newtonsoft-json901" Category="Stage1" Label="newtonsoft-json901" />
+    <Node Id="newtonsoft-json901" Category="Stage2" Label="newtonsoft-json901" />
     <Node Id="nuget-client" Category="Stage1" Label="nuget-client" />
     <Node Id="roslyn" Category="Stage1" Label="roslyn" />
     <Node Id="runtime" Category="Stage1" Label="runtime" />
     <Node Id="runtime-portable" Category="Stage1" Label="runtime-portable" />
     <Node Id="sdk" Category="Stage1" Label="sdk" />
-    <Node Id="sourcelink" Category="Stage1" Label="sourcelink" />
+    <Node Id="sourcelink" Category="Stage2" Label="sourcelink" />
     <Node Id="templating" Category="Stage1" Label="templating" />
     <Node Id="vstest" Category="Stage1" Label="vstest" />
     <Node Id="websdk" Category="Stage1" Label="websdk" />
-    <Node Id="xliff-tasks" Category="Stage1" Label="xliff-tasks" />
+    <Node Id="xliff-tasks" Category="Stage2" Label="xliff-tasks" />
   </Nodes>
   <Links>
     <Link Source="application-insights" Target="sdk" />
@@ -49,6 +50,7 @@
     <Link Source="aspnetcore" Target="websdk" />
     <Link Source="aspnetcore-tooling" Target="aspnetcore" />
     <Link Source="aspnetcore-tooling" Target="sdk" />
+    <Link Source="cecil" Target="linker" />
     <Link Source="clicommandlineparser" Target="sdk" />
     <Link Source="clicommandlineparser" Target="templating" />
     <Link Source="fsharp" Target="sdk" />
