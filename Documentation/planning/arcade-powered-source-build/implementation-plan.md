@@ -7,15 +7,16 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 
 | Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ⏱ [#1715](https://github.com/dotnet/source-build/issues/1715) | ✔️ | ✔️ | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | | |
+| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | | | | |
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
-| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | | | | | |
+| Tools | cecil | [Dan Seefeldt](https://github.com/dseefeld) | [⏱ #1537](https://github.com/dotnet/source-build/issues/1537) | ✔️ | | | | |
+| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
 | 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
-| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
-| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
-| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
+| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
+| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
+| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
