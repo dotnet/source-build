@@ -13,10 +13,14 @@
   <Target Name="AcquireDarc"
           Condition="
             '$(OfflineBuild)' != 'true' and
-            '$(SkipAcquireDarc)' != 'true'">
+            '$(SkipAcquireDarc)' != 'true'"
+          Inputs="$(MSBuildThisFileDirectory)tools-local\acquire-darc\acquire-darc.proj"
+          Outputs="$(CompletedSemaphorePath)AcquireDarc.complete">
     <MSBuild
       Projects="$(MSBuildThisFileDirectory)tools-local\acquire-darc\acquire-darc.proj"
       Targets="AcquireDarcCore" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)AcquireDarc.complete" Overwrite="true" />
   </Target>
 
   <Target Name="GetCommonDarcCloneCommand" DependsOnTargets="AcquireDarc">

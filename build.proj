@@ -44,7 +44,7 @@
   <Target Name="InitBuild">
     <MSBuild Projects="tools-local/init-build.proj" />
   </Target>
-  
+
   <Target Name="Clone">
     <MSBuild Projects="tools-local/init-build.proj" Targets="FetchSources" />
   </Target>
@@ -55,18 +55,36 @@
 
   <Target Name="DownloadSourceBuildReferencePackages"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingReferencePackages)' != 'true'">
-    <DownloadFileSB 
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingReferencePackages)' != 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" >
+    <PropertyGroup Condition="'$(DownloadSourceBuildReferencePackagesTimeoutSeconds)' == ''">
+      <DownloadSourceBuildReferencePackagesTimeoutSeconds>600</DownloadSourceBuildReferencePackagesTimeoutSeconds>
+    </PropertyGroup>
+
+    <DownloadFileSB
           SourceUrl="$(ReferencePackagesTarballUrl)$(ReferencePackagesTarballName).$(PrivateSourceBuildReferencePackagesPackageVersion).tar.gz"
-          DestinationFolder="$(ExternalTarballsDir)" />
+          DestinationFolder="$(ExternalTarballsDir)"
+          TimeoutSeconds="$(DownloadSourceBuildReferencePackagesTimeoutSeconds)" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" Overwrite="true" />
   </Target>
 
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'">
-    <DownloadFileSB 
+          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" >
+    <PropertyGroup Condition="'$(DownloadSourceBuiltArtifactsTimeoutSeconds)' == ''">
+      <DownloadSourceBuiltArtifactsTimeoutSeconds>1500</DownloadSourceBuiltArtifactsTimeoutSeconds>
+    </PropertyGroup>
+
+    <DownloadFileSB
           SourceUrl="$(SourceBuiltArtifactsTarballUrl)$(SourceBuiltArtifactsTarballName).$(PrivateSourceBuiltArtifactsPackageVersion).tar.gz"
-          DestinationFolder="$(ExternalTarballsDir)" />
+          DestinationFolder="$(ExternalTarballsDir)"
+          TimeoutSeconds="$(DownloadSourceBuiltArtifactsTimeoutSeconds)" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" Overwrite="true" />
   </Target>
 
   <!-- After building, generate a prebuilt usage report. -->
@@ -88,7 +106,9 @@
 
   <Target Name="ReportPoisonUsage"
           AfterTargets="Build"
-          Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'">
+          Condition="'$(EnablePoison)' == 'true' and '$(OfflineBuild)' == 'true'"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)ReportPoisonUsage.complete" >
     <ItemGroup>
       <FinalCliTarball Include="$(SourceBuiltTarBallPath)**/*$(TarBallExtension)" />
     </ItemGroup>
@@ -96,15 +116,21 @@
                     HashCatalogFilePath="$(PoisonReportDataFile)"
                     MarkerFileName="$(PoisonMarkerFile)"
                     PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="GeneratePrebuiltBurndownData">
+  <Target Name="GeneratePrebuiltBurndownData"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" >
     <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
                             PrebuiltBaselineFile="$(OnlineBaselineDataFile)"
                             OutputFilePath="$(OnlinePrebuiltBurndownDataFile)" />
     <WriteUsageBurndownData RootDirectory="$(ProjectDir)"
                             PrebuiltBaselineFile="$(OfflineBaselineDataFile)"
                             OutputFilePath="$(OfflinePrebuiltBurndownDataFile)" />
+
+    <WriteLinesToFile File="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" Overwrite="true" />
   </Target>
 
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">

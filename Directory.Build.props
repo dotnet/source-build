@@ -211,9 +211,12 @@
     <RootRepoTests>known-good-tests</RootRepoTests>
   </PropertyGroup>
 
-  <ItemGroup>
-    <SourceBuiltPackage Include="$(SourceBuiltPackagesPath)/*.nupkg" />
-  </ItemGroup>
+  <!--
+    Semaphore path for incremental builds
+  -->
+  <PropertyGroup>
+    <CompletedSemaphorePath>$(BaseIntermediatePath)semaphores/</CompletedSemaphorePath>
+  </PropertyGroup>
 
   <!-- CLI internal version is statically set by us to a version that will never show up in the wild.
        This ensures we will never restore a public version instead of our source-built version.  We

@@ -21,7 +21,7 @@
     <BuildPackagesCommand>$(DotNetCliToolDir)dotnet $(BuildPackagesCommandArgs)</BuildPackagesCommand>
 
     <PackagesOutput>$(ProjectDirectory)artifacts/packages/illink_$(Configuration)/Shipping/</PackagesOutput>
-    
+
     <RepoApiImplemented>false</RepoApiImplemented>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
@@ -33,7 +33,9 @@
 
   <!-- Extract this package into packages dir, because repos assume it's restored as a tool. -->
   <Target Name="ExtractLinkerPackageToCache"
-          AfterTargets="Package">
+          AfterTargets="Package"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete">
     <PropertyGroup>
       <ILLinkTasksPackageFile>$(PackagesOutput)/$(ILLinkTasksPackageId).$(OutputPackageVersion).nupkg</ILLinkTasksPackageFile>
       <ILLinkTasksPackageIdToLower>$(ILLinkTasksPackageId.ToLowerInvariant())</ILLinkTasksPackageIdToLower>
@@ -44,6 +46,8 @@
     <ZipFileExtractToDirectory SourceArchive="$(ILLinkTasksPackageFile)"
                                DestinationDirectory="$(PackagesDir)$(ILLinkTasksPackageIdToLower)/$(OutputPackageVersion)/"
                                OverwriteDestination="true" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractLinkerPackageToCache.complete" Overwrite="true" />
   </Target>
 
   <!-- Replace file includes in nuspec as recommended in the linker repo's ./corebuild/README.md -->
