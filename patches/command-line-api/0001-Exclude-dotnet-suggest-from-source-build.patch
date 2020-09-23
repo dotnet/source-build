@@ -1,8 +1,10 @@
-From eeee907f22d384322975644dae2c1c1e884ea61d Mon Sep 17 00:00:00 2001
+From aafb58d2919b4ebe663cd61fd7fc622358da2ce5 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Fri, 18 Sep 2020 16:09:49 -0500
-Subject: [PATCH 1/2] Exclude dotnet-suggest from source-build.
+Subject: [PATCH 1/3] Exclude dotnet-suggest from source-build.
 
+This is not used by any downstream repos in source-build and adds a
+bunch of prebuilts, so we can leave this out for now.
 ---
  System.CommandLine.sln                        | 134 ------------------
  .../dotnet-suggest.csproj                     |   1 +
