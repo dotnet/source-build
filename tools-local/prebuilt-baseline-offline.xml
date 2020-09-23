@@ -6,6 +6,7 @@
     <Dir>src/xdt.c01a538851a8ab1a1fbeb2e6243f391fff7587b4/</Dir>
     <Dir>src/aspnetcore.a4938d07a5127ffad8466ddf703a6b5b21f4b0c9/</Dir>
     <Dir>src/cliCommandLineParser.0e89c2116ad28e404ba56c14d1c3f938caa25a01/</Dir>
+    <Dir>src/command-line-api.afd010ba8cb3cbd714c734465d1a5de1ee133e2d/</Dir>
     <Dir>src/common.6e37cdfe96ac8b06a923242120169fafacd720e6/</Dir>
     <Dir>src/fsharp.870364a5d5627ef446303899e6df300be51dcba6/</Dir>
     <Dir>src/installer.fc62663a352010552399b0aba6a31bf2cd2f1a70/</Dir>
@@ -32,6 +33,9 @@
     <Dir></Dir>
   </ProjectDirectories>
   <NeverRestoredTarballPrebuilts>
+    <PackageIdentity Id="BenchmarkDotNet" Version="0.11.5" />
+    <PackageIdentity Id="BenchmarkDotNet.Annotations" Version="0.11.5" />
+    <PackageIdentity Id="CommandLineParser" Version="2.4.3" />
     <PackageIdentity Id="MicroBuild.Core" Version="0.2.0" />
     <PackageIdentity Id="MicroBuild.Core.Sentinel" Version="1.0.0" />
     <PackageIdentity Id="Microsoft.Build.Framework" Version="15.3.409" />
@@ -39,11 +43,34 @@
     <PackageIdentity Id="Microsoft.Build.Tasks.Core" Version="15.3.409" />
     <PackageIdentity Id="Microsoft.Build.Utilities.Core" Version="15.3.409" />
     <PackageIdentity Id="Microsoft.Build.Utilities.Core" Version="15.4.8" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.Analyzers" Version="2.6.2-beta2" />
     <PackageIdentity Id="Microsoft.CodeAnalysis.Analyzers" Version="2.9.6" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.Common" Version="2.10.0" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.Common" Version="3.0.0" />
     <PackageIdentity Id="Microsoft.CodeAnalysis.Common" Version="3.4.0" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.CSharp" Version="2.10.0" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.CSharp" Version="3.0.0" />
     <PackageIdentity Id="Microsoft.CodeAnalysis.CSharp" Version="3.4.0" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.CSharp.Scripting" Version="3.0.0" />
+    <PackageIdentity Id="Microsoft.CodeAnalysis.Scripting.Common" Version="3.0.0" />
+    <PackageIdentity Id="Microsoft.CSharp" Version="4.4.1" />
+    <PackageIdentity Id="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Configuration.Binder" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
     <PackageIdentity Id="Microsoft.Extensions.DependencyModel" Version="3.1.0" />
+    <PackageIdentity Id="Microsoft.Extensions.FileProviders.Abstractions" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.FileProviders.Physical" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.FileSystemGlobbing" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Hosting" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Hosting.Abstractions" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Logging" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Options" Version="2.2.0" />
+    <PackageIdentity Id="Microsoft.Extensions.Primitives" Version="2.2.0" />
     <PackageIdentity Id="Microsoft.SymbolUploader.Build.Task" Version="1.1.141804" />
+    <PackageIdentity Id="Microsoft.Win32.Registry" Version="4.5.0" />
     <PackageIdentity Id="NETStandard.Library" Version="2.2.0-prerelease.19564.1" />
     <PackageIdentity Id="runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" />
     <PackageIdentity Id="runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" />
@@ -65,16 +92,28 @@
     <PackageIdentity Id="runtime.ubuntu.14.04-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" />
     <PackageIdentity Id="runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" />
     <PackageIdentity Id="runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl" Version="4.3.2" />
+    <PackageIdentity Id="System.CodeDom" Version="4.5.0" />
     <PackageIdentity Id="System.Collections.Immutable" Version="5.0.0-preview.8.20371.14" />
+    <PackageIdentity Id="System.ComponentModel.Annotations" Version="4.5.0" />
     <PackageIdentity Id="System.Composition" Version="1.0.31" />
     <PackageIdentity Id="System.Data.SqlClient" Version="4.8.0" />
     <PackageIdentity Id="System.Diagnostics.DiagnosticSource" Version="4.7.0" />
+    <PackageIdentity Id="System.Management" Version="4.5.0" />
+    <PackageIdentity Id="System.Reactive" Version="4.1.1" />
+    <PackageIdentity Id="System.Reactive.Core" Version="4.1.1" />
     <PackageIdentity Id="System.Reflection.Metadata" Version="5.0.0-preview.8.20371.14" />
+    <PackageIdentity Id="System.Runtime.CompilerServices.Unsafe" Version="4.5.1" />
     <PackageIdentity Id="System.Runtime.CompilerServices.Unsafe" Version="5.0.0-preview.4.20202.18" />
+    <PackageIdentity Id="System.Runtime.InteropServices.WindowsRuntime" Version="4.3.0" />
+    <PackageIdentity Id="System.Text.Encoding.CodePages" Version="4.5.0" />
     <PackageIdentity Id="System.Text.Encoding.CodePages" Version="4.7.0" />
     <PackageIdentity Id="System.Text.Encodings.Web" Version="5.0.0-preview.4.20202.18" />
     <PackageIdentity Id="System.Text.Json" Version="5.0.0-preview.4.20202.18" />
+    <PackageIdentity Id="System.Threading.Tasks.Extensions" Version="4.5.0" />
+    <PackageIdentity Id="System.Xml.XmlSerializer" Version="4.3.0" />
     <PackageIdentity Id="System.Xml.XPath.XmlDocument" Version="4.0.1" />
+    <PackageIdentity Id="System.Xml.XPath.XmlDocument" Version="4.3.0" />
+    <PackageIdentity Id="XliffTasks" Version="1.0.0-beta.20206.1" />
     <PackageIdentity Id="XliffTasks" Version="1.0.0-beta.20420.1" />
   </NeverRestoredTarballPrebuilts>
   <Usages>
@@ -97,7 +136,6 @@
     <Usage Id="Microsoft.CodeAnalysis.NetAnalyzers" Version="3.3.0-beta1.20355.1" IsDirectDependency="true" />
     <Usage Id="Microsoft.CodeAnalysis.NetAnalyzers" Version="3.3.0-beta2.20360.2" IsDirectDependency="true" />
     <Usage Id="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="3.0.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.CSharp" Version="4.4.1" />
     <Usage Id="Microsoft.Css.Parser" Version="1.0.0-20200708.1" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.Diagnostics.NETCore.Client" Version="0.2.0-preview.20378.10" IsDirectDependency="true" />
     <Usage Id="Microsoft.Diagnostics.Tracing.EventSource.Redist" Version="2.1.0" />
@@ -300,7 +338,6 @@
     <Usage Id="System.CodeDom" Version="4.6.0" />
     <Usage Id="System.Collections.Immutable" Version="1.6.0" />
     <Usage Id="System.Collections.Immutable" Version="1.7.0" />
-    <Usage Id="System.CommandLine" Version="2.0.0-beta1.20253.1" IsDirectDependency="true" />
     <Usage Id="System.ComponentModel.Annotations" Version="4.6.0" />
     <Usage Id="System.ComponentModel.Composition" Version="4.6.0" />
     <Usage Id="System.ComponentModel.Composition.Registration" Version="4.6.0" />
