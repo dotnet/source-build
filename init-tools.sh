@@ -184,6 +184,9 @@ echo "Making all .sh files executable under Tools."
 ls "$__scriptpath/Tools/"*.sh | xargs chmod +x
 ls "$__scriptpath/Tools/scripts/docker/"*.sh | xargs chmod +x
 
+# Get BuildTools crossgen dependencies from a better place. The script that's
+# automatically downloaded points at MyGet, which doesn't have recent packages.
+export BUILDTOOLS_CROSSGEN_FEED=https://api.nuget.org/v3/index.json
 "$__scriptpath/Tools/crossgen.sh" "$__scriptpath/Tools"
 
 
