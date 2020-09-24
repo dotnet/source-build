@@ -10,7 +10,6 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | | | | |
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
-| Tools | cecil | [Dan Seefeldt](https://github.com/dseefeld) | [⏱ #1537](https://github.com/dotnet/source-build/issues/1537) | ✔️ | | | | |
 | 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
 | 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
@@ -18,6 +17,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
 | 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| 1 | command-line-api | [?](https://github.com/) | ⏱ | | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
 | 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
