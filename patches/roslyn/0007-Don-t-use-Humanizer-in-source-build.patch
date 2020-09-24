@@ -1,0 +1,92 @@
+From f44e01f25b4d45a6a66a739f8ba7b89d7c52d63e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 24 Sep 2020 13:45:50 -0500
+Subject: [PATCH 7/7] Don't use Humanizer in source-build.
+
+---
+ .../Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj  | 4 ++--
+ .../Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj      | 4 ++--
+ .../Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj    | 4 ++--
+ .../Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj b/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
+index 2c7af08b354..18a263ff52a 100644
+--- a/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
++++ b/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
+@@ -10,7 +10,7 @@
+   </PropertyGroup>
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpFixedVersion)" />
+-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
++    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+   <ItemGroup Label="Project References">
+     <ProjectReference Include="..\..\Core\Analyzers\Microsoft.CodeAnalysis.CodeStyle.csproj" />
+@@ -28,4 +28,4 @@
+   </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\Analyzers\CSharpAnalyzers.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
+index 4ce5a872393..0ef4d309c9d 100644
+--- a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
++++ b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
+@@ -36,7 +36,7 @@
+   </Target>
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(MicrosoftCodeAnalysisCSharpWorkspacesFixedVersion)" />
+-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
++    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+   <ItemGroup Label="Project References">
+     <ProjectReference Include="..\..\Core\Analyzers\Microsoft.CodeAnalysis.CodeStyle.csproj" />
+@@ -55,4 +55,4 @@
+   </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\CodeFixes\CSharpCodeFixes.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj b/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
+index f41ffaa6a77..ad68fda9fea 100644
+--- a/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
++++ b/src/Features/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj
+@@ -64,9 +64,9 @@
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
++    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+   <Import Project="..\..\..\Compilers\CSharp\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\Analyzers\CSharpAnalyzers.projitems" Label="Shared" />
+   <Import Project="..\..\..\Analyzers\CSharp\CodeFixes\CSharpCodeFixes.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+index 097e06a5d12..eb316fc7d36 100644
+--- a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
++++ b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+@@ -20,7 +20,7 @@
+     <ProjectReference Include="..\..\Core\Portable\Microsoft.CodeAnalysis.Workspaces.csproj" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
++    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.CSharp.EditorFeatures" />
+@@ -60,4 +60,4 @@
+   </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+
