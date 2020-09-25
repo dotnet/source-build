@@ -35,6 +35,7 @@
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:PackageRid=$(OverrideTargetRid)</CoreClrBuildArguments>
     <!-- PGO is disabled for now because the profiler only runs on Windows: https://github.com/dotnet/source-build/issues/247 -->
     <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:NoPgoOptimize=true</CoreClrBuildArguments>
+    <CoreClrBuildArguments>$(CoreClrBuildArguments) /p:KeepNativeSymbols=true</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' != 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid.Substring(0, $(OverrideTargetRid.IndexOf("-"))))</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(CoreClrBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</CoreClrBuildArguments>
 
@@ -52,6 +53,7 @@
     <LibrariesBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(LibrariesBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllPackages=true</LibrariesBuildArguments>
+    <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:KeepNativeSymbols=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuiltSdkPackageOverride=""</LibrariesBuildArguments>    <!-- Clear PackageOverride for Libraries - it only applies to coreclr -->
     <LibrariesBuildArguments Condition="'$(OfflineBuild)' != 'true'">$(LibrariesBuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</LibrariesBuildArguments>
@@ -63,6 +65,7 @@
 
     <InstallerBuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</InstallerBuildArguments>
+    <InstallerBuildArguments>$(InstallerBuildArguments) /p:KeepNativeSymbols=true</InstallerBuildArguments>
     <InstallerBuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(InstallerBuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:BuildDebPackage=false</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:BuildAllPackages=true</InstallerBuildArguments>
