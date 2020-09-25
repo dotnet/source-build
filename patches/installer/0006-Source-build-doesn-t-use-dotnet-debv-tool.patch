@@ -1,0 +1,25 @@
+From a9a817d04b13c1b92c96a9178d92170c7d9f68e0 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 24 Sep 2020 13:39:47 -0500
+Subject: [PATCH 6/6] Source-build doesn't use dotnet-debv-tool.
+
+---
+ src/redist/targets/GenerateDebs.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/GenerateDebs.targets b/src/redist/targets/GenerateDebs.targets
+index 72305b0a7..f5a1baabd 100644
+--- a/src/redist/targets/GenerateDebs.targets
++++ b/src/redist/targets/GenerateDebs.targets
+@@ -3,7 +3,7 @@
+ 
+   <!-- dotnet deb-tool -->
+   <ItemGroup>
+-    <DotNetCliToolReference Include="dotnet-deb-tool" Version="$(DotnetDebToolVersion)" />
++    <DotNetCliToolReference Include="dotnet-deb-tool" Version="$(DotnetDebToolVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+   
+   <Target Name="SetupDebProps"
+-- 
+2.18.0
+
