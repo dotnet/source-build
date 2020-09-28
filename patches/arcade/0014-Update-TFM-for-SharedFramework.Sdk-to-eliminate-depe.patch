@@ -1,0 +1,45 @@
+From cb70abf59465a8071b1a91bed30eff49e414b1d0 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Mon, 28 Sep 2020 11:51:06 -0400
+Subject: [PATCH] Update TFM for SharedFramework.Sdk to eliminate dependency
+
+ Update TFM for SharedFramework.Sdk to eliminate dependence on
+ Microsoft.Bcl.AsyncInterfaces.1.*.  This package is not produced by the 
+ runtime in preview8, but looks like it was added back in RC1 with
+ https://github.com/dotnet/runtime/pull/40189, so this should be a 
+ temporary patch.
+
+---
+ .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj     | 2 +-
+ .../sdk/Sdk.props                                               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+index 6644307c..9b8606b8 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>net5.0</TargetFrameworks>
+     <LangVersion>preview</LangVersion>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+ 
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
+index 74b10617..c6e84e37 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
+@@ -8,7 +8,7 @@
+   -->
+ 
+   <PropertyGroup Condition="'$(DotNetBuildTasksSharedFrameworkTaskDir)' == ''">
+-    <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/netcoreapp2.1/</DotNetBuildTasksSharedFrameworkTaskDir>
++    <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/net5.0/</DotNetBuildTasksSharedFrameworkTaskDir>
+     <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)../tools/net472/</DotNetBuildTasksSharedFrameworkTaskDir>
+   </PropertyGroup>
+ 
+-- 
+2.18.2
+
