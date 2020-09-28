@@ -83,12 +83,6 @@
       - Note: The PR is internal for internal builds and on GitHub for non-internal builds.
       - [Non-Internal] Merge the PR when green and accepted.
       - [Internal] Don't merge the PR.
-      - [ ] Download the artifacts from the green PR validation build.
-        - Download the tarball and smoke-test prereqs from each job.
-          - We may require only a subset for certain releases: refer to the previous release email thread corresponding to 2.1 vs. 3.1 build.
-        - Rename tarball and smoke-test prereqs to human-friendly names. Refer to previous release email for naming pattern.
-          - Can use <https://github.com/dagood/terminal-setup/blob/master/bash-util/rename-inner-targz> to do this.
-1.  - [ ] Upload tarballs and smoke-test prereqs to blob storage.
 1.  - [ ] Coordinate with team and complete manual distributed smoke-testing. Suggested assignment below, but it's flexible.  Send email with direct links to artifacts from green PR.
       - [2.1]
         - [ ] RHEL7 and RHEL8 VMs - crummel
@@ -103,6 +97,13 @@
         - [ ] CentOS 7 - dagood
         - [ ] CentOS 8 - dseefeld
         - [ ] Debian - dagood
+1.  - [ ] Download the artifacts from the green PR validation build onto a machine with Bash.
+      - We may require only a subset of the artifacts for certain releases: refer to the previous release email thread corresponding to 2.1 vs. 3.1 build.
+      - Can use <https://github.com/dotnet/source-build/blob/release/3.1/scripts/fetch-azdo-artifact-tarball.sh> as a library.
+        - E.g. download the tarballs with `download_tarball`, and fix them up with `fix_azdo_tarball` if necessary.
+1.  - [ ] Rename tarball and smoke-test prereqs to human-friendly names. (Can use `rename_tarball_inner_dir`.)
+      - Refer to previous release's email threads for naming pattern.
+1.  - [ ] Upload tarballs and smoke-test prereqs to blob storage.
 1.  - [ ] [Internal] Send the tarball to partners. Include info about how certain we are that this will be the final Microsoft build.
       - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
 1.  - [ ] SYNC POINT: Wait for Microsoft build release.
