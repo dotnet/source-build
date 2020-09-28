@@ -83,3 +83,17 @@ jobs:
     scriptPrefix: ./
     scriptSuffix: .sh
     setupMac: true
+
+# Prepare artifacts in all situations but public PR validation.
+- ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
+  - template: ../jobs/prepare-artifacts.yml
+    parameters:
+      # Gather from all jobs that have offline in the matrix. This also defines dependencies.
+      gatherJobs:
+      - job: centos71
+      - job: centos8
+      - job: debian9
+        artifactName: Tarball debian9 Online
+      - job: fedora30
+      - job: fedora31
+      gatherPortableJob: centos71
