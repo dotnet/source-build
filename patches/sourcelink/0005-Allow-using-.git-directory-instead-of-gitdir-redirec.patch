@@ -21,7 +21,7 @@ index 196c57d..e1ab9c4 100644
 +            var dotGitPath = Path.Combine(submoduleWorkingDirectoryFullPath, GitDirName);
 +            if (IsGitDirectory(dotGitPath, out var directSubmoduleGitDirectory))
 +            {
-+                var submoduleGitDirResolver = new GitReferenceResolver(submoduleWorkingDirectoryFullPath, directSubmoduleGitDirectory);
++                var submoduleGitDirResolver = new GitReferenceResolver(directSubmoduleGitDirectory, submoduleWorkingDirectoryFullPath);
 +                return submoduleGitDirResolver.ResolveHeadReference();
 +            }
 +
