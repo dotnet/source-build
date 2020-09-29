@@ -21,6 +21,7 @@ jobs:
       Production: { generatePrebuiltBurndown: true, runUnitTests: false }
       Online: { type: Online }
       Offline: { type: Offline }
+      Offline Portable: { type: Offline Portable }
 
 # Temporarily disable bootstrap build until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1550
@@ -59,7 +60,6 @@ jobs:
       Production: {}
       Online: { type: Online }
       Offline: { type: Offline }
-      Offline Portable: { type: Offline Portable }
 
 - template: ../jobs/ci-linux.yml
   parameters:
@@ -96,4 +96,4 @@ jobs:
         artifactName: Tarball debian9 Online
       - job: fedora30
       - job: fedora31
-      gatherPortableJob: fedora30
+      gatherPortableJob: centos71
