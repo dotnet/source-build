@@ -18,16 +18,16 @@ diff --git a/src/libraries/Directory.Build.targets b/src/libraries/Directory.Bui
 index 16af4c2e85b..e54dc3e8699 100644
 --- a/src/libraries/Directory.Build.targets
 +++ b/src/libraries/Directory.Build.targets
-@@ -228,7 +228,8 @@
+@@ -240,7 +240,8 @@
    </Choose>
-   
+
    <PropertyGroup>
 -    <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetCoreAppCurrent)' and '$(ExcludeCurrentNetCoreAppFromPackage)' == 'true'">true</ExcludeFromPackage>
 +    <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetCoreAppCurrent)' and '$(ExcludeCurrentNetCoreAppFromPackage)' == 'true' and
 +'$(DotNetBuildFromSource)' != 'true'">true</ExcludeFromPackage>
-     <ExcludeFromPackage Condition="'$(TargetFramework)' == '$(NetFrameworkCurrent)' and '$(ExcludeCurrentFullFrameworkFromPackage)' == 'true'">true</ExcludeFromPackage>
    </PropertyGroup>
- 
--- 
+
+   <!-- Adds System.Runtime.Versioning*Platform* annotation attributes to < .NET 5 builds -->
+--
 2.17.1
 

@@ -15,13 +15,13 @@ index 5de108f5018..3441fe9399b 100644
      <BinPlaceForTargetVertical>false</BinPlaceForTargetVertical>
      <BinPlaceNative>true</BinPlaceNative>
      <BinPlaceRuntime>false</BinPlaceRuntime>
--    <TargetFrameworks>netcoreapp3.0-Windows_NT;netcoreapp3.0-Unix;$(netcoreappCurrent)-Windows_NT;$(NetCoreAppCurrent)-Unix;$(NetCoreAppCurrent)-Browser</TargetFrameworks>
+-    <TargetFrameworks>$(NetCoreAppCurrent)-Windows_NT;$(NetCoreAppCurrent)-Unix;$(NetCoreAppCurrent)-Browser</TargetFrameworks>
 +    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
 +    <TargetFrameworkVersion>3.0</TargetFrameworkVersion>
 +    <TargetFrameworkIdentifier>.NETCoreApp</TargetFrameworkIdentifier>
    </PropertyGroup>
- 
+
    <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
--- 
+--
 2.18.0
 
