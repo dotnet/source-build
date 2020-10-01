@@ -25,7 +25,7 @@ jobs:
     stagingDirectory: $(rootDirectory)/bst/staging
     tarballName: tarball_$(Build.BuildId)
     # Default type, can be overridden by matrix legs.
-    type: Production
+    type: ${{ coalesce(parameters.type, 'Production') }}
 
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
