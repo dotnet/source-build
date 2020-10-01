@@ -9,10 +9,11 @@ parameters:
   windowsPoolName: NetCorePublic-Pool
   windowsQueueName: buildpool.windows.10.amd64.vs2017.open
 
-jobs:
-- template: ../jobs/ci-linux.yml
+stages:
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: centos71
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: centos71
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
     reportPrebuiltLeaks: false
     matrix:
@@ -21,17 +22,19 @@ jobs:
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../jobs/ci-linux_bootstrap.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: centos71_BootStrap
-    dependsOn: centos71
+    jobTemplateName: ../jobs/ci-linux_bootstrap.yml
+    name: centos71_BootStrap
+    dependsOn: centos71_Production
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
     matrix:
       Offline: { type: Offline}
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: centos8
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: centos8
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212
     reportPrebuiltLeaks: false
     systemLibunwind: false
@@ -41,17 +44,19 @@ jobs:
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: debian9
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: debian9
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
     matrix:
       Production: {}
       Online: { type: Online }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: fedora30
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: fedora30
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223
     matrix:
       Production: {}
@@ -59,29 +64,31 @@ jobs:
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: ubuntu1804
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: ubuntu1804
     imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20200918145614-047508b
 
-- template: ../jobs/ci-local.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: osx
-    pool:
-      name: Hosted macOS
-    scriptPrefix: ./
-    scriptSuffix: .sh
-    setupMac: true
+    jobTemplateName: ../jobs/ci-local.yml
+    name: osx
+    jobParameters:
+      pool:
+        name: Hosted macOS
+      scriptPrefix: ./
+      scriptSuffix: .sh
+      setupMac: true
 
 # Prepare artifacts in all situations but public PR validation.
 - ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
-  - template: ../jobs/prepare-artifacts.yml
+  - template: ../stages/prepare-artifacts.yml
     parameters:
       # Gather from all jobs that have offline in the matrix. This also defines dependencies.
       gatherJobs:
-      - job: centos71
-      - job: centos8
-      - job: debian9
-        artifactName: Tarball debian9 Online
-      - job: fedora30
-      gatherPortableJob: centos71
+      - job: centos71_Offline
+      - job: centos8_Offline
+      - job: debian9_Online
+      - job: fedora30_Offline
+      gatherPortableJob: centos71_Offline_Portable

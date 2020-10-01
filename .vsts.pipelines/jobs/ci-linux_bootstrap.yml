@@ -1,7 +1,5 @@
 parameters:
   job: null
-  matrix:
-    Production: {}
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
@@ -10,8 +8,6 @@ parameters:
 jobs:
 - job: ${{ parameters.job }}
   dependsOn: ${{ parameters.dependsOn }}
-  strategy:
-    matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 270
   variables:

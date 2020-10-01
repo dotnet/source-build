@@ -1,7 +1,5 @@
 parameters:
   job: null
-  matrix:
-    Production: {}
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
@@ -11,8 +9,6 @@ parameters:
 
 jobs:
 - job: ${{ parameters.job }}
-  strategy:
-    matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 300
   variables:
@@ -39,7 +35,7 @@ jobs:
     tarballName: tarball_$(Build.BuildId)
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
-    type: Production
+    type: ${{ coalesce(parameters.type, 'Production') }}
 
     ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
       SetInternalPackageFeedPatDockerArg: ''
