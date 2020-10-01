@@ -3,11 +3,9 @@ parameters:
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
-  dependsOn: ''
 
 jobs:
 - job: ${{ parameters.job }}
-  dependsOn: ${{ parameters.dependsOn }}
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 270
   variables:

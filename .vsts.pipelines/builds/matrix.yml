@@ -27,11 +27,11 @@ stages:
   parameters:
     jobTemplateName: ../jobs/ci-linux_bootstrap.yml
     name: centos71_BootStrap
-    dependsOn: centos71_Production
+    dependsOn: centos71_Offline
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343
     matrix:
-      Offline: { type: Offline}
+      Offline: { type: Offline }
 
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
