@@ -97,13 +97,13 @@
         - [ ] CentOS 7 - dagood
         - [ ] CentOS 8 - dseefeld
         - [ ] Debian - dagood
-1.  - [ ] Download the artifacts from the green PR validation build onto a machine with Bash.
+1.  - [ ] [Internal] Download the artifacts from the green PR validation build onto a machine with Bash.
       - We may require only a subset of the artifacts for certain releases: refer to the previous release email thread corresponding to 2.1 vs. 3.1 build.
       - Can use <https://github.com/dotnet/source-build/blob/release/3.1/scripts/fetch-azdo-artifact-tarball.sh> as a library.
         - E.g. download the tarballs with `download_tarball`, and fix them up with `fix_azdo_tarball` if necessary.
-1.  - [ ] Rename tarball and smoke-test prereqs to human-friendly names. (Can use `rename_tarball_inner_dir`.)
+1.  - [ ] [Internal] Rename tarball and smoke-test prereqs to human-friendly names. (Can use `rename_tarball_inner_dir`.)
       - Refer to previous release's email threads for naming pattern.
-1.  - [ ] Upload tarballs and smoke-test prereqs to blob storage.
+1.  - [ ] [Internal] Upload tarballs and smoke-test prereqs to blob storage.
 1.  - [ ] [Internal] Send the tarball to partners. Include info about how certain we are that this will be the final Microsoft build.
       - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
 1.  - [ ] SYNC POINT: Wait for Microsoft build release.
