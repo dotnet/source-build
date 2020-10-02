@@ -1,7 +1,13 @@
 From 0eace82143b22501f9c94986580d01c4c9cefa16 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 2 Oct 2020 13:27:28 +0000
-Subject: [PATCH] Update PackageTargetFramework to NetCoreAppCurrent
+Subject: [PATCH] Don't set PackageTargetFramework when building from source
+
+Because we're only building for net5.0, netcoreapp2.0 doesn't exist. If it's
+updated to <PackageTargetFramework>$(NetCoreAppCurrent)</PackageTargetFramework>
+packaging complains that System.IO.Pipelines/ref/net5.0-Release/System.IO.Pipelines.dll
+and System.IO.Pipelines/ref/netstandard2.0-Release/System.IO.Pipelines.dll have the
+same TargetPath.
 
 ---
  src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj | 2 +-
@@ -16,10 +22,10 @@ index 7cb2868..fe032ed 100644
      <!-- We only plan to use this ref in netcoreapp. For all other netstandard compatible frameworks
      we should use the lib asset instead. -->
 -    <PackageTargetFramework>netcoreapp2.0</PackageTargetFramework>
-+    <PackageTargetFramework>$(NetCoreAppCurrent)</PackageTargetFramework>
++    <PackageTargetFramework Condition="'$(DotNetBuildFromSource)' != 'true'">netcoreapp2.0</PackageTargetFramework>
      <ExcludeCurrentNetCoreAppFromPackage>true</ExcludeCurrentNetCoreAppFromPackage>
    </PropertyGroup>
    <ItemGroup>
--- 
+--
 1.8.3.1
 
