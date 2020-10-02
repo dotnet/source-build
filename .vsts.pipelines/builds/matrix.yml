@@ -9,12 +9,14 @@ parameters:
   windowsPoolName: NetCorePublic-Pool
   windowsQueueName: buildpool.windows.10.amd64.vs2017.open
 
-jobs:
-- template: ../jobs/ci-linux.yml
+stages:
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: centos71
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-    reportPrebuiltLeaks: false
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: centos71
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+      reportPrebuiltLeaks: false
     matrix:
 # Temporarily disable unit tests until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1549
@@ -25,74 +27,85 @@ jobs:
 
 # Temporarily disable bootstrap build until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1550
-#- template: ../jobs/ci-linux_bootstrap.yml
-#  parameters:
-#    job: centos71_BootStrap
-#    dependsOn: centos71
-#    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-#    matrix:
-#      Offline: { type: Offline}
+# - template: ../stages/stage-jobs-matrix.yml
+#   parameters:
+#     jobTemplateName: ../jobs/ci-linux_bootstrap.yml
+#     name: centos71_BootStrap
+#     dependsOn: centos71_Offline
+#     jobParameters:
+#       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
+#     matrix:
+#       Offline: { type: Offline }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: centos8
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-source-build-20200402192642-9e679d4
-    reportPrebuiltLeaks: false
-    systemLibunwind: false
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: centos8
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-source-build-20200402192642-9e679d4
+      reportPrebuiltLeaks: false
+      systemLibunwind: false
     matrix:
       Production: {}
       Online: { type: Online }
       Offline: { type: Offline }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: debian9
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-source-build-20200331133109-ed32d26
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: debian9
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
     matrix:
       Production: {}
       Online: { type: Online }
 
-- template: ../jobs/ci-linux.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: fedora30
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-bfcd90a-20200324132732
-    matrix:
-      Production: {}
-      Online: { type: Online }
-      Offline: { type: Offline }
-
-- template: ../jobs/ci-linux.yml
-  parameters:
-    job: fedora31
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-31-02f7c7e-20200324132728
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: fedora30
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-bfcd90a-20200324132732
     matrix:
       Production: {}
       Online: { type: Online }
       Offline: { type: Offline }
 
-- template: ../jobs/ci-linux.yml
-  parameters:
-    job: ubuntu1804
-    imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: fedora31
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-31-02f7c7e-20200324132728
+    matrix:
+      Production: {}
+      Online: { type: Online }
+      Offline: { type: Offline }
 
-- template: ../jobs/ci-local.yml
+- template: ../stages/stage-jobs-matrix.yml
   parameters:
-    job: osx
-    pool:
-      name: Hosted macOS
-    scriptPrefix: ./
-    scriptSuffix: .sh
-    setupMac: true
+    jobTemplateName: ../jobs/ci-linux.yml
+    name: ubuntu1804
+    jobParameters:
+      imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
+
+- template: ../stages/stage-jobs-matrix.yml
+  parameters:
+    jobTemplateName: ../jobs/ci-local.yml
+    name: osx
+    jobParameters:
+      pool:
+        name: Hosted macOS
+      scriptPrefix: ./
+      scriptSuffix: .sh
+      setupMac: true
 
 # Prepare artifacts in all situations but public PR validation.
 - ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
-  - template: ../jobs/prepare-artifacts.yml
+  - template: ../stages/prepare-artifacts.yml
     parameters:
       # Gather from all jobs that have offline in the matrix. This also defines dependencies.
       gatherJobs:
-      - job: centos71
-      - job: centos8
-      - job: debian9
-        artifactName: Tarball debian9 Online
-      - job: fedora31
-      gatherPortableJob: centos71
+      - job: centos71_Offline
+      - job: centos8_Offline
+      - job: debian9_Online
+      - job: fedora31_Offline
+      gatherPortableJob: centos71_Offline_Portable
