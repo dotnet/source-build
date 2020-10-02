@@ -43,6 +43,7 @@ jobs:
         ${{ insert }}: ${{ parameters.downloadBuildConfig }}
         downloadType: single
         artifactName: ${{ coalesce(gather.artifactName, format('Tarball {0} Offline', gather.job)) }}
+        itemPattern: '**/Private.SourceBuilt.Artifacts.*.tar.gz'
         downloadPath: $(nonportableSourceBuiltStageDir)
         allowPartiallySucceededBuilds: true
 
@@ -52,6 +53,7 @@ jobs:
       ${{ insert }}: ${{ parameters.downloadBuildConfig }}
       downloadType: single
       artifactName: 'Tarball ${{ parameters.gatherPortableJob }} Offline Portable'
+      itemPattern: '**/Private.SourceBuilt.Artifacts.*.tar.gz'
       downloadPath: $(portableSourceBuiltStageDir)
       allowPartiallySucceededBuilds: true
 
