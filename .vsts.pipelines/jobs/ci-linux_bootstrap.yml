@@ -23,6 +23,7 @@ jobs:
     imageName: ${{ parameters.imageName }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/bst/staging
+    tarballArtifactName: Tarball centos71_Offline
     tarballName: tarball_$(Build.BuildId)
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
@@ -35,8 +36,8 @@ jobs:
     displayName: Download CentOS artifacts
     inputs:
       buildType: 'current'
-      itemPattern: 'Tarball centos71_Offline/$(tarballName)*.tar.gz'
-      artifactName: 'Tarball centos71_Offline'
+      itemPattern: '$(tarballArtifactName)/$(tarballName)*.tar.gz'
+      artifactName: '$(tarballArtifactName)'
       downloadPath: '$(System.ArtifactsDirectory)/bootstrap_root'
 
   - script: |
