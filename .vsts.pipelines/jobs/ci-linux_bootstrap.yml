@@ -1,22 +1,15 @@
 parameters:
   job: null
-  matrix:
-    Production: {}
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
-  dependsOn: ''
 
 jobs:
 - job: ${{ parameters.job }}
-  dependsOn: ${{ parameters.dependsOn }}
-  strategy:
-    matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 270
   variables:
-    # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    artifactName: ${{ parameters.job }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc
@@ -24,15 +17,16 @@ jobs:
     docker.logs.map: -v $(dropDirectory)/logs:/logs:z
     docker.root.map: -v $(rootDirectory):/root:z
     docker.run: docker run --rm
-    docker.bst.map: -v $(System.ArtifactsDirectory)/boostrap_root:/bst:z
+    docker.bst.map: -v $(System.ArtifactsDirectory)/bootstrap_root:/bst:z
     docker.bst.work: -w /bst
     dropDirectory: $(stagingDirectory)/drop
     imageName: ${{ parameters.imageName }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/bst/staging
+    tarballArtifactName: Tarball centos71_Offline
     tarballName: tarball_$(Build.BuildId)
     # Default type, can be overridden by matrix legs.
-    type: Production
+    type: ${{ coalesce(parameters.type, 'Production') }}
 
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
@@ -42,9 +36,9 @@ jobs:
     displayName: Download CentOS artifacts
     inputs:
       buildType: 'current'
-      itemPattern: 'Tarball centos71 Offline/$(tarballName)*.tar.gz'
-      artifactName: 'Tarball centos71 Offline'
-      downloadPath: '$(System.ArtifactsDirectory)/boostrap_root'
+      itemPattern: '$(tarballArtifactName)/$(tarballName)*.tar.gz'
+      artifactName: '$(tarballArtifactName)'
+      downloadPath: '$(System.ArtifactsDirectory)/bootstrap_root'
 
   - script: |
       set -ex
