@@ -45,6 +45,7 @@ stages:
           ${{ insert }}: ${{ parameters.downloadBuildConfig }}
           downloadType: single
           artifactName: ${{ coalesce(gather.artifactName, format('Tarball {0}', gather.job)) }}
+          itemPattern: '**/Private.SourceBuilt.Artifacts.*.tar.gz'
           downloadPath: $(nonportableSourceBuiltStageDir)
           allowPartiallySucceededBuilds: true
 
@@ -54,6 +55,7 @@ stages:
         ${{ insert }}: ${{ parameters.downloadBuildConfig }}
         downloadType: single
         artifactName: 'Tarball ${{ parameters.gatherPortableJob }}'
+        itemPattern: '**/Private.SourceBuilt.Artifacts.*.tar.gz'
         downloadPath: $(portableSourceBuiltStageDir)
         allowPartiallySucceededBuilds: true
 
