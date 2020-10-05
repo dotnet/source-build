@@ -1,0 +1,42 @@
+From e806e54c80c86075cefc14e59963b98613cb5450 Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Mon, 5 Oct 2020 12:12:27 -0400
+Subject: [PATCH] Do not define X509_new as local_X509_new
+
+This was only being done for OpenSSL 1.0. X509_new is actually available
+to use in OpenSSL 1.0 and doesn't need to be re-defined:
+https://www.openssl.org/docs/man1.0.2/man3/X509_new.html. That document
+even says: "X509_new() and X509_free() are available in all versions of
+SSLeay and OpenSSL".
+
+The current libraries code doesn't contain an implementation of
+local_X509_new. If we define X509_new as local_X509_new, it breaks the
+build when it's being compiled non-portable against OpenSSL 1.0. See
+https://github.com/dotnet/runtime/issues/42991 for complete details.
+
+I was able to reproduce this on Fedora 29 when building using OpenSSL
+1.0 headers. The error doesn't happen when building using OpenSSL 1.1,
+since X509_new is never re-defined.
+
+Fixes: #42991
+
+Upstream PR: https://github.com/dotnet/runtime/pull/43039
+---
+ .../Unix/System.Security.Cryptography.Native/opensslshim.h       | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/src/libraries/Native/Unix/System.Security.Cryptography.Native/opensslshim.h b/src/libraries/Native/Unix/System.Security.Cryptography.Native/opensslshim.h
+index 0e0543b1409..0bfdde872bf 100644
+--- a/src/libraries/Native/Unix/System.Security.Cryptography.Native/opensslshim.h
++++ b/src/libraries/Native/Unix/System.Security.Cryptography.Native/opensslshim.h
+@@ -1092,7 +1092,6 @@ FOR_ALL_OPENSSL_FUNCTIONS
+ #define SSL_is_init_finished local_SSL_is_init_finished
+ #define X509_CRL_get0_nextUpdate local_X509_CRL_get0_nextUpdate
+ #define X509_NAME_get0_der local_X509_NAME_get0_der
+-#define X509_new local_X509_new
+ #define X509_PUBKEY_get0_param local_X509_PUBKEY_get0_param
+ #define X509_STORE_CTX_get0_cert local_X509_STORE_CTX_get0_cert
+ #define X509_STORE_CTX_get0_chain local_X509_STORE_CTX_get0_chain
+-- 
+2.25.2
+
