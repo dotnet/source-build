@@ -71,6 +71,8 @@ stages:
       Online: { type: Online }
       Offline: { type: Offline }
 
+- template: ../stages/stage-jobs-matrix.yml
+  parameters:
     jobTemplateName: ../jobs/ci-linux.yml
     name: fedora31
     jobParameters:
