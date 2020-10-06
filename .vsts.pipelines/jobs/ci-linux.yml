@@ -1,7 +1,5 @@
 parameters:
   job: null
-  matrix:
-    Production: {}
   pool:
     name: Hosted Ubuntu 1604
   imageName: null
@@ -11,13 +9,10 @@ parameters:
 
 jobs:
 - job: ${{ parameters.job }}
-  strategy:
-    matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 300
   variables:
-    # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    artifactName: ${{ parameters.job }}
     # Use ":z" to set selinux flag for sharing in build-owned root dir. https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label
     docker.agentSrc.map: -v $(Build.SourcesDirectory):/agentSrc:z
     docker.agentSrc.work: -w /agentSrc
@@ -39,7 +34,7 @@ jobs:
     tarballName: tarball_$(Build.BuildId)
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
-    type: Production
+    type: ${{ coalesce(parameters.type, 'Production') }}
 
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
