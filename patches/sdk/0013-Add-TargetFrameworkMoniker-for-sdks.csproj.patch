@@ -1,0 +1,24 @@
+From ef1f4c25840a851a723288f8f008f99e8934c6ef Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 8 Oct 2020 22:00:42 +0000
+Subject: [PATCH] Add TargetFrameworkMoniker for sdks.csproj
+
+---
+ src/Layout/redist/targets/sdks/sdks.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Layout/redist/targets/sdks/sdks.csproj b/src/Layout/redist/targets/sdks/sdks.csproj
+index 6b16447..1daeba7 100644
+--- a/src/Layout/redist/targets/sdks/sdks.csproj
++++ b/src/Layout/redist/targets/sdks/sdks.csproj
+@@ -4,6 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <TargetFramework>net5.0</TargetFramework>
++    <TargetFrameworkMoniker>.NETCoreApp,Version=v5.0</TargetFrameworkMoniker>
+     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+   </PropertyGroup>
+ 
+-- 
+1.8.3.1
+
