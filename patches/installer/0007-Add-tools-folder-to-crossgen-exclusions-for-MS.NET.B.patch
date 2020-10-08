@@ -1,0 +1,52 @@
+From 2cdd560b4029623d27a7133b2651a76c2b209794 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 8 Oct 2020 22:19:34 +0000
+Subject: [PATCH] Add tools folder to crossgen exclusions for
+ MS.NET.Build.Extensions
+
+---
+ src/redist/targets/Crossgen.targets | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/redist/targets/Crossgen.targets b/src/redist/targets/Crossgen.targets
+index cc81a3f..a985878 100644
+--- a/src/redist/targets/Crossgen.targets
++++ b/src/redist/targets/Crossgen.targets
+@@ -2,7 +2,7 @@
+   <Target Name="CrossgenLayout"
+           Condition="'$(DISABLE_CROSSGEN)' == ''"
+           DependsOnTargets="SetSdkBrandingInfo">
+-    
++
+     <PropertyGroup>
+       <RuntimeNETCoreAppPackageName>microsoft.netcore.app.runtime.$(SharedFrameworkRid)</RuntimeNETCoreAppPackageName>
+       <_crossDir Condition="'$(Architecture)' == 'arm64' and '$(BuildArchitecture)' != 'arm64'">/x64_arm64</_crossDir>
+@@ -35,7 +35,7 @@
+       BuildInParallel="False"
+       Projects="@(CrossGenDownloadPackageProject)">
+     </MSBuild>
+-    
++
+     <ItemGroup>
+       <RoslynFiles Include="$(SdkOutputDirectory)Roslyn\bincore\**\*" />
+ 
+@@ -61,6 +61,7 @@
+ 
+       <!-- Don't try to CrossGen .NET Framework support assemblies for .NET Standard -->
+       <RemainingFiles Remove="$(SdkOutputDirectory)Microsoft\Microsoft.NET.Build.Extensions\net*\**\*" />
++      <RemainingFiles Remove="$(SdkOutputDirectory)Microsoft\Microsoft.NET.Build.Extensions\tools\net*\**\*" />
+ 
+       <!-- Don't CrossGen bundled DotnetTools -->
+       <RemainingFiles Remove="$(SdkOutputDirectory)DotnetTools\**\*" />
+@@ -98,7 +99,7 @@
+       <!-- FSharp.Build.dll causes the FSharp folder to be included. Remove it, as we don't want other FSharp dlls being included in the crossgen. -->
+       <RemainingFolders Remove="$(PublishDir)FSharp\**\*" />
+ 
+-      <!-- RemainingFolders should be ordered so that dependencies are first looked up in the leaf folders. 
++      <!-- RemainingFolders should be ordered so that dependencies are first looked up in the leaf folders.
+         Currently it is not ordered and crossgen is picking the wrong dlls when resolving dependencies: https://github.com/dotnet/core-sdk/pull/6774
+         As a partial solution, we remove the root folder from the list and put it back to the end.
+         Remove the following 2 lines when resolving this issue: https://github.com/dotnet/core-sdk/issues/6877 -->
+-- 
+1.8.3.1
+
