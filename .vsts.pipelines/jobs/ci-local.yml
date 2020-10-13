@@ -31,6 +31,9 @@ jobs:
     artifactName: ${{ format('{0} $(type)', parameters.job) }}
     failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    tarballDownloadArgs: >-
+      /p:SkipDownloadingReferencePackages=true
+      /p:SkipDownloadingPreviouslySourceBuiltPackages=true
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
@@ -76,7 +79,8 @@ jobs:
       set -x
       $(SetInternalPackageFeedPatBashCommand)
       set -e
-      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }} \
+        $(tarballDownloadArgs)
     displayName: Build source-build
     timeoutInMinutes: 150
 

@@ -32,6 +32,9 @@ jobs:
     stagingDirectory: $(rootDirectory)/sb/staging
     systemLibunwind: ${{ parameters.systemLibunwind }}
     tarballName: tarball_$(Build.BuildId)
+    tarballDownloadArgs: >-
+      /p:DownloadSourceBuildReferencePackagesTimeoutSeconds=600
+      /p:DownloadSourceBuiltArtifactsTimeoutSeconds=1500
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
@@ -76,6 +79,7 @@ jobs:
         /p:ArchiveDownloadedPackages=$(sb.tarball) \
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
+        $(tarballDownloadArgs) \
         /p:AzDoPat=$(System.AccessToken)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
