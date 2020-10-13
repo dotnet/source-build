@@ -19,13 +19,14 @@ jobs:
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 240
   variables:
-    args.build: >
+    args.build: >-
       /p:Configuration=$(sb.configuration)
-      /p:BuildPortableRuntime=$(sb.portable) \
-      /p:BuildPortableSdk=$(sb.portable) \
+      /p:BuildPortableRuntime=$(sb.portable)
+      /p:BuildPortableSdk=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       /p:AzDoPat=$(System.AccessToken)
+      $(tarballDownloadArgs)
     args.smokeTest: >
       --run-smoke-test
       /p:Configuration=$(sb.configuration)
@@ -70,8 +71,7 @@ jobs:
 
   # Build source-build.
   - script: |
-      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }} \
-        $(tarballDownloadArgs)
+      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
     timeoutInMinutes: 150
 
