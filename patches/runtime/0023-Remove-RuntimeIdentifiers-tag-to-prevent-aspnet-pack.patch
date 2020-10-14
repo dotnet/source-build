@@ -1,0 +1,38 @@
+From b5aee18250d117dfd071ecdfb7915e10b9a4e876 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 13 Oct 2020 16:56:31 +0000
+Subject: [PATCH] Remove <RuntimeIdentifiers> tag to prevent aspnet pack from
+ loading
+
+---
+ src/coreclr/src/tools/aot/crossgen2/crossgen2.csproj | 1 -
+ src/coreclr/src/tools/dotnet-pgo/dotnet-pgo.csproj   | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/src/coreclr/src/tools/aot/crossgen2/crossgen2.csproj b/src/coreclr/src/tools/aot/crossgen2/crossgen2.csproj
+index 2de5f56..2e66b24 100644
+--- a/src/coreclr/src/tools/aot/crossgen2/crossgen2.csproj
++++ b/src/coreclr/src/tools/aot/crossgen2/crossgen2.csproj
+@@ -12,7 +12,6 @@
+     <OutputPath>$(BinDir)/crossgen2</OutputPath>
+     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+-    <RuntimeIdentifiers>linux-x64;linux-musl-x64;win-x64</RuntimeIdentifiers>
+     <Configurations>Debug;Release;Checked</Configurations>
+   </PropertyGroup>
+ 
+diff --git a/src/coreclr/src/tools/dotnet-pgo/dotnet-pgo.csproj b/src/coreclr/src/tools/dotnet-pgo/dotnet-pgo.csproj
+index c5c6745..0f7fd79 100644
+--- a/src/coreclr/src/tools/dotnet-pgo/dotnet-pgo.csproj
++++ b/src/coreclr/src/tools/dotnet-pgo/dotnet-pgo.csproj
+@@ -9,7 +9,6 @@
+     <OutputPath>$(BinDir)/dotnet-pgo</OutputPath>
+     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+-    <RuntimeIdentifiers>linux-x64;linux-musl-x64;win-x64</RuntimeIdentifiers>
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-- 
+1.8.3.1
+
