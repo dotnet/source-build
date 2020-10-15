@@ -59,7 +59,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)DownloadSourceBuildReferencePackages.complete" >
     <PropertyGroup Condition="'$(DownloadSourceBuildReferencePackagesTimeoutSeconds)' == ''">
-      <DownloadSourceBuildReferencePackagesTimeoutSeconds>600</DownloadSourceBuildReferencePackagesTimeoutSeconds>
+      <DownloadSourceBuildReferencePackagesTimeoutSeconds>N/A</DownloadSourceBuildReferencePackagesTimeoutSeconds>
     </PropertyGroup>
 
     <DownloadFileSB
@@ -76,7 +76,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" >
     <PropertyGroup Condition="'$(DownloadSourceBuiltArtifactsTimeoutSeconds)' == ''">
-      <DownloadSourceBuiltArtifactsTimeoutSeconds>1500</DownloadSourceBuiltArtifactsTimeoutSeconds>
+      <DownloadSourceBuiltArtifactsTimeoutSeconds>N/A</DownloadSourceBuiltArtifactsTimeoutSeconds>
     </PropertyGroup>
 
     <DownloadFileSB

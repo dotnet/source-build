@@ -19,13 +19,14 @@ jobs:
   pool: ${{ parameters.pool }}
   timeoutInMinutes: 240
   variables:
-    args.build: >
+    args.build: >-
       /p:Configuration=$(sb.configuration)
-      /p:BuildPortableRuntime=$(sb.portable) \
-      /p:BuildPortableSdk=$(sb.portable) \
+      /p:BuildPortableRuntime=$(sb.portable)
+      /p:BuildPortableSdk=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       /p:AzDoPat=$(System.AccessToken)
+      $(tarballDownloadArgs)
     args.smokeTest: >
       --run-smoke-test
       /p:Configuration=$(sb.configuration)
@@ -34,6 +35,9 @@ jobs:
     artifactName: ${{ format('{0} $(type)', parameters.job) }}
     failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
     logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    tarballDownloadArgs: >-
+      /p:SkipDownloadingReferencePackages=true
+      /p:SkipDownloadingPreviouslySourceBuiltPackages=true
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: Production
@@ -66,7 +70,8 @@ jobs:
   - template: ../steps/check-space-powershell.yml
 
   # Build source-build.
-  - script: ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+  - script: |
+      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
     timeoutInMinutes: 150
 
