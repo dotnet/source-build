@@ -24,6 +24,7 @@ stages:
   dependsOn:
   - ${{ each gather in parameters.gatherJobs }}:
     - ${{ gather.job }}
+  - ${{ parameters.gatherPortableJob }}
   jobs:
   - job: PrepareArtifacts
     pool:
