@@ -16,11 +16,14 @@
     <BuildCommandArgs>$(BuildCommandArgs) --arch $(Platform)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNodeJs=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
+
+    <!-- Update to 1.0.0 version of reference assemblies which are built in SBRP instead of the preview.2 version
+         included by Arcade -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNetFrameworkReferenceAssembliesVersion=1.0.0</BuildCommandArgs>
     <!-- aspnetcore requires some types in the RC1 version of this package.  This is temporary until RC1 versions
-        are included in previously source-built packages -->
+         are included in previously source-built packages -->
     <BuildCommandArgs>$(BuildCommandArgs) /p:MicrosoftNETCoreAppRefPackageVersion=5.0.0-rc.1.20451.14</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
 
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
