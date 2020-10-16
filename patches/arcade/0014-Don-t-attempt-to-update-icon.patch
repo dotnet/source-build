@@ -1,0 +1,27 @@
+From f0dbe50cab6e83427c49d461d7b7601799f13337 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 16 Oct 2020 16:57:23 +0000
+Subject: [PATCH] Don't attempt to update icon
+
+---
+ src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
+index 00f126a..2108576 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/GenerateNuSpec.cs
+@@ -202,10 +202,6 @@ private Manifest CreateManifest()
+             {
+                 manifestMetadata.SetIconUrl(IconUrl);
+             }
+-            if (!string.IsNullOrEmpty(Icon))
+-            {
+-                manifestMetadata.Icon = Icon;
+-            }
+             manifestMetadata.UpdateMember(x => x.Id, Id);
+             manifestMetadata.UpdateMember(x => x.Language, Language);
+ 
+-- 
+1.8.3.1
+
