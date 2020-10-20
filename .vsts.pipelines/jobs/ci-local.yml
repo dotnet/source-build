@@ -60,6 +60,11 @@ jobs:
   - template: ../steps/check-space-powershell.yml
 
   - bash: |
+      set -x
+      cd $(brew --prefix)
+      git remote -v
+      git config -l
+  - bash: |
       tar -zcf homebrew-before.tar.gz /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask
       find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
     condition: always()
