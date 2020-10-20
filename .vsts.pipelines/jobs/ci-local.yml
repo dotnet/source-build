@@ -61,11 +61,14 @@ jobs:
 
   - bash: |
       set -x
-      cd $(brew --prefix)
+      brew --version
+      brew info
+      brew doctor
+      brew info
+      brew --prefix
+      cd $(brew --repository)
       git remote -v
       git config -l
-      which brew
-      cat $(which brew)
   - bash: |
       tar -zcf homebrew-before.tar.gz /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask
       find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
