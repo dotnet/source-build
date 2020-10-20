@@ -59,12 +59,12 @@ jobs:
 
   - template: ../steps/check-space-powershell.yml
 
-  - publish: '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask'
-    artifact: homebrew-before
-    condition: always()
-
   - bash: |
+      tar -zcf homebrew-before.tar.gz /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask
       find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
+    condition: always()
+  - publish: homebrew-before.tar.gz
+    artifact: homebrew-before.tar.gz
     condition: always()
 
   - ${{ if eq(parameters.setupMac, true) }}:
@@ -73,12 +73,12 @@ jobs:
     - template: ../steps/setup-windows-bash.yml
     - template: ../steps/setup-windows-python.yml
 
-  - publish: '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask'
-    artifact: homebrew-after
-    condition: always()
-
   - bash: |
+      tar -zcf homebrew-after.tar.gz /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask
       find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
+    condition: always()
+  - publish: homebrew-after.tar.gz
+    artifact: homebrew-after.tar.gz
     condition: always()
 
   - bash: |
