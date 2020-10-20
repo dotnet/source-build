@@ -73,6 +73,8 @@ jobs:
       ( cd try-getting-brew-core; git pull )
 
       exit 1
+    displayName: Try cloning manually
+    condition: always()
 
   - template: ../steps/calculate-config-flags.yml
 
