@@ -61,12 +61,25 @@ jobs:
 
   - publish: '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask'
     artifact: homebrew-before
+    condition: always()
+
+  - bash: |
+      find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
+    condition: always()
 
   - ${{ if eq(parameters.setupMac, true) }}:
     - template: ../steps/setup-macos-native.yml
   - ${{ if eq(parameters.setupWindows, true) }}:
     - template: ../steps/setup-windows-bash.yml
     - template: ../steps/setup-windows-python.yml
+
+  - publish: '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask'
+    artifact: homebrew-after
+    condition: always()
+
+  - bash: |
+      find /usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask -exec ls -lad '{}' \;
+    condition: always()
 
   - bash: |
       set -x
