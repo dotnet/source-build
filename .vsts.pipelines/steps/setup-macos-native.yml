@@ -8,8 +8,13 @@ steps:
       )
     }
     set -ex
+    # Work around environment bug (?): https://github.com/actions/virtual-environments/issues/1811
+    brew uninstall openssl@1.0.2t
+    brew uninstall python@2.7.17
+    brew untap local/openssl
+    brew untap local/python2
     # Work around brew bug: https://github.com/dotnet/coreclr/pull/21913
-    brew update --debug --verbose -f
+    brew update --debug --verbose
     # Install macOS native dependencies not present in hosted pool.
     # Package lists are from:
     # https://github.com/sbomer/coreclr/blob/dc2fa1b96415f87d694e5b6e751e38ca6fbd09a1/unix-pipeline.yml#L36-L39
