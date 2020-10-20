@@ -1,0 +1,30 @@
+From 7f853e5085f182c4cc923a587c7ef91404cfa95f Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 20 Oct 2020 16:55:11 -0500
+Subject: [PATCH] Exclude R2RDump from source-build
+
+This removes the Microsoft.NETCore.CoreDisTools/1.0.1-prerelease-00005
+prebuilt dependency.
+---
+ src/coreclr/src/tools/r2rdump/R2RDump.csproj | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/coreclr/src/tools/r2rdump/R2RDump.csproj b/src/coreclr/src/tools/r2rdump/R2RDump.csproj
+index 133c5cc72c3..1f889579d18 100644
+--- a/src/coreclr/src/tools/r2rdump/R2RDump.csproj
++++ b/src/coreclr/src/tools/r2rdump/R2RDump.csproj
+@@ -13,6 +13,11 @@
+     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+     <OutputPath>$(BinDir)/R2RDump</OutputPath>
+     <Platforms>AnyCPU;x64</Platforms>
++    <!--
++      R2RDump is not used in the .NET SDK or Runtime, so it is not required by source-build.
++      See https://github.com/dotnet/source-build/issues/1816
++    -->
++    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <Import Project="$(RepositoryEngineeringDir)DiaSymReaderNative.targets" />
+-- 
+2.25.2
+
