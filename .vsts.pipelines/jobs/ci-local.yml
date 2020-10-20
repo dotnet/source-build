@@ -59,6 +59,9 @@ jobs:
 
   - template: ../steps/check-space-powershell.yml
 
+  - publish: '/usr/local/Homebrew/Library/Taps/homebrew/homebrew-cask'
+    artifact: homebrew-before
+
   - ${{ if eq(parameters.setupMac, true) }}:
     - template: ../steps/setup-macos-native.yml
   - ${{ if eq(parameters.setupWindows, true) }}:
