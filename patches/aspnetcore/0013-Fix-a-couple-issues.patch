@@ -6,10 +6,9 @@ Subject: [PATCH 13/13] Fix a couple issues.
 ---
  AspNetCore.sln                                |  2 --
  src/Components/Components.slnf                |  1 -
- src/Components/ComponentsNoDeps.slnf          |  3 +-
- .../Driver/Wasm.Performance.Driver.csproj     | 32 -------------------
- .../Microsoft.JSInterop/src/JSRuntime.cs      |  2 +-
- 5 files changed, 2 insertions(+), 38 deletions(-)
+ src/Components/ComponentsNoDeps.slnf          |  1 -
+ .../Driver/Wasm.Performance.Driver.csproj     | 37 -------------------
+ 4 files changed, 41 deletions(-)
  delete mode 100644 src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 
 diff --git a/AspNetCore.sln b/AspNetCore.sln
@@ -36,32 +35,25 @@ index 637ec1a384..9bb64a3495 100644
 -      "src\\Components\\benchmarkapps\\Wasm.Performance\\Driver\\Wasm.Performance.Driver.csproj",
        "src\\Components\\benchmarkapps\\Wasm.Performance\\TestApp\\Wasm.Performance.TestApp.csproj",
        "src\\Components\\Web.Extensions\\src\\Microsoft.AspNetCore.Components.Web.Extensions.csproj",
-       "src\\Components\\Web.Extensions\\test\\Microsoft.AspNetCore.Components.Web.Extensions.Tests.csproj",
+       "src\\Components\\WebAssembly\\Server\\test\\Microsoft.AspNetCore.Components.WebAssembly.Server.Tests.csproj",
 diff --git a/src/Components/ComponentsNoDeps.slnf b/src/Components/ComponentsNoDeps.slnf
 index dd08970d02..34e5619a94 100644
 --- a/src/Components/ComponentsNoDeps.slnf
 +++ b/src/Components/ComponentsNoDeps.slnf
-@@ -37,7 +37,6 @@
-       "src\\Components\\WebAssembly\\Sdk\\integrationtests\\Microsoft.NET.Sdk.BlazorWebAssembly.IntegrationTests.csproj",
+@@ -39,7 +39,6 @@
        "src\\Components\\Web\\src\\Microsoft.AspNetCore.Components.Web.csproj",
        "src\\Components\\Web\\test\\Microsoft.AspNetCore.Components.Web.Tests.csproj",
+       "src\\Components\\benchmarkapps\\Wasm.Performance\\ConsoleHost\\Wasm.Performance.ConsoleHost.csproj",
 -      "src\\Components\\benchmarkapps\\Wasm.Performance\\Driver\\Wasm.Performance.Driver.csproj",
        "src\\Components\\benchmarkapps\\Wasm.Performance\\TestApp\\Wasm.Performance.TestApp.csproj",
        "src\\Components\\test\\E2ETest\\Microsoft.AspNetCore.Components.E2ETests.csproj",
        "src\\Components\\test\\testassets\\BasicTestApp\\BasicTestApp.csproj",
-@@ -46,4 +45,4 @@
-       "src\\Components\\test\\testassets\\TestServer\\Components.TestServer.csproj"
-     ]
-   }
--}
-\ No newline at end of file
-+}
 diff --git a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj b/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 deleted file mode 100644
 index 66aea279ee..0000000000
 --- a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 +++ /dev/null
-@@ -1,32 +0,0 @@
+@@ -1,37 +0,0 @@
 -<Project Sdk="Microsoft.NET.Sdk.Web">
 -
 -  <PropertyGroup>
@@ -76,11 +68,16 @@ index 66aea279ee..0000000000
 -  </PropertyGroup>
 -
 -  <ItemGroup>
+-    <Reference Include="Microsoft.AspNetCore" />
 -    <Reference Include="Microsoft.AspNetCore.Cors" />
+-    <Reference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
 -    <Reference Include="Selenium.Support" />
 -    <Reference Include="Selenium.WebDriver" />
--    <ProjectReference Include="..\..\..\WebAssembly\DevServer\src\Microsoft.AspNetCore.Components.WebAssembly.DevServer.csproj" />
 -    <ProjectReference Include="..\TestApp\Wasm.Performance.TestApp.csproj" />
+-  </ItemGroup>
+-
+-  <ItemGroup>
+-    <Compile Include="..\..\..\WebAssembly\DevServer\src\Server\*.cs" />
 -  </ItemGroup>
 -
 -  <Target Name="_AddTestProjectMetadataAttributes" BeforeTargets="BeforeCompile">
@@ -94,19 +91,6 @@ index 66aea279ee..0000000000
 -  </Target>
 -
 -</Project>
-diff --git a/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs b/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
-index b59e987686..b18e53e916 100644
---- a/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
-+++ b/src/JSInterop/Microsoft.JSInterop/src/JSRuntime.cs
-@@ -88,7 +88,7 @@ namespace Microsoft.JSInterop
-         public ValueTask<TValue> InvokeAsync<TValue>(string identifier, CancellationToken cancellationToken, object[] args)
-         {
-             var taskId = Interlocked.Increment(ref _nextPendingTaskId);
--            var tcs = new TaskCompletionSource<TValue>(TaskContinuationOptions.RunContinuationsAsynchronously);
-+            var tcs = new TaskCompletionSource<TValue>(TaskCreationOptions.RunContinuationsAsynchronously);
-             if (cancellationToken != default)
-             {
-                 _cancellationRegistrations[taskId] = cancellationToken.Register(() =>
--- 
+--
 2.18.0
 

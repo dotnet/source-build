@@ -1,0 +1,25 @@
+From 0eace82143b22501f9c94986580d01c4c9cefa16 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 2 Oct 2020 13:27:28 +0000
+Subject: [PATCH] Conditionally set PackageTargetFramework
+
+---
+ src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj b/src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj
+index 7cb2868..fe032ed 100644
+--- a/src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj
++++ b/src/libraries/System.IO.Pipelines/ref/System.IO.Pipelines.csproj
+@@ -5,7 +5,7 @@
+     <ExcludeFromPackage Condition="'$(TargetFramework)' == 'net461'">true</ExcludeFromPackage>
+     <!-- We only plan to use this ref in netcoreapp. For all other netstandard compatible frameworks
+     we should use the lib asset instead. -->
+-    <PackageTargetFramework>netcoreapp2.0</PackageTargetFramework>
++    <PackageTargetFramework Condition="'$(TargetFramework)' == 'netstandard2.0'">netcoreapp2.0</PackageTargetFramework>
+     <ExcludeCurrentNetCoreAppFromPackage>true</ExcludeCurrentNetCoreAppFromPackage>
+   </PropertyGroup>
+   <ItemGroup>
+--
+1.8.3.1
+

@@ -1,4 +1,4 @@
-From 2fcdb9db2f9fb707e9d79521a68a41470f47cbb7 Mon Sep 17 00:00:00 2001
+From 621093abf8ea57143cb909c0d49adf0dd817af0e Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Fri, 25 Sep 2020 16:53:59 -0400
 Subject: [PATCH] Add an option to keep native debug symbols
@@ -45,15 +45,15 @@ For some related fixes, see:
  eng/native/build-commons.sh            |  5 +++++
  eng/native/functions.cmake             | 14 ++++++++++----
  src/coreclr/runtime.proj               |  1 +
- src/installer/corehost/build.proj   |  1 +
+ src/installer/corehost/corehost.proj   |  1 +
  src/libraries/Native/build-native.proj |  3 ++-
  7 files changed, 34 insertions(+), 5 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index e6dc7b84da1..b95ce4d3143 100644
+index 92745f87f60..b58085121d2 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -97,6 +97,8 @@
+@@ -102,6 +102,8 @@
    <PropertyGroup>
      <!-- Default to portable build if not explicitly set -->
      <PortableBuild Condition="'$(PortableBuild)' == ''">true</PortableBuild>
@@ -63,7 +63,7 @@ index e6dc7b84da1..b95ce4d3143 100644
      <AppDesignerFolder>Properties</AppDesignerFolder>
      <!-- Determine what architecture we are building on. -->
 diff --git a/eng/build.sh b/eng/build.sh
-index eb0cb586ebf..f9403d2ef54 100755
+index afa16a69447..4cdb61b8968 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
 @@ -74,6 +74,7 @@ usage()
@@ -74,7 +74,7 @@ index eb0cb586ebf..f9403d2ef54 100755
    echo ""
  
    echo "Command line arguments starting with '/p:' are passed through to MSBuild."
-@@ -377,6 +378,18 @@ while [[ $# > 0 ]]; do
+@@ -380,6 +381,18 @@ while [[ $# > 0 ]]; do
        shift 2
        ;;
  
@@ -94,10 +94,10 @@ index eb0cb586ebf..f9403d2ef54 100755
        extraargs="$extraargs $1"
        shift 1
 diff --git a/eng/native/build-commons.sh b/eng/native/build-commons.sh
-index e5bec2b3b8c..15549012eda 100755
+index 7315e43f276..c61407c5f9a 100755
 --- a/eng/native/build-commons.sh
 +++ b/eng/native/build-commons.sh
-@@ -208,6 +208,7 @@ usage()
+@@ -223,6 +223,7 @@ usage()
      echo "-portablebuild: pass -portablebuild=false to force a non-portable build."
      echo "-skipconfigure: skip build configuration."
      echo "-skipgenerateversion: disable version generation even if MSBuild is supported."
@@ -105,7 +105,7 @@ index e5bec2b3b8c..15549012eda 100755
      echo "-verbose: optional argument to enable verbose build output."
      echo ""
      echo "Additional Options:"
-@@ -323,6 +324,10 @@ while :; do
+@@ -352,6 +353,10 @@ while :; do
                  __CompilerMinorVersion="${parts[1]}"
              ;;
  
@@ -165,10 +165,10 @@ index f0da8c09cd0..3e6a3df2397 100644
        <_CoreClrBuildArg Condition="!$([MSBuild]::IsOsPlatform(Windows))" Include="-os $(TargetOS)" />
  
        <_CoreClrBuildArg Condition="$([MSBuild]::IsOsPlatform(Windows)) and
-diff --git a/src/installer/corehost/build.proj b/src/installer/corehost/build.proj
+diff --git a/src/installer/corehost/corehost.proj b/src/installer/corehost/corehost.proj
 index 69927e8304b..38c104ca005 100644
---- a/src/installer/corehost/build.proj
-+++ b/src/installer/corehost/build.proj
+--- a/src/installer/corehost/corehost.proj
++++ b/src/installer/corehost/corehost.proj
 @@ -30,6 +30,7 @@
        <BuildArgs>$(Configuration) $(TargetArchitecture) -apphostver "$(AppHostVersion)" -hostver "$(HostVersion)" -fxrver "$(HostResolverVersion)" -policyver "$(HostPolicyVersion)" -commithash "$(LatestCommit)" -os $(TargetOS)</BuildArgs>
        <BuildArgs>$(BuildArgs) -cmakeargs "-DVERSION_FILE_PATH=$(NativeVersionFile)"</BuildArgs>
@@ -178,10 +178,10 @@ index 69927e8304b..38c104ca005 100644
        <BuildArgs Condition="'$(Compiler)' != ''">$(BuildArgs) $(Compiler)</BuildArgs>
        <BuildArgs Condition="'$(CMakeArgs)' != ''">$(BuildArgs) $(CMakeArgs)</BuildArgs>
 diff --git a/src/libraries/Native/build-native.proj b/src/libraries/Native/build-native.proj
-index b0551571adf..af67b63ab41 100644
+index beaf3098745..6f3d4aa0892 100644
 --- a/src/libraries/Native/build-native.proj
 +++ b/src/libraries/Native/build-native.proj
-@@ -22,6 +22,7 @@
+@@ -24,6 +24,7 @@
        <_ProcessorCountArg> -numproc $(MSBuildNodeCount)</_ProcessorCountArg>
        <_PortableBuildArg Condition="'$(PortableBuild)' != 'true'"> -portablebuild=false</_PortableBuildArg>
        <_CrossBuildArg Condition="'$(CrossBuild)' == 'true'"> -cross</_CrossBuildArg>
@@ -189,7 +189,7 @@ index b0551571adf..af67b63ab41 100644
        <_CMakeArgs Condition="'$(CMakeArgs)' != ''"> $(CMakeArgs)</_CMakeArgs>
  
        <!--
-@@ -29,7 +30,7 @@
+@@ -31,7 +32,7 @@
          used to force a specific compiler toolset.
        -->
        <_BuildNativeCompilerArg Condition="'$(BuildNativeCompiler)' != ''"> $(BuildNativeCompiler)</_BuildNativeCompilerArg>
@@ -197,7 +197,7 @@ index b0551571adf..af67b63ab41 100644
 +      <_BuildNativeUnixArgs>$(_BuildNativeArgs)$(_ProcessCountArg)$(_PortableBuildArg)$(_CrossBuildArg)$(_BuildNativeCompilerArg)$(_KeepNativeSymbolsBuildArg)$(_CMakeArgs) $(Compiler)</_BuildNativeUnixArgs>
      </PropertyGroup>
  
-     <Message Text="$(MSBuildProjectDirectory)/build-native.sh $(_BuildNativeUnixArgs)" Importance="High"/>
+     <Message Text="$(MSBuildThisFileDirectory)build-native.sh $(_BuildNativeUnixArgs)" Importance="High"/>
 -- 
-2.26.2
+2.25.2
 

@@ -1,0 +1,52 @@
+From c0d106f0d4cc732f5fa8a97391c1d870283fe097 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Tue, 13 Oct 2020 17:00:34 +0000
+Subject: [PATCH] Pin System.ComponentModel.Annotations to version that can be added to sbrp
+
+---
+ .../src/Microsoft.Extensions.Options.DataAnnotations.csproj             | 2 +-
+ .../ref/Microsoft.Extensions.Options.csproj                             | 2 +-
+ .../src/Microsoft.Extensions.Options.csproj                             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/libraries/Microsoft.Extensions.Options.DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj b/src/libraries/Microsoft.Extensions.Options.DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
+index bcf5ce5..95255db 100644
+--- a/src/libraries/Microsoft.Extensions.Options.DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
++++ b/src/libraries/Microsoft.Extensions.Options.DataAnnotations/src/Microsoft.Extensions.Options.DataAnnotations.csproj
+@@ -11,7 +11,7 @@
+   </ItemGroup>
+
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+-    <PackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsVersion)" />
++    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+   </ItemGroup>
+
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+diff --git a/src/libraries/Microsoft.Extensions.Options/ref/Microsoft.Extensions.Options.csproj b/src/libraries/Microsoft.Extensions.Options/ref/Microsoft.Extensions.Options.csproj
+index c441c3e..3abf450 100644
+--- a/src/libraries/Microsoft.Extensions.Options/ref/Microsoft.Extensions.Options.csproj
++++ b/src/libraries/Microsoft.Extensions.Options/ref/Microsoft.Extensions.Options.csproj
+@@ -12,6 +12,6 @@
+     <ProjectReference Include="$(LibrariesProjectRoot)Microsoft.Extensions.Primitives\ref\Microsoft.Extensions.Primitives.csproj" />
+   </ItemGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+-    <PackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsVersion)" />
++    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/libraries/Microsoft.Extensions.Options/src/Microsoft.Extensions.Options.csproj b/src/libraries/Microsoft.Extensions.Options/src/Microsoft.Extensions.Options.csproj
+index 4da5f5e..d49ca1e 100644
+--- a/src/libraries/Microsoft.Extensions.Options/src/Microsoft.Extensions.Options.csproj
++++ b/src/libraries/Microsoft.Extensions.Options/src/Microsoft.Extensions.Options.csproj
+@@ -18,7 +18,7 @@
+   </ItemGroup>
+
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+-    <PackageReference Include="System.ComponentModel.Annotations" Version="$(SystemComponentModelAnnotationsVersion)" />
++    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+   </ItemGroup>
+
+   <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
+--
+1.8.3.1
+

@@ -4,46 +4,39 @@ Date: Thu, 24 Sep 2020 13:45:50 -0500
 Subject: [PATCH 7/7] Don't use Humanizer in source-build.
 
 ---
- .../Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj          | 4 ++--
+ .../Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj          | 2 +-
  .../Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj    | 4 ++--
  .../Portable/Microsoft.CodeAnalysis.CSharp.Features.csproj  | 4 ++--
  .../Microsoft.CodeAnalysis.CSharp.Workspaces.csproj         | 4 ++--
  .../Compiler/CSharp/Extensions/SemanticModelExtensions.cs   | 6 +++---
- 5 files changed, 11 insertions(+), 11 deletions(-)
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj b/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
 index 2c7af08b354..18a263ff52a 100644
 --- a/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
 +++ b/src/CodeStyle/CSharp/Analyzers/Microsoft.CodeAnalysis.CSharp.CodeStyle.csproj
-@@ -10,7 +10,7 @@
+@@ -9,7 +9,7 @@
+     <PackageId>Microsoft.CodeAnalysis.CSharp.CodeStyle.NewNameSinceWeReferenceTheAnalyzersAndNuGetCannotFigureItOut</PackageId>
    </PropertyGroup>
    <ItemGroup>
-     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpFixedVersion)" />
 -    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
 +    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
    </ItemGroup>
    <ItemGroup Label="Project References">
-     <ProjectReference Include="..\..\Core\Analyzers\Microsoft.CodeAnalysis.CodeStyle.csproj" />
-@@ -28,4 +28,4 @@
-   </ItemGroup>
-   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
-   <Import Project="..\..\..\Analyzers\CSharp\Analyzers\CSharpAnalyzers.projitems" Label="Shared" />
--</Project>
-\ No newline at end of file
-+</Project>
+     <ProjectReference Include="..\..\..\Compilers\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.csproj" />
 diff --git a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 index 4ce5a872393..0ef4d309c9d 100644
 --- a/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 +++ b/src/CodeStyle/CSharp/CodeFixes/Microsoft.CodeAnalysis.CSharp.CodeStyle.Fixes.csproj
 @@ -36,7 +36,7 @@
+     </ItemGroup>
    </Target>
    <ItemGroup>
-     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="$(MicrosoftCodeAnalysisCSharpWorkspacesFixedVersion)" />
 -    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" />
 +    <PackageReference Include="Humanizer.Core" Version="$(HumanizerCoreVersion)" PrivateAssets="compile" Condition="'$(DotNetBuildFromSource)' != 'true'" />
    </ItemGroup>
    <ItemGroup Label="Project References">
-     <ProjectReference Include="..\..\Core\Analyzers\Microsoft.CodeAnalysis.CodeStyle.csproj" />
+     <ProjectReference Include="..\..\..\Workspaces\CSharp\Portable\Microsoft.CodeAnalysis.CSharp.Workspaces.csproj" />
 @@ -55,4 +55,4 @@
    </ItemGroup>
    <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
@@ -111,14 +104,14 @@ index 900b94ea7ac..82f25d6d9b1 100644
                  {
 @@ -260,7 +259,8 @@ private static bool CanBindToken(SyntaxToken token)
              var pluralize = Pluralize(semanticModel, type);
- 
+
              var parameterName = type.CreateParameterName(capitalize);
 -            return pluralize ? parameterName.Pluralize() : parameterName;
 +            // return pluralize ? parameterName.Pluralize() : parameterName;
 +            return parameterName;
          }
- 
+
          private static bool Pluralize(SemanticModel semanticModel, ITypeSymbol type)
--- 
+--
 2.18.0
 

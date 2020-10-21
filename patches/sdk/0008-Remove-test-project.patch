@@ -1,115 +1,107 @@
-From 2f6a1439a8d48fc5dd8c6b7b4b279dd200e1de40 Mon Sep 17 00:00:00 2001
-From: Chris Rummel <crummel@microsoft.com>
-Date: Sun, 28 Jun 2020 21:59:35 +0000
-Subject: [PATCH 08/10] Remove test project.
+From 9361b036fc86774a5268394c867be04a002efa95 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Wed, 30 Sep 2020 22:05:26 +0000
+Subject: [PATCH] Remove test project.
 
 ---
- sdk.sln                                       | 196 ------------------
- .../v1/dotnet-hello/dotnet-hello.csproj       |  16 --
- .../v2/dotnet-hello/dotnet-hello.csproj       |  15 --
- .../BuildTestPackages.targets                 |  16 --
- 4 files changed, 243 deletions(-)
- delete mode 100644 src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
- delete mode 100644 src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
+ sdk.sln                                            | 168 ---------------------
+ .../v1/dotnet-hello/dotnet-hello.csproj            |  17 +--
+ .../v2/dotnet-hello/dotnet-hello.csproj            |  16 +-
+ .../BuildTestPackages.targets                      |  16 --
+ 4 files changed, 2 insertions(+), 215 deletions(-)
 
 diff --git a/sdk.sln b/sdk.sln
-index 08cd9a108..30662a0cf 100644
+index 5599dc0..fb666c1 100644
 --- a/sdk.sln
 +++ b/sdk.sln
-@@ -45,12 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{1FEED16D
+@@ -32,11 +32,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{1FEED16D
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Build.Extensions.Tasks", "src\Tasks\Microsoft.NET.Build.Extensions.Tasks\Microsoft.NET.Build.Extensions.Tasks.csproj", "{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}"
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Build.Extensions.Tasks.UnitTests", "src\Tasks\Microsoft.NET.Build.Extensions.Tasks.UnitTests\Microsoft.NET.Build.Extensions.Tasks.UnitTests.csproj", "{6ADADB58-92D3-438C-8D97-F495B59A83C0}"
--EndProject
+ EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Build.Tasks", "src\Tasks\Microsoft.NET.Build.Tasks\Microsoft.NET.Build.Tasks.csproj", "{9CFC1EB5-8CF4-41D3-B91D-7D88B52F0B07}"
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Build.Tasks.UnitTests", "src\Tasks\Microsoft.NET.Build.Tasks.UnitTests\Microsoft.NET.Build.Tasks.UnitTests.csproj", "{2D749C5D-B033-4B7F-A00E-354A6229DB8D}"
--EndProject
+ EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{580D1AE7-AA8F-4912-8B76-105594E00B3B}"
  EndProject
- Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{5293658E-96D2-421F-A789-D0B6BA129570}"
-@@ -58,29 +54,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{529365
+@@ -45,28 +43,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{529365
  		src\Tests\Common\Program.cs = src\Tests\Common\Program.cs
  	EndProjectSection
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Build.Tests", "src\Tests\Microsoft.NET.Build.Tests\Microsoft.NET.Build.Tests.csproj", "{52CB4546-DD2D-4207-B6E1-494C9506D1C1}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Clean.Tests", "src\Tests\Microsoft.NET.Clean.Tests\Microsoft.NET.Clean.Tests.csproj", "{5CBFF0EE-71EA-49CC-8369-34A9A62C8116}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Pack.Tests", "src\Tests\Microsoft.NET.Pack.Tests\Microsoft.NET.Pack.Tests.csproj", "{8746DC05-3035-4F24-9F2C-BAAAB5B50FD3}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Publish.Tests", "src\Tests\Microsoft.NET.Publish.Tests\Microsoft.NET.Publish.Tests.csproj", "{5B3E6EC9-AD8D-4F68-A9F8-C60CF11F4753}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Rebuild.Tests", "src\Tests\Microsoft.NET.Rebuild.Tests\Microsoft.NET.Rebuild.Tests.csproj", "{8283544E-9704-40C5-BEC2-2781413AA3CF}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Restore.Tests", "src\Tests\Microsoft.NET.Restore.Tests\Microsoft.NET.Restore.Tests.csproj", "{112668D7-322D-4F83-A6CE-B814C25AD3BF}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.TestFramework", "src\Tests\Microsoft.NET.TestFramework\Microsoft.NET.TestFramework.csproj", "{CAF71BDC-7B7D-4A43-AB8C-E440A1E4F108}"
--EndProject
+ EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CommandLine", "CommandLine", "{7C6A88D0-DBCC-4933-A92D-A0AC133DD5FC}"
  	ProjectSection(SolutionItems) = preProject
  		src\Tests\Common\CommandLine\TestCommandLine.Default.cs = src\Tests\Common\CommandLine\TestCommandLine.Default.cs
  	EndProjectSection
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.ToolPack.Tests", "src\Tests\Microsoft.NET.ToolPack.Tests\Microsoft.NET.ToolPack.Tests.csproj", "{6F72FAA2-4E46-4382-940A-4F0290E070E2}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelemetryStdOutLogger", "src\Tests\TelemetryStdOutLogger\TelemetryStdOutLogger.csproj", "{E740A596-2CAE-476C-8062-49705C3A9CF0}"
--EndProject
+ EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cli", "Cli", "{9CEF03F6-1A61-431A-8ABD-9095974629AE}"
  EndProject
- Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Cli.Utils", "src\Cli\Microsoft.DotNet.Cli.Utils\Microsoft.DotNet.Cli.Utils.csproj", "{CC25E192-70AD-4D91-B288-3AD40065DBAC}"
-@@ -105,40 +83,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redist", "src\Layout\redist
+@@ -92,37 +81,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "redist", "src\Layout\redist
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "toolset-tasks", "src\Layout\toolset-tasks\toolset-tasks.csproj", "{C687CA8D-9843-4045-BC20-917953F6C864}"
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Msbuild.Tests.Utilities", "src\Tests\Msbuild.Tests.Utilities\Msbuild.Tests.Utilities.csproj", "{64294C35-9001-4FF9-975F-43D283EE5FA9}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet.Tests", "src\Tests\dotnet.Tests\dotnet.Tests.csproj", "{C5F191E5-BF2E-4A7A-AE1D-E2393AAA6F99}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Tools.Tests.ComponentMocks", "src\Tests\Microsoft.DotNet.Tools.Tests.ComponentMocks\Microsoft.DotNet.Tools.Tests.ComponentMocks.csproj", "{99334000-EBF8-44D9-90D0-BE998ED3FE60}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-msbuild.Tests", "src\Tests\dotnet-msbuild.Tests\dotnet-msbuild.Tests.csproj", "{8FB015CE-1900-41EE-8E68-C222CE1B8561}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotnet-sln.Tests", "src\Tests\dotnet-sln.Tests\dotnet-sln.Tests.csproj", "{5D421BE2-66A9-43FC-877C-620ACED021EB}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArgumentsReflector", "src\Tests\ArgumentsReflector\ArgumentsReflector.csproj", "{587A6639-FA2A-498C-8FA2-F77925DB732B}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArgumentForwarding.Tests", "src\Tests\ArgumentForwarding.Tests\ArgumentForwarding.Tests.csproj", "{2D8AA9EA-3013-47DE-B2DD-E074F67467ED}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EndToEnd.Tests", "src\Tests\EndToEnd.Tests\EndToEnd.Tests.csproj", "{A0EFB2CB-517F-4746-902E-D0EBEFFBD89B}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InstallationScript.Tests", "src\Tests\InstallationScript.Tests\InstallationScript.Tests.csproj", "{1552D0BB-6B8D-400E-A9B4-F58C0BA1C903}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Cli.Sln.Internal.Tests", "src\Tests\Microsoft.DotNet.Cli.Sln.Internal.Tests\Microsoft.DotNet.Cli.Sln.Internal.Tests.csproj", "{82D910C3-A5E2-41F0-A142-F4F2D770CB59}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Cli.Utils.Tests", "src\Tests\Microsoft.DotNet.Cli.Utils.Tests\Microsoft.DotNet.Cli.Utils.Tests.csproj", "{C34FB893-2320-41A3-9D38-0061C22A6464}"
--EndProject
- Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.MSBuildSdkResolver", "src\Microsoft.DotNet.MSBuildSdkResolver\Microsoft.DotNet.MSBuildSdkResolver.csproj", "{FE88C711-9AFF-484F-B5E2-80D13FB82C2F}"
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.MSBuildSdkResolver.Tests", "src\Tests\Microsoft.DotNet.MSBuildSdkResolver.Tests\Microsoft.DotNet.MSBuildSdkResolver.Tests.csproj", "{0AE2AB83-1F0D-4E04-9C8D-5C35CE97FDDC}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.ToolPackage.Tests", "src\Tests\Microsoft.DotNet.ToolPackage.Tests\Microsoft.DotNet.ToolPackage.Tests.csproj", "{3D20D19D-74FB-4A43-B78C-B0AF90A696A0}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.DotNet.Tools.Tests.Utilities.Tests", "src\Tests\Microsoft.DotNet.Tools.Tests.Utilities.Tests\Microsoft.DotNet.Tools.Tests.Utilities.Tests.csproj", "{BE6B9618-2262-4FF7-B762-FB97A7A1A0B8}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msbuild.Integration.Tests", "src\Tests\msbuild.Integration.Tests\msbuild.Integration.Tests.csproj", "{45281FB4-EAFA-4D62-84BA-47546C04D653}"
--EndProject
+ EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelixTasks", "src\Tests\HelixTasks\HelixTasks.csproj", "{818165C4-6D22-4FA6-AAAF-DC66DA72450A}"
--EndProject
+ EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebSdk", "WebSdk", "{974F9450-8895-41D9-8328-D55AFF81A814}"
  	ProjectSection(SolutionItems) = preProject
- 		src\WebSdk\CopyPackageLayout.targets = src\WebSdk\CopyPackageLayout.targets
-@@ -174,8 +120,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Web.Tasks
+@@ -159,7 +132,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Web.Tasks
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Worker.Tasks", "src\WebSdk\Worker\Tasks\Microsoft.NET.Sdk.Worker.Tasks.csproj", "{ACB5302C-8641-4E12-B7F7-0122D2A97C31}"
  EndProject
 -Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NET.Sdk.Publish.Tasks.Tests", "src\Tests\Microsoft.NET.Sdk.Publish.Tasks.Tests\Microsoft.NET.Sdk.Publish.Tasks.Tests.csproj", "{1F26FAE6-2654-4E83-8936-146134638C59}"
--EndProject
+ EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sdk", "Sdk", "{F717D467-EF88-49B9-AD67-55FC6350A9DE}"
  	ProjectSection(SolutionItems) = preProject
- 		src\WebSdk\Publish\Sdk\Sdk.props = src\WebSdk\Publish\Sdk\Sdk.props
-@@ -269,54 +213,10 @@ Global
+@@ -266,54 +238,10 @@ Global
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -164,7 +156,7 @@ index 08cd9a108..30662a0cf 100644
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-@@ -357,74 +257,10 @@ Global
+@@ -354,70 +282,6 @@ Global
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{C687CA8D-9843-4045-BC20-917953F6C864}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -212,10 +204,6 @@ index 08cd9a108..30662a0cf 100644
 -		{C34FB893-2320-41A3-9D38-0061C22A6464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 -		{C34FB893-2320-41A3-9D38-0061C22A6464}.Release|Any CPU.ActiveCfg = Release|Any CPU
 -		{C34FB893-2320-41A3-9D38-0061C22A6464}.Release|Any CPU.Build.0 = Release|Any CPU
- 		{FE88C711-9AFF-484F-B5E2-80D13FB82C2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
- 		{FE88C711-9AFF-484F-B5E2-80D13FB82C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
- 		{FE88C711-9AFF-484F-B5E2-80D13FB82C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
- 		{FE88C711-9AFF-484F-B5E2-80D13FB82C2F}.Release|Any CPU.Build.0 = Release|Any CPU
 -		{0AE2AB83-1F0D-4E04-9C8D-5C35CE97FDDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 -		{0AE2AB83-1F0D-4E04-9C8D-5C35CE97FDDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 -		{0AE2AB83-1F0D-4E04-9C8D-5C35CE97FDDC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -239,7 +227,7 @@ index 08cd9a108..30662a0cf 100644
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{C713077C-5E5B-4512-8C40-53C90915557F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-@@ -441,10 +277,6 @@ Global
+@@ -434,10 +298,6 @@ Global
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -247,10 +235,10 @@ index 08cd9a108..30662a0cf 100644
 -		{1F26FAE6-2654-4E83-8936-146134638C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 -		{1F26FAE6-2654-4E83-8936-146134638C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 -		{1F26FAE6-2654-4E83-8936-146134638C59}.Release|Any CPU.Build.0 = Release|Any CPU
- 	EndGlobalSection
- 	GlobalSection(SolutionProperties) = preSolution
- 		HideSolutionNode = FALSE
-@@ -452,21 +284,10 @@ Global
+ 		{89F798D9-A8BA-4556-B2A2-39CEF3587093}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{89F798D9-A8BA-4556-B2A2-39CEF3587093}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{89F798D9-A8BA-4556-B2A2-39CEF3587093}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -465,21 +325,10 @@ Global
  	GlobalSection(NestedProjects) = preSolution
  		{1FEED16D-E07D-47C1-BB4C-56CD9F42B53B} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{61C31F8E-FE7C-47CC-B21C-3DEE499AD6F5} = {1FEED16D-E07D-47C1-BB4C-56CD9F42B53B}
@@ -272,7 +260,7 @@ index 08cd9a108..30662a0cf 100644
  		{9CEF03F6-1A61-431A-8ABD-9095974629AE} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{CC25E192-70AD-4D91-B288-3AD40065DBAC} = {9CEF03F6-1A61-431A-8ABD-9095974629AE}
  		{2119E6E5-2B75-402A-AFF3-3E7E7B671B9B} = {9CEF03F6-1A61-431A-8ABD-9095974629AE}
-@@ -479,23 +300,7 @@ Global
+@@ -492,22 +341,6 @@ Global
  		{C2DF833D-2A83-408B-8122-3038ACDFDFD0} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
  		{AA273ACB-56FE-4F0C-8CC9-C2C45D31491D} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
  		{C687CA8D-9843-4045-BC20-917953F6C864} = {71C279BD-E850-4A8D-9775-11CA26B8E5BA}
@@ -287,7 +275,6 @@ index 08cd9a108..30662a0cf 100644
 -		{1552D0BB-6B8D-400E-A9B4-F58C0BA1C903} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
 -		{82D910C3-A5E2-41F0-A142-F4F2D770CB59} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
 -		{C34FB893-2320-41A3-9D38-0061C22A6464} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
- 		{FE88C711-9AFF-484F-B5E2-80D13FB82C2F} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
 -		{0AE2AB83-1F0D-4E04-9C8D-5C35CE97FDDC} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
 -		{3D20D19D-74FB-4A43-B78C-B0AF90A696A0} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
 -		{BE6B9618-2262-4FF7-B762-FB97A7A1A0B8} = {580D1AE7-AA8F-4912-8B76-105594E00B3B}
@@ -296,7 +283,7 @@ index 08cd9a108..30662a0cf 100644
  		{974F9450-8895-41D9-8328-D55AFF81A814} = {22AB674F-ED91-4FBC-BFEE-8A1E82F9F05E}
  		{B1C96E63-6F34-4BFE-AD5B-091F8A86A704} = {974F9450-8895-41D9-8328-D55AFF81A814}
  		{0C6854E8-01E5-4F76-97A0-E1FCF5428B10} = {B1C96E63-6F34-4BFE-AD5B-091F8A86A704}
-@@ -507,7 +312,6 @@ Global
+@@ -519,7 +352,6 @@ Global
  		{518B88F4-D9C0-4865-8D33-9BB09F7D4A3E} = {5F8809DE-414C-42CB-A1BC-CF95267E6F49}
  		{CC92D8D8-5914-451E-8F8E-9623103BC186} = {27302615-7D46-499E-AC84-D3E193F9A62D}
  		{ACB5302C-8641-4E12-B7F7-0122D2A97C31} = {EBEF2950-E27B-4EB8-8F1C-2001984B4D41}
@@ -305,11 +292,10 @@ index 08cd9a108..30662a0cf 100644
  		{2F565AE9-3DBC-4EFF-A3C4-4B65C7262282} = {409D6E91-ACFD-4801-A879-B166668EE256}
  		{63DA18A8-D24A-4CD1-A7E7-2B181AB2DF9A} = {029BC558-D2FA-413F-83D0-A67216BA9DB1}
 diff --git a/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj b/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
-deleted file mode 100644
-index 48a78a6e7..000000000
+index 48a78a6..5f28270 100644
 --- a/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
-+++ /dev/null
-@@ -1,16 +0,0 @@
++++ b/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
+@@ -1,16 +1 @@
 -﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 -  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), testAsset.props))\testAsset.props" />
 -  
@@ -326,12 +312,13 @@ index 48a78a6e7..000000000
 -  </PropertyGroup>
 -
 -</Project>
++﻿
+\ No newline at end of file
 diff --git a/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj b/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
-deleted file mode 100644
-index 8956d362f..000000000
+index 8956d36..5f28270 100644
 --- a/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
-+++ /dev/null
-@@ -1,15 +0,0 @@
++++ b/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
+@@ -1,15 +1 @@
 -﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 -  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), testAsset.props))\testAsset.props" />
 -  
@@ -347,8 +334,10 @@ index 8956d362f..000000000
 -    <IsPackable>true</IsPackable>
 -  </PropertyGroup>
 -</Project>
++﻿
+\ No newline at end of file
 diff --git a/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets b/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
-index 34d58c2f1..611b838eb 100644
+index 34d58c2..611b838 100644
 --- a/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
 +++ b/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
 @@ -84,22 +84,6 @@
@@ -375,5 +364,5 @@ index 34d58c2f1..611b838eb 100644
          <Name>dotnet-outputsframeworkversion-netcoreapp1.0</Name>
          <ProjectName>dotnet-outputsframeworkversion-netcoreapp1.0.csproj</ProjectName>
 -- 
-2.18.2
+1.8.3.1
 

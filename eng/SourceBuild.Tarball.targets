@@ -7,7 +7,6 @@
             AddTarballSource;
             AddTarballSourcelinkMetadata;
             AddTarballTools;
-            AddTarballGeneratedSource;
             AddTarballPackages;
             AddTarballExternalTarballs;
             AddTarballCommitInfo;
@@ -264,14 +263,6 @@
         RelativeRoot="packages\archive\" />
 
       <TarballCopyFile Include="@(ExternalTarballFile);" />
-    </ItemGroup>
-  </Target>
-
-  <Target Name="AddTarballGeneratedSource">
-    <ItemGroup>
-      <TarballCopyFile
-        Include="$(GeneratedSourcePathOnline)**"
-        RelativeRoot="src\generatedSrc\" />
     </ItemGroup>
   </Target>
 

@@ -55,8 +55,6 @@
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllPackages=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:KeepNativeSymbols=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuiltSdkPackageOverride=""</LibrariesBuildArguments>    <!-- Clear PackageOverride for Libraries - it only applies to coreclr -->
-    <LibrariesBuildArguments Condition="'$(OfflineBuild)' != 'true'">$(LibrariesBuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOnline)</LibrariesBuildArguments>
-    <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:DotNetSourceBuildIntermediatePath=$(GeneratedSourcePathOffline)</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:MicrosoftNETCoreDotNetHostPolicyPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</LibrariesBuildArguments>
 

@@ -11,15 +11,15 @@ diff --git a/src/libraries/restore/runtime/runtime.depproj b/src/libraries/resto
 index 3179312c073..b88c71fa8df 100644
 --- a/src/libraries/restore/runtime/runtime.depproj
 +++ b/src/libraries/restore/runtime/runtime.depproj
-@@ -65,7 +65,7 @@
+@@ -52,7 +52,7 @@
            SkipUnchangedFiles="true"
            UseHardlinksIfPossible="$(UseHardlink)" />
- 
+
 -    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension)" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
 +    <Exec Command="chmod +x $(TestHostRootPath)%(DotnetExe.Filename)%(DotnetExe.Extension) || true" Condition="'$(TargetOS)' != 'Windows_NT' and '$(OS)' != 'Windows_NT'"/>
    </Target>
- 
-   <Target Name="SetupRuntimePackNative"
--- 
+
+   <Target Name="OverrideRuntimeCoreCLR"
+--
 2.17.1
 
