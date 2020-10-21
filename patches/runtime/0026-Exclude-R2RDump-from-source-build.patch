@@ -1,0 +1,26 @@
+From bc3422ac3e76484c8595fa96b99b0055ef2c65b7 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 21 Oct 2020 14:29:31 -0500
+Subject: [PATCH] Exclude R2RDump from source-build
+
+This removes the Microsoft.NETCore.CoreDisTools/1.0.1-prerelease-00005
+prebuilt dependency.
+---
+ eng/Subsets.props | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/eng/Subsets.props b/eng/Subsets.props
+index 29d013c3916..63b351c1216 100644
+--- a/eng/Subsets.props
++++ b/eng/Subsets.props
+@@ -154,7 +154,6 @@
+ 
+   <ItemGroup Condition="$(_subset.Contains('+clr.tools+'))">
+     <ProjectToBuild Include="$(CoreClrProjectRoot)src\tools\runincontext\runincontext.csproj;
+-                             $(CoreClrProjectRoot)src\tools\r2rdump\R2RDump.csproj;
+                              $(CoreClrProjectRoot)src\tools\dotnet-pgo\dotnet-pgo.csproj" Category="clr" BuildInParallel="true" />
+     <ProjectToBuild Include="$(CoreClrProjectRoot)src\tools\aot\crossgen2\crossgen2.csproj" Category="clr" />
+   </ItemGroup>
+-- 
+2.25.2
+
