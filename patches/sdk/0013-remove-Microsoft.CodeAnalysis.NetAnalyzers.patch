@@ -1,0 +1,53 @@
+From fbc3f5cb88c30710d3bfae54a336d4e399708bf1 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Wed, 21 Oct 2020 14:20:28 +0200
+Subject: [PATCH] sdk: remove Microsoft.CodeAnalysis.NetAnalyzers
+
+---
+ src/Layout/redist/redist.csproj                 |  1 -
+ .../redist/targets/GenerateLayout.targets       | 17 -----------------
+ 2 files changed, 18 deletions(-)
+
+diff --git a/src/Layout/redist/redist.csproj b/src/Layout/redist/redist.csproj
+index c3940776b..a9fbbb60a 100644
+--- a/src/Layout/redist/redist.csproj
++++ b/src/Layout/redist/redist.csproj
+@@ -27,7 +27,6 @@
+     <PackageReference Condition=" '$(DotNetBuildFromSource)' != 'true' " Include="NuGet.Localization" Version="$(NuGetProjectModelPackageVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelPackageVersion)" />
+     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetPackageVersion)" ExcludeAssets="All" />
+-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftCodeAnalysisNetAnalyzersVersion)" ExcludeAssets="All" GeneratePathProperty="true"/>
+ 
+     <!-- Lift up dependencies of dependencies to prevent build tasks from getting pinned to older versions -->
+     <PackageReference Include="System.CodeDom" Version="$(SystemCodeDomPackageVersion)" />
+diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
+index 10729093c..c05c74549 100644
+--- a/src/Layout/redist/targets/GenerateLayout.targets
++++ b/src/Layout/redist/targets/GenerateLayout.targets
+@@ -30,23 +30,6 @@
+     <Delete Files="@(RoslynFrameworkAssemblies)" />
+   </Target>
+ 
+-  <Target Name="PublishNETAnalyzers"
+-          BeforeTargets="Build;PublishNetSdk">
+-     <PropertyGroup>
+-      <AnalyzerAssembliesDirectory>$(ArtifactsBinDir)$(Configuration)\Sdks\Microsoft.NET.Sdk\analyzers</AnalyzerAssembliesDirectory>
+-      <AnalyzerTargetsDirectory>$(AnalyzerAssembliesDirectory)\build</AnalyzerTargetsDirectory>
+-    </PropertyGroup>
+-    <ItemGroup>
+-      <AnalyzerAssemblies Include="$(PkgMicrosoft_CodeAnalysis_NetAnalyzers)/analyzers/dotnet/cs/**/*.dll" />
+-      <AnalyzerAssemblies Include="$(PkgMicrosoft_CodeAnalysis_NetAnalyzers)/analyzers/dotnet/vb/Microsoft.CodeAnalysis.VisualBasic.NetAnalyzers.dll" />
+-      <AnalyzerTargets Include="$(PkgMicrosoft_CodeAnalysis_NetAnalyzers)/build/**/*" />
+-    </ItemGroup>
+-    <Error Condition="'@(AnalyzerAssemblies)' == ''" Text="Something moved around in Analyzer package, adjust code here accordingly. TFM change?" />
+-    <Error Condition="'@(AnalyzerTargets)' == ''" Text="Something moved around in Analyzer package, adjust code here accordingly. TFM change?" />
+-    <Copy SourceFiles="@(AnalyzerAssemblies)" DestinationFiles="@(AnalyzerAssemblies->'$(AnalyzerAssembliesDirectory)/%(RecursiveDir)%(Filename)%(Extension)')" />
+-    <Copy SourceFiles="@(AnalyzerTargets)" DestinationFiles="@(AnalyzerTargets->'$(AnalyzerTargetsDirectory)/%(RecursiveDir)%(Filename)%(Extension)')" />
+-  </Target>
+-
+   <Target Name="PublishMSBuildExtensions"
+           DependsOnTargets="GenerateMSBuildExtensions"
+           BeforeTargets="Build">
+-- 
+2.26.2
+
