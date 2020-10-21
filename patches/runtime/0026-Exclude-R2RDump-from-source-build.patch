@@ -5,6 +5,9 @@ Subject: [PATCH] Exclude R2RDump from source-build
 
 This removes the Microsoft.NETCore.CoreDisTools/1.0.1-prerelease-00005
 prebuilt dependency.
+
+R2RDump is not included in the .NET SDK or Runtime, so it is not required in
+source-build. See https://github.com/dotnet/source-build/issues/1816
 ---
  eng/Subsets.props | 1 -
  1 file changed, 1 deletion(-)
