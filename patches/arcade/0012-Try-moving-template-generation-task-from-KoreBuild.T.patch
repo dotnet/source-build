@@ -1,0 +1,167 @@
+From d8ba4e7ae5a96fac748c84c28264ee198e93603e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 21 Oct 2020 12:05:09 -0500
+Subject: [PATCH 12/12] Try moving template generation task from
+ KoreBuild.Tasks.
+
+---
+ .../src/GenerateFileFromTemplates.cs          | 147 ++++++++++++++++++
+ 1 file changed, 147 insertions(+)
+ create mode 100644 src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs b/src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs
+new file mode 100644
+index 00000000..059aa142
+--- /dev/null
++++ b/src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs
+@@ -0,0 +1,147 @@
++// Copyright (c) .NET Foundation. All rights reserved.
++// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
++
++using System.Collections.Generic;
++using System.IO;
++using System.Text;
++using Microsoft.Build.Framework;
++using Microsoft.Build.Utilities;
++
++namespace Microsoft.AspNetCore.BuildTools
++{
++    /// <summary>
++    /// <para>
++    /// Generates a new file at <see cref="OutputPath"/>.
++    /// </para>
++    /// <para>
++    /// The <see cref="TemplateFile"/> can define variables for substitution using <see cref="Properties"/>.
++    /// </para>
++    /// <example>
++    /// The input file might look like this:
++    /// <code>
++    /// 2 + 2 = ${Sum}
++    /// </code>
++    /// When the task is invoked like this, it will produce "2 + 2 = 4"
++    /// <code>
++    /// &lt;GenerateFileFromTemplate Properties="Sum=4;OtherValue=123;" ... &gt;
++    /// </code>
++    /// </example>
++    /// </summary>
++    public class GenerateFileFromTemplate : Task
++    {
++        /// <summary>
++        /// The template file.
++        /// Variable syntax: ${VarName}
++        /// If your template file needs to output this format, you can escape the dollar sign with a backtick, e.g. `${NotReplaced}
++        /// </summary>
++        [Required]
++        public string TemplateFile { get; set; }
++
++        /// <summary>
++        /// The destination for the generated file.
++        /// </summary>
++        [Required]
++        [Output]
++        public string OutputPath { get; set; }
++
++        /// <summary>
++        /// Key=value pairs of values
++        /// </summary>
++        [Required]
++        public string[] Properties { get; set; }
++
++        public override bool Execute()
++        {
++            var outputPath = Path.GetFullPath(OutputPath.Replace('\\', '/'));
++
++            if (!File.Exists(TemplateFile))
++            {
++                Log.LogError($"File {TemplateFile} does not exist");
++                return false;
++            }
++
++            var values = MSBuildListSplitter.GetNamedProperties(Properties);
++            var template = File.ReadAllText(TemplateFile);
++
++            var result = Replace(template, values);
++            Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
++            File.WriteAllText(outputPath, result);
++
++            return true;
++        }
++
++        public string Replace(string template, IDictionary<string, string> values)
++        {
++            var sb = new StringBuilder();
++            var varNameSb = new StringBuilder();
++            var line = 1;
++            for (var i = 0; i < template.Length; i++)
++            {
++                var ch = template[i];
++                var nextCh = i + 1 >= template.Length
++                        ? '\0'
++                        : template[i + 1];
++
++                // count lines in the template file
++                if (ch == '\n')
++                {
++                    line++;
++                }
++
++                if (ch == '`' && (nextCh == '$' || nextCh == '`'))
++                {
++                    // skip the backtick for known escape characters
++                    i++;
++                    sb.Append(nextCh);
++                    continue;
++                }
++
++                if (ch != '$' || nextCh != '{')
++                {
++                    // variables begin with ${. Moving on.
++                    sb.Append(ch);
++                    continue;
++                }
++
++                varNameSb.Clear();
++                i += 2;
++                for (; i < template.Length; i++)
++                {
++                    ch = template[i];
++                    if (ch != '}')
++                    {
++                        varNameSb.Append(ch);
++                    }
++                    else
++                    {
++                        // Found the end of the variable substitution
++                        var varName = varNameSb.ToString();
++                        if (values.TryGetValue(varName, out var value))
++                        {
++                            sb.Append(value);
++                        }
++                        else
++                        {
++                            Log.LogWarning(null, null, null, TemplateFile,
++                                line, 0, 0, 0,
++                                message: $"No property value is available for '{varName}'");
++                        }
++
++                        varNameSb.Clear();
++                        break;
++                    }
++                }
++
++                if (varNameSb.Length > 0)
++                {
++                    Log.LogWarning(null, null, null, TemplateFile,
++                                line, 0, 0, 0,
++                                message: "Expected closing bracket for variable placeholder. No substitution will be made.");
++                    sb.Append("${").Append(varNameSb.ToString());
++                }
++            }
++
++            return sb.ToString();
++        }
++    }
++}
+-- 
+2.18.0
+
