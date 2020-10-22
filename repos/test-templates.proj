@@ -3,12 +3,10 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
+    <BuildCommandArgs>pack $(ProjectDirectory)template_feed/NetCoreTestTemplates.sln</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --binaryLog</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
-    <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
-    <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
+    <BuildCommand>$(DotnetToolCommand) $(BuildCommandArgs)</BuildCommand>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
     <NuGetConfigFile>$(ProjectDirectory)NuGet.config</NuGetConfigFile>
