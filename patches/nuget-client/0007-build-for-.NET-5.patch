@@ -1,0 +1,67 @@
+From a158ba6c9bdf7465264a5de8ee62e5d3572b961a Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Thu, 12 Nov 2020 15:51:37 +0100
+Subject: [PATCH] nuget.client: build for .NET 5
+
+---
+ build/common.project.props                              | 4 ++--
+ build/packages.targets                                  | 4 ++--
+ src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/build/common.project.props b/build/common.project.props
+index 03c93ae65..4679fd57a 100644
+--- a/build/common.project.props
++++ b/build/common.project.props
+@@ -13,11 +13,11 @@
+     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+     <NETFXTargetFrameworkVersion>v4.7.2</NETFXTargetFrameworkVersion>
+     <NETFXTargetFramework>net472</NETFXTargetFramework>
+-    <NETCoreTargetFramework>netcoreapp2.1</NETCoreTargetFramework>
++    <NETCoreTargetFramework>netcoreapp5.0</NETCoreTargetFramework>
+     <NETCoreTargetFrameworksForSigning>$(NETCoreTargetFramework);netcoreapp5.0</NETCoreTargetFrameworksForSigning>
+     <IsBuildOnlyXPLATProjects>$(DotNetBuildFromSource)</IsBuildOnlyXPLATProjects>
+     <NETCoreTestTargetFramework>netcoreapp5.0</NETCoreTestTargetFramework>
+-    <NetStandardVersion>netstandard2.0</NetStandardVersion>
++    <NetStandardVersion>netcoreapp5.0</NetStandardVersion>
+     <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFramework)</TargetFrameworksExe>
+     <TargetFrameworksExe Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">$(NETCoreTargetFramework)</TargetFrameworksExe>
+     <TargetFrameworksExeForSigning>$(TargetFrameworksExe);netcoreapp5.0</TargetFrameworksExeForSigning>
+diff --git a/build/packages.targets b/build/packages.targets
+index 873850ccb..baa369e09 100644
+--- a/build/packages.targets
++++ b/build/packages.targets
+@@ -8,7 +8,7 @@
+         <VSServicesVersion>16.153.0</VSServicesVersion>
+         <VSThreadingVersion>16.7.56</VSThreadingVersion>
+         <!-- TODO - remove this when temporary patching is no longer necessary. See https://github.com/nuget/home/issues/8952 -->
+-        <PatchedSystemPackagesVersion>5.0.0-preview.3.20214.6</PatchedSystemPackagesVersion>
++        <PatchedSystemPackagesVersion>5.0.0</PatchedSystemPackagesVersion>
+     </PropertyGroup>
+ 
+     <!-- Test and package versions -->
+@@ -66,7 +66,7 @@
+         <PackageReference Update="System.Diagnostics.Debug" Version="$(SystemPackagesVersion)" />
+         <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(PatchedSystemPackagesVersion)" />
+         <PackageReference Update="System.Security.Cryptography.Cng" Version="$(PatchedSystemPackagesVersion)" />
+-        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="4.4.0" />
++        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="$(PatchedSystemPackagesVersion)" />
+         <PackageReference Update="System.Threading.Tasks.Dataflow" Version="4.9.0" />
+         <PackageReference Update="VSLangProj" Version="7.0.3300" />
+         <PackageReference Update="VSLangProj110" Version="11.0.61030" />
+diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+index 4f3ac234c..1ad241531 100644
+--- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
++++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+@@ -4,7 +4,7 @@
+ 
+   <PropertyGroup>
+     <Description>NuGet's understanding of target frameworks.</Description>
+-    <TargetFrameworks>$(TargetFrameworksLibrary)</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+     <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' != 'true'">$(TargetFrameworks);net40;net45</TargetFrameworks>
+     <TargetFramework />
+     <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
+-- 
+2.26.2
+
