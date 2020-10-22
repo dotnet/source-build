@@ -241,7 +241,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs/prebuilt-reports
+        mkdir -p /logs/tarball/logs/prebuilt-reports
         cd \"$(tarballName)\"
         find . \( \
           -path './artifacts/*-report/*' -o \
