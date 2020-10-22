@@ -1,0 +1,62 @@
+From 17d1615ffa9aa4d280adb298c3c1544a1918f2f7 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 22 Oct 2020 12:44:30 +0000
+Subject: [PATCH] Change package versions to use SBRP
+
+In order to build for net472 (a requirement for OmniSharp), change
+package versions of some system packages to SBRP versions, which
+have net4x assets.
+---
+ .../Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj  | 2 +-
+ .../Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj    | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/Cli/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj b/src/Cli/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+index ec9bfa3..c10ac6b 100644
+--- a/src/Cli/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
++++ b/src/Cli/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+@@ -15,7 +15,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelPackageVersion)" />
++    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+     <PackageReference Include="NuGet.Versioning" Version="$(NuGetVersioningPackageVersion)" />
+     <PackageReference Include="NuGet.Packaging" Version="$(NuGetPackagingPackageVersion)" />
+     <!-- nuget moved all type from NuGet.Packaging.Core to NuGet.Packaging and added type forwarding in 5.0.0-rtm.5821.
+diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
+index 6baf864..2f707c0 100644
+--- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
++++ b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
+@@ -6,7 +6,7 @@
+     <PackageId>Microsoft.NET.Sdk</PackageId>
+     <OutDirName>$(Configuration)\Sdks\$(PackageId)\tools</OutDirName>
+   </PropertyGroup>
+-  
++
+   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+ 
+   <PropertyGroup>
+@@ -49,7 +49,7 @@
+     <PackageReference Include="Microsoft.Build" Version="15.7.179" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.7.179" ExcludeAssets="Runtime" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" ExcludeAssets="Runtime" />
+-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelVersion)" />
++    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" />
+     <PackageReference Include="Microsoft.NET.HostModel" Version="$(MicrosoftNETHostModelVersion)" />
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelVersion)" />
+@@ -59,8 +59,8 @@
+ 
+   <!-- Packages that are in-box for .NET Core, so we only need to reference them for .NET Framework -->
+   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+-    
++    <PackageReference Include="System.Reflection.Metadata" Version="1.8.1" />
++
+   </ItemGroup>
+ 
+   <!-- These are loaded from the CLI's copy on .NET Core, we don't need to duplicate them on disk -->
+-- 
+1.8.3.1
+
