@@ -131,7 +131,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs
+        mkdir -p /logs/source-build/logs/prebuilt-reports
         find . \( \
           -path './artifacts/*-report/*' -o \
           -path './artifacts/msbuild-debug/*' -o \
@@ -139,7 +139,11 @@ jobs:
           -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;"
+          -exec cp {} --parents /logs/source-build/logs \;
+        find . \( \
+          -path './artifacts/*-report/*' \) \
+          -exec cp {} --parents /logs/source-build/logs/prebuilt-reports \;
+        "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build production build logs
     condition: always()
@@ -237,7 +241,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/tarball/logs
+        mkdir -p /logs/source-build/logs/prebuilt-reports
         cd \"$(tarballName)\"
         find . \( \
           -path './artifacts/*-report/*' -o \
@@ -246,7 +250,11 @@ jobs:
           -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/tarball/logs \;"
+          -exec cp {} --parents /logs/tarball/logs \;
+        find . \( \
+          -path './artifacts/*-report/*' \) \
+          -exec cp {} --parents /logs/tarball/logs/prebuilt-reports \;
+        "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball logs
     condition: eq(variables['sb.tarball'], true)
@@ -277,6 +285,14 @@ jobs:
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   # Publish artifacts.
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Prebuilt Report Logs artifact
+    condition: always()
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs/prebuilt-reports
+      ArtifactName: Logs $(artifactName) - Prebuilt Reports
+      ArtifactType: Container
   - task: PublishBuildArtifacts@1
     displayName: Publish Logs artifact
     condition: always()
