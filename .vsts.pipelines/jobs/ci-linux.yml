@@ -131,7 +131,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.src.map) $(docker.src.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/source-build/logs/prebuilt-reports
+        mkdir -p /logs/source-build/logs
         find . \( \
           -path './artifacts/*-report/*' -o \
           -path './artifacts/msbuild-debug/*' -o \
@@ -140,9 +140,10 @@ jobs:
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/source-build/logs \;
+        mkdir -p /logs/prebuilt-reports/source-build
         find . \( \
           -path './artifacts/*-report/*' \) \
-          -exec cp {} --parents /logs/source-build/logs/prebuilt-reports \;
+          -exec cp {} --parents /logs/prebuilt-reports/source-build \;
         "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build production build logs
@@ -241,7 +242,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.logs.map) $(docker.tb.map) $(docker.tb.work) $(imageName) /bin/bash -c "
-        mkdir -p /logs/tarball/logs/prebuilt-reports
+        mkdir -p /logs/tarball/logs
         cd \"$(tarballName)\"
         find . \( \
           -path './artifacts/*-report/*' -o \
@@ -251,9 +252,10 @@ jobs:
           -iname '*.binlog' -o \
           -iname '*.log' \) \
           -exec cp {} --parents /logs/tarball/logs \;
+        mkdir -p /logs/prebuilt-reports/tarball
         find . \( \
           -path './artifacts/*-report/*' \) \
-          -exec cp {} --parents /logs/tarball/logs/prebuilt-reports \;
+          -exec cp {} --parents /logs/prebuilt-reports/tarball \;
         "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball logs
