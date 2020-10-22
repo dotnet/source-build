@@ -139,7 +139,12 @@ jobs:
           -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/source-build/logs \;"
+          -exec cp {} --parents /logs/source-build/logs \;
+        mkdir -p /logs/prebuilt-reports/source-build
+        find . \( \
+          -path './artifacts/*-report/*' \) \
+          -exec cp {} --parents /logs/prebuilt-reports/source-build \;
+        "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy source-build production build logs
     condition: always()
@@ -246,7 +251,12 @@ jobs:
           -path './artifacts/aspnet-debug/*' -o \
           -iname '*.binlog' -o \
           -iname '*.log' \) \
-          -exec cp {} --parents /logs/tarball/logs \;"
+          -exec cp {} --parents /logs/tarball/logs \;
+        mkdir -p /logs/prebuilt-reports/tarball
+        find . \( \
+          -path './artifacts/*-report/*' \) \
+          -exec cp {} --parents /logs/prebuilt-reports/tarball \;
+        "
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy tarball logs
     condition: eq(variables['sb.tarball'], true)
@@ -277,6 +287,14 @@ jobs:
       targetFolder: $(Build.ArtifactStagingDirectory)
 
   # Publish artifacts.
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Prebuilt Report Logs artifact
+    condition: always()
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs/prebuilt-reports
+      ArtifactName: Logs $(artifactName) - Prebuilt Reports
+      ArtifactType: Container
   - task: PublishBuildArtifacts@1
     displayName: Publish Logs artifact
     condition: always()
