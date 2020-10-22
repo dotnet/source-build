@@ -1,0 +1,56 @@
+From 1d66493cc19a555e406e0788864011ba41ea7352 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 22 Oct 2020 10:26:14 -0500
+Subject: [PATCH 2/2] Remove test-template tests
+
+---
+ eng/Build.props                               |  1 -
+ ...crosoft.TestTemplates.Acceptance.Tests.sln | 25 -------------------
+ 2 files changed, 26 deletions(-)
+ delete mode 100644 test/Microsoft.TestTemplates.Acceptance.Tests.sln
+
+diff --git a/eng/Build.props b/eng/Build.props
+index 9140eca..1028cdc 100644
+--- a/eng/Build.props
++++ b/eng/Build.props
+@@ -5,6 +5,5 @@
+     <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\template_feed\NetCoreTestTemplates.sln" />
+     <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\Templates\MSTestTemplates.sln" />
+     <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\WizardExtensions\WizardExtensions.sln" />
+-    <ProjectToBuild Include="$(MSBuildThisFileDirectory)..\test\Microsoft.TestTemplates.Acceptance.Tests.sln" />
+   </ItemGroup>
+ </Project>
+diff --git a/test/Microsoft.TestTemplates.Acceptance.Tests.sln b/test/Microsoft.TestTemplates.Acceptance.Tests.sln
+deleted file mode 100644
+index 7d8605a..0000000
+--- a/test/Microsoft.TestTemplates.Acceptance.Tests.sln
++++ /dev/null
+@@ -1,25 +0,0 @@
+-﻿
+-Microsoft Visual Studio Solution File, Format Version 12.00
+-# Visual Studio Version 16
+-VisualStudioVersion = 16.0.30404.172
+-MinimumVisualStudioVersion = 10.0.40219.1
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.TestTemplates.Acceptance.Tests", "Microsoft.TestTemplates.Acceptance.Tests\Microsoft.TestTemplates.Acceptance.Tests.csproj", "{369E063C-1823-4213-BF99-504002639ED1}"
+-EndProject
+-Global
+-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+-		Debug|Any CPU = Debug|Any CPU
+-		Release|Any CPU = Release|Any CPU
+-	EndGlobalSection
+-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+-		{369E063C-1823-4213-BF99-504002639ED1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{369E063C-1823-4213-BF99-504002639ED1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{369E063C-1823-4213-BF99-504002639ED1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{369E063C-1823-4213-BF99-504002639ED1}.Release|Any CPU.Build.0 = Release|Any CPU
+-	EndGlobalSection
+-	GlobalSection(SolutionProperties) = preSolution
+-		HideSolutionNode = FALSE
+-	EndGlobalSection
+-	GlobalSection(ExtensibilityGlobals) = postSolution
+-		SolutionGuid = {CDFEF38D-33CE-4011-90A1-C63A1CD2EA31}
+-	EndGlobalSection
+-EndGlobal
+-- 
+2.18.0
+
