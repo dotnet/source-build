@@ -1,13 +1,14 @@
-From d8ba4e7ae5a96fac748c84c28264ee198e93603e Mon Sep 17 00:00:00 2001
+From 176e2be6c50b138063993597ebd6560199452d93 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 21 Oct 2020 12:05:09 -0500
-Subject: [PATCH 12/12] Try moving template generation task from
- KoreBuild.Tasks.
+Subject: [PATCH 5/7] Try moving template generation task from KoreBuild.Tasks.
 
 ---
  .../src/GenerateFileFromTemplates.cs          | 147 ++++++++++++++++++
- 1 file changed, 147 insertions(+)
+ .../src/MSBuildListSplitter.cs                |  50 ++++++
+ 2 files changed, 197 insertions(+)
  create mode 100644 src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs
+ create mode 100644 src/Microsoft.DotNet.Arcade.Sdk/src/MSBuildListSplitter.cs
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs b/src/Microsoft.DotNet.Arcade.Sdk/src/GenerateFileFromTemplates.cs
 new file mode 100644
@@ -159,6 +160,62 @@ index 00000000..059aa142
 +            }
 +
 +            return sb.ToString();
++        }
++    }
++}
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/src/MSBuildListSplitter.cs b/src/Microsoft.DotNet.Arcade.Sdk/src/MSBuildListSplitter.cs
+new file mode 100644
+index 00000000..548ea972
+--- /dev/null
++++ b/src/Microsoft.DotNet.Arcade.Sdk/src/MSBuildListSplitter.cs
+@@ -0,0 +1,50 @@
++// Copyright (c) .NET Foundation. All rights reserved.
++// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
++
++using System;
++using System.Collections.Generic;
++
++namespace Microsoft.AspNetCore.BuildTools
++{
++    internal static class MSBuildListSplitter
++    {
++        public static IDictionary<string, string> GetNamedProperties(string input)
++        {
++            if (string.IsNullOrEmpty(input))
++            {
++                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
++            }
++
++            return GetNamedProperties(input.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries));
++        }
++
++        public static IDictionary<string, string> GetNamedProperties(string[] input)
++        {
++            var values = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
++            if (input == null)
++            {
++                return values;
++            }
++
++            foreach (var item in input)
++            {
++                var splitIdx = item.IndexOf('=');
++                if (splitIdx < 0)
++                {
++                    continue;
++                }
++
++                var key = item.Substring(0, splitIdx).Trim();
++                if (string.IsNullOrEmpty(key))
++                {
++                    continue;
++                }
++
++                var value = item.Substring(splitIdx + 1);
++                values[key] = value;
++            }
++
++            return values;
 +        }
 +    }
 +}
