@@ -91,15 +91,15 @@ diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
 index 35c3d4ad9..15601e98f 100644
 --- a/src/redist/redist.csproj
 +++ b/src/redist/redist.csproj
-@@ -11,7 +11,7 @@
+@@ -12,7 +12,7 @@
                          RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)"
                          />
  
 -    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" />
 +    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+     <ProjectReference Include="..\VSTemplateLocator\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" />
    </ItemGroup>
  
-   <ItemGroup>
 -- 
 2.18.0
 
