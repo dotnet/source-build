@@ -1,15 +1,16 @@
-From 9177a0fb0833ae9f831c2a8074d3c8dff7aca0b0 Mon Sep 17 00:00:00 2001
+From e1bfe3ef4a6088061a3179f6e012f61225805a6e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 15 Oct 2020 12:30:16 -0500
-Subject: [PATCH 16/16] Need to build templates in source-build.
+Subject: [PATCH 15/15] Need to build templates in source-build.
 
 ---
- Directory.Build.props   | 1 +
- Directory.Build.targets | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ Directory.Build.props                        | 1 +
+ Directory.Build.targets                      | 2 +-
+ src/ProjectTemplates/GenerateContent.targets | 2 ++
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index af3b14dd5f..4bd2da63d3 100644
+index 40fc07be18..eefa34bcfd 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -20,6 +20,7 @@
@@ -21,7 +22,7 @@ index af3b14dd5f..4bd2da63d3 100644
  
      <!--
 diff --git a/Directory.Build.targets b/Directory.Build.targets
-index 0980e5eda6..031ee65717 100644
+index d9d71cc6b4..98439457a7 100644
 --- a/Directory.Build.targets
 +++ b/Directory.Build.targets
 @@ -4,7 +4,7 @@
@@ -33,6 +34,17 @@ index 0980e5eda6..031ee65717 100644
  
      <!-- If the user has specified that they want to skip building any test related projects with SkipTestBuild,
       suppress all targets for TestProjects using ExcludeFromBuild. -->
+diff --git a/src/ProjectTemplates/GenerateContent.targets b/src/ProjectTemplates/GenerateContent.targets
+index 0de73148b3..c748e69512 100644
+--- a/src/ProjectTemplates/GenerateContent.targets
++++ b/src/ProjectTemplates/GenerateContent.targets
+@@ -1,4 +1,6 @@
+ <Project>
++  <UsingTask TaskName="Microsoft.AspNetCore.BuildTools.GenerateFileFromTemplate" AssemblyFile="$(ArcadeSdkBuildTasksAssembly)" />
++
+   <PropertyGroup>
+     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+ 
 -- 
 2.18.0
 
