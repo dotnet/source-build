@@ -1,0 +1,121 @@
+From e0a0996d35c4049b5904d954044306e906f9c075 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 21 Oct 2020 11:39:24 -0500
+Subject: [PATCH] Make sh files executable.
+
+---
+ build.sh                                     | 0
+ eng/common/SetupNugetSources.sh              | 0
+ eng/common/build.sh                          | 0
+ eng/common/cibuild.sh                        | 0
+ eng/common/cross/arm64/tizen-build-rootfs.sh | 0
+ eng/common/cross/arm64/tizen-fetch.sh        | 0
+ eng/common/cross/armel/tizen-build-rootfs.sh | 0
+ eng/common/cross/armel/tizen-fetch.sh        | 0
+ eng/common/cross/build-android-rootfs.sh     | 0
+ eng/common/cross/build-rootfs.sh             | 0
+ eng/common/darc-init.sh                      | 0
+ eng/common/dotnet-install.sh                 | 0
+ eng/common/init-tools-native.sh              | 0
+ eng/common/internal-feed-operations.sh       | 0
+ eng/common/msbuild.sh                        | 0
+ eng/common/native/common-library.sh          | 0
+ eng/common/native/find-native-compiler.sh    | 0
+ eng/common/native/install-cmake-test.sh      | 0
+ eng/common/native/install-cmake.sh           | 0
+ eng/common/performance/performance-setup.sh  | 0
+ eng/common/pipeline-logging-functions.sh     | 0
+ eng/common/tools.sh                          | 0
+ 22 files changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 build.sh
+ mode change 100644 => 100755 eng/common/SetupNugetSources.sh
+ mode change 100644 => 100755 eng/common/build.sh
+ mode change 100644 => 100755 eng/common/cibuild.sh
+ mode change 100644 => 100755 eng/common/cross/arm64/tizen-build-rootfs.sh
+ mode change 100644 => 100755 eng/common/cross/arm64/tizen-fetch.sh
+ mode change 100644 => 100755 eng/common/cross/armel/tizen-build-rootfs.sh
+ mode change 100644 => 100755 eng/common/cross/armel/tizen-fetch.sh
+ mode change 100644 => 100755 eng/common/cross/build-android-rootfs.sh
+ mode change 100644 => 100755 eng/common/cross/build-rootfs.sh
+ mode change 100644 => 100755 eng/common/darc-init.sh
+ mode change 100644 => 100755 eng/common/dotnet-install.sh
+ mode change 100644 => 100755 eng/common/init-tools-native.sh
+ mode change 100644 => 100755 eng/common/internal-feed-operations.sh
+ mode change 100644 => 100755 eng/common/msbuild.sh
+ mode change 100644 => 100755 eng/common/native/common-library.sh
+ mode change 100644 => 100755 eng/common/native/find-native-compiler.sh
+ mode change 100644 => 100755 eng/common/native/install-cmake-test.sh
+ mode change 100644 => 100755 eng/common/native/install-cmake.sh
+ mode change 100644 => 100755 eng/common/performance/performance-setup.sh
+ mode change 100644 => 100755 eng/common/pipeline-logging-functions.sh
+ mode change 100644 => 100755 eng/common/tools.sh
+
+diff --git a/build.sh b/build.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/SetupNugetSources.sh b/eng/common/SetupNugetSources.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/build.sh b/eng/common/build.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cibuild.sh b/eng/common/cibuild.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/arm64/tizen-build-rootfs.sh b/eng/common/cross/arm64/tizen-build-rootfs.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/arm64/tizen-fetch.sh b/eng/common/cross/arm64/tizen-fetch.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/armel/tizen-build-rootfs.sh b/eng/common/cross/armel/tizen-build-rootfs.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/armel/tizen-fetch.sh b/eng/common/cross/armel/tizen-fetch.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/build-android-rootfs.sh b/eng/common/cross/build-android-rootfs.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/cross/build-rootfs.sh b/eng/common/cross/build-rootfs.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/darc-init.sh b/eng/common/darc-init.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/dotnet-install.sh b/eng/common/dotnet-install.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/init-tools-native.sh b/eng/common/init-tools-native.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/internal-feed-operations.sh b/eng/common/internal-feed-operations.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/msbuild.sh b/eng/common/msbuild.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/native/common-library.sh b/eng/common/native/common-library.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/native/find-native-compiler.sh b/eng/common/native/find-native-compiler.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/native/install-cmake-test.sh b/eng/common/native/install-cmake-test.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/native/install-cmake.sh b/eng/common/native/install-cmake.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/performance/performance-setup.sh b/eng/common/performance/performance-setup.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/pipeline-logging-functions.sh b/eng/common/pipeline-logging-functions.sh
+old mode 100644
+new mode 100755
+diff --git a/eng/common/tools.sh b/eng/common/tools.sh
+old mode 100644
+new mode 100755
+-- 
+2.18.0
+

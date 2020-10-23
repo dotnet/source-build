@@ -1,0 +1,67 @@
+From ef25c5a4142b1a52c7996e8a281afa879c5ae3d0 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 22 Oct 2020 14:31:25 -0500
+Subject: [PATCH 3/3] Fix casing in project files.
+
+---
+ .../Microsoft.DotNet.Test.ProjectTemplates.2.1.csproj           | 2 +-
+ .../Microsoft.DotNet.Test.ProjectTemplates.3.0.csproj           | 2 +-
+ .../Microsoft.DotNet.Test.ProjectTemplates.3.1.csproj           | 2 +-
+ .../Microsoft.DotNet.Test.ProjectTemplates.5.0.csproj           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.2.1/Microsoft.DotNet.Test.ProjectTemplates.2.1.csproj b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.2.1/Microsoft.DotNet.Test.ProjectTemplates.2.1.csproj
+index 5767aee..6f7bba5 100644
+--- a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.2.1/Microsoft.DotNet.Test.ProjectTemplates.2.1.csproj
++++ b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.2.1/Microsoft.DotNet.Test.ProjectTemplates.2.1.csproj
+@@ -24,7 +24,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(MSBuildThisFileDirectory)../../src/GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.0/Microsoft.DotNet.Test.ProjectTemplates.3.0.csproj b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.0/Microsoft.DotNet.Test.ProjectTemplates.3.0.csproj
+index 5eab5b3..6951001 100644
+--- a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.0/Microsoft.DotNet.Test.ProjectTemplates.3.0.csproj
++++ b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.0/Microsoft.DotNet.Test.ProjectTemplates.3.0.csproj
+@@ -24,7 +24,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(MSBuildThisFileDirectory)../../src/GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.1/Microsoft.DotNet.Test.ProjectTemplates.3.1.csproj b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.1/Microsoft.DotNet.Test.ProjectTemplates.3.1.csproj
+index 7caa2bf..f5603e0 100644
+--- a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.1/Microsoft.DotNet.Test.ProjectTemplates.3.1.csproj
++++ b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.3.1/Microsoft.DotNet.Test.ProjectTemplates.3.1.csproj
+@@ -24,7 +24,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(MSBuildThisFileDirectory)../../src/GitInfo.cs" />
+-        <Content Include="Content\**" >
++        <Content Include="content\**" >
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+diff --git a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.5.0/Microsoft.DotNet.Test.ProjectTemplates.5.0.csproj b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.5.0/Microsoft.DotNet.Test.ProjectTemplates.5.0.csproj
+index c39ab4c..0381c0f 100644
+--- a/template_feed/Microsoft.DotNet.Test.ProjectTemplates.5.0/Microsoft.DotNet.Test.ProjectTemplates.5.0.csproj
++++ b/template_feed/Microsoft.DotNet.Test.ProjectTemplates.5.0/Microsoft.DotNet.Test.ProjectTemplates.5.0.csproj
+@@ -24,7 +24,7 @@
+         <PackageReference Remove="Microsoft.NETCore.App" />
+         <Compile Remove="$(GitInfoFile)" />
+         <Compile Remove="$(MSBuildThisFileDirectory)../../src/GitInfo.cs" />
+-        <Content Include="Content\**">
++        <Content Include="content\**">
+             <PackagePath>content</PackagePath>
+         </Content>
+     </ItemGroup>
+-- 
+2.18.0
+
