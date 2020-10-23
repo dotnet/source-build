@@ -1,0 +1,120 @@
+From 20b229574b47f01c0b233a5915a63fe8a7759c1d Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Fri, 23 Oct 2020 09:42:48 +0200
+Subject: [PATCH] vstest: build for .NET 5
+
+---
+ .../Microsoft.TestPlatform.PlatformAbstractions.csproj      | 6 +++++-
+ src/datacollector/datacollector.csproj                      | 2 +-
+ src/package/package/package.csproj                          | 2 +-
+ src/testhost.x86/testhost.x86.csproj                        | 2 +-
+ src/testhost/testhost.csproj                                | 4 ++--
+ src/vstest.console/vstest.console.csproj                    | 4 ++--
+ 6 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
+index e112259a..73b35c87 100644
+--- a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
++++ b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
+@@ -7,7 +7,7 @@
+   <PropertyGroup>
+     <AssemblyName>Microsoft.TestPlatform.PlatformAbstractions</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net451;uap10.0;netstandard2.0</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard2.0;netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard2.0;net5.0</TargetFrameworks>
+     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+     <EnableCodeAnalysis>true</EnableCodeAnalysis>
+     <NoWarn>NU1605</NoWarn>
+@@ -35,6 +35,10 @@
+   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+     <Compile Include="netstandard\**\*.cs" />
+   </ItemGroup>
++  <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
++    <Compile Include="netcore\**\*.cs" />
++    <Compile Include="common\**\*.cs" />
++  </ItemGroup>
+   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
+     <Compile Include="netcore\**\*.cs" />
+     <Compile Include="common\**\*.cs" />
+diff --git a/src/datacollector/datacollector.csproj b/src/datacollector/datacollector.csproj
+index 24e3df7c..bb6d3631 100644
+--- a/src/datacollector/datacollector.csproj
++++ b/src/datacollector/datacollector.csproj
+@@ -10,7 +10,7 @@
+   <PropertyGroup>
+     <AssemblyName>datacollector</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
+     <OutputType>Exe</OutputType>
+diff --git a/src/package/package/package.csproj b/src/package/package/package.csproj
+index 4b39d121..febb3848 100644
+--- a/src/package/package/package.csproj
++++ b/src/package/package/package.csproj
+@@ -6,7 +6,7 @@
+   <Import Project="$(TestPlatformRoot)scripts/build/TestPlatform.Settings.targets" />
+   <PropertyGroup>
+     <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
+     <AssemblyName>package</AssemblyName>
+     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+diff --git a/src/testhost.x86/testhost.x86.csproj b/src/testhost.x86/testhost.x86.csproj
+index 535a6e6a..a3ef5cee 100644
+--- a/src/testhost.x86/testhost.x86.csproj
++++ b/src/testhost.x86/testhost.x86.csproj
+@@ -7,7 +7,7 @@
+   <PropertyGroup>
+     <AssemblyName>testhost.x86</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+     <Prefer32Bit>true</Prefer32Bit>
+diff --git a/src/testhost/testhost.csproj b/src/testhost/testhost.csproj
+index c239485d..00101709 100644
+--- a/src/testhost/testhost.csproj
++++ b/src/testhost/testhost.csproj
+@@ -7,11 +7,11 @@
+   <PropertyGroup>
+     <AssemblyName>testhost</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
+     <OutputType>Exe</OutputType>
+     <ApplicationManifest>app.manifest</ApplicationManifest>
+   </PropertyGroup>
+-  <PropertyGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1' ">
++  <PropertyGroup Condition="'$(TargetFramework)' != 'net5.0' ">
+     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+   </PropertyGroup>
+diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
+index ea970a60..69144393 100644
+--- a/src/vstest.console/vstest.console.csproj
++++ b/src/vstest.console/vstest.console.csproj
+@@ -7,7 +7,7 @@
+   <PropertyGroup>
+     <AssemblyName>vstest.console</AssemblyName>
+     <TargetFrameworks>netcoreapp2.1;net451</TargetFrameworks>
+-    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <OutputType>Exe</OutputType>
+     <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
+@@ -15,7 +15,7 @@
+     <ApplicationManifest>app.manifest</ApplicationManifest>
+     <RootNamespace>Microsoft.VisualStudio.TestPlatform.CommandLine</RootNamespace>
+   </PropertyGroup>
+-  <PropertyGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1'">
++  <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+     <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+   </PropertyGroup>
+   <ItemGroup>
+-- 
+2.26.2
+
