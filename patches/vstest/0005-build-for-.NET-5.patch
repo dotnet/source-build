@@ -1,4 +1,4 @@
-From 20b229574b47f01c0b233a5915a63fe8a7759c1d Mon Sep 17 00:00:00 2001
+From ca612ca3918e005ee94d85a902e9131eb5cb2035 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Fri, 23 Oct 2020 09:42:48 +0200
 Subject: [PATCH] vstest: build for .NET 5
@@ -9,8 +9,9 @@ Subject: [PATCH] vstest: build for .NET 5
  src/package/package/package.csproj                          | 2 +-
  src/testhost.x86/testhost.x86.csproj                        | 2 +-
  src/testhost/testhost.csproj                                | 4 ++--
+ src/vstest.console/CommandLine/CommandLineOptions.cs        | 4 ++--
  src/vstest.console/vstest.console.csproj                    | 4 ++--
- 6 files changed, 12 insertions(+), 8 deletions(-)
+ 7 files changed, 14 insertions(+), 10 deletions(-)
 
 diff --git a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
 index e112259a..73b35c87 100644
@@ -93,6 +94,27 @@ index c239485d..00101709 100644
      <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
      <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
    </PropertyGroup>
+diff --git a/src/vstest.console/CommandLine/CommandLineOptions.cs b/src/vstest.console/CommandLine/CommandLineOptions.cs
+index 64d21204..9c25faf8 100644
+--- a/src/vstest.console/CommandLine/CommandLineOptions.cs
++++ b/src/vstest.console/CommandLine/CommandLineOptions.cs
+@@ -295,14 +295,14 @@ namespace Microsoft.VisualStudio.TestPlatform.CommandLine
+                 // Get matching files from file pattern parser
+                 matchingFiles = FilePatternParser.GetMatchingFiles(source);
+             }
+-            catch(TestSourceException ex)
++            catch(TestSourceException)
+             {
+                 if(source.StartsWith("-") || source.StartsWith("/"))
+                 {
+                     throw new TestSourceException(
+                         string.Format(CultureInfo.CurrentUICulture, CommandLineResources.InvalidArgument, source));
+                 }
+-                throw ex;
++                throw;
+             }
+             // Add the matching files to source list
+             this.sources = this.sources.Union(matchingFiles).ToList();
 diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
 index ea970a60..69144393 100644
 --- a/src/vstest.console/vstest.console.csproj
