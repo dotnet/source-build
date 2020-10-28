@@ -35,6 +35,7 @@ namespace Microsoft.DotNet.Build.Tasks
         // This is a list of bad stuff we should remove that's never part of a version number.  If adding to it, it
         // should include the delimiter immediately before the RID, arch, or extension.
         protected string[] BadAtoms = new[] { "-x64", ".x64",
+                                              "-arm64", ".arm64",
                                               ".tar", ".gz",
                                               "-rhel.7", "-rhel.8", "-rhel.9",
                                               ".rhel.7", ".rhel.8", ".rhel.9",
