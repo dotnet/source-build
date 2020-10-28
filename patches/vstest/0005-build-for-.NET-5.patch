@@ -1,18 +1,34 @@
-From ca612ca3918e005ee94d85a902e9131eb5cb2035 Mon Sep 17 00:00:00 2001
+From 32b756689c05bd8180c5c7d005e7d8dd299450f4 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Fri, 23 Oct 2020 09:42:48 +0200
 Subject: [PATCH] vstest: build for .NET 5
 
 ---
+ scripts/build.sh                                            | 2 +-
  .../Microsoft.TestPlatform.PlatformAbstractions.csproj      | 6 +++++-
+ .../Hosting/DotnetTestHostManager.cs                        | 2 +-
  src/datacollector/datacollector.csproj                      | 2 +-
+ src/package/nuspec/TestPlatform.CLI.nuspec                  | 2 +-
  src/package/package/package.csproj                          | 2 +-
  src/testhost.x86/testhost.x86.csproj                        | 2 +-
  src/testhost/testhost.csproj                                | 4 ++--
  src/vstest.console/CommandLine/CommandLineOptions.cs        | 4 ++--
  src/vstest.console/vstest.console.csproj                    | 4 ++--
- 7 files changed, 14 insertions(+), 10 deletions(-)
+ 10 files changed, 17 insertions(+), 13 deletions(-)
 
+diff --git a/scripts/build.sh b/scripts/build.sh
+index e4454a5d..cddfd93b 100755
+--- a/scripts/build.sh
++++ b/scripts/build.sh
+@@ -120,7 +120,7 @@ DOTNET_CLI_VERSION="5.0.100-rc.1.20380.12"
+ TPB_Solution="TestPlatform.sln"
+ TPB_Build_From_Source_Solution="TestPlatform_BuildFromSource.sln"
+ TPB_TargetFramework="net451"
+-TPB_TargetFrameworkCore="netcoreapp2.1"
++TPB_TargetFrameworkCore="net5.0"
+ TPB_Configuration=$CONFIGURATION
+ TPB_TargetRuntime=$TARGET_RUNTIME
+ TPB_Version=$(test -z $VERSION_SUFFIX && echo $VERSION || echo $VERSION-$VERSION_SUFFIX)
 diff --git a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
 index e112259a..73b35c87 100644
 --- a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
@@ -37,6 +53,19 @@ index e112259a..73b35c87 100644
    <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.1' ">
      <Compile Include="netcore\**\*.cs" />
      <Compile Include="common\**\*.cs" />
+diff --git a/src/Microsoft.TestPlatform.TestHostProvider/Hosting/DotnetTestHostManager.cs b/src/Microsoft.TestPlatform.TestHostProvider/Hosting/DotnetTestHostManager.cs
+index eb4149d6..33a13411 100644
+--- a/src/Microsoft.TestPlatform.TestHostProvider/Hosting/DotnetTestHostManager.cs
++++ b/src/Microsoft.TestPlatform.TestHostProvider/Hosting/DotnetTestHostManager.cs
+@@ -252,7 +252,7 @@ namespace Microsoft.VisualStudio.TestPlatform.CrossPlatEngine.Hosting
+                         // testhost.(x86).exe is present in location {testHostNugetRoot}\build\netcoreapp2.1\{x86/x64}\{testhost.x86.exe/testhost.exe}
+                         var folderName = this.architecture == Architecture.X86 ? "x86" : "x64";
+                         var testHostNugetRoot = new DirectoryInfo(testHostPath).Parent.Parent.Parent;
+-                        var testHostExeNugetPath = Path.Combine(testHostNugetRoot.FullName, "build", "netcoreapp2.1", folderName, exeName);
++                        var testHostExeNugetPath = Path.Combine(testHostNugetRoot.FullName, "build", "net5.0", folderName, exeName);
+ 
+                         if (this.fileHelper.Exists(testHostExeNugetPath))
+                         {
 diff --git a/src/datacollector/datacollector.csproj b/src/datacollector/datacollector.csproj
 index 24e3df7c..bb6d3631 100644
 --- a/src/datacollector/datacollector.csproj
@@ -50,6 +79,18 @@ index 24e3df7c..bb6d3631 100644
      <WarningsAsErrors>true</WarningsAsErrors>
      <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
      <OutputType>Exe</OutputType>
+diff --git a/src/package/nuspec/TestPlatform.CLI.nuspec b/src/package/nuspec/TestPlatform.CLI.nuspec
+index ce0da806..018ba30e 100644
+--- a/src/package/nuspec/TestPlatform.CLI.nuspec
++++ b/src/package/nuspec/TestPlatform.CLI.nuspec
+@@ -21,6 +21,6 @@
+     <!-- Add a third party notice file -->
+     <file src="ThirdPartyNotices.txt" target="" />
+     
+-    <file src="netcoreapp2.1\**\*.*" exclude="**\*.pdb" target="contentFiles\any\netcoreapp2.1" />
++    <file src="net5.0\**\*.*" exclude="**\*.pdb" target="contentFiles\any\net5.0" />
+   </files>
+ </package>
 diff --git a/src/package/package/package.csproj b/src/package/package/package.csproj
 index 4b39d121..febb3848 100644
 --- a/src/package/package/package.csproj
