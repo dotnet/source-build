@@ -1,10 +1,10 @@
-From 32b756689c05bd8180c5c7d005e7d8dd299450f4 Mon Sep 17 00:00:00 2001
+From 1c9fbfe36a817582d370356e55b6a1c80d7bfc96 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Fri, 23 Oct 2020 09:42:48 +0200
 Subject: [PATCH] vstest: build for .NET 5
 
 ---
- scripts/build.sh                                            | 2 +-
+ scripts/build.sh                                            | 4 ++--
  .../Microsoft.TestPlatform.PlatformAbstractions.csproj      | 6 +++++-
  .../Hosting/DotnetTestHostManager.cs                        | 2 +-
  src/datacollector/datacollector.csproj                      | 2 +-
@@ -14,10 +14,10 @@ Subject: [PATCH] vstest: build for .NET 5
  src/testhost/testhost.csproj                                | 4 ++--
  src/vstest.console/CommandLine/CommandLineOptions.cs        | 4 ++--
  src/vstest.console/vstest.console.csproj                    | 4 ++--
- 10 files changed, 17 insertions(+), 13 deletions(-)
+ 10 files changed, 18 insertions(+), 14 deletions(-)
 
 diff --git a/scripts/build.sh b/scripts/build.sh
-index e4454a5d..cddfd93b 100755
+index e4454a5d..a8dcbddb 100755
 --- a/scripts/build.sh
 +++ b/scripts/build.sh
 @@ -120,7 +120,7 @@ DOTNET_CLI_VERSION="5.0.100-rc.1.20380.12"
@@ -29,6 +29,15 @@ index e4454a5d..cddfd93b 100755
  TPB_Configuration=$CONFIGURATION
  TPB_TargetRuntime=$TARGET_RUNTIME
  TPB_Version=$(test -z $VERSION_SUFFIX && echo $VERSION || echo $VERSION-$VERSION_SUFFIX)
+@@ -338,7 +338,7 @@ function publish_package()
+ 
+     log "publish_package: Complete. Elapsed $(( SECONDS - start ))s."
+     
+-    publishplatformatbstractions
++    # publishplatformatbstractions
+ }
+ 
+ function publishplatformatbstractions()
 diff --git a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj b/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
 index e112259a..73b35c87 100644
 --- a/src/Microsoft.TestPlatform.PlatformAbstractions/Microsoft.TestPlatform.PlatformAbstractions.csproj
