@@ -1,4 +1,4 @@
-From 1c9fbfe36a817582d370356e55b6a1c80d7bfc96 Mon Sep 17 00:00:00 2001
+From f809784f6258d3ad38cd2bab468e9effc2a5d4d4 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Fri, 23 Oct 2020 09:42:48 +0200
 Subject: [PATCH] vstest: build for .NET 5
@@ -11,10 +11,10 @@ Subject: [PATCH] vstest: build for .NET 5
  src/package/nuspec/TestPlatform.CLI.nuspec                  | 2 +-
  src/package/package/package.csproj                          | 2 +-
  src/testhost.x86/testhost.x86.csproj                        | 2 +-
- src/testhost/testhost.csproj                                | 4 ++--
+ src/testhost/testhost.csproj                                | 5 +++--
  src/vstest.console/CommandLine/CommandLineOptions.cs        | 4 ++--
  src/vstest.console/vstest.console.csproj                    | 4 ++--
- 10 files changed, 18 insertions(+), 14 deletions(-)
+ 10 files changed, 19 insertions(+), 14 deletions(-)
 
 diff --git a/scripts/build.sh b/scripts/build.sh
 index e4454a5d..a8dcbddb 100755
@@ -127,15 +127,16 @@ index 535a6e6a..a3ef5cee 100644
      <PlatformTarget>AnyCPU</PlatformTarget>
      <Prefer32Bit>true</Prefer32Bit>
 diff --git a/src/testhost/testhost.csproj b/src/testhost/testhost.csproj
-index c239485d..00101709 100644
+index c239485d..152b8ae0 100644
 --- a/src/testhost/testhost.csproj
 +++ b/src/testhost/testhost.csproj
-@@ -7,11 +7,11 @@
+@@ -7,11 +7,12 @@
    <PropertyGroup>
      <AssemblyName>testhost</AssemblyName>
      <TargetFrameworks>netcoreapp2.1;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
 +    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <TargetFramework>net5.0</TargetFramework>
      <OutputType>Exe</OutputType>
      <ApplicationManifest>app.manifest</ApplicationManifest>
    </PropertyGroup>
