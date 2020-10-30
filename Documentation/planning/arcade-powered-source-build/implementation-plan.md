@@ -12,9 +12,13 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
 | 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
+| ? | cssparser | ? | ✔️ | | | | | |
+| ? | diagnostics | ? | ✔️ | | | | | |
 | 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
 | 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
 | 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
+| ? | symreader | ? | ✔️ | | | | | |
+| ? | test-templates | ? | ✔️ | | | | | |
 | 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 | 1 | command-line-api | [?](https://github.com/) | ⏱ | | | | | |
