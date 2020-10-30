@@ -1,0 +1,1481 @@
+From 48442474744a416eee4f367d3e389a0916047842 Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Thu, 29 Oct 2020 18:20:09 -0400
+Subject: [PATCH 1/4] WIP for source-build
+
+This is a grab-bag of fixes to make roslyn-analzyers build in a
+source-build context.
+
+- Fix build on Linux. This is an early version of
+  dotnet/roslyn-analyzers#4419
+
+- Fix ./build.sh --pack support on Linux.
+
+- Fix up TargetFrameworks:
+  - Remove net46, net47, etc
+  - Move from netstandard 1.3 to 2.0
+
+- Remove FxCopAnalyzers.sln, which is not needed for source-build
+
+---
+ FxCopAnalyzers.sln                            | 193 ------------
+ RoslynAnalyzers.sln                           | 256 ---------------
+ build.sh                                      |  16 +
+ eng/GenerateAnalyzerNuspec.targets            |  17 +-
+ .../GenerateAnalyzerNuspec.csproj             |   8 +
+ eng/GenerateAnalyzerNuspec/Program.cs         | 296 ++++++++++++++++++
+ eng/Versions.props                            |   4 +
+ eng/common/dotnet-install.sh                  |   0
+ ...soft.CodeAnalysis.Analyzers.Package.csproj |  16 +-
+ ...soft.CodeAnalysis.AnalyzerUtilities.csproj |  12 +-
+ .../Microsoft.CodeAnalysis.Analyzers.csproj   |  16 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ ...eAnalysis.CSharp.BannedApiAnalyzers.csproj |   2 +-
+ ...oft.CodeAnalysis.BannedApiAnalyzers.csproj |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ ...ysis.VisualBasic.BannedApiAnalyzers.vbproj |   2 +-
+ ...t.CodeAnalysis.VersionCheckAnalyzer.csproj |   2 +-
+ ...Microsoft.CodeAnalysis.NetAnalyzers.csproj |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ ...Sharp.PerformanceSensitiveAnalyzers.csproj |   2 +-
+ ...lysis.PerformanceSensitiveAnalyzers.csproj |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ ...oft.CodeAnalysis.PublicApiAnalyzers.csproj |  12 +-
+ ...alysis.PublicApiAnalyzers.CodeFixes.csproj |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ .../Core/Roslyn.Diagnostics.Analyzers.csproj  |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ src/Text.Analyzers/Core/Text.Analyzers.csproj |  12 +-
+ .../Setup/AnalyzerReleases.Shipped.md         |   0
+ .../Setup/AnalyzerReleases.Unshipped.md       |   0
+ .../Compiler/Analyzer.Utilities.projitems     |   2 +-
+ 37 files changed, 436 insertions(+), 492 deletions(-)
+ delete mode 100644 FxCopAnalyzers.sln
+ create mode 100755 build.sh
+ create mode 100644 eng/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+ create mode 100644 eng/GenerateAnalyzerNuspec/Program.cs
+ mode change 100644 => 100755 eng/common/dotnet-install.sh
+ create mode 100644 src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/NetAnalyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/NetAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/PublicApiAnalyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/PublicApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+ create mode 100644 src/Text.Analyzers/Setup/AnalyzerReleases.Shipped.md
+ create mode 100644 src/Text.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+
+diff --git a/FxCopAnalyzers.sln b/FxCopAnalyzers.sln
+deleted file mode 100644
+index 5d5002c3c..000000000
+--- a/FxCopAnalyzers.sln
++++ /dev/null
+@@ -1,193 +0,0 @@
+-Microsoft Visual Studio Solution File, Format Version 12.00
+-# Visual Studio Version 16
+-VisualStudioVersion = 16.0.28531.58
+-MinimumVisualStudioVersion = 10.0.40219.1
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{77D6EC8A-02B7-4EC9-B14A-E8C3A1543AAE}"
+-	ProjectSection(SolutionItems) = preProject
+-		.editorconfig = .editorconfig
+-		README.md = README.md
+-	EndProjectSection
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.FxCopAnalyzers", "Microsoft.CodeAnalysis.FxCopAnalyzers", "{4889919F-291D-4909-911C-21B9005AE794}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.FxCopAnalyzers.Setup", "src\Microsoft.CodeAnalysis.FxCopAnalyzers\Setup\Microsoft.CodeAnalysis.FxCopAnalyzers.Setup.csproj", "{FF60CC25-31F6-4FE8-8C62-256F0B117353}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Analyzer.Utilities", "src\Utilities\Compiler\Analyzer.Utilities.shproj", "{EC946164-1E17-410B-B7D9-7DE7E6268D63}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.VersionCheckAnalyzer", "Microsoft.CodeAnalysis.VersionCheckAnalyzer", "{4ABFCD94-20BB-48A4-B9CD-EE304812F03B}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.VersionCheckAnalyzer", "src\Microsoft.CodeAnalysis.VersionCheckAnalyzer\Microsoft.CodeAnalysis.VersionCheckAnalyzer.csproj", "{F89AD21E-42A4-4460-9B85-B9CFF295BD49}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.VersionCheckAnalyzer.Package", "nuget\Microsoft.CodeAnalysis.VersionCheckAnalyzer\Microsoft.CodeAnalysis.VersionCheckAnalyzer.Package.csproj", "{CB7A5E66-902D-49C2-A952-8989EBFABD8D}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Workspaces.Utilities", "src\Utilities\Workspaces\Workspaces.Utilities.shproj", "{99F594B1-3916-471D-A761-A6731FC50E9A}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FlowAnalysis.Utilities", "src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.shproj", "{FCB56CBA-FA35-46A8-86B7-BAE5433197D9}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeQuality.Analyzers", "Microsoft.CodeQuality.Analyzers", "{02441226-0D01-4ED2-A1F6-46BB956307FF}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.NetCore.Analyzers", "Microsoft.NetCore.Analyzers", "{9201CFE0-167E-447E-B7EF-933341A3797D}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.NetFramework.Analyzers", "Microsoft.NetFramework.Analyzers", "{31B73922-AADE-4B0C-88F5-92AA5883A0E6}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeQuality.Analyzers", "src\NetAnalyzers\Core\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.Analyzers.csproj", "{DB2A3703-0149-46D4-B575-018346B2F406}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetCore.Analyzers", "src\NetAnalyzers\Core\Microsoft.NetCore.Analyzers\Microsoft.NetCore.Analyzers.csproj", "{FEE46B63-96AC-476E-80C3-4CA964E748E9}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetFramework.Analyzers", "src\NetAnalyzers\Core\Microsoft.NetFramework.Analyzers\Microsoft.NetFramework.Analyzers.csproj", "{E038E362-EFBE-4A81-A93F-CFA5D779FD2E}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeQuality.CSharp.Analyzers", "src\NetAnalyzers\CSharp\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.CSharp.Analyzers.csproj", "{BCB20922-349F-45A6-A8CA-0BC9C29C878C}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetCore.CSharp.Analyzers", "src\NetAnalyzers\CSharp\Microsoft.NetCore.Analyzers\Microsoft.NetCore.CSharp.Analyzers.csproj", "{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetFramework.CSharp.Analyzers", "src\NetAnalyzers\CSharp\Microsoft.NetFramework.Analyzers\Microsoft.NetFramework.CSharp.Analyzers.csproj", "{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966}"
+-EndProject
+-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.CodeQuality.VisualBasic.Analyzers", "src\NetAnalyzers\VisualBasic\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.VisualBasic.Analyzers.vbproj", "{748416D8-6D6C-4F85-B29A-E145DE589715}"
+-EndProject
+-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.NetCore.VisualBasic.Analyzers", "src\NetAnalyzers\VisualBasic\Microsoft.NetCore.Analyzers\Microsoft.NetCore.VisualBasic.Analyzers.vbproj", "{EC0535DF-6A80-428A-B13A-C0FD22AE4592}"
+-EndProject
+-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.NetFramework.VisualBasic.Analyzers", "src\NetAnalyzers\VisualBasic\Microsoft.NetFramework.Analyzers\Microsoft.NetFramework.VisualBasic.Analyzers.vbproj", "{A410FBFA-994E-450B-A492-177D20A7D9FE}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeQuality.Analyzers.Package", "nuget\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.Analyzers.Package.csproj", "{E75CA893-D29C-43F3-A262-E0DF90A8FE00}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetCore.Analyzers.Package", "nuget\Microsoft.NetCore.Analyzers\Microsoft.NetCore.Analyzers.Package.csproj", "{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetFramework.Analyzers.Package", "nuget\Microsoft.NetFramework.Analyzers\Microsoft.NetFramework.Analyzers.Package.csproj", "{3AA1978C-31A1-4002-8A21-5A2560DD95B8}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.FxCopAnalyzers.Package", "nuget\Microsoft.CodeAnalysis.FxCopAnalyzers\Microsoft.CodeAnalysis.FxCopAnalyzers.Package.csproj", "{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeQuality.Analyzers.Setup", "src\Microsoft.CodeQuality.Analyzers\Setup\Microsoft.CodeQuality.Analyzers.Setup.csproj", "{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetCore.Analyzers.Setup", "src\Microsoft.NetCore.Analyzers\Setup\Microsoft.NetCore.Analyzers.Setup.csproj", "{95519BE2-5ED6-466A-9EB4-A1152950A567}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.NetFramework.Analyzers.Setup", "src\Microsoft.NetFramework.Analyzers\Setup\Microsoft.NetFramework.Analyzers.Setup.csproj", "{16C5B8A9-E410-45E9-8F6A-583BF459F09C}"
+-EndProject
+-Global
+-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{99f594b1-3916-471d-a761-a6731fc50e9a}*SharedItemsImports = 13
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{db2a3703-0149-46d4-b575-018346b2f406}*SharedItemsImports = 5
+-		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{db2a3703-0149-46d4-b575-018346b2f406}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{db2a3703-0149-46d4-b575-018346b2f406}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{e038e362-efbe-4a81-a93f-cfa5d779fd2e}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{e038e362-efbe-4a81-a93f-cfa5d779fd2e}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{ec946164-1e17-410b-b7d9-7de7e6268d63}*SharedItemsImports = 13
+-		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{fcb56cba-fa35-46a8-86b7-bae5433197d9}*SharedItemsImports = 13
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{fee46b63-96ac-476e-80c3-4ca964e748e9}*SharedItemsImports = 5
+-		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{fee46b63-96ac-476e-80c3-4ca964e748e9}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{fee46b63-96ac-476e-80c3-4ca964e748e9}*SharedItemsImports = 5
+-	EndGlobalSection
+-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+-		Debug|Any CPU = Debug|Any CPU
+-		Release|Any CPU = Release|Any CPU
+-	EndGlobalSection
+-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+-		{FF60CC25-31F6-4FE8-8C62-256F0B117353}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{FF60CC25-31F6-4FE8-8C62-256F0B117353}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{FF60CC25-31F6-4FE8-8C62-256F0B117353}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{FF60CC25-31F6-4FE8-8C62-256F0B117353}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{F89AD21E-42A4-4460-9B85-B9CFF295BD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{F89AD21E-42A4-4460-9B85-B9CFF295BD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{F89AD21E-42A4-4460-9B85-B9CFF295BD49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{F89AD21E-42A4-4460-9B85-B9CFF295BD49}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{CB7A5E66-902D-49C2-A952-8989EBFABD8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{CB7A5E66-902D-49C2-A952-8989EBFABD8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{CB7A5E66-902D-49C2-A952-8989EBFABD8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{CB7A5E66-902D-49C2-A952-8989EBFABD8D}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{DB2A3703-0149-46D4-B575-018346B2F406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{DB2A3703-0149-46D4-B575-018346B2F406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{DB2A3703-0149-46D4-B575-018346B2F406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{DB2A3703-0149-46D4-B575-018346B2F406}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{FEE46B63-96AC-476E-80C3-4CA964E748E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{FEE46B63-96AC-476E-80C3-4CA964E748E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{FEE46B63-96AC-476E-80C3-4CA964E748E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{FEE46B63-96AC-476E-80C3-4CA964E748E9}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{E038E362-EFBE-4A81-A93F-CFA5D779FD2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{E038E362-EFBE-4A81-A93F-CFA5D779FD2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{E038E362-EFBE-4A81-A93F-CFA5D779FD2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{E038E362-EFBE-4A81-A93F-CFA5D779FD2E}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{BCB20922-349F-45A6-A8CA-0BC9C29C878C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{BCB20922-349F-45A6-A8CA-0BC9C29C878C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{BCB20922-349F-45A6-A8CA-0BC9C29C878C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{BCB20922-349F-45A6-A8CA-0BC9C29C878C}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{748416D8-6D6C-4F85-B29A-E145DE589715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{748416D8-6D6C-4F85-B29A-E145DE589715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{748416D8-6D6C-4F85-B29A-E145DE589715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{748416D8-6D6C-4F85-B29A-E145DE589715}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{EC0535DF-6A80-428A-B13A-C0FD22AE4592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{EC0535DF-6A80-428A-B13A-C0FD22AE4592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{EC0535DF-6A80-428A-B13A-C0FD22AE4592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{EC0535DF-6A80-428A-B13A-C0FD22AE4592}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{A410FBFA-994E-450B-A492-177D20A7D9FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{A410FBFA-994E-450B-A492-177D20A7D9FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{A410FBFA-994E-450B-A492-177D20A7D9FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{A410FBFA-994E-450B-A492-177D20A7D9FE}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{E75CA893-D29C-43F3-A262-E0DF90A8FE00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{E75CA893-D29C-43F3-A262-E0DF90A8FE00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{E75CA893-D29C-43F3-A262-E0DF90A8FE00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{E75CA893-D29C-43F3-A262-E0DF90A8FE00}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{3AA1978C-31A1-4002-8A21-5A2560DD95B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{3AA1978C-31A1-4002-8A21-5A2560DD95B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{3AA1978C-31A1-4002-8A21-5A2560DD95B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{3AA1978C-31A1-4002-8A21-5A2560DD95B8}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{95519BE2-5ED6-466A-9EB4-A1152950A567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{95519BE2-5ED6-466A-9EB4-A1152950A567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{95519BE2-5ED6-466A-9EB4-A1152950A567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{95519BE2-5ED6-466A-9EB4-A1152950A567}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{16C5B8A9-E410-45E9-8F6A-583BF459F09C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{16C5B8A9-E410-45E9-8F6A-583BF459F09C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{16C5B8A9-E410-45E9-8F6A-583BF459F09C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{16C5B8A9-E410-45E9-8F6A-583BF459F09C}.Release|Any CPU.Build.0 = Release|Any CPU
+-	EndGlobalSection
+-	GlobalSection(SolutionProperties) = preSolution
+-		HideSolutionNode = FALSE
+-	EndGlobalSection
+-	GlobalSection(NestedProjects) = preSolution
+-		{FF60CC25-31F6-4FE8-8C62-256F0B117353} = {4889919F-291D-4909-911C-21B9005AE794}
+-		{EC946164-1E17-410B-B7D9-7DE7E6268D63} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{F89AD21E-42A4-4460-9B85-B9CFF295BD49} = {4ABFCD94-20BB-48A4-B9CD-EE304812F03B}
+-		{CB7A5E66-902D-49C2-A952-8989EBFABD8D} = {4ABFCD94-20BB-48A4-B9CD-EE304812F03B}
+-		{99F594B1-3916-471D-A761-A6731FC50E9A} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{FCB56CBA-FA35-46A8-86B7-BAE5433197D9} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{DB2A3703-0149-46D4-B575-018346B2F406} = {02441226-0D01-4ED2-A1F6-46BB956307FF}
+-		{FEE46B63-96AC-476E-80C3-4CA964E748E9} = {9201CFE0-167E-447E-B7EF-933341A3797D}
+-		{E038E362-EFBE-4A81-A93F-CFA5D779FD2E} = {31B73922-AADE-4B0C-88F5-92AA5883A0E6}
+-		{BCB20922-349F-45A6-A8CA-0BC9C29C878C} = {02441226-0D01-4ED2-A1F6-46BB956307FF}
+-		{47A90FE9-1942-44AD-ABBC-AF4AD45C04B2} = {9201CFE0-167E-447E-B7EF-933341A3797D}
+-		{DB4AAE94-5DEC-4CCB-91C4-1244D72E7966} = {31B73922-AADE-4B0C-88F5-92AA5883A0E6}
+-		{748416D8-6D6C-4F85-B29A-E145DE589715} = {02441226-0D01-4ED2-A1F6-46BB956307FF}
+-		{EC0535DF-6A80-428A-B13A-C0FD22AE4592} = {9201CFE0-167E-447E-B7EF-933341A3797D}
+-		{A410FBFA-994E-450B-A492-177D20A7D9FE} = {31B73922-AADE-4B0C-88F5-92AA5883A0E6}
+-		{E75CA893-D29C-43F3-A262-E0DF90A8FE00} = {02441226-0D01-4ED2-A1F6-46BB956307FF}
+-		{4367C446-0EB2-4EFC-B9C3-8A0C3CA34E02} = {9201CFE0-167E-447E-B7EF-933341A3797D}
+-		{3AA1978C-31A1-4002-8A21-5A2560DD95B8} = {31B73922-AADE-4B0C-88F5-92AA5883A0E6}
+-		{89B4A206-72E8-4DF6-8C59-1AB4E00DCDC5} = {4889919F-291D-4909-911C-21B9005AE794}
+-		{EFF69ED7-A8AB-4394-BDAE-9C4A1A19D150} = {02441226-0D01-4ED2-A1F6-46BB956307FF}
+-		{95519BE2-5ED6-466A-9EB4-A1152950A567} = {9201CFE0-167E-447E-B7EF-933341A3797D}
+-		{16C5B8A9-E410-45E9-8F6A-583BF459F09C} = {31B73922-AADE-4B0C-88F5-92AA5883A0E6}
+-	EndGlobalSection
+-	GlobalSection(ExtensibilityGlobals) = postSolution
+-		SolutionGuid = {FC44ACA9-AEA3-4EE6-881C-2E08ED281B5F}
+-	EndGlobalSection
+-EndGlobal
+diff --git a/RoslynAnalyzers.sln b/RoslynAnalyzers.sln
+index 82e87f32e..6807ca029 100644
+--- a/RoslynAnalyzers.sln
++++ b/RoslynAnalyzers.sln
+@@ -10,16 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roslyn.Diagnostics.CSharp.A
+ EndProject
+ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Roslyn.Diagnostics.VisualBasic.Analyzers", "src\Roslyn.Diagnostics.Analyzers\VisualBasic\Roslyn.Diagnostics.VisualBasic.Analyzers.vbproj", "{70BBA457-2CC1-4929-8FEE-359EBB7C398A}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roslyn.Diagnostics.Analyzers.UnitTests", "src\Roslyn.Diagnostics.Analyzers\UnitTests\Roslyn.Diagnostics.Analyzers.UnitTests.csproj", "{D90E7402-70E7-4A95-A292-47EA163D6309}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roslyn.Diagnostics.Analyzers.Setup", "src\Roslyn.Diagnostics.Analyzers\Setup\Roslyn.Diagnostics.Analyzers.Setup.csproj", "{BD80CDC4-25FF-4268-8131-F7A43260122B}"
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{80E410B3-D8D1-4C67-93FF-078530E20816}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test.Utilities", "src\Test.Utilities\Test.Utilities.csproj", "{0A0621F2-D1DC-47FF-B643-C6646557505E}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.Analyzers", "Microsoft.CodeAnalysis.Analyzers", "{041E93F2-E703-4AB1-B6DF-13EC899D1C6E}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Analyzers", "src\Microsoft.CodeAnalysis.Analyzers\Core\Microsoft.CodeAnalysis.Analyzers.csproj", "{D8762A0A-3832-47BE-BCF6-8B1060BE6B28}"
+@@ -28,22 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSha
+ EndProject
+ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.CodeAnalysis.VisualBasic.Analyzers", "src\Microsoft.CodeAnalysis.Analyzers\VisualBasic\Microsoft.CodeAnalysis.VisualBasic.Analyzers.vbproj", "{B1A6A74B-E484-48FB-8745-7A30A06DB631}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Analyzers.UnitTests", "src\Microsoft.CodeAnalysis.Analyzers\UnitTests\Microsoft.CodeAnalysis.Analyzers.UnitTests.csproj", "{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Analyzers.Setup", "src\Microsoft.CodeAnalysis.Analyzers\Setup\Microsoft.CodeAnalysis.Analyzers.Setup.csproj", "{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF}"
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text.Analyzers", "Text.Analyzers", "{446787CE-66C8-43F0-9D51-585BB41FC770}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Text.Analyzers", "src\Text.Analyzers\Core\Text.Analyzers.csproj", "{730C2D1C-0276-4132-85EA-675CE60068BB}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Text.CSharp.Analyzers", "src\Text.Analyzers\CSharp\Text.CSharp.Analyzers.csproj", "{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Text.Analyzers.Setup", "src\Text.Analyzers\Setup\Text.Analyzers.Setup.csproj", "{EA61DA2E-D175-4430-A56B-17BAC4B227A9}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Text.Analyzers.UnitTests", "src\Text.Analyzers\UnitTests\Text.Analyzers.UnitTests.csproj", "{6762EB1D-517C-4746-80EB-D11717ACD469}"
+-EndProject
+-Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Text.VisualBasic.Analyzers", "src\Text.Analyzers\VisualBasic\Text.VisualBasic.Analyzers.vbproj", "{938F2420-14B8-4C7C-93BE-C9E89E08E823}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{77D6EC8A-02B7-4EC9-B14A-E8C3A1543AAE}"
+ 	ProjectSection(SolutionItems) = preProject
+ 		.editorconfig = .editorconfig
+@@ -54,26 +32,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Anal
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roslyn.Diagnostics.Analyzers.Package", "nuget\Roslyn.Diagnostics.Analyzers\Roslyn.Diagnostics.Analyzers.Package.csproj", "{2569B087-6465-425E-986D-BD0D32FC8AA5}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Text.Analyzers.Package", "nuget\Text.Analyzers\Text.Analyzers.Package.csproj", "{0A7C9A18-888A-4028-B88F-989DA6A0140B}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Analyzer.Utilities", "src\Utilities\Compiler\Analyzer.Utilities.shproj", "{EC946164-1E17-410B-B7D9-7DE7E6268D63}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{C0B86774-8307-444F-9EE4-98D62C3424F9}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestReferenceAssembly", "TestReferenceAssembly", "{4F3DD6F3-121C-4D38-9B8E-5065783EA832}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestReferenceAssembly", "src\TestReferenceAssembly\TestReferenceAssembly.csproj", "{774B5DF6-D14F-4839-95F3-D3632B754765}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Analyzer.Utilities.UnitTests", "src\Utilities.UnitTests\Analyzer.Utilities.UnitTests.csproj", "{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers", "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers", "{34430BD4-4D66-4FE6-8076-51B87B4FBCD4}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Workspaces.Utilities", "src\Utilities\Workspaces\Workspaces.Utilities.shproj", "{99F594B1-3916-471D-A761-A6731FC50E9A}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FlowAnalysis.Utilities", "src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.shproj", "{FCB56CBA-FA35-46A8-86B7-BAE5433197D9}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.AnalyzerUtilities", "Microsoft.CodeAnalysis.AnalyzerUtilities", "{1A3624C9-EB8A-4F27-98F8-9FAEAB30604E}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.BannedApiAnalyzers", "Microsoft.CodeAnalysis.BannedApiAnalyzers", "{8D64F6D4-951C-413E-8A53-FB708F9FB5CD}"
+ EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers", "Microsoft.CodeAnalysis.PublicApiAnalyzers", "{8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}"
+@@ -82,46 +40,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Bann
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers.Package", "nuget\PublicApiAnalyzers\Microsoft.CodeAnalysis.PublicApiAnalyzers.Package.csproj", "{18CE822A-A46D-494B-BBFC-C52EF1D048BE}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.Package", "nuget\PerformanceSensitiveAnalyzers\Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.Package.csproj", "{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers", "src\PerformanceSensitiveAnalyzers\Core\Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj", "{F2985136-DCB2-492F-A66D-32968A0266F1}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers", "src\PerformanceSensitiveAnalyzers\CSharp\Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers.csproj", "{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.Setup", "src\PerformanceSensitiveAnalyzers\Setup\Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.Setup.csproj", "{5C9B8805-6489-41C5-8FE6-195599C6497F}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.UnitTests", "src\PerformanceSensitiveAnalyzers\UnitTests\Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.UnitTests.csproj", "{F86DCF03-7C4D-40FE-91D2-6206D532DEFD}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers", "src\PublicApiAnalyzers\Core\Analyzers\Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj", "{9A3072A5-FC2D-4183-9420-DE5DE323441E}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes", "src\PublicApiAnalyzers\Core\CodeFixes\Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj", "{0DC347C1-660D-45D8-BDC8-DC439C2E4A67}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers.Setup", "src\PublicApiAnalyzers\Setup\Microsoft.CodeAnalysis.PublicApiAnalyzers.Setup.csproj", "{720DF809-C0D0-440A-B4B8-BFD41358CDA2}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.PublicApiAnalyzers.UnitTests", "src\PublicApiAnalyzers\UnitTests\Microsoft.CodeAnalysis.PublicApiAnalyzers.UnitTests.csproj", "{0F68246D-5645-486C-9CED-A8C8A97996DE}"
+-EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.BannedApiAnalyzers", "src\Microsoft.CodeAnalysis.BannedApiAnalyzers\Core\Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj", "{A94F29CC-56BF-4CF6-93B1-3BB13725B776}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers", "src\Microsoft.CodeAnalysis.BannedApiAnalyzers\CSharp\Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers.csproj", "{FF1C6979-CD73-46DC-94BF-A6D59A252B66}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.BannedApiAnalyzers.Setup", "src\Microsoft.CodeAnalysis.BannedApiAnalyzers\Setup\Microsoft.CodeAnalysis.BannedApiAnalyzers.Setup.csproj", "{FCA9533D-04BB-4654-94A7-B9B2065CE0EF}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.BannedApiAnalyzers.UnitTests", "src\Microsoft.CodeAnalysis.BannedApiAnalyzers\UnitTests\Microsoft.CodeAnalysis.BannedApiAnalyzers.UnitTests.csproj", "{697FE592-9EB8-493C-87DA-6C218A3B113D}"
+-EndProject
+ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers", "src\Microsoft.CodeAnalysis.BannedApiAnalyzers\VisualBasic\Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers.vbproj", "{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1}"
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Metrics", "Metrics", "{50FB229D-38DB-4A34-8588-D33671AB68DE}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics", "src\Tools\Metrics\Metrics.csproj", "{CADE5623-CC57-43A2-9D2A-B7AB29225406}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Metrics.Legacy", "src\Tools\Metrics\Metrics.Legacy.csproj", "{2A4AF3A4-307B-4252-888E-E6546244585A}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.Metrics.Package", "nuget\Microsoft.CodeAnalysis.Metrics\Microsoft.CodeAnalysis.Metrics.Package.csproj", "{C96D2F95-3090-4376-942C-2C934C55283B}"
+-EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReleaseNotesUtil", "ReleaseNotesUtil", "{6AAE1FC7-D96E-40CB-8B52-EA87EF9BF00A}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReleaseNotesUtil", "src\Tools\ReleaseNotesUtil\ReleaseNotesUtil.csproj", "{01518AF6-AE8F-4ADA-ABE4-C78F8234899F}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Microsoft.CodeAnalysis.NetAnalyzers", "Microsoft.CodeAnalysis.NetAnalyzers", "{31F86414-C34B-462A-AFB5-BDA7724904F3}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.NetAnalyzers", "src\NetAnalyzers\Core\Microsoft.CodeAnalysis.NetAnalyzers.csproj", "{1C62A2F6-7A44-4030-9D1A-7E7A966736E5}"
+@@ -130,24 +62,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.CSha
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.NetAnalyzers.Setup", "src\NetAnalyzers\Setup\Microsoft.CodeAnalysis.NetAnalyzers.Setup.csproj", "{9F4C5E8F-10EE-4193-BB36-A2FDE07B5557}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.NetAnalyzers.UnitTests", "src\NetAnalyzers\UnitTests\Microsoft.CodeAnalysis.NetAnalyzers.UnitTests.csproj", "{F4F111E0-7108-47A7-97A1-A5B10207C0D8}"
+-EndProject
+ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Microsoft.CodeAnalysis.VisualBasic.NetAnalyzers", "src\NetAnalyzers\VisualBasic\Microsoft.CodeAnalysis.VisualBasic.NetAnalyzers.vbproj", "{C75555DC-D059-4665-A421-4EF5F30BD9B6}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.NetAnalyzers.Package", "nuget\NetAnalyzers\Microsoft.CodeAnalysis.NetAnalyzers.Package.csproj", "{8AC54A99-5655-435B-8417-BF2F995BE66A}"
+ EndProject
+-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RulesetToEditorconfigConverter", "RulesetToEditorconfigConverter", "{02F88961-A08F-451A-93AB-328792A32EBC}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesetToEditorconfigConverter", "src\Tools\RulesetToEditorconfigConverter\Source\RulesetToEditorconfigConverter.csproj", "{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RulesetToEditorconfigConverter.UnitTests", "src\Tools\RulesetToEditorconfigConverter\Tests\RulesetToEditorconfigConverter.UnitTests.csproj", "{813C80EB-D614-4258-BD07-42660BEB738A}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.AnalyzerUtilities", "src\Microsoft.CodeAnalysis.AnalyzerUtilities\Microsoft.CodeAnalysis.AnalyzerUtilities.csproj", "{B969F316-815C-47B9-82B3-67FDD9ED694F}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.AnalyzerUtilities.Package", "nuget\Microsoft.CodeAnalysis.AnalyzerUtilities\Microsoft.CodeAnalysis.AnalyzerUtilities.Package.csproj", "{3F998217-4174-4AD0-A015-A9BFFADB075F}"
+-EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.CodeAnalysis.RulesetToEditorconfigConverter.Package", "nuget\Microsoft.CodeAnalysis.RulesetToEditorconfigConverter\Microsoft.CodeAnalysis.RulesetToEditorconfigConverter.Package.csproj", "{64D70469-18B0-446C-80E9-A7C45A747B3E}"
+-EndProject
+ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GenerateGlobalAnalyzerConfigs", "GenerateGlobalAnalyzerConfigs", "{0194F644-14D0-4AF4-8FA1-5CEA07DC7F5F}"
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateGlobalAnalyzerConfigs", "src\Tools\GenerateGlobalAnalyzerConfigs\GenerateGlobalAnalyzerConfigs.csproj", "{3DD9D249-13D4-4DD2-B043-1F025F550013}"
+@@ -156,44 +74,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GenerateDocumentationAndCon
+ EndProject
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenerateDocumentationAndConfigFiles", "src\Tools\GenerateDocumentationAndConfigFiles\GenerateDocumentationAndConfigFiles.csproj", "{563654BA-4C05-4EA2-91D3-28A14723B7D5}"
+ EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Refactoring.Utilities", "src\Utilities\Refactoring\Refactoring.Utilities.shproj", "{68528C1C-B163-49A6-A19D-24E10F500F90}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Refactoring.CSharp.Utilities", "src\Utilities\Refactoring.CSharp\Refactoring.CSharp.Utilities.shproj", "{3055F932-0D1E-4823-A03A-7B62C7639BDA}"
+-EndProject
+-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Refactoring.VisualBasic.Utilities", "src\Utilities\Refactoring.VisualBasic\Refactoring.VisualBasic.Utilities.shproj", "{4C362C30-C4B1-4C4B-A545-DBF67C7E9153}"
+-EndProject
+ Global
+ 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{0a0621f2-d1dc-47ff-b643-c6646557505e}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{0a0621f2-d1dc-47ff-b643-c6646557505e}*SharedItemsImports = 5
+ 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{0dc347c1-660d-45d8-bdc8-dc439c2e4a67}*SharedItemsImports = 5
+ 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{1c62a2f6-7a44-4030-9d1a-7e7a966736e5}*SharedItemsImports = 5
+ 		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{1c62a2f6-7a44-4030-9d1a-7e7a966736e5}*SharedItemsImports = 5
+ 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{1c62a2f6-7a44-4030-9d1a-7e7a966736e5}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{2a4af3a4-307b-4252-888e-e6546244585a}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{2a4af3a4-307b-4252-888e-e6546244585a}*SharedItemsImports = 5
+-		src\Utilities\Refactoring.CSharp\Refactoring.CSharp.Utilities.projitems*{3055f932-0d1e-4823-a03a-7b62c7639bda}*SharedItemsImports = 13
+-		src\Utilities\Refactoring.VisualBasic\Refactoring.VisualBasic.Utilities.projitems*{4c362c30-c4b1-4c4b-a545-dbf67c7e9153}*SharedItemsImports = 13
+-		src\Utilities\Refactoring\Refactoring.Utilities.projitems*{68528c1c-b163-49a6-a19d-24e10f500f90}*SharedItemsImports = 13
+ 		src\Utilities\Refactoring.CSharp\Refactoring.CSharp.Utilities.projitems*{697e2991-39a8-46c2-aa9c-fe576fbbcd90}*SharedItemsImports = 5
+ 		src\Utilities\Refactoring.VisualBasic\Refactoring.VisualBasic.Utilities.projitems*{70bba457-2cc1-4929-8fee-359ebb7c398a}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{730c2d1c-0276-4132-85ea-675ce60068bb}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{730c2d1c-0276-4132-85ea-675ce60068bb}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{99f594b1-3916-471d-a761-a6731fc50e9a}*SharedItemsImports = 13
+ 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{9a3072a5-fc2d-4183-9420-de5de323441e}*SharedItemsImports = 5
+ 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{a94f29cc-56bf-4cf6-93b1-3bb13725b776}*SharedItemsImports = 5
+ 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{b475c173-a39d-4a75-93ff-69c3d2742cad}*SharedItemsImports = 5
+ 		src\Utilities\Refactoring\Refactoring.Utilities.projitems*{b475c173-a39d-4a75-93ff-69c3d2742cad}*SharedItemsImports = 5
+ 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{b475c173-a39d-4a75-93ff-69c3d2742cad}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{b969f316-815c-47b9-82b3-67fdd9ed694f}*SharedItemsImports = 5
+-		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{b969f316-815c-47b9-82b3-67fdd9ed694f}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{cade5623-cc57-43a2-9d2a-b7ab29225406}*SharedItemsImports = 5
+-		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{cade5623-cc57-43a2-9d2a-b7ab29225406}*SharedItemsImports = 5
+ 		src\Utilities\Compiler\Analyzer.Utilities.projitems*{d8762a0a-3832-47be-bcf6-8b1060be6b28}*SharedItemsImports = 5
+ 		src\Utilities\Workspaces\Workspaces.Utilities.projitems*{d8762a0a-3832-47be-bcf6-8b1060be6b28}*SharedItemsImports = 5
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{ec946164-1e17-410b-b7d9-7de7e6268d63}*SharedItemsImports = 13
+-		src\Utilities\Compiler\Analyzer.Utilities.projitems*{f2985136-dcb2-492f-a66d-32968a0266f1}*SharedItemsImports = 5
+-		src\Utilities\FlowAnalysis\FlowAnalysis.Utilities.projitems*{fcb56cba-fa35-46a8-86b7-bae5433197d9}*SharedItemsImports = 13
+ 	EndGlobalSection
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+ 		Debug|Any CPU = Debug|Any CPU
+@@ -212,18 +107,10 @@ Global
+ 		{70BBA457-2CC1-4929-8FEE-359EBB7C398A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{70BBA457-2CC1-4929-8FEE-359EBB7C398A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{70BBA457-2CC1-4929-8FEE-359EBB7C398A}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{D90E7402-70E7-4A95-A292-47EA163D6309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{D90E7402-70E7-4A95-A292-47EA163D6309}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{D90E7402-70E7-4A95-A292-47EA163D6309}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{D90E7402-70E7-4A95-A292-47EA163D6309}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{BD80CDC4-25FF-4268-8131-F7A43260122B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{BD80CDC4-25FF-4268-8131-F7A43260122B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{BD80CDC4-25FF-4268-8131-F7A43260122B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{BD80CDC4-25FF-4268-8131-F7A43260122B}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{0A0621F2-D1DC-47FF-B643-C6646557505E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{0A0621F2-D1DC-47FF-B643-C6646557505E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{0A0621F2-D1DC-47FF-B643-C6646557505E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{0A0621F2-D1DC-47FF-B643-C6646557505E}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{D8762A0A-3832-47BE-BCF6-8B1060BE6B28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{D8762A0A-3832-47BE-BCF6-8B1060BE6B28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{D8762A0A-3832-47BE-BCF6-8B1060BE6B28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -236,34 +123,10 @@ Global
+ 		{B1A6A74B-E484-48FB-8745-7A30A06DB631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{B1A6A74B-E484-48FB-8745-7A30A06DB631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{B1A6A74B-E484-48FB-8745-7A30A06DB631}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{730C2D1C-0276-4132-85EA-675CE60068BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{730C2D1C-0276-4132-85EA-675CE60068BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{730C2D1C-0276-4132-85EA-675CE60068BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{730C2D1C-0276-4132-85EA-675CE60068BB}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{EA61DA2E-D175-4430-A56B-17BAC4B227A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{EA61DA2E-D175-4430-A56B-17BAC4B227A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{EA61DA2E-D175-4430-A56B-17BAC4B227A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{EA61DA2E-D175-4430-A56B-17BAC4B227A9}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{6762EB1D-517C-4746-80EB-D11717ACD469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{6762EB1D-517C-4746-80EB-D11717ACD469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{6762EB1D-517C-4746-80EB-D11717ACD469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{6762EB1D-517C-4746-80EB-D11717ACD469}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{938F2420-14B8-4C7C-93BE-C9E89E08E823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{938F2420-14B8-4C7C-93BE-C9E89E08E823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{938F2420-14B8-4C7C-93BE-C9E89E08E823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{938F2420-14B8-4C7C-93BE-C9E89E08E823}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{9E184844-18B8-446E-8EFB-25FFF76EE347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{9E184844-18B8-446E-8EFB-25FFF76EE347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{9E184844-18B8-446E-8EFB-25FFF76EE347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -272,18 +135,6 @@ Global
+ 		{2569B087-6465-425E-986D-BD0D32FC8AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{2569B087-6465-425E-986D-BD0D32FC8AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{2569B087-6465-425E-986D-BD0D32FC8AA5}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{0A7C9A18-888A-4028-B88F-989DA6A0140B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{0A7C9A18-888A-4028-B88F-989DA6A0140B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{0A7C9A18-888A-4028-B88F-989DA6A0140B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{0A7C9A18-888A-4028-B88F-989DA6A0140B}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{774B5DF6-D14F-4839-95F3-D3632B754765}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{774B5DF6-D14F-4839-95F3-D3632B754765}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{774B5DF6-D14F-4839-95F3-D3632B754765}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{774B5DF6-D14F-4839-95F3-D3632B754765}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{B88CCE32-B1EA-45A5-AE4C-AE92B7CFD691}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{B88CCE32-B1EA-45A5-AE4C-AE92B7CFD691}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{B88CCE32-B1EA-45A5-AE4C-AE92B7CFD691}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -292,26 +143,6 @@ Global
+ 		{18CE822A-A46D-494B-BBFC-C52EF1D048BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{18CE822A-A46D-494B-BBFC-C52EF1D048BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{18CE822A-A46D-494B-BBFC-C52EF1D048BE}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{F2985136-DCB2-492F-A66D-32968A0266F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{F2985136-DCB2-492F-A66D-32968A0266F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{F2985136-DCB2-492F-A66D-32968A0266F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{F2985136-DCB2-492F-A66D-32968A0266F1}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{5C9B8805-6489-41C5-8FE6-195599C6497F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{5C9B8805-6489-41C5-8FE6-195599C6497F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{5C9B8805-6489-41C5-8FE6-195599C6497F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{5C9B8805-6489-41C5-8FE6-195599C6497F}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{F86DCF03-7C4D-40FE-91D2-6206D532DEFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{F86DCF03-7C4D-40FE-91D2-6206D532DEFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{F86DCF03-7C4D-40FE-91D2-6206D532DEFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{F86DCF03-7C4D-40FE-91D2-6206D532DEFD}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{9A3072A5-FC2D-4183-9420-DE5DE323441E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{9A3072A5-FC2D-4183-9420-DE5DE323441E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{9A3072A5-FC2D-4183-9420-DE5DE323441E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -324,10 +155,6 @@ Global
+ 		{720DF809-C0D0-440A-B4B8-BFD41358CDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{720DF809-C0D0-440A-B4B8-BFD41358CDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{720DF809-C0D0-440A-B4B8-BFD41358CDA2}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{0F68246D-5645-486C-9CED-A8C8A97996DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{0F68246D-5645-486C-9CED-A8C8A97996DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{0F68246D-5645-486C-9CED-A8C8A97996DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{0F68246D-5645-486C-9CED-A8C8A97996DE}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{A94F29CC-56BF-4CF6-93B1-3BB13725B776}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{A94F29CC-56BF-4CF6-93B1-3BB13725B776}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{A94F29CC-56BF-4CF6-93B1-3BB13725B776}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -340,30 +167,10 @@ Global
+ 		{FCA9533D-04BB-4654-94A7-B9B2065CE0EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{FCA9533D-04BB-4654-94A7-B9B2065CE0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{FCA9533D-04BB-4654-94A7-B9B2065CE0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{697FE592-9EB8-493C-87DA-6C218A3B113D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{697FE592-9EB8-493C-87DA-6C218A3B113D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{697FE592-9EB8-493C-87DA-6C218A3B113D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{697FE592-9EB8-493C-87DA-6C218A3B113D}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{CADE5623-CC57-43A2-9D2A-B7AB29225406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{CADE5623-CC57-43A2-9D2A-B7AB29225406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{CADE5623-CC57-43A2-9D2A-B7AB29225406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{CADE5623-CC57-43A2-9D2A-B7AB29225406}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{2A4AF3A4-307B-4252-888E-E6546244585A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{2A4AF3A4-307B-4252-888E-E6546244585A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{2A4AF3A4-307B-4252-888E-E6546244585A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{2A4AF3A4-307B-4252-888E-E6546244585A}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{C96D2F95-3090-4376-942C-2C934C55283B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{C96D2F95-3090-4376-942C-2C934C55283B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{C96D2F95-3090-4376-942C-2C934C55283B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{C96D2F95-3090-4376-942C-2C934C55283B}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{01518AF6-AE8F-4ADA-ABE4-C78F8234899F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{01518AF6-AE8F-4ADA-ABE4-C78F8234899F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{01518AF6-AE8F-4ADA-ABE4-C78F8234899F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{01518AF6-AE8F-4ADA-ABE4-C78F8234899F}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{1C62A2F6-7A44-4030-9D1A-7E7A966736E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{1C62A2F6-7A44-4030-9D1A-7E7A966736E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{1C62A2F6-7A44-4030-9D1A-7E7A966736E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -376,10 +183,6 @@ Global
+ 		{9F4C5E8F-10EE-4193-BB36-A2FDE07B5557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{9F4C5E8F-10EE-4193-BB36-A2FDE07B5557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{9F4C5E8F-10EE-4193-BB36-A2FDE07B5557}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{F4F111E0-7108-47A7-97A1-A5B10207C0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{F4F111E0-7108-47A7-97A1-A5B10207C0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{F4F111E0-7108-47A7-97A1-A5B10207C0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{F4F111E0-7108-47A7-97A1-A5B10207C0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{C75555DC-D059-4665-A421-4EF5F30BD9B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{C75555DC-D059-4665-A421-4EF5F30BD9B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{C75555DC-D059-4665-A421-4EF5F30BD9B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -388,26 +191,6 @@ Global
+ 		{8AC54A99-5655-435B-8417-BF2F995BE66A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{8AC54A99-5655-435B-8417-BF2F995BE66A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+ 		{8AC54A99-5655-435B-8417-BF2F995BE66A}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{813C80EB-D614-4258-BD07-42660BEB738A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{813C80EB-D614-4258-BD07-42660BEB738A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{813C80EB-D614-4258-BD07-42660BEB738A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{813C80EB-D614-4258-BD07-42660BEB738A}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{B969F316-815C-47B9-82B3-67FDD9ED694F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{B969F316-815C-47B9-82B3-67FDD9ED694F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{B969F316-815C-47B9-82B3-67FDD9ED694F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{B969F316-815C-47B9-82B3-67FDD9ED694F}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{3F998217-4174-4AD0-A015-A9BFFADB075F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{3F998217-4174-4AD0-A015-A9BFFADB075F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{3F998217-4174-4AD0-A015-A9BFFADB075F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{3F998217-4174-4AD0-A015-A9BFFADB075F}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{64D70469-18B0-446C-80E9-A7C45A747B3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{64D70469-18B0-446C-80E9-A7C45A747B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{64D70469-18B0-446C-80E9-A7C45A747B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{64D70469-18B0-446C-80E9-A7C45A747B3E}.Release|Any CPU.Build.0 = Release|Any CPU
+ 		{3DD9D249-13D4-4DD2-B043-1F025F550013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{3DD9D249-13D4-4DD2-B043-1F025F550013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{3DD9D249-13D4-4DD2-B043-1F025F550013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+@@ -424,68 +207,29 @@ Global
+ 		{B475C173-A39D-4A75-93FF-69C3D2742CAD} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+ 		{697E2991-39A8-46C2-AA9C-FE576FBBCD90} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+ 		{70BBA457-2CC1-4929-8FEE-359EBB7C398A} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+-		{D90E7402-70E7-4A95-A292-47EA163D6309} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+ 		{BD80CDC4-25FF-4268-8131-F7A43260122B} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+-		{0A0621F2-D1DC-47FF-B643-C6646557505E} = {80E410B3-D8D1-4C67-93FF-078530E20816}
+ 		{D8762A0A-3832-47BE-BCF6-8B1060BE6B28} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+ 		{921B412A-5551-4853-82B4-46AD5A05A03E} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+ 		{B1A6A74B-E484-48FB-8745-7A30A06DB631} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+-		{0C2925AD-CD97-46FA-A686-E2C1AD19DAD8} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+ 		{54F6AE18-B0CD-4799-9DF0-9B1AAD6A78AF} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+-		{730C2D1C-0276-4132-85EA-675CE60068BB} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+-		{0EA928BE-51C1-4087-B48A-ECE9C5E0C5B0} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+-		{EA61DA2E-D175-4430-A56B-17BAC4B227A9} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+-		{6762EB1D-517C-4746-80EB-D11717ACD469} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+-		{938F2420-14B8-4C7C-93BE-C9E89E08E823} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+ 		{9E184844-18B8-446E-8EFB-25FFF76EE347} = {041E93F2-E703-4AB1-B6DF-13EC899D1C6E}
+ 		{2569B087-6465-425E-986D-BD0D32FC8AA5} = {72AAA528-FD70-45DA-82F8-1D29FC27F81F}
+-		{0A7C9A18-888A-4028-B88F-989DA6A0140B} = {446787CE-66C8-43F0-9D51-585BB41FC770}
+-		{EC946164-1E17-410B-B7D9-7DE7E6268D63} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{774B5DF6-D14F-4839-95F3-D3632B754765} = {4F3DD6F3-121C-4D38-9B8E-5065783EA832}
+-		{AFCB0C5B-E3C6-45AF-940B-AA38C7EC94EA} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{99F594B1-3916-471D-A761-A6731FC50E9A} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{FCB56CBA-FA35-46A8-86B7-BAE5433197D9} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+ 		{B88CCE32-B1EA-45A5-AE4C-AE92B7CFD691} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+ 		{18CE822A-A46D-494B-BBFC-C52EF1D048BE} = {8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}
+-		{04CDAFD7-7EC6-43A0-AC42-84FFD56E78B6} = {34430BD4-4D66-4FE6-8076-51B87B4FBCD4}
+-		{F2985136-DCB2-492F-A66D-32968A0266F1} = {34430BD4-4D66-4FE6-8076-51B87B4FBCD4}
+-		{37F2A7AD-FABE-4AEA-AB3D-CE8543D8134E} = {34430BD4-4D66-4FE6-8076-51B87B4FBCD4}
+-		{5C9B8805-6489-41C5-8FE6-195599C6497F} = {34430BD4-4D66-4FE6-8076-51B87B4FBCD4}
+-		{F86DCF03-7C4D-40FE-91D2-6206D532DEFD} = {34430BD4-4D66-4FE6-8076-51B87B4FBCD4}
+ 		{9A3072A5-FC2D-4183-9420-DE5DE323441E} = {8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}
+ 		{0DC347C1-660D-45D8-BDC8-DC439C2E4A67} = {8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}
+ 		{720DF809-C0D0-440A-B4B8-BFD41358CDA2} = {8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}
+-		{0F68246D-5645-486C-9CED-A8C8A97996DE} = {8E48BD4D-5178-47E1-A850-76B5DA2EB9D0}
+ 		{A94F29CC-56BF-4CF6-93B1-3BB13725B776} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+ 		{FF1C6979-CD73-46DC-94BF-A6D59A252B66} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+ 		{FCA9533D-04BB-4654-94A7-B9B2065CE0EF} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+-		{697FE592-9EB8-493C-87DA-6C218A3B113D} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+ 		{5AFCA3A1-C780-4E44-BFFA-D9224685FCE1} = {8D64F6D4-951C-413E-8A53-FB708F9FB5CD}
+-		{50FB229D-38DB-4A34-8588-D33671AB68DE} = {C0B86774-8307-444F-9EE4-98D62C3424F9}
+-		{CADE5623-CC57-43A2-9D2A-B7AB29225406} = {50FB229D-38DB-4A34-8588-D33671AB68DE}
+-		{2A4AF3A4-307B-4252-888E-E6546244585A} = {50FB229D-38DB-4A34-8588-D33671AB68DE}
+-		{C96D2F95-3090-4376-942C-2C934C55283B} = {50FB229D-38DB-4A34-8588-D33671AB68DE}
+-		{6AAE1FC7-D96E-40CB-8B52-EA87EF9BF00A} = {C0B86774-8307-444F-9EE4-98D62C3424F9}
+-		{01518AF6-AE8F-4ADA-ABE4-C78F8234899F} = {6AAE1FC7-D96E-40CB-8B52-EA87EF9BF00A}
+ 		{1C62A2F6-7A44-4030-9D1A-7E7A966736E5} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+ 		{DC277D4D-9479-4B55-95BB-9FDB8A682DE1} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+ 		{9F4C5E8F-10EE-4193-BB36-A2FDE07B5557} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+-		{F4F111E0-7108-47A7-97A1-A5B10207C0D8} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+ 		{C75555DC-D059-4665-A421-4EF5F30BD9B6} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+ 		{8AC54A99-5655-435B-8417-BF2F995BE66A} = {31F86414-C34B-462A-AFB5-BDA7724904F3}
+-		{02F88961-A08F-451A-93AB-328792A32EBC} = {C0B86774-8307-444F-9EE4-98D62C3424F9}
+-		{C3A4699A-4701-4EC9-9EE9-4CAB4C9B1A4E} = {02F88961-A08F-451A-93AB-328792A32EBC}
+-		{813C80EB-D614-4258-BD07-42660BEB738A} = {02F88961-A08F-451A-93AB-328792A32EBC}
+-		{B969F316-815C-47B9-82B3-67FDD9ED694F} = {1A3624C9-EB8A-4F27-98F8-9FAEAB30604E}
+-		{3F998217-4174-4AD0-A015-A9BFFADB075F} = {1A3624C9-EB8A-4F27-98F8-9FAEAB30604E}
+-		{64D70469-18B0-446C-80E9-A7C45A747B3E} = {02F88961-A08F-451A-93AB-328792A32EBC}
+-		{0194F644-14D0-4AF4-8FA1-5CEA07DC7F5F} = {C0B86774-8307-444F-9EE4-98D62C3424F9}
+ 		{3DD9D249-13D4-4DD2-B043-1F025F550013} = {0194F644-14D0-4AF4-8FA1-5CEA07DC7F5F}
+-		{DB2DD702-8301-4FC6-B8C0-029C7DCC2931} = {C0B86774-8307-444F-9EE4-98D62C3424F9}
+ 		{563654BA-4C05-4EA2-91D3-28A14723B7D5} = {DB2DD702-8301-4FC6-B8C0-029C7DCC2931}
+-		{68528C1C-B163-49A6-A19D-24E10F500F90} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{3055F932-0D1E-4823-A03A-7B62C7639BDA} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+-		{4C362C30-C4B1-4C4B-A545-DBF67C7E9153} = {1F4F7A9B-FD3B-495F-86D0-89A7DEA2128C}
+ 	EndGlobalSection
+ 	GlobalSection(ExtensibilityGlobals) = postSolution
+ 		SolutionGuid = {FC44ACA9-AEA3-4EE6-881C-2E08ED281B5F}
+diff --git a/build.sh b/build.sh
+new file mode 100755
+index 000000000..84a7478bf
+--- /dev/null
++++ b/build.sh
+@@ -0,0 +1,16 @@
++#!/usr/bin/env bash
++
++source="${BASH_SOURCE[0]}"
++
++# resolve $SOURCE until the file is no longer a symlink
++while [[ -h $source ]]; do
++  scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
++  source="$(readlink "$source")"
++
++  # if $source was a relative symlink, we need to resolve it relative to the path where the
++  # symlink file was located
++  [[ $source != /* ]] && source="$scriptroot/$source"
++done
++
++scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
++"$scriptroot/eng/common/build.sh" --restore --build $@
+diff --git a/eng/GenerateAnalyzerNuspec.targets b/eng/GenerateAnalyzerNuspec.targets
+index bcc2bb261..61dd0442b 100644
+--- a/eng/GenerateAnalyzerNuspec.targets
++++ b/eng/GenerateAnalyzerNuspec.targets
+@@ -22,6 +22,11 @@
+     <PackageLicenseExpression Condition="'$(PackageLicenseExpression)' == ''">Apache-2.0</PackageLicenseExpression>
+   </PropertyGroup>
+ 
++  <PropertyGroup>
++    <DotNetExecutable Condition="'$(OS)' == 'Windows_NT'">$(DotNetRoot)\dotnet.exe</DotNetExecutable>
++    <DotNetExecutable Condition="'$(DotNetExecutable)' == ''">$(DotNetRoot)/dotnet</DotNetExecutable>
++  </PropertyGroup>
++
+   <Target Name="GenerateAnalyzerConfigAndDocumentationFiles"
+           DependsOnTargets="InitializeSourceControlInformation" 
+           Condition="'@(AnalyzerNupkgAssembly)' != '' or '@(AnalyzerRulesetAssembly)' != ''">
+@@ -88,13 +93,13 @@
+       <AnalyzerRulesetAssembly Condition="'@(AnalyzerNupkgAssembly)' != '' and '@(AnalyzerRulesetAssembly)' == ''" Include="@(AnalyzerNupkgAssembly)"/>
+       <AnalyzerRulesetAssembly Update="@(AnalyzerRulesetAssembly)" Condition="'%(AnalyzerRulesetAssembly.TargetFramework)' == ''" TargetFramework="$(TargetFramework)" />
+     </ItemGroup>
+-    <Exec Command='"$(DotNetRoot)dotnet.exe" "$(_GenerateDocumentationAndConfigFilesPath)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "$(ArtifactsBinDir)\" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "@(AnalyzerRulesetAssembly)" "$(PackagePropsFileDir)" "$(PackagePropsFileName)" "$(DisableNETAnalyzersPackagePropsFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(VersionPrefix)" $(NuspecPackageId) $(ContainsPortedFxCopRules) $(GenerateAnalyzerRulesMissingDocumentationFile)' />
++    <Exec Command='"$(DotNetExecutable)" "$(_GenerateDocumentationAndConfigFilesPath)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "$(ArtifactsBinDir)" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "@(AnalyzerRulesetAssembly)" "$(PackagePropsFileDir)" "$(PackagePropsFileName)" "$(DisableNETAnalyzersPackagePropsFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(VersionPrefix)" $(NuspecPackageId) $(ContainsPortedFxCopRules) $(GenerateAnalyzerRulesMissingDocumentationFile)' />
+ 
+     <MSBuild Projects="$(RepoRoot)src\Tools\GenerateGlobalAnalyzerConfigs\GenerateGlobalAnalyzerConfigs.csproj" Targets="Build">
+       <Output TaskParameter="TargetOutputs" PropertyName="_GenerateGlobalAnalyzerConfigsPath"/>
+     </MSBuild>
+ 
+-    <Exec Command='"$(DotNetRoot)dotnet.exe" "$(_GenerateGlobalAnalyzerConfigsPath)" "$(_GeneratedGlobalAnalyzerConfigsDir)" "$(NuspecPackageId)" "$(PackageTargetsFileDir)" "$(PackageTargetsFileName)" "@(AnalyzerRulesetAssembly)" "$(ArtifactsBinDir)\" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "$(ReleaseTrackingOptOut)"' />
++    <Exec Command='"$(DotNetExecutable)" "$(_GenerateGlobalAnalyzerConfigsPath)" "$(_GeneratedGlobalAnalyzerConfigsDir)" "$(NuspecPackageId)" "$(PackageTargetsFileDir)" "$(PackageTargetsFileName)" "@(AnalyzerRulesetAssembly)" "$(ArtifactsBinDir)" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "$(ReleaseTrackingOptOut)"' />
+ 
+     <ItemGroup Condition="Exists('$(PackageTargetsFileDir)\$(PackageTargetsFileName)')">
+       <AnalyzerNupkgFile Include="$(PackageTargetsFileDir)\$(PackageTargetsFileName)"/>
+@@ -132,6 +137,10 @@
+       <_CscToolPath Condition="!HasTrailingSlash('$(_CscToolPath)')">$(_CscToolPath)\</_CscToolPath>
+     </PropertyGroup>
+ 
+-    <Exec Command='"$(_CscToolPath)csi.exe" "$(RepoRoot)eng\GenerateAnalyzerNuspec.csx" "$(NuspecFile)" "$(AssetsDir)\" "$(MSBuildProjectDirectory)" "$(Configuration)" "$(TargetFrameworksForPackage)" "@(_NuspecMetadata)" "@(AnalyzerNupkgFile)" "@(AnalyzerNupkgFolder)" "@(AnalyzerNupkgAssembly)" "@(AnalyzerNupkgDependency)" "@(AnalyzerNupkgLibrary)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "@(AnalyzerLegacyRuleset)" "$(ArtifactsBinDir)\" "$(AnalyzerDocumentationFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(AnalyzerConfigurationFileDir)" "$(AnalyzerConfigurationFileName)" "$(_GeneratedGlobalAnalyzerConfigsDir)"' />
++    <Exec Command='"$(DotNetExecutable)" "build" "-c" "Release" "$(RepoRoot)eng\GenerateAnalyzerNuspec\GenerateAnalyzerNuspec.csproj"'
++          EnvironmentVariables="MSBUILDDISABLENODEREUSE=1;UseSharedCompilation=false;UseRazorBuildServer=false"
++          Condition="!Exists('$(RepoRoot)\artifacts\bin\GenerateAnalyzerNuspec\Release\net5.0\GenerateAnalyzerNuspec.dll')" />
++
++    <Exec Command='"$(DotNetExecutable)" "$(RepoRoot)\artifacts\bin\GenerateAnalyzerNuspec\Release\net5.0\GenerateAnalyzerNuspec.dll" "$(NuspecFile)" "$(AssetsDir)" "$(MSBuildProjectDirectory)" "$(Configuration)" "$(TargetFrameworksForPackage)" "@(_NuspecMetadata)" "@(AnalyzerNupkgFile)" "@(AnalyzerNupkgFolder)" "@(AnalyzerNupkgAssembly)" "@(AnalyzerNupkgDependency)" "@(AnalyzerNupkgLibrary)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "@(AnalyzerLegacyRuleset)" "$(ArtifactsBinDir)" "$(AnalyzerDocumentationFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(AnalyzerConfigurationFileDir)" "$(AnalyzerConfigurationFileName)" "$(_GeneratedGlobalAnalyzerConfigsDir)"' />
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/eng/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj b/eng/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+new file mode 100644
+index 000000000..208270428
+--- /dev/null
++++ b/eng/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+@@ -0,0 +1,8 @@
++<Project Sdk="Microsoft.NET.Sdk">
++
++  <PropertyGroup>
++    <OutputType>Exe</OutputType>
++    <TargetFramework>net5.0</TargetFramework>
++  </PropertyGroup>
++
++</Project>
+diff --git a/eng/GenerateAnalyzerNuspec/Program.cs b/eng/GenerateAnalyzerNuspec/Program.cs
+new file mode 100644
+index 000000000..5da676784
+--- /dev/null
++++ b/eng/GenerateAnalyzerNuspec/Program.cs
+@@ -0,0 +1,296 @@
++using System;
++using System.Collections.Generic;
++using System.Diagnostics;
++using System.IO;
++using System.Linq;
++using System.Text;
++
++namespace GenerateAnalyzerNuspec
++{
++    public class Program
++    {
++        public static void Main(string[] Args)
++        {
++string nuspecFile = Args[0];
++string assetsDir = Args[1];
++string projectDir = Args[2];
++string configuration = Args[3];
++string[] tfms = Args[4].Split(';');
++var metadataList = Args[5].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var fileList = Args[6].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var folderList = Args[7].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var assemblyList = Args[8].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var dependencyList = Args[9].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var libraryList = Args[10].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var rulesetsDir = Args[11];
++var editorconfigsDir = Args[12];
++var legacyRulesets = Args[13].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
++var artifactsBinDir = Args[14];
++var analyzerDocumentationFileDir = Args[15];
++var analyzerDocumentationFileName = Args[16];
++var analyzerSarifFileDir = Args[17];
++var analyzerSarifFileName = Args[18];
++var analyzerConfigurationFileDir = Args[19];
++var analyzerConfigurationFileName = Args[20];
++var globalAnalyzerConfigsDir = Args[21];
++
++var result = new StringBuilder();
++
++result.AppendLine(@"<?xml version=""1.0""?>");
++result.AppendLine(@"<package xmlns=""http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd"">");
++result.AppendLine(@"  <metadata>");
++
++string? version = null;
++string? repositoryType = null;
++string? repositoryUrl = null;
++string? repositoryCommit = null;
++
++foreach (string entry in metadataList)
++{
++    int equals = entry.IndexOf('=');
++    string name = entry.Substring(0, equals);
++    string value = entry.Substring(equals + 1);
++    switch (name)
++    {
++        case "repositoryType": repositoryType = value; continue;
++        case "repositoryUrl": repositoryUrl = value; continue;
++        case "repositoryCommit": repositoryCommit = value; continue;
++		case "license": result.AppendLine($"    <license type=\"expression\">{value}</license>"); continue;
++    }
++    
++    if (value != "")
++    {
++        result.AppendLine($"    <{name}>{value}</{name}>");
++    }
++
++    if (name == "version")
++    {
++        version = value;
++    }
++}
++
++if (!string.IsNullOrEmpty(repositoryType))
++{
++    result.AppendLine($@"    <repository type=""{repositoryType}"" url=""{repositoryUrl}"" commit=""{repositoryCommit}""/>");
++}
++
++if (dependencyList.Length > 0)
++{
++    result.AppendLine(@"    <dependencies>");
++
++    foreach (var dependency in dependencyList)
++    {
++        result.AppendLine($@"      <dependency id=""{dependency}"" version=""{version}"" />");
++    }
++
++    result.AppendLine(@"    </dependencies>");
++}
++
++result.AppendLine(@"  </metadata>");
++
++result.AppendLine(@"  <files>");
++
++string FileElement(string file, string target) => $@"    <file src=""{file}"" target=""{target}""/>";
++
++if (fileList.Length > 0 || assemblyList.Length > 0 || libraryList.Length > 0 || folderList.Length > 0)
++{
++    const string csName = "CSharp";
++    const string vbName = "VisualBasic";
++    const string csTarget = @"analyzers\dotnet\cs";
++    const string vbTarget = @"analyzers\dotnet\vb";
++    const string agnosticTarget = @"analyzers\dotnet";
++
++    var allTargets = new List<string>();
++    if (assemblyList.Any(assembly => assembly.Contains(csName)))
++    {
++        allTargets.Add(csTarget);
++    }
++
++    if (assemblyList.Any(assembly => assembly.Contains(vbName)))
++    {
++        allTargets.Add(vbTarget);
++    }
++
++    if (allTargets.Count == 0)
++    {
++        allTargets.Add(agnosticTarget);
++    }
++
++    foreach (string assembly in assemblyList) 
++    {
++        IEnumerable<string> targets;
++
++		if (assembly.Contains(csName))
++        {
++            targets = new[] { csTarget };
++        }
++        else if (assembly.Contains(vbName))
++        {
++            targets = new[] { vbTarget };
++        }
++        else
++        {
++            targets = allTargets;
++        }
++
++        string assemblyNameWithoutExtension = Path.GetFileNameWithoutExtension(assembly);
++
++        foreach (var tfm in tfms)
++        {
++            string assemblyFolder = Path.Combine(artifactsBinDir, assemblyNameWithoutExtension, configuration, tfm);
++            string assemblyPathForNuspec = Path.Combine(assemblyNameWithoutExtension, configuration, tfm, assembly);
++
++            foreach (string target in targets)
++            {
++                result.AppendLine(FileElement(assemblyPathForNuspec, target));
++
++                if (Directory.Exists(assemblyFolder))
++                {
++                    string resourceAssemblyName = assemblyNameWithoutExtension + ".resources.dll";
++                    foreach (var directory in Directory.EnumerateDirectories(assemblyFolder))
++                    {
++                        var resourceAssemblyFullPath = Path.Combine(directory, resourceAssemblyName);
++                        if (File.Exists(resourceAssemblyFullPath))
++                        {
++                            var directoryName = Path.GetFileName(directory);
++                            string resourceAssemblyPathForNuspec = Path.Combine(assemblyNameWithoutExtension, configuration, tfm, directoryName, resourceAssemblyName);
++                            string targetForNuspec = Path.Combine(target, directoryName);
++                            result.AppendLine(FileElement(resourceAssemblyPathForNuspec, targetForNuspec));
++                        }
++                    }
++                }
++            }
++        }
++    }
++
++    foreach (string file in fileList)
++    {
++        var fileWithPath = Path.IsPathRooted(file) ? file : Path.Combine(projectDir, file);
++        result.AppendLine(FileElement(fileWithPath, "build"));
++    }
++
++    foreach (string file in libraryList)
++    {
++        foreach (var tfm in tfms)
++        {
++            var fileWithPath = Path.Combine(artifactsBinDir, Path.GetFileNameWithoutExtension(file), configuration, tfm, file);
++            
++            // For multi-tfm case, file may not exist for all tfms.
++            if (File.Exists(fileWithPath))
++            {
++                result.AppendLine(FileElement(fileWithPath, Path.Combine("lib", tfm)));
++            }
++        }
++    }
++
++    foreach (string folder in folderList)
++    {
++        foreach (var tfm in tfms)
++        {
++            string folderPath = Path.Combine(artifactsBinDir, folder, configuration, tfm);
++            foreach (var file in Directory.EnumerateFiles(folderPath))
++            {
++                var fileExtension = Path.GetExtension(file);
++                if (fileExtension == ".exe" ||
++                    fileExtension == ".dll" ||
++                    fileExtension == ".config" ||
++                    fileExtension == ".xml")
++                {
++                    var fileWithPath = Path.Combine(folderPath, file);
++                    var targetPath = tfms.Length > 1 ? Path.Combine(folder, tfm) : folder;
++                    result.AppendLine(FileElement(fileWithPath, targetPath));
++                }
++            }
++        }
++    }
++
++    result.AppendLine(FileElement(Path.Combine(assetsDir, "Install.ps1"), "tools"));
++    result.AppendLine(FileElement(Path.Combine(assetsDir, "Uninstall.ps1"), "tools"));
++}
++
++if (rulesetsDir.Length > 0 && Directory.Exists(rulesetsDir))
++{
++    foreach (string ruleset in Directory.EnumerateFiles(rulesetsDir))
++    {
++        if (Path.GetExtension(ruleset) == ".ruleset")
++        {
++            result.AppendLine(FileElement(Path.Combine(rulesetsDir, ruleset), "rulesets"));
++        }
++    }
++}
++
++if (editorconfigsDir.Length > 0 && Directory.Exists(editorconfigsDir))
++{
++    foreach (string directory in Directory.EnumerateDirectories(editorconfigsDir))
++    {
++        var directoryName = new DirectoryInfo(directory).Name;
++        foreach (string editorconfig in Directory.EnumerateFiles(directory))
++        {
++            result.AppendLine(FileElement(Path.Combine(directory, editorconfig), $"editorconfig\\{directoryName}"));
++        }
++    }
++}
++
++if (globalAnalyzerConfigsDir.Length > 0 && Directory.Exists(globalAnalyzerConfigsDir))
++{
++    foreach (string editorconfig in Directory.EnumerateFiles(globalAnalyzerConfigsDir))
++    {
++        if (Path.GetExtension(editorconfig) == ".editorconfig")
++        {
++            result.AppendLine(FileElement(Path.Combine(globalAnalyzerConfigsDir, editorconfig), $"build\\config"));
++        }
++        else
++        {
++            throw new InvalidDataException($"Encountered a file with unexpected extension: {editorconfig}");
++        }
++    }
++}
++
++if (analyzerDocumentationFileDir.Length > 0 && Directory.Exists(analyzerDocumentationFileDir) && analyzerDocumentationFileName.Length > 0)
++{
++    var fileWithPath = Path.Combine(analyzerDocumentationFileDir, analyzerDocumentationFileName);
++    if (File.Exists(fileWithPath))
++    {
++        result.AppendLine(FileElement(fileWithPath, "documentation"));
++    }
++}
++
++if (analyzerSarifFileDir.Length > 0 && Directory.Exists(analyzerSarifFileDir) && analyzerSarifFileName.Length > 0)
++{
++    var fileWithPath = Path.Combine(analyzerSarifFileDir, analyzerSarifFileName);
++    if (File.Exists(fileWithPath))
++    {
++        result.AppendLine(FileElement(fileWithPath, "documentation"));
++    }
++}
++
++if (analyzerConfigurationFileDir.Length > 0 && Directory.Exists(analyzerConfigurationFileDir) && analyzerConfigurationFileName.Length > 0)
++{
++    var fileWithPath = Path.Combine(analyzerConfigurationFileDir, analyzerConfigurationFileName);
++    if (File.Exists(fileWithPath))
++    {
++        result.AppendLine(FileElement(fileWithPath, "documentation"));
++    }
++}
++
++if (legacyRulesets.Length > 0)
++{
++    foreach (string legacyRuleset in legacyRulesets)
++    {
++        if (Path.GetExtension(legacyRuleset) == ".ruleset")
++        {
++            result.AppendLine(FileElement(Path.Combine(projectDir, legacyRuleset), @"rulesets\legacy"));
++        }
++    }
++}
++
++result.AppendLine(FileElement(Path.Combine(assetsDir, "EULA.rtf"), ""));
++result.AppendLine(FileElement(Path.Combine(assetsDir, "ThirdPartyNotices.rtf"), ""));
++result.AppendLine(@"  </files>");
++
++result.AppendLine(@"</package>");
++
++File.WriteAllText(nuspecFile, result.ToString());
++        }
++    }
++}
+\ No newline at end of file
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 23f5ee1bd..ced06221d 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -25,6 +25,7 @@
+     <UsingToolMicrosoftNetCompilers>true</UsingToolMicrosoftNetCompilers>
+     <!-- Roslyn -->
+     <MicrosoftCodeAnalysisVersion>3.3.1</MicrosoftCodeAnalysisVersion>
++    <MicrosoftCodeAnalysisCommonVersion>3.3.1</MicrosoftCodeAnalysisCommonVersion>
+     <MicrosoftCodeAnalysisForRoslynDiagnosticsAnalyzersVersion>$(MicrosoftCodeAnalysisVersion)</MicrosoftCodeAnalysisForRoslynDiagnosticsAnalyzersVersion>
+     <MicrosoftCodeAnalysisForShippedApisVersion>3.7.0</MicrosoftCodeAnalysisForShippedApisVersion>
+     <DogfoodAnalyzersVersion>3.3.0</DogfoodAnalyzersVersion>
+@@ -48,4 +49,7 @@
+     <HumanizerVersion>2.2.0</HumanizerVersion>
+     <XunitCombinatorialVersion>1.2.7</XunitCombinatorialVersion>
+   </PropertyGroup>
++
++  <!-- Override isolated build dependency versions with versions from Repo API. -->
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
+ </Project>
+diff --git a/eng/common/dotnet-install.sh b/eng/common/dotnet-install.sh
+old mode 100644
+new mode 100755
+diff --git a/nuget/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.Package.csproj b/nuget/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.Package.csproj
+index 5ca2d53f9..92d0810d6 100644
+--- a/nuget/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.Package.csproj
++++ b/nuget/Microsoft.CodeAnalysis.Analyzers/Microsoft.CodeAnalysis.Analyzers.Package.csproj
+@@ -10,11 +10,17 @@
+     <ReleaseNotes>Diagnostic analyzers for the Microsoft .NET Compiler Platform (Roslyn)</ReleaseNotes>
+     <PackageTags>Roslyn CodeAnalysis Compiler CSharp VB VisualBasic Diagnostic Analyzers Syntax Semantics</PackageTags>
+ 
+-    <!-- 
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers 
+-      Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and Microsoft.CodeAnalysis.Analyzers.
++    <!--
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+   </PropertyGroup>
+   
+   <ItemGroup>
+@@ -28,4 +34,4 @@
+     <ProjectReference Include="..\..\src\Microsoft.CodeAnalysis.Analyzers\CSharp\Microsoft.CodeAnalysis.CSharp.Analyzers.csproj" />
+     <ProjectReference Include="..\..\src\Microsoft.CodeAnalysis.Analyzers\VisualBasic\Microsoft.CodeAnalysis.VisualBasic.Analyzers.vbproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.CodeAnalysis.AnalyzerUtilities/Microsoft.CodeAnalysis.AnalyzerUtilities.csproj b/src/Microsoft.CodeAnalysis.AnalyzerUtilities/Microsoft.CodeAnalysis.AnalyzerUtilities.csproj
+index 5bc31228b..72c4caf4e 100644
+--- a/src/Microsoft.CodeAnalysis.AnalyzerUtilities/Microsoft.CodeAnalysis.AnalyzerUtilities.csproj
++++ b/src/Microsoft.CodeAnalysis.AnalyzerUtilities/Microsoft.CodeAnalysis.AnalyzerUtilities.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.AnalyzerUtilities,
+-      Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.AnalyzerUtilities package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <ExcludeInternalFlowAnalyses>true</ExcludeInternalFlowAnalyses>
+     <ExcludeCodeMetricsUtilities>true</ExcludeCodeMetricsUtilities>
+     <ReleaseTrackingOptOut>true</ReleaseTrackingOptOut>
+diff --git a/src/Microsoft.CodeAnalysis.Analyzers/Core/Microsoft.CodeAnalysis.Analyzers.csproj b/src/Microsoft.CodeAnalysis.Analyzers/Core/Microsoft.CodeAnalysis.Analyzers.csproj
+index eab29554e..69ffa2042 100644
+--- a/src/Microsoft.CodeAnalysis.Analyzers/Core/Microsoft.CodeAnalysis.Analyzers.csproj
++++ b/src/Microsoft.CodeAnalysis.Analyzers/Core/Microsoft.CodeAnalysis.Analyzers.csproj
+@@ -2,11 +2,17 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>
+-    <!-- 
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers 
+-      Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and Microsoft.CodeAnalysis.Analyzers.
++    <!--
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+   </PropertyGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.CSharp.Analyzers" />
+@@ -18,4 +24,4 @@
+   </ItemGroup>
+   <Import Project="..\..\Utilities\Compiler\Analyzer.Utilities.projitems" Label="Shared" />
+   <Import Project="..\..\Utilities\Workspaces\Workspaces.Utilities.projitems" Label="Shared" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Shipped.md b/src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Unshipped.md b/src/Microsoft.CodeAnalysis.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers.csproj b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers.csproj
+index b629875db..c0cde9db9 100644
+--- a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers.csproj
++++ b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.BannedApiAnalyzers.csproj
+@@ -10,4 +10,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\Core\Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj
+index d8d799a9d..f3a0b0e5f 100644
+--- a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj
++++ b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard1.3</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.BannedApiAnalyzer,
+-      Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.BannedApiAnalyzer package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <MicrosoftCodeAnalysisVersion>2.9.0</MicrosoftCodeAnalysisVersion>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Shipped.md b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers.vbproj b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers.vbproj
+index 0958cc7ed..645153bbd 100644
+--- a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers.vbproj
++++ b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/VisualBasic/Microsoft.CodeAnalysis.VisualBasic.BannedApiAnalyzers.vbproj
+@@ -10,4 +10,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\Core\Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Microsoft.CodeAnalysis.VersionCheckAnalyzer/Microsoft.CodeAnalysis.VersionCheckAnalyzer.csproj b/src/Microsoft.CodeAnalysis.VersionCheckAnalyzer/Microsoft.CodeAnalysis.VersionCheckAnalyzer.csproj
+index bbf276e8e..32865d493 100644
+--- a/src/Microsoft.CodeAnalysis.VersionCheckAnalyzer/Microsoft.CodeAnalysis.VersionCheckAnalyzer.csproj
++++ b/src/Microsoft.CodeAnalysis.VersionCheckAnalyzer/Microsoft.CodeAnalysis.VersionCheckAnalyzer.csproj
+@@ -26,6 +26,6 @@
+     <Compile Include="..\Utilities\Compiler\Extensions\ReportDiagnosticExtensions.cs" Link="ReportDiagnosticExtensions.cs" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(MicrosoftCodeAnalysisVersion)" />
++    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(MicrosoftCodeAnalysisCommonVersion)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/NetAnalyzers/Core/Microsoft.CodeAnalysis.NetAnalyzers.csproj b/src/NetAnalyzers/Core/Microsoft.CodeAnalysis.NetAnalyzers.csproj
+index 23e99b957..9a43964db 100644
+--- a/src/NetAnalyzers/Core/Microsoft.CodeAnalysis.NetAnalyzers.csproj
++++ b/src/NetAnalyzers/Core/Microsoft.CodeAnalysis.NetAnalyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Microsoft.CodeQuality.Analyzers
+-      Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeQuality.Analyzers nuget package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <RootNamespace></RootNamespace>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/NetAnalyzers/Setup/AnalyzerReleases.Shipped.md b/src/NetAnalyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/NetAnalyzers/Setup/AnalyzerReleases.Unshipped.md b/src/NetAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/PerformanceSensitiveAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers.csproj b/src/PerformanceSensitiveAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers.csproj
+index ebdabf30a..29a9d9494 100644
+--- a/src/PerformanceSensitiveAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers.csproj
++++ b/src/PerformanceSensitiveAnalyzers/CSharp/Microsoft.CodeAnalysis.CSharp.PerformanceSensitiveAnalyzers.csproj
+@@ -13,4 +13,4 @@
+   <ItemGroup>
+     <ProjectReference Include="..\Core\Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj b/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj
+index c20ca61be..ac9455cac 100644
+--- a/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj
++++ b/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard1.3</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.PerformanceSensitive.Analyzers,
+-      Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.PerformanceSensitive.Analyzers nuget package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <MicrosoftCodeAnalysisVersion>2.9.0</MicrosoftCodeAnalysisVersion>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Shipped.md b/src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Unshipped.md b/src/PerformanceSensitiveAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj b/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj
+index 73b42c326..8ac0061a4 100644
+--- a/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj
++++ b/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard1.3</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.PublicApiAnalyzer,
+-      Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.PublicApiAnalyzer package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <MicrosoftCodeAnalysisVersion>1.2.1</MicrosoftCodeAnalysisVersion>
+   </PropertyGroup>
+ 
+diff --git a/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj b/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj
+index c355be240..bdb00b382 100644
+--- a/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj
++++ b/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard1.3</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to DotNetAnalyzers.PublicApiAnalyzer.CodeFixes,
+-      Restore would conclude that there is a cyclic dependency between us and the DotNetAnalyzers.PublicApiAnalyzer.CodeFixes package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <MicrosoftCodeAnalysisVersion>1.2.1</MicrosoftCodeAnalysisVersion>
+     <ReleaseTrackingOptOut>true</ReleaseTrackingOptOut>
+   </PropertyGroup>
+diff --git a/src/PublicApiAnalyzers/Setup/AnalyzerReleases.Shipped.md b/src/PublicApiAnalyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/PublicApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md b/src/PublicApiAnalyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Roslyn.Diagnostics.Analyzers/Core/Roslyn.Diagnostics.Analyzers.csproj b/src/Roslyn.Diagnostics.Analyzers/Core/Roslyn.Diagnostics.Analyzers.csproj
+index 11f7691f4..981e9ae23 100644
+--- a/src/Roslyn.Diagnostics.Analyzers/Core/Roslyn.Diagnostics.Analyzers.csproj
++++ b/src/Roslyn.Diagnostics.Analyzers/Core/Roslyn.Diagnostics.Analyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Roslyn.Diagnostics.Analyzers,
+-      Restore would conclude that there is a cyclic dependency between us and the Roslyn.Diagnostics.Analyzers package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <MicrosoftCodeAnalysisVersion>$(MicrosoftCodeAnalysisForRoslynDiagnosticsAnalyzersVersion)</MicrosoftCodeAnalysisVersion>
+   </PropertyGroup>
+   <ItemGroup>
+diff --git a/src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Shipped.md b/src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Unshipped.md b/src/Roslyn.Diagnostics.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Text.Analyzers/Core/Text.Analyzers.csproj b/src/Text.Analyzers/Core/Text.Analyzers.csproj
+index 0b75ee195..266a79b43 100644
+--- a/src/Text.Analyzers/Core/Text.Analyzers.csproj
++++ b/src/Text.Analyzers/Core/Text.Analyzers.csproj
+@@ -3,10 +3,16 @@
+   <PropertyGroup>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <!--
+-      PackageId is used by Restore. If we set it to Text.Analyzers,
+-      Restore would conclude that there is a cyclic dependency between us and the Text.Analyzers nuget package.
++        PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
++        Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
++        Microsoft.CodeAnalysis.Analyzers.
++
++        Additionally, for Unix, convert the paths to Windows-style paths. The project.assets.json
++        file uses '/' as a delimiter between the package id and the version. If keep the
++        forward-slashes in the path on Unix, the code parsing projects.assets.json gets confused
++        about where the package name ends and where the version begins.
+     -->
+-    <PackageId>*$(MSBuildProjectFullPath)*</PackageId>
++    <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+   </PropertyGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Text.CSharp.Analyzers" />
+diff --git a/src/Text.Analyzers/Setup/AnalyzerReleases.Shipped.md b/src/Text.Analyzers/Setup/AnalyzerReleases.Shipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Text.Analyzers/Setup/AnalyzerReleases.Unshipped.md b/src/Text.Analyzers/Setup/AnalyzerReleases.Unshipped.md
+new file mode 100644
+index 000000000..e69de29bb
+diff --git a/src/Utilities/Compiler/Analyzer.Utilities.projitems b/src/Utilities/Compiler/Analyzer.Utilities.projitems
+index 9e3e75dbd..74731c652 100644
+--- a/src/Utilities/Compiler/Analyzer.Utilities.projitems
++++ b/src/Utilities/Compiler/Analyzer.Utilities.projitems
+@@ -127,4 +127,4 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="$(MicrosoftCodeAnalysisVersion)" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.26.2
+
