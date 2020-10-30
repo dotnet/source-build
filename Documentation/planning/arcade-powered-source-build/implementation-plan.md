@@ -19,6 +19,7 @@ To get each repo building with the new source-build 5.0 plan, [Arcade-Powered So
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 | 1 | command-line-api | [?](https://github.com/) | ⏱ | | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
+| ? | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | | | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
 | 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | | | | | |
