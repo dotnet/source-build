@@ -20,8 +20,6 @@
     <Platform Condition="'$(Platform)' == '' AND '$(BuildArchitecture)' == 'arm64'">$(BuildArchitecture)</Platform>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
 
-    <UseStableVersions Condition="'$(UseStableVersions)' == ''">true</UseStableVersions>
-
     <!-- new supported portable/nonportable options.  These control whether to build portable runtime
          or portable SDK.  The PortableBuild flag is only set in runtime-portable.proj and should
          no longer be passed in.  -->
