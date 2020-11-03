@@ -15,13 +15,13 @@ index f2eef864898..5e156775bcc 100644
 +++ b/src/libraries/libraries-packages.proj
 @@ -24,7 +24,7 @@
    <Import Project="$(PkgDir)baseline\baseline.props" />
-
+ 
    <!-- Calculate PackageDownload items for restore. -->
 -  <Import Project="$(RepositoryEngineeringDir)restore\harvestPackages.targets" Condition="'$(MSBuildRestoreSessionId)' != ''" />
 +  <Import Project="$(RepositoryEngineeringDir)restore\harvestPackages.targets" Condition="'$(MSBuildRestoreSessionId)' != '' and '$(DotNetBuildFromSource)' != 'true'" />
-
+ 
    <!--
      Updates the package index to mark all packages we are building that can go stable as stable.
---
+-- 
 2.25.2
 
