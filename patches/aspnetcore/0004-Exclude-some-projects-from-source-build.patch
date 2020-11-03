@@ -12,7 +12,7 @@ index 86dbc3c929..908fa251c7 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -16,9 +16,11 @@
-     <IsUnitTestProject>false</IsUnitTestProject>
+     <IsUnitTestProject Condition=" '$(IsUnitTestProject)' == '' ">false</IsUnitTestProject>
      <IsUnitTestProject Condition="'$(IsSpecificationTestProject)' != 'true' and ( $(MSBuildProjectName.EndsWith('Tests')) or $(MSBuildProjectName.EndsWith('.Test')) or $(MSBuildProjectName.EndsWith('.FunctionalTest')) )">true</IsUnitTestProject>
      <IsTestAssetProject Condition="$(RepoRelativeProjectDir.Contains('testassets'))">true</IsTestAssetProject>
 +    <IsOtherTestProject Condition="$(MSBuildProjectName.Contains('IntegrationTesting')) or $(MSBuildProjectName.Contains('TestCommon'))">true</IsOtherTestProject>
@@ -20,9 +20,9 @@ index 86dbc3c929..908fa251c7 100644
      <IsAnalyzersProject Condition="$(MSBuildProjectName.EndsWith('.Analyzers'))">true</IsAnalyzersProject>
      <IsShipping Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true'">false</IsShipping>
 +    <ExcludeFromSourceBuild Condition="'$(IsSampleProject)' == 'true' or '$(IsTestAssetProject)' == 'true' or '$(IsBenchmarkProject)' == 'true' or '$(IsUnitTestProject)' == 'true' or '$(IsSpecificationTestProject)' == 'true' or '$(IsOtherTestProject)' == 'true'">true</ExcludeFromSourceBuild>
- 
+
      <!--
        Following logic mimics core-setup approach as well as
--- 
+--
 2.18.2
 

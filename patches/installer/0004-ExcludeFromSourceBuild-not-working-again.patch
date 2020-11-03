@@ -6,8 +6,8 @@ Subject: [PATCH 4/4] ExcludeFromSourceBuild not working again
 ---
  Microsoft.DotNet.Cli.sln           |  7 ------
  src/SdkResolver/SdkResolver.csproj | 39 ------------------------------
- src/redist/redist.csproj           |  2 +-
- 3 files changed, 1 insertion(+), 47 deletions(-)
+ src/redist/redist.csproj           |  4 ++--
+ 3 files changed, 2 insertion(+), 48 deletions(-)
  delete mode 100644 src/SdkResolver/SdkResolver.csproj
 
 diff --git a/Microsoft.DotNet.Cli.sln b/Microsoft.DotNet.Cli.sln
@@ -91,15 +91,16 @@ diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
 index 35c3d4ad9..15601e98f 100644
 --- a/src/redist/redist.csproj
 +++ b/src/redist/redist.csproj
-@@ -11,7 +11,7 @@
+@@ -12,7 +12,7 @@
                          RuntimeFrameworkVersion="$(MicrosoftNETCoreAppRuntimePackageVersion)"
                          />
  
 -    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" />
 +    <ProjectReference Include="..\SdkResolver\SdkResolver.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+-    <ProjectReference Include="..\VSTemplateLocator\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" />
++    <ProjectReference Include="..\VSTemplateLocator\VSTemplateLocator.csproj" ReferenceOutputAssembly="false" Condition="'$(DotNetBuildFromSource)' != 'true'" />
    </ItemGroup>
  
-   <ItemGroup>
 -- 
 2.18.0
 

@@ -12,5 +12,12 @@
       <RepositoryReference Include="runtime-portable" Condition="'$(TargetOS)' == 'Linux' and '$(BuildPortableRuntime)' == 'true'" />
   </ItemGroup>
 
+    <!-- Additional Targets -->
+  <Target Name="InstallJustBuiltRuntime" AfterTargets="RemoveBuiltPackagesFromCache">
+    <!-- Install the runtime that was just built to be used by downstream repos, namely, aspnetcore -->
+    <Exec Command="tar -xvf $(SourceBuiltAssetsDir)dotnet-runtime-$(runtimeOutputPackageVersion)-$(TargetRid).tar.gz -C $(DotNetRoot)" />
+  </Target>
+
+
   <Import Project="runtime.common.targets" />
 </Project>
