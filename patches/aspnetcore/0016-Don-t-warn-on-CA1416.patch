@@ -1,26 +1,29 @@
 From 0e7e210394d152c097facaf9e3cde68a0a04eb87 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 8 Oct 2020 14:18:02 +0000
-Subject: [PATCH] Don't warn on CA1416
+Subject: [PATCH] Don't warn on CA1416 & NU5104
 
 ---
- Directory.Build.props | 3 +++
- 1 file changed, 3 insertions(+)
+ Directory.Build.props | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
 index 9f3a6d3..40fc07b 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -100,6 +100,9 @@
- 
+@@ -100,6 +100,12 @@
+
    <!-- Warnings and errors -->
    <PropertyGroup>
 +    <!-- Don't warn on CA1416 since source-build TFM changes
 +        are causing the warning to occur -->
 +    <NoWarn>$(NoWarn);CA1416</NoWarn>
++    <!-- Don't warn on NU5104 - PVP provides built versions
++        which may be unstable versions, causing this error -->
++    <NoWarn>$(NoWarn);NU5104</NoWarn>
      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
      <!-- Don't make missing XML docs a fatal build error, but still surface so we have visibility into undocumented APIs. -->
      <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
--- 
+--
 1.8.3.1
 
