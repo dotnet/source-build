@@ -1,0 +1,96 @@
+From d83bee0c97ca52f9aba75fe87def80b938513c96 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 5 Nov 2020 14:23:06 +0000
+Subject: [PATCH] Use PVP version of System.Text.Json
+
+---
+ .../Microsoft.DotNet.TemplateLocator.csproj      |  2 +-
+ .../Microsoft.DotNet.MSBuildSdkResolver.csproj   | 16 ++++++++--------
+ ...crosoft.NET.Sdk.WorkloadManifestReader.csproj |  2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
+index ea1c10f33..8046415ba 100644
+--- a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
++++ b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
+@@ -52,7 +52,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="System.Text.Json" Version="4.7.2" Condition="'$(UseSystemTextJson)'=='True'"/>
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" Condition="'$(UseSystemTextJson)'=='True'"/>
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'"/>
+   </ItemGroup>
+ </Project>
+diff --git a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+index 22662b41a..f514a14c9 100644
+--- a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
++++ b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
+@@ -8,9 +8,9 @@
+     <WarningsAsErrors>true</WarningsAsErrors>
+     <StrongNameKeyId>MicrosoftAspNetCore</StrongNameKeyId>
+     <IsPackable>true</IsPackable>
+-    
++
+     <Nullable>Enable</Nullable>
+-    
++
+     <UseSystemTextJson Condition="'$(TargetFramework)'!='netstandard2.0' And '$(TargetFramework)'!='net472'">True</UseSystemTextJson>
+     <DefineConstants Condition="'$(UseSystemTextJson)'=='True'">$(DefineConstants);USE_SYSTEM_TEXT_JSON</DefineConstants>
+ 
+@@ -27,7 +27,7 @@
+       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('NuGetPackageId', 'Newtonsoft.Json'))" />
+     </ItemGroup>
+   </Target>
+-  
++
+   <ItemGroup>
+     <EmbeddedResource Include="..\Microsoft.NET.Sdk.WorkloadManifestReader\Strings.resx" LinkBase="Resources" GenerateSource="True" Namespace="Microsoft.NET.Sdk.Localization"/>
+   </ItemGroup>
+@@ -41,7 +41,7 @@
+ 
+     <WriteLinesToFile File="$(OutputPath)\SdkResolvers\$(AssemblyName)\$(AssemblyName).xml" Lines="@(ManifestLines)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+   </Target>
+-  
++
+   <ItemGroup>
+     <EmbeddedResource Update="**\*.resx" GenerateSource="true" />
+   </ItemGroup>
+@@ -72,11 +72,11 @@
+     <Reference Include="System.Core" />
+     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30" PrivateAssets="All" ExcludeAssets="Runtime" />
+   </ItemGroup>
+-  
++
+   <ItemGroup>
+-    <PackageReference Include="System.Text.Json" Version="4.7.2" Condition="'$(UseSystemTextJson)'=='True'"/>
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" Condition="'$(UseSystemTextJson)'=='True'"/>
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'"/>
+-    
++
+     <!-- Reference this package to avoid package downgrade errors.  See https://github.com/dotnet/sdk/issues/3044 for details -->
+     <PackageReference Include="Microsoft.NETCore.Targets" Version="2.1.0" ExcludeAssets="all" PrivateAssets="all" />
+   </ItemGroup>
+@@ -102,4 +102,4 @@
+     </ItemGroup>
+   </Target>
+ 
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj b/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
+index 4c151eaad..2bac54eff 100644
+--- a/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
++++ b/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
+@@ -20,7 +20,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="System.Text.Json" Version="4.7.2" Condition="'$(UseSystemTextJson)'=='True'" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" Condition="'$(UseSystemTextJson)'=='True'" />
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'" />
+   </ItemGroup>
+ 
+-- 
+2.18.4
+
