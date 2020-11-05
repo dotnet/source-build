@@ -1,0 +1,29 @@
+From 845e63821f5cf56770e382fe0bfede94dd064c00 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Wed, 4 Nov 2020 19:21:19 -0600
+Subject: [PATCH] Unify System.Data.SqlClient version 4.8.1
+
+Version 4.8.1 is in SBRP. Unify this usage to use that, to avoid
+bringing in 4.8.2 as a prebuilt. This upgrade was performed in
+dotnet/runtime on 2020-10-8 by
+https://github.com/dotnet/runtime/pull/43192 and this reverts it.
+---
+ eng/Versions.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 094ff7afcee..79c96dd6002 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -72,7 +72,7 @@
+     <SystemCollectionsVersion>4.3.0</SystemCollectionsVersion>
+     <SystemCollectionsConcurrentVersion>4.3.0</SystemCollectionsConcurrentVersion>
+     <SystemComponentModelAnnotationsVersion>4.7.0</SystemComponentModelAnnotationsVersion>
+-    <SystemDataSqlClientVersion>4.8.2</SystemDataSqlClientVersion>
++    <SystemDataSqlClientVersion>4.8.1</SystemDataSqlClientVersion>
+     <SystemDiagnosticsContractsVersion>4.3.0</SystemDiagnosticsContractsVersion>
+     <SystemDiagnosticsDebugVersion>4.3.0</SystemDiagnosticsDebugVersion>
+     <SystemDiagnosticsTracingVersion>4.3.0</SystemDiagnosticsTracingVersion>
+-- 
+2.25.2
+
