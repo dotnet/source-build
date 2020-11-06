@@ -1,14 +1,14 @@
-From db16bd386194031fa765cf3d745a14a6d3822b61 Mon Sep 17 00:00:00 2001
+From 4a74073416e5798e9be49d291da9e8a9db598fff Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 9 Oct 2019 20:39:30 +0000
-Subject: [PATCH 5/7] Remove runtime identifier from vstest projects
+Subject: [PATCH] Remove runtime identifier from vstest projects
 
 ---
- src/testhost.x86/testhost.x86.csproj | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/testhost.x86/testhost.x86.csproj     | 2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/src/testhost.x86/testhost.x86.csproj b/src/testhost.x86/testhost.x86.csproj
-index 244737eb..74d82a77 100644
+index 535a6e6a..d2199dc0 100644
 --- a/src/testhost.x86/testhost.x86.csproj
 +++ b/src/testhost.x86/testhost.x86.csproj
 @@ -13,7 +13,7 @@
@@ -16,10 +16,11 @@ index 244737eb..74d82a77 100644
      <OutputType>Exe</OutputType>
      <ApplicationManifest>app.manifest</ApplicationManifest>
 -    <RuntimeIdentifier>win7-x86</RuntimeIdentifier>
-+    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' == 'true' ">win7-x86</RuntimeIdentifier>
++    <RuntimeIdentifier Condition=" '$(DotNetBuildFromSource)' != 'true' ">win7-x86</RuntimeIdentifier>
      <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
    </PropertyGroup>
    <ItemGroup>
 -- 
-2.18.2
+2.26.2
+1.8.3.1
 
