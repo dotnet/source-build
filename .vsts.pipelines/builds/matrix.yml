@@ -16,7 +16,7 @@ stages:
     name: centos71
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
-      reportPrebuiltLeaks: false
+      reportPrebuiltLeaks: true
     matrix:
 # Temporarily disable unit tests until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1549
@@ -43,7 +43,7 @@ stages:
     name: centos8
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-source-build-20200402192642-9e679d4
-      reportPrebuiltLeaks: false
+      reportPrebuiltLeaks: true
       systemLibunwind: false
     matrix:
       Production: {}
