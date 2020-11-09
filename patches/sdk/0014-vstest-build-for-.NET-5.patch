@@ -1,0 +1,25 @@
+From 2e00d462c9533b48afe268726d9b5b00f3d36036 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Wed, 28 Oct 2020 14:31:39 +0100
+Subject: [PATCH] vstest: build for .NET 5
+
+---
+ src/Layout/redist/targets/GenerateLayout.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Layout/redist/targets/GenerateLayout.targets b/src/Layout/redist/targets/GenerateLayout.targets
+index c3713a8d4..1745c694d 100644
+--- a/src/Layout/redist/targets/GenerateLayout.targets
++++ b/src/Layout/redist/targets/GenerateLayout.targets
+@@ -96,7 +96,7 @@
+   <Target Name="PublishTestCli"
+           BeforeTargets="Build">
+     <PropertyGroup>
+-      <TestCliNuGetDirectory>$(NuGetPackageRoot)/microsoft.testplatform.cli/$(MicrosoftTestPlatformCLIPackageVersion)/contentFiles/any/netcoreapp2.1/</TestCliNuGetDirectory>
++      <TestCliNuGetDirectory>$(NuGetPackageRoot)/microsoft.testplatform.cli/$(MicrosoftTestPlatformCLIPackageVersion)/contentFiles/any/net5.0/</TestCliNuGetDirectory>
+     </PropertyGroup>
+     <ItemGroup>
+       <!-- https://github.com/microsoft/vstest/issues/1886 -->
+-- 
+2.26.2
+

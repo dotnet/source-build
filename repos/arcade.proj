@@ -51,5 +51,26 @@
     <RepositoryReference Include="sourcelink" />
   </ItemGroup>
 
+  <Target Name="UsePreviouslySourceBuiltNuGet"
+          Condition="'$(OfflineBuild)' == 'true'"
+          BeforeTargets="RepoBuild">
+    <ItemGroup>
+      <PreviouslySourceBuiltNuGetPackageFile Include="$(PrebuiltSourceBuiltPackagesPath)NuGet.Packaging.*.nupkg" />
+    </ItemGroup>
+
+    <Error
+      Text="Unable to find any previously source built NuGet.Packaging version to use in Arcade SDK tooling."
+      Condition="'@(PreviouslySourceBuiltNuGetPackageFile)' == ''" />
+
+    <ReadNuGetPackageInfos PackagePaths="@(PreviouslySourceBuiltNuGetPackageFile)">
+      <Output TaskParameter="PackageInfoItems" ItemName="PreviouslySourceBuiltNuGetPackageInfo" />
+    </ReadNuGetPackageInfos>
+
+    <PropertyGroup>
+      <PreviouslySourceBuiltNuGetVersion>%(PreviouslySourceBuiltNuGetPackageInfo.PackageVersion)</PreviouslySourceBuiltNuGetVersion>
+      <BuildCommand>$(BuildCommand) /p:NuGetVersion=$(PreviouslySourceBuiltNuGetVersion)</BuildCommand>
+    </PropertyGroup>
+  </Target>
+
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
