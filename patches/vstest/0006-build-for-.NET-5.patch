@@ -1,6 +1,6 @@
-From ab128917787b6bf53a82a954fca040f9ca1c2682 Mon Sep 17 00:00:00 2001
+From 80d24c9102802bf1e16c7b5bca5884b639ca2f0f Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Fri, 23 Oct 2020 09:42:48 +0200
+Date: Thu, 12 Nov 2020 15:35:12 +0100
 Subject: [PATCH] vstest: build for .NET 5
 
 ---
@@ -15,8 +15,8 @@ Subject: [PATCH] vstest: build for .NET 5
  src/testhost.x86/testhost.x86.csproj                        | 2 +-
  src/testhost/testhost.csproj                                | 5 +++--
  src/vstest.console/CommandLine/CommandLineOptions.cs        | 4 ++--
- src/vstest.console/vstest.console.csproj                    | 4 ++--
- 12 files changed, 21 insertions(+), 16 deletions(-)
+ src/vstest.console/vstest.console.csproj                    | 5 +++--
+ 12 files changed, 22 insertions(+), 16 deletions(-)
 
 diff --git a/scripts/build.sh b/scripts/build.sh
 index e4454a5d..a8dcbddb 100755
@@ -195,19 +195,20 @@ index 64d21204..9c25faf8 100644
              // Add the matching files to source list
              this.sources = this.sources.Union(matchingFiles).ToList();
 diff --git a/src/vstest.console/vstest.console.csproj b/src/vstest.console/vstest.console.csproj
-index ea970a60..69144393 100644
+index ea970a60..f7448391 100644
 --- a/src/vstest.console/vstest.console.csproj
 +++ b/src/vstest.console/vstest.console.csproj
-@@ -7,7 +7,7 @@
+@@ -7,7 +7,8 @@
    <PropertyGroup>
      <AssemblyName>vstest.console</AssemblyName>
      <TargetFrameworks>netcoreapp2.1;net451</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
 +    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <UseAppHost>false</UseAppHost>
      <WarningsAsErrors>true</WarningsAsErrors>
      <OutputType>Exe</OutputType>
      <PlatformTarget Condition="'$(TargetFramework)' == 'net451'">AnyCPU</PlatformTarget>
-@@ -15,7 +15,7 @@
+@@ -15,7 +16,7 @@
      <ApplicationManifest>app.manifest</ApplicationManifest>
      <RootNamespace>Microsoft.VisualStudio.TestPlatform.CommandLine</RootNamespace>
    </PropertyGroup>
