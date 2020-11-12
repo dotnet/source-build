@@ -70,7 +70,11 @@
 
   <Target Name="DownloadSourceBuiltArtifacts"
           AfterTargets="Build"
-          Condition="'$(OfflineBuild)' != 'true' and '$(OS)' != 'Windows_NT' and '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true'"
+          Condition="
+            '$(OfflineBuild)' != 'true' and
+            '$(OS)' != 'Windows_NT' and
+            '$(SkipDownloadingPreviouslySourceBuiltPackages)' != 'true' and
+            '$(PrivateSourceBuiltArtifactsPackageVersion)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)DownloadSourceBuiltArtifacts.complete" >
     <PropertyGroup Condition="'$(DownloadSourceBuiltArtifactsTimeoutSeconds)' == ''">
