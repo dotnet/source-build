@@ -1,0 +1,62 @@
+From a99a8874966fbc6c6d2aa75ae636bfecdf99412c Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 16 Nov 2020 10:21:33 -0600
+Subject: [PATCH] Override Microsoft.CodeAnalysis.CSharp pkg deps
+
+Microsoft.CodeAnalysis.CSharp brings in System.Collections.Immutable and
+System.Reflection.Metadata dependencies with prebuilt versions. We can
+override them to the version that we built.
+
+dotnet/arcade already defines SystemCollectionsImmutableVersion and
+SystemReflectionMetadataVersion, and it seems safe to use their values.
+
+See https://github.com/dotnet/source-build/pull/1881
+---
+ .../Microsoft.DotNet.CodeAnalysis.csproj               | 10 ++++++++++
+ .../Microsoft.DotNet.GenFacades.csproj                 |  9 +++++++++
+ 2 files changed, 19 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj b/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
+index 5cdfd539..d1ac5ccb 100644
+--- a/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
++++ b/src/Microsoft.DotNet.CodeAnalysis/Microsoft.DotNet.CodeAnalysis.csproj
+@@ -12,6 +12,16 @@
+     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="$(MicrosoftCodeAnalysisCSharpVersion)" ExcludeAssets="analyzers" />
+   </ItemGroup>
+ 
++  <!--
++    In the source-build tarball build, Microsoft.CodeAnalysis.CSharp has dependencies on old
++    versions of these packages due to repo build order. Override to lift them to the versions passed
++    in via DotNetPackageVersionPropsPath.
++  -->
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
++  </ItemGroup>
++
+   <ItemGroup>
+     <Content Include="build/*.*" PackagePath="build" />
+     <Content Include="content/*.*" PackagePath="content" />
+diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+index 00a413da..df155ae0 100644
+--- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
++++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+@@ -28,6 +28,15 @@
+     <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+   </ItemGroup>
+ 
++  <!--
++    In the source-build tarball build, Microsoft.CodeAnalysis.CSharp has dependencies on old
++    versions of these packages due to repo build order. Override to lift them to the versions passed
++    in via DotNetPackageVersionPropsPath.
++  -->
++  <ItemGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
++    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++  </ItemGroup>
++
+   <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
+     <ProjectReference Include="..\Microsoft.Cci.Extensions\Microsoft.Cci.Extensions.csproj" />
+   </ItemGroup>
+-- 
+2.25.2
+

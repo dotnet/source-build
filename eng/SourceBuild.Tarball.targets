@@ -185,8 +185,24 @@
       <PreviouslySourceBuiltPackageFile Include="$(CustomPreviouslySourceBuiltPackagesDir)**\*.nupkg" />
     </ItemGroup>
 
+    <ItemGroup>
+      <!-- Use a downloaded previously source built artifacts tar.gz if specified. -->
+      <PrivateSourceBuiltArtifactsTarGzFile
+        Condition="'$(PrivateSourceBuiltArtifactsPackageVersion)' != ''"
+        Include="$(ExternalTarballsDir)Private.SourceBuilt.Artifacts.*.tar.gz" />
+
+      <!-- If not using previously source built artifacts tar.gz, use Production build output. -->
+      <PrivateSourceBuiltArtifactsTarGzFile
+        Condition="'$(PrivateSourceBuiltArtifactsPackageVersion)' == ''"
+        Include="$(OutputPath)$(SourceBuiltArtifactsTarballName).*.tar.gz" />
+    </ItemGroup>
+
+    <Error
+      Text="Expected one PrivateSourceBuiltArtifactsTarGzFile item, got @(PrivateSourceBuiltArtifactsTarGzFile->Count())"
+      Condition="@(PrivateSourceBuiltArtifactsTarGzFile->Count()) != 1" />
+
     <Exec
-      Command="tar -tf $(ExternalTarballsDir)Private.SourceBuilt.Artifacts.*.tar.gz | tr '[:upper:]' '[:lower:]'"
+      Command="tar -tf @(PrivateSourceBuiltArtifactsTarGzFile) | tr '[:upper:]' '[:lower:]'"
       ConsoleToMsBuild="true"
       StandardOutputImportance="low"
       Condition="'$(CustomPreviouslySourceBuiltPackagesDir)' == ''">
@@ -256,10 +272,17 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="AddTarballExternalTarballs">
+  <Target Name="AddTarballExternalTarballs"
+          DependsOnTargets="AddTarballPackages">
     <ItemGroup>
       <ExternalTarballFile
         Include="$(ExternalTarballsDir)*.tar.gz"
+        RelativeRoot="packages\archive\" />
+
+      <!-- If not using previously source built artifacts tar.gz, use Production build output. -->
+      <ExternalTarballFile
+        Condition="'$(PrivateSourceBuiltArtifactsPackageVersion)' == ''"
+        Include="@(PrivateSourceBuiltArtifactsTarGzFile)"
         RelativeRoot="packages\archive\" />
 
       <TarballCopyFile Include="@(ExternalTarballFile);" />
