@@ -12,6 +12,10 @@
     <OverrideTargetRid Condition="'$(TargetOS)' == 'FreeBSD'">freebsd-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Windows_NT'">win-x64</OverrideTargetRid>
     <OverrideTargetRid Condition="'$(TargetOS)' == 'Linux' and ('$(PortableBuild)' == 'true' or '$(BuildingPortableRuntime)' == 'true')">linux-$(Platform)</OverrideTargetRid>
+
+    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == '' AND '$(OS)' == 'Windows_NT'">false</UseSystemLibunwind>
+    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == '' AND '$(TargetOS)' == 'OSX'">false</UseSystemLibunwind>
+    <UseSystemLibunwind Condition="'$(UseSystemLibunwind)' == ''">$(UseSystemLibraries)</UseSystemLibunwind>
   </PropertyGroup>
 
   <!-- Build arguments -->
@@ -21,8 +25,7 @@
     <LogVerbosityOptOut>true</LogVerbosityOptOut>
 
     <!-- coreclr -->
-    <!-- coreclr build fails when passing this flag after this PR https://github.com/dotnet/coreclr/pull/26082 -->
-    <!-- <CoreClrBuildArguments Condition="'$(UseSystemLibraries)' == 'true' AND '$(OS)' != 'Windows_NT'">$(CoreClrBuildArguments) cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</CoreClrBuildArguments> -->
+    <CoreClrBuildArguments Condition="'$(UseSystemLibunwind)' == 'true'">$(CoreClrBuildArguments) -cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64' ">$(CoreClrBuildArguments) skipnuget cross -skiprestore cmakeargs -DFEATURE_GDBJIT=TRUE</CoreClrBuildArguments>
     <CoreClrBuildArguments Condition="'$(TargetOS)' == 'FreeBSD'">$(CoreClrBuildArguments) -clang6.0 /p:PortableBuild=true</CoreClrBuildArguments>
 
@@ -64,6 +67,7 @@
     <InstallerBuildArguments>$(FlagParameterPrefix)restore $(FlagParameterPrefix)build</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:KeepNativeSymbols=true</InstallerBuildArguments>
+    <InstallerBuildArguments Condition="'$(UseSystemLibunwind)' == 'true'">$(InstallerBuildArguments) -cmakeargs -DCLR_CMAKE_USE_SYSTEM_LIBUNWIND=TRUE</InstallerBuildArguments>
     <InstallerBuildArguments Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(InstallerBuildArguments) /p:TargetArchitecture=$(Platform) /p:DisableCrossgen=true /p:CrossBuild=true</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:BuildDebPackage=false</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:BuildAllPackages=true</InstallerBuildArguments>

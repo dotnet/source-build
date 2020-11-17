@@ -27,6 +27,8 @@
          no longer be passed in.  -->
     <BuildPortableRuntime Condition="'$(BuildPortableRuntime)' == ''">false</BuildPortableRuntime>
     <BuildPortableSdk Condition="'$(BuildPortableSdk)' == ''">false</BuildPortableSdk>
+    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == '' AND '$(PortableRuntime)' != 'true'">true</UseSystemLibraries>
+    <UseSystemLibraries Condition="'$(UseSystemLibraries)' == ''">false</UseSystemLibraries>
   </PropertyGroup>
 
   <!-- This repo's projects are entirely infrastructure and do not ship. -->
