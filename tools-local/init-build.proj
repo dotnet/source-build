@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <Target Name="Build">
-    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;ExtractToolPackage;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;ExtractToolPackage;GenerateRootFs;ApplyPatches;UpdateBuildToolFramework;PoisonPrebuiltPackages" />
   </Target>
 
   <Target Name="PrepareOfflineLocalTools"
@@ -76,6 +76,11 @@
   <Target Name="ApplyPatches" DependsOnTargets="GetRepoProjects">
     <Message Text="Applying patches only" />
     <MSBuild Projects="@(RepoProjects)" Targets="ApplyPatches" BuildInParallel="$(BuildInParallel)" />
+  </Target>
+
+  <Target Name="UpdateBuildToolFramework" DependsOnTargets="GetRepoProjects">
+    <Message Text="Updating build tool framework" />
+    <MSBuild Projects="@(RepoProjects)" Targets="UpdateBuildToolFramework" BuildInParallel="$(BuildInParallel)" />
   </Target>
 
   <Target Name="GenerateRootFs" Condition="'$(OS)' != 'Windows_NT'">
