@@ -1,0 +1,180 @@
+From d3c79a7af8e99e42e828889edc56628f419e7129 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Tue, 17 Nov 2020 08:46:00 +0100
+Subject: [PATCH] arcade: remove netcoreapp2.x targets
+
+---
+ .../Microsoft.DotNet.Arcade.Sdk.csproj                        | 2 +-
+ .../Microsoft.DotNet.Build.Tasks.Installers.csproj            | 2 +-
+ .../build/Microsoft.DotNet.Build.Tasks.Installers.props       | 2 +-
+ .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj         | 4 ++--
+ .../src/build/Packaging.common.targets                        | 2 +-
+ .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj   | 2 +-
+ .../sdk/Sdk.props                                             | 2 +-
+ .../Microsoft.DotNet.CMake.Sdk.csproj                         | 2 +-
+ .../Microsoft.DotNet.GenFacades.csproj                        | 2 +-
+ .../build/Microsoft.DotNet.GenFacades.targets                 | 2 +-
+ .../tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj           | 2 +-
+ .../tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props      | 2 +-
+ 12 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
+index 8c34e63a..259a96cb 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
++++ b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
+@@ -2,7 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <LangVersion>preview</LangVersion>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj b/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj
+index 66307864..f86bb1ce 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj
+@@ -2,7 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.0</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+     <LangVersion>Latest</LangVersion>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props b/src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props
+index 39d57d1b..40598d84 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props
++++ b/src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props
+@@ -1,6 +1,6 @@
+ <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+   <PropertyGroup>
+-    <MicrosoftDotNetBuildTasksInstallersTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\Microsoft.DotNet.Build.Tasks.Installers.dll</MicrosoftDotNetBuildTasksInstallersTaskAssembly>
++    <MicrosoftDotNetBuildTasksInstallersTaskAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net5.0\Microsoft.DotNet.Build.Tasks.Installers.dll</MicrosoftDotNetBuildTasksInstallersTaskAssembly>
+     <MicrosoftDotNetBuildTasksInstallersTaskAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net472\Microsoft.DotNet.Build.Tasks.Installers.dll</MicrosoftDotNetBuildTasksInstallersTaskAssembly>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
+index bdc2f913..089922e5 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj
+@@ -2,8 +2,8 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+-    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'netcoreapp2.1'">true</CopyLocalLockFileAssemblies>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
++    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'net5.0'">true</CopyLocalLockFileAssemblies>
+     <PackageType>MSBuildSdk</PackageType>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <IsPackable>true</IsPackable>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets
+index d0430d9a..a7494f4e 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets
++++ b/src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets
+@@ -5,7 +5,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <PackagingTaskDir Condition="'$(PackagingTaskDir)' == '' AND '$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/netcoreapp2.1/</PackagingTaskDir>
++    <PackagingTaskDir Condition="'$(PackagingTaskDir)' == '' AND '$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/net5.0/</PackagingTaskDir>
+     <PackagingTaskDir Condition="'$(PackagingTaskDir)' == '' AND '$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)../tools/net472/</PackagingTaskDir>
+     <RuntimeIdGraphDefinitionFile Condition="'$(RuntimeIdGraphDefinitionFile)' == ''">$(MSBuildThisFileDirectory)runtime.json</RuntimeIdGraphDefinitionFile>
+ 
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+index b5d19e61..1f15b6dd 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj
+@@ -2,7 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <LangVersion>preview</LangVersion>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+ 
+diff --git a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
+index 74b10617..c6e84e37 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
++++ b/src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props
+@@ -8,7 +8,7 @@
+   -->
+ 
+   <PropertyGroup Condition="'$(DotNetBuildTasksSharedFrameworkTaskDir)' == ''">
+-    <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/netcoreapp2.1/</DotNetBuildTasksSharedFrameworkTaskDir>
++    <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/net5.0/</DotNetBuildTasksSharedFrameworkTaskDir>
+     <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)../tools/net472/</DotNetBuildTasksSharedFrameworkTaskDir>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj b/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj
+index 752679e0..bc50bcb1 100644
+--- a/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj
++++ b/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>net5.0</TargetFrameworks>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+ 
+     <IsPackable>true</IsPackable>
+diff --git a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+index 04b4d467..5531602a 100644
+--- a/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
++++ b/src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+     <PackageType>MSBuildSdk</PackageType>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+diff --git a/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets b/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets
+index 45c20f9f..b54fe253 100644
+--- a/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets
++++ b/src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets
+@@ -2,7 +2,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <_MicrosoftDotNetGenFacadesTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/netcoreapp2.1/</_MicrosoftDotNetGenFacadesTaskDir>
++    <_MicrosoftDotNetGenFacadesTaskDir Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)../tools/net5.0/</_MicrosoftDotNetGenFacadesTaskDir>
+     <_MicrosoftDotNetGenFacadesTaskDir Condition="'$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)../tools/net472/</_MicrosoftDotNetGenFacadesTaskDir>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj b/src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
+index 1ebc8567..3cf7a474 100644
+--- a/src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
++++ b/src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+ 
+   <PropertyGroup>
+-    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks>net472;net5.0</TargetFrameworks>
+     <PackageType>MSBuildSdk</PackageType>
+   </PropertyGroup>
+ 
+diff --git a/src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props b/src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props
+index 83e15d39..65a68722 100644
+--- a/src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props
++++ b/src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props
+@@ -1,7 +1,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <MicrosoftDotNetSourceBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.1\$(MSBuildThisFileName).dll</MicrosoftDotNetSourceBuildTasksAssembly>
++    <MicrosoftDotNetSourceBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' == 'core'">$(MSBuildThisFileDirectory)..\tools\net5.0\$(MSBuildThisFileName).dll</MicrosoftDotNetSourceBuildTasksAssembly>
+     <MicrosoftDotNetSourceBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)..\tools\net472\$(MSBuildThisFileName).dll</MicrosoftDotNetSourceBuildTasksAssembly>
+   </PropertyGroup>
+ 
+-- 
+2.26.2
+
