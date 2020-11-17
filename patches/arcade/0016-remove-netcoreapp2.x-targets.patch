@@ -1,10 +1,11 @@
-From d3c79a7af8e99e42e828889edc56628f419e7129 Mon Sep 17 00:00:00 2001
+From 7c596b8599111f724e9b3ed69d280a658d4c88d1 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Tue, 17 Nov 2020 08:46:00 +0100
 Subject: [PATCH] arcade: remove netcoreapp2.x targets
 
 ---
  .../Microsoft.DotNet.Arcade.Sdk.csproj                        | 2 +-
+ src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props        | 2 +-
  .../Microsoft.DotNet.Build.Tasks.Installers.csproj            | 2 +-
  .../build/Microsoft.DotNet.Build.Tasks.Installers.props       | 2 +-
  .../src/Microsoft.DotNet.Build.Tasks.Packaging.csproj         | 4 ++--
@@ -16,7 +17,7 @@ Subject: [PATCH] arcade: remove netcoreapp2.x targets
  .../build/Microsoft.DotNet.GenFacades.targets                 | 2 +-
  .../tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj           | 2 +-
  .../tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props      | 2 +-
- 12 files changed, 13 insertions(+), 13 deletions(-)
+ 13 files changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 index 8c34e63a..259a96cb 100644
@@ -31,6 +32,18 @@ index 8c34e63a..259a96cb 100644
      <LangVersion>preview</LangVersion>
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
      <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props b/src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props
+index a0c5dbc9..49cb86be 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props
+@@ -3,6 +3,6 @@
+ <Project>
+   <PropertyGroup>
+     <ArcadeSdkBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)net472\Microsoft.DotNet.Arcade.Sdk.dll</ArcadeSdkBuildTasksAssembly>
+-    <ArcadeSdkBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)netcoreapp2.1\Microsoft.DotNet.Arcade.Sdk.dll</ArcadeSdkBuildTasksAssembly>
++    <ArcadeSdkBuildTasksAssembly Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)net5.0\Microsoft.DotNet.Arcade.Sdk.dll</ArcadeSdkBuildTasksAssembly>
+   </PropertyGroup>
+ </Project>
 diff --git a/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj b/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj
 index 66307864..f86bb1ce 100644
 --- a/src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj
