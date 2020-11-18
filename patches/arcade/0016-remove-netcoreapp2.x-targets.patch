@@ -1,6 +1,6 @@
-From 7c596b8599111f724e9b3ed69d280a658d4c88d1 Mon Sep 17 00:00:00 2001
+From dbf591fdccc90808ad1ac5a146f98c9a3d4cc65c Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Tue, 17 Nov 2020 08:46:00 +0100
+Date: Wed, 18 Nov 2020 20:22:19 +0100
 Subject: [PATCH] arcade: remove netcoreapp2.x targets
 
 ---
@@ -12,12 +12,14 @@ Subject: [PATCH] arcade: remove netcoreapp2.x targets
  .../src/build/Packaging.common.targets                        | 2 +-
  .../Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj   | 2 +-
  .../sdk/Sdk.props                                             | 2 +-
+ .../Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj   | 4 ++--
+ .../Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props    | 2 +-
  .../Microsoft.DotNet.CMake.Sdk.csproj                         | 2 +-
  .../Microsoft.DotNet.GenFacades.csproj                        | 2 +-
  .../build/Microsoft.DotNet.GenFacades.targets                 | 2 +-
  .../tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj           | 2 +-
  .../tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props      | 2 +-
- 13 files changed, 14 insertions(+), 14 deletions(-)
+ 15 files changed, 17 insertions(+), 17 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 index 8c34e63a..259a96cb 100644
@@ -123,6 +125,34 @@ index 74b10617..c6e84e37 100644
      <DotNetBuildTasksSharedFrameworkTaskDir Condition="'$(MSBuildRuntimeType)' != 'core'">$(MSBuildThisFileDirectory)../tools/net472/</DotNetBuildTasksSharedFrameworkTaskDir>
    </PropertyGroup>
  
+diff --git a/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj b/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj
+index aad22bef..25e0b186 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj
++++ b/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj
+@@ -2,8 +2,8 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netcoreapp2.1;net472</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1</TargetFrameworks>
+-    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'netcoreapp2.1'">true</CopyLocalLockFileAssemblies>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
++    <CopyLocalLockFileAssemblies Condition="'$(TargetFramework)' == 'net5.0'">true</CopyLocalLockFileAssemblies>
+     <IncludeBuildOutput>false</IncludeBuildOutput>
+     <IsPackable>true</IsPackable>
+     <Title>Configuration system for cross-targeting projects.</Title>
+diff --git a/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props b/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props
+index f1ab03ea..4b25d3c0 100644
+--- a/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props
++++ b/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props
+@@ -8,7 +8,7 @@
+   </ItemDefinitionGroup>
+ 
+   <PropertyGroup>
+-    <DotNetBuildTasksTargetFrameworkSdkAssembly Condition="'$(DotNetBuildTasksTargetFrameworkSdkAssembly)' == '' AND '$(MSBuildRuntimeType)' == 'core'">..\tools\netcoreapp2.1\Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.dll</DotNetBuildTasksTargetFrameworkSdkAssembly>
++    <DotNetBuildTasksTargetFrameworkSdkAssembly Condition="'$(DotNetBuildTasksTargetFrameworkSdkAssembly)' == '' AND '$(MSBuildRuntimeType)' == 'core'">..\tools\net5.0\Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.dll</DotNetBuildTasksTargetFrameworkSdkAssembly>
+     <DotNetBuildTasksTargetFrameworkSdkAssembly Condition="'$(DotNetBuildTasksTargetFrameworkSdkAssembly)' == '' AND '$(MSBuildRuntimeType)' != 'core'">..\tools\net472\Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.dll</DotNetBuildTasksTargetFrameworkSdkAssembly>
+     <_OriginalTargetFramework>$(TargetFramework)</_OriginalTargetFramework>
+   </PropertyGroup>
 diff --git a/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj b/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj
 index 752679e0..bc50bcb1 100644
 --- a/src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj
