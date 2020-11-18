@@ -172,7 +172,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
                 // add its contents to the list to be checked.
                 if (ZipFileExtensions.Concat(TarFileExtensions).Concat(TarGzFileExtensions).Any(e => checking.ToLowerInvariant().EndsWith(e)))
                 {
-                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetFileNameWithoutExtension(checking) + "." + (++dirCounter).ToString());
+                    var tempCheckingDir = Path.Combine(tempDir.FullName, Path.GetRandomFileName(), Path.GetFileNameWithoutExtension(checking) + "." + (++dirCounter).ToString());
                     PoisonedFileEntry result = ExtractAndCheckZipFileOnly(catalogedPackages, checking, markerFileName, tempCheckingDir, candidateQueue);
                     if (result != null)
                     {
