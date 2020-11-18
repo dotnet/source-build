@@ -89,7 +89,7 @@
   </Target>
 
   <Target Name="UpdateBuildToolFramework"
-    Condition="'$(EngCommonToolsShFile)' != ''"
+    Condition="'$(EngCommonToolsShFile)' != '' and '$(UseBootstrapArcade)' != 'true'"
     Outputs="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" >
 
     <ReplaceTextInFile InputFile="$(EngCommonToolsShFile)"
