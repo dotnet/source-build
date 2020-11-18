@@ -79,6 +79,13 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
 
                     foreach (string f in Directory.EnumerateFiles(packageTempPath, "*", SearchOption.AllDirectories))
                     {
+                        // remove signatures so we don't later fail validation
+                        if (Path.GetFileName(f) == ".signature.p7s")
+                        {
+                            File.Delete(f);
+                            continue;
+                        }
+
                         var catalogFileEntry = new CatalogFileEntry();
                         packageEntry.Files.Add(catalogFileEntry);
                         catalogFileEntry.Path = Utility.MakeRelativePath(f, packageTempPath);
