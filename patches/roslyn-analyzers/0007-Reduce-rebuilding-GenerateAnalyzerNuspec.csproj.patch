@@ -1,0 +1,73 @@
+From 8e4efb29244e1673b8ac84394158a98d394b7e5f Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Fri, 20 Nov 2020 13:00:40 -0500
+Subject: [PATCH] Reduce rebuilding GenerateAnalyzerNuspec.csproj
+
+PR #4442 has reports where the build fails because the project is being
+rebuilt multiple time with highly parallel builds and that causes file
+conflicts.
+
+I am not sure why that's happening, to be honest. Or at least why it's
+only happening for GenerateAnalyzerNuspec. That project uses the
+`MSBuild` + `Exec` pattern:
+
+https://github.com/dotnet/roslyn-analyzers/blob/37eba3a5aa2d706745f37692ad7ba7cb0a66a115/eng/GenerateAnalyzerNuspec.targets#L140-L144
+
+That's the same pattern used elsewhere in the same file:
+
+https://github.com/dotnet/roslyn-analyzers/blob/37eba3a5aa2d706745f37692ad7ba7cb0a66a115/eng/GenerateAnalyzerNuspec.targets#L105-L109
+
+Still, this PR tries to reduce how many times that project is rebuilt,
+which should (hopefully) reduce the frequency of the error, if not
+eliminate it.
+
+Any suggestions on what could be causing this specifically in
+GenerateAnalyzerNuspec?
+---
+ eng/GenerateAnalyzerNuspec.targets | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/eng/GenerateAnalyzerNuspec.targets b/eng/GenerateAnalyzerNuspec.targets
+index 74244690a..b7210a770 100644
+--- a/eng/GenerateAnalyzerNuspec.targets
++++ b/eng/GenerateAnalyzerNuspec.targets
+@@ -113,9 +113,24 @@
+     </ItemGroup>
+   </Target>
+   
++  <PropertyGroup>
++    <!-- Ideally, we would extract this from the MSBuild task, but we need this as the Target Output before that task is executed -->
++    <_GenerateAnalyzerNuspecPath>$(ArtifactsBinDir)GenerateAnalyzerNuspec\$(Configuration)\netcoreapp3.1\GenerateAnalyzerNuspec.dll</_GenerateAnalyzerNuspecPath>
++  </PropertyGroup>
++
++  <Target Name="BuildGenerateAnalyzerNuspecFile"
++          Inputs="$(RepoRoot)src\Tools\GenerateAnalyzerNuspec\Program.cs"
++          Outputs="$(_GenerateAnalyzerNuspecPath)">
++
++    <MSBuild Projects="$(RepoRoot)src\Tools\GenerateAnalyzerNuspec\GenerateAnalyzerNuspec.csproj"
++             Targets="Restore;Build" >
++    </MSBuild>
++
++  </Target>
++
+   <Target Name="GenerateAnalyzerNuspecFile"
+           BeforeTargets="GenerateNuspec"
+-          DependsOnTargets="InitializeSourceControlInformation;GenerateAnalyzerConfigAndDocumentationFiles" 
++          DependsOnTargets="InitializeSourceControlInformation;GenerateAnalyzerConfigAndDocumentationFiles;BuildGenerateAnalyzerNuspecFile"
+           Condition="'@(AnalyzerNupkgFile)' != '' or '@(AnalyzerNupkgFolder)' != '' or '@(AnalyzerNupkgAssembly)' != '' or '@(AnalyzerNupkgDependency)' != '' or '@(AnalyzerNupkgLibrary)' != ''">
+     <ItemGroup>
+       <_NuspecMetadata Include="version=$(PackageVersion)" />
+@@ -137,10 +152,6 @@
+       <_NuspecMetadata Include="repositoryUrl=$(PrivateRepositoryUrl)" />
+     </ItemGroup>
+ 
+-    <MSBuild Projects="$(RepoRoot)src\Tools\GenerateAnalyzerNuspec\GenerateAnalyzerNuspec.csproj" Targets="Restore;Build">
+-      <Output TaskParameter="TargetOutputs" PropertyName="_GenerateAnalyzerNuspecPath"/>
+-    </MSBuild>
+-
+     <Exec Command='"$(DotNetExecutable)" "$(_GenerateAnalyzerNuspecPath)" "$(NuspecFile)" "$(AssetsDir)$(EscapeDirectorySuffix)" "$(MSBuildProjectDirectory)" "$(Configuration)" "$(TargetFrameworksForPackage)" "@(_NuspecMetadata)" "@(AnalyzerNupkgFile)" "@(AnalyzerNupkgFolder)" "@(AnalyzerNupkgAssembly)" "@(AnalyzerNupkgDependency)" "@(AnalyzerNupkgLibrary)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "@(AnalyzerLegacyRuleset)" "$(ArtifactsBinDir)$(EscapeDirectorySuffix)" "$(AnalyzerDocumentationFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(AnalyzerConfigurationFileDir)" "$(AnalyzerConfigurationFileName)" "$(_GeneratedGlobalAnalyzerConfigsDir)"' />
+   </Target>
+ </Project>
+-- 
+2.28.0
+

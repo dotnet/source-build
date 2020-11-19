@@ -1,0 +1,149 @@
+From fed5a94a2b5a39d227b9337c22d5ac2f91288904 Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Tue, 17 Nov 2020 19:14:37 -0500
+Subject: [PATCH] Fix ./build.sh --pack to work on Linux
+
+There's no csi.exe in the .NET 5 (or .NET Core) SDK.  So move away from
+a csx script to a full-blown tool written in C#.
+
+For ease of review, I have kept the original tool code unmodified (not
+even indentation has been fixed). To work around build warnings/errors,
+disable the warnings.
+
+Also fix the case of path to the dll in the local nuget cache. It
+doesn't matter on Windows, but most file systems on Linux are
+case-sensitive.
+---
+ eng/GenerateAnalyzerNuspec.targets            | 23 +++++++++++--------
+ ...osoft.CodeQuality.Analyzers.Package.csproj |  4 ++--
+ .../GenerateAnalyzerNuspec.csproj             |  7 ++++++
+ .../Tools/GenerateAnalyzerNuspec/Program.cs   | 19 +++++++++++++--
+ 4 files changed, 39 insertions(+), 14 deletions(-)
+ create mode 100644 src/Tools/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+ rename eng/GenerateAnalyzerNuspec.csx => src/Tools/GenerateAnalyzerNuspec/Program.cs (96%)
+
+diff --git a/eng/GenerateAnalyzerNuspec.targets b/eng/GenerateAnalyzerNuspec.targets
+index 9b90519cf..74244690a 100644
+--- a/eng/GenerateAnalyzerNuspec.targets
++++ b/eng/GenerateAnalyzerNuspec.targets
+@@ -22,6 +22,12 @@
+     <PackageLicenseExpression Condition="'$(PackageLicenseExpression)' == ''">Apache-2.0</PackageLicenseExpression>
+   </PropertyGroup>
+ 
++  <PropertyGroup>
++    <DotNetExecutable Condition="'$(OS)' == 'Windows_NT'">$(DotNetRoot)dotnet.exe</DotNetExecutable>
++    <DotNetExecutable Condition="'$(DotNetExecutable)' == ''">$(DotNetRoot)dotnet</DotNetExecutable>
++    <EscapeDirectorySuffix Condition="'$(OS)' == 'Windows_NT'">\</EscapeDirectorySuffix>
++  </PropertyGroup>
++
+   <Target Name="GenerateAnalyzerConfigAndDocumentationFiles"
+           DependsOnTargets="InitializeSourceControlInformation" 
+           Condition="'@(AnalyzerNupkgAssembly)' != '' or '@(AnalyzerRulesetAssembly)' != ''">
+@@ -88,13 +88,13 @@
+       <AnalyzerRulesetAssembly Condition="'@(AnalyzerNupkgAssembly)' != '' and '@(AnalyzerRulesetAssembly)' == ''" Include="@(AnalyzerNupkgAssembly)"/>
+       <AnalyzerRulesetAssembly Update="@(AnalyzerRulesetAssembly)" Condition="'%(AnalyzerRulesetAssembly.TargetFramework)' == ''" TargetFramework="$(TargetFramework)" />
+     </ItemGroup>
+-    <Exec Command='"$(DotNetRoot)dotnet.exe" "$(_GenerateDocumentationAndConfigFilesPath)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "$(ArtifactsBinDir)\" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "@(AnalyzerRulesetAssembly)" "$(PackagePropsFileDir)" "$(PackagePropsFileName)" "$(DisableNETAnalyzersPackagePropsFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(VersionPrefix)" $(NuspecPackageId) $(ContainsPortedFxCopRules) $(GenerateAnalyzerRulesMissingDocumentationFile)' />
++    <Exec Command='"$(DotNetExecutable)" "$(_GenerateDocumentationAndConfigFilesPath)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "$(ArtifactsBinDir)$(EscapeDirectorySuffix)" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "@(AnalyzerRulesetAssembly)" "$(PackagePropsFileDir)" "$(PackagePropsFileName)" "$(DisableNETAnalyzersPackagePropsFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(VersionPrefix)" $(NuspecPackageId) $(ContainsPortedFxCopRules) $(GenerateAnalyzerRulesMissingDocumentationFile)' />
+ 
+     <MSBuild Projects="$(RepoRoot)src\Tools\GenerateGlobalAnalyzerConfigs\GenerateGlobalAnalyzerConfigs.csproj" Targets="Build">
+       <Output TaskParameter="TargetOutputs" PropertyName="_GenerateGlobalAnalyzerConfigsPath"/>
+     </MSBuild>
+ 
+-    <Exec Command='"$(DotNetRoot)dotnet.exe" "$(_GenerateGlobalAnalyzerConfigsPath)" "$(_GeneratedGlobalAnalyzerConfigsDir)" "$(NuspecPackageId)" "$(PackageTargetsFileDir)" "$(PackageTargetsFileName)" "@(AnalyzerRulesetAssembly)" "$(ArtifactsBinDir)\" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "$(ReleaseTrackingOptOut)"' />
++    <Exec Command='"$(DotNetExecutable)" "$(_GenerateGlobalAnalyzerConfigsPath)" "$(_GeneratedGlobalAnalyzerConfigsDir)" "$(NuspecPackageId)" "$(PackageTargetsFileDir)" "$(PackageTargetsFileName)" "@(AnalyzerRulesetAssembly)" "$(ArtifactsBinDir)$(EscapeDirectorySuffix)" "$(Configuration)" "%(AnalyzerRulesetAssembly.TargetFramework)" "$(ReleaseTrackingOptOut)"' />
+ 
+     <ItemGroup Condition="Exists('$(PackageTargetsFileDir)\$(PackageTargetsFileName)')">
+       <AnalyzerNupkgFile Include="$(PackageTargetsFileDir)\$(PackageTargetsFileName)"/>
+@@ -131,13 +137,10 @@
+       <_NuspecMetadata Include="repositoryUrl=$(PrivateRepositoryUrl)" />
+     </ItemGroup>
+ 
+-    <PropertyGroup>
+-      <_CscToolPath>$(RoslynTargetsPath)</_CscToolPath>
+-      <_CscToolPath Condition="'$(_CscToolPath)' == ''">$(CscToolPath)</_CscToolPath>
+-      <_CscToolPath Condition="'$(_CscToolPath)' == ''">$(MSBuildBinPath)\Roslyn</_CscToolPath>
+-      <_CscToolPath Condition="!HasTrailingSlash('$(_CscToolPath)')">$(_CscToolPath)\</_CscToolPath>
+-    </PropertyGroup>
++    <MSBuild Projects="$(RepoRoot)src\Tools\GenerateAnalyzerNuspec\GenerateAnalyzerNuspec.csproj" Targets="Restore;Build">
++      <Output TaskParameter="TargetOutputs" PropertyName="_GenerateAnalyzerNuspecPath"/>
++    </MSBuild>
+ 
+-    <Exec Command='"$(_CscToolPath)csi.exe" "$(RepoRoot)eng\GenerateAnalyzerNuspec.csx" "$(NuspecFile)" "$(AssetsDir)\" "$(MSBuildProjectDirectory)" "$(Configuration)" "$(TargetFrameworksForPackage)" "@(_NuspecMetadata)" "@(AnalyzerNupkgFile)" "@(AnalyzerNupkgFolder)" "@(AnalyzerNupkgAssembly)" "@(AnalyzerNupkgDependency)" "@(AnalyzerNupkgLibrary)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "@(AnalyzerLegacyRuleset)" "$(ArtifactsBinDir)\" "$(AnalyzerDocumentationFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(AnalyzerConfigurationFileDir)" "$(AnalyzerConfigurationFileName)" "$(_GeneratedGlobalAnalyzerConfigsDir)"' />
++    <Exec Command='"$(DotNetExecutable)" "$(_GenerateAnalyzerNuspecPath)" "$(NuspecFile)" "$(AssetsDir)$(EscapeDirectorySuffix)" "$(MSBuildProjectDirectory)" "$(Configuration)" "$(TargetFrameworksForPackage)" "@(_NuspecMetadata)" "@(AnalyzerNupkgFile)" "@(AnalyzerNupkgFolder)" "@(AnalyzerNupkgAssembly)" "@(AnalyzerNupkgDependency)" "@(AnalyzerNupkgLibrary)" "$(_GeneratedRulesetsDir)" "$(_GeneratedEditorconfigsDir)" "@(AnalyzerLegacyRuleset)" "$(ArtifactsBinDir)$(EscapeDirectorySuffix)" "$(AnalyzerDocumentationFileDir)" "$(AnalyzerDocumentationFileName)" "$(AnalyzerSarifFileDir)" "$(AnalyzerSarifFileName)" "$(AnalyzerConfigurationFileDir)" "$(AnalyzerConfigurationFileName)" "$(_GeneratedGlobalAnalyzerConfigsDir)"' />
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/nuget/Microsoft.CodeQuality.Analyzers/Microsoft.CodeQuality.Analyzers.Package.csproj b/nuget/Microsoft.CodeQuality.Analyzers/Microsoft.CodeQuality.Analyzers.Package.csproj
+index 397f6484c..65728e66a 100644
+--- a/nuget/Microsoft.CodeQuality.Analyzers/Microsoft.CodeQuality.Analyzers.Package.csproj
++++ b/nuget/Microsoft.CodeQuality.Analyzers/Microsoft.CodeQuality.Analyzers.Package.csproj
+@@ -18,7 +18,7 @@
+     <AnalyzerNupkgAssembly Include="Microsoft.CodeQuality.Analyzers.dll" />
+     <AnalyzerNupkgAssembly Include="Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+     <AnalyzerNupkgAssembly Include="Microsoft.CodeQuality.VisualBasic.Analyzers.dll" />
+-    <AnalyzerNupkgAssembly Include="$(NuGetPackageRoot)Humanizer.Core\$(HumanizerVersion)\lib\netstandard1.0\Humanizer.dll" />
++    <AnalyzerNupkgAssembly Include="$(NuGetPackageRoot)humanizer.core\$(HumanizerVersion)\lib\netstandard1.0\Humanizer.dll" />
+ 	</ItemGroup>
+   
+   <ItemGroup>
+@@ -26,4 +26,4 @@
+     <ProjectReference Include="..\..\src\NetAnalyzers\CSharp\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.CSharp.Analyzers.csproj" />
+     <ProjectReference Include="..\..\src\NetAnalyzers\VisualBasic\Microsoft.CodeQuality.Analyzers\Microsoft.CodeQuality.VisualBasic.Analyzers.vbproj" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/Tools/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj b/src/Tools/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+new file mode 100644
+index 000000000..42b47952b
+--- /dev/null
++++ b/src/Tools/GenerateAnalyzerNuspec/GenerateAnalyzerNuspec.csproj
+@@ -0,0 +1,7 @@
++﻿<Project Sdk="Microsoft.NET.Sdk">
++  <PropertyGroup>
++    <OutputType>Exe</OutputType>
++    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <NonShipping>true</NonShipping>
++  </PropertyGroup>
++</Project>
+diff --git a/eng/GenerateAnalyzerNuspec.csx b/src/Tools/GenerateAnalyzerNuspec/Program.cs
+similarity index 96%
+rename from eng/GenerateAnalyzerNuspec.csx
+rename to src/Tools/GenerateAnalyzerNuspec/Program.cs
+index 1d40d0096..5ca8fbfcc 100644
+--- a/eng/GenerateAnalyzerNuspec.csx
++++ b/src/Tools/GenerateAnalyzerNuspec/Program.cs
+@@ -1,5 +1,17 @@
+-using System.Diagnostics;
++#pragma warning disable CA1820, CS8600, IDE0055, IDE0057, IDE0062, IDE0078, IDE0073
++
++using System;
++using System.Collections.Generic;
+ using System.IO;
++using System.Linq;
++using System.Text;
++
++namespace GenerateAnalyzerNuspec
++{
++    public static class Program
++    {
++        public static void Main(string[] Args)
++        {
+ 
+ string nuspecFile = Args[0];
+ string assetsDir = Args[1];
+@@ -280,4 +292,7 @@
+ 
+ result.AppendLine(@"</package>");
+ 
+-File.WriteAllText(nuspecFile, result.ToString());
+\ No newline at end of file
++File.WriteAllText(nuspecFile, result.ToString());
++        }
++    }
++}
+-- 
+2.26.2
+
