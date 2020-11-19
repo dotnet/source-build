@@ -1,15 +1,15 @@
-From d2c2c5a7e5472973d2dc843026087ec69c45b53b Mon Sep 17 00:00:00 2001
+From d51dc871b3373de2153b06c328ad3d59fbc00de4 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Tue, 17 Nov 2020 08:34:21 +0100
+Date: Thu, 19 Nov 2020 20:06:23 +0100
 Subject: [PATCH] xliff-tasks: remove netcoreapp2.0 targets
 
 ---
- src/XliffTasks/XliffTasks.csproj        | 4 ++--
+ src/XliffTasks/XliffTasks.csproj        | 5 ++---
  src/XliffTasks/build/XliffTasks.targets | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ 2 files changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/src/XliffTasks/XliffTasks.csproj b/src/XliffTasks/XliffTasks.csproj
-index d967ac3..38bd62b 100644
+index d967ac3..e074bd7 100644
 --- a/src/XliffTasks/XliffTasks.csproj
 +++ b/src/XliffTasks/XliffTasks.csproj
 @@ -4,7 +4,7 @@
@@ -21,7 +21,7 @@ index d967ac3..38bd62b 100644
      <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
      <EnableDefaultItems>false</EnableDefaultItems>
      <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-@@ -23,7 +23,7 @@
+@@ -23,10 +23,9 @@
      <InternalsVisibleTo Include="XliffTasks.Tests" />
    </ItemGroup>
  
@@ -29,7 +29,10 @@ index d967ac3..38bd62b 100644
 +  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
      <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" PrivateAssets="All" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" PrivateAssets="All" />
-     <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" PrivateAssets="All" />
+-    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" PrivateAssets="All" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
 diff --git a/src/XliffTasks/build/XliffTasks.targets b/src/XliffTasks/build/XliffTasks.targets
 index a79dae2..d5498c2 100644
 --- a/src/XliffTasks/build/XliffTasks.targets
