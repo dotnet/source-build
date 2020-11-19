@@ -320,12 +320,14 @@
     <MSBuild
       Projects="$(LeakDetectionProjectFile)"
       Targets="Restore"
-      Properties="RestoreSources=$(SourceBuiltPackagesPath)%3B$(TarballRootDir)packages/prebuilt%3bhttps://api.nuget.org/v3/index.json;DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)"/>
+      Properties="RestoreSources=$(SourceBuiltPackagesPath)%3B$(TarballRootDir)packages/prebuilt%3bhttps://api.nuget.org/v3/index.json
+                  DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)"/>
 
     <MSBuild
       Projects="$(LeakDetectionProjectFile)"
       Targets="Publish"
-      Properties="OutputPath=$(TarballRootDir)tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/;DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)"/>
+      Properties="OutputPath=$(TarballRootDir)tools-local/tasks/Microsoft.DotNet.SourceBuild.Tasks.LeakDetection/
+                  DotNetPackageVersionPropsPath=$(PackageVersionPropsPath)"/>
   </Target>
 
   <Target Name="CopyTarballFiles">
