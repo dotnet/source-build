@@ -1,0 +1,54 @@
+From 61101604c89260e680df2d0e52c2dce84629ba00 Mon Sep 17 00:00:00 2001
+From: Tom Deseyn <tom.deseyn@gmail.com>
+Date: Thu, 19 Nov 2020 20:06:23 +0100
+Subject: [PATCH] xliff-tasks: remove netcoreapp2.0 targets
+
+---
+ src/XliffTasks/XliffTasks.csproj        | 6 ++----
+ src/XliffTasks/build/XliffTasks.targets | 2 +-
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/src/XliffTasks/XliffTasks.csproj b/src/XliffTasks/XliffTasks.csproj
+index d967ac3..340b458 100644
+--- a/src/XliffTasks/XliffTasks.csproj
++++ b/src/XliffTasks/XliffTasks.csproj
+@@ -4,10 +4,9 @@
+ 
+   <PropertyGroup>
+     <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
+-    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net5.0</TargetFrameworks>
+     <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
+     <EnableDefaultItems>false</EnableDefaultItems>
+-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+     <IsPackable>true</IsPackable>
+     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+     <LangVersion>7.2</LangVersion>
+@@ -23,10 +22,9 @@
+     <InternalsVisibleTo Include="XliffTasks.Tests" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+     <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" PrivateAssets="All" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" PrivateAssets="All" />
+-    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" PrivateAssets="All" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+diff --git a/src/XliffTasks/build/XliffTasks.targets b/src/XliffTasks/build/XliffTasks.targets
+index a79dae2..d5498c2 100644
+--- a/src/XliffTasks/build/XliffTasks.targets
++++ b/src/XliffTasks/build/XliffTasks.targets
+@@ -4,7 +4,7 @@
+ <Project>
+ 
+   <PropertyGroup>
+-    <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\</XliffTasksDirectory>
++    <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net5.0\</XliffTasksDirectory>
+     <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net46\</XliffTasksDirectory>
+     <XliffTasksAssembly>$(XliffTasksDirectory)XliffTasks.dll</XliffTasksAssembly>
+   </PropertyGroup>
+-- 
+2.26.2
+

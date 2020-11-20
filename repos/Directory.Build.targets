@@ -18,6 +18,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageReports" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteVersionsFile" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ZipFileExtractToDirectory" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
 
   <!--
     Central property to define that a repo doesn't implement any of the Repo API. If a repo adds an
@@ -28,6 +29,7 @@
   -->
   <PropertyGroup>
     <RepoApiImplemented Condition="'$(RepoApiImplemented)' == ''">true</RepoApiImplemented>
+    <EngCommonToolsShFile Condition="Exists('$(ProjectDirectory)/eng/common/tools.sh')">$(ProjectDirectory)/eng/common/tools.sh</EngCommonToolsShFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -84,6 +86,18 @@
           Condition="'@(PatchesToApply)' != ''" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Overwrite="true" />
+  </Target>
+
+  <Target Name="UpdateBuildToolFramework"
+          BeforeTargets="Build"
+          Condition="'$(EngCommonToolsShFile)' != ''"
+          Inputs="$(MSBuildProjectFullPath)"
+          Outputs="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" >
+    <ReplaceTextInFile InputFile="$(EngCommonToolsShFile)"
+                       OldText="local logger_path=&quot;$toolset_dir/$_InitializeBuildToolFramework/Microsoft.DotNet.Arcade.Sdk.dll&quot;"
+                       NewText="logger_path=%24%28find &quot;$toolset_dir&quot; -name Microsoft.DotNet.Arcade.Sdk.dll -regex &apos;.*netcoreapp2.1.*\|.*net5.0.*&apos;)" />
+
+    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" Overwrite="true" />
   </Target>
 
   <Target Name="UpdateNuGetConfig"
