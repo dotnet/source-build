@@ -1,0 +1,26 @@
+From c9a10118eb61bf8f3a24375af2d9c54dcd90446a Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Fri, 20 Nov 2020 17:41:59 -0500
+Subject: [PATCH] WIP: disable apphost in ILVerify
+
+It doesn't appear to be needed and ends up as a prebuilt for
+source-build.
+---
+ src/coreclr/src/tools/ILVerify/ILVerify.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/coreclr/src/tools/ILVerify/ILVerify.csproj b/src/coreclr/src/tools/ILVerify/ILVerify.csproj
+index aeb5b5d8605..a84288247c3 100644
+--- a/src/coreclr/src/tools/ILVerify/ILVerify.csproj
++++ b/src/coreclr/src/tools/ILVerify/ILVerify.csproj
+@@ -3,6 +3,7 @@
+     <OutputType>Exe</OutputType>
+     <TargetFramework>netcoreapp3.1</TargetFramework>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
++    <UseAppHost>false</UseAppHost>
+     <RollForward>Major</RollForward>
+   </PropertyGroup>
+ 
+-- 
+2.26.2
+
