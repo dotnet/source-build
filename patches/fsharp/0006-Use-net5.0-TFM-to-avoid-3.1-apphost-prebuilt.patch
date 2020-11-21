@@ -1,0 +1,169 @@
+From 793325d73d4a84e73bf78e7c0d0f8b6b22c8a66f Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Fri, 20 Nov 2020 18:28:36 -0600
+Subject: [PATCH] Use net5.0 TFM to avoid 3.1 apphost prebuilt
+
+See https://github.com/dotnet/source-build/issues/1905
+---
+ eng/Versions.props                                |  1 +
+ eng/build.sh                                      | 12 +++++++-----
+ proto.proj                                        |  6 +++---
+ src/buildtools/AssemblyCheck/AssemblyCheck.fsproj |  2 +-
+ src/buildtools/fslex/fslex.fsproj                 |  2 +-
+ src/buildtools/fsyacc/fsyacc.fsproj               |  2 +-
+ src/fsharp/FSharp.Build/FSharp.Build.fsproj       |  2 ++
+ src/fsharp/fsc/fsc.fsproj                         |  1 +
+ src/fsharp/fsi/fsi.fsproj                         |  1 +
+ 9 files changed, 18 insertions(+), 11 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 14e6695d7..799efed6c 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -82,6 +82,7 @@
+     <!-- System.* packages -->
+     <SystemBuffersVersion>4.5.1</SystemBuffersVersion>
+     <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
++    <SystemConfigurationConfigurationManagerVersion>5.0.0</SystemConfigurationConfigurationManagerVersion>
+     <SystemConsoleVersion>4.3.0</SystemConsoleVersion>
+     <SystemDataSqlClientPackageVersion>4.3.0</SystemDataSqlClientPackageVersion>
+     <SystemDesignVersion>4.0.0</SystemDesignVersion>
+diff --git a/eng/build.sh b/eng/build.sh
+index 32af25330..16d8c65a7 100755
+--- a/eng/build.sh
++++ b/eng/build.sh
+@@ -246,20 +246,22 @@ function BuildSolution {
+     MSBuild "$repo_root/src/buildtools/buildtools.proj" \
+       /restore \
+       /p:Configuration=$bootstrap_config \
+-      /t:Publish
++      /t:Publish \
++      /bl:proto-fslex-tools.binlog
+ 
+     mkdir -p "$bootstrap_dir"
+-    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/netcoreapp3.1/publish $bootstrap_dir/fslex
+-    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/netcoreapp3.1/publish $bootstrap_dir/fsyacc
++    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/net5.0/publish $bootstrap_dir/fslex
++    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/net5.0/publish $bootstrap_dir/fsyacc
+   fi
+   if [ ! -f "$bootstrap_dir/fsc.exe" ]; then
+     BuildMessage="Error building bootstrap"
+     MSBuild "$repo_root/proto.proj" \
+       /restore \
+       /p:Configuration=$bootstrap_config \
+-      /t:Publish
++      /t:Publish \
++      /bl:proto-fsc-bootstrap.binlog
+ 
+-    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/netcoreapp3.1/publish $bootstrap_dir/fsc
++    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/net5.0/publish $bootstrap_dir/fsc
+   fi
+ 
+   # do real build
+diff --git a/proto.proj b/proto.proj
+index f24b2580e..3179197be 100644
+--- a/proto.proj
++++ b/proto.proj
+@@ -7,13 +7,13 @@
+ 
+   <ItemGroup>
+     <Projects Include="src\fsharp\FSharp.Build\FSharp.Build.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net5.0</AdditionalProperties>
+     </Projects>
+     <Projects Include="src\fsharp\fsc\fsc.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net5.0</AdditionalProperties>
+     </Projects>
+     <Projects Include="src\fsharp\fsi\fsi.fsproj">
+-      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net5.0</AdditionalProperties>
+     </Projects>
+   </ItemGroup>
+ 
+diff --git a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj b/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
+index be43696d7..464b6ef78 100644
+--- a/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
++++ b/src/buildtools/AssemblyCheck/AssemblyCheck.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <TargetFramework>net5.0</TargetFramework>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+ 
+diff --git a/src/buildtools/fslex/fslex.fsproj b/src/buildtools/fslex/fslex.fsproj
+index da7c52ba1..1959ce59c 100644
+--- a/src/buildtools/fslex/fslex.fsproj
++++ b/src/buildtools/fslex/fslex.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <TargetFramework>net5.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+diff --git a/src/buildtools/fsyacc/fsyacc.fsproj b/src/buildtools/fsyacc/fsyacc.fsproj
+index a2b8cb384..5d1b7141f 100644
+--- a/src/buildtools/fsyacc/fsyacc.fsproj
++++ b/src/buildtools/fsyacc/fsyacc.fsproj
+@@ -2,7 +2,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <TargetFramework>net5.0</TargetFramework>
+     <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
+     <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
+   </PropertyGroup>
+diff --git a/src/fsharp/FSharp.Build/FSharp.Build.fsproj b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+index c62b2c2d9..28323a704 100644
+--- a/src/fsharp/FSharp.Build/FSharp.Build.fsproj
++++ b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+@@ -7,6 +7,7 @@
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <AssemblyName>FSharp.Build</AssemblyName>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+@@ -54,6 +55,7 @@
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCoreVersion)" />
+     <PackageReference Include="Microsoft.Win32.Registry" Version="$(MicrosoftWin32RegistryVersion)" />
++    <PackageReference Include="System.Configuration.ConfigurationManager" Version="$(SystemConfigurationConfigurationManagerVersion)" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
+index df16c1554..7bcc01024 100644
+--- a/src/fsharp/fsc/fsc.fsproj
++++ b/src/fsharp/fsc/fsc.fsproj
+@@ -7,6 +7,7 @@
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <TargetExt>.exe</TargetExt>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+diff --git a/src/fsharp/fsi/fsi.fsproj b/src/fsharp/fsi/fsi.fsproj
+index bb2bcc73b..7c3162387 100644
+--- a/src/fsharp/fsi/fsi.fsproj
++++ b/src/fsharp/fsi/fsi.fsproj
+@@ -7,6 +7,7 @@
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
+     <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
+     <TargetExt>.exe</TargetExt>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
+-- 
+2.25.4
+
