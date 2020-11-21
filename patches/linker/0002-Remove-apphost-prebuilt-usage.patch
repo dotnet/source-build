@@ -64,7 +64,7 @@ index 20e60aca..de6ab385 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 +    <!-- This apphost is not necessary for source-build. Remove it to avoid a prebuilt. See https://github.com/dotnet/source-build/issues/1905 -->
-+    <UseAppHost Condition="'$(DotNetBuildFromSource)' != 'true'">false</UseAppHost>
++    <UseAppHost Condition="'$(DotNetBuildFromSource)' == 'true'">false</UseAppHost>
    </PropertyGroup>
  
    <PropertyGroup Condition="'$(MonoBuild)' == ''">
