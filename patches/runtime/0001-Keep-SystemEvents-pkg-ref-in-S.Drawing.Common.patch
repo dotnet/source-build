@@ -1,0 +1,29 @@
+From 8aeeb464ea41216758510c19534762051cfc033b Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 23 Nov 2020 11:39:55 -0600
+Subject: [PATCH] Keep SystemEvents pkg ref in S.Drawing.Common
+
+When building System.Drawing.Common in source-build, always reference
+Microsoft.Win32.SystemEvents, rather than only referencing it when
+TargetsWindows = true. This fixes downstream repos by removing a
+difference between source-build and the Microsoft build.
+---
+ .../System.Drawing.Common/src/System.Drawing.Common.csproj      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/libraries/System.Drawing.Common/src/System.Drawing.Common.csproj b/src/libraries/System.Drawing.Common/src/System.Drawing.Common.csproj
+index 88201ea00bd..0937bf4eaba 100644
+--- a/src/libraries/System.Drawing.Common/src/System.Drawing.Common.csproj
++++ b/src/libraries/System.Drawing.Common/src/System.Drawing.Common.csproj
+@@ -354,7 +354,7 @@
+       <LogicalName>placeholder.ico</LogicalName>
+     </EmbeddedResource>
+   </ItemGroup>
+-  <ItemGroup Condition="'$(TargetsWindows)' == 'true'">
++  <ItemGroup Condition="'$(TargetsWindows)' == 'true' or '$(DotNetBuildFromSource)' == 'true'">
+     <ProjectReference Include="$(LibrariesProjectRoot)Microsoft.Win32.SystemEvents\src\Microsoft.Win32.SystemEvents.csproj" />  
+   </ItemGroup>
+   <ItemGroup>
+-- 
+2.25.4
+
