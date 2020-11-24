@@ -203,7 +203,7 @@ function doCommand() {
             else
                 "${dotnetCmd}" $newArgs --no-restore >> "$logFile" 2>&1
             fi
-        elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor)$ ]]; then
+        elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor|blazorwasm|blazorserver)$ ]]; then
             if [ "$projectOutput" == "true" ]; then
                 "${dotnetCmd}" $1 &
             else
@@ -307,6 +307,8 @@ function runWebTests() {
     doCommand C# mvc "$@" new restore build run
     doCommand C# webapi "$@" new restore build run
     doCommand C# razor "$@" new restore build run
+    doCommand C# blazorwasm "$@" new restore build run
+    doCommand C# blazorserver "$@" new restore build run
 
     doCommand F# web "$@" new restore build run
     doCommand F# mvc "$@" new restore build run
