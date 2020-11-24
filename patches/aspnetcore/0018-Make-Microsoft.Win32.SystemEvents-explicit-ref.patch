@@ -1,0 +1,43 @@
+From 8111a47893a3536e5332817c78b9fdd1e59542bd Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 23 Nov 2020 18:42:37 -0600
+Subject: [PATCH] Make Microsoft.Win32.SystemEvents explicit ref
+
+Change Microsoft.Win32.SystemEvents from
+_TransitiveExternalAspNetCoreAppReference to
+ExternalAspNetCoreAppReference. Normally SystemEvents is brought in by
+System.Drawing.Common as a transitive ref, but in source-build,
+System.Drawing.Common doesn't have this reference. Ideally this will be
+fixed in dotnet/runtime, but for now this is a more straightforward
+place to patch the reference.
+
+Without this, the ASP.NET Core shared framework ends up missing the
+SystemEvents assembly, making it potentially unable to run some
+applications built using the Microsoft-built SDK.
+---
+ eng/SharedFramework.External.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/SharedFramework.External.props b/eng/SharedFramework.External.props
+index a43f82e803..246678e723 100644
+--- a/eng/SharedFramework.External.props
++++ b/eng/SharedFramework.External.props
+@@ -40,6 +40,7 @@
+     <ExternalAspNetCoreAppReference Include="Microsoft.Extensions.Options.DataAnnotations"                 Version="$(MicrosoftExtensionsOptionsDataAnnotationsPackageVersion)" />
+     <ExternalAspNetCoreAppReference Include="Microsoft.Extensions.Options"                                 Version="$(MicrosoftExtensionsOptionsPackageVersion)" />
+     <ExternalAspNetCoreAppReference Include="Microsoft.Extensions.Primitives"                              Version="$(MicrosoftExtensionsPrimitivesPackageVersion)" />
++    <ExternalAspNetCoreAppReference Include="Microsoft.Win32.SystemEvents"                                 Version="$(MicrosoftWin32SystemEventsPackageVersion)" />
+     <ExternalAspNetCoreAppReference Include="System.IO.Pipelines"                                          Version="$(SystemIOPipelinesPackageVersion)" />
+     <ExternalAspNetCoreAppReference Include="System.Security.Cryptography.Xml"                             Version="$(SystemSecurityCryptographyXmlPackageVersion)" />
+ 
+@@ -52,7 +53,6 @@
+ 
+       If these are needed as direct dependencies, it is okay to change them to ExternalAspNetCoreAppReference and move up into sections above.
+     -->
+-    <_TransitiveExternalAspNetCoreAppReference Include="Microsoft.Win32.SystemEvents"                       Version="$(MicrosoftWin32SystemEventsPackageVersion)" />
+     <_TransitiveExternalAspNetCoreAppReference Include="System.Drawing.Common"                              Version="$(SystemDrawingCommonPackageVersion)" />
+     <_TransitiveExternalAspNetCoreAppReference Include="System.Security.Cryptography.Pkcs"                  Version="$(SystemSecurityCryptographyPkcsPackageVersion)" />
+     <!--
+-- 
+2.25.4
+
