@@ -125,19 +125,17 @@ diff --git a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAn
 index f3a0b0e5f..b8c947767 100644
 --- a/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj
 +++ b/src/Microsoft.CodeAnalysis.BannedApiAnalyzers/Core/Microsoft.CodeAnalysis.BannedApiAnalyzers.csproj
-@@ -1,7 +1,7 @@
+@@ -1,13 +1,15 @@
  ﻿<!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFramework>netstandard1.3</TargetFramework>
 +    <TargetFramework>netstandard2.0</TargetFramework>
      <!--
-         PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
-         Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
-@@ -13,7 +13,9 @@
-         about where the package name ends and where the version begins.
+       PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.BannedApiAnalyzer,
+       Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.BannedApiAnalyzer package.
      -->
-     <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <PackageId>*$(MSBuildProjectFile)*</PackageId>
 +    <!--
      <MicrosoftCodeAnalysisVersion>2.9.0</MicrosoftCodeAnalysisVersion>
 +    -->
@@ -200,19 +198,17 @@ diff --git a/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.Perfo
 index ac9455cac..366db8ae4 100644
 --- a/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj
 +++ b/src/PerformanceSensitiveAnalyzers/Core/Microsoft.CodeAnalysis.PerformanceSensitiveAnalyzers.csproj
-@@ -1,7 +1,7 @@
+@@ -1,13 +1,15 @@
  ﻿<!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFramework>netstandard1.3</TargetFramework>
 +    <TargetFramework>netstandard2.0</TargetFramework>
      <!--
-         PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
-         Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
-@@ -13,7 +13,9 @@
-         about where the package name ends and where the version begins.
+       PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.PerformanceSensitive.Analyzers,
+       Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.PerformanceSensitive.Analyzers nuget package.
      -->
-     <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <PackageId>*$(MSBuildProjectFile)*</PackageId>
 +    <!--
      <MicrosoftCodeAnalysisVersion>2.9.0</MicrosoftCodeAnalysisVersion>
 +    -->
@@ -263,19 +259,17 @@ diff --git a/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.Public
 index 8ac0061a4..ba8bac56e 100644
 --- a/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj
 +++ b/src/PublicApiAnalyzers/Core/Analyzers/Microsoft.CodeAnalysis.PublicApiAnalyzers.csproj
-@@ -1,7 +1,7 @@
+@@ -1,13 +1,15 @@
  ﻿<!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFramework>netstandard1.3</TargetFramework>
 +    <TargetFramework>netstandard2.0</TargetFramework>
      <!--
-         PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
-         Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
-@@ -13,7 +13,9 @@
-         about where the package name ends and where the version begins.
+       PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.PublicApiAnalyzer,
+       Restore would conclude that there is a cyclic dependency between us and the Microsoft.CodeAnalysis.PublicApiAnalyzer package.
      -->
-     <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <PackageId>*$(MSBuildProjectFile)*</PackageId>
 +    <!--
      <MicrosoftCodeAnalysisVersion>1.2.1</MicrosoftCodeAnalysisVersion>
 +    -->
@@ -330,19 +324,17 @@ diff --git a/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.Public
 index bdb00b382..3178f5d2b 100644
 --- a/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj
 +++ b/src/PublicApiAnalyzers/Core/CodeFixes/Microsoft.CodeAnalysis.PublicApiAnalyzers.CodeFixes.csproj
-@@ -1,7 +1,7 @@
+@@ -1,13 +1,15 @@
  ﻿<!-- Copyright (c)  Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information. -->
  <Project Sdk="Microsoft.NET.Sdk">
    <PropertyGroup>
 -    <TargetFramework>netstandard1.3</TargetFramework>
 +    <TargetFramework>netstandard2.0</TargetFramework>
      <!--
-         PackageId is used by Restore. If we set it to Microsoft.CodeAnalysis.Analyzers,
-         Restore would conclude that there is a cyclic dependency between Microsoft.CodeAnalysis and
-@@ -13,7 +13,9 @@
-         about where the package name ends and where the version begins.
+       PackageId is used by Restore. If we set it to DotNetAnalyzers.PublicApiAnalyzer.CodeFixes,
+       Restore would conclude that there is a cyclic dependency between us and the DotNetAnalyzers.PublicApiAnalyzer.CodeFixes package.
      -->
-     <PackageId>*$(MSBuildProjectFullPath.Replace('/', '\\'))*</PackageId>
+     <PackageId>*$(MSBuildProjectFile)*</PackageId>
 +    <!--
      <MicrosoftCodeAnalysisVersion>1.2.1</MicrosoftCodeAnalysisVersion>
 +    -->
