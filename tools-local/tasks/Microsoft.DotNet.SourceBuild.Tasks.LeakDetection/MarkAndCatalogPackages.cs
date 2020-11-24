@@ -53,10 +53,20 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         [Required]
         public ITaskItem[] PackagesToMark { get; set; }
 
+        /// <summary>
+        /// Use this directory instead of the system temp directory for staging.
+        /// Intended for Linux systems with limited /tmp space, like Azure VMs.
+        /// </summary>
+        public string OverrideTempPath { get; set; }
+
         public override bool Execute()
         {
             var tempDirName = Path.GetRandomFileName();
-            var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), tempDirName));
+            if (!string.IsNullOrWhiteSpace(OverrideTempPath))
+            {
+                Directory.CreateDirectory(OverrideTempPath);
+            }
+            var tempDir = Directory.CreateDirectory(Path.Combine(OverrideTempPath ?? Path.GetTempPath(), tempDirName));
 
             var packageEntries = new List<CatalogPackageEntry>();
 

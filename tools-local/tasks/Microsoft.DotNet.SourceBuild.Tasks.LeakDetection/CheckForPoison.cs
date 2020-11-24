@@ -51,6 +51,12 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// </summary>
         public bool FailOnPoisonFound { get; set; }
 
+        /// <summary>
+        /// Use this directory instead of the system temp directory for staging.
+        /// Intended for Linux systems with limited /tmp space, like Azure VMs.
+        /// </summary>
+        public string OverrideTempPath { get; set; }
+
         private static readonly string[] ZipFileExtensions =
         {
             ".zip",
@@ -140,7 +146,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
             else
             {
-                //Log.LogError($"No leaked files found in output.  Either something is broken or it is the future and we have fixed all leaks - please verify and remove this error if so (and default {nameof(FailOnPoisonFound)} to true).");
+                Log.LogError($"No leaked files found in output.  Either something is broken or it is the future and we have fixed all leaks - please verify and remove this error if so (and default {nameof(FailOnPoisonFound)} to true).");
                 return false;
             }
 
@@ -156,13 +162,17 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
         internal static IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
-            var tempDirName = Path.GetRandomFileName();
-            var tempDir = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), tempDirName));
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
             var candidateQueue = new Queue<string>(initialCandidates);
             // avoid collisions between nupkgs with the same name
             var dirCounter = 0;
+            if (!string.IsNullOrWhiteSpace(OverrideTempPath))
+            {
+                Directory.CreateDirectory(OverrideTempPath);
+            }
+            var tempDirName = Path.GetRandomFileName();
+            var tempDir = Directory.CreateDirectory(Path.Combine(OverrideTempPath ?? Path.GetTempPath(), tempDirName));
 
             while (candidateQueue.Any())
             {
@@ -190,6 +200,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             }
 
             tempDir.Delete(true);
+
             return poisons;
         }
 
@@ -295,7 +306,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             // now extract and look for the marker file
             if (ZipFileExtensions.Any(e => zipToCheck.ToLowerInvariant().EndsWith(e)))
             {
-                ZipFile.ExtractToDirectory(zipToCheck, tempDir);
+                ZipFile.ExtractToDirectory(zipToCheck, tempDir, true);
             }
             else if (TarFileExtensions.Any(e => zipToCheck.ToLowerInvariant().EndsWith(e)))
             {
