@@ -93,9 +93,11 @@
           Condition="'$(EngCommonToolsShFile)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" >
+    <!-- Use a relative find in NewText to avoid regex matches with parent directories.
+         See https://github.com/dotnet/source-build/issues/1914 for details. -->
     <ReplaceTextInFile InputFile="$(EngCommonToolsShFile)"
                        OldText="local logger_path=&quot;$toolset_dir/$_InitializeBuildToolFramework/Microsoft.DotNet.Arcade.Sdk.dll&quot;"
-                       NewText="logger_path=%24%28find &quot;$toolset_dir&quot; -name Microsoft.DotNet.Arcade.Sdk.dll -regex &apos;.*netcoreapp2.1.*\|.*net5.0.*&apos;)" />
+                       NewText="logger_path=&quot;%24toolset_dir&quot;/%24%28cd &quot;$toolset_dir&quot; &amp;&amp; find -name Microsoft.DotNet.Arcade.Sdk.dll -regex &apos;.*netcoreapp2.1.*\|.*net5.0.*&apos;)" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" Overwrite="true" />
   </Target>
