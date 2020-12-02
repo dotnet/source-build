@@ -160,7 +160,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
         /// <param name="catalogedPackagesFilePath">File path to the file hash catalog</param>
         /// <param name="markerFileName">Marker file name to check for in poisoned nupkgs</param>
         /// <returns>List of poisoned packages and files found and reasons for each</returns>
-        internal static IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
+        internal IEnumerable<PoisonedFileEntry> GetPoisonedFiles(IEnumerable<string> initialCandidates, string catalogedPackagesFilePath, string markerFileName)
         {
             IEnumerable<CatalogPackageEntry> catalogedPackages = ReadCatalog(catalogedPackagesFilePath);
             var poisons = new List<PoisonedFileEntry>();
