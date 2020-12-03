@@ -84,6 +84,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             ".gitkeep",
             ".rels",
             "LICENSE",
+            "prefercliruntime",
             "RunCsc",
             "RunVbc",
         };
@@ -109,6 +110,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.LeakDetection
             ".png",
             ".props",
             ".psmdcp",
+            ".rtf",
             ".scss",
             ".svg",
             ".targets",
