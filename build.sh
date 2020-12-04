@@ -119,12 +119,6 @@ if [ "${internalPackageFeedPat:-}" ]; then
   # The internal transport isn't added by Darc, though, so it will still need special-casing.
   export VSS_NUGET_EXTERNAL_FEED_ENDPOINTS='{"endpointCredentials": [
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-7ab67ec7/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-extensions-bdc3beed/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-1721e394-2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-1721e394-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-core-setup-1721e394/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-aspnetcore-tooling-e2442f29/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-aspnetcore-e3187077/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
 fi
