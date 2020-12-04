@@ -118,7 +118,7 @@ if [ "${internalPackageFeedPat:-}" ]; then
   # TODO: Read these from nuget.config
   # The internal transport isn't added by Darc, though, so it will still need special-casing.
   export VSS_NUGET_EXTERNAL_FEED_ENDPOINTS='{"endpointCredentials": [
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-7ab67ec7/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-7ab67ec7/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
 fi
