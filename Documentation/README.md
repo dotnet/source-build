@@ -36,6 +36,12 @@ For example, building a 3.1.105 SDK on an x64 (aka x86\_64) platform running Fed
 
 If you are interested in "installing" this SDK system wide or making a Linux package out of the SDK, please see [Packaging and Installation](packaging-installation.md).
 
+`./build.{cmd|sh}` accepts a number of parameters to control the build.
+
+- `/p:UseSystemLibraries=true` or `/p:UseSystemLibraries=false` can be used to explicitly link against the system libraries. `false` will make it `dlopen` any required libraries at runtime.
+
+- `/p:UseSystemLibunwind=true` or `/p:UseSystemLibunwind=false` can be used to use either the system libunwind or the version of libunwind included in the dotnet/runtime repository. Defaults to the value of `UseSystemLibraries`.
+
 ## Building one repo
 
 By default we build the cli and its dependencies but the default root repository to build can be passed in. For example, if you just want to build the .NET Core Runtime, you would just build the `core-setup` repo and its dependencies:
