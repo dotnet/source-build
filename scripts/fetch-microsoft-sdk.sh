@@ -54,7 +54,7 @@ else
 fi
 
 chmod +x "${install_script}"
-url=$("${install_script_dir}/dotnet-install.sh" --dry-run --version "${sdk_version}" | grep https | sed -E 's|.*(https://.*tar.gz)$|\1|' | head -1)
+url=$("${install_script_dir}/dotnet-install.sh" --dry-run --version "${sdk_version}" | grep -E 'https://.*tar.gz' | sed -E 's|.*(https://.*tar.gz)$|\1|' | head -1)
 echo "${url}"
 
 # Use curl if available, otherwise use wget
