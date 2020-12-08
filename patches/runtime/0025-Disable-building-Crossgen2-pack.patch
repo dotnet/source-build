@@ -1,6 +1,6 @@
-From 3113a8a5880408a0bf99c294afc69a759bb031de Mon Sep 17 00:00:00 2001
+From 37592dbc531b43a4366aa9988bc155db8e560d32 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
-Date: Tue, 8 Dec 2020 10:16:07 -0600
+Date: Tue, 8 Dec 2020 10:36:54 -0600
 Subject: [PATCH] Disable building Crossgen2 pack
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] Disable building Crossgen2 pack
  1 file changed, 17 insertions(+)
 
 diff --git a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
-index db13cdde514..71aee46af70 100644
+index d652108a181..7a5313e5cc4 100644
 --- a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
 +++ b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
 @@ -10,6 +10,23 @@
@@ -16,16 +16,16 @@ index db13cdde514..71aee46af70 100644
    </PropertyGroup>
  
 +  <!--
-+    Building Crossgen2 from source has a few issues:
++    Building the Crossgen2 pack from source has a few issues:
 +
-+    Self-contained packages bring down lots of prebuilts. We can disable
-+    self-contained, but this only fixes this one problem, and it also makes the
-+    source-built crossgen2 different from the Microsoft build and potentially
-+    not work in the expected scenarios. See
-+    https://github.com/dotnet/source-build/issues/1937
++    Self-contained packages like this one bring down lots of prebuilts. We can disable
++    self-contained, but this only fixes this some prebuilts, not all. See
++    https://github.com/dotnet/source-build/issues/1937. Also, disabling self-contained makes the
++    source-built Crossgen2 pack different from the Microsoft build's and potentially not work in the
++    expected scenarios.
 +
-+    Even if we build it, there is no mechanism to distribute it in distro
-+    packages. This is the same problem as runtime packs. See
++    Even if we managed to build it without prebuilts, there is no mechanism to distribute the
++    Crossgen2 pack in distro packages. This is the same problem as runtime packs. See
 +    https://github.com/dotnet/source-build/issues/1568
 +  -->
 +  <PropertyGroup>
