@@ -1,0 +1,40 @@
+From 1fbaac491061d31b31d5e07490ef9011f01550b7 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 8 Dec 2020 10:36:54 -0600
+Subject: [PATCH] Disable building Crossgen2 pack
+
+---
+ .../pkg/Microsoft.NETCore.App.Crossgen2.pkgproj | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
+index d652108a181..7db441d2bc8 100644
+--- a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
++++ b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
+@@ -10,6 +10,23 @@
+     <SkipBuildOnRuntimePackOnlyOS>true</SkipBuildOnRuntimePackOnlyOS>
+   </PropertyGroup>
+ 
++  <!--
++    Building the Crossgen2 pack from source has a few issues:
++
++    Self-contained packages like this one bring down lots of prebuilts. We can disable
++    self-contained, but this only fixes this some prebuilts, not all. See
++    https://github.com/dotnet/source-build/issues/1937. Also, disabling self-contained makes the
++    source-built Crossgen2 pack different from the Microsoft build's and potentially not work in the
++    expected scenarios.
++
++    Even if we managed to build it without prebuilts, there is no mechanism to distribute the
++    Crossgen2 pack in distro packages. This is the same problem as runtime packs. See
++    https://github.com/dotnet/source-build/issues/1568
++  -->
++  <PropertyGroup>
++    <SkipBuild>true</SkipBuild>
++  </PropertyGroup>
++
+   <!--
+     Get installer properties, in particular for MSIs.
+     Consider porting to central infrastructure: https://github.com/dotnet/runtime/issues/1867
+-- 
+2.25.4
+
