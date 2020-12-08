@@ -1,4 +1,4 @@
-From 37592dbc531b43a4366aa9988bc155db8e560d32 Mon Sep 17 00:00:00 2001
+From 1fbaac491061d31b31d5e07490ef9011f01550b7 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Tue, 8 Dec 2020 10:36:54 -0600
 Subject: [PATCH] Disable building Crossgen2 pack
@@ -8,7 +8,7 @@ Subject: [PATCH] Disable building Crossgen2 pack
  1 file changed, 17 insertions(+)
 
 diff --git a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
-index d652108a181..7a5313e5cc4 100644
+index d652108a181..7db441d2bc8 100644
 --- a/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
 +++ b/src/installer/pkg/projects/netcoreapp/pkg/Microsoft.NETCore.App.Crossgen2.pkgproj
 @@ -10,6 +10,23 @@
@@ -29,7 +29,7 @@ index d652108a181..7a5313e5cc4 100644
 +    https://github.com/dotnet/source-build/issues/1568
 +  -->
 +  <PropertyGroup>
-+    <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
++    <SkipBuild>true</SkipBuild>
 +  </PropertyGroup>
 +
    <!--
