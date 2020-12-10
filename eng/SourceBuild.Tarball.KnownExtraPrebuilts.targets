@@ -110,6 +110,16 @@
         $(TarballPrebuiltPackageDir)microsoft.sourcelink.github.1.0.0-beta2-*.nupkg;
         $(TarballPrebuiltPackageDir)microsoft.sourcelink.vsts.git.1.0.0-beta2-*.nupkg;
         " />
+      <!--
+        Remove packages that show up when dotnet/sdk restores Microsoft.Build/15.7.179 in net472
+        configuration. These are not present in the source-build-reference-packages version of
+        Microsoft.Build/15.7.179, so we know it's safe to ignore. In the production build, we aren't
+        using SBRP yet, so we need to remove them here.
+      -->
+      <KnownExtraPrebuiltFile Include="
+        $(TarballPrebuiltPackageDir)microsoft.visualstudio.setup.configuration.interop.1.16.30.nupkg;
+        $(TarballPrebuiltPackageDir)system.threading.tasks.dataflow.4.5.24.nupkg;
+        " />
     </ItemGroup>
 
     <Delete Files="@(KnownExtraPrebuiltFile)" />

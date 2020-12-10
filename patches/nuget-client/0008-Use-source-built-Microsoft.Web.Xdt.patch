@@ -1,0 +1,36 @@
+From c74570ea31e05f3f7b9d6de326d0b61c0bcf91d2 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Thu, 10 Dec 2020 16:17:55 -0600
+Subject: [PATCH] Use source-built Microsoft.Web.Xdt
+
+---
+ build/packages.targets | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/build/packages.targets b/build/packages.targets
+index 3cecece3e..f70aef127 100644
+--- a/build/packages.targets
++++ b/build/packages.targets
+@@ -11,6 +11,10 @@
+         <PatchedSystemPackagesVersion>5.0.0</PatchedSystemPackagesVersion>
+     </PropertyGroup>
+ 
++    <PropertyGroup>
++        <MicrosoftWebXdtPackageVersion Condition="'$(MicrosoftWebXdtPackageVersion)' == ''">3.0.0</MicrosoftWebXdtPackageVersion>
++    </PropertyGroup>
++
+     <!-- Test and package versions -->
+     <PropertyGroup>
+         <XunitVersion>2.4.1</XunitVersion>
+@@ -60,7 +64,7 @@
+         <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingVersion)" />
+         <PackageReference Update="Microsoft.VisualStudio.Workspace.VSIntegration" Version="16.6.55-preview-0003" />
+         <PackageReference Update="Microsoft.VisualStudio.Utilities" Version="$(VSFrameworkVersion)" />
+-        <PackageReference Update="Microsoft.Web.Xdt" Version="2.1.2" />
++        <PackageReference Update="Microsoft.Web.Xdt" Version="$(MicrosoftWebXdtPackageVersion)" />
+         <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
+         <PackageReference Update="System.Collections.Immutable" Version="1.7.1" />
+         <PackageReference Update="System.Diagnostics.Debug" Version="$(SystemPackagesVersion)" />
+-- 
+2.25.4
+
