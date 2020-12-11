@@ -1,19 +1,19 @@
 From acdac361d8c2e101f401c0e71a51d0018cfb76f9 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 15 Jan 2020 15:14:54 +0000
-Subject: [PATCH 03/10] Add source-build specific build script
+Subject: [PATCH] Add source-build specific build script
 
 ---
- build-source-build.sh | 87 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 87 insertions(+)
+ build-source-build.sh | 85 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 85 insertions(+)
  create mode 100755 build-source-build.sh
 
 diff --git a/build-source-build.sh b/build-source-build.sh
 new file mode 100755
-index 00000000000..db23d3032ac
+index 00000000000..25c0c1b0625
 --- /dev/null
 +++ b/build-source-build.sh
-@@ -0,0 +1,84 @@
+@@ -0,0 +1,85 @@
 +#!/usr/bin/env bash
 +set -euo pipefail
 +
@@ -99,6 +99,6 @@ index 00000000000..db23d3032ac
 +echo "Running command: $scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs"
 +$scriptroot/build.sh $commonArgs -subset corehost+installer.managed+installer.depprojs+installer.pkgprojs+installers+bundles $installerArgs /p:ILAsmToolPath=$ilasmPath $additionalArgs
 +find $scriptroot/artifacts/ -type f -name Build.binlog -exec rename "Build.binlog" "installerBuild.binlog" * {} \;
---
-2.18.0
+-- 
+2.25.4
 
