@@ -1,19 +1,19 @@
-From a158ba6c9bdf7465264a5de8ee62e5d3572b961a Mon Sep 17 00:00:00 2001
+From a25eb78bab34afc8a6ff082bebec9b8ca33a9f17 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
-Date: Thu, 12 Nov 2020 15:51:37 +0100
+Date: Thu, 26 Nov 2020 08:26:13 +0100
 Subject: [PATCH] nuget.client: build for .NET 5
 
 ---
- build/common.project.props                              | 4 ++--
+ build/common.project.props                              | 5 ++---
  build/packages.targets                                  | 4 ++--
  src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ 3 files changed, 5 insertions(+), 6 deletions(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
-index 03c93ae65..4679fd57a 100644
+index 03c93ae65..f578a2271 100644
 --- a/build/common.project.props
 +++ b/build/common.project.props
-@@ -13,11 +13,11 @@
+@@ -13,16 +13,15 @@
      <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
      <NETFXTargetFrameworkVersion>v4.7.2</NETFXTargetFrameworkVersion>
      <NETFXTargetFramework>net472</NETFXTargetFramework>
@@ -27,6 +27,11 @@ index 03c93ae65..4679fd57a 100644
      <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFramework)</TargetFrameworksExe>
      <TargetFrameworksExe Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">$(NETCoreTargetFramework)</TargetFrameworksExe>
      <TargetFrameworksExeForSigning>$(TargetFrameworksExe);netcoreapp5.0</TargetFrameworksExeForSigning>
+     <TargetFrameworksLibrary>$(NETFXTargetFramework);$(NetStandardVersion)</TargetFrameworksLibrary>
+-    <TargetFrameworksLibrary Condition="'$(IsBuildOnlyXPLATProjects)' == 'true'">$(NetStandardVersion)</TargetFrameworksLibrary>
+     <TargetFrameworksLibraryForSigning>$(TargetFrameworksLibrary);netcoreapp5.0</TargetFrameworksLibraryForSigning>
+     <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
+     <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
 diff --git a/build/packages.targets b/build/packages.targets
 index 873850ccb..baa369e09 100644
 --- a/build/packages.targets
