@@ -4,23 +4,9 @@ Date: Wed, 12 Aug 2020 14:26:52 -0500
 Subject: [PATCH 10/10] PlatformAbstractions is not produced in source-build
 
 ---
- src/Layout/redist/redist.csproj                                 | 2 +-
  .../Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj  | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-diff --git a/src/Layout/redist/redist.csproj b/src/Layout/redist/redist.csproj
-index c3940776b..e46938bae 100644
---- a/src/Layout/redist/redist.csproj
-+++ b/src/Layout/redist/redist.csproj
-@@ -20,7 +20,7 @@
- 
-   <ItemGroup>
-     <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
--    <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />
-+  <!--  <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />-->
-     <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(MicrosoftBuildNuGetSdkResolverPackageVersion)" />
-     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" ExcludeAssets="All" />
-     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
 diff --git a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj b/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj
 index ecf56d956..59545bb39 100644
 --- a/src/Tasks/Microsoft.NET.Build.Tasks/Microsoft.NET.Build.Tasks.csproj

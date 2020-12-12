@@ -29,7 +29,7 @@ function LogMessage {
 }
 
 function BuildStage1Sdk {
-    LogMessage "Starting Step1 - Build stage1 sdk" 
+    LogMessage "Starting Step1 - Build stage1 sdk"
 
     if [ -d "$stage1Dir" ]; then
         echo "$stage1Dir already exists"
@@ -53,11 +53,11 @@ function BuildStage1Sdk {
     ./build.sh
     popd
 
-    LogMessage "Completing Step1 - Build stage1 sdk" 
+    LogMessage "Completing Step1 - Build stage1 sdk"
 }
 
 function BuildRefPkgs {
-    LogMessage "Starting Step2 - Build Reference Packages" 
+    LogMessage "Starting Step2 - Build Reference Packages"
 
     if [ ! -d "$refPkgSourceDir" ]; then
         echo "$refPkgSourceDir doesn't exist"
@@ -85,14 +85,14 @@ function BuildRefPkgs {
         rm -rf $stage1SdkInstallDir
     fi
     mkdir $stage1SdkInstallDir
-    tar -xzf $stage1Dir/artifacts/x64/Release/dotnet-sdk-3*.tar.gz --directory $stage1SdkInstallDir
+    tar -xzf $stage1Dir/artifacts/x64/Release/dotnet-sdk-5*.tar.gz --directory $stage1SdkInstallDir
 
     LogMessage "Build stage1 ref-pkgs"
     pushd $refPkgsDir
     ./build.sh --with-packages $stage1Dir/artifacts/x64/Release/Private.SourceBuilt.Artifacts.*.tar.gz --with-sdk $stage1SdkInstallDir
     popd
 
-    LogMessage "Completing Step2 - Build Reference Packages" 
+    LogMessage "Completing Step2 - Build Reference Packages"
 }
 
 function buildFinalSdk {
