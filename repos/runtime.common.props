@@ -60,6 +60,7 @@
     <LibrariesBuildArguments Condition="'$(TargetOS)' == 'OSX'">$(LibrariesBuildArguments) /p:RuntimeOS=$(OverrideTargetRid)</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PortableBuild=$(OverridePortableBuild)</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllPackages=true</LibrariesBuildArguments>
+    <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuildAllOOBPackages=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:KeepNativeSymbols=true</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:BuiltSdkPackageOverride=""</LibrariesBuildArguments>    <!-- Clear PackageOverride for Libraries - it only applies to coreclr -->
     <LibrariesBuildArguments Condition="'$(OfflineBuild)' == 'true'">$(LibrariesBuildArguments) /p:MicrosoftNETCoreDotNetHostPackageVersion=$(DOTNET_HOST_BOOTSTRAP_VERSION)</LibrariesBuildArguments>
