@@ -1,7 +1,7 @@
-From c16e32552af497082e5eda086eabaa91effb0e1a Mon Sep 17 00:00:00 2001
+From d67aa83be72cbb1ca37aba992633da87235f397b Mon Sep 17 00:00:00 2001
 From: Tomas Weinfurt <tweinfurt@yahoo.com>
 Date: Wed, 13 Nov 2019 22:32:02 -0800
-Subject: [PATCH 08/11] Add FreeBSD
+Subject: [PATCH 06/14] Add FreeBSD
 
 ---
  Directory.Build.props | 1 +
@@ -9,17 +9,17 @@ Subject: [PATCH 08/11] Add FreeBSD
  2 files changed, 2 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 908fa251c7..af3b14dd5f 100644
+index cd2dabcdba..53d90f2903 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -170,6 +170,7 @@
+@@ -163,6 +163,7 @@
        win-arm;
        win-arm64;
        osx-x64;
 +      freebsd-x64;
        linux-musl-x64;
+       linux-musl-arm;
        linux-musl-arm64;
-       linux-x64;
 diff --git a/eng/Common.props b/eng/Common.props
 index 7c489b15a9..a9a69bde9f 100644
 --- a/eng/Common.props
@@ -33,5 +33,5 @@ index 7c489b15a9..a9a69bde9f 100644
      <TargetRuntimeIdentifier Condition="'$(TargetRuntimeIdentifier)' == ''">$(TargetOsName)-$(TargetArchitecture)</TargetRuntimeIdentifier>
    </PropertyGroup>
 -- 
-2.18.2
+2.18.0
 

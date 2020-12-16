@@ -1,17 +1,17 @@
-From 2faea9ff0e3517a9c8873ccfd7a53aad389dfe2c Mon Sep 17 00:00:00 2001
+From c629528ac32b946a81e0e1f926879cd06a2e295c Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Thu, 14 Nov 2019 21:06:36 +0000
-Subject: [PATCH] Revert to reference versions of source-built packages
+Subject: [PATCH 05/14] Revert to reference versions of source-built packages
 
 ---
  eng/tools/RepoTasks/RepoTasks.csproj | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
-index e71a1d7591..2e959a1092 100644
+index 3895d24b07..56a5de9a38 100644
 --- a/eng/tools/RepoTasks/RepoTasks.csproj
 +++ b/eng/tools/RepoTasks/RepoTasks.csproj
-@@ -17,9 +17,9 @@
+@@ -28,9 +28,9 @@
    </ItemGroup>
  
    <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
@@ -25,5 +25,5 @@ index e71a1d7591..2e959a1092 100644
  
    <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
 -- 
-2.25.2
+2.18.0
 

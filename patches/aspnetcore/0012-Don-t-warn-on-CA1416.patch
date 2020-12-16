@@ -1,17 +1,17 @@
-From 0e7e210394d152c097facaf9e3cde68a0a04eb87 Mon Sep 17 00:00:00 2001
+From 446691a345e68861bd653c1be4b9111aafad5613 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 8 Oct 2020 14:18:02 +0000
-Subject: [PATCH] Don't warn on CA1416
+Subject: [PATCH 12/14] Don't warn on CA1416
 
 ---
  Directory.Build.props | 3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 9f3a6d3..40fc07b 100644
+index 53d90f2903..72cee68b4e 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -100,6 +100,9 @@
+@@ -109,6 +109,9 @@
  
    <!-- Warnings and errors -->
    <PropertyGroup>
@@ -22,5 +22,5 @@ index 9f3a6d3..40fc07b 100644
      <!-- Don't make missing XML docs a fatal build error, but still surface so we have visibility into undocumented APIs. -->
      <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
 -- 
-1.8.3.1
+2.18.0
 
