@@ -8,7 +8,6 @@ VERSION_PREFIX=5.0
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.3
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
-targetRid=$(cat "$SCRIPT_ROOT/artifacts/obj/x64/Release/TargetInfo.props" | grep -i targetrid | sed -E 's|\s*</?TargetRid>\s*||g')
 executingUserHome=${HOME:-}
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
