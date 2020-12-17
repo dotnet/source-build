@@ -102,6 +102,19 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$scriptroot/packages/restored/"
 
+if [ "${internalPackageFeedPat:-}" ]; then
+  echo "Setting up NuGet credential provider using PAT from env var 'internalPackageFeedPat'..."
+  . "$scriptroot/eng/install-nuget-credprovider.sh"
+  # TODO: Read these from nuget.config
+  # The internal transport isn't added by Darc, though, so it will still need special-casing.
+  export VSS_NUGET_EXTERNAL_FEED_ENDPOINTS='{"endpointCredentials": [
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-cb5f173b/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-2670c128/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-installer-71365b4d/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
+  ]}'
+fi
+
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
