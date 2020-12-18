@@ -1,8 +1,12 @@
 From 0b3838220ec3d40762c3221357202ec5ab1340f6 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 18 Dec 2020 16:07:30 +0000
-Subject: [PATCH] Default libraries pacakge version to 5.0.0
+Subject: [PATCH] Default libraries package version to 5.0.0
 
+Without this, libraries package versions are generated with the
+current build number, which is incorrect.  
+See https://github.com/dotnet/runtime/pull/46224 for upstream
+fix.
 ---
  src/libraries/Directory.Build.props | 1 +
  1 file changed, 1 insertion(+)
