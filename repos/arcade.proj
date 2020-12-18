@@ -2,8 +2,6 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <!-- Include extra arcade required prebuilts in offline build only-->
-    <ExtraRestoreSourcePath Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/arcadeRequired/</ExtraRestoreSourcePath>
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)pack</BuildCommandArgs>
