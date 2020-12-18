@@ -1,0 +1,24 @@
+From 0b3838220ec3d40762c3221357202ec5ab1340f6 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Fri, 18 Dec 2020 16:07:30 +0000
+Subject: [PATCH] Default libraries pacakge version to 5.0.0
+
+---
+ src/libraries/Directory.Build.props | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/libraries/Directory.Build.props b/src/libraries/Directory.Build.props
+index dfe161d..bb94ae0 100644
+--- a/src/libraries/Directory.Build.props
++++ b/src/libraries/Directory.Build.props
+@@ -26,6 +26,7 @@
+   <Import Sdk="Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk" Project="Sdk.props" />
+ 
+   <PropertyGroup>
++    <PackageVersion>5.0.0</PackageVersion>
+     <HostArch>$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant)</HostArch>
+     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(HostArch)' == 'arm'">arm</TargetArchitecture>
+     <TargetArchitecture Condition="'$(TargetArchitecture)' == '' and '$(HostArch)' == 'arm64'">arm64</TargetArchitecture>
+-- 
+1.8.3.1
+
