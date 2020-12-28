@@ -1,0 +1,324 @@
+From a106c5dbd96a220b6a8f104624e15afae5bb8377 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 29 Dec 2020 00:35:49 -0600
+Subject: [PATCH 2/5] Rename IReadOnlySet -> IRoslynReadOnlySet
+
+net5.0 introduces a type with the same name that collides. Rename Roslyn's to avoid this.
+---
+ Directory.Build.props                                       | 5 +++++
+ .../AsyncIteratorMethodToStateMachineRewriter.cs            | 2 +-
+ .../AsyncRewriter/AsyncMethodToStateMachineRewriter.cs      | 2 +-
+ .../IteratorMethodToStateMachineRewriter.cs                 | 2 +-
+ .../StateMachineRewriter/MethodToStateMachineRewriter.cs    | 6 +++---
+ .../MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj   | 2 +-
+ .../Core/Portable/Collections/IOrderedReadOnlySet.cs        | 2 +-
+ src/Compilers/Core/Portable/Collections/OrderedSet.cs       | 2 +-
+ src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs   | 4 ++--
+ .../Core/Portable/InternalUtilities/IReadOnlySet.cs         | 2 +-
+ .../Portable/InternalUtilities/SetWithInsertionOrder.cs     | 2 +-
+ .../InternalUtilities/SpecializedCollections.Empty.Set.cs   | 2 +-
+ .../SpecializedCollections.ReadOnly.Set.cs                  | 2 +-
+ .../Portable/InternalUtilities/SpecializedCollections.cs    | 4 ++--
+ .../AsyncRewriter.AsyncMethodToClassRewriter.vb             | 2 +-
+ .../IteratorRewriter.IteratorMethodToClassRewriter.vb       | 2 +-
+ ...tateMachineRewriter.StateMachineMethodToClassRewriter.vb | 4 ++--
+ .../Lowering/StateMachineRewriter/StateMachineRewriter.vb   | 2 +-
+ .../Compiler/Core/CompilerExtensions.projitems              | 2 +-
+ 19 files changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 05f2dcec7d6..aaa1d5b9fe5 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -2,5 +2,10 @@
+ <Project>
+   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
+   <Import Project="eng\targets\Settings.props" />
++
++  <PropertyGroup>
++    <WarningsNotAsErrors>$(WarningsNotAsErrors);CS0618;CS8600;CS8602;CS8603;CS8604;CS8777</WarningsNotAsErrors>
++  </PropertyGroup>
++
+ </Project>
+ 
+diff --git a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
+index a4ca0180881..7db58c52484 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncIteratorMethodToStateMachineRewriter.cs
+@@ -50,7 +50,7 @@ internal sealed class AsyncIteratorMethodToStateMachineRewriter : AsyncMethodToS
+             SyntheticBoundNodeFactory F,
+             FieldSymbol state,
+             FieldSymbol builder,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            IRoslynReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
+index f1c430168bf..aeb9c082ad4 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/AsyncRewriter/AsyncMethodToStateMachineRewriter.cs
+@@ -69,7 +69,7 @@ internal class AsyncMethodToStateMachineRewriter : MethodToStateMachineRewriter
+             SyntheticBoundNodeFactory F,
+             FieldSymbol state,
+             FieldSymbol builder,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            IRoslynReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
+index de5a1082eef..bb89404a901 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/IteratorRewriter/IteratorMethodToStateMachineRewriter.cs
+@@ -58,7 +58,7 @@ internal sealed partial class IteratorMethodToStateMachineRewriter : MethodToSta
+             MethodSymbol originalMethod,
+             FieldSymbol state,
+             FieldSymbol current,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            IRoslynReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+diff --git a/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs b/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
+index 9b04dc62d9a..e2f6433b504 100644
+--- a/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
++++ b/src/Compilers/CSharp/Portable/Lowering/StateMachineRewriter/MethodToStateMachineRewriter.cs
+@@ -105,7 +105,7 @@ internal abstract class MethodToStateMachineRewriter : MethodToClassRewriter
+         /// <summary>
+         /// The set of local variables and parameters that were hoisted and need a proxy.
+         /// </summary>
+-        private readonly IReadOnlySet<Symbol> _hoistedVariables;
++        private readonly IRoslynReadOnlySet<Symbol> _hoistedVariables;
+ 
+         private readonly SynthesizedLocalOrdinalsDispenser _synthesizedLocalOrdinals;
+         private int _nextFreeHoistedLocalSlot;
+@@ -115,7 +115,7 @@ internal abstract class MethodToStateMachineRewriter : MethodToClassRewriter
+             SyntheticBoundNodeFactory F,
+             MethodSymbol originalMethod,
+             FieldSymbol state,
+-            IReadOnlySet<Symbol> hoistedVariables,
++            IRoslynReadOnlySet<Symbol> hoistedVariables,
+             IReadOnlyDictionary<Symbol, CapturedSymbolReplacement> nonReusableLocalProxies,
+             SynthesizedLocalOrdinalsDispenser synthesizedLocalOrdinals,
+             VariableSlotAllocator slotAllocatorOpt,
+@@ -181,7 +181,7 @@ protected override NamedTypeSymbol ContainingType
+             get { return OriginalMethod.ContainingType; }
+         }
+ 
+-        internal IReadOnlySet<Symbol> HoistedVariables
++        internal IRoslynReadOnlySet<Symbol> HoistedVariables
+         {
+             get
+             {
+diff --git a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+index 98ec812d772..f3b6f741aa1 100644
+--- a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
++++ b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+@@ -41,7 +41,7 @@
+     <Compile Include="..\Portable\InternalUtilities\CommandLineUtilities.cs" />
+     <Compile Include="..\Portable\InternalUtilities\CompilerOptionParseUtilities.cs" />
+     <Compile Include="..\Portable\InternalUtilities\Debug.cs" Link="Debug.cs" />
+-    <Compile Include="..\Portable\InternalUtilities\IReadOnlySet.cs" Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net5.0'))" />
++    <Compile Include="..\Portable\InternalUtilities\IReadOnlySet.cs" />
+     <Compile Include="..\Portable\InternalUtilities\NullableAttributes.cs" />
+     <Compile Include="..\Portable\InternalUtilities\PlatformInformation.cs" />
+     <Compile Include="..\Portable\InternalUtilities\ReflectionUtilities.cs" />
+diff --git a/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs b/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
+index 4657da780d9..582740fc77e 100644
+--- a/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
++++ b/src/Compilers/Core/Portable/Collections/IOrderedReadOnlySet.cs
+@@ -9,7 +9,7 @@
+ 
+ namespace Microsoft.CodeAnalysis.Collections
+ {
+-    internal interface IOrderedReadOnlySet<T> : IReadOnlySet<T>, IReadOnlyList<T>
++    internal interface IOrderedReadOnlySet<T> : IRoslynReadOnlySet<T>, IReadOnlyList<T>
+     {
+     }
+ }
+diff --git a/src/Compilers/Core/Portable/Collections/OrderedSet.cs b/src/Compilers/Core/Portable/Collections/OrderedSet.cs
+index 20fb33a2537..f9e65be054f 100644
+--- a/src/Compilers/Core/Portable/Collections/OrderedSet.cs
++++ b/src/Compilers/Core/Portable/Collections/OrderedSet.cs
+@@ -12,7 +12,7 @@
+ 
+ namespace Microsoft.CodeAnalysis.Collections
+ {
+-    internal sealed class OrderedSet<T> : IEnumerable<T>, IReadOnlySet<T>, IReadOnlyList<T>, IOrderedReadOnlySet<T>
++    internal sealed class OrderedSet<T> : IEnumerable<T>, IRoslynReadOnlySet<T>, IReadOnlyList<T>, IOrderedReadOnlySet<T>
+     {
+         private readonly HashSet<T> _set;
+         private readonly ArrayBuilder<T> _list;
+diff --git a/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs b/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
+index 2b6ecd4fb09..09e94fbde9e 100644
+--- a/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
++++ b/src/Compilers/Core/Portable/CommandLine/CommonCompiler.cs
+@@ -79,7 +79,7 @@ internal abstract partial class CommonCompiler
+         /// The set of source file paths that are in the set of embedded paths.
+         /// This is used to prevent reading source files that are embedded twice.
+         /// </summary>
+-        public IReadOnlySet<string> EmbeddedSourcePaths { get; }
++        public IRoslynReadOnlySet<string> EmbeddedSourcePaths { get; }
+ 
+         private readonly HashSet<Diagnostic> _reportedDiagnostics = new HashSet<Diagnostic>();
+ 
+@@ -477,7 +477,7 @@ private ImmutableArray<EmbeddedText> AcquireEmbeddedTexts(Compilation compilatio
+             OrderedSet<string> embeddedFiles,
+             DiagnosticBag diagnostics);
+ 
+-        private static IReadOnlySet<string> GetEmbeddedSourcePaths(CommandLineArguments arguments)
++        private static IRoslynReadOnlySet<string> GetEmbeddedSourcePaths(CommandLineArguments arguments)
+         {
+             if (arguments.EmbeddedFiles.IsEmpty)
+             {
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/IReadOnlySet.cs b/src/Compilers/Core/Portable/InternalUtilities/IReadOnlySet.cs
+index 5f47d8919b9..b26dcd33985 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/IReadOnlySet.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/IReadOnlySet.cs
+@@ -6,7 +6,7 @@
+ 
+ namespace Roslyn.Utilities
+ {
+-    internal interface IReadOnlySet<T>
++    internal interface IRoslynReadOnlySet<T>
+     {
+         int Count { get; }
+         bool Contains(T item);
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/SetWithInsertionOrder.cs b/src/Compilers/Core/Portable/InternalUtilities/SetWithInsertionOrder.cs
+index d434b2e0e03..492747f49fd 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/SetWithInsertionOrder.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/SetWithInsertionOrder.cs
+@@ -16,7 +16,7 @@ namespace Roslyn.Utilities
+     /// A set that returns the inserted values in insertion order.
+     /// The mutation operations are not thread-safe.
+     /// </summary>
+-    internal sealed class SetWithInsertionOrder<T> : IEnumerable<T>, IReadOnlySet<T>
++    internal sealed class SetWithInsertionOrder<T> : IEnumerable<T>, IRoslynReadOnlySet<T>
+     {
+         private HashSet<T>? _set = null;
+         private ArrayBuilder<T>? _elements = null;
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.Empty.Set.cs b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.Empty.Set.cs
+index e3d2913874f..09bc73f1259 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.Empty.Set.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.Empty.Set.cs
+@@ -13,7 +13,7 @@ internal partial class SpecializedCollections
+     {
+         private partial class Empty
+         {
+-            internal class Set<T> : Collection<T>, ISet<T>, IReadOnlySet<T>
++            internal class Set<T> : Collection<T>, ISet<T>, IRoslynReadOnlySet<T>
+             {
+                 public static new readonly Set<T> Instance = new Set<T>();
+ 
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.ReadOnly.Set.cs b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.ReadOnly.Set.cs
+index 9a5781bd211..c98be316408 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.ReadOnly.Set.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.ReadOnly.Set.cs
+@@ -13,7 +13,7 @@ internal partial class SpecializedCollections
+     {
+         private partial class ReadOnly
+         {
+-            internal class Set<TUnderlying, T> : Collection<TUnderlying, T>, ISet<T>, IReadOnlySet<T>
++            internal class Set<TUnderlying, T> : Collection<TUnderlying, T>, ISet<T>, IRoslynReadOnlySet<T>
+                 where TUnderlying : ISet<T>
+             {
+                 public Set(TUnderlying underlying)
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.cs b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.cs
+index ac84a167127..3a4fd5dd7b7 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/SpecializedCollections.cs
+@@ -45,7 +45,7 @@ public static ISet<T> EmptySet<T>()
+             return Empty.Set<T>.Instance;
+         }
+ 
+-        public static IReadOnlySet<T> EmptyReadOnlySet<T>()
++        public static IRoslynReadOnlySet<T> EmptyReadOnlySet<T>()
+         {
+             return Empty.Set<T>.Instance;
+         }
+@@ -106,7 +106,7 @@ public static ISet<T> ReadOnlySet<T>(ISet<T>? set)
+                 : new ReadOnly.Set<ISet<T>, T>(set);
+         }
+ 
+-        public static IReadOnlySet<T> StronglyTypedReadOnlySet<T>(ISet<T>? set)
++        public static IRoslynReadOnlySet<T> StronglyTypedReadOnlySet<T>(ISet<T>? set)
+         {
+             return set == null || set.Count == 0
+                 ? EmptyReadOnlySet<T>()
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
+index 5af5c2cc0ca..3b33b02547e 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.AsyncMethodToClassRewriter.vb
+@@ -64,7 +64,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                            F As SyntheticBoundNodeFactory,
+                            state As FieldSymbol,
+                            builder As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As IRoslynReadOnlySet(Of Symbol),
+                            nonReusableLocalProxies As Dictionary(Of Symbol, CapturedSymbolOrExpression),
+                            synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
+index 52b80e5587b..d8a36d91a8f 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/IteratorRewriter/IteratorRewriter.IteratorMethodToClassRewriter.vb
+@@ -28,7 +28,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                            F As SyntheticBoundNodeFactory,
+                            state As FieldSymbol,
+                            current As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As IRoslynReadOnlySet(Of Symbol),
+                            localProxies As Dictionary(Of Symbol, FieldSymbol),
+                            SynthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
+index 771a40fff78..b951da8d836 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.StateMachineMethodToClassRewriter.vb
+@@ -62,14 +62,14 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' <summary>
+             ''' The set of local variables and parameters that were hoisted and need a proxy.
+             ''' </summary>
+-            Private ReadOnly _hoistedVariables As IReadOnlySet(Of Symbol) = Nothing
++            Private ReadOnly _hoistedVariables As IRoslynReadOnlySet(Of Symbol) = Nothing
+ 
+             Private ReadOnly _synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser
+             Private ReadOnly _nextFreeHoistedLocalSlot As Integer
+ 
+             Public Sub New(F As SyntheticBoundNodeFactory,
+                            stateField As FieldSymbol,
+-                           hoistedVariables As IReadOnlySet(Of Symbol),
++                           hoistedVariables As IRoslynReadOnlySet(Of Symbol),
+                            initialProxies As Dictionary(Of Symbol, TProxy),
+                            synthesizedLocalOrdinals As SynthesizedLocalOrdinalsDispenser,
+                            slotAllocatorOpt As VariableSlotAllocator,
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
+index 5ba8b540387..ead64574128 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/StateMachineRewriter/StateMachineRewriter.vb
+@@ -32,7 +32,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         Protected StateField As FieldSymbol
+         Protected nonReusableLocalProxies As Dictionary(Of Symbol, TProxy)
+         Protected nextFreeHoistedLocalSlot As Integer
+-        Protected hoistedVariables As IReadOnlySet(Of Symbol)
++        Protected hoistedVariables As IRoslynReadOnlySet(Of Symbol)
+         Protected InitialParameters As Dictionary(Of Symbol, TProxy)
+ 
+         Protected Sub New(body As BoundStatement,
+diff --git a/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/CompilerExtensions.projitems b/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/CompilerExtensions.projitems
+index edda3ef935f..7e8add9bbc2 100644
+--- a/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/CompilerExtensions.projitems
++++ b/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/CompilerExtensions.projitems
+@@ -12,7 +12,7 @@
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\Debug.cs" Link="InternalUtilities\Debug.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\EnumerableExtensions.cs" Link="InternalUtilities\EnumerableExtensions.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\ExceptionUtilities.cs" Link="InternalUtilities\ExceptionUtilities.cs" />
+-    <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\IReadOnlySet.cs" Link="InternalUtilities\IReadOnlySet.cs" Condition="!$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)', 'net5.0'))" />
++    <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\IReadOnlySet.cs" Link="InternalUtilities\IReadOnlySet.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\KeyValuePairUtil.cs" Link="InternalUtilities\KeyValuePairUtil.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\NonCopyableAttribute.cs" Link="InternalUtilities\NonCopyableAttribute.cs" />
+     <Compile Include="$(MSBuildThisFileDirectory)..\..\..\..\Compilers\Core\Portable\InternalUtilities\NonDefaultableAttribute.cs" Link="InternalUtilities\NonDefaultableAttribute.cs" />
+-- 
+2.25.4
+

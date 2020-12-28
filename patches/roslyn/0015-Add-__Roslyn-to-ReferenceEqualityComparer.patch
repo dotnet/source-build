@@ -1,0 +1,1263 @@
+From c89b2ce89de9e9219450120ddc2f0b986822a180 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 29 Dec 2020 00:49:54 -0600
+Subject: [PATCH 4/5] Add "__Roslyn" to ReferenceEqualityComparer
+
+net5.0 introduces ReferenceEqualityComparer, conflicting with Roslyn's definition.
+---
+ .../Portable/Binder/LocalBinderFactory.cs     |  2 +-
+ .../CSharp/Portable/CodeGen/Optimizer.cs      |  2 +-
+ .../EditAndContinue/CSharpSymbolMatcher.cs    |  8 ++---
+ .../Portable/Emitter/NoPia/EmbeddedType.cs    |  2 +-
+ .../Emitter/NoPia/EmbeddedTypesManager.cs     |  4 +--
+ .../Portable/FlowAnalysis/AbstractFlowPass.cs |  2 +-
+ .../Source/SourceMemberContainerSymbol.cs     |  2 +-
+ .../Source/TypeParameterConstraintClause.cs   |  2 +-
+ .../Symbols/Tuples/TupleTypeSymbol.cs         |  4 +--
+ .../CSharp/Portable/Symbols/TypeMap.cs        | 10 +++---
+ .../Test/Emit/CodeGen/CodeGenTupleTest.cs     | 10 +++---
+ .../Semantic/Semantics/NativeIntegerTests.cs  |  4 +--
+ .../Test/Semantic/Semantics/OutVarTests.cs    | 34 +++++++++----------
+ .../Semantics/PatternMatchingTestBase.cs      | 18 +++++-----
+ .../Symbols/Metadata/PE/LoadingProperties.cs  | 10 +++---
+ .../MetadataReferenceTests.cs                 |  4 +--
+ .../Core/Portable/CodeGen/ILBuilder.cs        |  2 +-
+ .../Core/Portable/CodeGen/ItemTokenMap.cs     |  2 +-
+ .../Core/Portable/CodeGen/LocalSlotManager.cs |  2 +-
+ .../Core/Portable/Compilation/Compilation.cs  |  2 +-
+ .../DiagnosticAnalyzer/AnalyzerDriver.cs      |  2 +-
+ .../DiagnosticAnalyzer/DiagnosticAnalyzer.cs  |  2 +-
+ .../Portable/Emit/CommonPEModuleBuilder.cs    |  4 +--
+ .../Emit/NoPia/EmbeddedTypesManager.cs        | 10 +++---
+ .../ReferenceEqualityComparer.cs              |  8 ++---
+ .../CommonReferenceManager.Resolution.cs      |  6 ++--
+ .../Portable/Serialization/ObjectWriter.cs    |  2 +-
+ .../Portable/Binding/Binder_Query.vb          |  6 ++--
+ .../Portable/Binding/MemberSemanticModel.vb   |  2 +-
+ .../Portable/Compilation/MethodCompiler.vb    |  4 +--
+ .../Compilation/TypeCompilationState.vb       |  6 ++--
+ .../VisualBasicSymbolMatcher.vb               |  8 ++---
+ .../Portable/Emit/NoPia/EmbeddedType.vb       |  2 +-
+ .../Emit/NoPia/EmbeddedTypesManager.vb        |  4 +--
+ .../Portable/Emit/PEModuleBuilder.vb          |  2 +-
+ .../Portable/Emit/SymbolTranslator.vb         |  2 +-
+ .../AsyncRewriter.SpillFieldAllocator.vb      |  2 +-
+ .../DiagnosticsPass_ExpressionLambdas.vb      |  2 +-
+ .../LambdaRewriter/LambdaRewriter.Analysis.vb | 14 ++++----
+ .../Lowering/LocalRewriter/LocalRewriter.vb   |  4 +--
+ .../LocalRewriter_LocalDeclaration.vb         |  2 +-
+ .../Operations/VisualBasicOperationFactory.vb |  2 +-
+ .../BlockContexts/CompilationUnitContext.vb   |  6 ++--
+ .../Portable/Semantics/OverloadResolution.vb  |  2 +-
+ .../TypeInference/TypeArgumentInference.vb    |  2 +-
+ ...EmbeddedSymbolManager.SymbolsCollection.vb |  4 +--
+ .../Source/SourceMemberContainerTypeSymbol.vb |  6 ++--
+ .../Symbols/Source/SourceModuleSymbol.vb      |  2 +-
+ .../Symbols/Tuples/TupleTypeSymbol.vb         |  4 +--
+ .../SymbolsTests/InstantiatingGenerics.vb     |  8 ++---
+ .../Shared/Utilities/ClassificationTypeMap.cs |  2 +-
+ .../SolutionCrawlerRegistrationService.cs     |  2 +-
+ .../CommonObjectFormatter.Visitor.cs          |  2 +-
+ .../Utilities/Portable/Assert/AssertXml.cs    |  4 +--
+ .../Utilities/FSharpClassificationTypeMap.cs  |  2 +-
+ .../AbstractExtensionManager.cs               |  4 +--
+ .../Portable/Utilities/ReferenceHolder`1.cs   |  4 +--
+ 57 files changed, 138 insertions(+), 138 deletions(-)
+
+diff --git a/src/Compilers/CSharp/Portable/Binder/LocalBinderFactory.cs b/src/Compilers/CSharp/Portable/Binder/LocalBinderFactory.cs
+index 7a025be2810..7c9634ef245 100644
+--- a/src/Compilers/CSharp/Portable/Binder/LocalBinderFactory.cs
++++ b/src/Compilers/CSharp/Portable/Binder/LocalBinderFactory.cs
+@@ -132,7 +132,7 @@ private LocalBinderFactory(Symbol containingMemberOrLambda, SyntaxNode root, Bin
+             Debug.Assert((object)containingMemberOrLambda != null);
+             Debug.Assert(containingMemberOrLambda.Kind != SymbolKind.Local && containingMemberOrLambda.Kind != SymbolKind.RangeVariable && containingMemberOrLambda.Kind != SymbolKind.Parameter);
+ 
+-            _map = new SmallDictionary<SyntaxNode, Binder>(ReferenceEqualityComparer.Instance);
++            _map = new SmallDictionary<SyntaxNode, Binder>(ReferenceEqualityComparer__Roslyn.Instance);
+             _containingMemberOrLambda = containingMemberOrLambda;
+             _enclosing = enclosing;
+             _root = root;
+diff --git a/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs b/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
+index 235012cdd3b..29ff3ea1115 100644
+--- a/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
++++ b/src/Compilers/CSharp/Portable/CodeGen/Optimizer.cs
+@@ -404,7 +404,7 @@ internal sealed class StackOptimizerPass1 : BoundTreeRewriter
+         // we do that by placing a fake dummy local at one end of a branch and force that it is accessible at another.
+         // if any stack local tries to intervene and misbalance the stack, it will clash with the dummy and will be rejected.
+         private readonly SmallDictionary<object, DummyLocal> _dummyVariables =
+-            new SmallDictionary<object, DummyLocal>(ReferenceEqualityComparer.Instance);
++            new SmallDictionary<object, DummyLocal>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+ 
+         // fake local that represents the eval stack.
+diff --git a/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs b/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
+index 394c33edc6f..7fab75b9743 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/EditAndContinue/CSharpSymbolMatcher.cs
+@@ -90,7 +90,7 @@ private abstract class MatchDefs
+             public MatchDefs(EmitContext sourceContext)
+             {
+                 _sourceContext = sourceContext;
+-                _matches = new ConcurrentDictionary<Cci.IDefinition, Cci.IDefinition>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Cci.IDefinition, Cci.IDefinition>(ReferenceEqualityComparer__Roslyn.Instance);
+             }
+ 
+             public Cci.IDefinition VisitDef(Cci.IDefinition def)
+@@ -306,8 +306,8 @@ private sealed class MatchSymbols : CSharpSymbolVisitor<Symbol>
+                 _otherAssembly = otherAssembly;
+                 _otherSynthesizedMembersOpt = otherSynthesizedMembersOpt;
+                 _comparer = new SymbolComparer(this, deepTranslatorOpt);
+-                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer.Instance);
+-                _otherMembers = new ConcurrentDictionary<ISymbolInternal, IReadOnlyDictionary<string, ImmutableArray<ISymbolInternal>>>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer__Roslyn.Instance);
++                _otherMembers = new ConcurrentDictionary<ISymbolInternal, IReadOnlyDictionary<string, ImmutableArray<ISymbolInternal>>>(ReferenceEqualityComparer__Roslyn.Instance);
+             }
+ 
+             internal bool TryGetAnonymousTypeName(AnonymousTypeManager.AnonymousTypeTemplateSymbol type, out string name, out int index)
+@@ -938,7 +938,7 @@ internal sealed class DeepTranslator : CSharpSymbolVisitor<Symbol>
+ 
+             public DeepTranslator(NamedTypeSymbol systemObject)
+             {
+-                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer.Instance);
++                _matches = new ConcurrentDictionary<Symbol, Symbol>(ReferenceEqualityComparer__Roslyn.Instance);
+                 _systemObject = systemObject;
+             }
+ 
+diff --git a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
+index 70bbbf6b476..33bee2709db 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedType.cs
+@@ -56,7 +56,7 @@ public void EmbedAllMembersOfImplementedInterface(SyntaxNode syntaxNodeOpt, Diag
+         protected override int GetAssemblyRefIndex()
+         {
+             ImmutableArray<AssemblySymbol> refs = TypeManager.ModuleBeingBuilt.SourceModule.GetReferencedAssemblySymbols();
+-            return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer.Instance);
++            return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer__Roslyn.Instance);
+         }
+ 
+         protected override bool IsPublic
+diff --git a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
+index 4785f8e1335..a1dab2d0e4d 100644
+--- a/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
++++ b/src/Compilers/CSharp/Portable/Emitter/NoPia/EmbeddedTypesManager.cs
+@@ -18,8 +18,8 @@ namespace Microsoft.CodeAnalysis.CSharp.Emit.NoPia
+     internal sealed class EmbeddedTypesManager :
+         EmbeddedTypesManager<PEModuleBuilder, ModuleCompilationState, EmbeddedTypesManager, SyntaxNode, CSharpAttributeData, Symbol, AssemblySymbol, NamedTypeSymbol, FieldSymbol, MethodSymbol, EventSymbol, PropertySymbol, ParameterSymbol, TypeParameterSymbol, EmbeddedType, EmbeddedField, EmbeddedMethod, EmbeddedEvent, EmbeddedProperty, EmbeddedParameter, EmbeddedTypeParameter>
+     {
+-        private readonly ConcurrentDictionary<AssemblySymbol, string> _assemblyGuidMap = new ConcurrentDictionary<AssemblySymbol, string>(ReferenceEqualityComparer.Instance);
+-        private readonly ConcurrentDictionary<Symbol, bool> _reportedSymbolsMap = new ConcurrentDictionary<Symbol, bool>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<AssemblySymbol, string> _assemblyGuidMap = new ConcurrentDictionary<AssemblySymbol, string>(ReferenceEqualityComparer__Roslyn.Instance);
++        private readonly ConcurrentDictionary<Symbol, bool> _reportedSymbolsMap = new ConcurrentDictionary<Symbol, bool>(ReferenceEqualityComparer__Roslyn.Instance);
+         private NamedTypeSymbol _lazySystemStringType = ErrorTypeSymbol.UnknownResultType;
+         private readonly MethodSymbol[] _lazyWellKnownTypeMethods;
+ 
+diff --git a/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs b/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
+index 8faf469215a..eed390bf09d 100644
+--- a/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
++++ b/src/Compilers/CSharp/Portable/FlowAnalysis/AbstractFlowPass.cs
+@@ -206,7 +206,7 @@ protected void Unsplit()
+             this.methodMainNode = node;
+             this.firstInRegion = firstInRegion;
+             this.lastInRegion = lastInRegion;
+-            _loopHeadState = new Dictionary<BoundLoopStatement, TLocalState>(ReferenceEqualityComparer.Instance);
++            _loopHeadState = new Dictionary<BoundLoopStatement, TLocalState>(ReferenceEqualityComparer__Roslyn.Instance);
+             TrackingRegions = trackRegions;
+             _nonMonotonicTransfer = nonMonotonicTransferFunction;
+         }
+diff --git a/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs b/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
+index 880befb620d..904acfacb6e 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/Source/SourceMemberContainerSymbol.cs
+@@ -2150,7 +2150,7 @@ private void CheckFiniteFlatteningGraph(DiagnosticBag diagnostics)
+         {
+             Debug.Assert(ReferenceEquals(this, this.OriginalDefinition));
+             if (AllTypeArgumentCount() == 0) return;
+-            var instanceMap = new Dictionary<NamedTypeSymbol, NamedTypeSymbol>(ReferenceEqualityComparer.Instance);
++            var instanceMap = new Dictionary<NamedTypeSymbol, NamedTypeSymbol>(ReferenceEqualityComparer__Roslyn.Instance);
+             instanceMap.Add(this, this);
+             foreach (var m in this.GetMembersUnordered())
+             {
+diff --git a/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs b/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
+index 26479dd94a2..25e48c49dc7 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/Source/TypeParameterConstraintClause.cs
+@@ -135,7 +135,7 @@ internal sealed class TypeParameterConstraintClause
+ 
+             if (isValueTypeOverride == null)
+             {
+-                var isValueTypeOverrideBuilder = new Dictionary<TypeParameterSymbol, bool>(typeParameters.Length, ReferenceEqualityComparer.Instance);
++                var isValueTypeOverrideBuilder = new Dictionary<TypeParameterSymbol, bool>(typeParameters.Length, ReferenceEqualityComparer__Roslyn.Instance);
+ 
+                 foreach (TypeParameterSymbol typeParameter in typeParameters)
+                 {
+diff --git a/src/Compilers/CSharp/Portable/Symbols/Tuples/TupleTypeSymbol.cs b/src/Compilers/CSharp/Portable/Symbols/Tuples/TupleTypeSymbol.cs
+index 8f8f5130635..d53f30c6d52 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/Tuples/TupleTypeSymbol.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/Tuples/TupleTypeSymbol.cs
+@@ -602,7 +602,7 @@ protected ArrayBuilder<Symbol> AddOrWrapTupleMembers(ImmutableArray<Symbol> curr
+                             }
+ 
+                             var underlyingField = field is TupleElementFieldSymbol tupleElement ? tupleElement.UnderlyingField.OriginalDefinition : field.OriginalDefinition;
+-                            int tupleFieldIndex = currentFieldsForElements.IndexOf(underlyingField, ReferenceEqualityComparer.Instance);
++                            int tupleFieldIndex = currentFieldsForElements.IndexOf(underlyingField, ReferenceEqualityComparer__Roslyn.Instance);
+                             if (underlyingField is TupleErrorFieldSymbol)
+                             {
+                                 // We will re-add all necessary error field symbols below.
+@@ -1058,7 +1058,7 @@ ImmutableArray<FieldSymbol> collectTupleElementFields(NamedTypeSymbol tuple)
+ 
+             private SmallDictionary<Symbol, Symbol> ComputeDefinitionToMemberMap()
+             {
+-                var map = new SmallDictionary<Symbol, Symbol>(ReferenceEqualityComparer.Instance);
++                var map = new SmallDictionary<Symbol, Symbol>(ReferenceEqualityComparer__Roslyn.Instance);
+                 var members = TupleUnderlyingType.GetMembers();
+ 
+                 // Go in reverse because we want members with default name, which precede the ones with
+diff --git a/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs b/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
+index ca63f6c528b..7c7517bd655 100644
+--- a/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
++++ b/src/Compilers/CSharp/Portable/Symbols/TypeMap.cs
+@@ -46,7 +46,7 @@ internal TypeMap(ImmutableArray<TypeParameterSymbol> from, ImmutableArray<TypePa
+         }
+ 
+         private TypeMap(SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> mapping)
+-            : base(new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(mapping, ReferenceEqualityComparer.Instance))
++            : base(new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(mapping, ReferenceEqualityComparer__Roslyn.Instance))
+         {
+             // mapping contents are read-only hereafter
+         }
+@@ -55,8 +55,8 @@ private TypeMap(SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> mappin
+         {
+             var substituted = containingType as SubstitutedNamedTypeSymbol;
+             return (object)substituted != null ?
+-                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(substituted.TypeSubstitution.Mapping, ReferenceEqualityComparer.Instance) :
+-                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(substituted.TypeSubstitution.Mapping, ReferenceEqualityComparer__Roslyn.Instance) :
++                new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer__Roslyn.Instance);
+         }
+ 
+         internal TypeMap(NamedTypeSymbol containingType, ImmutableArray<TypeParameterSymbol> typeParameters, ImmutableArray<TypeWithAnnotations> typeArguments)
+@@ -74,7 +74,7 @@ internal TypeMap(NamedTypeSymbol containingType, ImmutableArray<TypeParameterSym
+         }
+ 
+         private static readonly SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> s_emptyDictionary =
+-            new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++            new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+         private TypeMap()
+             : base(s_emptyDictionary)
+@@ -191,7 +191,7 @@ internal TypeMap WithAlphaRename(MethodSymbol oldOwner, Symbol newOwner, out Imm
+ 
+         private static SmallDictionary<TypeParameterSymbol, TypeWithAnnotations> ConstructMapping(ImmutableArray<TypeParameterSymbol> from, ImmutableArray<TypeWithAnnotations> to)
+         {
+-            var mapping = new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer.Instance);
++            var mapping = new SmallDictionary<TypeParameterSymbol, TypeWithAnnotations>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+             Debug.Assert(from.Length == to.Length);
+ 
+diff --git a/src/Compilers/CSharp/Test/Emit/CodeGen/CodeGenTupleTest.cs b/src/Compilers/CSharp/Test/Emit/CodeGen/CodeGenTupleTest.cs
+index fe7d28dd301..cdb09297576 100644
+--- a/src/Compilers/CSharp/Test/Emit/CodeGen/CodeGenTupleTest.cs
++++ b/src/Compilers/CSharp/Test/Emit/CodeGen/CodeGenTupleTest.cs
+@@ -15415,10 +15415,10 @@ public override string ToString()
+             Assert.False(m1thisGet.IsImplicitlyDeclared);
+         }
+ 
+-        private class SyntaxReferenceEqualityComparer : IEqualityComparer<SyntaxReference>
++        private class SyntaxReferenceEqualityComparer__Roslyn : IEqualityComparer<SyntaxReference>
+         {
+-            public static readonly SyntaxReferenceEqualityComparer Instance = new SyntaxReferenceEqualityComparer();
+-            private SyntaxReferenceEqualityComparer() { }
++            public static readonly SyntaxReferenceEqualityComparer__Roslyn Instance = new SyntaxReferenceEqualityComparer__Roslyn();
++            private SyntaxReferenceEqualityComparer__Roslyn() { }
+ 
+             public bool Equals(SyntaxReference x, SyntaxReference y)
+             {
+@@ -15602,7 +15602,7 @@ public void Test((T1, T2) val, System.Action<T1> d)
+             Assert.Same(m1Tuple, m1E1.ContainingSymbol);
+             Assert.True(m1E1.GetAttributes().IsEmpty);
+             Assert.Null(m1E1.GetUseSiteDiagnostic());
+-            Assert.True(m1E1.DeclaringSyntaxReferences.SequenceEqual(m1E1.DeclaringSyntaxReferences, SyntaxReferenceEqualityComparer.Instance));
++            Assert.True(m1E1.DeclaringSyntaxReferences.SequenceEqual(m1E1.DeclaringSyntaxReferences, SyntaxReferenceEqualityComparer__Roslyn.Instance));
+             Assert.False(m1E1.IsImplicitlyDeclared);
+             Assert.True(m1E1Add.Equals(m1E1.AddMethod, TypeCompareKind.ConsiderEverything));
+             Assert.True(m1E1Remove.Equals(m1E1.RemoveMethod, TypeCompareKind.ConsiderEverything));
+@@ -15633,7 +15633,7 @@ public void Test((T1, T2) val, System.Action<T1> d)
+             Assert.Same(m1Tuple, m1E2.ContainingSymbol);
+             Assert.True(m1E2.GetAttributes().IsEmpty);
+             Assert.Null(m1E2.GetUseSiteDiagnostic());
+-            Assert.True(m1E2.DeclaringSyntaxReferences.SequenceEqual(m1E2.DeclaringSyntaxReferences, SyntaxReferenceEqualityComparer.Instance));
++            Assert.True(m1E2.DeclaringSyntaxReferences.SequenceEqual(m1E2.DeclaringSyntaxReferences, SyntaxReferenceEqualityComparer__Roslyn.Instance));
+             Assert.False(m1E2.IsImplicitlyDeclared);
+             Assert.NotSame(m1E2Add, m1E2.AddMethod);
+             Assert.True(m1E2Add.Equals(m1E2.AddMethod, TypeCompareKind.ConsiderEverything));
+diff --git a/src/Compilers/CSharp/Test/Semantic/Semantics/NativeIntegerTests.cs b/src/Compilers/CSharp/Test/Semantic/Semantics/NativeIntegerTests.cs
+index 9e033e39e59..b83d9cb0193 100644
+--- a/src/Compilers/CSharp/Test/Semantic/Semantics/NativeIntegerTests.cs
++++ b/src/Compilers/CSharp/Test/Semantic/Semantics/NativeIntegerTests.cs
+@@ -15,7 +15,7 @@
+ using Roslyn.Test.Utilities;
+ using Roslyn.Utilities;
+ using Xunit;
+-using ReferenceEqualityComparer = Roslyn.Utilities.ReferenceEqualityComparer;
++using ReferenceEqualityComparer__Roslyn = Roslyn.Utilities.ReferenceEqualityComparer__Roslyn;
+ 
+ namespace Microsoft.CodeAnalysis.CSharp.UnitTests.Semantics
+ {
+@@ -459,7 +459,7 @@ private static void VerifyMembers(INamedTypeSymbol type)
+         {
+             var memberNames = type.MemberNames;
+             var allMembers = type.GetMembers();
+-            Assert.Equal(allMembers, type.GetMembers(), ReferenceEqualityComparer.Instance); // same member instances
++            Assert.Equal(allMembers, type.GetMembers(), ReferenceEqualityComparer__Roslyn.Instance); // same member instances
+ 
+             foreach (var member in allMembers)
+             {
+diff --git a/src/Compilers/CSharp/Test/Semantic/Semantics/OutVarTests.cs b/src/Compilers/CSharp/Test/Semantic/Semantics/OutVarTests.cs
+index 473c87dc55f..2209212d6c0 100644
+--- a/src/Compilers/CSharp/Test/Semantic/Semantics/OutVarTests.cs
++++ b/src/Compilers/CSharp/Test/Semantic/Semantics/OutVarTests.cs
+@@ -16,7 +16,7 @@
+ using Roslyn.Utilities;
+ using Microsoft.CodeAnalysis.Diagnostics;
+ using static Roslyn.Test.Utilities.TestMetadata;
+-using ReferenceEqualityComparer = Roslyn.Utilities.ReferenceEqualityComparer;
++using ReferenceEqualityComparer__Roslyn = Roslyn.Utilities.ReferenceEqualityComparer__Roslyn;
+ 
+ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
+ {
+@@ -1111,26 +1111,26 @@ private static void VerifyDataFlow(SemanticModel model, DeclarationExpressionSyn
+             if (isExecutableCode)
+             {
+                 Assert.True(dataFlow.Succeeded);
+-                Assert.True(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer.Instance));
++                Assert.True(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+                 if (!isDelegateCreation)
+                 {
+-                    Assert.True(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                    Assert.True(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                    Assert.True(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                    Assert.True(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+                     var flowsIn = FlowsIn(dataFlowParent, decl, references);
+                     Assert.Equal(flowsIn,
+-                                 dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer.Instance));
++                                 dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+                     Assert.Equal(flowsIn,
+-                                 dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                                 dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+                     Assert.Equal(FlowsOut(dataFlowParent, decl, references),
+-                                 dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer.Instance));
++                                 dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+                     Assert.Equal(ReadOutside(dataFlowParent, references),
+-                                 dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                                 dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+                     Assert.Equal(WrittenOutside(dataFlowParent, references),
+-                                 dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                                 dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+                 }
+             }
+         }
+@@ -32710,14 +32710,14 @@ static void Main(string[] args)
+ 
+                     if (dataFlow.Succeeded)
+                     {
+-                        Assert.False(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                        Assert.False(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+                     }
+                 }
+             }
+diff --git a/src/Compilers/CSharp/Test/Semantic/Semantics/PatternMatchingTestBase.cs b/src/Compilers/CSharp/Test/Semantic/Semantics/PatternMatchingTestBase.cs
+index fa7d739b766..92ed1df8211 100644
+--- a/src/Compilers/CSharp/Test/Semantic/Semantics/PatternMatchingTestBase.cs
++++ b/src/Compilers/CSharp/Test/Semantic/Semantics/PatternMatchingTestBase.cs
+@@ -12,7 +12,7 @@
+ using Roslyn.Test.Utilities;
+ using Xunit;
+ using Roslyn.Utilities;
+-using ReferenceEqualityComparer = Roslyn.Utilities.ReferenceEqualityComparer;
++using ReferenceEqualityComparer__Roslyn = Roslyn.Utilities.ReferenceEqualityComparer__Roslyn;
+ 
+ namespace Microsoft.CodeAnalysis.CSharp.UnitTests
+ {
+@@ -329,14 +329,14 @@ protected static void VerifyNotInScope(SemanticModel model, IdentifierNameSyntax
+ 
+                     if (dataFlow.Succeeded)
+                     {
+-                        Assert.False(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
+-                        Assert.False(dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer.Instance));
++                        Assert.False(dataFlow.VariablesDeclared.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.AlwaysAssigned.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.WrittenInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.DataFlowsIn.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.ReadInside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.DataFlowsOut.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.ReadOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
++                        Assert.False(dataFlow.WrittenOutside.Contains(symbol, ReferenceEqualityComparer__Roslyn.Instance));
+                     }
+                 }
+             }
+diff --git a/src/Compilers/CSharp/Test/Symbol/Symbols/Metadata/PE/LoadingProperties.cs b/src/Compilers/CSharp/Test/Symbol/Symbols/Metadata/PE/LoadingProperties.cs
+index 48348290849..64319a5056a 100644
+--- a/src/Compilers/CSharp/Test/Symbol/Symbols/Metadata/PE/LoadingProperties.cs
++++ b/src/Compilers/CSharp/Test/Symbol/Symbols/Metadata/PE/LoadingProperties.cs
+@@ -261,21 +261,21 @@ public void TestExplicitImplementationMultipleAndPartial()
+             Assert.NotNull(classProperty2.SetMethod);
+ 
+             var implementedByProperty1 = ImmutableArray.Create<PropertySymbol>(interfaceProperty1, interfaceProperty4, interfaceProperty5);
+-            Assert.True(implementedByProperty1.SetEquals(classProperty1.ExplicitInterfaceImplementations, ReferenceEqualityComparer.Instance));
++            Assert.True(implementedByProperty1.SetEquals(classProperty1.ExplicitInterfaceImplementations, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             Assert.Equal(0, classProperty2.ExplicitInterfaceImplementations.Length);
+ 
+             var implementedByGetter1 = ImmutableArray.Create<MethodSymbol>(interfaceProperty1.GetMethod, interfaceProperty2.GetMethod, interfaceProperty4.GetMethod);
+-            Assert.True(implementedByGetter1.SetEquals(classProperty1.GetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer.Instance));
++            Assert.True(implementedByGetter1.SetEquals(classProperty1.GetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             var implementedBySetter1 = ImmutableArray.Create<MethodSymbol>(interfaceProperty1.SetMethod, interfaceProperty3.SetMethod, interfaceProperty5.SetMethod);
+-            Assert.True(implementedBySetter1.SetEquals(classProperty1.SetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer.Instance));
++            Assert.True(implementedBySetter1.SetEquals(classProperty1.SetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             var implementedByGetter2 = ImmutableArray.Create<MethodSymbol>(interfaceProperty3.GetMethod);
+-            Assert.True(implementedByGetter2.SetEquals(classProperty2.GetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer.Instance));
++            Assert.True(implementedByGetter2.SetEquals(classProperty2.GetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             var implementedBySetter2 = ImmutableArray.Create<MethodSymbol>(interfaceProperty2.SetMethod);
+-            Assert.True(implementedBySetter2.SetEquals(classProperty2.SetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer.Instance));
++            Assert.True(implementedBySetter2.SetEquals(classProperty2.SetMethod.ExplicitInterfaceImplementations, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             Assert.Same(classProperty1, @class.FindImplementationForInterfaceMember(interfaceProperty1));
+             Assert.Same(classProperty1, @class.FindImplementationForInterfaceMember(interfaceProperty4));
+diff --git a/src/Compilers/Core/CodeAnalysisTest/MetadataReferences/MetadataReferenceTests.cs b/src/Compilers/Core/CodeAnalysisTest/MetadataReferences/MetadataReferenceTests.cs
+index 1f3e1f3534d..a049c0727e2 100644
+--- a/src/Compilers/Core/CodeAnalysisTest/MetadataReferences/MetadataReferenceTests.cs
++++ b/src/Compilers/Core/CodeAnalysisTest/MetadataReferences/MetadataReferenceTests.cs
+@@ -460,7 +460,7 @@ protected override PortableExecutableReference WithPropertiesImpl(MetadataRefere
+         [Fact]
+         public void Equivalence()
+         {
+-            var comparer = CommonReferenceManager<CS.CSharpCompilation, IAssemblySymbolInternal>.MetadataReferenceEqualityComparer.Instance;
++            var comparer = CommonReferenceManager<CS.CSharpCompilation, IAssemblySymbolInternal>.MetadataReferenceEqualityComparer__Roslyn.Instance;
+ 
+             var f1 = MscorlibRef;
+             var f2 = SystemCoreRef;
+@@ -505,7 +505,7 @@ public void Equivalence()
+         [Fact]
+         public void PortableReference_Display()
+         {
+-            var comparer = CommonReferenceManager<CS.CSharpCompilation, IAssemblySymbolInternal>.MetadataReferenceEqualityComparer.Instance;
++            var comparer = CommonReferenceManager<CS.CSharpCompilation, IAssemblySymbolInternal>.MetadataReferenceEqualityComparer__Roslyn.Instance;
+ 
+             var f1 = MscorlibRef;
+             var f2 = SystemCoreRef;
+diff --git a/src/Compilers/Core/Portable/CodeGen/ILBuilder.cs b/src/Compilers/Core/Portable/CodeGen/ILBuilder.cs
+index 47e8d452bb4..309fd0ebf96 100644
+--- a/src/Compilers/Core/Portable/CodeGen/ILBuilder.cs
++++ b/src/Compilers/Core/Portable/CodeGen/ILBuilder.cs
+@@ -76,7 +76,7 @@ internal ILBuilder(ITokenDeferral module, LocalSlotManager localSlotManager, Opt
+ 
+             leaderBlock = _currentBlock = _scopeManager.CreateBlock(this);
+ 
+-            _labelInfos = new SmallDictionary<object, LabelInfo>(ReferenceEqualityComparer.Instance);
++            _labelInfos = new SmallDictionary<object, LabelInfo>(ReferenceEqualityComparer__Roslyn.Instance);
+             _optimizations = optimizations;
+             _areLocalsZeroed = areLocalsZeroed;
+         }
+diff --git a/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs b/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
+index 1e1175c08c2..34bac5fddc6 100644
+--- a/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
++++ b/src/Compilers/Core/Portable/CodeGen/ItemTokenMap.cs
+@@ -20,7 +20,7 @@ namespace Microsoft.CodeAnalysis.CodeGen
+     /// </summary>
+     internal sealed class ItemTokenMap<T> where T : class
+     {
+-        private readonly ConcurrentDictionary<T, uint> _itemToToken = new ConcurrentDictionary<T, uint>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentDictionary<T, uint> _itemToToken = new ConcurrentDictionary<T, uint>(ReferenceEqualityComparer__Roslyn.Instance);
+         private readonly ArrayBuilder<T> _items = new ArrayBuilder<T>();
+ 
+         public uint GetOrAddTokenFor(T item)
+diff --git a/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs b/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
+index b28f13d1b3e..9f88ceee619 100644
+--- a/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
++++ b/src/Compilers/Core/Portable/CodeGen/LocalSlotManager.cs
+@@ -95,7 +95,7 @@ public LocalSlotManager(VariableSlotAllocator? slotAllocator)
+                 var map = _localMap;
+                 if (map == null)
+                 {
+-                    map = new Dictionary<ILocalSymbolInternal, LocalDefinition>(ReferenceEqualityComparer.Instance);
++                    map = new Dictionary<ILocalSymbolInternal, LocalDefinition>(ReferenceEqualityComparer__Roslyn.Instance);
+                     _localMap = map;
+                 }
+ 
+diff --git a/src/Compilers/Core/Portable/Compilation/Compilation.cs b/src/Compilers/Core/Portable/Compilation/Compilation.cs
+index a2991157b6b..20638d8ce4a 100644
+--- a/src/Compilers/Core/Portable/Compilation/Compilation.cs
++++ b/src/Compilers/Core/Portable/Compilation/Compilation.cs
+@@ -1026,7 +1026,7 @@ public INamedTypeSymbol CreateNativeIntegerTypeSymbol(bool signed)
+         // is that there are maybe a couple dozen analyzers in the solution and each one has
+         // ~0-2 unique well-known types, and the chance of hash collision is very low.
+         private readonly ConcurrentCache<string, INamedTypeSymbol?> _getTypeCache =
+-            new ConcurrentCache<string, INamedTypeSymbol?>(50, ReferenceEqualityComparer.Instance);
++            new ConcurrentCache<string, INamedTypeSymbol?>(50, ReferenceEqualityComparer__Roslyn.Instance);
+ 
+         /// <summary>
+         /// Gets the type within the compilation's assembly and all referenced assemblies (other than
+diff --git a/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs b/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
+index 5671fe5f212..bbfecfe0795 100644
+--- a/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
++++ b/src/Compilers/Core/Portable/DiagnosticAnalyzer/AnalyzerDriver.cs
+@@ -360,7 +360,7 @@ protected AnalyzerDriver(ImmutableArray<DiagnosticAnalyzer> analyzers, AnalyzerM
+             _severityFilter = severityFilter;
+             _hasDiagnosticSuppressors = this.Analyzers.Any(a => a is DiagnosticSuppressor);
+             _programmaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Suppression>() : null;
+-            _diagnosticsProcessedForProgrammaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Diagnostic>(ReferenceEqualityComparer.Instance) : null;
++            _diagnosticsProcessedForProgrammaticSuppressions = _hasDiagnosticSuppressors ? new ConcurrentSet<Diagnostic>(ReferenceEqualityComparer__Roslyn.Instance) : null;
+             _lazyAnalyzerGateMap = ImmutableDictionary<DiagnosticAnalyzer, SemaphoreSlim>.Empty;
+         }
+ 
+diff --git a/src/Compilers/Core/Portable/DiagnosticAnalyzer/DiagnosticAnalyzer.cs b/src/Compilers/Core/Portable/DiagnosticAnalyzer/DiagnosticAnalyzer.cs
+index 16b774b3893..f1901e26c49 100644
+--- a/src/Compilers/Core/Portable/DiagnosticAnalyzer/DiagnosticAnalyzer.cs
++++ b/src/Compilers/Core/Portable/DiagnosticAnalyzer/DiagnosticAnalyzer.cs
+@@ -32,7 +32,7 @@ public sealed override bool Equals(object? obj)
+ 
+         public sealed override int GetHashCode()
+         {
+-            return ReferenceEqualityComparer.GetHashCode(this);
++            return ReferenceEqualityComparer__Roslyn.GetHashCode(this);
+         }
+ 
+         public sealed override string ToString()
+diff --git a/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs b/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
+index 00bf03d15d0..2c33083e8cf 100644
+--- a/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
++++ b/src/Compilers/Core/Portable/Emit/CommonPEModuleBuilder.cs
+@@ -64,7 +64,7 @@ internal abstract class CommonPEModuleBuilder : Cci.IUnit, Cci.IModuleReference
+             DebugDocumentsBuilder = new DebugDocumentsBuilder(compilation.Options.SourceReferenceResolver, compilation.IsCaseSensitive);
+             OutputKind = outputKind;
+             SerializationProperties = serializationProperties;
+-            _methodBodyMap = new ConcurrentDictionary<IMethodSymbolInternal, Cci.IMethodBody>(ReferenceEqualityComparer.Instance);
++            _methodBodyMap = new ConcurrentDictionary<IMethodSymbolInternal, Cci.IMethodBody>(ReferenceEqualityComparer__Roslyn.Instance);
+             EmitOptions = emitOptions;
+         }
+ 
+@@ -738,7 +738,7 @@ public ImmutableArray<ISymbolInternal> GetAllMembers()
+         }
+ 
+         private readonly ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions> _synthesizedTypeMembers =
+-            new ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions>(ReferenceEqualityComparer.Instance);
++            new ConcurrentDictionary<TNamedTypeSymbol, SynthesizedDefinitions>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+         private ConcurrentDictionary<INamespaceSymbolInternal, ConcurrentQueue<INamespaceOrTypeSymbolInternal>> _lazySynthesizedNamespaceMembers;
+ 
+diff --git a/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs b/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
+index 1429a9b9d0e..d9f13888259 100644
+--- a/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
++++ b/src/Compilers/Core/Portable/Emit/NoPia/EmbeddedTypesManager.cs
+@@ -64,11 +64,11 @@ internal abstract partial class EmbeddedTypesManager<
+     {
+         public readonly TPEModuleBuilder ModuleBeingBuilt;
+ 
+-        public readonly ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType> EmbeddedTypesMap = new ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TFieldSymbol, TEmbeddedField> EmbeddedFieldsMap = new ConcurrentDictionary<TFieldSymbol, TEmbeddedField>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod> EmbeddedMethodsMap = new ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty> EmbeddedPropertiesMap = new ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty>(ReferenceEqualityComparer.Instance);
+-        public readonly ConcurrentDictionary<TEventSymbol, TEmbeddedEvent> EmbeddedEventsMap = new ConcurrentDictionary<TEventSymbol, TEmbeddedEvent>(ReferenceEqualityComparer.Instance);
++        public readonly ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType> EmbeddedTypesMap = new ConcurrentDictionary<TNamedTypeSymbol, TEmbeddedType>(ReferenceEqualityComparer__Roslyn.Instance);
++        public readonly ConcurrentDictionary<TFieldSymbol, TEmbeddedField> EmbeddedFieldsMap = new ConcurrentDictionary<TFieldSymbol, TEmbeddedField>(ReferenceEqualityComparer__Roslyn.Instance);
++        public readonly ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod> EmbeddedMethodsMap = new ConcurrentDictionary<TMethodSymbol, TEmbeddedMethod>(ReferenceEqualityComparer__Roslyn.Instance);
++        public readonly ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty> EmbeddedPropertiesMap = new ConcurrentDictionary<TPropertySymbol, TEmbeddedProperty>(ReferenceEqualityComparer__Roslyn.Instance);
++        public readonly ConcurrentDictionary<TEventSymbol, TEmbeddedEvent> EmbeddedEventsMap = new ConcurrentDictionary<TEventSymbol, TEmbeddedEvent>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+         private ImmutableArray<TEmbeddedType> _frozen;
+ 
+diff --git a/src/Compilers/Core/Portable/InternalUtilities/ReferenceEqualityComparer.cs b/src/Compilers/Core/Portable/InternalUtilities/ReferenceEqualityComparer.cs
+index 2a7870dd9c9..31c5d0771b1 100644
+--- a/src/Compilers/Core/Portable/InternalUtilities/ReferenceEqualityComparer.cs
++++ b/src/Compilers/Core/Portable/InternalUtilities/ReferenceEqualityComparer.cs
+@@ -12,11 +12,11 @@ namespace Roslyn.Utilities
+     /// <summary>
+     /// Compares objects based upon their reference identity.
+     /// </summary>
+-    internal class ReferenceEqualityComparer : IEqualityComparer<object?>
++    internal class ReferenceEqualityComparer__Roslyn : IEqualityComparer<object?>
+     {
+-        public static readonly ReferenceEqualityComparer Instance = new ReferenceEqualityComparer();
++        public static readonly ReferenceEqualityComparer__Roslyn Instance = new ReferenceEqualityComparer__Roslyn();
+ 
+-        private ReferenceEqualityComparer()
++        private ReferenceEqualityComparer__Roslyn()
+         {
+         }
+ 
+@@ -27,7 +27,7 @@ private ReferenceEqualityComparer()
+ 
+         int IEqualityComparer<object?>.GetHashCode(object? a)
+         {
+-            return ReferenceEqualityComparer.GetHashCode(a);
++            return ReferenceEqualityComparer__Roslyn.GetHashCode(a);
+         }
+ 
+         public static int GetHashCode(object? a)
+diff --git a/src/Compilers/Core/Portable/ReferenceManager/CommonReferenceManager.Resolution.cs b/src/Compilers/Core/Portable/ReferenceManager/CommonReferenceManager.Resolution.cs
+index 339921374ab..8dcd6032f38 100644
+--- a/src/Compilers/Core/Portable/ReferenceManager/CommonReferenceManager.Resolution.cs
++++ b/src/Compilers/Core/Portable/ReferenceManager/CommonReferenceManager.Resolution.cs
+@@ -221,7 +221,7 @@ public ReferencedAssemblyIdentity(AssemblyIdentity identity, MetadataReference r
+             Dictionary<MetadataReference, MergedAliases>? lazyAliasMap = null;
+ 
+             // Used to filter out duplicate references that reference the same file (resolve to the same full normalized path).
+-            var boundReferences = new Dictionary<MetadataReference, MetadataReference>(MetadataReferenceEqualityComparer.Instance);
++            var boundReferences = new Dictionary<MetadataReference, MetadataReference>(MetadataReferenceEqualityComparer__Roslyn.Instance);
+ 
+             ArrayBuilder<MetadataReference>? uniqueDirectiveReferences = (referenceDirectiveLocations != null) ? ArrayBuilder<MetadataReference>.GetInstance() : null;
+             var assembliesBuilder = ArrayBuilder<AssemblyData>.GetInstance();
+@@ -550,9 +550,9 @@ private bool TryGetObservedMetadata(PortableExecutableReference peReference, Dia
+         /// Determines whether references are the same. Compilation references are the same if they refer to the same compilation.
+         /// Otherwise, references are represented by their object identities.
+         /// </summary>
+-        internal sealed class MetadataReferenceEqualityComparer : IEqualityComparer<MetadataReference>
++        internal sealed class MetadataReferenceEqualityComparer__Roslyn : IEqualityComparer<MetadataReference>
+         {
+-            internal static readonly MetadataReferenceEqualityComparer Instance = new MetadataReferenceEqualityComparer();
++            internal static readonly MetadataReferenceEqualityComparer__Roslyn Instance = new MetadataReferenceEqualityComparer__Roslyn();
+ 
+             public bool Equals(MetadataReference? x, MetadataReference? y)
+             {
+diff --git a/src/Compilers/Core/Portable/Serialization/ObjectWriter.cs b/src/Compilers/Core/Portable/Serialization/ObjectWriter.cs
+index 457a8bab9b4..d599b9b55d8 100644
+--- a/src/Compilers/Core/Portable/Serialization/ObjectWriter.cs
++++ b/src/Compilers/Core/Portable/Serialization/ObjectWriter.cs
+@@ -388,7 +388,7 @@ private struct WriterReferenceMap
+             private int _nextId;
+ 
+             private static readonly ObjectPool<Dictionary<object, int>> s_referenceDictionaryPool =
+-                new ObjectPool<Dictionary<object, int>>(() => new Dictionary<object, int>(128, ReferenceEqualityComparer.Instance));
++                new ObjectPool<Dictionary<object, int>>(() => new Dictionary<object, int>(128, ReferenceEqualityComparer__Roslyn.Instance));
+ 
+             private static readonly ObjectPool<Dictionary<object, int>> s_valueDictionaryPool =
+                 new ObjectPool<Dictionary<object, int>>(() => new Dictionary<object, int>(128));
+diff --git a/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb b/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
+index a09ab6c59fa..e3dc08a1d07 100644
+--- a/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
++++ b/src/Compilers/VisualBasic/Portable/Binding/Binder_Query.vb
+@@ -3754,9 +3754,9 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Public Overrides Function VisitRangeVariable(node As BoundRangeVariable) As BoundNode
+                     Dim rangeVariable As RangeVariableSymbol = node.RangeVariable
+ 
+-                    If _outerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    If _outerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer__Roslyn.Instance) >= 0 Then
+                         _side = _side Or Result.Outer
+-                    ElseIf _innerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    ElseIf _innerRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer__Roslyn.Instance) >= 0 Then
+                         _side = _side Or Result.Inner
+                     End If
+ 
+@@ -3806,7 +3806,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Public Overrides Function VisitRangeVariable(node As BoundRangeVariable) As BoundNode
+                     Dim rangeVariable As RangeVariableSymbol = node.RangeVariable
+ 
+-                    If _badRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer.Instance) >= 0 Then
++                    If _badRangeVariables.IndexOf(rangeVariable, ReferenceEqualityComparer__Roslyn.Instance) >= 0 Then
+                         ReportDiagnostic(_diagnostics, node.Syntax, _errorInfo)
+                     End If
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb b/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
+index bf7d8e86314..f7bc36b01d7 100644
+--- a/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
++++ b/src/Compilers/VisualBasic/Portable/Binding/MemberSemanticModel.vb
+@@ -1214,7 +1214,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         '' map, so that we can answer GetEnclosingBinder questions.
+ 
+         ' The bound nodes associated with syntaxnode, from highest in the tree to lowest.
+-        Private ReadOnly _guardedNodeMap As New SmallDictionary(Of SyntaxNode, ImmutableArray(Of BoundNode))(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _guardedNodeMap As New SmallDictionary(Of SyntaxNode, ImmutableArray(Of BoundNode))(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+         Private ReadOnly _guardedQueryBindersMap As New Dictionary(Of SyntaxNode, ImmutableArray(Of Binder))()
+         Private ReadOnly _guardedAnonymousTypeBinderMap As New Dictionary(Of FieldInitializerSyntax, Binder.AnonymousTypeFieldInitializerBinder)()
+diff --git a/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb b/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
+index 49fa92ca18d..883f5515dba 100644
+--- a/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
++++ b/src/Compilers/VisualBasic/Portable/Compilation/MethodCompiler.vb
+@@ -322,7 +322,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+ 
+         Private Sub ProcessEmbeddedMethods()
+             Dim manager = _compilation.EmbeddedSymbolManager
+-            Dim processedSymbols As New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Dim processedSymbols As New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+ 
+             Dim methodOrdinal = 0
+@@ -1777,7 +1777,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                    Not node.Method.IsShared AndAlso node.Method.OriginalDefinition.ContainingType Is _containingType Then
+ 
+                     If _calledMethods Is Nothing Then
+-                        _calledMethods = New HashSet(Of MethodSymbol)(ReferenceEqualityComparer.Instance)
++                        _calledMethods = New HashSet(Of MethodSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+                     End If
+ 
+                     _calledMethods.Add(node.Method.OriginalDefinition)
+diff --git a/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb b/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
+index da4c143a616..d3f06ea6fe4 100644
+--- a/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
++++ b/src/Compilers/VisualBasic/Portable/Compilation/TypeCompilationState.vb
+@@ -48,7 +48,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         ''' <summary>
+         ''' A mapping from (source) iterator or async methods to the compiler-generated classes that implement them.
+         ''' </summary>
+-        Public ReadOnly StateMachineImplementationClass As New Dictionary(Of MethodSymbol, NamedTypeSymbol)(ReferenceEqualityComparer.Instance)
++        Public ReadOnly StateMachineImplementationClass As New Dictionary(Of MethodSymbol, NamedTypeSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+         ''' <summary> 
+         ''' Map of 'MyBase' or 'MyClass' call wrappers; actually each method symbol will 
+@@ -134,7 +134,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+ #End If
+ 
+             If _initializeComponentCallTree Is Nothing Then
+-                _initializeComponentCallTree = New Dictionary(Of MethodSymbol, ImmutableArray(Of MethodSymbol))(ReferenceEqualityComparer.Instance)
++                _initializeComponentCallTree = New Dictionary(Of MethodSymbol, ImmutableArray(Of MethodSymbol))(ReferenceEqualityComparer__Roslyn.Instance)
+             End If
+ 
+             _initializeComponentCallTree.Add(method, callees)
+@@ -147,7 +147,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+                 Return False
+             End If
+ 
+-            Return CallsInitializeComponent(method, New HashSet(Of MethodSymbol)(ReferenceEqualityComparer.Instance))
++            Return CallsInitializeComponent(method, New HashSet(Of MethodSymbol)(ReferenceEqualityComparer__Roslyn.Instance))
+         End Function
+ 
+         Private Function CallsInitializeComponent(method As MethodSymbol, visited As HashSet(Of MethodSymbol)) As Boolean
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb b/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
+index fc56440ef51..40619f949ea 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/EditAndContinue/VisualBasicSymbolMatcher.vb
+@@ -74,7 +74,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+ 
+             Public Sub New(sourceContext As EmitContext)
+                 Me._sourceContext = sourceContext
+-                Me._matches = New ConcurrentDictionary(Of Cci.IDefinition, Cci.IDefinition)(ReferenceEqualityComparer.Instance)
++                Me._matches = New ConcurrentDictionary(Of Cci.IDefinition, Cci.IDefinition)(ReferenceEqualityComparer__Roslyn.Instance)
+             End Sub
+ 
+             Public Function VisitDef(def As Cci.IDefinition) As Cci.IDefinition
+@@ -248,8 +248,8 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+                 _otherAssembly = otherAssembly
+                 _otherSynthesizedMembersOpt = otherSynthesizedMembersOpt
+                 _comparer = New SymbolComparer(Me, deepTranslatorOpt)
+-                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
+-                _otherMembers = New ConcurrentDictionary(Of ISymbolInternal, IReadOnlyDictionary(Of String, ImmutableArray(Of ISymbolInternal)))(ReferenceEqualityComparer.Instance)
++                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
++                _otherMembers = New ConcurrentDictionary(Of ISymbolInternal, IReadOnlyDictionary(Of String, ImmutableArray(Of ISymbolInternal)))(ReferenceEqualityComparer__Roslyn.Instance)
+             End Sub
+ 
+             Friend Function TryGetAnonymousTypeName(type As AnonymousTypeManager.AnonymousTypeOrDelegateTemplateSymbol, <Out> ByRef name As String, <Out> ByRef index As Integer) As Boolean
+@@ -680,7 +680,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+             Private ReadOnly _systemObject As NamedTypeSymbol
+ 
+             Public Sub New(systemObject As NamedTypeSymbol)
+-                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
++                _matches = New ConcurrentDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+                 _systemObject = systemObject
+             End Sub
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
+index 141577fe4a9..8d773b95051 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedType.vb
+@@ -48,7 +48,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit.NoPia
+ 
+         Protected Overrides Function GetAssemblyRefIndex() As Integer
+             Dim refs = TypeManager.ModuleBeingBuilt.SourceModule.GetReferencedAssemblySymbols()
+-            Return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer.Instance)
++            Return refs.IndexOf(UnderlyingNamedType.ContainingAssembly, ReferenceEqualityComparer__Roslyn.Instance)
+         End Function
+ 
+         Protected Overrides ReadOnly Property IsPublic As Boolean
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
+index 840f68d521b..b664f42a975 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/NoPia/EmbeddedTypesManager.vb
+@@ -13,8 +13,8 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit.NoPia
+     Friend NotInheritable Class EmbeddedTypesManager
+         Inherits Microsoft.CodeAnalysis.Emit.NoPia.EmbeddedTypesManager(Of PEModuleBuilder, ModuleCompilationState, EmbeddedTypesManager, SyntaxNode, VisualBasicAttributeData, Symbol, AssemblySymbol, NamedTypeSymbol, FieldSymbol, MethodSymbol, EventSymbol, PropertySymbol, ParameterSymbol, TypeParameterSymbol, EmbeddedType, EmbeddedField, EmbeddedMethod, EmbeddedEvent, EmbeddedProperty, EmbeddedParameter, EmbeddedTypeParameter)
+ 
+-        Private ReadOnly _assemblyGuidMap As New ConcurrentDictionary(Of AssemblySymbol, String)(ReferenceEqualityComparer.Instance)
+-        Private ReadOnly _reportedSymbolsMap As New ConcurrentDictionary(Of Symbol, Boolean)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _assemblyGuidMap As New ConcurrentDictionary(Of AssemblySymbol, String)(ReferenceEqualityComparer__Roslyn.Instance)
++        Private ReadOnly _reportedSymbolsMap As New ConcurrentDictionary(Of Symbol, Boolean)(ReferenceEqualityComparer__Roslyn.Instance)
+         Private _lazySystemStringType As NamedTypeSymbol = ErrorTypeSymbol.UnknownResultType
+         Private ReadOnly _lazyWellKnownTypeMethods As MethodSymbol()
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb b/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
+index 72d0c9a0662..e2d50fc3fa3 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/PEModuleBuilder.vb
+@@ -18,7 +18,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+         Inherits PEModuleBuilder(Of VisualBasicCompilation, SourceModuleSymbol, AssemblySymbol, TypeSymbol, NamedTypeSymbol, MethodSymbol, SyntaxNode, NoPia.EmbeddedTypesManager, ModuleCompilationState)
+ 
+         ' Not many methods should end up here.
+-        Private ReadOnly _disableJITOptimization As ConcurrentDictionary(Of MethodSymbol, Boolean) = New ConcurrentDictionary(Of MethodSymbol, Boolean)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _disableJITOptimization As ConcurrentDictionary(Of MethodSymbol, Boolean) = New ConcurrentDictionary(Of MethodSymbol, Boolean)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+         ' Gives the name of this module (may not reflect the name of the underlying symbol).
+         ' See Assembly.MetadataName.
+diff --git a/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb b/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
+index 5c03d518f25..0d18b8dbf43 100644
+--- a/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
++++ b/src/Compilers/VisualBasic/Portable/Emit/SymbolTranslator.vb
+@@ -38,7 +38,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Emit
+             Debug.Assert(symbol.ContainingModule Is Me.SourceModule)
+ 
+             If _addedEmbeddedSymbols Is Nothing Then
+-                Interlocked.CompareExchange(_addedEmbeddedSymbols, New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer.Instance), Nothing)
++                Interlocked.CompareExchange(_addedEmbeddedSymbols, New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer__Roslyn.Instance), Nothing)
+             End If
+ 
+             Dim manager = SourceModule.ContainingSourceAssembly.DeclaringCompilation.EmbeddedSymbolManager
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.SpillFieldAllocator.vb b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.SpillFieldAllocator.vb
+index fcb345e1992..4d4af8cb8ca 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.SpillFieldAllocator.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/AsyncRewriter/AsyncRewriter.SpillFieldAllocator.vb
+@@ -24,7 +24,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         Private Class SpillFieldAllocator
+             Private ReadOnly _F As SyntheticBoundNodeFactory
+             Private ReadOnly _allocatedFields As New KeyedStack(Of TypeSymbol, FieldSymbol)
+-            Private ReadOnly _realizedSpills As New HashSet(Of FieldSymbol)(ReferenceEqualityComparer.Instance)
++            Private ReadOnly _realizedSpills As New HashSet(Of FieldSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             Private _nextHoistedFieldId As Integer
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/Diagnostics/DiagnosticsPass_ExpressionLambdas.vb b/src/Compilers/VisualBasic/Portable/Lowering/Diagnostics/DiagnosticsPass_ExpressionLambdas.vb
+index cc23275e14a..457f6d270bf 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/Diagnostics/DiagnosticsPass_ExpressionLambdas.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/Diagnostics/DiagnosticsPass_ExpressionLambdas.vb
+@@ -11,7 +11,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+ 
+     Partial Friend Class DiagnosticsPass
+ 
+-        Private ReadOnly _expressionTreePlaceholders As New HashSet(Of BoundNode)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _expressionTreePlaceholders As New HashSet(Of BoundNode)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+         Public Overrides Function VisitObjectCreationExpression(node As BoundObjectCreationExpression) As BoundNode
+             If Me.IsInExpressionLambda Then
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb b/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
+index 0e59257cac7..a9d86303424 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/LambdaRewriter/LambdaRewriter.Analysis.vb
+@@ -48,19 +48,19 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' For each statement with captured variables, identifies the nearest enclosing statement with captured variables.
+             ''' </summary>
+             Friend blockParent As Dictionary(Of BoundNode, BoundNode) = New Dictionary(Of BoundNode, BoundNode)()
+-            Friend lambdaParent As Dictionary(Of LambdaSymbol, MethodSymbol) = New Dictionary(Of LambdaSymbol, MethodSymbol)(ReferenceEqualityComparer.Instance)
++            Friend lambdaParent As Dictionary(Of LambdaSymbol, MethodSymbol) = New Dictionary(Of LambdaSymbol, MethodSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' For each captured variable, identifies the statement in which it will be moved to a frame class.  This is
+             ''' normally the block where the variable is introduced, but method parameters are moved
+             ''' to a frame class within the body of the method.
+             ''' </summary>
+-            Friend variableScope As Dictionary(Of Symbol, BoundNode) = New Dictionary(Of Symbol, BoundNode)(ReferenceEqualityComparer.Instance)
++            Friend variableScope As Dictionary(Of Symbol, BoundNode) = New Dictionary(Of Symbol, BoundNode)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' For a given label, the nearest enclosing block that captures variables
+             ''' </summary>
+-            Friend labelBlock As Dictionary(Of LabelSymbol, BoundNode) = New Dictionary(Of LabelSymbol, BoundNode)(ReferenceEqualityComparer.Instance)
++            Friend labelBlock As Dictionary(Of LabelSymbol, BoundNode) = New Dictionary(Of LabelSymbol, BoundNode)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' For a given goto, the nearest enclosing block that captures variables
+@@ -101,17 +101,17 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' <summary>
+             ''' The set of captured variables seen in the method body.
+             ''' </summary>
+-            Friend capturedVariables As HashSet(Of Symbol) = New HashSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Friend capturedVariables As HashSet(Of Symbol) = New HashSet(Of Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' For each lambda in the code, the set of variables that it captures.
+             ''' </summary>
+-            Friend capturedVariablesByLambda As MultiDictionary(Of LambdaSymbol, Symbol) = New MultiDictionary(Of LambdaSymbol, Symbol)(ReferenceEqualityComparer.Instance)
++            Friend capturedVariablesByLambda As MultiDictionary(Of LambdaSymbol, Symbol) = New MultiDictionary(Of LambdaSymbol, Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' The set of variables that were declared anywhere inside an expression lambda.
+             ''' </summary>
+-            Friend ReadOnly declaredInsideExpressionLambda As New HashSet(Of Symbol)(ReferenceEqualityComparer.Instance)
++            Friend ReadOnly declaredInsideExpressionLambda As New HashSet(Of Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+             ''' <summary>
+             ''' Set to true while we are analyzing the interior of an expression lambda.
+@@ -165,7 +165,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             ''' Create the optimized plan for the location of lambda methods and whether scopes need access to parent scopes
+             '''  </summary>
+             Friend Sub ComputeLambdaScopesAndFrameCaptures()
+-                lambdaScopes = New Dictionary(Of LambdaSymbol, BoundNode)(ReferenceEqualityComparer.Instance)
++                lambdaScopes = New Dictionary(Of LambdaSymbol, BoundNode)(ReferenceEqualityComparer__Roslyn.Instance)
+                 needsParentFrame = New HashSet(Of BoundNode)
+ 
+                 For Each kvp In capturedVariablesByLambda
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter.vb b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter.vb
+index bdcf176c474..0ddc9c2d72d 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter.vb
+@@ -43,7 +43,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         ''' A map from SyntaxNode to corresponding visited BoundStatement.
+         ''' Used to ensure correct generation of resumable code for Unstructured Exception Handling.
+         ''' </summary>
+-        Private ReadOnly _unstructuredExceptionHandlingResumableStatements As New Dictionary(Of SyntaxNode, BoundStatement)(ReferenceEqualityComparer.Instance)
++        Private ReadOnly _unstructuredExceptionHandlingResumableStatements As New Dictionary(Of SyntaxNode, BoundStatement)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+         Private ReadOnly _leaveRestoreUnstructuredExceptionHandlingContextTracker As New Stack(Of BoundNode)()
+ #End If
+@@ -52,7 +52,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+         ''' <summary>
+         ''' Used to prevent multiple rewrite of the same nodes.
+         ''' </summary>
+-        Private _rewrittenNodes As New HashSet(Of BoundNode)(ReferenceEqualityComparer.Instance)
++        Private _rewrittenNodes As New HashSet(Of BoundNode)(ReferenceEqualityComparer__Roslyn.Instance)
+ #End If
+ 
+         ''' <summary>
+diff --git a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
+index 7fec8327b7e..c528559e9cb 100644
+--- a/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
++++ b/src/Compilers/VisualBasic/Portable/Lowering/LocalRewriter/LocalRewriter_LocalDeclaration.vb
+@@ -130,7 +130,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic
+             Debug.Assert(localSymbol.IsStatic)
+ 
+             If _staticLocalMap Is Nothing Then
+-                _staticLocalMap = New Dictionary(Of LocalSymbol, KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField))(ReferenceEqualityComparer.Instance)
++                _staticLocalMap = New Dictionary(Of LocalSymbol, KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField))(ReferenceEqualityComparer__Roslyn.Instance)
+             End If
+ 
+             Dim result As New KeyValuePair(Of SynthesizedStaticLocalBackingField, SynthesizedStaticLocalBackingField)(
+diff --git a/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb b/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
+index 70fd9df876c..0990d75c010 100644
+--- a/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
++++ b/src/Compilers/VisualBasic/Portable/Operations/VisualBasicOperationFactory.vb
+@@ -55,7 +55,7 @@ Namespace Microsoft.CodeAnalysis.Operations
+ 
+             If _lazyPlaceholderToParentMap Is Nothing Then
+                 Threading.Interlocked.CompareExchange(_lazyPlaceholderToParentMap,
+-                                                      New ConcurrentDictionary(Of BoundValuePlaceholderBase, BoundNode)(concurrencyLevel:=2, capacity:=10, comparer:=ReferenceEqualityComparer.Instance),
++                                                      New ConcurrentDictionary(Of BoundValuePlaceholderBase, BoundNode)(concurrencyLevel:=2, capacity:=10, comparer:=ReferenceEqualityComparer__Roslyn.Instance),
+                                                       Nothing)
+             End If
+ 
+diff --git a/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb b/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
+index 94ca4007d10..4d958a81cb6 100644
+--- a/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
++++ b/src/Compilers/VisualBasic/Portable/Parser/BlockContexts/CompilationUnitContext.vb
+@@ -164,7 +164,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ 
+                 If notClosedIfDirectives IsNot Nothing Then
+                     rewriter._notClosedIfDirectives =
+-                        New HashSet(Of IfDirectiveTriviaSyntax)(ReferenceEqualityComparer.Instance)
++                        New HashSet(Of IfDirectiveTriviaSyntax)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+                     For Each node In notClosedIfDirectives
+                         rewriter._notClosedIfDirectives.Add(node)
+@@ -173,7 +173,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ 
+                 If notClosedRegionDirectives IsNot Nothing Then
+                     rewriter._notClosedRegionDirectives =
+-                        New HashSet(Of RegionDirectiveTriviaSyntax)(ReferenceEqualityComparer.Instance)
++                        New HashSet(Of RegionDirectiveTriviaSyntax)(ReferenceEqualityComparer__Roslyn.Instance)
+ 
+                     For Each node In notClosedRegionDirectives
+                         rewriter._notClosedRegionDirectives.Add(node)
+@@ -205,7 +205,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Syntax.InternalSyntax
+ #If DEBUG Then
+             ' NOTE: the logic is heavily relying on the fact that green nodes in 
+             ' NOTE: one single tree are not reused, the following code assert this
+-            Private ReadOnly _processedNodesWithoutDuplication As HashSet(Of VisualBasicSyntaxNode) = New HashSet(Of VisualBasicSyntaxNode)(ReferenceEqualityComparer.Instance)
++            Private ReadOnly _processedNodesWithoutDuplication As HashSet(Of VisualBasicSyntaxNode) = New HashSet(Of VisualBasicSyntaxNode)(ReferenceEqualityComparer__Roslyn.Instance)
+ #End If
+ 
+             Public Overrides Function VisitCompilationUnit(node As CompilationUnitSyntax) As VisualBasicSyntaxNode
+diff --git a/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb b/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
+index 5dbbf1f4bf9..b771faa4ce7 100644
+--- a/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
++++ b/src/Compilers/VisualBasic/Portable/Semantics/OverloadResolution.vb
+@@ -3327,7 +3327,7 @@ Bailout:
+                             If bound IsNot Nothing AndAlso (bound.MethodConversionKind And MethodConversionKind.AllErrorReasons) = MethodConversionKind.Error_SubToFunction AndAlso
+                                (Not bound.Diagnostics.HasAnyErrors) Then
+                                 If asyncLambdaSubToFunctionMismatch Is Nothing Then
+-                                    asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer.Instance)
++                                    asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer__Roslyn.Instance)
+                                 End If
+ 
+                                 asyncLambdaSubToFunctionMismatch.Add(unbound)
+diff --git a/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb b/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
+index fc4a0ea90bc..8caba727daa 100644
+--- a/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
++++ b/src/Compilers/VisualBasic/Portable/Semantics/TypeInference/TypeArgumentInference.vb
+@@ -2246,7 +2246,7 @@ HandleAsAGeneralExpression:
+ 
+                                     If Not boundLambda.HasErrors AndAlso Not boundLambda.Diagnostics.HasAnyErrors() Then
+                                         If _asyncLambdaSubToFunctionMismatch Is Nothing Then
+-                                            _asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer.Instance)
++                                            _asyncLambdaSubToFunctionMismatch = New HashSet(Of BoundExpression)(ReferenceEqualityComparer__Roslyn.Instance)
+                                         End If
+ 
+                                         _asyncLambdaSubToFunctionMismatch.Add(unboundLambda)
+diff --git a/src/Compilers/VisualBasic/Portable/Symbols/EmbeddedSymbols/EmbeddedSymbolManager.SymbolsCollection.vb b/src/Compilers/VisualBasic/Portable/Symbols/EmbeddedSymbols/EmbeddedSymbolManager.SymbolsCollection.vb
+index 367b07bfb03..8a0c48dd96f 100644
+--- a/src/Compilers/VisualBasic/Portable/Symbols/EmbeddedSymbols/EmbeddedSymbolManager.SymbolsCollection.vb
++++ b/src/Compilers/VisualBasic/Portable/Symbols/EmbeddedSymbols/EmbeddedSymbolManager.SymbolsCollection.vb
+@@ -42,7 +42,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+             If (embedded And EmbeddedSymbolKind.All) <> 0 Then
+                 ' If any bits are set, EmbeddedAttribute should be set.
+                 Debug.Assert((embedded And EmbeddedSymbolKind.EmbeddedAttribute) <> 0)
+-                _symbols = New ConcurrentDictionary(Of Symbol, Boolean)(ReferenceEqualityComparer.Instance)
++                _symbols = New ConcurrentDictionary(Of Symbol, Boolean)(ReferenceEqualityComparer__Roslyn.Instance)
+             End If
+         End Sub
+ 
+@@ -145,7 +145,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+         End Sub
+ 
+         Public Sub MarkSymbolAsReferenced(symbol As Symbol)
+-            MarkSymbolAsReferenced(symbol, New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer.Instance))
++            MarkSymbolAsReferenced(symbol, New ConcurrentSet(Of Symbol)(ReferenceEqualityComparer__Roslyn.Instance))
+         End Sub
+ 
+         ''' <summary>
+diff --git a/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceMemberContainerTypeSymbol.vb b/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceMemberContainerTypeSymbol.vb
+index 980e25a12b1..6d644b20cd6 100644
+--- a/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceMemberContainerTypeSymbol.vb
++++ b/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceMemberContainerTypeSymbol.vb
+@@ -1712,7 +1712,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+ 
+ #If DEBUG Then
+             If s_SymbolsBuildingMembersAndInitializers Is Nothing Then
+-                s_SymbolsBuildingMembersAndInitializers = New HashSet(Of SourceMemberContainerTypeSymbol)(ReferenceEqualityComparer.Instance)
++                s_SymbolsBuildingMembersAndInitializers = New HashSet(Of SourceMemberContainerTypeSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+             End If
+ 
+             Dim added As Boolean = s_SymbolsBuildingMembersAndInitializers.Add(Me)
+@@ -1764,7 +1764,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+                             diagnostics.Add(ERRID.ERR_PartialMethodsMustBeSub1, method.NonMergedLocation, method.Name)
+                         Else
+                             If partialMethods Is Nothing Then
+-                                partialMethods = New HashSet(Of SourceMemberMethodSymbol)(ReferenceEqualityComparer.Instance)
++                                partialMethods = New HashSet(Of SourceMemberMethodSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+                             End If
+                             partialMethods.Add(method)
+                         End If
+@@ -3687,7 +3687,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+                             If (comparisonResults And (Not SymbolComparisonResults.MismatchesForConflictingMethods Or SymbolComparisonResults.ReturnTypeMismatch)) = 0 Then
+                                 ' Found the pair
+                                 If operatorsKnownToHavePair Is Nothing Then
+-                                    operatorsKnownToHavePair = New HashSet(Of MethodSymbol)(ReferenceEqualityComparer.Instance)
++                                    operatorsKnownToHavePair = New HashSet(Of MethodSymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+                                 End If
+ 
+                                 operatorsKnownToHavePair.Add(otherMethod)
+diff --git a/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceModuleSymbol.vb b/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceModuleSymbol.vb
+index 548b7c457ce..07661d4171b 100644
+--- a/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceModuleSymbol.vb
++++ b/src/Compilers/VisualBasic/Portable/Symbols/Source/SourceModuleSymbol.vb
+@@ -1155,7 +1155,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+                                 Dim targetType = DirectCast(prop.Type, NamedTypeSymbol)
+ 
+                                 If result Is Nothing Then
+-                                    result = New Dictionary(Of NamedTypeSymbol, SynthesizedMyGroupCollectionPropertySymbol)(ReferenceEqualityComparer.Instance)
++                                    result = New Dictionary(Of NamedTypeSymbol, SynthesizedMyGroupCollectionPropertySymbol)(ReferenceEqualityComparer__Roslyn.Instance)
+                                 ElseIf result.ContainsKey(targetType) Then
+                                     ' ambiguity
+                                     result(targetType) = Nothing
+diff --git a/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb b/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
+index 7be43f0cb2e..6c1616050f2 100644
+--- a/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
++++ b/src/Compilers/VisualBasic/Portable/Symbols/Tuples/TupleTypeSymbol.vb
+@@ -714,7 +714,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+                         Case SymbolKind.Field
+                             Dim field = DirectCast(member, FieldSymbol)
+ 
+-                            Dim tupleFieldIndex = currentFieldsForElements.IndexOf(field, ReferenceEqualityComparer.Instance)
++                            Dim tupleFieldIndex = currentFieldsForElements.IndexOf(field, ReferenceEqualityComparer__Roslyn.Instance)
+                             If tupleFieldIndex >= 0 Then
+                                 ' This is a tuple backing field
+ 
+@@ -880,7 +880,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.Symbols
+         End Sub
+ 
+         Private Function ComputeDefinitionToMemberMap() As SmallDictionary(Of Symbol, Symbol)
+-            Dim smallDictionary As SmallDictionary(Of Symbol, Symbol) = New SmallDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer.Instance)
++            Dim smallDictionary As SmallDictionary(Of Symbol, Symbol) = New SmallDictionary(Of Symbol, Symbol)(ReferenceEqualityComparer__Roslyn.Instance)
+             Dim originalDefinition As NamedTypeSymbol = Me._underlyingType.OriginalDefinition
+             Dim members As ImmutableArray(Of Symbol) = Me.GetMembers()
+             Dim i As Integer = members.Length - 1
+diff --git a/src/Compilers/VisualBasic/Test/Symbol/SymbolsTests/InstantiatingGenerics.vb b/src/Compilers/VisualBasic/Test/Symbol/SymbolsTests/InstantiatingGenerics.vb
+index dac4e205740..5c68ee1830d 100644
+--- a/src/Compilers/VisualBasic/Test/Symbol/SymbolsTests/InstantiatingGenerics.vb
++++ b/src/Compilers/VisualBasic/Test/Symbol/SymbolsTests/InstantiatingGenerics.vb
+@@ -11,7 +11,7 @@ Imports Microsoft.CodeAnalysis.VisualBasic
+ Imports Microsoft.CodeAnalysis.VisualBasic.Symbols
+ Imports Microsoft.CodeAnalysis.VisualBasic.Syntax
+ Imports Roslyn.Test.Utilities
+-Imports ReferenceEqualityComparer = Roslyn.Utilities.ReferenceEqualityComparer
++Imports ReferenceEqualityComparer__Roslyn = Roslyn.Utilities.ReferenceEqualityComparer__Roslyn
+ 
+ Namespace Microsoft.CodeAnalysis.VisualBasic.UnitTests.Symbols
+ 
+@@ -61,7 +61,7 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.UnitTests.Symbols
+             Assert.Same(originalDefinition, constructedFrom.OriginalDefinition)
+             Assert.Same(constructedFrom, constructedFromConstructedFrom)
+             Assert.Same(instantiation.ContainingSymbol, constructedFrom.ContainingSymbol)
+-            Assert.True(constructedFromTypeArguments.SequenceEqual(constructedFromTypeParameters, ReferenceEqualityComparer.Instance))
++            Assert.True(constructedFromTypeArguments.SequenceEqual(constructedFromTypeParameters, ReferenceEqualityComparer__Roslyn.Instance))
+             Assert.Equal(constructedFrom.Name, originalDefinition.Name)
+ 
+             Assert.Equal(constructedFrom.Kind, originalDefinition.Kind)
+@@ -80,9 +80,9 @@ Namespace Microsoft.CodeAnalysis.VisualBasic.UnitTests.Symbols
+             Next
+ 
+             ' Check instantiation invariants.
+-            Assert.True(typeParameters.SequenceEqual(constructedFromTypeParameters, ReferenceEqualityComparer.Instance))
++            Assert.True(typeParameters.SequenceEqual(constructedFromTypeParameters, ReferenceEqualityComparer__Roslyn.Instance))
+             Assert.True(instantiation Is constructedFrom OrElse Not typeArguments.SequenceEqual(typeParameters), String.Format("Constructed symbol {0} uses its own type parameters as type arguments", instantiation.ToTestDisplayString()))
+-            Assert.Equal(instantiation Is constructedFrom, typeArguments.SequenceEqual(typeParameters, ReferenceEqualityComparer.Instance))
++            Assert.Equal(instantiation Is constructedFrom, typeArguments.SequenceEqual(typeParameters, ReferenceEqualityComparer__Roslyn.Instance))
+             Assert.Equal(instantiation.Name, constructedFrom.Name)
+ 
+             Assert.Equal(instantiation.Kind, originalDefinition.Kind)
+diff --git a/src/EditorFeatures/Core/Shared/Utilities/ClassificationTypeMap.cs b/src/EditorFeatures/Core/Shared/Utilities/ClassificationTypeMap.cs
+index 68eb10ec47d..f09e1bbefd1 100644
+--- a/src/EditorFeatures/Core/Shared/Utilities/ClassificationTypeMap.cs
++++ b/src/EditorFeatures/Core/Shared/Utilities/ClassificationTypeMap.cs
+@@ -28,7 +28,7 @@ internal class ClassificationTypeMap
+ 
+             // Prepopulate the identity map with the constant string values from ClassificationTypeNames
+             var fields = typeof(ClassificationTypeNames).GetFields();
+-            _identityMap = new Dictionary<string, IClassificationType>(fields.Length, ReferenceEqualityComparer.Instance);
++            _identityMap = new Dictionary<string, IClassificationType>(fields.Length, ReferenceEqualityComparer__Roslyn.Instance);
+ 
+             foreach (var field in fields)
+             {
+diff --git a/src/Features/Core/Portable/SolutionCrawler/SolutionCrawlerRegistrationService.cs b/src/Features/Core/Portable/SolutionCrawler/SolutionCrawlerRegistrationService.cs
+index 0395aa804a2..78146809723 100644
+--- a/src/Features/Core/Portable/SolutionCrawler/SolutionCrawlerRegistrationService.cs
++++ b/src/Features/Core/Portable/SolutionCrawler/SolutionCrawlerRegistrationService.cs
+@@ -42,7 +42,7 @@ internal partial class SolutionCrawlerRegistrationService : ISolutionCrawlerRegi
+             _analyzerProviders = analyzerProviders.GroupBy(kv => kv.Metadata.Name).ToImmutableDictionary(g => g.Key, g => g.ToImmutableArray());
+             AssertAnalyzerProviders(_analyzerProviders);
+ 
+-            _documentWorkCoordinatorMap = new Dictionary<Workspace, WorkCoordinator>(ReferenceEqualityComparer.Instance);
++            _documentWorkCoordinatorMap = new Dictionary<Workspace, WorkCoordinator>(ReferenceEqualityComparer__Roslyn.Instance);
+             _listener = listenerProvider.GetListener(FeatureAttribute.SolutionCrawler);
+ 
+             _progressReporter = new SolutionCrawlerProgressReporter();
+diff --git a/src/Scripting/Core/Hosting/ObjectFormatter/CommonObjectFormatter.Visitor.cs b/src/Scripting/Core/Hosting/ObjectFormatter/CommonObjectFormatter.Visitor.cs
+index be6f75a8ea4..d594c3633e5 100644
+--- a/src/Scripting/Core/Hosting/ObjectFormatter/CommonObjectFormatter.Visitor.cs
++++ b/src/Scripting/Core/Hosting/ObjectFormatter/CommonObjectFormatter.Visitor.cs
+@@ -36,7 +36,7 @@ private HashSet<object> VisitedObjects
+                 {
+                     if (_lazyVisitedObjects == null)
+                     {
+-                        _lazyVisitedObjects = new HashSet<object>(ReferenceEqualityComparer.Instance);
++                        _lazyVisitedObjects = new HashSet<object>(ReferenceEqualityComparer__Roslyn.Instance);
+                     }
+ 
+                     return _lazyVisitedObjects;
+diff --git a/src/Test/Utilities/Portable/Assert/AssertXml.cs b/src/Test/Utilities/Portable/Assert/AssertXml.cs
+index 2566a6e0c18..8653330c58e 100644
+--- a/src/Test/Utilities/Portable/Assert/AssertXml.cs
++++ b/src/Test/Utilities/Portable/Assert/AssertXml.cs
+@@ -13,7 +13,7 @@
+ using System.Xml.Linq;
+ using Roslyn.Utilities;
+ using Xunit;
+-using ReferenceEqualityComparer = Roslyn.Utilities.ReferenceEqualityComparer;
++using ReferenceEqualityComparer__Roslyn = Roslyn.Utilities.ReferenceEqualityComparer__Roslyn;
+ 
+ namespace Roslyn.Test.Utilities
+ {
+@@ -173,7 +173,7 @@ private static bool CheckEqual(XElement expectedRoot, XElement actualRoot, IEqua
+                     return false;
+                 }
+ 
+-                HashSet<XElement> children2Used = new HashSet<XElement>(ReferenceEqualityComparer.Instance);
++                HashSet<XElement> children2Used = new HashSet<XElement>(ReferenceEqualityComparer__Roslyn.Instance);
+                 foreach (XElement child1 in children1)
+                 {
+                     XElement child2 = null;
+diff --git a/src/Tools/ExternalAccess/FSharp/Editor/Shared/Utilities/FSharpClassificationTypeMap.cs b/src/Tools/ExternalAccess/FSharp/Editor/Shared/Utilities/FSharpClassificationTypeMap.cs
+index dcc1c9b80d7..2779df63dd6 100644
+--- a/src/Tools/ExternalAccess/FSharp/Editor/Shared/Utilities/FSharpClassificationTypeMap.cs
++++ b/src/Tools/ExternalAccess/FSharp/Editor/Shared/Utilities/FSharpClassificationTypeMap.cs
+@@ -27,7 +27,7 @@ public FSharpClassificationTypeMap(IClassificationTypeRegistryService registrySe
+ 
+             // Prepopulate the identity map with the constant string values from ClassificationTypeNames
+             var fields = typeof(ClassificationTypeNames).GetFields();
+-            _identityMap = new Dictionary<string, IClassificationType>(fields.Length, ReferenceEqualityComparer.Instance);
++            _identityMap = new Dictionary<string, IClassificationType>(fields.Length, ReferenceEqualityComparer__Roslyn.Instance);
+ 
+             foreach (var field in fields)
+             {
+diff --git a/src/Workspaces/Core/Portable/ExtensionManager/AbstractExtensionManager.cs b/src/Workspaces/Core/Portable/ExtensionManager/AbstractExtensionManager.cs
+index 21218d6d063..e421796d1b7 100644
+--- a/src/Workspaces/Core/Portable/ExtensionManager/AbstractExtensionManager.cs
++++ b/src/Workspaces/Core/Portable/ExtensionManager/AbstractExtensionManager.cs
+@@ -11,8 +11,8 @@ namespace Microsoft.CodeAnalysis.Extensions
+ {
+     internal abstract class AbstractExtensionManager : IExtensionManager
+     {
+-        private readonly ConcurrentSet<object> _disabledProviders = new ConcurrentSet<object>(ReferenceEqualityComparer.Instance);
+-        private readonly ConcurrentSet<object> _ignoredProviders = new ConcurrentSet<object>(ReferenceEqualityComparer.Instance);
++        private readonly ConcurrentSet<object> _disabledProviders = new ConcurrentSet<object>(ReferenceEqualityComparer__Roslyn.Instance);
++        private readonly ConcurrentSet<object> _ignoredProviders = new ConcurrentSet<object>(ReferenceEqualityComparer__Roslyn.Instance);
+ 
+         protected AbstractExtensionManager()
+         {
+diff --git a/src/Workspaces/Core/Portable/Utilities/ReferenceHolder`1.cs b/src/Workspaces/Core/Portable/Utilities/ReferenceHolder`1.cs
+index 2fba53e9b6c..1eb14b202b2 100644
+--- a/src/Workspaces/Core/Portable/Utilities/ReferenceHolder`1.cs
++++ b/src/Workspaces/Core/Portable/Utilities/ReferenceHolder`1.cs
+@@ -40,7 +40,7 @@ public static ReferenceHolder<T> Weak(T value)
+                 return Strong(value);
+             }
+ 
+-            return new ReferenceHolder<T>(new WeakReference<T>(value), ReferenceEqualityComparer.GetHashCode(value));
++            return new ReferenceHolder<T>(new WeakReference<T>(value), ReferenceEqualityComparer__Roslyn.GetHashCode(value));
+         }
+ 
+         public T? TryGetTarget()
+@@ -88,7 +88,7 @@ public override int GetHashCode()
+             if (_weakReference is object)
+                 return _hashCode;
+ 
+-            return ReferenceEqualityComparer.GetHashCode(_strongReference);
++            return ReferenceEqualityComparer__Roslyn.GetHashCode(_strongReference);
+         }
+ 
+         internal static class TestAccessor
+-- 
+2.25.4
+

@@ -1,0 +1,25 @@
+From dbb2cbb458f0b8d2fcf4af0c3dbb6628e62ea661 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Tue, 29 Dec 2020 01:20:44 -0600
+Subject: [PATCH] Set compilers package targetframework to net5.0
+
+---
+ .../Microsoft.NETCore.Compilers.Package.csproj                  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
+index dcb5df09f24..0f3093bdc54 100644
+--- a/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
++++ b/src/NuGet/Microsoft.NETCore.Compilers/Microsoft.NETCore.Compilers.Package.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFramework>netcoreapp3.1</TargetFramework>
++    <TargetFramework>$(TargetFrameworkForNETSDK)</TargetFramework>
+ 
+     <IsPackable>true</IsPackable>
+     <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+-- 
+2.25.4
+
