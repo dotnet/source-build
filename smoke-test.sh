@@ -233,7 +233,7 @@ function doCommand() {
             $killCommand
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
-        elif [ "$1" == "publish" ]; then
+        elif [ "$1" == "multi-rid-publish" ]; then
             runPublishScenarios() {
                 "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
                 "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
@@ -282,18 +282,18 @@ function setupDevCerts() {
 function runAllTests() {
     # Run tests for each language and template
     if [ "$excludeNonWebTests" == "false" ]; then
-        doCommand C# console new restore build run publish
-        doCommand C# classlib new restore build publish
+        doCommand C# console new restore build run multi-rid-publish
+        doCommand C# classlib new restore build multi-rid-publish
         doCommand C# xunit new restore test
         doCommand C# mstest new restore test
 
-        doCommand VB console new restore build run publish
-        doCommand VB classlib new restore build publish
+        doCommand VB console new restore build run multi-rid-publish
+        doCommand VB classlib new restore build multi-rid-publish
         doCommand VB xunit new restore test
         doCommand VB mstest new restore test
 
-        doCommand F# console new restore build run publish
-        doCommand F# classlib new restore build publish
+        doCommand F# console new restore build run multi-rid-publish
+        doCommand F# classlib new restore build multi-rid-publish
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
     fi
@@ -313,16 +313,16 @@ function runAllTests() {
 }
 
 function runWebTests() {
-    doCommand C# web "$@" new restore build run publish
-    doCommand C# mvc "$@" new restore build run publish
-    doCommand C# webapi "$@" new restore build run publish
-    doCommand C# razor "$@" new restore build run publish
+    doCommand C# web "$@" new restore build run multi-rid-publish
+    doCommand C# mvc "$@" new restore build run multi-rid-publish
+    doCommand C# webapi "$@" new restore build multi-rid-publish
+    doCommand C# razor "$@" new restore build run multi-rid-publish
     doCommand C# blazorwasm "$@" new restore build run publish
     doCommand C# blazorserver "$@" new restore build run publish
 
-    doCommand F# web "$@" new restore build run publish
-    doCommand F# mvc "$@" new restore build run publish
-    doCommand F# webapi "$@" new restore build run publish
+    doCommand F# web "$@" new restore build run multi-rid-publish
+    doCommand F# mvc "$@" new restore build run multi-rid-publish
+    doCommand F# webapi "$@" new restore build run multi-rid-publish
 }
 
 function resetCaches() {
