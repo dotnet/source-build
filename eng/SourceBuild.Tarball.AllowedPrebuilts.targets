@@ -3,11 +3,8 @@
   <Target Name="AllowWorkInProgressPrebuilts"
           BeforeTargets="ForbidPrebuilts">
     <ItemGroup>
-      <AllowedPrebuiltPackageFile Include="
-        $(TarballPrebuiltPackageDir)microsoft.dotnet.web.itemtemplates.5.0.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.dotnet.web.projecttemplates.5.0.5.0.2.nupkg;
-        $(TarballPrebuiltPackageDir)microsoft.dotnet.web.spa.projecttemplates.5.0.5.0.2.nupkg;
-        " />
+      <!-- Example: $(TarballPrebuiltPackageDir)microsoft.dotnet.web.itemtemplates.5.0.2.nupkg -->
+      <AllowedPrebuiltPackageFile />
     </ItemGroup>
   </Target>
 
