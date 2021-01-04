@@ -1,0 +1,55 @@
+From e1b0bd455793d26f3fbf8879eae2e1ec99b1b7d7 Mon Sep 17 00:00:00 2001
+From: Davis Goodin <dagood@microsoft.com>
+Date: Mon, 4 Jan 2021 14:17:37 -0600
+Subject: [PATCH] Delete assertions invalid with servicing SDK
+
+See https://github.com/dotnet/sdk/issues/15132
+
+Fixes problems when forcing dotnet/sdk to build with a non-5.0.0 SDK version.
+---
+ ...AndCreateBundledNETCoreAppPackageVersion.cs | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs b/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
+index aa4af7ab4..11944873c 100644
+--- a/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
++++ b/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
+@@ -58,18 +58,6 @@ public override bool Execute()
+                 propertyGroup.Element(ns + "BundledNETCoreAppPackageVersion").Value;
+             propertyGroup.Element(ns + "BundledNETCoreAppPackageVersion").Value = microsoftNETCoreAppRefPackageVersion;
+ 
+-            void CheckAndReplaceElement(XElement element)
+-            {
+-                if (element.Value != originalBundledNETCoreAppPackageVersion)
+-                {
+-                    throw new ApplicationException(string.Format(
+-                        _messageWhenMismatch,
+-                        element.ToString(), element.Value, originalBundledNETCoreAppPackageVersion));
+-                }
+-
+-                element.Value = microsoftNETCoreAppRefPackageVersion;
+-            }
+-
+             void CheckAndReplaceAttribute(XAttribute attribute)
+             {
+                 if (attribute.Value != originalBundledNETCoreAppPackageVersion)
+@@ -83,16 +71,10 @@ void CheckAndReplaceAttribute(XAttribute attribute)
+                 attribute.Value = microsoftNETCoreAppRefPackageVersion;
+             }
+ 
+-            CheckAndReplaceElement(propertyGroup.Element(ns + "BundledNETCorePlatformsPackageVersion"));
+-
+             var itemGroup = projectXml.Root.Elements(ns + "ItemGroup").First();
+ 
+-            CheckAndReplaceAttribute(itemGroup
+-                .Elements(ns + "KnownFrameworkReference").First().Attribute("DefaultRuntimeFrameworkVersion"));
+             CheckAndReplaceAttribute(itemGroup
+                 .Elements(ns + "KnownFrameworkReference").First().Attribute("LatestRuntimeFrameworkVersion"));
+-            CheckAndReplaceAttribute(itemGroup
+-                .Elements(ns + "KnownFrameworkReference").First().Attribute("TargetingPackVersion"));
+             CheckAndReplaceAttribute(itemGroup
+                 .Elements(ns + "KnownAppHostPack").First().Attribute("AppHostPackVersion"));
+             CheckAndReplaceAttribute(itemGroup
+-- 
+2.25.4
+
