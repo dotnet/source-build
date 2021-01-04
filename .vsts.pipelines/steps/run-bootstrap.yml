@@ -195,7 +195,7 @@ steps:
       df -h 
       $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c "
       pushd /bst/bootstrap_dir/final-sdk
-      ./smoke-test.sh --prodConBlobFeedUrl ''"
+      ./build.sh --run-smoke-test"
   displayName: Smoke-test final SDK
   condition: always()
 
