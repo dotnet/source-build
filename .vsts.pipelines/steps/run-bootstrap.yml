@@ -195,7 +195,10 @@ steps:
       df -h 
       $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c "
       pushd /bst/bootstrap_dir/final-sdk
-      ./build.sh --run-smoke-test"
+      ./build.sh \
+        --run-smoke-test \
+        --with-packages /bst/bootstrap_dir/stage1-source-built-artifacts-install/ \
+        --with-sdk /bst/bootstrap_dir/stage1-sdk-install/"
   displayName: Smoke-test final SDK
   condition: always()
 
