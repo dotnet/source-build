@@ -87,17 +87,16 @@ stages:
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
 
-# Disable until CI break is fixed to avoid cognitive load while getting 5.0 prebuilts down: https://github.com/dotnet/source-build/issues/1819
-# - template: ../stages/stage-jobs-matrix.yml
-#   parameters:
-#     jobTemplateName: ../jobs/ci-local.yml
-#     name: osx
-#     jobParameters:
-#       pool:
-#         name: Hosted macOS
-#       scriptPrefix: ./
-#       scriptSuffix: .sh
-#       setupMac: true
+- template: ../stages/stage-jobs-matrix.yml
+  parameters:
+    jobTemplateName: ../jobs/ci-local.yml
+    name: osx
+    jobParameters:
+      pool:
+        name: Hosted macOS
+      scriptPrefix: ./
+      scriptSuffix: .sh
+      setupMac: true
 
 # Prepare artifacts in all situations but public PR validation.
 - ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
