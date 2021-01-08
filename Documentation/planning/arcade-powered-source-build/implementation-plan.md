@@ -12,12 +12,12 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | | |
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
+| 1 | *application-insights*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
 | 1 | *cssparser*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
 | 1 | *humanizer*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
 | 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
 | 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ |  | | | | |
 | 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
-| 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 | 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | | |
