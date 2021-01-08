@@ -1,0 +1,125 @@
+// dot.exe implementation-plan-graph.dot -Tsvg -o implementation-plan-graph.svg
+
+digraph {
+node[
+  shape=rect
+  width=0 height=0 margin=0.07
+  style=filled
+  fontsize=11]
+edge[
+  penwidth=1
+  arrowsize=0.6
+  arrowhead=vee
+  pencolor="#444444"]
+rankdir=LR
+nodesep=0.07
+ranksep=0.08
+
+node [fillcolor="#F5F5F5",style="dashed,filled,rounded",tooltip="1"]
+"s1"[label="#1 - Built 5.0"]
+"arcade" "aspnet-xdt" "aspnetcore" "clicommandlineparser" "command-line-api" "fsharp" "msbuild" "newtonsoft-json" "nuget-client" "roslyn" "roslyn-analyzers" "runtime" "runtime-portable" "sdk" "templating" "vstest" "installer" "symreader" "common" "test-templates"
+
+node [fillcolor="#F7CAAC",style="dashed,filled",tooltip="2"]
+"s2"[label="#2 - Inputs ready"]
+"application-insights" "netcorecli-fsc" "newtonsoft-json901" "xliff-tasks" "humanizer" "linker" "cssparser" "diagnostics"
+
+node [fillcolor="#FFE599",style="dotted,filled,rounded",tooltip="3"]
+"s3"[label="#3 - Merged patches & local build infra"]
+"sourcelink"
+
+node [fillcolor="#F0FE86",style="dashed,filled,rounded",tooltip="4"]
+"s4"[label="#4 - Merged CI, generated official build"]
+
+node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="5"]
+"s5"[label="#5 - Validated & merged"]
+"source-build-reference-packages"
+
+node [fillcolor="#CFAFE7",style="filled",tooltip="6"]
+"s6"[label="#6 - Prebuilt enforcement on"]
+
+// Color all future nodes red. All nodes should be accounted for: red means they need a category.
+node [fillcolor="#FF0000",style=filled]
+
+subgraph clusterLegend {
+  style=filled
+  color="#ebebeb"
+  "s1" "s2" "s3" "s4" "s5" "s6"
+}
+
+// Remaining text created by generate-graphviz.proj based on repos/*.proj:
+"sourcelink" -> "arcade"
+"arcade" -> "aspnet-xdt"
+"arcade" -> "aspnetcore"
+"cssparser" -> "aspnetcore"
+"runtime" -> "aspnetcore"
+"msbuild" -> "aspnetcore"
+"roslyn" -> "aspnetcore"
+"roslyn-analyzers" -> "aspnetcore"
+"arcade" -> "clicommandlineparser"
+"arcade" -> "command-line-api"
+"newtonsoft-json" -> "common"
+"arcade" -> "fsharp"
+"msbuild" -> "fsharp"
+"newtonsoft-json901" -> "fsharp"
+"newtonsoft-json" -> "fsharp"
+"xliff-tasks" -> "fsharp"
+"application-insights" -> "installer"
+"arcade" -> "installer"
+"aspnetcore" -> "installer"
+"clicommandlineparser" -> "installer"
+"fsharp" -> "installer"
+"msbuild" -> "installer"
+"netcorecli-fsc" -> "installer"
+"newtonsoft-json" -> "installer"
+"newtonsoft-json901" -> "installer"
+"nuget-client" -> "installer"
+"roslyn" -> "installer"
+"runtime" -> "installer"
+"sdk" -> "installer"
+"templating" -> "installer"
+"test-templates" -> "installer"
+"vstest" -> "installer"
+"xliff-tasks" -> "installer"
+"arcade" -> "msbuild"
+"runtime" -> "msbuild"
+"roslyn" -> "msbuild"
+"arcade" -> "newtonsoft-json"
+"common" -> "nuget-client"
+"newtonsoft-json" -> "nuget-client"
+"msbuild" -> "nuget-client"
+"aspnet-xdt" -> "nuget-client"
+"runtime" -> "roslyn-analyzers"
+"roslyn" -> "roslyn-analyzers"
+"arcade" -> "roslyn"
+"command-line-api" -> "roslyn"
+"humanizer" -> "roslyn"
+"xliff-tasks" -> "roslyn"
+"arcade" -> "runtime-portable"
+"linker" -> "runtime-portable"
+"newtonsoft-json" -> "runtime-portable"
+"newtonsoft-json901" -> "runtime-portable"
+"roslyn" -> "runtime-portable"
+"arcade" -> "runtime"
+"symreader" -> "runtime"
+"linker" -> "runtime"
+"newtonsoft-json" -> "runtime"
+"newtonsoft-json901" -> "runtime"
+"roslyn" -> "runtime"
+"arcade" -> "sdk"
+"xliff-tasks" -> "sdk"
+"runtime" -> "sdk"
+"msbuild" -> "sdk"
+"newtonsoft-json" -> "sdk"
+"newtonsoft-json901" -> "sdk"
+"nuget-client" -> "sdk"
+"roslyn-analyzers" -> "sdk"
+"vstest" -> "sdk"
+"fsharp" -> "sdk"
+"arcade" -> "symreader"
+"clicommandlineparser" -> "templating"
+"newtonsoft-json" -> "templating"
+"arcade" -> "test-templates"
+"diagnostics" -> "vstest"
+"runtime" -> "vstest"
+"newtonsoft-json" -> "vstest"
+}

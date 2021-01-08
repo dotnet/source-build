@@ -1,46 +1,51 @@
-# Source-build 5.0 Implementation Plan
+# Arcade-powered source-build implementation plan
 
-To get each repo building with the new source-build 5.0 plan, [Arcade-Powered Source-Build](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/planning/arcade-powered-source-build), the following stages will be accomplished.  Below, the repos are placed in a table representing the earliest dependencies are available and work can begin.  Stages can be completed in parallel, but stage 4 may depend on output from stage 6 from previous repos.  The following graph and table will be used to track progress for each repo.
+To get each repo building with the new source-build sustainability plan, [Arcade-Powered Source-Build](./README.md), each repo will go through several stages. Some stages have dependencies on upstream repos, so this process will be completed in dependency order with some exceptions.
 
-> ![](img/implementation-plan-graph.png)
-> [source (img/implementation-plan-graph.dgml)](img/implementation-plan-graph.dgml)
+Below, the repo status is in a graph to show the dependencies and make it easy to tell which repos are ready to work on. There's also a table, for searchable and more detailed status. These will both be kept up to date.
+
+> ![](img/implementation-plan-graph.svg)  
+> [source (img/implementation-plan-graph.dot)](img/implementation-plan-graph.dot)
 
 | Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | | | | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | | |
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
+| 1 | *cssparser*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
+| 1 | *humanizer*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
+| 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
+| 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ |  | | | | |
+| 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
 | 1 | application-insights | [Reiley Yang](https://github.com/reyang) | ✔️ | ✔️ | | | | |
 | 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
-| ? | cssparser | ? | ✔️ | | | | | |
-| ? | diagnostics | ? | ✔️ | | | | | |
-| 1 | newtonsoft-json | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | | |
-| 1 | netcorecli-fsc | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
-| 1 | newtonsoft-json901 | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
-| ? | symreader | ? | ✔️ | | | | | |
-| ? | test-templates | ? | ✔️ | | | | | |
-| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
 | 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
-| 1 | command-line-api | [?](https://github.com/) | ⏱ | | | | | |
+| 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | | |
+| 1 | diagnostics | ? | ✔️ | ✔️ | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
-| ? | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | | | | | | |
-| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | | |
-| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
+| 1 | symreader | ? | ✔️ | | | | | |
+| 1 | test-templates | ? | ✔️ | | | | | |
+| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
+| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | | | | |
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | | | | | |
 | 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | | | | | |
+| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
 | 2 | templating | [Vlada Shubina](https://github.com/vlada-shubina) | ✔️ | | | | | |
-| 3 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | | | | | |
-| 3 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
-| 4 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
-| 4 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | | | | | |
-| 4 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | | | | | |
-| 5 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| 3 | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | ✔️ | | | | | |
+| 4 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | | | | | |
+| 4 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
+| 5 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | | | | | |
+| 5 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| 5 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | | | | | |
+| 6 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
 
 | Status | Description |
 | --- | --- |
 | ✔️ | Complete |
 | ⏱ | In progress |
 | ❗ | At Risk |
+
+> <sup>1</sup> — Source will be maintained in central dotnet/source-build repo. It is not feasible to add full arcade-powered source-build infrastructure in some cases.
 
 ## Stage descriptions:
   - **(1) Build from source 5.0**
