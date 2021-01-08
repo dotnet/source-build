@@ -15,26 +15,26 @@ rankdir=LR
 nodesep=0.07
 ranksep=0.08
 
-node [fillcolor="#F5F5F5",style="dashed,filled,rounded",tooltip="1"]
+node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="1"]
 "s1"[label="#1 - Built 5.0"]
 "arcade" "aspnet-xdt" "aspnetcore" "clicommandlineparser" "command-line-api" "fsharp" "msbuild" "newtonsoft-json" "nuget-client" "roslyn" "roslyn-analyzers" "runtime" "runtime-portable" "sdk" "templating" "vstest" "installer" "symreader" "common" "test-templates"
 
-node [fillcolor="#F7CAAC",style="dashed,filled",tooltip="2"]
+node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="2"]
 "s2"[label="#2 - Inputs ready"]
 "application-insights" "netcorecli-fsc" "newtonsoft-json901" "xliff-tasks" "humanizer" "linker" "cssparser" "diagnostics"
 
-node [fillcolor="#FFE599",style="dotted,filled,rounded",tooltip="3"]
+node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="3"]
 "s3"[label="#3 - Merged patches & local build infra"]
 "sourcelink"
 
-node [fillcolor="#F0FE86",style="dashed,filled,rounded",tooltip="4"]
+node [fillcolor="#F0FE86",style="dashed,filled",tooltip="4"]
 "s4"[label="#4 - Merged CI, generated official build"]
 
 node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="5"]
 "s5"[label="#5 - Validated & merged"]
 "source-build-reference-packages"
 
-node [fillcolor="#CFAFE7",style="filled",tooltip="6"]
+node [fillcolor="#CFAFE7",style="bold,filled",tooltip="6"]
 "s6"[label="#6 - Prebuilt enforcement on"]
 
 // Color all future nodes red. All nodes should be accounted for: red means they need a category.
