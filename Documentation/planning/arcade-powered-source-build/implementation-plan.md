@@ -7,37 +7,37 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 > ![](img/implementation-plan-graph.svg)  
 > [source (img/implementation-plan-graph.dot)](img/implementation-plan-graph.dot)
 
-| Tier | Repo | Owner | (Stage 1)<br>Build from source - 5.0 | (Stage 2)<br>Input intermediate packages available | (Stage 3)<br>Merge patches & local build infra | (Stage 4)<br>Merge CI, generate official build | (Stage 5)<br>Validate & merge dev branch into 5.0 | (Stage 6)<br>Prebuilt baseline enforcement |
-| --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | | |
-| 1 | *application-insights*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
-| 1 | *cssparser*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
-| 1 | *humanizer*<sup>1</sup> | ? | ✔️ | ✔️ | | | | |
-| 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
-| 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ |  | | | | |
-| 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | | | | |
-| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
-| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
-| 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | | |
-| 1 | diagnostics | ? | ✔️ | ✔️ | | | | |
-| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | ✔️ | | | | | |
-| 1 | symreader | ? | ✔️ | | | | | |
-| 1 | test-templates | ? | ✔️ | | | | | |
-| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | | |
-| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | | | | |
-| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | ✔️ | | | | | |
-| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | | | | | |
-| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | ✔️ | | | | | |
-| 2 | templating | [Vlada Shubina](https://github.com/vlada-shubina) | ✔️ | | | | | |
-| 3 | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | ✔️ | | | | | |
-| 4 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | ✔️ | | | | | |
-| 4 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | | |
-| 5 | fsharp | [Brett Forsgren](https://github.com/brettfo) | ✔️ | | | | | |
-| 5 | sdk | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
-| 5 | vstest | [Jakub Jares](https://github.com/nohwnd) | ✔️ | | | | | |
-| 6 | installer | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | | |
+| Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
+| --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
+| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | | | | | |
+| 1 | *application-insights*<sup>1</sup> | ? | ✔️ | | | | |
+| 1 | *cssparser*<sup>1</sup> | ? | ✔️ | | | | |
+| 1 | *humanizer*<sup>1</sup> | ? | ✔️ | | | | |
+| 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
+| 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
+| 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
+| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
+| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
+| 1 | command-line-api | [?](https://github.com/) | | | | | |
+| 1 | diagnostics | ? | ✔️ | | | | |
+| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | | | | | |
+| 1 | symreader | ? | | | | | |
+| 1 | test-templates | ? | | | | | |
+| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
+| 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | |
+| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
+| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
+| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | | | | | |
+| 2 | templating | [Vlada Shubina](https://github.com/vlada-shubina) | | | | | |
+| 3 | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | | | | | |
+| 4 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | | | | | |
+| 4 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
+| 5 | fsharp | [Brett Forsgren](https://github.com/brettfo) | | | | | |
+| 5 | sdk | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
+| 5 | vstest | [Jakub Jares](https://github.com/nohwnd) | | | | | |
+| 6 | installer | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
 
 | Status | Description |
 | --- | --- |
@@ -48,21 +48,23 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 > <sup>1</sup> — Source will be maintained in central dotnet/source-build repo. It is not feasible to add full arcade-powered source-build infrastructure in some cases.
 
 ## Stage descriptions:
-  - **(1) Build from source 5.0**
-    - Get repo building from source with 5.0 source in dotnet/source-build.
-  - **(2) Input intermediate packages available**
-    - Indicates upstream intermediate packages are available, and work on this repo can begin.
-  - **(3) Merge patches & local build infra**
-    - All source-build specific build parameters from `/repos/<reponame>.proj` in source-build repo moved to repo `/eng` directory.
-    - Repo-specific patches are incorporated.
-    - If necessary, create a dev branch to manage changes.
-  - **(4) Merge CI, generate official build**
-    - PR validation and Official Build CI jobs added to repo and run to generate intermediate package for repo.
-  - **(5) Validate & merge dev branch into 5.0**
-    - Build logs and intermediate package of an official build are reviewed and validated by source-build team.
-    - Source-build changes are live for the repo in the `main`/`master` branch.
-    - If a dev branch was created, it is merged into `main`/`master`.
-    - The changes are ported to the branch for `5.0`.
-  - **(6) Prebuilt baseline enforcement**
-    - Prebuilt check baseline is narrowed down to necessary packages.
-    - PR validation builds fail if new prebuilts are introduced.
+  - **(1) Local build infra**
+    - (Source-build) Submit PR introducing local build infra. May include `.patch` files.
+    - (**Repo team**) Review PR and merge.
+      - Merging into main/master strongly preferred.
+      - If a dev branch is created, the repo team must merge it into main/master before ending stage (3).
+  - **(2) CI implemented** (PR + Official)
+    - (**Repo team**) Submit PR adding source-build CI jobs and merge.
+      - Let us know, and send us a link to an official build that includes the changes. We will start on (3).
+    - *Async (**Repo team**) Incorporate `.patch` files into repo.*
+      - *High impact: if these patch files have conflicts, CI fails.*
+  - **(3) Artifacts greenlit** for downstream usage
+    - (Source-build) Validate "intermediate nupkg" artifact and logs.
+    - (Source-build) Preliminary check for unexpected prebuilt usage.
+    - (Source-build + **repo team**) Fix up problems if found.
+  - **(4) Prebuilt regressions blocked**
+    - (Source-build) Submit PR enabling prebuilt baseline enforcement.
+      - Prebuilt binary usage is expected because this is a "production build", not a "tarball build".
+      - Prebuilt usage baseline enforcement prevents prebuilt regression.
+      - We will only do this once enforcement errors are actionable.
+    - (**Repo team**) Review PR and merge.
