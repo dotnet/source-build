@@ -15,27 +15,27 @@ rankdir=LR
 nodesep=0.07
 ranksep=0.08
 
-node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="1"]
-"s1"[label="#1 - Built 5.0"]
-"arcade" "aspnet-xdt" "aspnetcore" "clicommandlineparser" "command-line-api" "fsharp" "msbuild" "newtonsoft-json" "nuget-client" "roslyn" "roslyn-analyzers" "runtime" "runtime-portable" "sdk" "templating" "vstest" "installer" "symreader" "common" "test-templates"
+node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="Built"]
+"pre0"[label="Built in 5.0"]
+"arcade" "aspnet-xdt" "aspnetcore" "clicommandlineparser" "command-line-api" "fsharp" "msbuild" "nuget-client" "roslyn" "roslyn-analyzers" "runtime" "runtime-portable" "sdk" "templating" "vstest" "installer" "symreader" "common" "test-templates"
 
-node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="2"]
-"s2"[label="#2 - Inputs ready"]
-"application-insights" "netcorecli-fsc" "newtonsoft-json901" "xliff-tasks" "humanizer" "linker" "cssparser" "diagnostics"
+node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="Inputs ready"]
+"pre1"[label="Inputs ready"]
+"application-insights" "netcorecli-fsc" "newtonsoft-json" "newtonsoft-json901" "xliff-tasks" "humanizer" "linker" "cssparser" "diagnostics"
 
-node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="3"]
-"s3"[label="#3 - Merged patches & local build infra"]
+node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="1"]
+"s1"[label="#1 - Local build infra"]
 "sourcelink"
 
-node [fillcolor="#F0FE86",style="dashed,filled",tooltip="4"]
-"s4"[label="#4 - Merged CI, generated official build"]
+node [fillcolor="#F0FE86",style="dashed,filled",tooltip="2"]
+"s2"[label="#2 - CI implemented"]
 
-node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="5"]
-"s5"[label="#5 - Validated & merged"]
+node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="3"]
+"s3"[label="#3 - Artifacts greenlit"]
 "source-build-reference-packages"
 
-node [fillcolor="#CFAFE7",style="bold,filled",tooltip="6"]
-"s6"[label="#6 - Prebuilt enforcement on"]
+node [fillcolor="#CFAFE7",style="bold,filled",tooltip="4"]
+"s4"[label="#4 - Prebuilt regressions blocked"]
 
 // Color all future nodes red. All nodes should be accounted for: red means they need a category.
 node [fillcolor="#FF0000",style=filled]
@@ -43,7 +43,7 @@ node [fillcolor="#FF0000",style=filled]
 subgraph clusterLegend {
   style=filled
   color="#ebebeb"
-  "s1" "s2" "s3" "s4" "s5" "s6"
+  "pre0" "pre1" "s1" "s2" "s3" "s4"
 }
 
 // Remaining text created by generate-graphviz.proj based on repos/*.proj:
@@ -83,7 +83,6 @@ subgraph clusterLegend {
 "arcade" -> "msbuild"
 "runtime" -> "msbuild"
 "roslyn" -> "msbuild"
-"arcade" -> "newtonsoft-json"
 "common" -> "nuget-client"
 "newtonsoft-json" -> "nuget-client"
 "msbuild" -> "nuget-client"
