@@ -253,7 +253,7 @@ function setupDevCerts() {
     echo "Setting up dotnet-dev-certs $devCertsVersion to generate dev certificate" | tee -a "$logFile"
     (
         set -x
-        "$dotnetDir/dotnet" tool install -g dotnet-dev-certs --version "$devCertsVersion" --add-source https://dotnet.myget.org/F/dotnet-core/api/v3/index.json
+        "$dotnetDir/dotnet" tool install -g dotnet-dev-certs --version "$devCertsVersion" --add-source https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json
         export DOTNET_ROOT="$dotnetDir"
         "$testingHome/.dotnet/tools/dotnet-dev-certs" https
     ) >> "$logFile" 2>&1
