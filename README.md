@@ -1,6 +1,6 @@
 # .NET Core Source-Build
 
-[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/dotnet/source-build/source-build-rolling-CI?branchName=release%2F3.1)](https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114&branchName=release%2F3.1)
+[![Build Status](https://dev.azure.com/dnceng/internal/_apis/build/status/dotnet/source-build/source-build-rolling-CI?branchName=master)](https://dev.azure.com/dnceng/internal/_build/latest?definitionId=114&branchName=master)
 [![Join the chat at https://gitter.im/dotnet/source-build](https://badges.gitter.im/dotnet/source-build.svg)](https://gitter.im/dotnet/source-build?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This repository contains infrastructure for building the .NET Core Runtime and SDK from source. The scripts allow .NET Core package maintainers to comply with common Linux distribution guidelines.
@@ -11,7 +11,16 @@ The scripts are written for Bash and supported on macOS and Linux. See [Document
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
+The `master` branch of this repository is being reworked to build several components of the .NET SDK, instead of the entire .NET SDK. This is part of the [arcade-powered source-build](Documentation\planning\arcade-powered-source-build) design. Once this plan is complete, [dotnet/installer](https://github.com/dotnet/installer) will directly support building from source.
+
+To build the full .NET SDK from source, pick a specific Git tag, or use the release branches:
+* [`release/5.0`](https://github.com/dotnet/source-build/tree/release/5.0)
+* [`release/3.1`](https://github.com/dotnet/source-build/tree/release/3.1)
+* [`release/2.1`](https://github.com/dotnet/source-build/tree/release/2.1)
+
 ### Build on Linux or macOS
+
+In a release branch, run this command:
 
 ```console
 ./build.sh
@@ -27,7 +36,7 @@ artifacts/${ARCHITECTURE}/Release/dotnet-sdk-${SDK_VERSION}-${RUNTIME_ID}.tar.gz
 - `${SDK_VERSION}` is the SDK version you are building
 - `${RUNTIME_ID}` is your OS name and architecture (something like `debian.9-x64` or `fedora.33-x64`)
 
-For example, building a 3.1.105 SDK on an x64 (aka x86\_64) platform running Fedora 32 will produce `artifacts/x64/Release/dotnet-sdk-3.1.105-fedora.32-x64.tar.gz`.
+For example, building a 5.0.100 SDK on an x64 (aka x86\_64) platform running Fedora 32 will produce `artifacts/x64/Release/dotnet-sdk-5.0.100-fedora.32-x64.tar.gz`.
 
 ## Goals
 
