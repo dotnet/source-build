@@ -22,8 +22,9 @@ namespace Microsoft.DotNet.Build.Tasks
         public string InputFile { get; set; }
 
         /// <summary>
-        /// An item group of feeds to update.  Each item must have metadata NewFeed
-        /// that specifies the replacement feed.
+        /// An item group of feeds to update.
+        /// %(Identity): The feed URL to find in the NuGet.Config.
+        /// %(NewFeed): The feed URL to replace %(Identity) with.
         /// </summary>
         [Required]
         public ITaskItem[] FeedMapping { get; set; }
