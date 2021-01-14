@@ -117,6 +117,7 @@
         - `/smoke-testNuGet.Config`
         - Do not remove from subrepos. The build infra removes these sources automatically while modifying each subrepo nuget.config file.
 1.  - [ ] [Internal] Push the servicing branch to your GitHub fork and submit a source-build PR.
+1.  - [ ] [Internal] If a build hits `fatal: reference is not a tree: cb5f173b`, [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/make-commit-available.md).
 1.  - [ ] [Internal] Add source-build team as reviewers.
 1.  - [ ] [Internal] When CI is green and two reviewers approve, merge.
       - Avoid squash/rebase: nice to preserve commit hashes. However, there are no known dependencies on *source-build* commits being preserved.
