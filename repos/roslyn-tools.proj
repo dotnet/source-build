@@ -2,6 +2,7 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
+    <NuGetConfigFile>$(ProjectDirectory)/nuget.config</NuGetConfigFile>
     <BuildCommand>$(ProjectDirectory)\build$(ShellExtension) $(FlagParameterPrefix)pack $(FlagParameterPrefix)configuration $(Configuration)</BuildCommand>
     <OrchestratedManifestBuildName>N/A</OrchestratedManifestBuildName>
     <UsesRepoToolset>true</UsesRepoToolset>

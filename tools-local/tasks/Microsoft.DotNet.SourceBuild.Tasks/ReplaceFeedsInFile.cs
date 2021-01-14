@@ -10,20 +10,20 @@ using Microsoft.Build.Utilities;
 namespace Microsoft.DotNet.Build.Tasks
 {
     /// <summary>
-    /// Replaces feeds in a NuGet.Config file given a mapping
+    /// Replaces feeds in a file given a mapping
     /// of old feeds to new feeds.
     /// </summary>
-    public class ReplaceFeedsInNuGetConfig : Task
+    public class ReplaceFeedsInFile : Task
     {
         /// <summary>
-        /// The NuGet.Config file in which to replace feeds.
+        /// The file in which to replace feeds.
         /// </summary>
         [Required]
         public string InputFile { get; set; }
 
         /// <summary>
         /// An item group of feeds to update.
-        /// %(Identity): The feed URL to find in the NuGet.Config.
+        /// %(Identity): The feed URL to find in the input file.
         /// %(NewFeed): The feed URL to replace %(Identity) with.
         /// </summary>
         [Required]
