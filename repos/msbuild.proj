@@ -39,10 +39,9 @@
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/nuget-build/api/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/roslyn/api/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/roslyn-tools/api/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/myget-legacy/nuget/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/nuget-build/nuget/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json</EnvironmentRestoreSources>
   </PropertyGroup>
 
   <ItemGroup>

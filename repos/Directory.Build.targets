@@ -9,6 +9,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="GetSourceBuiltNupkgCacheConflicts" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReadNuGetPackageInfos" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceFeedsInNuGetConfig" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UpdateJson" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ValidateUsageAgainstBaseline" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteBuildOutputProps" />
@@ -119,6 +120,64 @@
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="source-built"
                             SourcePath="$(SourceBuiltPackagesPath)" />
+
+    <!-- Update NuGet.Config files that have deprecated myget feeds -->
+    <ItemGroup>
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/nuget-build/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/nuget-build/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://www.myget.org/F/nugetbuild/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/nuget-build/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/dotnet-corefxlab/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json"
+        NewFeed="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/system-commandline/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/vstest/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/mstestv2/auth/1e768268-8c95-4e7e-9fd2-0eb1b1b69b18/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/roslyn/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/roslyn-master-nightly/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/azure-public/vside/_packaging/vssdk/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/symreader-converter/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/interactive-window/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/mstestv2/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/vsunittesting/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/msbuild/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
+      <LegacyFeedMapping
+        Include="https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json"
+        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/myget-legacy/nuget/v3/index.json" />
+    </ItemGroup>
+
+    <ReplaceFeedsInNugetConfig InputFile="%(NuGetConfigFiles.Identity)"
+                               FeedMapping="@(LegacyFeedMapping)" />
 
     <!--
       The internal transport feed is dynamically added by Arcade by a script called directly in the
@@ -353,7 +412,13 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete">
 
-    <ReadNuGetPackageInfos PackagePaths="@(_BuiltPackages)">
+    <ItemGroup>
+        <!-- Excluding Arcade here will keep it in the cache, because that's where we're running from.
+             Subsequent projects will get Arcade from Tools/source-built. -->
+        <PackagePaths Include="@(_BuiltPackages)" Exclude="$(PackagesOutput)/Microsoft.DotNet.Arcade.Sdk.*.nupkg" />
+    </ItemGroup>
+
+    <ReadNuGetPackageInfos PackagePaths="@(PackagePaths)">
       <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
     </ReadNuGetPackageInfos>
 

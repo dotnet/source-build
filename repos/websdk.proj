@@ -26,8 +26,7 @@
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/aspnet-blazor/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/aspnetcore-dev/api/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnet.myget.org/F/aspnetcore-tools/api/v3/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json</EnvironmentRestoreSources>
 
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
   </PropertyGroup>
