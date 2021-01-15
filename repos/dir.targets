@@ -164,7 +164,7 @@
   </Target>
 
   <Target Name="UpdateLegacyFeeds"
-          BeforeTargets="Build"
+          BeforeTargets="Build;Restore"
           Condition="'@(LegacyFeedUpdateFiles)' != ''">
 
     <!-- Update files that have deprecated myget feeds -->
