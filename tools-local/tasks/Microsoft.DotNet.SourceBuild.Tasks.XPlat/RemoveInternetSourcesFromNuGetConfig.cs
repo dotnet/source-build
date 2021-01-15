@@ -38,6 +38,7 @@ namespace Microsoft.DotNet.Build.Tasks
         {
             XDocument d = XDocument.Load(NuGetConfigFile);
             XElement packageSourcesElement = d.Root.Descendants().First(e => e.Name == "packageSources");
+            XElement disabledPackageSourcesElement = d.Root.Descendants().FirstOrDefault(e => e.Name == "disabledPackageSources");
 
             IEnumerable<XElement> local = packageSourcesElement.Descendants().Where(e =>
             {
@@ -66,6 +67,9 @@ namespace Microsoft.DotNet.Build.Tasks
             });
 
             packageSourcesElement.ReplaceNodes(local.ToArray());
+
+            // Remove disabledPackageSources element so if any internal packages remain, they are used in source-build
+            disabledPackageSourcesElement?.ReplaceNodes(new XElement("clear"));
 
             using (FileStream fs = new FileStream(NuGetConfigFile, FileMode.Create, FileAccess.ReadWrite))
             {
