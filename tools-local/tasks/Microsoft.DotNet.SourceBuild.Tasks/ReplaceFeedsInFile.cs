@@ -34,6 +34,10 @@ namespace Microsoft.DotNet.Build.Tasks
             string fileContents = File.ReadAllText(InputFile);
             bool updated = false;
 
+            Log.LogMessage(
+                MessageImportance.High,
+                $"Searching for feeds in {InputFile}");
+
             foreach (var feed in FeedMapping)
             {
                 string oldFeed = feed.ItemSpec;
@@ -41,6 +45,9 @@ namespace Microsoft.DotNet.Build.Tasks
 
                 if (fileContents.Contains(oldFeed))
                 {
+                    Log.LogMessage(
+                        MessageImportance.High,
+                        $"Replacing {oldFeed} with {newFeed}");
                     fileContents = fileContents.Replace(oldFeed, newFeed);
                     updated = true;
                 }
