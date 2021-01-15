@@ -1,13 +1,16 @@
-From a25eb78bab34afc8a6ff082bebec9b8ca33a9f17 Mon Sep 17 00:00:00 2001
+From e0d440befafc6822a8807fa34a0a038e0456599e Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Thu, 26 Nov 2020 08:26:13 +0100
 Subject: [PATCH] nuget.client: build for .NET 5
 
+Update netcoreapp TFMs to 5.0.
+
+Fix package references to comply with PackageVersions.props overrides.
 ---
  build/common.project.props                              | 5 ++---
- build/packages.targets                                  | 4 ++--
+ build/packages.targets                                  | 8 +++-----
  src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
- 3 files changed, 5 insertions(+), 6 deletions(-)
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
 index 03c93ae65..f578a2271 100644
@@ -33,24 +36,28 @@ index 03c93ae65..f578a2271 100644
      <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
      <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
 diff --git a/build/packages.targets b/build/packages.targets
-index 873850ccb..baa369e09 100644
+index 6ea9510dc..19df3657c 100644
 --- a/build/packages.targets
 +++ b/build/packages.targets
-@@ -8,7 +8,7 @@
+@@ -7,8 +7,6 @@
+         <VSFrameworkVersion>16.6.30107.105</VSFrameworkVersion>
          <VSServicesVersion>16.153.0</VSServicesVersion>
          <VSThreadingVersion>16.7.56</VSThreadingVersion>
-         <!-- TODO - remove this when temporary patching is no longer necessary. See https://github.com/nuget/home/issues/8952 -->
+-        <!-- TODO - remove this when temporary patching is no longer necessary. See https://github.com/nuget/home/issues/8952 -->
 -        <PatchedSystemPackagesVersion>5.0.0-preview.3.20214.6</PatchedSystemPackagesVersion>
-+        <PatchedSystemPackagesVersion>5.0.0</PatchedSystemPackagesVersion>
      </PropertyGroup>
  
      <!-- Test and package versions -->
-@@ -66,7 +66,7 @@
+@@ -64,9 +62,9 @@
+         <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
+         <PackageReference Update="System.Collections.Immutable" Version="1.7.1" />
          <PackageReference Update="System.Diagnostics.Debug" Version="$(SystemPackagesVersion)" />
-         <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(PatchedSystemPackagesVersion)" />
-         <PackageReference Update="System.Security.Cryptography.Cng" Version="$(PatchedSystemPackagesVersion)" />
+-        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(PatchedSystemPackagesVersion)" />
+-        <PackageReference Update="System.Security.Cryptography.Cng" Version="$(PatchedSystemPackagesVersion)" />
 -        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="4.4.0" />
-+        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="$(PatchedSystemPackagesVersion)" />
++        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcsVersion)" />
++        <PackageReference Update="System.Security.Cryptography.Cng" Version="$(SystemSecurityCryptographyCngVersion)" />
++        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="$(SystemSecurityCryptographyProtectedDataVersion)" />
          <PackageReference Update="System.Threading.Tasks.Dataflow" Version="4.9.0" />
          <PackageReference Update="VSLangProj" Version="7.0.3300" />
          <PackageReference Update="VSLangProj110" Version="11.0.61030" />
@@ -68,5 +75,5 @@ index 4f3ac234c..1ad241531 100644
      <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
 -- 
-2.26.2
+2.25.4
 

@@ -1,10 +1,10 @@
-From bdb9e700339344537b96bfc2d6b28d7e89dc46ec Mon Sep 17 00:00:00 2001
+From 594c716ad8993df91b4cbade593b9bee7cacae47 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Thu, 3 Sep 2020 06:29:25 -0500
-Subject: [PATCH 13/13] Fix a couple issues.
+Subject: [PATCH 11/14] Fix a couple issues.
 
 ---
- AspNetCore.sln                                |  2 --
+ AspNetCore.sln                                |  2 -
  src/Components/Components.slnf                |  1 -
  src/Components/ComponentsNoDeps.slnf          |  1 -
  .../Driver/Wasm.Performance.Driver.csproj     | 37 -------------------
@@ -12,10 +12,10 @@ Subject: [PATCH 13/13] Fix a couple issues.
  delete mode 100644 src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 
 diff --git a/AspNetCore.sln b/AspNetCore.sln
-index d5fda15eba..529be82b05 100644
+index 06f5b1b4c6..4a7c2e59a8 100644
 --- a/AspNetCore.sln
 +++ b/AspNetCore.sln
-@@ -483,8 +483,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarkapps", "benchmarka
+@@ -475,8 +475,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarkapps", "benchmarka
  EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wasm.Performance", "Wasm.Performance", "{6276A9A0-791B-49C1-AD8F-50AC47CDC196}"
  EndProject
@@ -25,7 +25,7 @@ index d5fda15eba..529be82b05 100644
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Components.WebAssembly.Server.Tests", "src\Components\WebAssembly\Server\test\Microsoft.AspNetCore.Components.WebAssembly.Server.Tests.csproj", "{0C610220-E00C-4752-98A0-44A3D4B96A21}"
 diff --git a/src/Components/Components.slnf b/src/Components/Components.slnf
-index 637ec1a384..9bb64a3495 100644
+index d023481b95..a28aa122b1 100644
 --- a/src/Components/Components.slnf
 +++ b/src/Components/Components.slnf
 @@ -99,7 +99,6 @@
@@ -37,10 +37,10 @@ index 637ec1a384..9bb64a3495 100644
        "src\\Components\\WebAssembly\\Server\\test\\Microsoft.AspNetCore.Components.WebAssembly.Server.Tests.csproj",
        "src\\Components\\WebAssembly\\Authentication.Msal\\src\\Microsoft.Authentication.WebAssembly.Msal.csproj",
 diff --git a/src/Components/ComponentsNoDeps.slnf b/src/Components/ComponentsNoDeps.slnf
-index dd08970d02..34e5619a94 100644
+index 7cf830b329..82e51fba83 100644
 --- a/src/Components/ComponentsNoDeps.slnf
 +++ b/src/Components/ComponentsNoDeps.slnf
-@@ -38,7 +38,6 @@
+@@ -39,7 +39,6 @@
        "src\\Components\\Web\\src\\Microsoft.AspNetCore.Components.Web.csproj",
        "src\\Components\\Web\\test\\Microsoft.AspNetCore.Components.Web.Tests.csproj",
        "src\\Components\\benchmarkapps\\Wasm.Performance\\ConsoleHost\\Wasm.Performance.ConsoleHost.csproj",
@@ -50,7 +50,7 @@ index dd08970d02..34e5619a94 100644
        "src\\Components\\test\\testassets\\BasicTestApp\\BasicTestApp.csproj",
 diff --git a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj b/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 deleted file mode 100644
-index 66aea279ee..0000000000
+index 346ddc48f1..0000000000
 --- a/src/Components/benchmarkapps/Wasm.Performance/Driver/Wasm.Performance.Driver.csproj
 +++ /dev/null
 @@ -1,37 +0,0 @@
@@ -91,6 +91,6 @@ index 66aea279ee..0000000000
 -  </Target>
 -
 -</Project>
---
+-- 
 2.18.0
 

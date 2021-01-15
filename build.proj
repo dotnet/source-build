@@ -153,7 +153,9 @@
       This is also a problem when passing CLI feeds: https://github.com/dotnet/source-build/issues/561
     -->
     <Exec Command="$(SmokeTestCommand)"
-          EnvironmentVariables="prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
+          EnvironmentVariables="
+            targetRid=$(TargetRid);
+            prodConBlobFeedUrl=$(ProdConBlobFeedUrl)" />
   </Target>
 
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="UploadToAzure" />

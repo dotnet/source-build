@@ -1,19 +1,19 @@
-From d83bee0c97ca52f9aba75fe87def80b938513c96 Mon Sep 17 00:00:00 2001
+From c8c8d9853eb8431064d88e5135db83f5e31dd58c Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 5 Nov 2020 14:23:06 +0000
 Subject: [PATCH] Use PVP version of System.Text.Json
 
 ---
- .../Microsoft.DotNet.TemplateLocator.csproj      |  2 +-
- .../Microsoft.DotNet.MSBuildSdkResolver.csproj   |  2 +-
- ...crosoft.NET.Sdk.WorkloadManifestReader.csproj |  2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ .../Microsoft.DotNet.TemplateLocator.csproj                   | 2 +-
+ .../Microsoft.DotNet.MSBuildSdkResolver.csproj                | 4 ++--
+ .../Microsoft.NET.Sdk.WorkloadManifestReader.csproj           | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
-index ea1c10f33..8046415ba 100644
+index 910e50c6f..c39ef136e 100644
 --- a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
 +++ b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
-@@ -52,7 +52,7 @@
+@@ -55,7 +55,7 @@
    </ItemGroup>
  
    <ItemGroup>
@@ -23,22 +23,18 @@ index ea1c10f33..8046415ba 100644
    </ItemGroup>
  </Project>
 diff --git a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
-index 22662b41a..f514a14c9 100644
+index 22662b41a..8061ddead 100644
 --- a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
 +++ b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
-@@ -72,11 +72,11 @@
-     <Reference Include="System.Core" />
-     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30" PrivateAssets="All" ExcludeAssets="Runtime" />
+@@ -74,7 +74,7 @@
    </ItemGroup>
-  
+   
    <ItemGroup>
 -    <PackageReference Include="System.Text.Json" Version="4.7.2" Condition="'$(UseSystemTextJson)'=='True'"/>
 +    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonVersion)" Condition="'$(UseSystemTextJson)'=='True'"/>
      <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'"/>
-    
+     
      <!-- Reference this package to avoid package downgrade errors.  See https://github.com/dotnet/sdk/issues/3044 for details -->
-     <PackageReference Include="Microsoft.NETCore.Targets" Version="2.1.0" ExcludeAssets="all" PrivateAssets="all" />
-   </ItemGroup>
 @@ -102,4 +102,4 @@
      </ItemGroup>
    </Target>
@@ -60,5 +56,5 @@ index 4c151eaad..2bac54eff 100644
    </ItemGroup>
  
 -- 
-2.18.4
+2.25.4
 

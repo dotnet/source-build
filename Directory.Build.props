@@ -155,6 +155,7 @@
     <OfflinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-offline.csv</OfflinePrebuiltBurndownDataFile>
     <OnlinePrebuiltBurndownDataFile>$(PackageReportDir)PrebuiltBurndownData-online.csv</OnlinePrebuiltBurndownDataFile>
     <ReferencePackagesBaseDir>$(IntermediatePath)reference-packages/</ReferencePackagesBaseDir>
+    <TextOnlyPackageBaseDir>$(IntermediatePath)text-only-packages/</TextOnlyPackageBaseDir>
     <ExternalTarballsDir>$(IntermediatePath)external-tarballs/</ExternalTarballsDir>
     <!--
       Change ReferencePackagesBaseDir & ExternalTarballsDir conditionally in offline build.
@@ -163,6 +164,7 @@
     -->
     <ExternalTarballsDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/archive/</ExternalTarballsDir>
     <ReferencePackagesBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/reference/</ReferencePackagesBaseDir>
+    <TextOnlyPackageBaseDir Condition="'$(OfflineBuild)' == 'true'">$(ProjectDir)packages/text-only/</TextOnlyPackageBaseDir>
     <ReferencePackagesDir>$(ReferencePackagesBaseDir)packages/</ReferencePackagesDir>
     <ReferencePackagesDir Condition="'$(CustomReferencePackagesPath)' != ''">$(CustomReferencePackagesPath)/</ReferencePackagesDir>
     <SourceBuiltArtifactsTarballName>Private.SourceBuilt.Artifacts</SourceBuiltArtifactsTarballName>

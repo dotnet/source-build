@@ -39,6 +39,16 @@ jobs:
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
 
+    ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
+      SetInternalPackageFeedPatDockerArg: ''
+    ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+      # In the internal build, we have one definition that provides dn-bot-dnceng-artifact-feeds-rw,
+      # and another that doesn't (to be more like a public build). For the definition that doesn't
+      # define dn-bot-dnceng-artifact-feeds-rw, this line relies on the subshell to fail when it
+      # tries to find a command by that name and set internalPackageFeedPat to nothing.
+      SetInternalPackageFeedPatDockerArg: >-
+        -e internalPackageFeedPat=$(dn-bot-dnceng-artifact-feeds-rw)
+
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
   - template: ../steps/docker-cleanup-linux.yml
@@ -62,7 +72,7 @@ jobs:
       if [ "$(sb.tarball)" != "true" ]; then
         failOnBaselineError=true
       fi
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(SetInternalPackageFeedPatDockerArg) $(imageName) ./build.sh \
         /p:Configuration=$(sb.configuration) \
         /p:BuildPortableRuntime=$(sb.portable) \
         /p:BuildPortableSdk=$(sb.portable) \
@@ -90,7 +100,7 @@ jobs:
   - script: |
       set -ex
       df -h
-      $(docker.run) $(docker.src.map) $(docker.src.work) $(imageName) ./build.sh \
+      $(docker.run) $(docker.src.map) $(docker.src.work) $(SetInternalPackageFeedPatDockerArg) $(imageName) ./build.sh \
         --run-smoke-test \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
@@ -119,7 +129,7 @@ jobs:
       if [ "$(reportPrebuiltLeaks)" = "true" ]; then
         args="$args --enable-leak-detection"
       fi
-      $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(imageName) ./build-source-tarball.sh \
+      $(docker.run) $(docker.tb.map) $(docker.src.map) $(docker.src.work) $(SetInternalPackageFeedPatDockerArg) $(imageName) ./build-source-tarball.sh \
         "/tb/$(tarballName)" \
         $args
       du -h $(rootDirectory) | sort -h | tail -n 50
@@ -224,10 +234,9 @@ jobs:
   - script: |
       set -ex
       df -h
-      $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/smoke-test.sh" \
-        --minimal \
-        --projectOutput \
-        --configuration $(sb.configuration)
+      $(docker.run) $(docker.tb.map) $(docker.tb.work) $(imageName) "$(tarballName)/build.sh" \
+        --run-smoke-test -- \
+        /p:Configuration=$(sb.configuration)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Run smoke-test in tarball
     condition: and(succeeded(), eq(variables['sb.tarball'], true))

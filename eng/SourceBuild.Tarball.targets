@@ -19,6 +19,7 @@
 
   <Import Project="SourceBuild.Tarball.KnownExtraPrebuilts.targets" />
   <Import Project="SourceBuild.Tarball.AllowedPrebuilts.targets" />
+  <Import Project="SourceBuild.Tarball.TextOnlyPrebuilts.targets" />
 
   <Import
     Project="SourceBuild.Tarball.DestructiveCleanup.targets"
@@ -155,6 +156,18 @@
         Include="$(ProjectDir)support/tarball/build.sh"
         RelativeDestination="build.sh" />
 
+      <!--
+        When building an internal build, the main smoke-test nuget config has authenticated sources
+        in it to generate a full set of smoke-test-prereqs. This isn't necessary in the tarball
+        because we have those smoke-test-prereqs, but we hit authentication errors nonetheless. Copy
+        a trimmed down nuget.config in this case.
+        TODO: Automatically trim down the main nuget.config.
+      -->
+      <TarballCopyFile
+        Condition="Exists('$(ProjectDir)support\tarball\smoke-testNuGet.Config')"
+        Include="$(ProjectDir)support\tarball\smoke-testNuGet.Config"
+        RelativeDestination="smoke-testNuGet.Config" />
+
       <!-- Setup package version props to include both source-built and running PackageVersions.props -->
       <TarballCopyFile
         Include="$(ProjectDir)support\tarball\PackageVersions.props"
@@ -228,18 +241,26 @@
         RelativeDestination="packages\prebuilt\%(Filename)%(Extension)" />
 
       <SmokeTestPackageFile
-        Include="$(ProjectDir)testing-smoke\smoke-test-packages\**"
+        Include="$(ProjectDir)testing-smoke\smoke-test-packages\**\*.nupkg"
         RelativeRoot="packages\smoke-test-packages\" />
 
-      <!-- Set identity to the filename to allow for Remove, but keep old identity to swap back. -->
+      <!--
+        Set up filename-based items, in order to filter out some packages that aren't necessary as
+        prebuilts, or are generated/acquired another way.
+      -->
+      <IncludedPrebuiltPackageCandidate Include="@(PrebuiltPackageFile)" />
+
+      <!--
+        For internal builds, all smoke-test packages should be kept. For external builds, they can
+        be restored during smoke-test execution from public sources, so can be pruned.
+      -->
+      <IncludedPrebuiltPackageFile Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != ''" />
+      <IncludedPrebuiltPackageCandidate Include="@(SmokeTestPackageFile)" Condition="'$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' == ''" />
+
       <IncludedPrebuiltPackageFilename
-        Include="
-          @(PrebuiltPackageFile -> '%(Filename)');
-          @(SmokeTestPackageFile -> '%(Filename)');
-          "
+        Include="@(IncludedPrebuiltPackageCandidate -> '%(Filename)')"
         OriginalIdentity="%(Identity)" />
 
-      <!-- Exclude prebuilt nupkgs supplied a different way or not actually needed as prebuilts. -->
       <IncludedPrebuiltPackageFilename Remove="
         @(SourceBuiltPackageFilename);
         @(SourceBuildReferencePackageFilename);

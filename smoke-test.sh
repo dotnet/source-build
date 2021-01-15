@@ -8,6 +8,9 @@ VERSION_PREFIX=5.0
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.3
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+executingUserHome=${HOME:-}
+
+echo "RID to test: ${targetRid?not specified. Use ./build.sh --run-smoke-test to detect RID, or specify manually.}"
 
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
@@ -65,6 +68,7 @@ function usage() {
     echo "usage:"
     echo "  --dotnetDir                    the directory from which to run dotnet"
     echo "  --configuration                the configuration being tested (default=Release)"
+    echo "  --targetRid                    override the target rid to use when needed (e.g. for self-contained publish tests)"
     echo "  --projectOutput                echo dotnet's output to console"
     echo "  --keepProjects                 keep projects after tests are complete"
     echo "  --minimal                      run minimal set of tests - local sources only, no web"
@@ -100,6 +104,10 @@ while :; do
         --configuration)
             shift
             configuration="$1"
+            ;;
+        --targetrid)
+            shift
+            targetRid="$1"
             ;;
         --projectoutput)
             projectOutput=true
@@ -194,7 +202,8 @@ function doCommand() {
             binlogHttpsPart="https"
         fi
 
-        binlog="$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_$1.binlog"
+        binlogPrefix="$testingDir/${lang}_${proj}_${binlogOnlinePart}_${binlogHttpsPart}_"
+        binlog="${binlogPrefix}$1.binlog"
         echo "    running $1" | tee -a "$logFile"
 
         if [ "$1" == "new" ]; then
@@ -224,6 +233,17 @@ function doCommand() {
             $killCommand
             wait $!
             echo "    terminated with exit code $?" | tee -a "$logFile"
+        elif [ "$1" == "multi-rid-publish" ]; then
+            runPublishScenarios() {
+                "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
+                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
+                "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
+            }
+            if [ "$projectOutput" == "true" ]; then
+                runPublishScenarios | tee -a "$logFile"
+            else
+                runPublishScenarios >> "$logFile" 2>&1
+            fi
         else
             if [ "$projectOutput" == "true" ]; then
                 "${dotnetCmd}" $1 /bl:"$binlog" | tee -a "$logFile"
@@ -262,18 +282,18 @@ function setupDevCerts() {
 function runAllTests() {
     # Run tests for each language and template
     if [ "$excludeNonWebTests" == "false" ]; then
-        doCommand C# console new restore build run
-        doCommand C# classlib new restore build
+        doCommand C# console new restore build run multi-rid-publish
+        doCommand C# classlib new restore build multi-rid-publish
         doCommand C# xunit new restore test
         doCommand C# mstest new restore test
 
-        doCommand VB console new restore build run
-        doCommand VB classlib new restore build
+        doCommand VB console new restore build run multi-rid-publish
+        doCommand VB classlib new restore build multi-rid-publish
         doCommand VB xunit new restore test
         doCommand VB mstest new restore test
 
-        doCommand F# console new restore build run
-        doCommand F# classlib new restore build
+        doCommand F# console new restore build run multi-rid-publish
+        doCommand F# classlib new restore build multi-rid-publish
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
     fi
@@ -292,27 +312,17 @@ function runAllTests() {
     fi
 }
 
-function resetCaches() {
-    rm -rf "$testingHome"
-    mkdir "$testingHome"
-
-    HOME="$testingHome"
-
-    # clean restore path
-    rm -rf "$restoredPackagesDir"
-}
-
 function runWebTests() {
-    doCommand C# web "$@" new restore build run
-    doCommand C# mvc "$@" new restore build run
-    doCommand C# webapi "$@" new restore build run
-    doCommand C# razor "$@" new restore build run
-    doCommand C# blazorwasm "$@" new restore build run
-    doCommand C# blazorserver "$@" new restore build run
+    doCommand C# web "$@" new restore build run multi-rid-publish
+    doCommand C# mvc "$@" new restore build run multi-rid-publish
+    doCommand C# webapi "$@" new restore build multi-rid-publish
+    doCommand C# razor "$@" new restore build run multi-rid-publish
+    doCommand C# blazorwasm "$@" new restore build run publish
+    doCommand C# blazorserver "$@" new restore build run publish
 
-    doCommand F# web "$@" new restore build run
-    doCommand F# mvc "$@" new restore build run
-    doCommand F# webapi "$@" new restore build run
+    doCommand F# web "$@" new restore build run multi-rid-publish
+    doCommand F# mvc "$@" new restore build run multi-rid-publish
+    doCommand F# webapi "$@" new restore build run multi-rid-publish
 }
 
 function resetCaches() {
@@ -323,6 +333,11 @@ function resetCaches() {
 
     # clean restore path
     rm -rf "$restoredPackagesDir"
+
+    # Copy NuGet plugins if running user has HOME and we have auth. In particular, the auth plugin.
+    if [ "${internalPackageFeedPat:-}" ] && [ "${executingUserHome:-}" ]; then
+        cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/" || :
+    fi
 }
 
 function setupProdConFeed() {

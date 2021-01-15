@@ -1,17 +1,17 @@
-From 9364583b7517aab2b3eaeb20f39f1b4705d90f73 Mon Sep 17 00:00:00 2001
+From 2ac4c152b5c4409025dcbaf473b89a6094453e97 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Sat, 8 Feb 2020 06:43:48 +0000
-Subject: [PATCH 10/11] use-sourcebuildRID-to-find-clrjit
+Subject: [PATCH 08/14] use-sourcebuildRID-to-find-clrjit
 
 ---
  .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj     | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index c68128a917..e743902791 100644
+index 4199691fdb..6387557d8f 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -403,7 +403,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -411,7 +411,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      <PropertyGroup>
        <!-- Pick the right coreclr jit based on whether we are cross-compiling or not. -->
        <CoreCLRJitPath
@@ -21,5 +21,5 @@ index c68128a917..e743902791 100644
            Condition="'$(CrossCompileDirectory)' != ''">$(RuntimePackageRoot)runtimes\$(CrossCompileDirectory)\native\$(LibPrefix)clrjit$(LibExtension)</CoreCLRJitPath>
      </PropertyGroup>
 -- 
-2.18.2
+2.18.0
 

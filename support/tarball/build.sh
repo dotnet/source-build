@@ -17,6 +17,7 @@ SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
+alternateTarget=false
 CUSTOM_SDK_DIR=''
 
 while :; do
@@ -26,6 +27,10 @@ while :; do
 
     lowerI="$(echo $1 | awk '{print tolower($0)}')"
     case $lowerI in
+        --run-smoke-test)
+            alternateTarget=true
+            MSBUILD_ARGUMENTS+=( "/t:RunSmokeTest" )
+            ;;
         --with-ref-packages)
             CUSTOM_REF_PACKAGES_DIR="$(cd -P "$2" && pwd)"
             if [ ! -d "$CUSTOM_REF_PACKAGES_DIR" ]; then
@@ -142,7 +147,11 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export NUGET_PACKAGES=$restoredPackagesDir/
 
-LogDateStamp=$(date +"%m%d%H%M%S")
-$CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:$SCRIPT_ROOT/artifacts/log/Debug/BuildXPlatTasks_$LogDateStamp.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:PrepareOfflineLocalTools ${MSBUILD_ARGUMENTS[@]} "$@"
+if [ "$alternateTarget" == "true" ]; then
+  "$CLI_ROOT/dotnet" $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll "$SCRIPT_ROOT/build.proj" /bl:source-build-test.binlog /clp:v=m ${MSBUILD_ARGUMENTS[@]} "$@"
+else
+  LogDateStamp=$(date +"%m%d%H%M%S")
+  $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:$SCRIPT_ROOT/artifacts/log/Debug/BuildXPlatTasks_$LogDateStamp.binlog $SCRIPT_ROOT/tools-local/init-build.proj /t:PrepareOfflineLocalTools ${MSBUILD_ARGUMENTS[@]} "$@"
 
-$CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:$SCRIPT_ROOT/artifacts/log/Debug/Build_$LogDateStamp.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"
+  $CLI_ROOT/dotnet $CLI_ROOT/sdk/$SDK_VERSION/MSBuild.dll /bl:$SCRIPT_ROOT/artifacts/log/Debug/Build_$LogDateStamp.binlog $SCRIPT_ROOT/build.proj ${MSBUILD_ARGUMENTS[@]} "$@"
+fi

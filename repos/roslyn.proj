@@ -1,6 +1,8 @@
 <Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFiles" />
+
   <PropertyGroup>
     <BuildCommandArgs>--restore --build --pack</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) --configuration $(Configuration)</BuildCommandArgs>
@@ -44,6 +46,33 @@
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
+
+  <!--
+    Some internal utility APIs implemented by dotnet/roslyn have the same name
+    as types that were officially added to .NET in 5.0. That means that when we
+    target 'net5.0', they are sometimes ambiguous. The .NET 5.0 and Roslyn
+    versions of these types are not compatible, so we need to keep using the
+    internal implementation. This target renames the internal Roslyn types to
+    make them unambiguous to the compiler.
+  -->
+  <Target Name="MangleInternalApiNamesOverlappingWithNet50"
+          BeforeTargets="Build">
+    <ItemGroup>
+      <RoslynSourceFile Include="$(ProjectDirectory)**\*.cs" />
+      <RoslynSourceFile Include="$(ProjectDirectory)**\*.vb" />
+    </ItemGroup>
+
+    <!-- Stick 'Roslyn' in the middle of the new text for some idempotence. -->
+    <ReplaceTextInFiles
+      InputFiles="@(RoslynSourceFile)"
+      OldText="IReadOnlySet"
+      NewText="IRoslynReadOnlySet" />
+
+    <ReplaceTextInFiles
+      InputFiles="@(RoslynSourceFile)"
+      OldText="ReferenceEqualityComparer"
+      NewText="ReferenceEqualityRoslynComparer" />
+  </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

@@ -1,7 +1,7 @@
-From 6e5decfb2df01f3912a3b17ea8845ace28bf5e3b Mon Sep 17 00:00:00 2001
+From 6eda93ee35f9e0b4bce73569d308e53259e75b50 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
-Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH 01/14] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
  eng/Dependencies.props                                      | 1 +
@@ -9,19 +9,19 @@ Subject: [PATCH 01/13] Use non-portable NETCoreAppRuntime for crossgen
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 8fc6f8364f..feb519867c 100644
+index 36a24451f0..d573a7bde9 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -93,6 +93,7 @@ and are generated based on the last package release.
-     <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-arm64" />
+@@ -98,6 +98,7 @@ and are generated based on the last package release.
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-x64" />
+     <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-arm" />
      <LatestPackageReference Include="Microsoft.NETCore.App.Runtime.linux-musl-arm64" />
 +    <LatestPackageReference Condition="'$(TargetOsName)' != 'osx'" Include="Microsoft.NETCore.App.Runtime.$(SourceBuildRuntimeIdentifier)" Version="5.0.0-preview.8.20407.11" />
    </ItemGroup>
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index f642976df3..fce47bf26a 100644
+index dd7368806f..4199691fdb 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -36,7 +36,7 @@ index f642976df3..fce47bf26a 100644
  
      <AssetTargetFallback>$(AssetTargetFallback);native,Version=0.0</AssetTargetFallback>
  
-@@ -122,7 +124,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -119,7 +121,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
        <IncludeAssets>Runtime;Native</IncludeAssets>
      </Reference>
  
