@@ -10,7 +10,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | | | |
+| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | |
 | Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | | | | | |
 | 1 | *application-insights*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *cssparser*<sup>1</sup> | ? | ✔️ | | | | |
