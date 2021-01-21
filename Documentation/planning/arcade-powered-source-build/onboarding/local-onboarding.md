@@ -3,6 +3,13 @@
 Local onboarding involves setting up files in `eng/` that determine the behavior
 of source-build in the repo.
 
+This document describes the overall onboarding process. For more details about
+how the build executes, see
+[dotnet/arcade/.../Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild).
+The source code for the build tasks that run for prebuilt validation and
+intermediate nupkg dependency reading are maintained at
+[dotnet/arcade/.../Microsoft.DotNet.SourceBuild](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild).
+
 
 ## Source-build configuration overview
 
@@ -97,7 +104,7 @@ Running source-build locally is done by passing `/p:ArcadeBuildFromSource=true`
 at the end of the usual arcade-based build command for the repo. For example:
 
 ```
-./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true
+./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true -bl
 ```
 
 > Note: [source-build is not supported on
