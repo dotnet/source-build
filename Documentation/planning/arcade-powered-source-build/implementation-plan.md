@@ -7,11 +7,11 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 > ![](img/implementation-plan-graph.svg)  
 > [source (img/implementation-plan-graph.dot)](img/implementation-plan-graph.dot)
 
-| Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
+| Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra merged | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | |
 | 1 | *application-insights*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *cssparser*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *humanizer*<sup>1</sup> | ? | ✔️ | | | | |
@@ -48,7 +48,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 > <sup>1</sup> — Source will be maintained in central dotnet/source-build repo. It is not feasible to add full arcade-powered source-build infrastructure in some cases.
 
 ## Stage descriptions:
-  - **(1) Local build infra**
+  - **(1) Local build infra merged**
     - (Source-build) Submit PR introducing local build infra. May include `.patch` files.
     - (**Repo team**) Review PR and merge.
       - Merging into main/master strongly preferred.
