@@ -114,12 +114,12 @@
       - Wait for dotnet/announcements post. <kbd>Watch</kbd> the repo to get emails so you don't have to poll.
         - Example: <https://github.com/dotnet/announcements/issues/160>.
 1.  - [ ] [Internal] [3.1 / 5.0] In a dev branch on your GitHub fork of source-build, clean up.
-      - [ ] [Internal] [3.1 / 5.0] Convert internal URIs to public in `eng/Version.Details.xml`.
-        - `https://dev.azure.com/dnceng/internal/_git/<org>-<repo>` => `https://github.com/<org>/<repo>`
+      - [ ] [Internal] [3.1 / 5.0] Convert internal URIs to public 
+        - In `eng/Version.Details.xml` - Update `https://dev.azure.com/dnceng/internal/_git/<org>-<repo>` => `https://github.com/<org>/<repo>`
+        - In repo projects - Update  `<SourceDirectory>dotnet-XXXXX</SourceDirectory>` => `<SourceDirectory>XXXXX</SourceDirectory>`.  If the `SourceDirectory` is the same as the RepositoryName, the element can be removed.  Issue to track consistent repo names: [#1608](https://github.com/dotnet/source-build/issues/1608)
       - [ ] [Internal] [3.1 / 5.0] Remove internal package feeds from source-build.
         - `/NuGet.Config`
         - `/smoke-testNuGet.Config`
-        - repo projects - Update  `<SourceDirectory>dotnet-XXXXX</SourceDirectory>` to `<SourceDirectory>XXXXX</SourceDirectory>`.  If the `SourceDirectory` is the same as the RepositoryName, the element can be removed.  Issue to track consistent repo names: [#1608](https://github.com/dotnet/source-build/issues/1608)
         - Do not remove from subrepos. The build infra removes these sources automatically while modifying each subrepo nuget.config file.
 1.  - [ ] [Internal] Push the servicing branch to your GitHub fork and submit a source-build PR.
 1.  - [ ] [Internal] If a build hits `fatal: reference is not a tree: cb5f173b`, [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/release/master/Documentation/servicing/make-commit-available.md).
