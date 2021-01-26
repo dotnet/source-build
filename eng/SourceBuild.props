@@ -1,0 +1,27 @@
+<Project>
+
+  <PropertyGroup>
+    <GitHubRepositoryName>source-build</GitHubRepositoryName>
+    <SourceBuildManagedOnly>true</SourceBuildManagedOnly>
+  </PropertyGroup>
+
+  <!--
+    This repo has submodules. Use 'git clone' on each submodule to put it in the inner repo.
+
+    It would be simpler to call 'git submodule update...' one time in the inner repo. However:
+    * 'submodule update' hits the network. This is slow and often unreliable.
+    * 'git clone' copies the minimal amount of files from one place on disk to another.
+    * 'git clone' uses hard links instead of doing a full copy of all the Git data files. (In some
+      cases it can't use hard links, but Git figures that out itself.)
+
+    The result of cloning each submodule into the right location in the inner repo isn't 100% the
+    same as a fully set-up submodule, but it behaves the same in the context of source-build.
+  -->
+  <Target Name="InitializeInnerSourceBuildSubmodules"
+          AfterTargets="PrepareInnerSourceBuildRepoRoot">
+    <Exec
+      Command="git submodule foreach 'git clone . &quot;$(InnerSourceBuildRepoRoot)$sm_path&quot;'"
+      WorkingDirectory="$(RepoRoot)" />
+  </Target>
+
+</Project>

@@ -1,0 +1,40 @@
+From cac0690ad133c5e166ce5642dc71175791404fad Mon Sep 17 00:00:00 2001
+From: adaggarw <aditya.aggarwal@microsoft.com>
+Date: Wed, 19 Jun 2019 15:43:39 +0000
+Subject: [PATCH] removed ruleset and dependency on a couple packages.
+
+---
+ Src/Newtonsoft.Json/Newtonsoft.Json.csproj | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+index f5264490..bd3b3b11 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+@@ -28,16 +28,11 @@
+     <MinClientVersion>2.12</MinClientVersion>
+     <IncludeSymbols>true</IncludeSymbols>
+     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+-    <CodeAnalysisRuleset>Newtonsoft.Json.ruleset</CodeAnalysisRuleset>
+   </PropertyGroup>
+   <ItemGroup>
+     <None Remove="**\*.orig" />
+     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
+   </ItemGroup>
+-  <ItemGroup>
+-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.2" PrivateAssets="All" />
+-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All" />
+-  </ItemGroup> 
+   <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+     <AssemblyTitle>Json.NET</AssemblyTitle>
+     <DefineConstants>HAVE_ADO_NET;HAVE_APP_DOMAIN;HAVE_ASYNC;HAVE_BIG_INTEGER;HAVE_BINARY_FORMATTER;HAVE_BINARY_SERIALIZATION;HAVE_BINARY_EXCEPTION_SERIALIZATION;HAVE_CAS;HAVE_CHAR_TO_LOWER_WITH_CULTURE;HAVE_CHAR_TO_STRING_WITH_CULTURE;HAVE_COM_ATTRIBUTES;HAVE_COMPONENT_MODEL;HAVE_CONCURRENT_COLLECTIONS;HAVE_COVARIANT_GENERICS;HAVE_DATA_CONTRACTS;HAVE_DATE_TIME_OFFSET;HAVE_DB_NULL_TYPE_CODE;HAVE_DYNAMIC;HAVE_EMPTY_TYPES;HAVE_ENTITY_FRAMEWORK;HAVE_EXPRESSIONS;HAVE_FAST_REVERSE;HAVE_FSHARP_TYPES;HAVE_FULL_REFLECTION;HAVE_GUID_TRY_PARSE;HAVE_HASH_SET;HAVE_ICLONEABLE;HAVE_ICONVERTIBLE;HAVE_IGNORE_DATA_MEMBER_ATTRIBUTE;HAVE_INOTIFY_COLLECTION_CHANGED;HAVE_INOTIFY_PROPERTY_CHANGING;HAVE_ISET;HAVE_LINQ;HAVE_MEMORY_BARRIER;HAVE_METHOD_IMPL_ATTRIBUTE;HAVE_NON_SERIALIZED_ATTRIBUTE;HAVE_READ_ONLY_COLLECTIONS;HAVE_REFLECTION_EMIT;HAVE_SECURITY_SAFE_CRITICAL_ATTRIBUTE;HAVE_SERIALIZATION_BINDER_BIND_TO_NAME;HAVE_STREAM_READER_WRITER_CLOSE;HAVE_STRING_JOIN_WITH_ENUMERABLE;HAVE_TIME_SPAN_PARSE_WITH_CULTURE;HAVE_TIME_SPAN_TO_STRING_WITH_CULTURE;HAVE_TIME_ZONE_INFO;HAVE_TRACE_WRITER;HAVE_TYPE_DESCRIPTOR;HAVE_UNICODE_SURROGATE_DETECTION;HAVE_VARIANT_TYPE_PARAMETERS;HAVE_VERSION_TRY_PARSE;HAVE_XLINQ;HAVE_XML_DOCUMENT;HAVE_XML_DOCUMENT_TYPE;HAVE_CONCURRENT_DICTIONARY;$(AdditionalConstants)</DefineConstants>
+@@ -93,4 +88,4 @@
+     <NugetTargetMoniker>.NETPortable,Version=v0.0,Profile=Profile259</NugetTargetMoniker>
+     <LanguageTargets>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</LanguageTargets>
+   </PropertyGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.25.4
+
