@@ -8,7 +8,7 @@ Subject: [PATCH 1/7] Enable sourcelink in source-build
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/eng/Tools.props b/eng/Tools.props
-index cfe49be3c6..025f8ab9af 100644
+index 33edddae16..fdbb3b9c4a 100644
 --- a/eng/Tools.props
 +++ b/eng/Tools.props
 @@ -20,6 +20,10 @@
@@ -18,7 +18,7 @@ index cfe49be3c6..025f8ab9af 100644
 +
 +    <!-- SourceLink -->
 +    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
-+    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
++    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVSTSVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
    </ItemGroup>
  
    <!-- excluded from offline portion of source build -->
@@ -28,7 +28,7 @@ index cfe49be3c6..025f8ab9af 100644
  
 -    <!-- SourceLink -->
 -    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
--    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+-    <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVSTSVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
 -
      <!-- UWP test tools -->
      <PackageReference Include="Microsoft.DotNet.UAP.TestTools" Version="$(MicrosoftDotNetUapTestToolsPackageVersion)" Condition="$(TargetGroup.StartsWith('uap'))" PrivateAssets="all" IsImplicitlyDefined="true" />
