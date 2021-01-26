@@ -22,8 +22,8 @@
       - [Non-Internal] File GitHub issues as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
 1.  - [ ] [Internal] Ensure internal/release/X.Y branch is up to date with mirrored release/X.Y branch.
 1.  - [ ] Update to new version.
-      - [2.1] [/Documentation/servicing/update-2.1.md](https://github.com/dotnet/source-build/tree/release/master/Documentation/servicing/update-2.1.md)
-      - [3.1 / 5.0] [/Documentation/servicing/update-3.1-5.0.md](https://github.com/dotnet/source-build/tree/release/master/Documentation/servicing/update-3.1-5.0.md)
+      - [2.1] [/Documentation/servicing/update-2.1.md](https://github.com/dotnet/source-build/tree/master/Documentation/servicing/update-2.1.md)
+      - [3.1 / 5.0] [/Documentation/servicing/update-3.1-5.0.md](https://github.com/dotnet/source-build/tree/master/Documentation/servicing/update-3.1-5.0.md)
       - Start a new working branch and PR for WIP so others can easily look if needed and CI starts running.
         - [Internal] For internal builds, use <https://dev.azure.com/dnceng/internal/_git/dotnet-source-build>, branch name `internal/release/<SDK-version>-<month name><YYYY>`.
 1.  - [ ] Version update cleanup and confirmations
@@ -122,12 +122,12 @@
         - `/smoke-testNuGet.Config`
         - Do not remove from subrepos. The build infra removes these sources automatically while modifying each subrepo nuget.config file.
 1.  - [ ] [Internal] Push the servicing branch to your GitHub fork and submit a source-build PR.
-1.  - [ ] [Internal] If a build hits `fatal: reference is not a tree: cb5f173b`, [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/release/master/Documentation/servicing/make-commit-available.md).
+1.  - [ ] [Internal] If a build hits `fatal: reference is not a tree: cb5f173b`, [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/master/Documentation/servicing/make-commit-available.md).
 1.  - [ ] [Internal] Add source-build team as reviewers.
 1.  - [ ] [Internal] When CI is green and two reviewers approve, merge.
       - Avoid squash/rebase: nice to preserve commit hashes. However, there are no known dependencies on *source-build* commits being preserved.
 1.  - [ ] After all contributing repos have fixed any missing merges (from the `fatal: reference is not a tree` item above), Make a new PR to move any repos changed back to their official source.
-1. - [ ] Create and push tags on the post-merge commit. [/Documentation/servicing/tagging.md](https://github.com/dotnet/source-build/tree/release/master/Documentation/servicing/tagging.md)
+1. - [ ] Create and push tags on the post-merge commit. [/Documentation/servicing/tagging.md](https://github.com/dotnet/source-build/tree/master/Documentation/servicing/tagging.md)
 1.  - [ ] Create a GitHub release on the tag with SDK versioning.
       - Go to <https://github.com/dotnet/source-build/tags>
       - Expand the SDK-versioned tag's message and copy it
