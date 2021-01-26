@@ -1,2 +1,33 @@
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - release/*
+
+pr:
+  branches:
+    include:
+    - master
+    - release/*
+
 stages:
-- template: matrix.yml
+- stage: build
+  displayName: Build
+  jobs:
+  - template: /eng/common/templates/jobs/jobs.yml
+    parameters:
+      enablePublishUsingPipelines: true
+      enablePublishBuildArtifacts: true
+      enablePublishBuildAssets: true
+      enableSourceBuild: true
+      artifacts:
+        publish:
+          artifacts: true
+          manifests: true
+
+- ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+  - template: /eng/common/templates/post-build/post-build.yml
+    parameters:
+      publishingInfraVersion: 3
+      enableSourceLinkValidation: true
