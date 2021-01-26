@@ -103,97 +103,21 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateBuildToolFramework.complete" Overwrite="true" />
   </Target>
 
+  <!--
+    If a NuGet.config exists in the project, delete it, so the dotnet/source-build nuget.config is
+    found instead. This lets the subrepo use the incoming intermediate nupkg contents and avoids the
+    need to do subrepo-specific fixups like removing internet sources.
+  -->
   <Target Name="UpdateNuGetConfig"
           BeforeTargets="Build"
           Condition="'$(NuGetConfigFile)' != '' OR '@(NuGetConfigFiles)' != ''"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete">
-    <!-- Update the detected or manually specified NuGetConfigFile, but also allow multiple. -->
     <ItemGroup>
       <NuGetConfigFiles Include="$(NuGetConfigFile)" />
     </ItemGroup>
 
-    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                                          OfflineBuild="$(OfflineBuild)" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                            SourceName="prebuilt"
-                            SourcePath="$(PrebuiltPackagesPath)"
-                            Condition="'$(OfflineBuild)' == 'true'" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                            SourceName="previously-source-built"
-                            SourcePath="$(PrebuiltSourceBuiltPackagesPath)"
-                            Condition="'$(OfflineBuild)' == 'true'" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                            SourceName="reference-packages"
-                            SourcePath="$(ReferencePackagesDir)"
-                            Condition="'$(OfflineBuild)' == 'true'" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                            SourceName="source-built"
-                            SourcePath="$(SourceBuiltPackagesPath)" />
-
-    <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                            SourceName="ExtraSources"
-                            SourcePath="$(ExtraRestoreSourcePath)"
-                            Condition="'$(ExtraRestoreSourcePath)' != ''" />
-
-    <!-- Update NuGet.Config files that have deprecated myget feeds -->
-    <ItemGroup>
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/nuget-build/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/nuget-build/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://www.myget.org/F/nugetbuild/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/nuget-build/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/dotnet-corefxlab/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-experimental/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/dotnet-core/api/v3/index.json"
-        NewFeed="https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/vstest/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/mstestv2/auth/1e768268-8c95-4e7e-9fd2-0eb1b1b69b18/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/roslyn/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/roslyn-tools/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/roslyn-analyzers/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/roslyn-master-nightly/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/symreader-converter/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/interactive-window/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/mstestv2/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/test-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/vsunittesting/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-tools/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/msbuild/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet5/nuget/v3/index.json" />
-      <LegacyFeedMapping
-        Include="https://dotnet.myget.org/F/dotnet-buildtools/api/v3/index.json"
-        NewFeed="https://pkgs.dev.azure.com/dnceng/public/_packaging/myget-legacy/nuget/v3/index.json" />
-    </ItemGroup>
-
-    <ReplaceFeedsInNugetConfig InputFile="%(NuGetConfigFiles.Identity)"
-                               FeedMapping="@(LegacyFeedMapping)" />
+    <Delete Files="@(NuGetConfigFiles)" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateNuGetConfig.complete" Overwrite="true" />
   </Target>
@@ -214,50 +138,6 @@
                 SkipUpdateIfMissingKey="true" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)UpdateGlobalJsonVersions.complete" Overwrite="true" />
-  </Target>
-
-  <Target Name="CreateBuildOutputProps"
-          BeforeTargets="Build"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete">
-    <PropertyGroup>
-      <_PackageVersionPropsBackupPath>$(PackageVersionPropsPath).pre.$(RepositoryName).xml</_PackageVersionPropsBackupPath>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
-                                      Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
-      <_AdditionalAssetDirs Include="$(SourceBuiltToolsetDir)" Condition="Exists('$(SourceBuiltToolsetDir)')" />
-    </ItemGroup>
-
-    <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
-                           ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
-                           AdditionalAssetDirs="@(_AdditionalAssetDirs)"
-                           OutputPath="$(GennedPackageVersionPropsPath)" />
-
-    <WriteBuildOutputProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
-                           IncludeCreationTimeProperty="true"
-                           OutputPath="$(_PackageVersionPropsBackupPath)" />
-
-    <Message Importance="High" Text="$(RepositoryName) using package version properties saved at $(_PackageVersionPropsBackupPath) " />
-
-    <ReadNuGetPackageInfos PackagePaths="@(PreviouslySourceBuiltPackages)">
-      <Output TaskParameter="PackageInfoItems" ItemName="_PreviouslySourceBuiltPackageInfos" />
-    </ReadNuGetPackageInfos>
-
-    <ItemGroup>
-      <_KnownOriginPackagePaths Include="$(PrebuiltSourceBuiltPackagesPath)*.nupkg" />
-      <_KnownOriginPackagePaths Include="$(PrebuiltPackagesPath)*.nupkg" />
-      <_KnownOriginPackagePaths Include="$(ReferencePackagesDir)*.nupkg" />
-    </ItemGroup>
-
-    <GetSourceBuiltNupkgCacheConflicts SourceBuiltPackageInfos="@(_PreviouslySourceBuiltPackageInfos)"
-                                       PackageCacheDir="$(PackagesDir)"
-                                       KnownOriginPackagePaths="@(_KnownOriginPackagePaths)">
-      <Output TaskParameter="ConflictingPackageInfos" ItemName="ConflictingPackageInfos" />
-    </GetSourceBuiltNupkgCacheConflicts>
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateBuildOutputProps.complete" Overwrite="true" />
   </Target>
 
   <Target Name="CheckSourceBuiltNupkgConflictUsages"
@@ -286,29 +166,6 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CheckSourceBuiltNupkgConflictUsages.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="CreateCombinedRestoreSourceAndVersionProps"
-          BeforeTargets="Build"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete">
-    <ItemGroup>
-      <_DotNetRestoreSources Include="$(ExtraRestoreSourcePath)" Condition="'$(ExtraRestoreSourcePath)' != ''"/>
-      <_DotNetRestoreSources Include="$(SourceBuiltPackagesPath)" />
-      <_DotNetRestoreSources Include="$(ReferencePackagesDir)" Condition="'$(OfflineBuild)' == 'true'"/>
-      <_DotNetRestoreSources Include="$(PrebuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
-      <_DotNetRestoreSources Include="$(PrebuiltSourceBuiltPackagesPath)" Condition="'$(OfflineBuild)' == 'true'"/>
-      <PreviouslySourceBuiltPackages Include="$(SourceBuiltPackagesPath)*.nupkg"
-                                      Exclude="$(SourceBuiltPackagesPath)*.symbols.nupkg" />
-      <_AdditionalAssetDirs Include="$(SourceBuiltToolsetDir)" Condition="Exists('$(SourceBuiltToolsetDir)')" />
-    </ItemGroup>
-    <WriteRestoreSourceAndVersionProps NuGetPackages="@(PreviouslySourceBuiltPackages)"
-                                       ExtraProperties="@(ExtraPackageVersionPropsPackageInfo)"
-                                       AdditionalAssetDirs="@(_AdditionalAssetDirs)"
-                                       RestoreSources="@(_DotNetRestoreSources)"
-                                       OutputPath="$(RestoreSourcePropsPath)" />
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CreateCombinedRestoreSourceAndVersionProps.complete" Overwrite="true" />
-  </Target>
-
   <!--
     Generate blank directory build files above the repos, so they won't
     automatically find the source-build directory build files ("escaping" their
@@ -331,8 +188,15 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PreventDirectoryBuildPropsTargetsEscape.complete" Overwrite="true" />
   </Target>
 
+  <Target Name="EnsureRedirectLogOutputDirExists">
+    <MakeDir Directories="$(LoggingDir)" />
+  </Target>
+
   <Target Name="Build"
-          DependsOnTargets="BuildRepoReferences"
+          DependsOnTargets="
+            BuildRepoReferences;
+            ApplyPatches;
+            EnsureRedirectLogOutputDirExists"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)Build.complete">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Building $(ProjectBuildReason)" />
@@ -410,36 +274,6 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyPackage.complete" Overwrite="true" />
   </Target>
 
-  <Target Name="RemoveBuiltPackagesFromCache"
-          AfterTargets="Package"
-          Condition="'@(_BuiltPackages)'!=''"
-          DependsOnTargets="GatherBuiltPackages"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete">
-
-    <ItemGroup>
-        <!-- Excluding Arcade here will keep it in the cache, because that's where we're running from.
-             Subsequent projects will get Arcade from Tools/source-built. -->
-        <PackagePaths Include="@(_BuiltPackages)" Exclude="$(PackagesOutput)/Microsoft.DotNet.Arcade.Sdk.*.nupkg" />
-    </ItemGroup>
-
-    <ReadNuGetPackageInfos PackagePaths="@(PackagePaths)">
-      <Output TaskParameter="PackageInfoItems" ItemName="_BuiltPackageInfos" />
-    </ReadNuGetPackageInfos>
-
-    <!-- Copy built nupkgs from nuget packages cache directory to the previouslyRestored directory
-         and then delete all expanded files and the nupkg from the package cache so the next time
-         the package is used, it will reload the source-built version -->
-    <ItemGroup>
-      <_FilesToCopy Include="$(PackagesDir)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLower())/%(_BuiltPackageInfos.PackageVersion)/**/*.nupkg" />
-      <_FilesToDelete Include="$(PackagesDir)$([System.String]::copy('%(_BuiltPackageInfos.PackageId)').ToLower())/%(_BuiltPackageInfos.PackageVersion)/**/*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_FilesToCopy)" DestinationFolder="$(PreviouslyRestoredPackagesPath)$(RepositoryName)/" />
-    <Delete Files="@(_FilesToDelete)" />
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)RemoveBuiltPackagesFromCache.complete" Overwrite="true" />
-  </Target>
-
   <Target Name="ExtractToolPackage"
           DependsOnTargets="GatherBuiltPackages"
           AfterTargets="Build"
@@ -469,39 +303,6 @@
     <Copy SourceFiles="@(ExtractedToolFiles)" DestinationFolder="$(ToolPackageExtractDir)/" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ExtractToolPackage.complete" Overwrite="true" />
-  </Target>
-
-  <Target Name="EnsurePackagesCreated"
-          AfterTargets="CopyPackage"
-          Condition="'$(SkipEnsurePackagesCreated)' != 'true'"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete">
-    <ItemGroup>
-      <JustSourceBuiltPackages
-        Include="$(SourceBuiltPackagesPath)*.nupkg"
-        Exclude="
-          $(SourceBuiltPackagesPath)*.symbols.nupkg;
-          @(PreviouslySourceBuiltPackages)" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_PackagesNotCreatedReason Include="^ There may have been a silent failure in the submodule build. To confirm, check the build log file for undetected errors that may have prevented package creation: $(RepoConsoleLogFile)" />
-      <_PackagesNotCreatedReason Include="^ This error might be a false positive if $(RepositoryName) intentionally builds no nuget packages. If so, set the SkipEnsurePackagesCreated property to true in $(MSBuildProjectFullPath)" />
-      <_PackagesNotCreatedReason Include="^ The 'bin' directory might be dirty from a previous build and the package files already existed. If so, perform a clean build, or check which packages were already in 'bin' by opening $(_PackageVersionPropsBackupPath)" />
-      <_PackagesNotCreatedReason Include="^ The packages may have been written to an unexpected directory. For example, some repos used bin/ and changed to artifacts/ to match Arcade. Check PackagesOutput in $(MSBuildProjectFullPath) (currently '$(PackagesOutput)')" />
-    </ItemGroup>
-
-    <Error Condition="'@(JustSourceBuiltPackages)' == ''"
-           Text="$(RepositoryName) produced no new source-built package identities. Known possible causes:%0A@(_PackagesNotCreatedReason, '%0A')" />
-
-    <ReadNuGetPackageInfos PackagePaths="@(JustSourceBuiltPackages)">
-      <Output TaskParameter="PackageInfoItems" ItemName="_JustSourceBuiltPackageInfos" />
-    </ReadNuGetPackageInfos>
-
-    <Message Importance="High" Text="New NuGet package(s) after building $(RepositoryName):" />
-    <Message Importance="High" Text="  -> %(_JustSourceBuiltPackageInfos.PackageId) %(_JustSourceBuiltPackageInfos.PackageVersion)" />
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)EnsurePackagesCreated.complete" Overwrite="true" />
   </Target>
 
   <Target Name="Clean" Condition="'$(CleanCommand)' != ''" >

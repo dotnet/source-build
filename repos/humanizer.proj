@@ -1,13 +1,8 @@
 <Project>
-
-  <PropertyGroup>
-    <SourceDirectory>Humanizer</SourceDirectory>
-  </PropertyGroup>
-
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)/src/Humanizer/bin/$(Configuration)</PackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)/src/Humanizer/bin/Release</PackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
     <NuGetConfigFile>$(ProjectDirectory)/src/NuGet.config</NuGetConfigFile>
@@ -15,31 +10,30 @@
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
-  <ItemGroup>
-    <!-- Humanizer needs SourceLink.Create.CommandLine which is not produced from sourcelink repo
-    <RepositoryReference Include="sourcelink" />
-    -->
-  </ItemGroup>
-
   <Target Name="RepoBuild">
     <PropertyGroup>
       <BuildCommandArgs>$(ProjectDirectory)src/Humanizer/Humanizer.csproj</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=$(Configuration)</BuildCommandArgs>
+      <!-- Always build release mode: nuspecs in repo are hard-coded to Release config outputs. -->
+      <BuildCommandArgs>$(BuildCommandArgs) /p:Configuration=Release</BuildCommandArgs>
       <BuildCommandArgs>$(BuildCommandArgs) /v:$(LogVerbosity)</BuildCommandArgs>
-      <BuildCommandArgs>$(BuildCommandArgs) $(RedirectRepoOutputToLog)</BuildCommandArgs>
+
+      <PackCommandArgs>$(BuildCommandArgs)</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /p:NuspecFile=$(ProjectDirectory)NuSpecs/Humanizer.Core.nuspec</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /p:NuspecBasePath=$(ProjectDirectory)src/</PackCommandArgs>
+      <PackCommandArgs>$(PackCommandArgs) /p:NuspecProperties=Version=$(HumanizerCorePackageVersion)</PackCommandArgs>
     </PropertyGroup>
 
-    <Exec Command="$(DotnetToolCommand) restore /bl:restore.binlog $(BuildCommandArgs)  "
+    <Exec Command="$(DotnetToolCommand) restore /bl:restore.binlog $(BuildCommandArgs) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
 
-    <Exec Command="$(DotnetToolCommand) build /bl:build.binlog $(BuildCommandArgs)"
+    <Exec Command="$(DotnetToolCommand) build /bl:build.binlog $(BuildCommandArgs) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
 
-    <Exec Command="$(DotnetToolCommand) pack $(ProjectDirectory)src/Humanizer/Humanizer.csproj /p:NuspecFile=$(ProjectDirectory)NuSpecs/Humanizer.Core.nuspec /p:NuspecBasePath=$(ProjectDirectory)src/ /p:NuspecProperties=Version=$(HumanizerCorePackageVersion) /p:Configuration=$(Configuration)"
+    <Exec Command="$(DotnetToolCommand) pack /bl:pack.binlog $(PackCommandArgs) $(RedirectRepoOutputToLog)"
           EnvironmentVariables="@(EnvironmentVariables)"
           WorkingDirectory="$(ProjectDirectory)"
           IgnoreStandardErrorWarningFormat="true" />
