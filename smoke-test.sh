@@ -213,17 +213,26 @@ function doCommand() {
                 "${dotnetCmd}" $newArgs --no-restore >> "$logFile" 2>&1
             fi
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor|blazorwasm|blazorserver)$ ]]; then
+            # A separate log file that we will over-write all the time.
+            exitLogFile="$testingDir/exitLogFile"
+            echo > $exitLogFile
+            # Run an application in the background and redirect its
+            # stdout+stderr to a separate process (tee). The tee process
+            # writes its input to 2 files:
+            # - Either the normal log or stdout
+            # - A log that's only used to find out when it's safe to kill
+            #   the application.
             if [ "$projectOutput" == "true" ]; then
-                "${dotnetCmd}" $1 &
+                "${dotnetCmd}" $1 2>&1 > >(tee -a "$exitLogFile") &
             else
-                "${dotnetCmd}" $1 >> "$logFile" 2>&1 &
+                "${dotnetCmd}" $1 2>&1 > >(tee -a "$logFile" "$exitLogFile" >/dev/null) &
             fi
             webPid=$!
             killCommand="pkill -SIGTERM -P $webPid"
             echo "    waiting up to 30 seconds for web project with pid $webPid..."
             echo "    to clean up manually after an interactive cancellation, run: $killCommand"
             for seconds in $(seq 30); do
-                if [ "$(tail -n 1 "$logFile")" = 'Application started. Press Ctrl+C to shut down.' ]; then
+                if grep 'Application started. Press Ctrl+C to shut down.' "$exitLogFile"; then
                     echo "    app ready for shutdown after $seconds seconds"
                     break
                 fi
