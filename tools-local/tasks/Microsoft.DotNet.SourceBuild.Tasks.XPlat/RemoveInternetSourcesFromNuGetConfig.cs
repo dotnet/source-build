@@ -27,6 +27,13 @@ namespace Microsoft.DotNet.Build.Tasks
         /// </summary>
         public bool OfflineBuild { get; set; }
 
+        /// <summary>
+        /// A list of prefix strings that make the task keep a package source unconditionally. For
+        /// example, a source named 'darc-pub-dotnet-aspnetcore-e81033e' will be kept if the prefix
+        /// 'darc-pub-dotnet-aspnetcore-' is in this list.
+        /// </summary>
+        public string[] KeepFeedPrefixes { get; set; }
+
         public override bool Execute()
         {
             XDocument d = XDocument.Load(NuGetConfigFile);
@@ -36,6 +43,14 @@ namespace Microsoft.DotNet.Build.Tasks
             {
                 if (e.Name == "add")
                 {
+                    string feedName = e.Attribute("key").Value;
+                    if (KeepFeedPrefixes
+                        ?.Any(prefix => feedName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                        == true)
+                    {
+                        return true;
+                    }
+
                     string feedUrl = e.Attribute("value").Value;
                     if (OfflineBuild)
                     {
