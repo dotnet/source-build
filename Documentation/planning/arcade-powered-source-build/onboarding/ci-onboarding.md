@@ -23,16 +23,12 @@ two line change if the repo already uses the arcade
 to certain RIDs, like `Microsoft.NETCore.App.Runtime.linux-x64`.)
 
 To opt in:
-* Set `runSourceBuild: true`
-* If the repo is managed-only, set:
-  ```yaml
-  sourceBuildParameters:
-    includeDefaultManagedPlatform: true
-  ```
+* Set `enableSourceBuild: true`
 * If the repo is not managed-only, set `platforms:` to a list of objects.
+* If the repo is managed-only, a default platform will be used automatically.
 
 A managed-only repo using this implementation should look something like
-[this source-build-reference-packages implementation:](https://github.com/dotnet/source-build-reference-packages/blob/0ee4e822dad9cc624b67f7486c2902fcbee05312/azure-pipelines/builds/ci.yml#L16-L31)
+[this sourcelink implementation:](https://github.com/dotnet/sourcelink/blob/dfe619dc722be42d475595c755c958afe6177554/azure-pipelines.yml#L40)
 
 ```yaml
 stages:
@@ -44,13 +40,11 @@ stages:
       enablePublishUsingPipelines: true
       enablePublishBuildArtifacts: true
       enablePublishBuildAssets: true
+      enableSourceBuild: true
       artifacts:
         publish:
           artifacts: true
           manifests: true
-      runSourceBuild: true
-      sourceBuildParameters:
-        includeDefaultManagedPlatform: true
 ```
 
 A non-managed-only repo would instead specify `sourceBuildParameters` like this:
