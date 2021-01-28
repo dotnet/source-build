@@ -19,8 +19,14 @@
   -->
   <Target Name="InitializeInnerSourceBuildSubmodules"
           AfterTargets="PrepareInnerSourceBuildRepoRoot">
+    <PropertyGroup>
+      <!-- Find the clone script relative to Build.proj location. -->
+      <_gitCloneToDirScriptFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'SourceBuild', 'git-clone-to-dir.sh'))</_gitCloneToDirScriptFile>
+      <_gitCloneToDirScriptFile>$(MSBuildThisFileDirectory)git-clone-to-dir.sh</_gitCloneToDirScriptFile>
+    </PropertyGroup>
+
     <Exec
-      Command="git submodule foreach 'git clone . &quot;$(InnerSourceBuildRepoRoot)$sm_path&quot;'"
+      Command="git submodule foreach '$(_gitCloneToDirScriptFile) --clean --source . --dest &quot;$(InnerSourceBuildRepoRoot)$sm_path&quot;'"
       WorkingDirectory="$(RepoRoot)" />
   </Target>
 

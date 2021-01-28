@@ -18,7 +18,6 @@ stages:
   - template: /eng/common/templates/jobs/jobs.yml
     parameters:
       enablePublishUsingPipelines: true
-      enablePublishBuildArtifacts: true
       enablePublishBuildAssets: true
       artifacts:
         publish:
@@ -26,16 +25,20 @@ stages:
           manifests: true
       jobs:
 
-      - name: Source-Build (Managed)
+      - job: SourceBuild_Managed
+        displayName: Source-Build (Managed)
         pool:
           vmImage: ubuntu-20.04
         container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
         workspace:
           clean: all
+        variables:
+        - name: _BuildConfig
+          value: Release
         steps:
         - checkout: self
           submodules: true
-        - template: eng\common\templates\steps\source-build.yml
+        - template: /eng/common/templates/steps/source-build.yml
 
       # Jobs that are useful to validate the build runs on the platform, but shouldn't run in the
       # official build. In dotnet/source-build, we should *only* produce the intermediate nupkg in
@@ -43,11 +46,17 @@ stages:
       # on nuget.org and must not make their way into the channel. (E.g. ours are not signed.)
       - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
 
-        - name: macOS
+        - job: macOS
+          pool:
+            name: Hosted macOS
+          variables:
+          - name: _BuildConfig
+            value: Release
           steps:
           - checkout: self
             submodules: true
-          - script: ./build.sh --ci --restore --build --pack
+          - script: ./build.sh --ci --restore --build --pack --publish
+            displayName: Build
 
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: /eng/common/templates/post-build/post-build.yml
