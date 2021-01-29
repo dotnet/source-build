@@ -21,32 +21,32 @@ node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="Built"]
 "aspnetcore"
 "clicommandlineparser"
 "command-line-api"
+"common"
 "fsharp"
+"installer"
 "msbuild"
 "nuget-client"
-"roslyn"
 "roslyn-analyzers"
-"runtime"
+"roslyn"
 "runtime-portable"
+"runtime"
 "sdk"
-"templating"
-"vstest"
-"installer"
 "symreader"
-"common"
+"templating"
 "test-templates"
+"vstest"
 
 node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="Inputs ready"]
 "pre1"[label="Inputs ready"]
 "application-insights"
+"cssparser"
+"diagnostics"
+"humanizer"
+"linker"
 "netcorecli-fsc"
 "newtonsoft-json"
 "newtonsoft-json901"
 "xliff-tasks"
-"humanizer"
-"linker"
-"cssparser"
-"diagnostics"
 
 node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="1"]
 "s1"[label="#1 - Local build infra merged"]
@@ -57,8 +57,8 @@ node [fillcolor="#F0FE86",style="dashed,filled",tooltip="2"]
 
 node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="3"]
 "s3"[label="#3 - Artifacts greenlit"]
-"sourcelink"
 "source-build-reference-packages"
+"sourcelink"
 
 node [fillcolor="#CFAFE7",style="bold,filled",tooltip="4"]
 "s4"[label="#4 - Prebuilt regressions blocked"]
