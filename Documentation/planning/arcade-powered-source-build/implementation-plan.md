@@ -11,20 +11,20 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
 | sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | |
+| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | *application-insights*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *cssparser*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *humanizer*<sup>1</sup> | ? | ✔️ | | | | |
 | 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
 | 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
 | 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | | | | |
-| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
-| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
-| 1 | command-line-api | [?](https://github.com/) | | | | | |
+| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | |
+| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | |
+| 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | |
 | 1 | diagnostics | ? | ✔️ | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | | | | | |
-| 1 | symreader | ? | | | | | |
-| 1 | test-templates | ? | | | | | |
+| 1 | symreader | ? | ✔️ | | | | |
+| 1 | test-templates | ? | ✔️ | | | | |
 | 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | |
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
