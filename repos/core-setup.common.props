@@ -46,9 +46,7 @@
     <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(ShippingPackagesOutput)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources>$(EnvironmentRestoreSources)%3B$(NonShippingPackagesOutput)</EnvironmentRestoreSources>
     <EnvironmentRestoreSources Condition="'$(OfflineBuild)' == 'true'">$(EnvironmentRestoreSources)%3B$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://api.nuget.org/v3/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-core/index.json</EnvironmentRestoreSources>
-    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://dotnetfeed.blob.core.windows.net/dotnet-tools-internal/index.json</EnvironmentRestoreSources>
+    <EnvironmentRestoreSources Condition="'$(OfflineBuild)' != 'true'">$(EnvironmentRestoreSources)%3Bhttps://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public%40Local/nuget/v3/index.json</EnvironmentRestoreSources>
 
     <!-- core-setup does not destabilize for intermediate servicing builds -->
     <IsStable>true</IsStable>
