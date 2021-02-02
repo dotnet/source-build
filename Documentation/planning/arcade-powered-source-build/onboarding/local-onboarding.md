@@ -10,6 +10,22 @@ The source code for the build tasks that run for prebuilt validation and
 intermediate nupkg dependency reading are maintained at
 [dotnet/arcade/.../Microsoft.DotNet.SourceBuild](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild).
 
+## Trying it out locally
+
+Running source-build locally is done by passing `/p:ArcadeBuildFromSource=true`
+at the end of the usual arcade-based build command for the repo. For example:
+
+```
+./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true -bl
+```
+
+> Note: [source-build is not supported on
+> Windows](https://github.com/dotnet/source-build/issues/1190), only Linux and
+> macOS.
+
+After running the build, source-build artifacts will be in
+`artifacts/source-build`, and the [intermediate nupkg] will be something like
+`artifacts/packages/*/Microsoft.SourceBuild.Intermediate.*.nupkg`.
 
 ## Source-build configuration overview
 
@@ -98,26 +114,4 @@ nupkg] ID. For example, running source-build on `dotnet/installer` with
   * Ends with the `RepoName` without a suffix because `ManagedOnly="true"`.
 
 
-# Trying it out locally
-
-Running source-build locally is done by passing `/p:ArcadeBuildFromSource=true`
-at the end of the usual arcade-based build command for the repo. For example:
-
-```
-./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true -bl
-```
-
-> Note: [source-build is not supported on
-> Windows](https://github.com/dotnet/source-build/issues/1190), only Linux and
-> macOS.
-
-After running the build, source-build artifacts will be in
-`artifacts/source-build`, and the [intermediate nupkg] will be something like
-`artifacts/packages/*/Microsoft.SourceBuild.Intermediate.*.nupkg`.
-
-It isn't strictly necessary to try it out locally to proceed with CI onboarding.
-The source-build contributor who submits the initial configuration PR to the
-repo will have tested out the build locally themselves.
-
-
-[intermediate nupkg]: https://github.com/dotnet/source-build/blob/release/3.1/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
+[intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
