@@ -12,8 +12,9 @@ intermediate nupkg dependency reading are maintained at
 
 ## Trying it out locally
 
-Running source-build locally is done by passing `/p:ArcadeBuildFromSource=true`
-at the end of the usual arcade-based build command for the repo. For example:
+After someone sets up arcade-powered source-build in a repo, running it locally
+is done by passing `/p:ArcadeBuildFromSource=true` at the end of the usual
+arcade-based build command for the repo. For example:
 
 ```
 ./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true -bl
@@ -27,7 +28,25 @@ After running the build, source-build artifacts will be in
 `artifacts/source-build`, and the [intermediate nupkg] will be something like
 `artifacts/packages/*/Microsoft.SourceBuild.Intermediate.*.nupkg`.
 
+The MSBuild binlog will be placed somewhere like:
+`artifacts/log/Debug/Build.binlog`. However, this "outer" binlog doesn't contain
+the meat of the build: the "inner" build runs inside an `Exec` task. The inner
+binlog will be written to:
+`artifacts/source-build/self/src/artifacts/sourcebuild.binlog`.
+
 ## Source-build configuration overview
+
+These changes are all needed before the inner source-build will work:
+
+* [`eng/SourceBuild.props`](#engsourcebuildprops) - Basic properties, such as
+  repo name.
+* [`eng/SourceBuildPrebuiltBaseline.xml`](#engsourcebuildprebuiltbaselinexml) -
+  Allow prebuilts. Until stage 4, we allow all prebuilts.
+* [`eng/Version.Details.xml`](#engversiondetailsxml) - Already exists, but
+  modifications are needed to pull dependencies from upstream intermediate
+  nupkgs.
+
+See the below sections for details on each file and examples:
 
 ### `eng/SourceBuild.props`
 
