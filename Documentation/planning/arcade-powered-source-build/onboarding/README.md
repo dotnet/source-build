@@ -4,14 +4,17 @@ Onboarding to ArPow (arcade-powered source-build) has several stages:
 
 * **(1) Local build infra merged**
    * See [local-onboarding.md](local-onboarding.md).
+   * PR submitted by source-build team.
 * **(2) CI implemented** (PR + Official)
    * See [ci-onboarding.md](ci-onboarding.md).
+   * PR submitted by repo's source-build champion.
 * **(3) Artifacts greenlit** for downstream usage
    * The source-build team looks at the results of an official build and marks
      the repo greenlit. No tooling.
 * **(4) Prebuilt regressions blocked**
    * This involves reducing `eng/SourceBuildPrebuiltBaseline.xml` to a minimal
      set and enabling a flag that makes CI fail when a regression is detected.
+   * PR submitted by source-build team.
 
 See [implementation-plan.md](../implementation-plan.md) for more details about
 the steps and the overall ArPow implementation status.

@@ -45,8 +45,11 @@ These changes are all needed before the inner source-build will work:
 * [`eng/Version.Details.xml`](#engversiondetailsxml) - Already exists, but
   modifications are needed to pull dependencies from upstream intermediate
   nupkgs.
+* [Patching](#patching). - The initial onboarding process includes putting any
+  required patches into the repo. Some may be incorporated directly, but some
+  may still be `.patch` files.
 
-See the below sections for details on each file and examples:
+See the below sections for details:
 
 ### `eng/SourceBuild.props`
 
@@ -131,6 +134,40 @@ nupkg] ID. For example, running source-build on `dotnet/installer` with
   * `.linux-x64` because `ManagedOnly` is not `true`.
 * `Microsoft.SourceBuild.Intermediate.source-build-reference-packages`
   * Ends with the `RepoName` without a suffix because `ManagedOnly="true"`.
+
+### Patching
+
+Look at <https://github.com/dotnet/source-build/tree/release/5.0/patches> to
+see if the repo needs patches.
+
+For each patch that will obviously work without breaking the Microsoft build,
+use `git am` to incorporate it. This is subjective: if there's any question,
+don't incorporate it yet.
+
+For each patch that isn't incorporated directly:
+* Place the patches in `eng/source-build-patches/*.patch`.
+* Add a target into `eng/SourceBuild.props` that applies the patches just before
+  the build from source:
+
+```xml
+  <Target Name="ApplySourceBuildPatchFiles"
+          Condition="
+            '$(ArcadeBuildFromSource)' == 'true' and
+            '$(ArcadeInnerBuildFromSource)' == 'true'"
+          BeforeTargets="Execute">
+    <ItemGroup>
+      <SourceBuildPatchFile Include="$(RepositoryEngineeringDir)source-build-patches\*.patch" />
+    </ItemGroup>
+
+    <Exec
+      Command="git apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
+      WorkingDirectory="$(RepoRoot)"
+      Condition="'@(SourceBuildPatchFile)' != ''" />
+  </Target>
+```
+
+> Example is from dotnet/arcade before its `.patch` files were incorporated:
+<https://github.com/dotnet/arcade/blob/681511f2f63a3563494f1f27904b2842abef6b35/eng/SourceBuild.props>
 
 
 [intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
