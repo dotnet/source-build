@@ -18,7 +18,6 @@ ranksep=0.08
 node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="Built"]
 "pre0"[label="Built in 5.0"]
 "aspnetcore"
-"common"
 "fsharp"
 "installer"
 "msbuild"
@@ -47,16 +46,16 @@ node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="1"]
 
 node [fillcolor="#F0FE86",style="dashed,filled",tooltip="2"]
 "s2"[label="#2 - CI implemented"]
+
+node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="3"]
+"s3"[label="#3 - Artifacts greenlit"]
 "application-insights"
+"arcade"
 "cssparser"
 "humanizer"
 "netcorecli-fsc"
 "newtonsoft-json"
 "newtonsoft-json901"
-
-node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="3"]
-"s3"[label="#3 - Artifacts greenlit"]
-"arcade"
 "source-build-reference-packages"
 "sourcelink"
 
@@ -83,7 +82,6 @@ subgraph clusterLegend {
 "roslyn-analyzers" -> "aspnetcore"
 "arcade" -> "clicommandlineparser"
 "arcade" -> "command-line-api"
-"newtonsoft-json" -> "common"
 "arcade" -> "fsharp"
 "msbuild" -> "fsharp"
 "newtonsoft-json901" -> "fsharp"
@@ -109,7 +107,6 @@ subgraph clusterLegend {
 "arcade" -> "msbuild"
 "runtime" -> "msbuild"
 "roslyn" -> "msbuild"
-"common" -> "nuget-client"
 "newtonsoft-json" -> "nuget-client"
 "msbuild" -> "nuget-client"
 "aspnet-xdt" -> "nuget-client"
