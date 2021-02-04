@@ -12,15 +12,15 @@ diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/Gene
 index 9e7249d..f1b11d4 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -11,8 +11,8 @@
+@@ -7,8 +7,8 @@
  
    <PropertyGroup>
      <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
--    <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreSharedFrameworkx6450PackageVersion)</AspNetCoreBlobVersion>
--    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
+-    <AspNetCoreBlobVersion>$(VSRedistCommonAspNetCoreSharedFrameworkx6460PackageVersion)</AspNetCoreBlobVersion>
+-    <CoreSetupBlobVersion>$(VSRedistCommonNetCoreSharedFrameworkx6460PackageVersion)</CoreSetupBlobVersion>
 +    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreAppRuntimePackageVersion)</AspNetCoreBlobVersion>
 +    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimeVersion)</CoreSetupBlobVersion>
-     <WindowsDesktopBlobVersion>$(MicrosoftWindowsDesktopAppPackageVersion)</WindowsDesktopBlobVersion>
+     <WindowsDesktopBlobVersion>$(VSRedistCommonWindowsDesktopSharedFrameworkx6460PackageVersion)</WindowsDesktopBlobVersion>
  
      <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
 -- 
