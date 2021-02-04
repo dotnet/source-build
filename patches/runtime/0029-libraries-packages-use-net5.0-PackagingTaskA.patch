@@ -1,4 +1,4 @@
-From ed9146aeedbc89e12f256a906cd94de62c02626e Mon Sep 17 00:00:00 2001
+From da5a2c2593df373d1fafa605e1d7ce3ba2ca38e7 Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Wed, 18 Nov 2020 09:29:17 +0100
 Subject: [PATCH] runtime: libraries-packages: use net5.0 PackagingTaskAssembly
@@ -8,10 +8,10 @@ Subject: [PATCH] runtime: libraries-packages: use net5.0 PackagingTaskAssembly
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/libraries/libraries-packages.proj b/src/libraries/libraries-packages.proj
-index 88e5bb94e91..31e57ebfb53 100644
+index 603d523df55..38cd7e74337 100644
 --- a/src/libraries/libraries-packages.proj
 +++ b/src/libraries/libraries-packages.proj
-@@ -9,7 +9,7 @@
+@@ -7,7 +7,7 @@
    
    <PropertyGroup>
      <PackagingTaskAssembly>$(NuGetPackageRoot)microsoft.dotnet.build.tasks.packaging\$(MicrosoftDotNetBuildTasksPackagingVersion)\tools\</PackagingTaskAssembly>
@@ -21,5 +21,5 @@ index 88e5bb94e91..31e57ebfb53 100644
      <PackagingTaskAssembly>$(PackagingTaskAssembly)Microsoft.DotNet.Build.Tasks.Packaging.dll</PackagingTaskAssembly>
    </PropertyGroup>
 -- 
-2.26.2
+2.25.4
 

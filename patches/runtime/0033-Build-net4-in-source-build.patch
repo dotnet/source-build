@@ -1,4 +1,4 @@
-From e4813ac3c2260a370e196acaa09a19e77aacbe0e Mon Sep 17 00:00:00 2001
+From 5bf117674aeb0489d2107679bb2ff0aa8e1c8e95 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Wed, 9 Dec 2020 14:01:09 -0600
 Subject: [PATCH] Build net4* in source-build
@@ -26,30 +26,30 @@ errors like these:
   /work/artifacts/src/runtime.cf258a14b70ad9069470a108f13765e0e5988f51/src/libraries/System.ServiceProcess.ServiceController/ref/System.ServiceProcess.ServiceController.cs(39,43):
     error CS0433: The type 'EventLog' exists in both 'System.Diagnostics.EventLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51' and 'System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089' [/work/artifacts/src/runtime.cf258a14b70ad9069470a108f13765e0e5988f51/src/libraries/System.ServiceProcess.ServiceController/ref/System.ServiceProcess.ServiceController.csproj]
   /work/.dotnet/sdk/5.0.100-rc.1.20452.10/Microsoft.Common.CrossTargeting.targets(88,5): error MSB4181: The "MSBuild" task returned false but did not log an error. [/work/artifacts/src/runtime.cf258a14b70ad9069470a108f13765e0e5988f51/src/libraries/System.ServiceProcess.ServiceController/ref/System.ServiceProcess.ServiceController.csproj]
-
 ---
- src/libraries/Directory.Build.props                          | 5 +++--
- .../src/Microsoft.Extensions.Configuration.Xml.csproj        | 3 +++
- .../ref/System.Configuration.ConfigurationManager.csproj     | 2 +-
- .../ref/System.ServiceProcess.ServiceController.csproj       | 2 +-
- 4 files changed, 8 insertions(+), 4 deletions(-)
+ src/libraries/Directory.Build.props                         | 6 ++++--
+ .../src/Microsoft.Extensions.Configuration.Xml.csproj       | 3 +++
+ .../ref/System.Configuration.ConfigurationManager.csproj    | 2 +-
+ .../ref/System.ServiceProcess.ServiceController.csproj      | 2 +-
+ 4 files changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/src/libraries/Directory.Build.props b/src/libraries/Directory.Build.props
-index 7a3946c28a4..dfe161d6d72 100644
+index 94606e51460..807578c11ed 100644
 --- a/src/libraries/Directory.Build.props
 +++ b/src/libraries/Directory.Build.props
-@@ -41,8 +41,9 @@
-     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-     <BuildTargetFramework Condition="'$(BuildTargetFramework)' == '' and '$(TargetFramework)' != ''">$(TargetFramework)</BuildTargetFramework>
+@@ -26,8 +26,10 @@
+   <PropertyGroup>
+     <BuildTargetFramework Condition="'$(BuildTargetFramework)' == '' and '$(TargetFramework)' != ''">$([System.Text.RegularExpressions.Regex]::Replace('$(TargetFramework)', '(-[^;]+)', ''))</BuildTargetFramework>
      <!-- Build all .NET Framework configurations when net48 is passed in. This is for convenience. -->
 -    <AdditionalBuildTargetFrameworks Condition="'$(BuildTargetFramework)' == 'net48'">net45;net451;net452;net46;net461;net462;net47;net471;net472</AdditionalBuildTargetFrameworks>
 -    <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildAllProjects)' == 'true'">$(AdditionalBuildTargetFrameworks);netstandard2.0</AdditionalBuildTargetFrameworks>
 +    <NETFrameworkTargetFrameworksExcept48>net45;net451;net452;net46;net461;net462;net47;net471;net472</NETFrameworkTargetFrameworksExcept48>
 +    <AdditionalBuildTargetFrameworks Condition="'$(BuildTargetFramework)' == 'net48'">$(AdditionalBuildTargetFrameworks);$(NETFrameworkTargetFrameworksExcept48)</AdditionalBuildTargetFrameworks>
 +    <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildAllProjects)' == 'true'">$(AdditionalBuildTargetFrameworks);netstandard2.0;net48;$(NETFrameworkTargetFrameworksExcept48)</AdditionalBuildTargetFrameworks>
++
+     <!-- Initialize BuildSettings from the individual properties. -->
      <BuildSettings>$(BuildTargetFramework)-$(TargetOS)-$(Configuration)-$(TargetArchitecture)</BuildSettings>
      <BuildSettings Condition="'$(BuildTargetFramework)' == ''">$(NetCoreAppCurrent)-$(TargetOS)-$(Configuration)-$(TargetArchitecture)</BuildSettings>
-   </PropertyGroup>
 diff --git a/src/libraries/Microsoft.Extensions.Configuration.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj b/src/libraries/Microsoft.Extensions.Configuration.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj
 index e1dad4a470d..ac14aaad7d6 100644
 --- a/src/libraries/Microsoft.Extensions.Configuration.Xml/src/Microsoft.Extensions.Configuration.Xml.csproj
