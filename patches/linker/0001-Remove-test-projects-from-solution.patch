@@ -1,18 +1,17 @@
-From 194c172bb1d8e0c0fa0596062ccdd3c28a3923b4 Mon Sep 17 00:00:00 2001
-From: Chris Rummel <crummel@microsoft.com>
-Date: Fri, 25 Sep 2020 14:02:33 -0500
+From ada0538e8106f207a05c52cbd91c3cbce3cee3b8 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 4 Feb 2021 22:26:17 +0000
 Subject: [PATCH] Remove test projects from solution.
 
 ---
- illink.sln     | 60 --------------------------------------------------
- monolinker.sln | 18 ---------------
- 2 files changed, 78 deletions(-)
+ illink.sln | 75 ------------------------------------------------------
+ 1 file changed, 75 deletions(-)
 
 diff --git a/illink.sln b/illink.sln
-index d26f2f3..8dcca17 100644
+index 33419289..47d8c826 100644
 --- a/illink.sln
 +++ b/illink.sln
-@@ -7,20 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Linker", "src\linker\M
+@@ -7,26 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Linker", "src\linker\M
  EndProject
  Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ILLink.Tasks", "src\ILLink.Tasks\ILLink.Tasks.csproj", "{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}"
  EndProject
@@ -32,8 +31,14 @@ index d26f2f3..8dcca17 100644
 -EndProject
  Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ref", "ref", "{03EB085F-3E2E-4A68-A7DF-951ADF59A0CC}"
  EndProject
- Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mono.Linker", "src\linker\ref\Mono.Linker.csproj", "{57BE47DF-DCDF-44EE-B77F-F8E8AD069076}"
-@@ -59,42 +51,6 @@ Global
+ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ILLink.RoslynAnalyzer", "src\ILLink.RoslynAnalyzer\ILLink.RoslynAnalyzer.csproj", "{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}"
+ EndProject
+-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ILLink.RoslynAnalyzer.Tests", "test\ILLink.RoslynAnalyzer.Tests\ILLink.RoslynAnalyzer.Tests.csproj", "{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}"
+-EndProject
+ Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "Mono.Linker", "src\linker\ref\Mono.Linker.csproj", "{8DA71B3B-5809-44E5-A018-5DE5C6FF6C2A}"
+ EndProject
+ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tlens", "src\tlens\tlens.csproj", "{B218CBE9-ADCE-4086-9DBF-E6C782136E6D}"
+@@ -65,42 +55,6 @@ Global
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x64.Build.0 = Release|Any CPU
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x86.ActiveCfg = Release|Any CPU
  		{A7A026C4-DEB4-4EF6-963E-17E7B98A6527}.Release|x86.Build.0 = Release|Any CPU
@@ -76,7 +81,7 @@ index d26f2f3..8dcca17 100644
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Debug|Any CPU.Build.0 = Debug|Any CPU
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Debug|x64.ActiveCfg = Debug|Any CPU
-@@ -107,18 +63,6 @@ Global
+@@ -113,18 +67,6 @@ Global
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Release|x64.Build.0 = Release|Any CPU
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Release|x86.ActiveCfg = Release|Any CPU
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17}.Release|x86.Build.0 = Release|Any CPU
@@ -92,10 +97,29 @@ index d26f2f3..8dcca17 100644
 -		{5A27FA80-0E28-4243-88DF-EC8A22C8BFD0}.Release|x64.Build.0 = Release|Any CPU
 -		{5A27FA80-0E28-4243-88DF-EC8A22C8BFD0}.Release|x86.ActiveCfg = Release|Any CPU
 -		{5A27FA80-0E28-4243-88DF-EC8A22C8BFD0}.Release|x86.Build.0 = Release|Any CPU
- 		{57BE47DF-DCDF-44EE-B77F-F8E8AD069076}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
- 		{57BE47DF-DCDF-44EE-B77F-F8E8AD069076}.Debug|Any CPU.Build.0 = Debug|Any CPU
- 		{57BE47DF-DCDF-44EE-B77F-F8E8AD069076}.Debug|x64.ActiveCfg = Debug|Any CPU
-@@ -136,11 +80,7 @@ Global
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Debug|x64.ActiveCfg = Debug|Any CPU
+@@ -137,18 +79,6 @@ Global
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Release|x64.Build.0 = Release|Any CPU
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Release|x86.ActiveCfg = Release|Any CPU
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2}.Release|x86.Build.0 = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|x64.ActiveCfg = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|x64.Build.0 = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|x86.ActiveCfg = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Debug|x86.Build.0 = Debug|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|Any CPU.Build.0 = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|x64.ActiveCfg = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|x64.Build.0 = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|x86.ActiveCfg = Release|Any CPU
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE}.Release|x86.Build.0 = Release|Any CPU
+ 		{8DA71B3B-5809-44E5-A018-5DE5C6FF6C2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+ 		{8DA71B3B-5809-44E5-A018-5DE5C6FF6C2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+ 		{8DA71B3B-5809-44E5-A018-5DE5C6FF6C2A}.Debug|x64.ActiveCfg = Debug|Any CPU
+@@ -178,13 +108,8 @@ Global
  		HideSolutionNode = FALSE
  	EndGlobalSection
  	GlobalSection(NestedProjects) = preSolution
@@ -104,45 +128,11 @@ index d26f2f3..8dcca17 100644
 -		{2C26601F-3E2F-45B9-A02F-58EE9296E19E} = {C2969923-7BAA-4FE4-853C-F670B0D3C6C8}
  		{96182221-C5C4-436D-9BE0-EC499F9BAF17} = {AA0569FB-73E9-4B42-9A19-714BB1229DAE}
 -		{5A27FA80-0E28-4243-88DF-EC8A22C8BFD0} = {C2969923-7BAA-4FE4-853C-F670B0D3C6C8}
- 		{57BE47DF-DCDF-44EE-B77F-F8E8AD069076} = {03EB085F-3E2E-4A68-A7DF-951ADF59A0CC}
+ 		{F1A44A78-34EE-408B-8285-9A26F0E7D4F2} = {AA0569FB-73E9-4B42-9A19-714BB1229DAE}
+-		{90D64CE4-C891-4B98-AF59-EE9B04BA1CBE} = {C2969923-7BAA-4FE4-853C-F670B0D3C6C8}
+ 		{8DA71B3B-5809-44E5-A018-5DE5C6FF6C2A} = {03EB085F-3E2E-4A68-A7DF-951ADF59A0CC}
  	EndGlobalSection
  	GlobalSection(ExtensibilityGlobals) = postSolution
-diff --git a/monolinker.sln b/monolinker.sln
-index ca9420d..9e11a08 100644
---- a/monolinker.sln
-+++ b/monolinker.sln
-@@ -5,12 +5,6 @@ VisualStudioVersion = 15.0.26403.7
- MinimumVisualStudioVersion = 10.0.40219.1
- Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker", "src\linker\Mono.Linker.csproj", "{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}"
- EndProject
--Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker.Tests", "test\Mono.Linker.Tests\Mono.Linker.Tests.csproj", "{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}"
--EndProject
--Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker.Tests.Cases", "test\Mono.Linker.Tests.Cases\Mono.Linker.Tests.Cases.csproj", "{B6BEE6AA-ADA0-4E1D-9A17-FBF2936F82B5}"
--EndProject
--Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Linker.Tests.Cases.Expectations", "test\Mono.Linker.Tests.Cases.Expectations\Mono.Linker.Tests.Cases.Expectations.csproj", "{2C26601F-3E2F-45B9-A02F-58EE9296E19E}"
--EndProject
- Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil", "external\cecil\Mono.Cecil.csproj", "{5E89AB62-1526-41F7-AAA3-D9119C9451EA}"
- EndProject
- Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mono.Cecil.Mdb", "external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj", "{76602591-ACB6-42DF-A6F6-8FE64B0E929F}"
-@@ -29,18 +23,6 @@ Global
- 		{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}.Debug|Any CPU.Build.0 = Debug|Any CPU
- 		{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}.Release|Any CPU.ActiveCfg = Release|Any CPU
- 		{DD28E2B1-057B-4B4D-A04D-B2EBD9E76E46}.Release|Any CPU.Build.0 = Release|Any CPU
--		{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
--		{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}.Debug|Any CPU.Build.0 = Debug|Any CPU
--		{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}.Release|Any CPU.ActiveCfg = Release|Any CPU
--		{400A1561-B6B6-482D-9E4C-3DDAEDE5BD07}.Release|Any CPU.Build.0 = Release|Any CPU
--		{B6BEE6AA-ADA0-4E1D-9A17-FBF2936F82B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
--		{B6BEE6AA-ADA0-4E1D-9A17-FBF2936F82B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
--		{B6BEE6AA-ADA0-4E1D-9A17-FBF2936F82B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
--		{B6BEE6AA-ADA0-4E1D-9A17-FBF2936F82B5}.Release|Any CPU.Build.0 = Release|Any CPU
--		{2C26601F-3E2F-45B9-A02F-58EE9296E19E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
--		{2C26601F-3E2F-45B9-A02F-58EE9296E19E}.Debug|Any CPU.Build.0 = Debug|Any CPU
--		{2C26601F-3E2F-45B9-A02F-58EE9296E19E}.Release|Any CPU.ActiveCfg = Release|Any CPU
--		{2C26601F-3E2F-45B9-A02F-58EE9296E19E}.Release|Any CPU.Build.0 = Release|Any CPU
- 		{5E89AB62-1526-41F7-AAA3-D9119C9451EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
- 		{5E89AB62-1526-41F7-AAA3-D9119C9451EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
- 		{5E89AB62-1526-41F7-AAA3-D9119C9451EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 -- 
-2.18.0
+2.21.3
 
