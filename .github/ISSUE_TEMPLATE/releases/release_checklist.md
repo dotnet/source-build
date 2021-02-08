@@ -37,6 +37,7 @@
       - [3.1 / 5.0]
         - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` matches N-1 release artifacts.
         - [ ] Update the `global.json` SDK version to N-1: the latest released "3.1.XYY" SDK version, where "3.1.X" matches the SDK we're building.
+        - [ ] Update the `eng/Versions.props` with the latest product versions.
 1.  - [ ] [2.1] Fetch internal git data for submodules.
       1.  Run `git submodule update --init --recursive` and see errors due to missing commits.
       1.  Run `fetch-vsts-commits.sh` with a PAT to automatically fetch internal refs.
