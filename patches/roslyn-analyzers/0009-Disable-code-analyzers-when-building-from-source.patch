@@ -13,18 +13,18 @@ catch anything.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/Directory.Build.props b/src/Directory.Build.props
-index 6c95f9d7b..63c1ce376 100644
+index b876ef5c2..f87b57387 100644
 --- a/src/Directory.Build.props
 +++ b/src/Directory.Build.props
-@@ -16,7 +16,7 @@
-   </ItemGroup>
+@@ -21,7 +21,7 @@
+     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+   </PropertyGroup>
  
-   <!-- Code analyzers -->
 -  <ItemGroup>
 +  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
-     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(MicrosoftCodeAnalysisFXCopAnalyzersVersion)" />
+     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(DogfoodNetAnalyzersVersion)" />
      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" />
      <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="$(MicrosoftCodeAnalysisPublicApiAnalyzersVersion)" />
 -- 
-2.25.2
+2.21.3
 

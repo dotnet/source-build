@@ -4,16 +4,16 @@ Date: Mon, 28 Dec 2020 11:20:26 -0600
 Subject: [PATCH] Reference latest when running in build
 
 ---
- Directory.Build.targets                       | 35 +++++++++++++++++++
+ src/Directory.Build.targets                   | 35 +++++++++++++++++++
  ...GenerateDocumentationAndConfigFiles.csproj |  3 ++
  2 files changed, 38 insertions(+)
 
-diff --git a/Directory.Build.targets b/Directory.Build.targets
-index 34e0b7966..6633a023a 100644
---- a/Directory.Build.targets
-+++ b/Directory.Build.targets
-@@ -14,6 +14,41 @@
-     </Content>
+diff --git a/src/Directory.Build.targets b/src/Directory.Build.targets
+index 46e0c6d77..55ec2b895 100644
+--- a/src/Directory.Build.targets
++++ b/src/Directory.Build.targets
+@@ -11,6 +11,41 @@
+     <EmbeddedResource Update="**\*.resx" GenerateSource="true" />
    </ItemGroup>
  
 +  <!--
@@ -51,11 +51,11 @@ index 34e0b7966..6633a023a 100644
 +    <PackageReference Include="@(ExecuteDuringBuildLatestPackageId->HasMetadata('Version'))" />
 +  </ItemGroup>
 +
-   <ItemGroup Condition="'$(IsUnitTestProject)' == 'true'">
-     <PackageReference Include="coverlet.msbuild" Version="$(CoverletVersion)" PrivateAssets="all" />
-   </ItemGroup>
+   <ItemGroup>
+     <!-- Workaround for https://github.com/dotnet/project-system/issues/2374 -->
+     <UpToDateCheckInput Include="$(CodeAnalysisRuleSet)" Condition="'$(CodeAnalysisRuleSet)' != ''" />
 diff --git a/src/Tools/GenerateDocumentationAndConfigFiles/GenerateDocumentationAndConfigFiles.csproj b/src/Tools/GenerateDocumentationAndConfigFiles/GenerateDocumentationAndConfigFiles.csproj
-index 181473c7f..51da76e35 100644
+index 3a72b78f4..1097c909b 100644
 --- a/src/Tools/GenerateDocumentationAndConfigFiles/GenerateDocumentationAndConfigFiles.csproj
 +++ b/src/Tools/GenerateDocumentationAndConfigFiles/GenerateDocumentationAndConfigFiles.csproj
 @@ -8,6 +8,9 @@
@@ -66,8 +66,8 @@ index 181473c7f..51da76e35 100644
 +    <ExecutesDuringBuild>true</ExecutesDuringBuild>
 +  </PropertyGroup>
    <ItemGroup>
-     <Compile Include="..\..\Utilities\Compiler\Extensions\WellKnownDiagnosticTagsExtensions.cs" Link="WellKnownDiagnosticTagsExtensions.cs" />
-     <Compile Include="..\..\Utilities\Compiler\FxCopWellKnownDiagnosticTags.cs" Link="FxCopWellKnownDiagnosticTags.cs" />
+     <Compile Include="..\..\Microsoft.CodeAnalysis.Analyzers\Core\MetaAnalyzers\ReleaseTrackingHelper.cs" Link="ReleaseTrackingHelper.cs" />
+     <Compile Include="..\..\Utilities\Compiler\Debug.cs" Link="Debug.cs" />
 -- 
-2.25.4
+2.21.3
 
