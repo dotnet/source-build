@@ -23,7 +23,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | |
 | 1 | diagnostics | ? | ✔️ | | | | |
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | | | | | |
-| 1 | symreader | ? | ✔️ | | | | |
+| 1 | symreader | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | |
 | 1 | test-templates | ? | ✔️ | | | | |
 | 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
 | 2 | linker | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | | | | |
