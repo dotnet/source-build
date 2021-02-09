@@ -9,10 +9,10 @@ Subject: [PATCH 6/6] Dirty revert of
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/Compilers/Shared/BuildClient.cs b/src/Compilers/Shared/BuildClient.cs
-index 3c262af14be..dc01513a463 100644
+index 4d1660794cb..cb606f3a957 100644
 --- a/src/Compilers/Shared/BuildClient.cs
 +++ b/src/Compilers/Shared/BuildClient.cs
-@@ -80,7 +80,7 @@ internal static int Run(IEnumerable<string> arguments, RequestLanguage language,
+@@ -84,7 +84,7 @@ internal static int Run(IEnumerable<string> arguments, RequestLanguage language,
              {
                  // Register encodings for console
                  // https://github.com/dotnet/roslyn/issues/10785
@@ -20,7 +20,7 @@ index 3c262af14be..dc01513a463 100644
 +                //System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
              }
  
-             var client = new BuildClient(language, compileFunc);
+             var client = new BuildClient(language, compileFunc, logger);
 -- 
-2.18.0
+2.21.3
 
