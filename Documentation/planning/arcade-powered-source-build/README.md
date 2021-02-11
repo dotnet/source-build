@@ -179,10 +179,15 @@ A: We shouldn't! But if we have to, use a forked branch. See
 [incremental-official.md]: incremental-official.md
 [source-build-in-pipeline.md]: source-build-in-pipeline.md
 [speculative-build.md]: speculative-build.md
+[intermediate nupkgs]: intermediate-nupkg.md
 
 ---
 
 ## Revisions:
+
+**2021-02-11** dagood  
+Added a plan to use "supplemental intermediate nupkgs" to handle situations
+where the [intermediate nupkgs] are too large to publish to Azure DevOps.
 
 **2020-07-15** dagood  
 Removed the plan to test every added intermediate nupkg all the way downstream

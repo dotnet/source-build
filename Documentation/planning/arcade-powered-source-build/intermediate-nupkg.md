@@ -35,14 +35,90 @@ source-built intermediates.
 
 ## Too large?
 
-If the artifacts are too large for our NuGet feeds to handle, we can:
+Some repositories produce artifacts that would be too large for Azure DevOps
+feeds to handle if put into a single intermediate package. To solve this, some
+repos need to produce "supplemental intermediate nupkgs".
 
-1. Split the monster nupkg along some logical line, and produce multiple for a
-   single repo.
-2. Split some artifacts to a tarball that is published to an auxiliary feed.
-   * Extra infra development necessary: secure transport of this tarball,
-     implementing caching, etc.
-   * Not recommended.
+A "supplemental intermediate nupkg" uses the same naming convention as
+intermediate nupkgs, but inserts an extra name between the repo name and the
+RID.
+
+* `Microsoft.SourceBuild.Intermediate.runtime.libraries.linux.x64/6.0.0-foo`
+  * Contains the dotnet/runtime platform extensions libraries.
+* `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.linux.x64/6.0.0-foo`
+  * Contains the crossgen2 pack nupkg.
+  * `Microsoft.NETCore.App.Crossgen2` is the name of the crossgen2 pack without
+    its RID, so use that as the name by convention.
+* `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.archive.linux.x64/6.0.0-foo`
+  * This stores the `tar.gz` version of the crossgen2 pack.
+  * Crossgen2 is huge (~167 MB), so we need one supplemental nupkg for each
+    artifact--the nupkg and the archive.
+  * The name should apply to any RID, so I use `archive` rather than `tarball`
+    to allow Windows support in the future.
+
+Each nupkg should either be < 20 MB, or contain only one artifact. This is a
+heuristic to use to decide when to produce supplemental nupkgs and how to split
+them up.
+
+The intermediate nupkg we produce now (non-supplemental) contains:
+
+* The prebuilt report.
+* Any artifacts that are < 20 MB total and that all downstreams use.
+* A list of supplemental intermediate nupkg names produced by the repo.
+  * This shouldn't be read by any tooling. (Avoid complicated implementation.)
+  * This makes it easier to figure out what supplemental nupkgs to include when
+    working on a downstream repo. Just restore the main one and look at the list
+    to see what to add.
+
+The supplemental packages of dotnet/runtime will have approximately these
+download sizes:
+
+Name | Download size (approx)
+-- | --
+Microsoft.NETCore.App.Ref | 1 MB
+Microsoft.NETCore.App.Ref.archive | 1 MB
+Microsoft.NETCore.App.Runtime | 107 MB
+Microsoft.NETCore.App.Runtime.archive | 93 MB
+Microsoft.NETCore.App.Host | 47 MB
+Microsoft.NETCore.App.Host.archive | 47 MB
+Microsoft.NETCore.App.Crossgen2 | 167 MB
+Microsoft.NETCore.App.Crossgen2.archive | 167 MB
+libraries | 6 MB
+coreclr (ilasm/ildasm/testhost) | 6 MB
+
+For context, some other repositories' intermediate nupkg total download size
+that do not need any supplemental nupkgs:
+
+* Arcade's intermediate nupkg is ~12 MB.
+* SourceLink's intermediate nupkg is < 1 MB.
+* xliff-tasks's intermediate nupkg is < 100 kB.
+
+There are a few alternate designs that aren't suitable:
+
+* Split just enough for the nupkg to fit on Azure DevOps, and always restore
+  every supplemental package.
+  * This is direct workaround for the immediate problem: Azure DevOps has a 500
+    MB limit on nupkg size (as of writing), and our intermediate nupkg for
+    dotnet/runtime is ~1 GB.
+  * This simplifies the design: the supplemental packages don't need meaningful
+    names, and there are no extra lines needed in `eng/Version.Details.xml`.
+  * This creates significant concern for CI performance, because every build
+    downstream of dotnet/runtime will have to download all of that data, whether
+    or not it's needed.
+  * We have an opportunity to avoid a significant perf regression by rejecting
+    this bare minimum approach.
+
+* Split artifacts into one artifact per package.
+  * This absolutely minimizes downloading artifacts that aren't needed.
+  * This will either:
+    * Significantly bloat the `eng/Version.Details.xml` file, specifying every
+      single required artifact. This makes it less maintainable and more brittle
+      to upstream changes.
+    * Require much more complicated intermediate nupkg restore logic to figure
+      out which supplemental intermediate nupkgs are necessary for the build.
+  * This doesn't seem like it has major benefits vs. establishing a reasonable
+    splitting heuristic. This is rejected to keep arcade-powered source-build
+    simple.
 
 ## Addressability with different build args?
 
