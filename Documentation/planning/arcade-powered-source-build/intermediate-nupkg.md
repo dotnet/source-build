@@ -64,19 +64,27 @@ RID.
   * Crossgen2 is huge (~167 MB), so we need one supplemental nupkg for each
     artifact. One for the nupkg, another for the archive.
 
+### Contents
+
 Each nupkg should either be < 20 MB, or contain only one artifact. This is a
 heuristic to use to decide when to produce supplemental nupkgs and how to split
 them up.
 
-The intermediate nupkg we produce now (non-supplemental) contains:
+The non-supplemental intermediate nupkg contains:
 
 * The prebuilt report.
 * Any artifacts that are < 20 MB total and that all downstreams use.
-* A list of supplemental intermediate nupkg names produced by the repo.
+* [New!] A list of supplemental intermediate nupkg names produced by the repo.
   * This shouldn't be read by any tooling. (Avoid complicated implementation.)
   * This makes it easier to figure out what supplemental nupkgs to include when
     working on a downstream repo. Just restore the main one and look at the list
     to see what to add.
+
+The supplemental intermediate nupkgs only contain one or more artifacts--no
+reports, and no list of supplemental nupkg names. The single *non-supplemental*
+nupkg is always restored if *any supplemental* nupkg is restored, so the
+report/metadata is always available to someone investigating a downstream build
+that uses supplemental nupkgs. There is no need to deliver redundant data.
 
 The supplemental packages of dotnet/runtime will have approximately these
 download sizes:
@@ -101,7 +109,9 @@ that do not need any supplemental nupkgs:
 * SourceLink's intermediate nupkg is < 1 MB.
 * xliff-tasks's intermediate nupkg is < 100 kB.
 
-There are a few alternate designs that aren't suitable:
+### Alternatives to manually split supplemental nupkgs
+
+There are a few alternate solutions that aren't suitable:
 
 * Split just enough for the nupkg to fit on Azure DevOps, and always restore
   every supplemental package.
