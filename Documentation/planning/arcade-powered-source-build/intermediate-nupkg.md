@@ -45,16 +45,24 @@ RID.
 
 * `Microsoft.SourceBuild.Intermediate.runtime.libraries.linux.x64/6.0.0-foo`
   * Contains the dotnet/runtime platform extensions libraries.
+  * E.g. `System.IO.Pipelines.6.0.0-ci.nupkg`, `System.Numerics.Tensors.6.0.0-ci.nupkg`, ...
 * `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.linux.x64/6.0.0-foo`
-  * Contains the crossgen2 pack nupkg.
-  * `Microsoft.NETCore.App.Crossgen2` is the name of the crossgen2 pack without
-    its RID, so use that as the name by convention.
+  * Contains the crossgen2 framework pack:
+    * `Microsoft.NETCore.App.Crossgen2.linux-x64.6.0.0-foo.nupkg`
+  * By convention, we use the identity of the crossgen2 pack without its RID for
+    the supplemental nupkg name. 
 * `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.archive.linux.x64/6.0.0-foo`
-  * This stores the `tar.gz` version of the crossgen2 pack.
+  * This stores the `tar.gz` version of the crossgen2 framework pack:
+    * `dotnet-crossgen2-6.0.0-ci-linux-x64.tar.gz`
+  * We could give this supplemental nupkg a distinct name, say,
+    `dotnet-crossgen2` rather than `Microsoft.NETCore.App.Crossgen2.archive`,
+    but these are just different formats of the same fundamental framework pack.
+    * Naming is ultimately up to the project owner. Arcade-powered source-build
+      doesn't require the name to correspond to artifact filenames.
+    * Calling it `archive` rather than `tarball` lets it handle `zip` files, to
+      allow for Windows support in the future.
   * Crossgen2 is huge (~167 MB), so we need one supplemental nupkg for each
-    artifact--the nupkg and the archive.
-  * The name should apply to any RID, so I use `archive` rather than `tarball`
-    to allow Windows support in the future.
+    artifact. One for the nupkg, another for the archive.
 
 Each nupkg should either be < 20 MB, or contain only one artifact. This is a
 heuristic to use to decide when to produce supplemental nupkgs and how to split
