@@ -113,8 +113,10 @@
       <NuGetConfigFiles Include="$(NuGetConfigFile)" />
     </ItemGroup>
 
-    <RemoveInternetSourcesFromNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
-                                          OfflineBuild="$(OfflineBuild)" />
+    <RemoveInternetSourcesFromNuGetConfig
+      NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+      OfflineBuild="$(OfflineBuild)"
+      KeepFeedPrefixes="@(KeepFeedPrefixes)" />
 
     <AddSourceToNuGetConfig NuGetConfigFile="%(NuGetConfigFiles.Identity)"
                             SourceName="prebuilt"
@@ -139,6 +141,18 @@
                             SourceName="ExtraSources"
                             SourcePath="$(ExtraRestoreSourcePath)"
                             Condition="'$(ExtraRestoreSourcePath)' != ''" />
+
+    <!--
+      The internal transport feed is dynamically added by Arcade by a script called directly in the
+      official pipeline, so in some cases we need to do the same here.
+    -->
+    <AddSourceToNuGetConfig
+      Condition="
+        '$(VSS_NUGET_EXTERNAL_FEED_ENDPOINTS)' != '' and
+        '$(SetUpInternalTransportFeed)' == 'true'"
+      NuGetConfigFile="%(NuGetConfigFiles.Identity)"
+      SourceName="dotnet5-internal-transport"
+      SourcePath="https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-transport/nuget/v3/index.json" />
 
     <!-- Update NuGet.Config files that have deprecated myget feeds -->
     <ItemGroup>
