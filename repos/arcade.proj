@@ -1,6 +1,8 @@
 <Project>
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFiles" />
+
   <PropertyGroup>
     <!-- 'restore' and 'build' switches automatically passed by build.sh/ps1. -->
     <BuildCommandArgs />
@@ -73,32 +75,32 @@
   <Target Name="UpdateArcadeTFM"
     BeforeTargets="Build">
     <ItemGroup>
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.SharedFramework.Sdk/sdk/Sdk.props" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj" />
-      <ArcadeSourceFiles Include="src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Arcade.Sdk/tools/BuildTasks.props" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.Installers/Microsoft.DotNet.Build.Tasks.Installers.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.Installers/build/Microsoft.DotNet.Build.Tasks.Installers.props" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.Packaging/src/Microsoft.DotNet.Build.Tasks.Packaging.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.Packaging/src/build/Packaging.common.targets" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.SharedFramework.Sdk/Microsoft.DotNet.SharedFramework.Sdk.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.SharedFramework.Sdk/sdk/Sdk.props" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk/src/build/Microsoft.DotNet.Build.Tasks.TargetFramework.Sdk.props" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.CMake.Sdk/Microsoft.DotNet.CMake.Sdk.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.GenFacades/Microsoft.DotNet.GenFacades.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.GenFacades/build/Microsoft.DotNet.GenFacades.targets" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.SourceBuild/tasks/Microsoft.DotNet.SourceBuild.Tasks.csproj" />
+      <ArcadeSourceFiles Include="$(ProjectDirectory)src/Microsoft.DotNet.SourceBuild/tasks/build/Microsoft.DotNet.SourceBuild.Tasks.props" />
     </ItemGroup>
 
     <ReplaceTextInFiles
       InputFiles="@(ArcadeSourceFiles)"
       OldText="netcoreapp2.1"
-      NewText="net5.0" />
+      NewText="net6.0" />
 
     <ReplaceTextInFiles
       InputFiles="@(ArcadeSourceFiles)"
       OldText="netcoreapp2.0"
-      NewText="net5.0" />
+      NewText="net6.0" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

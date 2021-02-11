@@ -1,7 +1,7 @@
 From e417384d15c0e9a5128c18848856184bb3d9fc86 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 4 Feb 2021 20:47:47 +0000
-Subject: [PATCH] Use net5.0 TFM to avoid 3.1 apphost prebuilt
+Subject: [PATCH] Use net6.0 TFM to avoid 3.1 apphost prebuilt
 
 See https://github.com/dotnet/source-build/issues/1905
 ---
@@ -44,8 +44,8 @@ index e741ff854..6fee74b83 100755
      mkdir -p "$bootstrap_dir"
 -    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/netcoreapp3.1 $bootstrap_dir/fslex
 -    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/netcoreapp3.1 $bootstrap_dir/fsyacc
-+    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/net5.0 $bootstrap_dir/fslex
-+    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/net5.0 $bootstrap_dir/fsyacc
++    cp -pr $artifacts_dir/bin/fslex/$bootstrap_config/net6.0 $bootstrap_dir/fslex
++    cp -pr $artifacts_dir/bin/fsyacc/$bootstrap_config/net6.0 $bootstrap_dir/fsyacc
    fi
    if [ ! -f "$bootstrap_dir/fsc.exe" ]; then
      BuildMessage="Error building bootstrap"
@@ -56,7 +56,7 @@ index e741ff854..6fee74b83 100755
  
  
 -    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/netcoreapp3.1 $bootstrap_dir/fsc
-+    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/net5.0 $bootstrap_dir/fsc
++    cp -pr $artifacts_dir/bin/fsc/$bootstrap_config/net6.0 $bootstrap_dir/fsc
    fi
  
    # do real build
@@ -69,11 +69,11 @@ index bb2f97270..bb0778345 100644
      </Projects>
      <Projects Include="src\fsharp\fsc\fsc.fsproj">
 -      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
-+      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net6.0</AdditionalProperties>
      </Projects>
      <Projects Include="src\fsharp\fsi\fsi.fsproj">
 -      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
-+      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=net6.0</AdditionalProperties>
      </Projects>
    </ItemGroup>
  
@@ -86,7 +86,7 @@ index be43696d7..464b6ef78 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
  
@@ -99,7 +99,7 @@ index da7c52ba1..1959ce59c 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
@@ -112,7 +112,7 @@ index a2b8cb384..5d1b7141f 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
@@ -124,7 +124,7 @@ index 3d36804a7..594df8ed9 100644
      <OutputType>Library</OutputType>
      <TargetFramework Condition="'$(Configuration)' != 'Proto'">netstandard2.0</TargetFramework>
      <TargetFrameworks Condition="'$(Configuration)' == 'Proto'">netstandard2.0</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFrameworks>
      <AssemblyName>FSharp.Build</AssemblyName>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
@@ -145,7 +145,7 @@ index e75296aa7..50445b80c 100644
    <PropertyGroup>
      <PreRelease>true</PreRelease>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <NuspecFile>Microsoft.FSharp.Compiler.nuspec</NuspecFile>
      <IsPackable>true</IsPackable>
      <PackageDescription>.NET Core compatible version of the F# compiler fsc.exe.</PackageDescription>
@@ -154,19 +154,19 @@ index e75296aa7..50445b80c 100644
    <ItemGroup>
      <ProjectReference Include="..\fsc\fsc.fsproj">
 -      <AdditionalProperties>TargetFramework=netcoreapp3.1</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\fsi\fsi.fsproj">
 -      <AdditionalProperties>TargetFramework=netcoreapp3.1</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj">
 -      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
 -      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net6.0</AdditionalProperties>
      </ProjectReference>
    </ItemGroup>
  
@@ -193,25 +193,25 @@ index f5cac7b09..933b63b1f 100644
 -        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.xml"                            target="lib\netcoreapp3.1" />
 -        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\netcoreapp3.1" />
 -        <file src="FSharp.Build\$Configuration$\netstandard2.0\FSharp.Build.dll"                          target="lib\netcoreapp3.1" />
-+        <file src="fsc\$Configuration$\net5.0\fsc.dll"                                             target="lib\net5.0" />
-+        <file src="fsi\$Configuration$\net5.0\fsi.dll"                                             target="lib\net5.0" />
-+        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"                            target="lib\net5.0" />
-+        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.xml"                            target="lib\net5.0" />
-+        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\net5.0" />
-+        <file src="FSharp.Build\$Configuration$\netstandard2.0\FSharp.Build.dll"                          target="lib\net5.0" />
++        <file src="fsc\$Configuration$\net6.0\fsc.dll"                                             target="lib\net6.0" />
++        <file src="fsi\$Configuration$\net6.0\fsi.dll"                                             target="lib\net6.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"                            target="lib\net6.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.xml"                            target="lib\net6.0" />
++        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\net6.0" />
++        <file src="FSharp.Build\$Configuration$\netstandard2.0\FSharp.Build.dll"                          target="lib\net6.0" />
          <file src="FSharp.DependencyManager.Nuget\$configuration$\netstandard2.0\FSharp.DependencyManager.Nuget.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
          <file src="Microsoft.DotNet.DependencyManager\$configuration$\netstandard2.0\Microsoft.DotNet.DependencyManager.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
          <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\FSharp.Compiler.Interactive.Settings.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
  
          <!-- additional files -->
 -        <file src="fsc\$Configuration$\netcoreapp3.1\default.win32manifest"                               target="contentFiles\any\any" />
-+        <file src="fsc\$Configuration$\net5.0\default.win32manifest"                               target="contentFiles\any\any" />
++        <file src="fsc\$Configuration$\net6.0\default.win32manifest"                               target="contentFiles\any\any" />
          <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
          <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
          <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
@@ -220,21 +220,21 @@ index f5cac7b09..933b63b1f 100644
  
          <!-- resources -->
 -        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\netcoreapp3.1" />
-+        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\net5.0" />
++        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\net6.0" />
          <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\**\FSharp.Compiler.Private.resources.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
          <file src="FSharp.Compiler.Interactive.Settings\$Configuration$\netstandard2.0\**\FSharp.Compiler.Interactive.Settings.resources.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
 -        <file src="FSharp.Build\$Configuration$\netstandard2.0\**\FSharp.Build.resources.dll"             target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
-+        <file src="FSharp.Build\$Configuration$\netstandard2.0\**\FSharp.Build.resources.dll"             target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
++        <file src="FSharp.Build\$Configuration$\netstandard2.0\**\FSharp.Build.resources.dll"             target="lib\net6.0" />
          <file src="FSharp.DependencyManager.Nuget\$configuration$\netstandard2.0\**\FSharp.DependencyManager.Nuget.resources.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
          <file src="Microsoft.DotNet.DependencyManager\$Configuration$\netstandard2.0\**\Microsoft.DotNet.DependencyManager.resources.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
-+                                                                                                          target="lib\net5.0" />
++                                                                                                          target="lib\net6.0" />
      </files>
  </package>
 diff --git a/src/fsharp/fsc/fsc.fsproj b/src/fsharp/fsc/fsc.fsproj
@@ -245,7 +245,7 @@ index b41676ca2..d87e05844 100644
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.1</TargetFrameworks>
      <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFrameworks>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
      <OtherFlags>$(OtherFlags) --maxerrors:20 --extraoptimizationloops:1</OtherFlags>
@@ -257,7 +257,7 @@ index 0f1a28f15..5422267a4 100644
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' != ''">$(ProtoTargetFramework)</TargetFrameworks>
      <TargetFrameworks Condition="'$(ProtoTargetFramework)' == ''">net472;netcoreapp3.1</TargetFrameworks>
      <TargetFrameworks Condition="'$(OS)' == 'Unix'">netcoreapp3.1</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFrameworks>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
      <OtherFlags>$(OtherFlags) --warnon:1182 --maxerrors:20 --extraoptimizationloops:1</OtherFlags>

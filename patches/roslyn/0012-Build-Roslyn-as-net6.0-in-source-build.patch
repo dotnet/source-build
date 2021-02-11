@@ -1,17 +1,17 @@
 From ed6e61977542a2fb1f69da41eb9806a4212d4046 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Mon, 28 Dec 2020 18:21:27 -0600
-Subject: [PATCH] Build Roslyn as net5.0 in source-build
+Subject: [PATCH] Build Roslyn as net6.0 in source-build
 
-Set compilers package targetframework to net5.0.
-Update _RoslynTargetDirectoryName for net5.0
+Set compilers package targetframework to net6.0.
+Update _RoslynTargetDirectoryName for net6.0
 
 Fixups for new types and changes introduced with net5.0:
 
 * Disable some warnings to let code continue to compile.
 
 * Remove S.Runtime.InteropServices.WindowsRuntime using. Doesn't exist
-  and doesn't seem necessary in net5.0.
+  and doesn't seem necessary in net6.0.
 ---
  Directory.Build.props                         |  5 +++
  Directory.Build.targets                       | 12 +++++++
@@ -53,12 +53,12 @@ index 8f38a48cd95..c8ba19fdf98 100644
    <Import Project="eng\targets\Imports.targets" />
 +
 +  <!--
-+    Swap out netcoreapp3.1 -> net5.0 in projects. Projects can use $(TargetFrameworkForNETSDK)
++    Swap out netcoreapp3.1 -> net6.0 in projects. Projects can use $(TargetFrameworkForNETSDK)
 +    directly. Doing this in the root Directory.Build.targets just reduces the chance of conflicts
 +    with the source-build patch.
 +  -->
 +  <PropertyGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
-+    <!-- Keep netstandard2.0: seems like we pack netstandard2.0 rather than net5.0 for VB. -->
++    <!-- Keep netstandard2.0: seems like we pack netstandard2.0 rather than net6.0 for VB. -->
 +    <KeepTargetFrameworks Condition="$(TargetFrameworks.Contains('netstandard2.0'))">netstandard2.0</KeepTargetFrameworks>
 +    <TargetFrameworks Condition="$(TargetFrameworks.Contains('netcoreapp3.1'))">$(TargetFrameworkForNETSDK);$(KeepTargetFrameworks)</TargetFrameworks>
 +  </PropertyGroup>
@@ -74,7 +74,7 @@ index 1cad2918891..a7e80667b4a 100644
    </PropertyGroup>
 +  <PropertyGroup>
 +    <TargetFrameworkForNETSDK>netcoreapp3.1</TargetFrameworkForNETSDK>
-+    <TargetFrameworkForNETSDK Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworkForNETSDK>
++    <TargetFrameworkForNETSDK Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFrameworkForNETSDK>
 +  </PropertyGroup>
    <PropertyGroup>
      <!-- Versions used by several individual references below -->
@@ -296,7 +296,7 @@ index 157388e0be7..aac3dcdee92 100644
  
    <PropertyGroup>
 -    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">netcoreapp3.1</_RoslynTargetDirectoryName>   
-+    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net5.0</_RoslynTargetDirectoryName>   
++    <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' == 'Core'">net6.0</_RoslynTargetDirectoryName>   
      <_RoslynTargetDirectoryName Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_RoslynTargetDirectoryName>   
      <_RoslynTasksDirectory>$(MSBuildThisFileDirectory)..\tasks\$(_RoslynTargetDirectoryName)\</_RoslynTasksDirectory>
      <RoslynTasksAssembly>$(_RoslynTasksDirectory)Microsoft.Build.Tasks.CodeAnalysis.dll</RoslynTasksAssembly> 

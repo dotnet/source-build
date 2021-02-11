@@ -17,7 +17,7 @@ index d967ac3..340b458 100644
    <PropertyGroup>
      <TargetFrameworks>netcoreapp2.0;net46</TargetFrameworks>
 -    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">netcoreapp2.0</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(OS)' != 'Windows_NT'">net6.0</TargetFrameworks>
      <BuildOutputTargetFolder>tools</BuildOutputTargetFolder>
      <EnableDefaultItems>false</EnableDefaultItems>
 -    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
@@ -29,7 +29,7 @@ index d967ac3..340b458 100644
    </ItemGroup>
  
 -  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0'">
-+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
++  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
      <PackageReference Include="Microsoft.Build.Framework" Version="15.1.1012" PrivateAssets="All" />
      <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.1.1012" PrivateAssets="All" />
 -    <PackageReference Include="Microsoft.NETCore.App" Version="2.0.0" PrivateAssets="All" />
@@ -45,7 +45,7 @@ index a79dae2..d5498c2 100644
  
    <PropertyGroup>
 -    <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\netcoreapp2.0\</XliffTasksDirectory>
-+    <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net5.0\</XliffTasksDirectory>
++    <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' == 'Core'">$(MSBuildThisFileDirectory)..\tools\net6.0\</XliffTasksDirectory>
      <XliffTasksDirectory Condition="'$(MSBuildRuntimeType)' != 'Core'">$(MSBuildThisFileDirectory)..\tools\net46\</XliffTasksDirectory>
      <XliffTasksAssembly>$(XliffTasksDirectory)XliffTasks.dll</XliffTasksAssembly>
    </PropertyGroup>

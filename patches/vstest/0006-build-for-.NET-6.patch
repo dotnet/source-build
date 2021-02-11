@@ -1,7 +1,7 @@
 From 80d24c9102802bf1e16c7b5bca5884b639ca2f0f Mon Sep 17 00:00:00 2001
 From: Tom Deseyn <tom.deseyn@gmail.com>
 Date: Thu, 12 Nov 2020 15:35:12 +0100
-Subject: [PATCH] vstest: build for .NET 5
+Subject: [PATCH] vstest: build for .NET 6
 
 ---
  scripts/build.sh                                            | 4 ++--
@@ -27,7 +27,7 @@ index e4454a5d..a8dcbddb 100755
  TPB_Build_From_Source_Solution="TestPlatform_BuildFromSource.sln"
  TPB_TargetFramework="net451"
 -TPB_TargetFrameworkCore="netcoreapp2.1"
-+TPB_TargetFrameworkCore="net5.0"
++TPB_TargetFrameworkCore="net6.0"
  TPB_Configuration=$CONFIGURATION
  TPB_TargetRuntime=$TARGET_RUNTIME
  TPB_Version=$(test -z $VERSION_SUFFIX && echo $VERSION || echo $VERSION-$VERSION_SUFFIX)
@@ -49,7 +49,7 @@ index e112259a..73b35c87 100644
      <TargetFrameworks>net45;net451;netcoreapp1.0;netcoreapp2.1;netstandard1.3;netstandard2.0</TargetFrameworks>
      <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">$(TargetFrameworks);uap10.0;netstandard1.0</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard1.0;netstandard1.3;netstandard2.0;netcoreapp2.1</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard2.0;net5.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netstandard2.0;net6.0</TargetFrameworks>
      <EnableCodeAnalysis>true</EnableCodeAnalysis>
  
      <!-- This causes a build error on netcoreapp1.0 -->
@@ -62,7 +62,7 @@ index eb4149d6..33a13411 100644
                          var folderName = this.architecture == Architecture.X86 ? "x86" : "x64";
                          var testHostNugetRoot = new DirectoryInfo(testHostPath).Parent.Parent.Parent;
 -                        var testHostExeNugetPath = Path.Combine(testHostNugetRoot.FullName, "build", "netcoreapp2.1", folderName, exeName);
-+                        var testHostExeNugetPath = Path.Combine(testHostNugetRoot.FullName, "build", "net5.0", folderName, exeName);
++                        var testHostExeNugetPath = Path.Combine(testHostNugetRoot.FullName, "build", "net6.0", folderName, exeName);
  
                          if (this.fileHelper.Exists(testHostExeNugetPath))
                          {
@@ -75,7 +75,7 @@ index 24e3df7c..bb6d3631 100644
      <TargetFrameworks Condition=" '$(OS)' == 'WINDOWS_NT' ">$(TargetFrameworks);net472</TargetFrameworks>
      <TargetFrameworks Condition=" '$(OS)' != 'WINDOWS_NT' ">$(TargetFrameworks);net451</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net6.0</TargetFrameworks>
      <WarningsAsErrors>true</WarningsAsErrors>
      <PlatformTarget Condition="$(TargetFramework.StartsWith('net4'))">AnyCPU</PlatformTarget>
      <OutputType>Exe</OutputType>
@@ -88,7 +88,7 @@ index fdc693f5..c9bc263e 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp1.0</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <NuspecFile>TestPlatform.Build.nuspec</NuspecFile>
      <NuspecProperties>version=$(Version)</NuspecProperties>
  
@@ -101,7 +101,7 @@ index b668cb39..2b74bcc5 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp1.0</TargetFramework>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFramework>net6.0</TargetFramework>
      <NuspecFile>TestPlatform.CLI.nuspec</NuspecFile>
      <NuspecProperties>version=$(Version)</NuspecProperties>
  
@@ -114,7 +114,7 @@ index ce0da806..018ba30e 100644
      <file src="ThirdPartyNotices.txt" target="" />
      
 -    <file src="netcoreapp2.1\**\*.*" exclude="**\*.pdb" target="contentFiles\any\netcoreapp2.1" />
-+    <file src="net5.0\**\*.*" exclude="**\*.pdb" target="contentFiles\any\net5.0" />
++    <file src="net6.0\**\*.*" exclude="**\*.pdb" target="contentFiles\any\net6.0" />
    </files>
  </package>
 diff --git a/src/package/package/package.csproj b/src/package/package/package.csproj
@@ -126,7 +126,7 @@ index 4b39d121..febb3848 100644
    <PropertyGroup>
      <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net6.0</TargetFrameworks>
      <AssemblyName>package</AssemblyName>
      <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
      <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
@@ -139,7 +139,7 @@ index 535a6e6a..a3ef5cee 100644
      <AssemblyName>testhost.x86</AssemblyName>
      <TargetFrameworks>netcoreapp2.1;netcoreapp1.0;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1;netcoreapp1.0</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net6.0</TargetFrameworks>
      <WarningsAsErrors>true</WarningsAsErrors>
      <PlatformTarget>AnyCPU</PlatformTarget>
      <Prefer32Bit>true</Prefer32Bit>
@@ -152,13 +152,13 @@ index c239485d..152b8ae0 100644
      <AssemblyName>testhost</AssemblyName>
      <TargetFrameworks>netcoreapp2.1;netcoreapp1.0;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1;netcoreapp1.0</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
-+    <TargetFramework>net5.0</TargetFramework>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net6.0</TargetFrameworks>
++    <TargetFramework>net6.0</TargetFramework>
      <OutputType>Exe</OutputType>
      <ApplicationManifest>app.manifest</ApplicationManifest>
    </PropertyGroup>
 -  <PropertyGroup Condition="'$(TargetFramework)' != 'netcoreapp2.1' AND '$(TargetFramework)' != 'netcoreapp1.0'">
-+  <PropertyGroup Condition="'$(TargetFramework)' != 'net5.0' ">
++  <PropertyGroup Condition="'$(TargetFramework)' != 'net6.0' ">
      <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
      <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
      <TargetName Condition="'$(TargetFramework)' != 'net451'">$(AssemblyName).$(TargetFramework)</TargetName>
@@ -192,7 +192,7 @@ index ea970a60..f7448391 100644
      <AssemblyName>vstest.console</AssemblyName>
      <TargetFrameworks>netcoreapp2.1;net451</TargetFrameworks>
 -    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">netcoreapp2.1</TargetFrameworks>
-+    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net5.0</TargetFrameworks>
++    <TargetFrameworks Condition=" '$(DotNetBuildFromSource)' == 'true' ">net6.0</TargetFrameworks>
 +    <UseAppHost>false</UseAppHost>
      <WarningsAsErrors>true</WarningsAsErrors>
      <OutputType>Exe</OutputType>

@@ -1,7 +1,7 @@
 From f1ffa381244fa08d4ba38fd6815a3dead7c3a954 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Fri, 11 Dec 2020 20:13:28 +0000
-Subject: [PATCH] Build roslyn-analyzer tools with net5.0 TFM
+Subject: [PATCH] Build roslyn-analyzer tools with net6.0 TFM
 
 ---
  eng/GenerateAnalyzerNuspec.targets                                      | 2 +-
@@ -18,7 +18,7 @@ index 91c6a26..f683eab 100644
    <PropertyGroup>
      <!-- Ideally, we would extract this from the MSBuild task, but we need this as the Target Output before that task is executed -->
 -    <_GenerateAnalyzerNuspecPath>$(ArtifactsBinDir)GenerateAnalyzerNuspec\$(Configuration)\netcoreapp3.1\GenerateAnalyzerNuspec.dll</_GenerateAnalyzerNuspecPath>
-+    <_GenerateAnalyzerNuspecPath>$(ArtifactsBinDir)GenerateAnalyzerNuspec\$(Configuration)\net5.0\GenerateAnalyzerNuspec.dll</_GenerateAnalyzerNuspecPath>
++    <_GenerateAnalyzerNuspecPath>$(ArtifactsBinDir)GenerateAnalyzerNuspec\$(Configuration)\net6.0\GenerateAnalyzerNuspec.dll</_GenerateAnalyzerNuspecPath>
    </PropertyGroup>
  
    <Target Name="BuildGenerateAnalyzerNuspecFile"
@@ -30,7 +30,7 @@ index ba0a961..3a16ac4 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
      <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFramework>
++    <TargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFramework>
      <NonShipping>true</NonShipping>
      <UseAppHost>false</UseAppHost>
    </PropertyGroup>
@@ -42,7 +42,7 @@ index 0056792..181473c 100644
    <PropertyGroup>
      <OutputType>Exe</OutputType>
      <TargetFramework>netcoreapp3.1</TargetFramework>
-+    <TargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFramework>
++    <TargetFramework Condition="'$(DotNetBuildFromSource)' == 'true'">net6.0</TargetFramework>
      <NonShipping>true</NonShipping>
      <UseAppHost>false</UseAppHost>
      <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
