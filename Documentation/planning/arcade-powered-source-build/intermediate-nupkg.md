@@ -45,7 +45,7 @@ RID.
 
 * `Microsoft.SourceBuild.Intermediate.runtime.libraries.linux.x64/6.0.0-foo`
   * Contains the dotnet/runtime platform extensions libraries.
-  * E.g. `System.IO.Pipelines.6.0.0-ci.nupkg`, `System.Numerics.Tensors.6.0.0-ci.nupkg`, ...
+  * E.g. `System.IO.Pipelines.6.0.0-foo.nupkg`, `System.Numerics.Tensors.6.0.0-foo.nupkg`, ...
 * `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.linux.x64/6.0.0-foo`
   * Contains the crossgen2 framework pack:
     * `Microsoft.NETCore.App.Crossgen2.linux-x64.6.0.0-foo.nupkg`
@@ -53,7 +53,7 @@ RID.
     the supplemental nupkg name. 
 * `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.archive.linux.x64/6.0.0-foo`
   * This stores the `tar.gz` version of the crossgen2 framework pack:
-    * `dotnet-crossgen2-6.0.0-ci-linux-x64.tar.gz`
+    * `dotnet-crossgen2-6.0.0-foo-linux-x64.tar.gz`
   * We could give this supplemental nupkg a distinct name, say,
     `dotnet-crossgen2` rather than `Microsoft.NETCore.App.Crossgen2.archive`,
     but these are just different formats of the same fundamental framework pack.
