@@ -98,16 +98,16 @@ download sizes:
 
 Name | Download size (approx)
 -- | --
-Microsoft.NETCore.App.Ref | 1 MB
-Microsoft.NETCore.App.Ref.archive | 1 MB
-Microsoft.NETCore.App.Runtime | 107 MB
-Microsoft.NETCore.App.Runtime.archive | 93 MB
-Microsoft.NETCore.App.Host | 47 MB
-Microsoft.NETCore.App.Host.archive | 47 MB
-Microsoft.NETCore.App.Crossgen2 | 167 MB
-Microsoft.NETCore.App.Crossgen2.archive | 167 MB
-libraries | 6 MB
-coreclr (ilasm/ildasm/testhost) | 6 MB
+RefPack | 1 MB
+RefPack.Archive | 1 MB
+RuntimePack | 107 MB
+RuntimePack.Archive | 93 MB
+HostPack | 47 MB
+HostPack.Archive | 47 MB
+Crossgen2Pack | 167 MB
+Crossgen2Pack.Archive | 167 MB
+Libraries | 6 MB
+CoreCLR (ilasm/ildasm/testhost) | 6 MB
 
 For context, some other repositories' intermediate nupkg total download size
 that do not need any supplemental nupkgs:
