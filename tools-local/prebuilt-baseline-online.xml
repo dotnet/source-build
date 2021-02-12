@@ -1,5 +1,5 @@
 <UsageData>
-  <CreatedByRid>centos.7-x64</CreatedByRid>
+  <CreatedByRid>fedora.30-x64</CreatedByRid>
   <IgnorePatterns>
     <UsagePattern IdentityGlob="Microsoft.AspNetCore.App.Ref/3.*" />
     <UsagePattern IdentityGlob="Microsoft.DotNet.Web.ItemTemplates/2.1.*" />
@@ -33,6 +33,7 @@
     <Usage Id="Microsoft.Build.Framework" Version="15.7.179" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.1.548" IsDirectDependency="true" />
     <Usage Id="Microsoft.Build.Tasks.Core" Version="15.7.179" IsDirectDependency="true" />
+    <Usage Id="Microsoft.Build.Tasks.Git" Version="1.0.0-beta2-19519-01" />
     <Usage Id="Microsoft.Build.Traversal" Version="2.0.2" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.548" />
     <Usage Id="Microsoft.Build.Utilities.Core" Version="15.1.1012" IsDirectDependency="true" />
@@ -44,14 +45,12 @@
     <Usage Id="Microsoft.CSharp" Version="4.3.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DiaSymReader.Pdb2Pdb" Version="1.1.0-beta1-62506-02" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.Docker.Sdk" Version="1.1.0" />
-    <Usage Id="Microsoft.DotNet.Arcade.Sdk" Version="1.0.0-beta.19359.6" />
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta3" />
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="1.0.2-beta4" />
     <Usage Id="Microsoft.DotNet.Common.ItemTemplates" Version="2.0.0-preview8.19373.1" />
-    <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.20213.4" />
+    <Usage Id="Microsoft.DotNet.GenAPI" Version="1.0.0-beta.21063.4" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.DotNet.PlatformAbstractions" Version="2.1.0" IsDirectDependency="true" />
-    <Usage Id="Microsoft.DotNet.SignTool" Version="1.0.0-beta.19359.6" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.2.1" Version="1.0.2-beta4-20181009-2100240" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.2.2" Version="1.0.2-beta4.19155.2" />
     <Usage Id="Microsoft.DotNet.Test.ProjectTemplates.3.0" Version="1.0.2-beta4.19354.2" />
@@ -80,13 +79,15 @@
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.0.0" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.1.0" />
     <Usage Id="Microsoft.NETCore.Platforms" Version="2.1.2" />
-    <Usage Id="Microsoft.NETCore.Platforms" Version="3.0.0-preview9.19409.15" />
+    <Usage Id="Microsoft.NETCore.Platforms" Version="3.0.0-preview9.19409.15" IsDirectDependency="true" />
     <Usage Id="Microsoft.NETCore.Targets" Version="1.0.1" />
     <Usage Id="Microsoft.NETCore.Targets" Version="1.1.0" />
     <Usage Id="Microsoft.NETCore.Targets" Version="2.1.0" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2" IsDirectDependency="true" IsAutoReferenced="true" />
     <Usage Id="Microsoft.NETFramework.ReferenceAssemblies.net472" Version="1.0.0-preview.2" />
-    <Usage Id="Microsoft.TargetingPack.NETFramework.v4.7.2" Version="1.0.0" />
+    <Usage Id="Microsoft.SourceLink.Common" Version="1.0.0-beta2-19519-01" />
+    <Usage Id="Microsoft.SourceLink.Vsts.Git" Version="1.0.0-beta2-19519-01" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="Microsoft.TargetingPack.NETFramework.v4.7.2" Version="1.0.0" IsDirectDependency="true" />
     <Usage Id="Microsoft.TargetingPack.Private.WinRT" Version="1.0.5" />
     <Usage Id="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.16.30" />
     <Usage Id="Microsoft.Win32.Primitives" Version="4.0.1" />
@@ -187,7 +188,7 @@
     <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.0.0" />
     <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.3.0" />
     <Usage Id="System.Diagnostics.DiagnosticSource" Version="4.4.0" IsDirectDependency="true" />
-    <Usage Id="System.Diagnostics.FileVersionInfo" Version="4.0.0" />
+    <Usage Id="System.Diagnostics.FileVersionInfo" Version="4.0.0" IsDirectDependency="true" />
     <Usage Id="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
     <Usage Id="System.Diagnostics.Process" Version="4.1.0" />
     <Usage Id="System.Diagnostics.Process" Version="4.3.0" />
@@ -261,7 +262,7 @@
     <Usage Id="System.Reflection.Metadata" Version="1.3.0" />
     <Usage Id="System.Reflection.Metadata" Version="1.4.1" />
     <Usage Id="System.Reflection.Metadata" Version="1.4.2" IsDirectDependency="true" />
-    <Usage Id="System.Reflection.Metadata" Version="1.5.0" />
+    <Usage Id="System.Reflection.Metadata" Version="1.5.0" IsDirectDependency="true" />
     <Usage Id="System.Reflection.Metadata" Version="1.6.0" />
     <Usage Id="System.Reflection.Primitives" Version="4.0.1" />
     <Usage Id="System.Reflection.Primitives" Version="4.3.0" />
@@ -281,9 +282,9 @@
     <Usage Id="System.Runtime.Extensions" Version="4.3.0" />
     <Usage Id="System.Runtime.Handles" Version="4.0.1" />
     <Usage Id="System.Runtime.Handles" Version="4.3.0" />
-    <Usage Id="System.Runtime.InteropServices" Version="4.1.0" />
+    <Usage Id="System.Runtime.InteropServices" Version="4.1.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.InteropServices" Version="4.3.0" />
-    <Usage Id="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" />
+    <Usage Id="System.Runtime.InteropServices.RuntimeInformation" Version="4.0.0" IsDirectDependency="true" />
     <Usage Id="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <Usage Id="System.Runtime.Loader" Version="4.0.0" />
     <Usage Id="System.Runtime.Loader" Version="4.3.0" />
@@ -300,15 +301,15 @@
     <Usage Id="System.Security.Cryptography.Algorithms" Version="4.3.0" />
     <Usage Id="System.Security.Cryptography.Cng" Version="4.2.0" />
     <Usage Id="System.Security.Cryptography.Cng" Version="4.3.0" />
-    <Usage Id="System.Security.Cryptography.Cng" Version="4.5.0" />
+    <Usage Id="System.Security.Cryptography.Cng" Version="4.5.0" IsDirectDependency="true" />
     <Usage Id="System.Security.Cryptography.Csp" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.Csp" Version="4.3.0" />
     <Usage Id="System.Security.Cryptography.Encoding" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.Encoding" Version="4.3.0" />
     <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.3.0" />
-    <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.5.1" />
-    <Usage Id="System.Security.Cryptography.Pkcs" Version="4.5.2" />
+    <Usage Id="System.Security.Cryptography.OpenSsl" Version="4.5.1" IsDirectDependency="true" />
+    <Usage Id="System.Security.Cryptography.Pkcs" Version="4.5.2" IsDirectDependency="true" />
     <Usage Id="System.Security.Cryptography.Primitives" Version="4.0.0" />
     <Usage Id="System.Security.Cryptography.Primitives" Version="4.3.0" />
     <Usage Id="System.Security.Cryptography.ProtectedData" Version="4.3.0" />
@@ -339,9 +340,9 @@
     <Usage Id="System.Threading.Tasks.Dataflow" Version="4.9.0" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.0.0" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.3.0" />
-    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.2" />
+    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.2" IsDirectDependency="true" />
     <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.3" />
-    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.4" IsDirectDependency="true" IsAutoReferenced="true" />
+    <Usage Id="System.Threading.Tasks.Extensions" Version="4.5.4" />
     <Usage Id="System.Threading.Tasks.Parallel" Version="4.3.0" />
     <Usage Id="System.Threading.Thread" Version="4.0.0" />
     <Usage Id="System.Threading.Thread" Version="4.3.0" />

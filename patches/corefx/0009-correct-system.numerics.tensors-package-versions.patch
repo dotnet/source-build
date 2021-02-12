@@ -1,0 +1,50 @@
+From b0e30ebc5df0b078599fc94e9b23b1be1de82f87 Mon Sep 17 00:00:00 2001
+From: Anipik <anirudhagnihotry098@gmail.com>
+Date: Wed, 27 Jan 2021 10:44:33 -0800
+Subject: [PATCH] correct system.numerics.tensors package versions
+
+See https://github.com/dotnet/corefx/pull/43022
+
+---
+ pkg/Microsoft.Private.PackageBaseline/packageIndex.json | 8 +++-----
+ src/System.Numerics.Tensors/Directory.Build.props       | 2 +-
+ 2 files changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/pkg/Microsoft.Private.PackageBaseline/packageIndex.json b/pkg/Microsoft.Private.PackageBaseline/packageIndex.json
+index 4f289d50cb..1733197f67 100644
+--- a/pkg/Microsoft.Private.PackageBaseline/packageIndex.json
++++ b/pkg/Microsoft.Private.PackageBaseline/packageIndex.json
+@@ -3534,14 +3534,12 @@
+     },
+     "System.Numerics.Tensors": {
+       "StableVersions": [
+-        "0.1.0",
+-        "0.3.0"
++        "0.1.0"
+       ],
+-      "BaselineVersion": "0.3.0",
++      "BaselineVersion": "0.1.0",
+       "InboxOn": {},
+       "AssemblyVersionInPackageVersion": {
+-        "0.1.0.0": "0.1.0",
+-        "0.2.0.0": "0.2.0"
++        "0.1.0.0": "0.1.0"
+       }
+     },
+     "System.Numerics.Vectors": {
+diff --git a/src/System.Numerics.Tensors/Directory.Build.props b/src/System.Numerics.Tensors/Directory.Build.props
+index 54cc918845..f1c26cee38 100644
+--- a/src/System.Numerics.Tensors/Directory.Build.props
++++ b/src/System.Numerics.Tensors/Directory.Build.props
+@@ -2,7 +2,7 @@
+   <Import Project="..\Directory.Build.props" />
+   <PropertyGroup>
+     <AssemblyVersion>0.2.1.0</AssemblyVersion>
+-    <PackageVersion>0.3.0</PackageVersion>
++    <PackageVersion>0.2.0</PackageVersion>
+     <StrongNameKeyId>Open</StrongNameKeyId>
+     <!-- This is a preview package. Do not mark as stable. -->
+     <BlockStable>true</BlockStable>
+--
+2.21.3
+
