@@ -43,26 +43,33 @@ A "supplemental intermediate nupkg" uses the same naming convention as
 intermediate nupkgs, but inserts an extra name between the repo name and the
 RID.
 
-* `Microsoft.SourceBuild.Intermediate.runtime.libraries.linux.x64/6.0.0-foo`
+* `Microsoft.SourceBuild.Intermediate.runtime.Libraries.linux.x64/6.0.0-foo`
   * Contains the dotnet/runtime platform extensions libraries.
   * E.g. `System.IO.Pipelines.6.0.0-foo.nupkg`, `System.Numerics.Tensors.6.0.0-foo.nupkg`, ...
-* `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.linux.x64/6.0.0-foo`
+* `Microsoft.SourceBuild.Intermediate.runtime.Crossgen2Pack.linux.x64/6.0.0-foo`
   * Contains the crossgen2 framework pack:
     * `Microsoft.NETCore.App.Crossgen2.linux-x64.6.0.0-foo.nupkg`
-  * By convention, we use the identity of the crossgen2 pack without its RID for
-    the supplemental nupkg name. 
-* `Microsoft.SourceBuild.Intermediate.runtime.Microsoft.NETCore.App.Crossgen2.archive.linux.x64/6.0.0-foo`
+* `Microsoft.SourceBuild.Intermediate.runtime.Crossgen2Pack.Archive.linux.x64/6.0.0-foo`
   * This stores the `tar.gz` version of the crossgen2 framework pack:
     * `dotnet-crossgen2-6.0.0-foo-linux-x64.tar.gz`
-  * We could give this supplemental nupkg a distinct name, say,
-    `dotnet-crossgen2` rather than `Microsoft.NETCore.App.Crossgen2.archive`,
-    but these are just different formats of the same fundamental framework pack.
-    * Naming is ultimately up to the project owner. Arcade-powered source-build
-      doesn't require the name to correspond to artifact filenames.
-    * Calling it `archive` rather than `tarball` lets it handle `zip` files, to
-      allow for Windows support in the future.
+  * Note: Calling it `.Archive` rather than `.Tarball` gives us room to handle
+    `zip` files, to allow for Windows support in the future.
   * Crossgen2 is huge (~167 MB), so we need one supplemental nupkg for each
-    artifact. One for the nupkg, another for the archive.
+    artifact: one for the nupkg, another for the archive.
+
+The names of the supplemental categories are based on the contents, but the
+exact names are arbitrary. The goal is that it's clear enough that downstream
+users will know what it contains.
+
+For example, it would be fine to give the `Crossgen2Pack.Archive` supplemental
+nupkg a name based on the artifact's filename, say, `dotnet-crossgen2`.
+Arcade-powered source-build doesn't require a specific naming style. In this
+case, making `Crossgen2Pack` and `Crossgen2Pack.Archive` similar seems
+reasonable, since these are simply the same bits packaged different ways. Naming
+is ultimately up to the project owner.
+
+In general, the name should be concise: long NuGet package IDs can cause path
+length problems.
 
 ### Contents
 
