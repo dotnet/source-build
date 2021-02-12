@@ -135,6 +135,53 @@ nupkg] ID. For example, running source-build on `dotnet/installer` with
 * `Microsoft.SourceBuild.Intermediate.source-build-reference-packages`
   * Ends with the `RepoName` without a suffix because `ManagedOnly="true"`.
 
+#### Supplemental intermediate nupkgs
+
+If the repo needs to *produce* [supplemental intermediate nupkgs], this needs to
+be configured. Exact implementation is to-be-documented. The repo needs to map
+each artifact to a supplemental category. Ideally this info can be stored in the
+project file responsible for producing each artifact, for maintainability.
+However, the faster approach is to use pattern matching to assign filenames in
+`artifacts/` to specific categories. This will likely be worked on
+incrementally.
+
+If the repo needs to *consume* [supplemental intermediate nupkgs] from an
+upstream, extra `<Supplemental ... />` elements need to be added to
+`eng/Version.Details.xml`. For example:
+
+```xml
+<Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="6.0.0">
+  <Uri>https://github.com/dotnet/runtime</Uri>
+  <Sha>d9069470a108f13765e0e5988f51cf258a14b70a</Sha>
+  <SourceBuild RepoName="runtime">
+    <Supplemental Name="Microsoft.NETCore.App.Ref" />
+    <Supplemental Name="Microsoft.NETCore.App.Ref.archive" />
+    <Supplemental Name="Microsoft.NETCore.App.Runtime" />
+    <Supplemental Name="Microsoft.NETCore.App.Runtime.archive" />
+    <Supplemental Name="Microsoft.NETCore.App.Host" />
+    <Supplemental Name="Microsoft.NETCore.App.Host.archive" />
+    <Supplemental Name="Microsoft.NETCore.App.Crossgen2" />
+    <Supplemental Name="Microsoft.NETCore.App.Crossgen2.archive" />
+    <Supplemental Name="libraries" />
+    <Supplemental Name="coreclr" />
+  </SourceBuild>
+</Dependency>
+```
+
+This causes source-build to download:
+
+```
+Microsoft.DotNet.SourceBuild.runtime.linux-x64
+Microsoft.DotNet.SourceBuild.runtime.Microsoft.NETCore.App.Ref.linux-x64
+Microsoft.DotNet.SourceBuild.runtime.Microsoft.NETCore.App.Ref.archive.linux-x64
+...
+Microsoft.DotNet.SourceBuild.runtime.coreclr.linux-x64
+```
+
+The list of available supplemental intermediate nupkgs for a given repo can be
+found inside the repo's "base" intermediate nupkg, e.g.
+`Microsoft.DotNet.SourceBuild.runtime.linux-x64`.
+
 ### Patching
 
 Look at <https://github.com/dotnet/source-build/tree/release/5.0/patches> to
@@ -171,3 +218,4 @@ For each patch that isn't incorporated directly:
 
 
 [intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
+[supplemental intermediate nupkgs]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md#too-large
