@@ -11,7 +11,7 @@ To build the full .NET SDK from source, pick a specific Git tag with your desire
 * [`release/3.1`](https://github.com/dotnet/source-build/tree/release/3.1)
 * [`release/2.1`](https://github.com/dotnet/source-build/tree/release/2.1)
 
-The current branch is a work in progress that produces several .NET SDK components for [Arcade-powered source-build](Documentation\planning\arcade-powered-source-build). Once Arcade-powered source-build is complete, it will allow building a .NET SDK from source directly from the [dotnet/installer](https://github.com/dotnet/installer) repository.
+The current branch is a work in progress that produces several .NET SDK components for [Arcade-powered source-build](Documentation/planning/arcade-powered-source-build). Once Arcade-powered source-build is complete, it will allow building a .NET SDK from source directly from the [dotnet/installer](https://github.com/dotnet/installer) repository.
 
 ## Using this repository
 
