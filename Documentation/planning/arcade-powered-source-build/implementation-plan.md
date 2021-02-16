@@ -25,7 +25,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | | | | | |
 | 1 | symreader | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | |
 | 1 | test-templates | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
+| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 2 | linker | [Marek Safar](https://github.com/marek-safar) | ✔️ | | | | |
 | 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
 | 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
