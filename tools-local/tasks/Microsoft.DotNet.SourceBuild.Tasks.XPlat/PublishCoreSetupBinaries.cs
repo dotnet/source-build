@@ -34,29 +34,21 @@ namespace Microsoft.DotNet.Build.Tasks
         // The regular expression is even more of a mess when we try to account for every RID and suffix that may exist.
         // This is a list of bad stuff we should remove that's never part of a version number.  If adding to it, it
         // should include the delimiter immediately before the RID, arch, or extension.
-        protected string[] BadAtoms = new[] { "-x64", ".x64",
-                                              "-arm64", ".arm64",
-                                              ".tar", ".gz",
-                                              "-rhel.7", "-rhel.8", "-rhel.9",
-                                              ".rhel.7", ".rhel.8", ".rhel.9",
-                                              "-centos.7", "-centos.8", "-centos.9",
-                                              ".centos.7", ".centos.8", ".centos.9",
-                                              ".fedora.30", "-fedora.30",
-                                              ".fedora.31", "-fedora.31",
-                                              ".fedora.32", "-fedora.32",
-                                              ".fedora.33", "-fedora.33",
-                                              ".fedora.34", "-fedora.34",
-                                              "-linux", ".linux",
-                                              "-osx", ".osx",
-                                              "-OSX", ".OSX",
-                                              "-osx.10", ".osx.10",
-                                              "-OSX.10", ".OSX.10",
-                                              "-osx.10.14", ".osx.10.14",
-                                              "-OSX.10.14", ".OSX.10.14",
-                                              "-osx.10.15", ".osx.10.15",
-                                              "-OSX.10.15", ".OSX.10.15",
-                                              ".ubuntu.18.04", "-ubuntu.18.04",
-                                              "-debian.9", ".debian.9",
+        protected string[] BadAtoms = new[] { @"-x64", @"\.x64",
+                                              @"-arm64", @"\.arm64",
+                                              @"\.tar", @"\.gz",
+                                              @"-rhel\.\d+", @"\.rhel\.\d+",
+                                              @"\.centos\.\d+", @"-centos\.\d+",
+                                              @"\.fedora\.\d+", @"-fedora\.\d+",
+                                              @"-linux", @"\.linux",
+                                              @"-osx", @"\.osx",
+                                              @"-OSX", @"\.OSX",
+                                              @"-osx\.10", @"\.osx\.10",
+                                              @"-OSX\.10", @"\.OSX\.10",
+                                              @"-osx\.10\.\d+", @"\.osx\.10\.\d+",
+                                              @"-OSX\.10\.\d+", @"\.OSX\.10\.\d+",
+                                              @"-ubuntu\.\d+\.\d+", @"\.ubuntu\.\d+\.\d+",
+                                              @"-debian\.\d+", @"\.debian\.\d+",
                                             };
 
         public override bool Execute()
@@ -69,12 +61,9 @@ namespace Microsoft.DotNet.Build.Tasks
                 string binaryFileName = Path.GetFileName(binaryFullPath);
                 string version = Regex.Match(binaryFileName, VersionMatchRegex).Groups["semver"].Value;
 
-                while (BadAtoms.Any(ba => version.Contains(ba)))
+                foreach (var ba in BadAtoms)
                 {
-                    foreach (var ba in BadAtoms)
-                    {
-                        version = version.Replace(ba, "");
-                    }
+                    version = Regex.Replace(version, ba, "");
                 }
 
                 if (version == "")
