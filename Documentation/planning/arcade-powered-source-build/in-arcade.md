@@ -69,19 +69,23 @@ parts of the build process.
 
 ### Publish
 
-This seems like a reasonable place to put [intermediate nupkg] creation. Not all
-repos use this target so care is needed to make sure this doesn't crash.
+We should add a simple target to Publish that ensures no artifacts are published
+directly, only the [intermediate nupkg] wrapper. This prevents NuGet feed
+pollution/conflict vs. the non-source-built packages.
+
+### New "AfterSourceBuild" project
+
+We need a place to put [intermediate nupkg] creation and prebuilt usage
+detection. The intermediate nupkg should contain the prebuilt report, so these
+steps are related.
+
+It's important to put prebuilt usage detection as the very last step, to be sure
+no prebuilts were used, even by Publish. Not all package restores and artifact
+downloads happen during the Arcade SDK's Restore phase.
 
 Creating an intermediate nupkg involves gathering together all shipped artifacts
 (nupkgs and tarballs) into a nupkg. The nupkg the needs to be uploaded to the
 build pipeline along with a manifest to indicate to Arcade how to publish it.
-
-We should also ensure here that no prebuilts were used. This is a validation
-step, however it's essential for source-build health, and quick to check. The
-reason to do this during Publish is that there is no Test phase during a
-source-build and we don't know for sure whether any extra prebuilts were
-restored until the entire build completes. (It's not guaranteed that all
-downloading happens during the Arcade SDK's Restore phase.)
 
 ## Supporting source-built SDKs
 
@@ -112,11 +116,13 @@ need to launch a new build. A few alternative ways how to do this (best first):
    * Reinvents a lot of NuGet caching/download/restore logic.
    * Needs to be implemented in tool.sh and tool.ps1 for parity.
 
+Option (1) has been implemented in the Arcade SDK, using `git` commands.
+[dotnet/arcade#5116](https://github.com/dotnet/arcade/issues/5116)
+
 ## Special per-repo handling
 
 Some repos may have some infra in source-build that is incompatible with arcade.
-Any functionality like this should be added to `eng/*.targets` and `eng/*.props`
-files.
+Any functionality like this should be added to `eng/SourceBuild.targets`.
 
 ## Non-Microsoft-maintained repositories
 

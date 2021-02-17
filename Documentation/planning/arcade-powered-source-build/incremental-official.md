@@ -25,36 +25,23 @@ source-build.
 
 ## Leaf first
 
-The reason to add source-build to leaf official builds first is that they don't
-require any source-built intermediate assets. We can add source-build to their
-official builds without yet implementing the logic to fetch intermediate assets.
-Once the leaves are added, we can onboard the repos that depend on those leaves
-and have them restore the necessary source-build intermediate nupkgs.
+Reasons to implement ArPow in leaves first:
 
-It is possible to pick a non-leaf repo, however it needs to get its
-prerequisites from somewhere. It would need to build every repo from source.
-(Depending on something like Microsoft-built NuGet packages defeats the point.)
-See [incremental-official-chunked.md](incremental-official-chunked.md) for an
-exploration of the idea of building small sets of repos from source at the same
-time: it's a much costlier approach than it may seem. We plan not to do this.
+* This most closely resembles an actual source-build. Either the repo has no
+  dependencies, or it gets all its dependencies from upstream ArPow builds.
+* If there are differences in the source-built artifacts from the upstreams,
+  they are exercised.
+* Fewer or no prebuilts are used.
 
-## Consume intermediates in dotnet/installer
+## Exceptions to leaf-first
 
-After the dotnet/source-build-reference-packages (SBRP) leaf starts producing
-source-built intermediates, we should update dotnet/installer to consume it.
-This way we validate the intermediate nupkg infrastructure and get a chance to
-move it into dotnet/arcade before we roll it out across multiple repos.
+Some repos have very high impact to source-build and may introduce unexpected
+problems, such as dotnet/runtime. It is useful to implement ArPow in these repos
+even if upstreams aren't ready yet. For example, working on dotnet/runtime
+before it was a leaf exposed issues with artifact size.
 
-Note that we only plan to do this partially cached source-build with a single
-leaf and dependency, SBRP => dotnet/installer. We won't repeat the exercise with
-other intermediate nupkgs that will be incrementally added, because it's not yet
-feasible at this point in the plan to keep source-build in dotnet/installer up
-to date with the work being done in 5.0 branches.
-
-Once it works, intermediate consumption support should be added to the Arcade
-SDK to allow for rollout.
-
-## Rollout
-
-Additional repos can then be added from the bottom up, building using upstream
-source-built intermediates.
+This makes sense for dotnet/runtime, but not for dotnet/aspnetcore. The behavior
+of aspnetcore depends a lot on the non-portable source-build RID, and needs
+artifacts to be available specifically for that RID. Building aspnetcore for
+`centos.7-x64` requires runtime artifacts with that non-portable RID, which are
+only built by source-build.
