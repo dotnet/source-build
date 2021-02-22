@@ -48,26 +48,8 @@
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)CopyTools.complete" Overwrite="true" />
   </Target>
 
-  <!-- Need to "publish" the tarballs for cli, until cli respects the assets blob -->
-  <Target Name="PublishBinaries"
-          AfterTargets="Build"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
-    <ItemGroup>
-      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-runtime-*$(TarBallExtension)" />
-      <CoreSetupTarballs Include="$(SourceBuiltAssetsDir)dotnet-hostfxr-*$(TarBallExtension)" />
-    </ItemGroup>
-    <PublishCoreSetupBinaries Binaries="@(CoreSetupTarballs)"
-                              DestinationFolderTemplate="$(SourceBuiltRuntimeDir){version}/" >
-      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
-    </PublishCoreSetupBinaries>
-    <Message Text="Published core-setup binaries version $(PublishedVersion)" Importance="High" />
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
-  </Target>
-
   <Target Name="CopyBinariesToBinFolder"
-          AfterTargets="PublishBinaries"
+          AfterTargets="Build"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)CopyBinariesToBinFolder.complete">
     <ItemGroup>

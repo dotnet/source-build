@@ -1,7 +1,7 @@
-From eac34237f8ee3e85a42af772fa37671c1dbfee73 Mon Sep 17 00:00:00 2001
+From 176885ba8f490d1748a672ba22199432fa2c4c4b Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Wed, 23 Sep 2020 10:48:12 -0400
-Subject: [PATCH] Fix singlefilehost build in non-portable mode (#42415)
+Subject: [PATCH 10/30] Fix singlefilehost build in non-portable mode (#42415)
 
 The singilefilehost needs to follow the libraries build in terms of how
 it links to OpenSSL: if it's a non-portable build, the singlefilehost
@@ -29,10 +29,10 @@ index c0bbce8e591..bd789c6f34f 100755
  if [[ "$__PortableBuild" == 1 ]]; then
      __CMakeArgs="-DCLI_CMAKE_PORTABLE_BUILD=1 $__CMakeArgs"
 diff --git a/src/installer/corehost/cli/apphost/static/CMakeLists.txt b/src/installer/corehost/cli/apphost/static/CMakeLists.txt
-index 85ea6ffe642..87db505c521 100644
+index ffb4f3ed02c..a9d5b047999 100644
 --- a/src/installer/corehost/cli/apphost/static/CMakeLists.txt
 +++ b/src/installer/corehost/cli/apphost/static/CMakeLists.txt
-@@ -191,6 +191,11 @@ else()
+@@ -193,6 +193,11 @@ else()
      #     )
      endif ()
  
@@ -44,7 +44,7 @@ index 85ea6ffe642..87db505c521 100644
      if(CLR_CMAKE_TARGET_LINUX OR CLR_CMAKE_TARGET_FREEBSD OR CLR_CMAKE_TARGET_NETBSD OR CLR_CMAKE_TARGET_SUNOS)
          # These options are used to force every object to be included even if it's unused.
          set(START_WHOLE_ARCHIVE -Wl,--whole-archive)
-@@ -212,3 +217,10 @@ target_link_libraries(singlefilehost
+@@ -216,3 +221,10 @@ target_link_libraries(
      ${NATIVE_LIBS}
      ${END_WHOLE_ARCHIVE}
  )
@@ -56,5 +56,5 @@ index 85ea6ffe642..87db505c521 100644
 +    )
 +endif()
 -- 
-2.26.2
+2.18.0
 
