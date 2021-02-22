@@ -17,6 +17,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNodeJs=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:PublishCompressedFilesPathPrefix=$(SourceBuiltAspNetCoreRuntime)</BuildCommandArgs>
 
     <!-- Update to 1.0.0 version of reference assemblies which are built in SBRP instead of the preview.2 version
          included by Arcade -->
@@ -26,7 +27,6 @@
 
     <BuildCommand>$(ProjectDirectory)build$(ShellExtension) $(BuildCommandArgs)</BuildCommand>
 
-    <TarballOutputDir>$(ProjectDirectory)artifacts/installers/$(Configuration)/</TarballOutputDir>
     <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
     <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
     <RepoApiImplemented>false</RepoApiImplemented>
@@ -84,28 +84,6 @@
       <PackagesOutputList Include="$(ShippingPackagesOutput)" />
       <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
     </ItemGroup>
-  </Target>
-
-  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="PublishToolsetBinaries" />
-
-  <Target Name="PublishBinaries"
-          AfterTargets="Build"
-          Inputs="$(MSBuildProjectFullPath)"
-          Outputs="$(RepoCompletedSemaphorePath)PublishBinaries.complete">
-    <ItemGroup>
-      <AspNetTarballs Include="$(TarballOutputDir)aspnetcore-*.tar.gz" />
-      <ExtraAspNetFiles Include="$(TarballOutputDir)*.version" />
-    </ItemGroup>
-    <Message Importance="High" Text="Publishing @(AspNetTarballs) from $(TarballOutputDir) to $(SourceBuiltAspNetCoreRuntime){version}/" />
-    <PublishToolsetBinaries Binaries="@(AspNetTarballs)"
-                            DestinationFolderTemplate="$(SourceBuiltAspNetCoreRuntime){version}/">
-      <Output TaskParameter="PublishedVersion" PropertyName="PublishedVersion" />
-    </PublishToolsetBinaries>
-    <Message Text="Published ASP.NET runtime version $(PublishedVersion)" Importance="High" />
-    <Copy SourceFiles="@(ExtraAspNetFiles)" DestinationFolder="$(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Condition="'@(ExtraAspNetFiles)' != ''" />
-    <Message Text="Published extra ASP.NET files @(ExtraAspNetFiles) to $(SourceBuiltAspNetCoreRuntime)$(PublishedVersion)" Importance="High" />
-
-    <WriteLinesToFile File="$(RepoCompletedSemaphorePath)PublishBinaries.complete" Overwrite="true" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

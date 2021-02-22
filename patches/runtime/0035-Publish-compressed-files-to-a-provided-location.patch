@@ -1,0 +1,53 @@
+From 824e7a89533f6e35099762a7f543d76fae693484 Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Tue, 23 Feb 2021 09:45:39 -0500
+Subject: [PATCH] Publish compressed files to a provided location
+
+Used by source-build
+---
+ src/installer/pkg/packaging/installers.proj | 22 +++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/src/installer/pkg/packaging/installers.proj b/src/installer/pkg/packaging/installers.proj
+index dbae53d0852..5293f91e0b9 100644
+--- a/src/installer/pkg/packaging/installers.proj
++++ b/src/installer/pkg/packaging/installers.proj
+@@ -12,6 +12,7 @@
+       GetInstallerLocations;
+       GenerateVersionBadge;
+       GenerateCompressedFiles;
++      PublishCompressedFilesForSourceBuild;
+       GenerateInstallers;
+       GenerateProjectInstallers;
+     </PackageTargets>
+@@ -259,6 +260,27 @@
+     <Error Condition="!Exists('$(AssetOutputPath)$(SharedFrameworkSymbolsCompressedFile)')" Message="Unable to create $(AssetOutputPath)$(SharedFrameworkSymbolsCompressedFile)" />
+   </Target>
+ 
++  <!-- Used by source-build -->
++  <Target Name="PublishCompressedFilesForSourceBuild"
++          Condition="'$(PublishCompressedFilesPathPrefix)' != ''">
++
++    <MakeDir Directories="$(PublishCompressedFilesPathPrefix)$(ProductVersion)" />
++
++    <Copy SourceFiles="$(AssetOutputPath)$(CombinedCompressedFile)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(ProductVersion)" />
++
++    <Copy SourceFiles="$(AssetOutputPath)$(HostFxrCompressedFile)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(ProductVersion)" />
++
++    <Copy SourceFiles="$(AssetOutputPath)$(SharedFrameworkCompressedFile)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(ProductVersion)" />
++
++    <Copy SourceFiles="$(AssetOutputPath)$(SharedFrameworkSymbolsCompressedFile)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(ProductVersion)" />
++
++  </Target>
++
++
+   <Import Project="osx\package.targets" />
+   <Import Project="deb\package.targets" />
+   <Import Project="rpm\package.targets" />
+-- 
+2.29.2
+
