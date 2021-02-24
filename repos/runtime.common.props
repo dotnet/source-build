@@ -79,6 +79,7 @@
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:RestoreAllBuildRids=false</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:OutputRid=$(OverrideTargetRid)</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:DotNetOutputBlobFeedDir=$(SourceBuiltBlobFeedDir)</InstallerBuildArguments>
+    <InstallerBuildArguments>$(InstallerBuildArguments) /p:PublishCompressedFilesPathPrefix=$(SourceBuiltRuntimeDir)</InstallerBuildArguments>
     <InstallerBuildArguments>$(InstallerBuildArguments) /p:BuiltSdkPackageOverride=""</InstallerBuildArguments>    <!-- Clear PackageOverride for Installer - it only applies to coreclr -->
     <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
 

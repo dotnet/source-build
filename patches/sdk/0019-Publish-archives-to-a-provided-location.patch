@@ -1,0 +1,38 @@
+From 59705e091ae3feccb8d50f67f0ffc58f16981efb Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Tue, 23 Feb 2021 09:48:12 -0500
+Subject: [PATCH] Publish archives to a provided location
+
+Used by source-build to consume the archives.
+---
+ .../redist/targets/GenerateArchive.targets       | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/src/Layout/redist/targets/GenerateArchive.targets b/src/Layout/redist/targets/GenerateArchive.targets
+index a67bd7a4b..d9f1318f7 100644
+--- a/src/Layout/redist/targets/GenerateArchive.targets
++++ b/src/Layout/redist/targets/GenerateArchive.targets
+@@ -33,4 +33,20 @@
+         Lines="$(Version)"
+         Overwrite="true" />
+   </Target>
++
++  <!-- Used by source-build -->
++  <Target Name="GenerateSourceBuildArchives"
++          AfterTargets="GenerateArchives"
++          Condition="'$(PublishCompressedFilesPathPrefix)' != ''">
++
++    <MakeDir Directories="$(PublishCompressedFilesPathPrefix)$(Version)" />
++
++    <ItemGroup>
++      <ToolsetZips Include="$(ArtifactsNonShippingPackagesDir)dotnet-*.zip" />
++    </ItemGroup>
++
++    <Copy SourceFiles="@(ToolsetZips)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(Version)" />
++  </Target>
++
+ </Project>
+-- 
+2.29.2
+

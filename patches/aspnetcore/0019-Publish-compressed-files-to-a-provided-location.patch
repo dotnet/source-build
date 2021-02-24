@@ -1,0 +1,44 @@
+From 2196196a6308eb52af91b1213dbfbdb8917e587f Mon Sep 17 00:00:00 2001
+From: Omair Majid <omajid@redhat.com>
+Date: Tue, 23 Feb 2021 09:42:29 -0500
+Subject: [PATCH] Publish compressed files to a provided location
+
+This allows source-build to consume these files directly.
+---
+ .../src/Microsoft.AspNetCore.App.Runtime.csproj   | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+index cfbe759aff..285acbd07a 100644
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+@@ -183,6 +183,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+       _CreateInternalSharedFxArchive;
+       _CreateRedistSharedFxArchive;
+       _InstallFrameworkIntoLocalDotNet;
++      _PublishCompressedFilesForSourceBuild;
+     </CoreBuildDependsOn>
+     <CrossGenDependsOn>
+       ResolveReferences;
+@@ -560,4 +561,18 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+     </ItemGroup>
+   </Target>
+ 
++  <!-- Used by source-build to get a copy of the right runtime -->
++  <Target Name="_PublishCompressedFilesForSourceBuild"
++          Condition="'$(PublishCompressedFilesPathPrefix)' != ''">
++
++    <MakeDir Directories="$(PublishCompressedFilesPathPrefix)$(MicrosoftNETCoreAppRuntimeVersion)" />
++
++    <Copy SourceFiles="$(InternalArchiveOutputPath)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(MicrosoftNETCoreAppRuntimeVersion)" />
++
++    <Copy SourceFiles="$(BaseRuntimeVersionFileOutputPath)"
++          DestinationFolder="$(PublishCompressedFilesPathPrefix)$(MicrosoftNETCoreAppRuntimeVersion)" />
++
++  </Target>
++
+ </Project>
+-- 
+2.29.2
+
