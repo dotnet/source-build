@@ -9,35 +9,35 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 
 | Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra merged | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
 | --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
-| sbrp | Source-build-reference-packages | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | sourcelink | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | arcade | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *application-insights*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *cssparser*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *humanizer*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *netcorecli-fsc*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *newtonsoft-json*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *newtonsoft-json901*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | aspnet-xdt | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | |
-| 1 | clicommandlineparser | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | |
-| 1 | command-line-api | [?](https://github.com/) | ✔️ | | | | |
-| 1 | diagnostics | ? | ✔️ | | | | |
-| 1 | roslyn | [Fred Silberberg](https://github.com/333fred) | | | | | |
-| 1 | symreader | [Tomas Matousek](https://github.com/tmat) | ✔️ | | | | |
-| 1 | test-templates | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | xliff-tasks | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 2 | linker | [Marek Safar](https://github.com/marek-safar) | ✔️ | | | | |
-| 2 | msbuild | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
-| 2 | NuGet.Client | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
-| 2 | runtime | [Jared Parsons](https://github.com/jaredpar) | | | | | |
-| 2 | templating | [Vlada Shubina](https://github.com/vlada-shubina) | | | | | |
-| 3 | roslyn-analyzers | [Jonathon Marolf](https://github.com/jmarolf) | | | | | |
-| 4 | aspnetcore | [John Luo](https://github.com/JunTaoLuo) | | | | | |
-| 4 | websdk | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
-| 5 | fsharp | [Brett Forsgren](https://github.com/brettfo) | | | | | |
-| 5 | sdk | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
-| 5 | vstest | [Jakub Jares](https://github.com/nohwnd) | | | | | |
-| 6 | installer | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
+| sbrp | [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| Tools | [sourcelink](https://github.com/dotnet/sourcelink) | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| Tools | [arcade](https://github.com/dotnet/arcade) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[application-insights](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[cssparser](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[humanizer](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[netcorecli-fsc](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[newtonsoft-json](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | *[newtonsoft-json901](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
+| 1 | [aspnet-xdt](https://github.com/dotnet/aspnet-xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | |
+| 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | |
+| 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? | ✔️ | | | | |
+| 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | ✔️ | ✔️ | | | |
+| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | | | | | |
+| 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | |
+| 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | ✔️ | | | | |
+| 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
+| 2 | [linker](https://github.com/mono/linker) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | | |
+| 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
+| 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
+| 2 | [runtime](https://github.com/dotnet/runtime) | [Jared Parsons](https://github.com/jaredpar) | | | | | |
+| 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | | | | |
+| 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | | | | | |
+| 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | | | | | |
+| 4 | [websdk](https://github.com/dotnet/sdk) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
+| 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | | | | | |
+| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
+| 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | | | | | |
+| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
 
 | Status | Description |
 | --- | --- |
