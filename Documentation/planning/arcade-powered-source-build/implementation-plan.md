@@ -24,8 +24,8 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | ✔️ | ✔️ | | | |
 | 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | | | | | |
 | 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | | |
-| 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | ✔️ | | | | |
-| 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | | | | |
+| 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | ✔️ | ✔️ | | | |
+| 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | | | |
 | 2 | [linker](https://github.com/mono/linker) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | | |
 | 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
 | 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
