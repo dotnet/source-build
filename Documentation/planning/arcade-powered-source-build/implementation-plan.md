@@ -18,7 +18,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | *[netcorecli-fsc](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | *[newtonsoft-json](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | *[newtonsoft-json901](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [aspnet-xdt](https://github.com/dotnet/aspnet-xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | |
+| 1 | [aspnet-xdt](https://github.com/dotnet/xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | | | | |
 | 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) | ✔️ | | | | |
 | 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? | ✔️ | | | | |
 | 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | ✔️ | ✔️ | | | |
