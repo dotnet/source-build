@@ -30,7 +30,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | | | | |
 | 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) | | | | | |
 | 2 | [runtime](https://github.com/dotnet/runtime) | [Jared Parsons](https://github.com/jaredpar) | | | | | |
-| 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | [PR](https://github.com/dotnet/templating/pull/2902) | | | |
+| 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | ✔️ | | | |
 | 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | | | | | |
 | 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | | | | | |
 | 4 | [websdk](https://github.com/dotnet/sdk) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
