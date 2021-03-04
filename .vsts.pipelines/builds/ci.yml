@@ -4,12 +4,22 @@ trigger:
     include:
     - master
     - release/*
+  paths:
+    exclude:
+    - .github/*
+    - Documentation/*
+    - '*.md'
 
 pr:
   branches:
     include:
     - master
     - release/*
+  paths:
+    exclude:
+    - .github/*
+    - Documentation/*
+    - '*.md'
 
 stages:
 - stage: build
