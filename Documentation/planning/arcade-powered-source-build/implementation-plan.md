@@ -33,9 +33,8 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | ✔️ | | | |
 | 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | | | | | |
 | 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | | | | | |
-| 4 | [websdk](https://github.com/dotnet/sdk) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | | | | | |
 | 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | | | | | |
-| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
+| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| | | | | |
 | 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | | | | | |
 | 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | | | | | |
 
