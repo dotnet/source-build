@@ -1,0 +1,23 @@
+From 4463ac79852a962c1b41188ead601cf2052c6dfd Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sat, 13 Mar 2021 14:21:20 -0600
+Subject: [PATCH 9/9] Restore CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS property.
+
+---
+ src/redist/targets/BundledDotnetTools.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/targets/BundledDotnetTools.targets b/src/redist/targets/BundledDotnetTools.targets
+index 0b5b202e0..0d3cc2e8c 100644
+--- a/src/redist/targets/BundledDotnetTools.targets
++++ b/src/redist/targets/BundledDotnetTools.targets
+@@ -1,5 +1,5 @@
+ <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+-  <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
++  <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' and '$(CLIBUILD_SKIP_BUNDLEDDOTNETTOOLS)' != 'true' ">
+     <BundledDotnetTool Include="dotnet-dev-certs" Version="$(DotnetDevCertsPackageVersion)" />
+     <BundledDotnetTool Include="dotnet-user-secrets" Version="$(DotnetUserSecretsPackageVersion)" ObsoletesCliTool="Microsoft.Extensions.SecretManager.Tools" />
+     <BundledDotnetTool Include="dotnet-watch" Version="$(DotnetWatchPackageVersion)" ObsoletesCliTool="Microsoft.DotNet.Watcher.Tools" />
+-- 
+2.18.0
+
