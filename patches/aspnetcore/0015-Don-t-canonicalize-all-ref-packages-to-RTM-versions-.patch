@@ -1,11 +1,11 @@
-From db28c21cbe16efe4c6f0de3ef6541c1487d00348 Mon Sep 17 00:00:00 2001
+From 93b584d3905b1abe7b7e3bb09fd853fe372c9da5 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 16 Dec 2020 19:36:48 -0600
-Subject: [PATCH 15/15] Don't canonicalize all ref packages to RTM versions for
+Subject: [PATCH 15/18] Don't canonicalize all ref packages to RTM versions for
  source-build. This is because we turn on BuildAllPackages in runtime since we
- don't use the previous version's prebuilt bits.  This target makes the
- version numbers mismatch, resulting in errors like error MSB3106: Assembly
- strong name
+ don't use the previous version's prebuilt bits. This target makes the version
+ numbers mismatch, resulting in errors like error MSB3106: Assembly strong
+ name
  "/home/chris/dotnet_source-build/packages/restored/system.io.pipelines/5.0.0/ref/net5.0/System.I
  O.Pipelines.dll" is either a path which could not be found or it is a full
  assembly name which is badly formed.

@@ -1,12 +1,12 @@
-From 340b200c6f0efe8dbe38186a5c94ba28cd9bfd5f Mon Sep 17 00:00:00 2001
+From f9ca4bdfbf9ac7802310e86428c8fca2c1f2f6c1 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Mon, 21 Dec 2020 15:17:22 -0600
-Subject: [PATCH] Don't use RTMVersion in source-build
+Subject: [PATCH 17/18] Don't use RTMVersion in source-build
 
 This seems like it would bring in prebuilts, and more directly, causes:
 
-  Detected package downgrade: System.Security.Cryptography.Pkcs from 5.0.1 to 5.0.0. Reference the package directly from the project to select a different version. 
-   RepoTasks -> NuGet.Packaging 5.8.0-rc.6930 -> System.Security.Cryptography.Pkcs (>= 5.0.1) 
+  Detected package downgrade: System.Security.Cryptography.Pkcs from 5.0.1 to 5.0.0. Reference the package directly from the project to select a different version.
+   RepoTasks -> NuGet.Packaging 5.8.0-rc.6930 -> System.Security.Cryptography.Pkcs (>= 5.0.1)
    RepoTasks -> System.Security.Cryptography.Pkcs (>= 5.0.0)
 ---
  eng/Dependencies.props | 6 +++++-
@@ -30,5 +30,5 @@ index d573a7bde9..79436b5a16 100644
        <!-- Remove excess metadata. -->
        <RTMVersion Condition=" '%(Version)' == '%(RTMVersion)' " />
 -- 
-2.25.4
+2.18.0
 
