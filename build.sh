@@ -124,7 +124,8 @@ if [ "${internalPackageFeedPat:-}" ]; then
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-4210e7d1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/darc-int-dotnet-corefx-43e382ec/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-9b154f56/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/3-1-13-2-18-21/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
 fi
 
