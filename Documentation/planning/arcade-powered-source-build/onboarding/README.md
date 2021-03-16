@@ -5,16 +5,36 @@ Onboarding to ArPow (arcade-powered source-build) has several stages:
 * **(1) Local build infra merged**
    * See [local-onboarding.md](local-onboarding.md).
    * PR submitted by source-build team.
+   * Exit criteria:
+	  - Local dev build works.
+	  - Source-build intermediate packages are produced.
+		- Intermediate packages contain the same set of packages as the in-progress 6.0 branch or the 5.0 branch.
+	  - Prebuilts are reviewed (best effort basis).
+	    - It will be difficult to determine if all prebuilts are correct before we have the whole graph building.
+		- Packages built earlier in the source-build graph should not be using external prebuilts if the source-build intermediates for those are ready.
+	  - If the target repo already has source-build CI, it is upgraded to ArPow. 
+   * After completing this step:
+	  - Log an issue in the target repo to remove source-build patches.
+	  - Log an issue in the target repo to enable source-build CI.
 * **(2) CI implemented** (PR + Official)
    * See [ci-onboarding.md](ci-onboarding.md).
    * PR submitted by repo's source-build champion.
+   * Exit criteria:
+      - All source-build patches are removed.
 * **(3) Artifacts greenlit** for downstream usage
    * The source-build team looks at the results of an official build and marks
      the repo greenlit. No tooling.
+   * Exit criteria:
+      - CI is reviewed.
+      - CI runs on release builds, checkins, and PRs.
+      - Intermediate packages are produced and published to BAR.
+      - Source-build team verifies that all expected packages are included in the intermediate packages.
 * **(4) Prebuilt regressions blocked**
    * This involves reducing `eng/SourceBuildPrebuiltBaseline.xml` to a minimal
      set and enabling a flag that makes CI fail when a regression is detected.
    * PR submitted by source-build team.
+   * Exit criteria:
+      - All prebuilts are removed.
 
 See [implementation-plan.md](../implementation-plan.md) for more details about
 the steps and the overall ArPow implementation status.
