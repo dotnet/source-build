@@ -1,0 +1,91 @@
+From 85020bbf86d7d94dfb3403b2faf495cbfd151668 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Mar 2021 14:39:27 -0500
+Subject: [PATCH] Add missing TRUE and FALSE definitions.
+
+---
+ src/corefx/System.Globalization.Native/calendarData.cpp  | 8 ++++++++
+ src/corefx/System.Globalization.Native/casing.cpp        | 8 ++++++++
+ src/corefx/System.Globalization.Native/collation.cpp     | 8 ++++++++
+ src/corefx/System.Globalization.Native/normalization.cpp | 8 ++++++++
+ 4 files changed, 32 insertions(+)
+
+diff --git a/src/corefx/System.Globalization.Native/calendarData.cpp b/src/corefx/System.Globalization.Native/calendarData.cpp
+index ba2b6df275..dc881757aa 100644
+--- a/src/corefx/System.Globalization.Native/calendarData.cpp
++++ b/src/corefx/System.Globalization.Native/calendarData.cpp
+@@ -23,6 +23,14 @@
+ 
+ #define JAPANESE_LOCALE_AND_CALENDAR "ja_JP@calendar=japanese"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ const UChar UDAT_MONTH_DAY_UCHAR[] = {'M', 'M', 'M', 'M', 'd', '\0'};
+ const UChar UDAT_YEAR_NUM_MONTH_DAY_UCHAR[] = {'y', 'M', 'd', '\0'};
+ const UChar UDAT_YEAR_MONTH_UCHAR[] = {'y', 'M', 'M', 'M', 'M', '\0'};
+diff --git a/src/corefx/System.Globalization.Native/casing.cpp b/src/corefx/System.Globalization.Native/casing.cpp
+index 918b8fe6ed..d228d0a04f 100644
+--- a/src/corefx/System.Globalization.Native/casing.cpp
++++ b/src/corefx/System.Globalization.Native/casing.cpp
+@@ -7,6 +7,14 @@
+ #include <stdint.h>
+ #include "icushim.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Function:
+ ChangeCase
+diff --git a/src/corefx/System.Globalization.Native/collation.cpp b/src/corefx/System.Globalization.Native/collation.cpp
+index 3aefae2a6a..5bdd691ebe 100644
+--- a/src/corefx/System.Globalization.Native/collation.cpp
++++ b/src/corefx/System.Globalization.Native/collation.cpp
+@@ -13,6 +13,14 @@
+ #include "locale.hpp"
+ #include "errors.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ const int32_t CompareOptionsIgnoreCase = 0x1;
+ const int32_t CompareOptionsIgnoreNonSpace = 0x2;
+ const int32_t CompareOptionsIgnoreSymbols = 0x4;
+diff --git a/src/corefx/System.Globalization.Native/normalization.cpp b/src/corefx/System.Globalization.Native/normalization.cpp
+index 014894a5ed..8fe1810232 100644
+--- a/src/corefx/System.Globalization.Native/normalization.cpp
++++ b/src/corefx/System.Globalization.Native/normalization.cpp
+@@ -6,6 +6,14 @@
+ #include <stdint.h>
+ #include "icushim.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+  * These values should be kept in sync with System.Text.NormalizationForm
+  */
+-- 
+2.18.0
+
