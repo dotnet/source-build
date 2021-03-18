@@ -86,6 +86,6 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
       - Prebuilt usage baseline enforcement prevents prebuilt regression.
       - We will only do this once enforcement errors are actionable.
       - Exit criteria:
-        - A prebuilt baseline is established.
+        - A prebuilt baseline is established with specific packages and versions (not wildcards).
         - New prebuilt detection is enabled in CI in the target repo.
     - (**Repo team**) Review PR and merge.
