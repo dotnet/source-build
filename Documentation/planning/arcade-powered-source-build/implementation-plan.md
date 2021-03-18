@@ -52,18 +52,40 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
     - (**Repo team**) Review PR and merge.
       - Merging into main/master strongly preferred.
       - If a dev branch is created, the repo team must merge it into main/master before ending stage (3).
+	- Exit criteria:
+	  - Local dev build works.
+	  - Source-build intermediate packages are produced.
+		- Intermediate packages contain the same set of packages as the in-progress 6.0 branch or the 5.0 branch.
+	  - Prebuilts are reviewed (best effort basis).
+	    - It will be difficult to determine if all prebuilts are correct before we have the whole graph building.
+		- Packages built earlier in the source-build graph should not be using external prebuilts if the source-build intermediates for those are ready.
+	  - If the target repo already has source-build CI, it is upgraded to ArPow.
+    - After completing this step:
+	    - Log an issue in the target repo to remove source-build patches.
+	    - Log an issue in the target repo to enable source-build CI.
   - **(2) CI implemented** (PR + Official)
     - (**Repo team**) Submit PR adding source-build CI jobs and merge.
       - Let us know, and send us a link to an official build that includes the changes. We will start on (3).
     - *Async (**Repo team**) Incorporate `.patch` files into repo.*
       - *High impact: if these patch files have conflicts, CI fails.*
+    - Exit criteria:
+      - All source-build patches are removed.
+      - Source-build CI in the target repo is green and runs on PRs and checkins.
   - **(3) Artifacts greenlit** for downstream usage
     - (Source-build) Validate "intermediate nupkg" artifact and logs.
     - (Source-build) Preliminary check for unexpected prebuilt usage.
     - (Source-build + **repo team**) Fix up problems if found.
+    - Exit criteria:
+      - CI is reviewed.
+      - CI runs on release builds, checkins, and PRs.
+      - Intermediate packages are produced and published to BAR.
+      - Source-build team verifies that all expected packages are included in the intermediate packages.
   - **(4) Prebuilt regressions blocked**
     - (Source-build) Submit PR enabling prebuilt baseline enforcement.
       - Prebuilt binary usage is expected because this is a "production build", not a "tarball build".
       - Prebuilt usage baseline enforcement prevents prebuilt regression.
       - We will only do this once enforcement errors are actionable.
+      - Exit criteria:
+        - A prebuilt baseline is established with specific packages and versions (not wildcards).
+        - New prebuilt detection is enabled in CI in the target repo.
     - (**Repo team**) Review PR and merge.
