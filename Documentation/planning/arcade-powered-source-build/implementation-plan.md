@@ -59,7 +59,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 	  - Prebuilts are reviewed (best effort basis).
 	    - It will be difficult to determine if all prebuilts are correct before we have the whole graph building.
 		- Packages built earlier in the source-build graph should not be using external prebuilts if the source-build intermediates for those are ready.
-	  - If the target repo already has source-build CI, it is upgraded to ArPow. 
+	  - If the target repo already has source-build CI, it is upgraded to ArPow.
     - After completing this step:
 	    - Log an issue in the target repo to remove source-build patches.
 	    - Log an issue in the target repo to enable source-build CI.
@@ -86,5 +86,6 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
       - Prebuilt usage baseline enforcement prevents prebuilt regression.
       - We will only do this once enforcement errors are actionable.
       - Exit criteria:
-        - All prebuilts are removed.
+        - A prebuilt baseline is established.
+        - New prebuilt detection is enabled in CI in the target repo.
     - (**Repo team**) Review PR and merge.
