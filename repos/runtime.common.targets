@@ -35,10 +35,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).$(Configuration)/ilasm" />
-      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).$(Configuration)/ildasm" />
-      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).$(Configuration)/libcoreclr.$(AssemblyExtension)" />
-      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).$(Configuration)/System.Private.CoreLib.dll" />
+      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).Debug/ilasm" />
+      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).Debug/ildasm" />
+      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).Debug/libcoreclr.$(AssemblyExtension)" />
+      <CoreClrTools Include="$(ProjectDirectory)artifacts/bin/coreclr/$(TargetOS).$(Platform).Debug/System.Private.CoreLib.dll" />
     </ItemGroup>
 
     <Message Importance="High" Text="Copying source-built ILAsm and ILDasm '@(CoreClrTools)' to '$(CoreClrDestinationDir)'" />

@@ -52,7 +52,7 @@
     <LibrariesBuildArguments Condition="'$(PrepForTests)' == 'true'">$(LibrariesBuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)build /p:IncludeTestUtils=true</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(RunTests)' == 'true'">$(LibrariesBuildArguments) $(FlagParameterPrefix)restore $(FlagParameterPrefix)buildtests $(FlagParameterPrefix)test /p:IncludeTestUtils=true</LibrariesBuildArguments>
     <LibrariesBuildArguments Condition="'$(RunTests)' == 'true' AND '$(DotNetRunningInDocker)' == '1' AND '$(TargetOS)' == 'Linux'">$(LibrariesBuildArguments) /p:TestRspFile=$(TestExclusionsDir)corefx/linux.docker.rsp</LibrariesBuildArguments>
-    <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ConfigurationGroup=$(Configuration)</LibrariesBuildArguments>
+    <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:ConfigurationGroup=Debug</LibrariesBuildArguments>
     <LibrariesBuildArguments>$(LibrariesBuildArguments) /p:PackageRid=$(OverrideTargetRid)</LibrariesBuildArguments>
     <!-- CoreFX parses this argument for a OS "family", i.e. rhel.7 to rhel.  OSX doesn't have the extra identifier so we need to include the
           "-x64" so CoreFX can find a character to break on (digits, hyphen, period).  -->
@@ -84,12 +84,12 @@
     <InstallerBuildArguments>$(InstallerBuildArguments) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</InstallerBuildArguments>
 
     <CommonBuildArguments>$(FlagParameterPrefix)arch $(Platform)</CommonBuildArguments>
-    <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)configuration $(Configuration)</CommonBuildArguments>
-    <CommonBuildArguments>$(CommonBuildArguments) /p:RuntimeConfiguration=$(Configuration)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)configuration Debug</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) /p:RuntimeConfiguration=Debug</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) /p:MicrosoftNetFrameworkReferenceAssembliesVersion=1.0.0</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)binaryLog</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)ci</CommonBuildArguments>
-    <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)runtimeConfiguration $(Configuration)</CommonBuildArguments>
+    <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)runtimeConfiguration Debug</CommonBuildArguments>
     <CommonBuildArguments>$(CommonBuildArguments) $(FlagParameterPrefix)verbosity $(LogVerbosity)</CommonBuildArguments>
     <!--
     Disable node reuse (in the new/Arcade way) to avoid errors like this:
@@ -109,9 +109,9 @@
   <!-- Output / source-build flags -->
   <PropertyGroup>
     <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
-    <PackagesOutput>$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).$(Configuration)/.nuget/pkg</PackagesOutput>
-    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/Shipping/</ShippingPackagesOutput>
-    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/$(Configuration)/NonShipping/</NonShippingPackagesOutput>
+    <PackagesOutput>$(ProjectDirectory)bin/Product/$(TargetOS).$(Platform).Debug/.nuget/pkg</PackagesOutput>
+    <ShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/Debug/Shipping/</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)artifacts/packages/Debug/NonShipping/</NonShippingPackagesOutput>
     <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
     <DependencyVersionInputRepoApiImplemented>true</DependencyVersionInputRepoApiImplemented>
   </PropertyGroup>
