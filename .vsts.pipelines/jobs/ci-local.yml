@@ -1,7 +1,5 @@
 parameters:
   job: null
-  matrix:
-    Production: {}
   pool: null
   scriptPrefix: null
   scriptSuffix: null
@@ -9,35 +7,45 @@ parameters:
   setupWindows: false
   skipSmokeTest: false
   failOnPrebuiltBaselineError: true
+  reportPrebuiltLeaks: false
+  generatePrebuiltBurndown: false
+  runUnitTests: false
+  cleanAptGet: false
 
 jobs:
 - job: ${{ parameters.job }}
-  strategy:
-    matrix: ${{ parameters.matrix }}
   pool: ${{ parameters.pool }}
-  timeoutInMinutes: 240
+  timeoutInMinutes: 300
   variables:
+    rootDirectory: $(Build.SourcesDirectory)/..
+    tarballDirectory: $(rootDirectory)/tb
+    stagingDirectory: $(rootDirectory)/staging
+    dropDirectory: $(stagingDirectory)/drop
+    logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    tarballName: tarball_$(Build.BuildId)
     args.build: >-
       /p:Configuration=$(sb.configuration)
       /p:PortableBuild=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       /p:AzDoPat=$(System.AccessToken)
+      /p:ArchiveDownloadedPackages=$(sb.tarball)
       $(tarballDownloadArgs)
     args.smokeTest: >
       --run-smoke-test
       /p:Configuration=$(sb.configuration)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
     # Prefix to distinguish artifacts from different legs.
-    artifactName: ${{ format('{0} $(type)', parameters.job) }}
+    artifactName: ${{ parameters.job }}
     failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
-    logsDirectory: $(Build.ArtifactStagingDirectory)/logs
+    reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
+    systemLibunwind: ${{ parameters.systemLibunwind }}
     tarballDownloadArgs: >-
-      /p:SkipDownloadingReferencePackages=true
-      /p:SkipDownloadingPreviouslySourceBuiltPackages=true
+      /p:DownloadSourceBuildReferencePackagesTimeoutSeconds=600
+      /p:DownloadSourceBuiltArtifactsTimeoutSeconds=1500
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
-    type: Production
+    type: ${{ coalesce(parameters.type, 'Production') }}
 
     ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
       SetInternalPackageFeedPatBashCommand: ''
@@ -53,6 +61,9 @@ jobs:
     clean: true
 
   - template: ../steps/cleanup-unneeded-files.yml
+    parameters:
+      cleanAptGet: ${{ parameters.cleanAptGet }}
+  - template: ../steps/calculate-config-flags.yml
 
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
@@ -95,6 +106,125 @@ jobs:
         ${{ format('{0}build{1} $(args.smokeTest)', parameters.scriptPrefix, parameters.scriptSuffix) }}
       displayName: Run smoke-test
 
+  # Create tarball.
+  - script: |
+      set -ex
+      df -h
+      args="--skip-prebuilt-check --skip-build --minimize-disk-usage"
+      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+        args="$args --enable-leak-detection"
+      fi
+      ./build-source-tarball.sh \
+        "$(tarballDirectory)/$(tarballName)" \
+        $args
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Create tarball
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
+
+  # Copy logs from the production build
+  - bash: |
+      set -ex
+      df -h
+      mkdir -p "$(logsDirectory)"
+      find . \( \
+        -path './artifacts/*-report/*' -o \
+        -path './artifacts/msbuild-debug/*' -o \
+        -path './artifacts/roslyn-debug/*' -o \
+        -path './artifacts/aspnet-debug/*' -o \
+        -iname '*.binlog' -o \
+        -iname '*.log' \) \
+        -exec cp {} --parents "$(logsDirectory)" \;
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Copy source-build production build logs
+    condition: always()
+    continueOnError: true
+
+  # Delete key directories from local copy of repo to save space
+  - bash: |
+      set -ex
+      df -h
+      sudo rm -rf $(rootDirectory)/source-build/artifacts/src
+      sudo rm -rf $(rootDirectory)/source-build/artifacts/obj
+      sudo rm -rf $(rootDirectory)/source-build/.git
+      sudo rm -rf $(rootDirectory)/source-build/packages
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Delete key directories from source copy of repo to save space
+
+  # tar the tarball directory into the drop directory.
+  - bash: |
+      set -ex
+      df -h
+      mkdir -p $(dropDirectory)/tarball/
+      smokeTestPackages="$(tarballDirectory)/$(tarballName)/packages/smoke-test-packages"
+      # smokeTestPackages is a package cache, with redundant data and unnecessary structure. E.g.
+      # $smokeTestPackages/name/version/name.version.nupkg <- We want this.
+      # $smokeTestPackages/name/version/lib/net46/name.dll <- This is already in the nupkg.
+      # This find moves the nupkg files into $smokeTestPackages:
+      find "$smokeTestPackages" -iname "*.nupkg" -exec mv {} "$smokeTestPackages" \;
+      # This find removes all non-nupkg files, which are not wanted:
+      find "$smokeTestPackages" -mindepth 1 -not -iname "*.nupkg" -delete
+      # Make one .tar.gz for build, another for extras necessary to smoke test:
+      tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "$(dropDirectory)/tarball/$(tarballName).tar.gz" -C "$(tarballDirectory)" "$(tarballDirectory)/$(tarballName)"
+      tar --numeric-owner -zcf "$(dropDirectory)/tarball/$(tarballName)-smoke-test-prereqs.tar.gz" "$smokeTestPackages"
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Copy tarball to output
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
+
+  # Build tarball.
+  - script: |
+      set -ex
+      df -h
+      networkArg=
+      if [ "$(sb.tarballOffline)" = "true" ]; then
+        networkArg="sudo unshare -n"
+      fi
+      poisonArg=
+      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+        poisonArg="/p:EnablePoison=true"
+      fi
+      $networkArg "$(tarballDirectory)/$(tarballName)/build.sh" -- \
+        /p:Configuration=$(sb.configuration) \
+        /p:PortableBuild=$(sb.portable) \
+        /p:UseSystemLibunwind=$(systemLibunwind) \
+        /p:FailOnPrebuiltBaselineError=true \
+        $poisonArg
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Build tarball
+    timeoutInMinutes: 150
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
+
+  # Run smoke tests.
+  - script: |
+      set -ex
+      df -h
+      sudo chown -R "$(id -u):$(id -g)" "$(tarballDirectory)/$(tarballName)"
+      "$(tarballDirectory)/$(tarballName)/smoke-test.sh" \
+        --minimal \
+        --projectOutput \
+        --configuration $(sb.configuration)
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Run smoke-test in tarball
+    condition: and(succeeded(), eq(variables['sb.tarball'], true))
+
+  - script: df -h
+    displayName: Check space (df -h)
+    condition: always()
+    continueOnError: true
+
+  # Copy source-built artifacts tarball to drop directory.
+  - bash: |
+      set -ex
+      df -h
+      mkdir -p "$(dropDirectory)/tarball/"
+      cd "$(tarballDirectory)/$(tarballName)"
+      find ./artifacts \( \
+        -iname 'Private.SourceBuilt.Artifacts*.tar.gz' \) \
+        -exec cp {} "$(dropDirectory)/tarball/" \;
+      du -h $(rootDirectory) | sort -h | tail -n 50
+    displayName: Copy source-built artifacts tarball
+    condition: eq(variables['sb.tarball'], true)
+    continueOnError: true
+
   # Gather artifacts. Uses git bash on Windows.
   - bash: |
       set -ex
@@ -128,3 +258,18 @@ jobs:
       PathtoPublish: $(logsDirectory)
       ArtifactName: Logs $(artifactName)
       ArtifactType: Container
+  - task: PublishBuildArtifacts@1
+    displayName: Publish Tarball artifact
+    condition: eq(variables['sb.tarball'], true)
+    continueOnError: true
+    inputs:
+      PathtoPublish: $(dropDirectory)/tarball
+      ArtifactName: Tarball $(artifactName)
+      ArtifactType: Container
+
+  - bash: |
+      set -ex
+      rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
+    displayName: Cleanup extra staging directories
+    condition: always()
+    continueOnError: true
