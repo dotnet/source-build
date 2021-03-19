@@ -1,0 +1,191 @@
+From 15f59106c7f6cb99945d55e9ac280565e28e22bc Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 17 Mar 2021 01:32:33 -0500
+Subject: [PATCH 29/29] Add missing TRUE and FALSE definitions.
+
+---
+ .../Unix/System.Globalization.Native/pal_calendarData.c   | 8 ++++++++
+ .../Native/Unix/System.Globalization.Native/pal_casing.c  | 8 ++++++++
+ .../Unix/System.Globalization.Native/pal_collation.c      | 8 ++++++++
+ .../Native/Unix/System.Globalization.Native/pal_icushim.c | 8 ++++++++
+ .../Native/Unix/System.Globalization.Native/pal_locale.c  | 8 ++++++++
+ .../System.Globalization.Native/pal_localeNumberData.c    | 8 ++++++++
+ .../System.Globalization.Native/pal_localeStringData.c    | 8 ++++++++
+ .../Unix/System.Globalization.Native/pal_normalization.c  | 8 ++++++++
+ .../Unix/System.Globalization.Native/pal_timeZoneInfo.c   | 8 ++++++++
+ 9 files changed, 72 insertions(+)
+
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_calendarData.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_calendarData.c
+index e7960716ea0..7cad464c7bb 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_calendarData.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_calendarData.c
+@@ -20,6 +20,14 @@
+ #define STRING_COPY(destination, numberOfElements, source) strncpy_s(destination, numberOfElements, source, _TRUNCATE);
+ #endif
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ #define GREGORIAN_NAME "gregorian"
+ #define JAPANESE_NAME "japanese"
+ #define BUDDHIST_NAME "buddhist"
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_casing.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_casing.c
+index ceca03b53f5..17cfd3a87fe 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_casing.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_casing.c
+@@ -14,6 +14,14 @@
+ #pragma clang diagnostic ignored "-Wsign-conversion"
+ #endif
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Function:
+ ChangeCase
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_collation.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_collation.c
+index 72077cfffc3..b40d0b6caec 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_collation.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_collation.c
+@@ -12,6 +12,14 @@
+ #include "pal_collation.h"
+ #include "pal_atomic.h"
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
++#ifndef FALSE
++#define FALSE 0
++#endif
++
+ c_static_assert_msg(UCOL_EQUAL == 0, "managed side requires 0 for equal strings");
+ c_static_assert_msg(UCOL_LESS < 0, "managed side requires less than zero for a < b");
+ c_static_assert_msg(UCOL_GREATER > 0, "managed side requires greater than zero for a > b");
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_icushim.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_icushim.c
+index 43e1d4fb370..3b704f1cb5b 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_icushim.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_icushim.c
+@@ -18,6 +18,14 @@
+ 
+ #include "pal_icushim.h"
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
++#ifndef FALSE
++#define FALSE 0
++#endif
++
+ // Define pointers to all the used ICU functions
+ #define PER_FUNCTION_BLOCK(fn, lib) TYPEOF(fn)* fn##_ptr;
+ FOR_ALL_ICU_FUNCTIONS
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_locale.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_locale.c
+index a96d5d955b2..57c2c75bec5 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_locale.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_locale.c
+@@ -11,6 +11,14 @@
+ #include "pal_locale_internal.h"
+ #include "pal_locale.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ int32_t UErrorCodeToBool(UErrorCode status)
+ {
+     if (U_SUCCESS(status))
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_localeNumberData.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_localeNumberData.c
+index 3e313858920..037343bfc09 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_localeNumberData.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_localeNumberData.c
+@@ -9,6 +9,14 @@
+ #include "pal_locale_internal.h"
+ #include "pal_localeNumberData.h"
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
++#ifndef FALSE
++#define FALSE 0
++#endif
++
+ // invariant character definitions used by ICU
+ #define UCHAR_CURRENCY ((UChar)0x00A4)   // international currency
+ #define UCHAR_SPACE ((UChar)0x0020)      // space
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_localeStringData.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_localeStringData.c
+index 669d59f88e9..e073c1bfa1e 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_localeStringData.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_localeStringData.c
+@@ -9,6 +9,14 @@
+ #include "pal_locale_internal.h"
+ #include "pal_localeStringData.h"
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
++#ifndef FALSE
++#define FALSE 0
++#endif
++
+ /*
+ Function:
+ GetLocaleInfoDecimalFormatSymbol
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_normalization.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_normalization.c
+index bd453f9ff1c..ec8607aa82a 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_normalization.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_normalization.c
+@@ -7,6 +7,14 @@
+ #include "pal_icushim_internal.h"
+ #include "pal_normalization.h"
+ 
++#ifndef TRUE
++#define TRUE 1
++#endif
++
++#ifndef FALSE
++#define FALSE 0
++#endif
++
+ static const UNormalizer2* GetNormalizerForForm(NormalizationForm normalizationForm, UErrorCode* pErrorCode)
+ {
+     switch (normalizationForm)
+diff --git a/src/libraries/Native/Unix/System.Globalization.Native/pal_timeZoneInfo.c b/src/libraries/Native/Unix/System.Globalization.Native/pal_timeZoneInfo.c
+index 802aa8515e2..271316acc84 100644
+--- a/src/libraries/Native/Unix/System.Globalization.Native/pal_timeZoneInfo.c
++++ b/src/libraries/Native/Unix/System.Globalization.Native/pal_timeZoneInfo.c
+@@ -8,6 +8,14 @@
+ #include "pal_locale_internal.h"
+ #include "pal_timeZoneInfo.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Gets the localized display name for the specified time zone.
+ */
+-- 
+2.24.3 (Apple Git-128)
+
