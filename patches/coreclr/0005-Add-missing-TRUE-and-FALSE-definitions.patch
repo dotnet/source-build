@@ -1,0 +1,191 @@
+From a34aef9d536695e3527c4c36e06adea803f0375a Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 19 Mar 2021 14:32:00 -0500
+Subject: [PATCH 5/5] Add missing TRUE and FALSE definitions.
+
+---
+ src/corefx/System.Globalization.Native/pal_calendarData.c | 8 ++++++++
+ src/corefx/System.Globalization.Native/pal_casing.c       | 8 ++++++++
+ src/corefx/System.Globalization.Native/pal_collation.c    | 8 ++++++++
+ src/corefx/System.Globalization.Native/pal_icushim.c      | 8 ++++++++
+ src/corefx/System.Globalization.Native/pal_locale.c       | 8 ++++++++
+ .../System.Globalization.Native/pal_localeNumberData.c    | 8 ++++++++
+ .../System.Globalization.Native/pal_localeStringData.c    | 8 ++++++++
+ .../System.Globalization.Native/pal_normalization.c       | 8 ++++++++
+ src/corefx/System.Globalization.Native/pal_timeZoneInfo.c | 8 ++++++++
+ 9 files changed, 72 insertions(+)
+
+diff --git a/src/corefx/System.Globalization.Native/pal_calendarData.c b/src/corefx/System.Globalization.Native/pal_calendarData.c
+index 96336fced7..db9745425e 100644
+--- a/src/corefx/System.Globalization.Native/pal_calendarData.c
++++ b/src/corefx/System.Globalization.Native/pal_calendarData.c
+@@ -21,6 +21,14 @@
+ 
+ #define JAPANESE_LOCALE_AND_CALENDAR "ja_JP@calendar=japanese"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ const UChar UDAT_MONTH_DAY_UCHAR[] = {'M', 'M', 'M', 'M', 'd', '\0'};
+ const UChar UDAT_YEAR_NUM_MONTH_DAY_UCHAR[] = {'y', 'M', 'd', '\0'};
+ const UChar UDAT_YEAR_MONTH_UCHAR[] = {'y', 'M', 'M', 'M', 'M', '\0'};
+diff --git a/src/corefx/System.Globalization.Native/pal_casing.c b/src/corefx/System.Globalization.Native/pal_casing.c
+index e6b27d3eb8..6281757ed9 100644
+--- a/src/corefx/System.Globalization.Native/pal_casing.c
++++ b/src/corefx/System.Globalization.Native/pal_casing.c
+@@ -9,6 +9,14 @@
+ #include "pal_casing.h"
+ #include "pal_icushim.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Function:
+ ChangeCase
+diff --git a/src/corefx/System.Globalization.Native/pal_collation.c b/src/corefx/System.Globalization.Native/pal_collation.c
+index 675d80521b..05f4d67e3a 100644
+--- a/src/corefx/System.Globalization.Native/pal_collation.c
++++ b/src/corefx/System.Globalization.Native/pal_collation.c
+@@ -12,6 +12,14 @@
+ 
+ #include "pal_collation.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ c_static_assert_msg(UCOL_EQUAL == 0, "managed side requires 0 for equal strings");
+ c_static_assert_msg(UCOL_LESS < 0, "managed side requires less than zero for a < b");
+ c_static_assert_msg(UCOL_GREATER > 0, "managed side requires greater than zero for a > b");
+diff --git a/src/corefx/System.Globalization.Native/pal_icushim.c b/src/corefx/System.Globalization.Native/pal_icushim.c
+index 04f73759cd..f8747d2db0 100644
+--- a/src/corefx/System.Globalization.Native/pal_icushim.c
++++ b/src/corefx/System.Globalization.Native/pal_icushim.c
+@@ -11,6 +11,14 @@
+ 
+ #include "pal_icushim.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ // Define pointers to all the used ICU functions
+ #define PER_FUNCTION_BLOCK(fn, lib) __typeof(fn)* fn##_ptr;
+ FOR_ALL_ICU_FUNCTIONS
+diff --git a/src/corefx/System.Globalization.Native/pal_locale.c b/src/corefx/System.Globalization.Native/pal_locale.c
+index 99eea3744a..6626a59731 100644
+--- a/src/corefx/System.Globalization.Native/pal_locale.c
++++ b/src/corefx/System.Globalization.Native/pal_locale.c
+@@ -11,6 +11,14 @@
+ 
+ #include "pal_locale.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ int32_t UErrorCodeToBool(UErrorCode status)
+ {
+     if (U_SUCCESS(status))
+diff --git a/src/corefx/System.Globalization.Native/pal_localeNumberData.c b/src/corefx/System.Globalization.Native/pal_localeNumberData.c
+index 5663c63d82..ea568b7b50 100644
+--- a/src/corefx/System.Globalization.Native/pal_localeNumberData.c
++++ b/src/corefx/System.Globalization.Native/pal_localeNumberData.c
+@@ -22,6 +22,14 @@
+ 
+ #define ARRAY_LENGTH(array) (sizeof(array) / sizeof(array[0]))
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Function:
+ NormalizeNumericPattern
+diff --git a/src/corefx/System.Globalization.Native/pal_localeStringData.c b/src/corefx/System.Globalization.Native/pal_localeStringData.c
+index a989b57f79..180c247051 100644
+--- a/src/corefx/System.Globalization.Native/pal_localeStringData.c
++++ b/src/corefx/System.Globalization.Native/pal_localeStringData.c
+@@ -9,6 +9,14 @@
+ 
+ #include "pal_localeStringData.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Function:
+ GetLocaleInfoDecimalFormatSymbol
+diff --git a/src/corefx/System.Globalization.Native/pal_normalization.c b/src/corefx/System.Globalization.Native/pal_normalization.c
+index 1fc880b6d0..05e44731a7 100644
+--- a/src/corefx/System.Globalization.Native/pal_normalization.c
++++ b/src/corefx/System.Globalization.Native/pal_normalization.c
+@@ -8,6 +8,14 @@
+ #include "pal_icushim.h"
+ #include "pal_normalization.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ const UNormalizer2* GetNormalizerForForm(NormalizationForm normalizationForm, UErrorCode* pErrorCode)
+ {
+     switch (normalizationForm)
+diff --git a/src/corefx/System.Globalization.Native/pal_timeZoneInfo.c b/src/corefx/System.Globalization.Native/pal_timeZoneInfo.c
+index bf2a9dca0f..9de8b14915 100644
+--- a/src/corefx/System.Globalization.Native/pal_timeZoneInfo.c
++++ b/src/corefx/System.Globalization.Native/pal_timeZoneInfo.c
+@@ -8,6 +8,14 @@
+ 
+ #include "pal_timeZoneInfo.h"
+ 
++#ifndef FALSE
++#define FALSE 0
++#endif
++
++#ifndef TRUE
++#define TRUE 1
++#endif
++
+ /*
+ Gets the localized display name for the specified time zone.
+ */
+-- 
+2.18.0
+
