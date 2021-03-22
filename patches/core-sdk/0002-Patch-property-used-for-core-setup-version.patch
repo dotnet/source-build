@@ -19,7 +19,7 @@ index 43ea706d4..b1f5d5772 100644
 +    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
  
      <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
-     <NETCoreAppTargetingPackBlobVersion>3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
+     <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
 -- 
 2.21.0
 
