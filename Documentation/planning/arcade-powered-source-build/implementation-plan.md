@@ -4,7 +4,7 @@ To get each repo building with the new source-build sustainability plan, [Arcade
 
 Below, the repo status is in a graph to show the dependencies and make it easy to tell which repos are ready to work on. There's also a table, for searchable and more detailed status. These will both be kept up to date.
 
-> ![](https://pointillism.io/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/img/implementation-plan-graph.dot.svg)  
+> ![](https://pointillism.io/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/img/implementation-plan-graph.dot.svg)  
 > [source (img/implementation-plan-graph.dot)](img/implementation-plan-graph.dot)
 
 | Tier | Repo | Owner | Tracking Issue | Input intermediate packages available | (Stage 1)<br>Local build infra merged | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
