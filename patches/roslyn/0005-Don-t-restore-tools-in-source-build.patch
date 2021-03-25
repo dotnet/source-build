@@ -4,23 +4,20 @@ Date: Fri, 4 Sep 2020 09:32:49 -0500
 Subject: [PATCH 5/5] Don't restore tools in source-build
 
 ---
- eng/build.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ eng/build.sh | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/eng/build.sh b/eng/build.sh
 index 30a6fbd1f8e..bf361f0a497 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
-@@ -298,9 +298,9 @@ function BuildSolution {
- }
- 
- InitializeDotNetCli $restore
+@@ -319,9 +319,6 @@ if [[ "$restore" == true || "$test_core_clr" == true ]]; then
+   install=true
+ fi
+ InitializeDotNetCli $install
 -if [[ "$restore" == true ]]; then
 -  dotnet tool restore
 -fi
-+#if [[ "$restore" == true ]]; then
-+#  dotnet tool restore
-+#fi
  
  bootstrap_dir=""
  if [[ "$bootstrap" == true ]]; then

@@ -1,152 +1,291 @@
-From 46f7e463bb933c5fbe1148c7098e276676eae87d Mon Sep 17 00:00:00 2001
-From: Sarabjot Singh <sasin@microsoft.com>
-Date: Wed, 11 Sep 2019 13:24:09 +0530
-Subject: [PATCH 3/7] Update the license for nuget packages to point to MIT
- license
+From 48405ce000a6ce7e6115a48423626562d2311343 Mon Sep 17 00:00:00 2001
+From: dseefeld <dseefeld@microsoft.com>
+Date: Thu, 25 Mar 2021 14:32:46 +0000
+Subject: [PATCH] Update the license for nuget packages to point to MIT license
 
 ---
- src/package/nuspec/Microsoft.CodeCoverage.nuspec                | 2 +-
- src/package/nuspec/Microsoft.NET.Test.Sdk.nuspec                | 2 +-
- src/package/nuspec/TestPlatform.Build.nuspec                    | 2 +-
- src/package/nuspec/TestPlatform.CLI.nuspec                      | 2 +-
- src/package/nuspec/TestPlatform.Extensions.TrxLogger.nuspec     | 2 +-
- src/package/nuspec/TestPlatform.ObjectModel.nuspec              | 2 +-
- src/package/nuspec/TestPlatform.TestHost.nuspec                 | 2 +-
- src/package/nuspec/TestPlatform.TranslationLayer.nuspec         | 2 +-
- .../Microsoft.TestPlatform.Asset.NativeCPP.nuspec               | 2 +-
- .../Microsoft.TestPlatform.QTools.Assets.nuspec                 | 2 +-
- 10 files changed, 10 insertions(+), 10 deletions(-)
+ src/package/licenses/LICENSE_MIT.txt          | 19 +++++++++++++++++++
+ .../nuspec/Microsoft.CodeCoverage.nuspec      |  4 ++--
+ .../nuspec/Microsoft.NET.Test.Sdk.nuspec      |  4 ++--
+ ...osoft.TestPlatform.AdapterUtilities.nuspec |  4 ++--
+ src/package/nuspec/TestPlatform.Build.nuspec  |  4 ++--
+ src/package/nuspec/TestPlatform.CLI.nuspec    |  4 ++--
+ .../TestPlatform.Extensions.TrxLogger.nuspec  |  4 ++--
+ .../nuspec/TestPlatform.ObjectModel.nuspec    |  4 ++--
+ .../nuspec/TestPlatform.TestHost.nuspec       |  4 ++--
+ .../TestPlatform.TranslationLayer.nuspec      |  4 ++--
+ ...rosoft.TestPlatform.Asset.NativeCPP.nuspec |  4 ++--
+ ...icrosoft.TestPlatform.QTools.Assets.nuspec |  4 ++--
+ 12 files changed, 41 insertions(+), 22 deletions(-)
+ create mode 100644 src/package/licenses/LICENSE_MIT.txt
 
+diff --git a/src/package/licenses/LICENSE_MIT.txt b/src/package/licenses/LICENSE_MIT.txt
+new file mode 100644
+index 00000000..a31c5558
+--- /dev/null
++++ b/src/package/licenses/LICENSE_MIT.txt
+@@ -0,0 +1,19 @@
++Copyright (c) 2020 Microsoft Corporation
++
++Permission is hereby granted, free of charge, to any person obtaining a copy
++of this software and associated documentation files (the "Software"), to deal
++in the Software without restriction, including without limitation the rights
++to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++copies of the Software, and to permit persons to whom the Software is
++furnished to do so, subject to the following conditions:
++
++The above copyright notice and this permission notice shall be included in all
++copies or substantial portions of the Software.
++
++THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++SOFTWARE.
 diff --git a/src/package/nuspec/Microsoft.CodeCoverage.nuspec b/src/package/nuspec/Microsoft.CodeCoverage.nuspec
-index ea186254..675d2969 100644
+index 2bd731e6..fa4a090c 100644
 --- a/src/package/nuspec/Microsoft.CodeCoverage.nuspec
 +++ b/src/package/nuspec/Microsoft.CodeCoverage.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>Microsoft.CodeCoverage package brings infra for collecting code coverage from vstest.console.exe and "dotnet test".</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -27,7 +27,7 @@
+ 
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <file src="Microsoft.CodeCoverage.props" target="build\netstandard1.0\" />
+     <file src="Microsoft.CodeCoverage.targets" target="build\netstandard1.0\" />
+     <file src="Microsoft.CodeCoverage\Microsoft.VisualStudio.TraceDataCollector.dll" target="build\netstandard1.0\" />
 diff --git a/src/package/nuspec/Microsoft.NET.Test.Sdk.nuspec b/src/package/nuspec/Microsoft.NET.Test.Sdk.nuspec
-index aef09290..387e279f 100644
+index 7727e083..a2073997 100644
 --- a/src/package/nuspec/Microsoft.NET.Test.Sdk.nuspec
 +++ b/src/package/nuspec/Microsoft.NET.Test.Sdk.nuspec
 @@ -7,7 +7,7 @@
      <authors>Microsoft</authors>
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <description>The MSbuild targets and properties for building .NET test projects.</description>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -44,7 +44,7 @@
+   </metadata>
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <file src="netcoreapp\*" target="build\netcoreapp1.0\" />
+     <file src="netcoreapp\*" target="build\netcoreapp2.1\" />
+     <file src="netfx\*" target="build\net40\" />
+diff --git a/src/package/nuspec/Microsoft.TestPlatform.AdapterUtilities.nuspec b/src/package/nuspec/Microsoft.TestPlatform.AdapterUtilities.nuspec
+index 84b41b83..6fb05bc8 100644
+--- a/src/package/nuspec/Microsoft.TestPlatform.AdapterUtilities.nuspec
++++ b/src/package/nuspec/Microsoft.TestPlatform.AdapterUtilities.nuspec
+@@ -10,7 +10,7 @@
+         <description>
+             Includes helpers for the Test Platform's modern functionality such as standardized fully qualified names and hierarchical test case names.
+         </description>
+-        <license type="file">LICENSE_NET.txt</license>
++        <license type="file">LICENSE_MIT.txt</license>
+         <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+         <icon>Icon.png</icon>
+         <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
+@@ -38,7 +38,7 @@
+ 
+     <files>
+         <file src="Icon.png" target="" />
+-        <file src="licenses\LICENSE_NET.txt" target="" />
++        <file src="licenses\LICENSE_MIT.txt" target="" />
+         <file src="netstandard1.0\Microsoft.TestPlatform.AdapterUtilities.dll" target="lib\netstandard1.0" />
+         <file src="netstandard1.0\**\Microsoft.TestPlatform.AdapterUtilities.resources.dll" target="lib\netstandard1.0" />
+ 
 diff --git a/src/package/nuspec/TestPlatform.Build.nuspec b/src/package/nuspec/TestPlatform.Build.nuspec
-index 92c0d9d7..5230aa5d 100644
+index 3808b296..9e0551f9 100644
 --- a/src/package/nuspec/TestPlatform.Build.nuspec
 +++ b/src/package/nuspec/TestPlatform.Build.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>Build tasks and targets for running tests with Test Platform</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -25,7 +25,7 @@
+   </metadata>
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <file src="Microsoft.TestPlatform.Build\netstandard2.0\Microsoft.TestPlatform.targets" target="runtimes\any\native" />
+ 
+     <!-- Add localized resources -->
 diff --git a/src/package/nuspec/TestPlatform.CLI.nuspec b/src/package/nuspec/TestPlatform.CLI.nuspec
-index ce0da806..ca995ffc 100644
+index 0e72bf58..9a2d4eae 100644
 --- a/src/package/nuspec/TestPlatform.CLI.nuspec
 +++ b/src/package/nuspec/TestPlatform.CLI.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>The cross platform Microsoft Test Platform.</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -25,7 +25,7 @@
+   </metadata>
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <!-- Add a third party notice file -->
+     <file src="ThirdPartyNotices.txt" target="" />
+     
 diff --git a/src/package/nuspec/TestPlatform.Extensions.TrxLogger.nuspec b/src/package/nuspec/TestPlatform.Extensions.TrxLogger.nuspec
-index 4ff5a3cb..247d7b4c 100644
+index 802ce1eb..fb97bda1 100644
 --- a/src/package/nuspec/TestPlatform.Extensions.TrxLogger.nuspec
 +++ b/src/package/nuspec/TestPlatform.Extensions.TrxLogger.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>C# SDK for the test platform protocol. This SDK can be used in IDE or Editors to use test platform for discovery and execution of tests.</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -40,7 +40,7 @@
+   </metadata>
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <!-- Add a third party notice file -->
+     <file src="ThirdPartyNotices.txt" target="" />
+     <file src="net451\$Runtime$\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.Trx.TestLogger.dll" target="lib\net451\" />
 diff --git a/src/package/nuspec/TestPlatform.ObjectModel.nuspec b/src/package/nuspec/TestPlatform.ObjectModel.nuspec
-index 342628c0..2d743fda 100644
+index 80d194f2..b418e89f 100644
 --- a/src/package/nuspec/TestPlatform.ObjectModel.nuspec
 +++ b/src/package/nuspec/TestPlatform.ObjectModel.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>The Microsoft Test Platform Object Model.</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -83,7 +83,7 @@
+   </metadata>
+   <files>	
+       <file src="Icon.png" target="" />
+-      <file src="licenses\LICENSE_NET.txt" target="" />
++      <file src="licenses\LICENSE_MIT.txt" target="" />
+     <!-- net45 -->
+       <file src="net45\$Runtime$\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll" target="lib\net45\" />
+       <file src="net45\$Runtime$\Microsoft.TestPlatform.CoreUtilities.dll"            target="lib\net45\" />
 diff --git a/src/package/nuspec/TestPlatform.TestHost.nuspec b/src/package/nuspec/TestPlatform.TestHost.nuspec
-index d2f1343f..58fc6fbb 100644
+index 86a4edea..6ff1ae1e 100644
 --- a/src/package/nuspec/TestPlatform.TestHost.nuspec
 +++ b/src/package/nuspec/TestPlatform.TestHost.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>Testplatform host executes the test using specified adapter.</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -50,7 +50,7 @@
+ 
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <!-- Add a third party notice file -->
+     <file src="ThirdPartyNotices.txt" target="" />
+ 
 diff --git a/src/package/nuspec/TestPlatform.TranslationLayer.nuspec b/src/package/nuspec/TestPlatform.TranslationLayer.nuspec
-index ad12872f..aed4c354 100644
+index 420efde6..d934d594 100644
 --- a/src/package/nuspec/TestPlatform.TranslationLayer.nuspec
 +++ b/src/package/nuspec/TestPlatform.TranslationLayer.nuspec
 @@ -8,7 +8,7 @@
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>true</requireLicenseAcceptance>
      <description>C# SDK for the test platform protocol. This SDK can be used in IDE or Editors to use test platform for discovery and execution of tests.</description>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
+     <icon>Icon.png</icon>
      <projectUrl>https://github.com/microsoft/vstest/</projectUrl>
-     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
+@@ -37,7 +37,7 @@
+   </metadata>
+   <files>
+     <file src="Icon.png" target="" />
+-    <file src="licenses\LICENSE_NET.txt" target="" />
++    <file src="licenses\LICENSE_MIT.txt" target="" />
+     <!-- Add a third party notice file -->
+     <file src="ThirdPartyNotices.txt" target="" />
+     
 diff --git a/test/TestAssets/CPPSimpleTestProject/Microsoft.TestPlatform.Asset.NativeCPP.nuspec b/test/TestAssets/CPPSimpleTestProject/Microsoft.TestPlatform.Asset.NativeCPP.nuspec
-index 1aa97e69..bdc242a6 100644
+index b2df3444..76685c82 100644
 --- a/test/TestAssets/CPPSimpleTestProject/Microsoft.TestPlatform.Asset.NativeCPP.nuspec
 +++ b/test/TestAssets/CPPSimpleTestProject/Microsoft.TestPlatform.Asset.NativeCPP.nuspec
 @@ -7,7 +7,7 @@
      <authors>Microsoft</authors>
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>false</requireLicenseAcceptance>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
      <description>MSDia typelib for reading debug symbols from managed code.</description>
      <copyright>Copyright © Microsoft Corporation</copyright>
+@@ -17,7 +17,7 @@
+     </contentFiles>
+   </metadata>
+   <files>
+-    <file src="package\licenses\LICENSE_NET.txt" target="" />
++    <file src="package\licenses\LICENSE_MIT.txt" target="" />
+     <file src="CPPSimpleProj\Release\Microsoft.TestPlatform.TestAsset.NativeCPP.dll" target="contentFiles\any\any\" />
+     <file src="CPPSimpleProj\x64\Release\Microsoft.TestPlatform.TestAsset.NativeCPP.dll" target="contentFiles\any\any\x64" />
+     <file src="ConsoleNativeApp\Release\Microsoft.TestPlatform.TestAsset.ConsoleNativeApp.exe" target="contentFiles\any\any\" />
 diff --git a/test/TestAssets/QualityToolsAssets/Microsoft.TestPlatform.QTools.Assets.nuspec b/test/TestAssets/QualityToolsAssets/Microsoft.TestPlatform.QTools.Assets.nuspec
-index 55ac1c42..f4c453e2 100644
+index 1090df2b..1e4a82ce 100644
 --- a/test/TestAssets/QualityToolsAssets/Microsoft.TestPlatform.QTools.Assets.nuspec
 +++ b/test/TestAssets/QualityToolsAssets/Microsoft.TestPlatform.QTools.Assets.nuspec
 @@ -7,7 +7,7 @@
      <authors>Microsoft</authors>
      <owners>Microsoft</owners>
      <requireLicenseAcceptance>false</requireLicenseAcceptance>
--    <licenseUrl>http://www.microsoft.com/web/webpi/eula/net_library_eula_enu.htm</licenseUrl>
-+    <licenseUrl>https://github.com/microsoft/vstest/blob/master/LICENSE</licenseUrl>
+-    <license type="file">LICENSE_NET.txt</license>
++    <license type="file">LICENSE_MIT.txt</license>
      <iconUrl>http://go.microsoft.com/fwlink/?LinkID=288859</iconUrl>
      <description>MSDia typelib for reading debug symbols from managed code.</description>
      <copyright>Copyright © Microsoft Corporation</copyright>
+@@ -17,7 +17,7 @@
+     </contentFiles>
+   </metadata>
+   <files>
+-    <file src="package\licenses\LICENSE_NET.txt" target="" />
++    <file src="package\licenses\LICENSE_MIT.txt" target="" />
+     <file src="BingWebTest\bin\*.*" target="contentFiles\any\any\WebTestAssets" />
+   </files>
+ </package>
 -- 
-2.18.2
+2.25.4
 

@@ -11,8 +11,8 @@ diff --git a/build/packages.targets b/build/packages.targets
 index 19df3657c..7d8c01f84 100644
 --- a/build/packages.targets
 +++ b/build/packages.targets
-@@ -9,6 +9,10 @@
-         <VSThreadingVersion>16.7.56</VSThreadingVersion>
+@@ -8,6 +8,10 @@
+         <CryptographyPackagesVersion>5.0.0</CryptographyPackagesVersion>
      </PropertyGroup>
  
 +    <PropertyGroup>
@@ -22,15 +22,15 @@ index 19df3657c..7d8c01f84 100644
      <!-- Test and package versions -->
      <PropertyGroup>
          <XunitVersion>2.4.1</XunitVersion>
-@@ -58,7 +62,7 @@
-         <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="$(VSThreadingVersion)" />
-         <PackageReference Update="Microsoft.VisualStudio.Workspace.VSIntegration" Version="16.6.55-preview-0003" />
+@@ -52,7 +56,7 @@
+         <PackageReference Update="Microsoft.VisualStudio.Threading" Version="16.9.39-alpha" />
          <PackageReference Update="Microsoft.VisualStudio.Utilities" Version="$(VSFrameworkVersion)" />
--        <PackageReference Update="Microsoft.Web.Xdt" Version="2.1.2" />
+         <PackageReference Update="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
+-        <PackageReference Update="Microsoft.Web.Xdt" Version="3.0.0" />
 +        <PackageReference Update="Microsoft.Web.Xdt" Version="$(MicrosoftWebXdtPackageVersion)" />
          <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
-         <PackageReference Update="System.Collections.Immutable" Version="1.7.1" />
-         <PackageReference Update="System.Diagnostics.Debug" Version="$(SystemPackagesVersion)" />
+         <PackageReference Update="System.ComponentModel.Composition" Version="4.5.0" />
+         <!--
 -- 
 2.25.4
 
