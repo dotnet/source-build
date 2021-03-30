@@ -34,7 +34,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | [issue](https://github.com/dotnet/source-build/issues/2071) | | ✔️ | ✔️ | | |
 | 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | [issue](https://github.com/dotnet/source-build/issues/2072) | | ⏱[PR](https://github.com/dotnet/aspnetcore/pull/31235) | | | |
 | 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | [issue](https://github.com/dotnet/source-build/issues/2074) | | ⏱[PR](https://github.com/dotnet/fsharp/pull/11208) / ❗[blocked](https://github.com/dotnet/fsharp/pull/11306) | | | |
-| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | | | | |
+| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | ⏱ | | | |
 | 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ❗[Blocked](https://github.com/microsoft/vstest/issues/2804) | | | |
 | 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | | | | |
 
