@@ -25,7 +25,7 @@ jobs:
       /p:BuildPortableSdk=$(sb.portable)
       /p:FailOnPrebuiltBaselineError=$(failOnPrebuiltBaselineError)
       /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
-      /p:AzDoPat=$(System.AccessToken)
+      /p:AzDoPat=$(dn-bot-devdiv-build-rw-code-rw)
       $(tarballDownloadArgs)
     args.smokeTest: >
       --run-smoke-test
