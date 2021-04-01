@@ -108,13 +108,21 @@ if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     sleep 10
 fi
 
-export FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
+export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
+fullTarballRoot="$TARBALL_ROOT"
+while [[ -h $fullTarballRoot ]]; do
+  fullTarballRoot="$(readlink "$fullTarballRoot")"
+
+  # if $source was a relative symlink, we need to resolve it relative to the path where the
+  # symlink file was located
+  [[ $fullTarballRoot != /* ]] && fullTarballRoot="$SCRIPT_ROOT/$fullTarballRoot"
+done
+export FULL_TARBALL_ROOT="$fullTarballRoot"
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "info: '$TARBALL_ROOT' already exists"
 fi
 
-export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 if [ -d "$CUSTOM_SDK_DIR" ]; then
   export SDK_VERSION=`"$CUSTOM_SDK_DIR/dotnet" --version`
   echo "Using custom bootstrap SDK from '$CUSTOM_SDK_DIR', version $SDK_VERSION"
