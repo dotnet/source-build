@@ -1,6 +1,6 @@
-From 99a8cba01d7cd210e09e717973fd84b99cdd3a5f Mon Sep 17 00:00:00 2001
+From 1d441b6136ba0325b740665807f7783f90713b92 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
-Date: Thu, 1 Apr 2021 15:18:25 -0500
+Date: Thu, 1 Apr 2021 17:46:44 -0500
 Subject: [PATCH 12/12] Fix ambiguous reference.
 
 ---
@@ -8,17 +8,17 @@ Subject: [PATCH 12/12] Fix ambiguous reference.
  1 file changed, 1 deletion(-)
 
 diff --git a/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs b/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
-index cc0e65411..99fcd8571 100644
+index cc0e65411..302051f4d 100644
 --- a/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
 +++ b/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
-@@ -5,7 +5,6 @@
+@@ -3,7 +3,6 @@
+ using System.Collections.Immutable;
+ using System.Threading.Tasks;
  using Microsoft.CodeAnalysis;
- using Microsoft.CodeAnalysis.CodeFixes;
+-using Microsoft.CodeAnalysis.CodeFixes;
  using Roslyn.Diagnostics.Analyzers;
--using StyleCop.Analyzers.Helpers;
+ using StyleCop.Analyzers.Helpers;
  
- namespace Roslyn.Diagnostics.CSharp.Analyzers.WrapStatements
- {
 -- 
 2.18.0
 
