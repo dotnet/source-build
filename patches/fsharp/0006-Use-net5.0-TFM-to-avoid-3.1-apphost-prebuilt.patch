@@ -1,23 +1,25 @@
-From 2e75e18f01c08390adb1914c9fe40cce7c3f9ed4 Mon Sep 17 00:00:00 2001
+From e71f2b0325d269f63a2373ce63722f4f3046084e Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 24 Mar 2021 15:10:07 +0000
-Subject: [PATCH] Use net5.0 TFM to avoid 3.1 apphost prebuilt
+Subject: [PATCH 5/5] Use net5.0 TFM to avoid 3.1 apphost prebuilt
 
 See https://github.com/dotnet/source-build/issues/1905
 ---
  eng/build.sh                                  | 11 +++---
- proto.proj                                    |  4 +--
+ proto.proj                                    |  6 ++--
  .../AssemblyCheck/AssemblyCheck.fsproj        |  2 +-
  src/buildtools/fslex/fslex.fsproj             |  2 +-
  src/buildtools/fsyacc/fsyacc.fsproj           |  2 +-
- .../Microsoft.FSharp.Compiler.csproj          |  6 ++--
+ src/fsharp/FSharp.Build/FSharp.Build.fsproj   |  3 +-
+ .../Microsoft.FSharp.Compiler.csproj          |  8 ++---
  .../Microsoft.FSharp.Compiler.nuspec          | 34 +++++++++----------
  src/fsharp/fsc/fsc.fsproj                     |  1 +
  src/fsharp/fsi/fsi.fsproj                     |  3 +-
- 9 files changed, 34 insertions(+), 31 deletions(-)
+ .../VisualFSharpFull/VisualFSharpFull.csproj  |  2 +-
+ 11 files changed, 38 insertions(+), 36 deletions(-)
 
 diff --git a/eng/build.sh b/eng/build.sh
-index e741ff854..4aa80d6ca 100755
+index e741ff854..165ba0b7f 100755
 --- a/eng/build.sh
 +++ b/eng/build.sh
 @@ -244,20 +244,21 @@ function BuildSolution {
@@ -48,11 +50,15 @@ index e741ff854..4aa80d6ca 100755
  
    # do real build
 diff --git a/proto.proj b/proto.proj
-index bb2f97270..bb0778345 100644
+index bb2f97270..6c344c880 100644
 --- a/proto.proj
 +++ b/proto.proj
-@@ -10,10 +10,10 @@
-       <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
+@@ -7,13 +7,13 @@
+ 
+   <ItemGroup>
+     <Projects Include="src\fsharp\FSharp.Build\FSharp.Build.fsproj">
+-      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
      </Projects>
      <Projects Include="src\fsharp\fsc\fsc.fsproj">
 -      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
@@ -103,8 +109,22 @@ index a2b8cb384..5d1b7141f 100644
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
+diff --git a/src/fsharp/FSharp.Build/FSharp.Build.fsproj b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+index 3d36804a7..5a9e49bb0 100644
+--- a/src/fsharp/FSharp.Build/FSharp.Build.fsproj
++++ b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+@@ -4,8 +4,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+-    <TargetFramework Condition="'$(Configuration)' != 'Proto'">netstandard2.0</TargetFramework>
+-    <TargetFrameworks Condition="'$(Configuration)' == 'Proto'">netstandard2.0</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+     <AssemblyName>FSharp.Build</AssemblyName>
+     <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
+     <AllowCrossTargeting>true</AllowCrossTargeting>
 diff --git a/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj b/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
-index e75296aa7..26620118b 100644
+index e75296aa7..d162af011 100644
 --- a/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
 +++ b/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.csproj
 @@ -2,7 +2,7 @@
@@ -116,7 +136,7 @@ index e75296aa7..26620118b 100644
      <NuspecFile>Microsoft.FSharp.Compiler.nuspec</NuspecFile>
      <IsPackable>true</IsPackable>
      <PackageDescription>.NET Core compatible version of the F# compiler fsc.exe.</PackageDescription>
-@@ -11,10 +11,10 @@
+@@ -11,13 +11,13 @@
  
    <ItemGroup>
      <ProjectReference Include="..\fsc\fsc.fsproj">
@@ -128,6 +148,10 @@ index e75296aa7..26620118b 100644
 +      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj">
+-      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
+     </ProjectReference>
+     <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
        <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
 diff --git a/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec b/src/fsharp/Microsoft.FSharp.Compiler/Microsoft.FSharp.Compiler.nuspec
 index f5cac7b09..933b63b1f 100644
@@ -229,6 +253,19 @@ index 0f1a28f15..5422267a4 100644
      <PackageReference Include="System.Diagnostics.Process" Version="$(SystemDiagnosticsProcessVersion)" />
      <PackageReference Include="System.Linq.Expressions" Version="$(SystemLinqExpressionsVersion)" />
      <PackageReference Include="System.Reflection.Emit" Version="$(SystemReflectionEmitVersion)" />
+diff --git a/vsintegration/Vsix/VisualFSharpFull/VisualFSharpFull.csproj b/vsintegration/Vsix/VisualFSharpFull/VisualFSharpFull.csproj
+index be3261418..7afea0af3 100644
+--- a/vsintegration/Vsix/VisualFSharpFull/VisualFSharpFull.csproj
++++ b/vsintegration/Vsix/VisualFSharpFull/VisualFSharpFull.csproj
+@@ -42,7 +42,7 @@
+       <NgenArchitecture>All</NgenArchitecture>
+       <NgenPriority>2</NgenPriority>
+       <Private>True</Private>
+-      <AdditionalProperties>TargetFramework=$(DependencyTargetFramework)</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
+     </ProjectReference>
+     <ProjectReference Include="$(FSharpSourcesRoot)\fsharp\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
+       <Project>{649FA588-F02E-457C-9FCF-87E46407481E}</Project>
 -- 
-2.25.4
+2.18.0
 
