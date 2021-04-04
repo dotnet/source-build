@@ -1,0 +1,42 @@
+From 83171b82c8db3adafd862a7ab480f3c148975831 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 4 Apr 2021 00:08:36 -0500
+Subject: [PATCH 21/21] Disable check for using both quiet and verbose that
+ uses a function we don't have.
+
+---
+ src/BuiltInTools/dotnet-watch/Program.cs | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/BuiltInTools/dotnet-watch/Program.cs b/src/BuiltInTools/dotnet-watch/Program.cs
+index 5d0d4c732..2a434243b 100644
+--- a/src/BuiltInTools/dotnet-watch/Program.cs
++++ b/src/BuiltInTools/dotnet-watch/Program.cs
+@@ -110,15 +110,15 @@ internal static RootCommand CreateRootCommand(Func<CommandLineOptions, Task<int>
+                 new[] { "--verbose", "-v" },
+                 "Show verbose output");
+ 
+-            verbose.AddValidator(v =>
+-            {
+-                if (v.FindResultFor(quiet) is not null && v.FindResultFor(verbose) is not null)
+-                {
+-                    return Resources.Error_QuietAndVerboseSpecified;
+-                }
+-
+-                return null;
+-            });
++//            verbose.AddValidator(v =>
++//            {
++//                if (v.FindResultFor(quiet) is not null && v.FindResultFor(verbose) is not null)
++//                {
++//                    return Resources.Error_QuietAndVerboseSpecified;
++//                }
++//
++//                return null;
++//            });
+ 
+             var root = new RootCommand(Description)
+             {
+-- 
+2.18.0
+
