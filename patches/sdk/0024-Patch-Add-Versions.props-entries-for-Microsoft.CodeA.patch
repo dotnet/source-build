@@ -1,0 +1,43 @@
+From 70f10ec5176d270ff24c76a04ed00785c0c38662 Mon Sep 17 00:00:00 2001
+From: Michael Simons <msimons@microsoft.com>
+Date: Tue, 6 Apr 2021 18:31:54 +0000
+Subject: [PATCH] [Patch] Add Versions.props entries for Microsoft.CodeAnalysis
+ versions
+
+---
+ eng/Versions.props              | 2 ++
+ src/Layout/redist/redist.csproj | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 4a1e9cf..162988f 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -81,7 +81,9 @@
+   </PropertyGroup>
+   <PropertyGroup>
+     <!-- Dependencies from https://github.com/dotnet/roslyn-analyzers -->
++    <MicrosoftCodeAnalysisCSharpCodeStyleVersion>3.8.0-5.20519.18</MicrosoftCodeAnalysisCSharpCodeStyleVersion>
+     <MicrosoftCodeAnalysisNetAnalyzersVersion>5.0.2</MicrosoftCodeAnalysisNetAnalyzersVersion>
++    <MicrosoftCodeAnalysisVisualBasicCodeStyleVersion>3.8.0-5.20519.18</MicrosoftCodeAnalysisVisualBasicCodeStyleVersion>
+   </PropertyGroup>
+   <PropertyGroup>
+     <!-- Dependencies from https://github.com/Microsoft/msbuild -->
+diff --git a/src/Layout/redist/redist.csproj b/src/Layout/redist/redist.csproj
+index bb3ebad..ea525eb 100644
+--- a/src/Layout/redist/redist.csproj
++++ b/src/Layout/redist/redist.csproj
+@@ -31,8 +31,8 @@
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelPackageVersion)" />
+     <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="$(MicrosoftNetCompilersToolsetPackageVersion)" ExcludeAssets="All" />
+     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="$(MicrosoftCodeAnalysisNetAnalyzersVersion)" ExcludeAssets="All" GeneratePathProperty="true" />
+-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="3.8.0-5.20519.18" ExcludeAssets="All" GeneratePathProperty="true" />
+-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.CodeStyle" Version="3.8.0-5.20519.18" ExcludeAssets="All" GeneratePathProperty="true" />
++    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeStyle" Version="$(MicrosoftCodeAnalysisCSharpCodeStyleVersion)" ExcludeAssets="All" GeneratePathProperty="true" />
++    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.CodeStyle" Version="$(MicrosoftCodeAnalysisVisualBasicCodeStyleVersion)" ExcludeAssets="All" GeneratePathProperty="true" />
+ 
+     <!-- Lift up dependencies of dependencies to prevent build tasks from getting pinned to older versions -->
+     <PackageReference Include="System.CodeDom" Version="$(SystemCodeDomPackageVersion)" />
+-- 
+1.8.3.1
+
