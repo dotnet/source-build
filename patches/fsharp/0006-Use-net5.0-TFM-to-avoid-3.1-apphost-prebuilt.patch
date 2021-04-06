@@ -58,7 +58,7 @@ index bb2f97270..6c344c880 100644
    <ItemGroup>
      <Projects Include="src\fsharp\FSharp.Build\FSharp.Build.fsproj">
 -      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
      </Projects>
      <Projects Include="src\fsharp\fsc\fsc.fsproj">
 -      <AdditionalProperties Condition="'$(OS)' == 'Unix'">TargetFramework=netcoreapp3.1</AdditionalProperties>
@@ -119,7 +119,7 @@ index 3d36804a7..5a9e49bb0 100644
      <OutputType>Library</OutputType>
 -    <TargetFramework Condition="'$(Configuration)' != 'Proto'">netstandard2.0</TargetFramework>
 -    <TargetFrameworks Condition="'$(Configuration)' == 'Proto'">netstandard2.0</TargetFrameworks>
-+    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">net5.0</TargetFrameworks>
      <AssemblyName>FSharp.Build</AssemblyName>
      <NoWarn>$(NoWarn);45;55;62;75;1204</NoWarn>
      <AllowCrossTargeting>true</AllowCrossTargeting>
@@ -149,7 +149,7 @@ index e75296aa7..d162af011 100644
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Build\FSharp.Build.fsproj">
 -      <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
-+      <AdditionalProperties>TargetFramework=netcoreapp2.1</AdditionalProperties>
++      <AdditionalProperties>TargetFramework=net5.0</AdditionalProperties>
      </ProjectReference>
      <ProjectReference Include="..\FSharp.Compiler.Interactive.Settings\FSharp.Compiler.Interactive.Settings.fsproj">
        <AdditionalProperties>TargetFramework=netstandard2.0</AdditionalProperties>
@@ -166,7 +166,7 @@ index f5cac7b09..933b63b1f 100644
                  <dependency id="Microsoft.NETCore.Platforms" version="2.0.0" />
                  <dependency id="NETStandard.Library" version="2.0.0" />
                  <dependency id="System.Collections.Immutable" version="1.5.0" />
-@@ -46,21 +46,21 @@
+@@ -46,37 +46,37 @@
              this approach gives a very small deployment. Which is kind of necessary.
          -->
          <!-- assemblies -->
@@ -181,7 +181,7 @@ index f5cac7b09..933b63b1f 100644
 +        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.dll"                            target="lib\net5.0" />
 +        <file src="FSharp.Core\$Configuration$\netstandard2.0\FSharp.Core.xml"                            target="lib\net5.0" />
 +        <file src="FSharp.Compiler.Private\$Configuration$\netstandard2.0\FSharp.Compiler.Private.dll"    target="lib\net5.0" />
-+        <file src="FSharp.Build\$Configuration$\netstandard2.0\FSharp.Build.dll"                          target="lib\net5.0" />
++        <file src="FSharp.Build\$Configuration$\net5.0\FSharp.Build.dll"                          target="lib\net5.0" />
          <file src="FSharp.DependencyManager.Nuget\$configuration$\netstandard2.0\FSharp.DependencyManager.Nuget.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
 +                                                                                                          target="lib\net5.0" />
@@ -194,12 +194,17 @@ index f5cac7b09..933b63b1f 100644
  
          <!-- additional files -->
 -        <file src="fsc\$Configuration$\netcoreapp3.1\default.win32manifest"                               target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.NetSdk.targets"            target="contentFiles\any\any" />
+-        <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
 +        <file src="fsc\$Configuration$\net5.0\default.win32manifest"                               target="contentFiles\any\any" />
-         <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
-         <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
-         <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
-@@ -68,15 +68,15 @@
-         <file src="FSharp.Build\$Configuration$\netstandard2.0\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\net5.0\Microsoft.FSharp.Targets"                   target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\net5.0\Microsoft.Portable.FSharp.Targets"          target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\net5.0\Microsoft.FSharp.NetSdk.props"              target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\net5.0\Microsoft.FSharp.NetSdk.targets"            target="contentFiles\any\any" />
++        <file src="FSharp.Build\$Configuration$\net5.0\Microsoft.FSharp.Overrides.NetSdk.targets"  target="contentFiles\any\any" />
  
          <!-- resources -->
 -        <file src="FSharp.Core\$Configuration$\netstandard2.0\**\FSharp.Core.resources.dll"               target="lib\netcoreapp3.1" />
@@ -211,7 +216,7 @@ index f5cac7b09..933b63b1f 100644
 -                                                                                                          target="lib\netcoreapp3.1" />
 -        <file src="FSharp.Build\$Configuration$\netstandard2.0\**\FSharp.Build.resources.dll"             target="lib\netcoreapp3.1" />
 +                                                                                                          target="lib\net5.0" />
-+        <file src="FSharp.Build\$Configuration$\netstandard2.0\**\FSharp.Build.resources.dll"             target="lib\net5.0" />
++        <file src="FSharp.Build\$Configuration$\net5.0\**\FSharp.Build.resources.dll"             target="lib\net5.0" />
          <file src="FSharp.DependencyManager.Nuget\$configuration$\netstandard2.0\**\FSharp.DependencyManager.Nuget.resources.dll"
 -                                                                                                          target="lib\netcoreapp3.1" />
 +                                                                                                          target="lib\net5.0" />
