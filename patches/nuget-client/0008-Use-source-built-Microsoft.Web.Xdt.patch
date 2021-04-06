@@ -1,35 +1,37 @@
 From ce18ce78f27717cb1079270d6a58d5c36e70425a Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Thu, 10 Dec 2020 16:17:55 -0600
-Subject: [PATCH] Use source-built Microsoft.Web.Xdt
+Subject: [PATCH] Use source-built Microsoft.Web.Xdt & System.ComponentModel.Composition
 
 ---
- build/packages.targets | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ build/packages.targets | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletion(-)
 
 diff --git a/build/packages.targets b/build/packages.targets
 index 19df3657c..7d8c01f84 100644
 --- a/build/packages.targets
 +++ b/build/packages.targets
-@@ -8,6 +8,10 @@
+@@ -8,6 +8,11 @@
          <CryptographyPackagesVersion>5.0.0</CryptographyPackagesVersion>
      </PropertyGroup>
  
 +    <PropertyGroup>
 +        <MicrosoftWebXdtPackageVersion Condition="'$(MicrosoftWebXdtPackageVersion)' == ''">3.0.0</MicrosoftWebXdtPackageVersion>
++        <SystemComponentModelCompositionPackageVersion Condition="'$(SystemComponentModelCompositionPackageVersion)' == ''">4.5.0</SystemComponentModelCompositionPackageVersion>
 +    </PropertyGroup>
 +
      <!-- Test and package versions -->
      <PropertyGroup>
          <XunitVersion>2.4.1</XunitVersion>
-@@ -52,7 +56,7 @@
+@@ -52,7 +57,7 @@
          <PackageReference Update="Microsoft.VisualStudio.Threading" Version="16.9.39-alpha" />
          <PackageReference Update="Microsoft.VisualStudio.Utilities" Version="$(VSFrameworkVersion)" />
          <PackageReference Update="Microsoft.VSSDK.BuildTools" Version="16.8.3038" />
 -        <PackageReference Update="Microsoft.Web.Xdt" Version="3.0.0" />
 +        <PackageReference Update="Microsoft.Web.Xdt" Version="$(MicrosoftWebXdtPackageVersion)" />
          <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
-         <PackageReference Update="System.ComponentModel.Composition" Version="4.5.0" />
+-        <PackageReference Update="System.ComponentModel.Composition" Version="4.5.0" />
++        <PackageReference Update="System.ComponentModel.Composition" Version="$(SystemComponentModelCompositionPackageVersion)" />
          <!--
 -- 
 2.25.4
