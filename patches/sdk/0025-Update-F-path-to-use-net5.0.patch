@@ -1,0 +1,28 @@
+From a73a286232bfe66a0c07fd13039c540e9d5257ba Mon Sep 17 00:00:00 2001
+From: Dan Seefeldt <dseefeld@microsoft.com>
+Date: Wed, 7 Apr 2021 08:44:24 -0500
+Subject: [PATCH] Update F# path to use net5.0
+
+Source-build builds F# with net5.0.  This patch
+updated SDK to look in the net5.0 path for an
+XML file rather than netcoreapp3.1
+---
+ src/Layout/tool_fsharp/tool_fsc.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Layout/tool_fsharp/tool_fsc.csproj b/src/Layout/tool_fsharp/tool_fsc.csproj
+index 14a8c7a68..1a665e87c 100644
+--- a/src/Layout/tool_fsharp/tool_fsc.csproj
++++ b/src/Layout/tool_fsharp/tool_fsc.csproj
+@@ -14,7 +14,7 @@
+         AfterTargets="_ResolveCopyLocalAssetsForPublish">
+     <ItemGroup>
+         <ResolvedFileToPublish
+-          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/netcoreapp3.1/FSharp.Core.xml"
++          Include="$(PkgMicrosoft_FSharp_Compiler)/lib/net5.0/FSharp.Core.xml"
+           CopyToPublishDirectory="PreserveNewest"
+           DestinationSubPath="FSharp.Core.xml"
+           RelativePath="FSharp.Core.xml"
+-- 
+2.29.2
+
