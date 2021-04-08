@@ -36,7 +36,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | [issue](https://github.com/dotnet/source-build/issues/2074) | | ⏱[PR](https://github.com/dotnet/fsharp/pull/11208) / ❗[Blocked](https://github.com/dotnet/fsharp/pull/11306) | | | |
 | 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | ⏱[PR](https://github.com/dotnet/sdk/pull/16653) | | | |
 | 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ❗[Blocked](https://github.com/microsoft/vstest/issues/2804) | | | |
-| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ⏱ | | | |
+| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ⏱[PR](https://github.com/dotnet/installer/pull/10186) | | | |
 
 | Status | Description |
 | --- | --- |
