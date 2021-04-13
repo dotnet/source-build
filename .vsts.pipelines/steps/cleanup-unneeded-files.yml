@@ -1,10 +1,15 @@
 # Delete some files from the default image since we're tight on disk space.
 # List is from https://github.com/microsoft/azure-pipelines-image-generation/pull/1231#issuecomment-537174621
 
+parameters:
+- name: cleanAptGet
+  type: boolean
+  default: false
+
 steps:
 - script: sudo apt-get clean
   displayName: Clean apt-get cache
-  condition: ne(variables['Agent.OS'], 'Darwin')
+  condition: ${{ eq(parameters.cleanAptGet, true) }}
   continueOnError: true
 
 - script: sudo rm -rf /usr/local/lib/android

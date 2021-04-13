@@ -19,7 +19,7 @@
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(RepoCompletedSemaphorePath)CopyTools.complete">
     <PropertyGroup>
-      <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools</CoreClrDestinationDir>
+      <CoreClrDestinationDir>$(ToolPackageExtractDir)coreclr-tools/$(BuildArchitecture)</CoreClrDestinationDir>
       <AssemblyExtension Condition="'$(TargetOS)' == 'Linux'">so</AssemblyExtension>
       <AssemblyExtension Condition="'$(TargetOS)' == 'FreeBSD'">so</AssemblyExtension>
       <AssemblyExtension Condition="'$(TargetOS)' == 'OSX'">dylib</AssemblyExtension>
