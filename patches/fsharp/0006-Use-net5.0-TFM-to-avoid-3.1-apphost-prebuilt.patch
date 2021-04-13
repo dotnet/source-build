@@ -8,15 +8,15 @@ See https://github.com/dotnet/source-build/issues/1905
  eng/build.sh                                  | 11 +++---
  proto.proj                                    |  6 ++--
  .../AssemblyCheck/AssemblyCheck.fsproj        |  2 +-
- src/buildtools/fslex/fslex.fsproj             |  2 +-
- src/buildtools/fsyacc/fsyacc.fsproj           |  2 +-
+ src/buildtools/fslex/fslex.fsproj             |  3 ++-
+ src/buildtools/fsyacc/fsyacc.fsproj           |  3 ++-
  src/fsharp/FSharp.Build/FSharp.Build.fsproj   |  3 +-
  .../Microsoft.FSharp.Compiler.csproj          |  8 ++---
  .../Microsoft.FSharp.Compiler.nuspec          | 34 +++++++++----------
  src/fsharp/fsc/fsc.fsproj                     |  1 +
  src/fsharp/fsi/fsi.fsproj                     |  3 +-
  .../VisualFSharpFull/VisualFSharpFull.csproj  |  2 +-
- 11 files changed, 38 insertions(+), 36 deletions(-)
+ 11 files changed, 40 insertions(+), 36 deletions(-)
 
 diff --git a/eng/build.sh b/eng/build.sh
 index e741ff854..165ba0b7f 100755
@@ -87,12 +87,13 @@ diff --git a/src/buildtools/fslex/fslex.fsproj b/src/buildtools/fslex/fslex.fspr
 index da7c52ba1..1959ce59c 100644
 --- a/src/buildtools/fslex/fslex.fsproj
 +++ b/src/buildtools/fslex/fslex.fsproj
-@@ -2,7 +2,7 @@
+@@ -2,7 +2,8 @@
  
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
 +    <TargetFramework>net5.0</TargetFramework>
++    <OtherFlags>$(OtherFlags) --nowarn:3218</OtherFlags>
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
@@ -100,12 +101,13 @@ diff --git a/src/buildtools/fsyacc/fsyacc.fsproj b/src/buildtools/fsyacc/fsyacc.
 index a2b8cb384..5d1b7141f 100644
 --- a/src/buildtools/fsyacc/fsyacc.fsproj
 +++ b/src/buildtools/fsyacc/fsyacc.fsproj
-@@ -2,7 +2,7 @@
+@@ -2,7 +2,8 @@
  
    <PropertyGroup>
      <OutputType>Exe</OutputType>
 -    <TargetFramework>netcoreapp3.1</TargetFramework>
 +    <TargetFramework>net5.0</TargetFramework>
++    <OtherFlags>$(OtherFlags) --nowarn:3218</OtherFlags>
      <DefineConstants>INTERNALIZED_FSLEXYACC_RUNTIME;$(DefineConstants)</DefineConstants>
      <DisableImplicitFSharpCoreReference>true</DisableImplicitFSharpCoreReference>
    </PropertyGroup>
