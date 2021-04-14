@@ -1,0 +1,29 @@
+From 04b80f151a5cdbec7cbdfcdf6b5645cfe68d8ff6 Mon Sep 17 00:00:00 2001
+From: msimons <msimons@microsoft.com>
+Date: Wed, 24 Mar 2021 19:48:46 +0000
+Subject: [PATCH] Add slnf file for source-build
+
+---
+ source-build.slnf | 36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 source-build.slnf
+
+diff --git a/source-build.slnf b/source-build.slnf
+new file mode 100644
+index 000000000..845a61e86
+--- /dev/null
++++ b/source-build.slnf
+@@ -0,0 +1,11 @@
++{
++  "solution": {
++    "path": "System.CommandLine.sln",
++    "projects": [
++        "src\\System.CommandLine.DragonFruit\\System.CommandLine.DragonFruit.csproj",
++        "src\\System.CommandLine.Hosting\\System.CommandLine.Hosting.csproj",
++        "src\\System.CommandLine.Rendering\\System.CommandLine.Rendering.csproj",
++        "src\\System.CommandLine\\System.CommandLine.csproj"
++    ]
++  }
++}
+-- 
+2.25.4

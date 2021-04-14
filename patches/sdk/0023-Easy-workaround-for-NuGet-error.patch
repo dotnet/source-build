@@ -1,0 +1,29 @@
+From bbea3466a1201b31e0712c8fbe25353ec91ad64d Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 4 Apr 2021 09:40:06 -0500
+Subject: [PATCH 23/23] Easy workaround for NuGet error.
+
+---
+ .../OverrideAndCreateBundledNETCoreAppPackageVersion.cs      | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs b/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
+index c3175a3c1..826e4fc36 100644
+--- a/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
++++ b/src/Layout/toolset-tasks/OverrideAndCreateBundledNETCoreAppPackageVersion.cs
+@@ -118,9 +118,10 @@ void CheckAndReplaceAttribute(XAttribute attribute)
+         /// <returns></returns>
+         private static bool IsSDKServicing(string sdkVersion)
+         {
+-            var parsedSdkVersion = NuGet.Versioning.NuGetVersion.Parse(sdkVersion);
++            // var parsedSdkVersion = NuGet.Versioning.NuGetVersion.Parse(sdkVersion);
+ 
+-            return parsedSdkVersion.Patch % 100 != 0;
++            // return parsedSdkVersion.Patch % 100 != 0;
++            return true;
+         }
+     }
+ }
+-- 
+2.18.0
+

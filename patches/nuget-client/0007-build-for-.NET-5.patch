@@ -8,12 +8,12 @@ Update netcoreapp TFMs to 5.0.
 Fix package references to comply with PackageVersions.props overrides.
 ---
  build/common.project.props                              | 5 ++---
- build/packages.targets                                  | 8 +++-----
+ build/packages.targets                                  | 6 +++---
  src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
- 3 files changed, 6 insertions(+), 9 deletions(-)
+ 3 files changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/build/common.project.props b/build/common.project.props
-index 03c93ae65..f578a2271 100644
+index 704369e09..e5827d77e 100644
 --- a/build/common.project.props
 +++ b/build/common.project.props
 @@ -13,16 +13,15 @@
@@ -36,33 +36,24 @@ index 03c93ae65..f578a2271 100644
      <RepositoryRootDirectory>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\</RepositoryRootDirectory>
      <BuildCommonDirectory>$(RepositoryRootDirectory)build\</BuildCommonDirectory>
 diff --git a/build/packages.targets b/build/packages.targets
-index 6ea9510dc..19df3657c 100644
+index 03bf7d20b..2d9830a63 100644
 --- a/build/packages.targets
 +++ b/build/packages.targets
-@@ -7,8 +7,6 @@
-         <VSFrameworkVersion>16.6.30107.105</VSFrameworkVersion>
-         <VSServicesVersion>16.153.0</VSServicesVersion>
-         <VSThreadingVersion>16.7.56</VSThreadingVersion>
--        <!-- TODO - remove this when temporary patching is no longer necessary. See https://github.com/nuget/home/issues/8952 -->
--        <PatchedSystemPackagesVersion>5.0.0-preview.3.20214.6</PatchedSystemPackagesVersion>
-     </PropertyGroup>
- 
-     <!-- Test and package versions -->
-@@ -64,9 +62,9 @@
-         <PackageReference Update="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" />
-         <PackageReference Update="System.Collections.Immutable" Version="1.7.1" />
+@@ -61,9 +61,9 @@
+           To resolve runtime assembly binding failures, we'll downgrade the package from 4.11.1 to 4.9.0.
+         -->
          <PackageReference Update="System.Diagnostics.Debug" Version="$(SystemPackagesVersion)" />
--        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(PatchedSystemPackagesVersion)" />
--        <PackageReference Update="System.Security.Cryptography.Cng" Version="$(PatchedSystemPackagesVersion)" />
+-        <PackageReference Update="System.Security.Cryptography.Cng" Version="$(CryptographyPackagesVersion)" />
+-        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(CryptographyPackagesVersion)" />
 -        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="4.4.0" />
-+        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcsVersion)" />
 +        <PackageReference Update="System.Security.Cryptography.Cng" Version="$(SystemSecurityCryptographyCngVersion)" />
++        <PackageReference Update="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcsVersion)" />
 +        <PackageReference Update="System.Security.Cryptography.ProtectedData" Version="$(SystemSecurityCryptographyProtectedDataVersion)" />
          <PackageReference Update="System.Threading.Tasks.Dataflow" Version="4.9.0" />
-         <PackageReference Update="VSLangProj" Version="7.0.3300" />
-         <PackageReference Update="VSLangProj110" Version="11.0.61030" />
+         <PackageReference Update="VSLangProj" Version="$(VSFrameworkVersion)" />
+         <PackageReference Update="VSLangProj80" Version="$(VSFrameworkVersion)" />
 diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
-index 4f3ac234c..1ad241531 100644
+index a4647839c..2d29adfee 100644
 --- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 +++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
 @@ -4,7 +4,7 @@
@@ -71,7 +62,7 @@ index 4f3ac234c..1ad241531 100644
      <Description>NuGet's understanding of target frameworks.</Description>
 -    <TargetFrameworks>$(TargetFrameworksLibrary)</TargetFrameworks>
 +    <TargetFrameworks>netstandard2.0</TargetFrameworks>
-     <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' != 'true'">$(TargetFrameworks);net40;net45</TargetFrameworks>
+     <TargetFrameworks Condition="'$(IsBuildOnlyXPLATProjects)' != 'true'">$(TargetFrameworks);net40</TargetFrameworks>
      <TargetFramework />
      <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
 -- 

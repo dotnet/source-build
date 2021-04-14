@@ -1,0 +1,69 @@
+From adabb4c0fc30a367055e13a3fbff00784310e496 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 1 Apr 2021 17:46:44 -0500
+Subject: [PATCH 12/12] Fix ambiguous reference.
+
+---
+ .../Maintainability/CodeMetricsAnalyzer.cs             | 10 +++++-----
+ .../CSharpBracePlacementFixAllProvider.cs              |  2 +-
+ .../CSharpWrapStatementsFixAllProvider.cs              |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/NetAnalyzers/Core/Microsoft.CodeQuality.Analyzers/Maintainability/CodeMetricsAnalyzer.cs b/src/NetAnalyzers/Core/Microsoft.CodeQuality.Analyzers/Maintainability/CodeMetricsAnalyzer.cs
+index a15e8a073..351d459e1 100644
+--- a/src/NetAnalyzers/Core/Microsoft.CodeQuality.Analyzers/Maintainability/CodeMetricsAnalyzer.cs
++++ b/src/NetAnalyzers/Core/Microsoft.CodeQuality.Analyzers/Maintainability/CodeMetricsAnalyzer.cs
+@@ -316,13 +316,13 @@ static bool isApplicableByDefault(string ruleId, SymbolKind symbolKind)
+                     // Compat: we match the default threshold values for old FxCop implementation.
+                     return ruleId switch
+                     {
+-                        CA1501RuleId => 5,
++                        CA1501RuleId => (uint)5,
+ 
+-                        CA1502RuleId => 25,
++                        CA1502RuleId => (uint)25,
+ 
+-                        CA1505RuleId => 10,
++                        CA1505RuleId => (uint)10,
+ 
+-                        CA1506RuleId => symbolKind == SymbolKind.NamedType ? 95 : 40,
++                        CA1506RuleId => symbolKind == SymbolKind.NamedType ? (uint)95 : (uint)40,
+ 
+                         _ => throw new NotImplementedException(),
+                     };
+@@ -505,4 +505,4 @@ private static int GetDistinctContainingNamespacesCount(IEnumerable<INamedTypeSy
+             return distinctNamespaces.Count;
+         }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/src/Roslyn.Diagnostics.Analyzers/CSharp/BracePlacement/CSharpBracePlacementFixAllProvider.cs b/src/Roslyn.Diagnostics.Analyzers/CSharp/BracePlacement/CSharpBracePlacementFixAllProvider.cs
+index f27881062..ecbbb77fb 100644
+--- a/src/Roslyn.Diagnostics.Analyzers/CSharp/BracePlacement/CSharpBracePlacementFixAllProvider.cs
++++ b/src/Roslyn.Diagnostics.Analyzers/CSharp/BracePlacement/CSharpBracePlacementFixAllProvider.cs
+@@ -9,7 +9,7 @@
+ 
+ namespace Roslyn.Diagnostics.CSharp.Analyzers.BracePlacement
+ {
+-    internal class CSharpBracePlacementFixAllProvider : DocumentBasedFixAllProvider
++    internal class CSharpBracePlacementFixAllProvider : StyleCop.Analyzers.Helpers.DocumentBasedFixAllProvider
+     {
+         protected override string CodeActionTitle
+             => RoslynDiagnosticsAnalyzersResources.Remove_blank_lines_between_braces;
+diff --git a/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs b/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
+index cc0e65411..8bdd97369 100644
+--- a/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
++++ b/src/Roslyn.Diagnostics.Analyzers/CSharp/WrapStatements/CSharpWrapStatementsFixAllProvider.cs
+@@ -9,7 +9,7 @@
+ 
+ namespace Roslyn.Diagnostics.CSharp.Analyzers.WrapStatements
+ {
+-    internal class CSharpWrapStatementsFixAllProvider : DocumentBasedFixAllProvider
++    internal class CSharpWrapStatementsFixAllProvider : StyleCop.Analyzers.Helpers.DocumentBasedFixAllProvider
+     {
+         protected override string CodeActionTitle
+             => RoslynDiagnosticsAnalyzersResources.Place_statement_on_following_line;
+-- 
+2.18.0
+

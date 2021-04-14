@@ -1,0 +1,75 @@
+From 42a4cb1b80128e87e014d91bbb349a8057e308e7 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 4 Apr 2021 17:38:54 -0500
+Subject: [PATCH 20/20] Try to get templates to build
+
+---
+ src/ProjectTemplates/GenerateContent.targets                    | 2 ++
+ .../Microsoft.DotNet.Web.Client.ItemTemplates.csproj            | 1 +
+ .../Web.ItemTemplates/Microsoft.DotNet.Web.ItemTemplates.csproj | 1 +
+ .../Microsoft.DotNet.Web.ProjectTemplates.csproj                | 1 +
+ .../Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj            | 1 +
+ 5 files changed, 6 insertions(+)
+
+diff --git a/src/ProjectTemplates/GenerateContent.targets b/src/ProjectTemplates/GenerateContent.targets
+index 0de73148b3..c748e69512 100644
+--- a/src/ProjectTemplates/GenerateContent.targets
++++ b/src/ProjectTemplates/GenerateContent.targets
+@@ -1,4 +1,6 @@
+ <Project>
++  <UsingTask TaskName="Microsoft.AspNetCore.BuildTools.GenerateFileFromTemplate" AssemblyFile="$(ArcadeSdkBuildTasksAssembly)" />
++
+   <PropertyGroup>
+     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+ 
+diff --git a/src/ProjectTemplates/Web.Client.ItemTemplates/Microsoft.DotNet.Web.Client.ItemTemplates.csproj b/src/ProjectTemplates/Web.Client.ItemTemplates/Microsoft.DotNet.Web.Client.ItemTemplates.csproj
+index 38c7fb6b62..55867f6524 100644
+--- a/src/ProjectTemplates/Web.Client.ItemTemplates/Microsoft.DotNet.Web.Client.ItemTemplates.csproj
++++ b/src/ProjectTemplates/Web.Client.ItemTemplates/Microsoft.DotNet.Web.Client.ItemTemplates.csproj
+@@ -3,6 +3,7 @@
+   <PropertyGroup>
+     <TargetFramework>$(DefaultNetCoreTargetFramework)</TargetFramework>
+     <Description>Web Client-Side File Templates for Microsoft Template Engine</Description>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+ </Project>
+diff --git a/src/ProjectTemplates/Web.ItemTemplates/Microsoft.DotNet.Web.ItemTemplates.csproj b/src/ProjectTemplates/Web.ItemTemplates/Microsoft.DotNet.Web.ItemTemplates.csproj
+index 20e88246ec..74305ab084 100644
+--- a/src/ProjectTemplates/Web.ItemTemplates/Microsoft.DotNet.Web.ItemTemplates.csproj
++++ b/src/ProjectTemplates/Web.ItemTemplates/Microsoft.DotNet.Web.ItemTemplates.csproj
+@@ -3,6 +3,7 @@
+   <PropertyGroup>
+     <TargetFramework>$(DefaultNetCoreTargetFramework)</TargetFramework>
+     <Description>Web File Templates for Microsoft Template Engine.</Description>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+ </Project>
+diff --git a/src/ProjectTemplates/Web.ProjectTemplates/Microsoft.DotNet.Web.ProjectTemplates.csproj b/src/ProjectTemplates/Web.ProjectTemplates/Microsoft.DotNet.Web.ProjectTemplates.csproj
+index 5b39b0fd0d..ad935040a2 100644
+--- a/src/ProjectTemplates/Web.ProjectTemplates/Microsoft.DotNet.Web.ProjectTemplates.csproj
++++ b/src/ProjectTemplates/Web.ProjectTemplates/Microsoft.DotNet.Web.ProjectTemplates.csproj
+@@ -5,6 +5,7 @@
+     <PackageId>Microsoft.DotNet.Web.ProjectTemplates.$(AspNetCoreMajorVersion).$(AspNetCoreMinorVersion)</PackageId>
+     <Description>ASP.NET Core Web Template Pack for Microsoft Template Engine</Description>
+     <ComponentsWebAssemblyProjectsRoot>$(RepoRoot)src\Components\WebAssembly\</ComponentsWebAssemblyProjectsRoot>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+diff --git a/src/ProjectTemplates/Web.Spa.ProjectTemplates/Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj b/src/ProjectTemplates/Web.Spa.ProjectTemplates/Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj
+index 62e1c07e7d..1d5f276ae0 100644
+--- a/src/ProjectTemplates/Web.Spa.ProjectTemplates/Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj
++++ b/src/ProjectTemplates/Web.Spa.ProjectTemplates/Microsoft.DotNet.Web.Spa.ProjectTemplates.csproj
+@@ -7,6 +7,7 @@
+     <PackageTags>$(PackageTags);spa</PackageTags>
+     <!-- By default Pack will exclude files that start with '.', we want to include those files -->
+     <NoDefaultExcludes>true</NoDefaultExcludes>
++    <ExcludeFromSourceBuild>false</ExcludeFromSourceBuild>
+   </PropertyGroup>
+ 
+     <PropertyGroup>
+-- 
+2.18.0
+

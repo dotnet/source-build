@@ -1,0 +1,25 @@
+From fd2790ad703ab10eb4f82fc8e5d4565b83333753 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 4 Apr 2021 02:36:35 -0500
+Subject: [PATCH 22/22] Don't think we need this file.
+
+---
+ src/Layout/redist/targets/OverlaySdkOnLKG.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Layout/redist/targets/OverlaySdkOnLKG.targets b/src/Layout/redist/targets/OverlaySdkOnLKG.targets
+index ab94ba45b..3dc19ea2c 100644
+--- a/src/Layout/redist/targets/OverlaySdkOnLKG.targets
++++ b/src/Layout/redist/targets/OverlaySdkOnLKG.targets
+@@ -14,7 +14,7 @@
+       <OverlaySDK Include="$(_DotNetHiveRoot)/**/*" Exclude="$(_DotNetHiveRoot)sdk/**/*"/>
+       <OverlaySdkFilesFromStage0 Include="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/Microsoft.NETCoreSdk.BundledCliTools.props" />
+       <OverlaySdkFilesFromStage0 Include="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/RuntimeIdentifierGraph.json" />
+-      <OverlaySdkFilesFromStage0 Include="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/NETCoreSdkRuntimeIdentifierChain.txt" />
++      <OverlaySdkFilesFromStage0 Include="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/NETCoreSdkRuntimeIdentifierChain.txt" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+       <!-- Ignore dotnet-watch files from the SDK since we're building a newer version of it in this repo. -->
+       <OverlaySdkFilesFromStage0 Include="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/DotnetTools/**/*" RelativeDestination="DotnetTools"
+         Exclude="$(_DotNetHiveRoot)/sdk/$(Stage0SdkVersion)/DotnetTools/dotnet-watch/**" />
+-- 
+2.18.0
+

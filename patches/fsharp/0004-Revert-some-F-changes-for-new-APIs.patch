@@ -4,13 +4,13 @@ Date: Mon, 29 Jun 2020 18:31:35 +0000
 Subject: [PATCH 4/4] Revert some F# changes for new APIs.
 
 ---
- src/absil/ilreflect.fs | 12 ++++++------
+ src/fsharp/absil/ilreflect.fs | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/src/absil/ilreflect.fs b/src/absil/ilreflect.fs
+diff --git a/src/fsharp/absil/ilreflect.fs b/src/fsharp/absil/ilreflect.fs
 index 7f048dd5b..d2010a9dc 100644
---- a/src/absil/ilreflect.fs
-+++ b/src/absil/ilreflect.fs
+--- a/src/fsharp/absil/ilreflect.fs
++++ b/src/fsharp/absil/ilreflect.fs
 @@ -1568,7 +1568,7 @@ let rec buildMethodPass2 cenv tref (typB: TypeBuilder) emEnv (mdef: ILMethodDef)
            // Method generic type parameters         
            buildGenParamsPass1 emEnv methB.DefineGenericParametersAndLog mdef.GenericParams

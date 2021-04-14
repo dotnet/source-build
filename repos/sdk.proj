@@ -16,6 +16,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) -ci</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) $(FlagParameterPrefix)warnAsError $(ArcadeFalseBoolBuildArg)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:Projects=$(ProjectDirectory)source-build.slnf</BuildCommandArgs>
 
     <!-- The sdk repo is building with an older version of the SDK where this property is
          defaulted to false.  The SDK that source-build is using defaults it to true.

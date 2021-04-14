@@ -1,18 +1,18 @@
-From 74c9b072853ff4d68f2630462a6f1ac5d576979d Mon Sep 17 00:00:00 2001
+From 4860e6a90c1f0b014a79d9a4c5c237d53281902d Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Mon, 21 Sep 2020 09:59:02 -0500
-Subject: [PATCH 2/2] Use package version properties for reference versions.
+Subject: [PATCH 2/4] Use package version properties for reference versions.
 
 ---
- eng/Versions.props                                         | 7 +++++--
- src/System.CommandLine/System.CommandLine.csproj           | 4 ++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ eng/Versions.props                               | 8 ++++++--
+ src/System.CommandLine/System.CommandLine.csproj | 4 ++--
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 3048701..16a0eb7 100644
+index 3048701..6e9c9af 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -29,9 +29,12 @@
+@@ -29,9 +29,13 @@
      <UsingToolSymbolUploader>true</UsingToolSymbolUploader>
      <PublishWindowsPdb>true</PublishWindowsPdb>
    </PropertyGroup>
@@ -26,22 +26,23 @@ index 3048701..16a0eb7 100644
 +    <MicrosoftCSharpPackageVersion Condition="'$(MicrosoftCSharpPackageVersion)' == ''">4.4.1</MicrosoftCSharpPackageVersion>
 +    <SystemMemoryPackageVersion Condition="'$(SystemMemoryPackageVersion)' == ''">4.5.3</SystemMemoryPackageVersion>
 +  </PropertyGroup>
++
  </Project>
 diff --git a/src/System.CommandLine/System.CommandLine.csproj b/src/System.CommandLine/System.CommandLine.csproj
-index 1ae8dd3..aaa2c4a 100644
+index 5841d89..83d604c 100644
 --- a/src/System.CommandLine/System.CommandLine.csproj
 +++ b/src/System.CommandLine/System.CommandLine.csproj
-@@ -19,8 +19,8 @@
-   </PropertyGroup>
-
+@@ -24,8 +24,8 @@
+   </ItemGroup>
+ 
    <ItemGroup>
 -    <PackageReference Include="Microsoft.CSharp" Version="4.4.1" />
--    <PackageReference Include="system.memory" Version="4.5.3" />
+-    <PackageReference Include="system.memory" Version="4.5.4" />
 +    <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpPackageVersion)" />
 +    <PackageReference Include="system.memory" Version="$(SystemMemoryPackageVersion)" />
    </ItemGroup>
-
+ 
  </Project>
---
+-- 
 2.18.0
 
