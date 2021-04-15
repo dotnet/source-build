@@ -24,6 +24,8 @@
     <ItemGroup>
       <CoreClrToolsFiles Include="$(ToolPackageExtractDir)coreclr-tools/*" />
     </ItemGroup>
+    <!-- Also copy to the legacy path without the architecture for SBRP for now -->
+    <Copy SourceFiles="@(CoreClrToolsFiles)" DestinationFolder="$(SourceBuiltPackagesPath)coreclr-tools" />
     <Copy SourceFiles="@(CoreClrToolsFiles)" DestinationFolder="$(SourceBuiltPackagesPath)coreclr-tools/$(BuildArchitecture)" />
 
     <PropertyGroup>
