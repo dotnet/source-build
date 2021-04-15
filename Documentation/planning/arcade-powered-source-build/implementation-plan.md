@@ -22,7 +22,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2037) | ✔️ | ⏱ / ❗[Blocked](https://github.com/dotnet/CliCommandLineParser/issues/180) | | | |
 | 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? | [issue](https://github.com/dotnet/source-build/issues/2038) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | [issue](https://github.com/dotnet/source-build/issues/2039) | ✔️ | ✔️ | [CI issue](https://github.com/dotnet/diagnostics/issues/2059) | | |
-| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | [issue](https://github.com/dotnet/source-build/issues/2067) | ✔️ | ⏱ | | | |
+| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | [issue](https://github.com/dotnet/source-build/issues/2067) | ✔️ | ⏱[PR](https://github.com/dotnet/roslyn/pull/51765) | | | |
 | 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | [issue](https://github.com/dotnet/source-build/issues/2040) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | [issue](https://github.com/dotnet/source-build/issues/2041) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | [issue](https://github.com/dotnet/source-build/issues/2042) | ✔️ | ✔️ | ✔️ | ✔️ | |
