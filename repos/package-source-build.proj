@@ -24,7 +24,7 @@
     <ItemGroup>
       <CoreClrToolsFiles Include="$(ToolPackageExtractDir)coreclr-tools/*" />
     </ItemGroup>
-    <Copy SourceFiles="@(CoreClrToolsFiles)" DestinationFolder="$(SourceBuiltPackagesPath)coreclr-tools" />
+    <Copy SourceFiles="@(CoreClrToolsFiles)" DestinationFolder="$(SourceBuiltPackagesPath)coreclr-tools/$(BuildArchitecture)" />
 
     <PropertyGroup>
       <SourceBuiltTarballName>$(OutputPath)$(SourceBuiltArtifactsTarballName).$(VersionPrefix)-$(VersionSuffix).tar.gz</SourceBuiltTarballName>
