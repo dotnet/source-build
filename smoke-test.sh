@@ -7,7 +7,7 @@ VERSION_PREFIX=5.0
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
 DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.3
-__ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
+__ROOT_REPO=$(sed 's/\r$//' "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt") # remove CR if mounted repo on Windows drive
 executingUserHome=${HOME:-}
 
 echo "RID to test: ${targetRid?not specified. Use ./build.sh --run-smoke-test to detect RID, or specify manually.}"
@@ -91,9 +91,9 @@ while :; do
         break
     fi
 
-    lowerI="$(echo $1 | awk '{print tolower($0)}')"
+    lowerI="$(echo "$1" | awk '{print tolower($0)}')"
     case $lowerI in
-        -?|-h|--help)
+        '-?'|-h|--help)
             usage
             exit 0
             ;;
@@ -215,7 +215,7 @@ function doCommand() {
         elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor|blazorwasm|blazorserver)$ ]]; then
             # A separate log file that we will over-write all the time.
             exitLogFile="$testingDir/exitLogFile"
-            echo > $exitLogFile
+            echo > "$exitLogFile"
             # Run an application in the background and redirect its
             # stdout+stderr to a separate process (tee). The tee process
             # writes its input to 2 files:
@@ -245,7 +245,7 @@ function doCommand() {
         elif [ "$1" == "multi-rid-publish" ]; then
             runPublishScenarios() {
                 "${dotnetCmd}" publish --self-contained false /bl:"${binlogPrefix}publish-fx-dep.binlog"
-                "${dotnetCmd}" publish --self-contained true -r $targetRid /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
+                "${dotnetCmd}" publish --self-contained true -r "$targetRid" /bl:"${binlogPrefix}publish-self-contained-${targetRid}.binlog"
                 "${dotnetCmd}" publish --self-contained true -r linux-x64 /bl:"${binlogPrefix}publish-self-contained-portable.binlog"
             }
             if [ "$projectOutput" == "true" ]; then
@@ -396,7 +396,7 @@ echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
     OUTPUT_DIR="$SCRIPT_ROOT/artifacts/$buildArch/$configuration/"
-    DOTNET_TARBALL="$(ls ${OUTPUT_DIR}dotnet-sdk-${VERSION_PREFIX}*)"
+    DOTNET_TARBALL="$(ls "${OUTPUT_DIR}${TARBALL_PREFIX}${VERSION_PREFIX}"*)"
 
     mkdir -p "$cliDir"
     tar xzf "$DOTNET_TARBALL" -C "$cliDir"
@@ -415,7 +415,7 @@ export NUGET_PACKAGES="$restoredPackagesDir"
 SOURCE_BUILT_PKGS_PATH="$SCRIPT_ROOT/artifacts/obj/$buildArch/$configuration/blob-feed/packages/"
 export DOTNET_ROOT="$dotnetDir"
 # OSX also requires DOTNET_ROOT to be on the PATH
-if [ `uname` == 'Darwin' ]; then
+if [ "$(uname)" == 'Darwin' ]; then
     export PATH="$dotnetDir:$PATH"
 fi
 
