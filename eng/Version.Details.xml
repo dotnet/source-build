@@ -17,29 +17,29 @@
     </Dependency>
     <!-- this is pinned to work around https://github.com/dotnet/arcade/issues/3518 -->
     <!-- if XDT is updated before that issue is fixed, this should be updated.  After the issue is fixed, it should be unpinned.  -->
-    <Dependency Name="Microsoft.Web.Xdt" Version="3.0.0" CoherentParentDependency="Microsoft.NET.Sdk.Web" Pinned="true">
+    <Dependency Name="Microsoft.Web.Xdt" Version="3.1.0" CoherentParentDependency="Microsoft.NET.Sdk.Web" Pinned="true">
       <Uri>https://github.com/aspnet/xdt</Uri>
       <Sha>c01a538851a8ab1a1fbeb2e6243f391fff7587b4</Sha>
       <RepoName>aspnet-xdt</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="5.0.0-rtm.21161.4" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="5.0.0-rtm.21213.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/mono/linker</Uri>
-      <Sha>c43f981eec336c1dc4fd0ead84b5e09db9377d9e</Sha>
+      <Sha>311102e38b4f925856f73af7a83da1ee4ded7af9</Sha>
       <RepoName>linker</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Runtime.win-x64" Version="5.0.6" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>2f740adc1457e8a28c1c072993b66f515977eb51</Sha>
+      <Sha>84b30748fccccc0247181b615946aac10870364d</Sha>
       <RepoName>runtime</RepoName>
       <RepoName>runtime-portable</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="5.0.202" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.DotNet.Common.ItemTemplates" Version="5.0.203" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/templating</Uri>
-      <Sha>8470ff317250d761c72f920b8ea1c0700b230eb3</Sha>
+      <Sha>50e1aa014b0b35cb9aa2c5157d054ee654949dff</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.5.0" Version="1.0.2-beta4.20407.5">
+    <Dependency Name="Microsoft.DotNet.Test.ProjectTemplates.5.0" Version="1.0.2-beta4.20420.1">
       <Uri>https://github.com/dotnet/test-templates</Uri>
-      <Sha>956e14dedd3a3ac981b320d66c6d389387a2954a</Sha>
+      <Sha>a2b05d8171915c69ad97ab5d49bbb07d2c780a67</Sha>
     </Dependency>
     <!-- this should have CPD to Roslyn or runtime but they don't have the proper Version.Details.xml entry - https://github.com/dotnet/runtime/issues/42637 -->
     <Dependency Name="System.CommandLine" Version="2.0.0-beta1.20371.2">
@@ -56,16 +56,16 @@
     </Dependency>
     <Dependency Name="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.2" CoherentParentDependency="Microsoft.NET.Sdk">
       <Uri>https://github.com/dotnet/roslyn-analyzers</Uri>
-      <Sha>ce71b27be743710012c0460071da188b2f05959c</Sha>
+      <Sha>755ceda71eaa7f2356fa0f310fea13bb529266f5</Sha>
     </Dependency>
     <Dependency Name="NuGet.Build.Tasks" Version="5.9.1-rc.8" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/nuget/nuget.client</Uri>
       <Sha>d525b0e670f3b6cbd5c73a35f04730a9f658c852</Sha>
       <RepoName>nuget-client</RepoName>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.202-servicing.21201.17" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NET.Sdk" Version="5.0.203-servicing.21216.8" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/sdk</Uri>
-      <Sha>51369266643769f9f0c1184e89715cd1045126d0</Sha>
+      <Sha>aeaa679b6eebd74eb26acb13457808cfe0892b18</Sha>
       <RepoName>sdk</RepoName>
     </Dependency>
     <Dependency Name="Microsoft.DotNet.Cli.CommandLine" Version="1.0.0-preview.19208.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
@@ -79,13 +79,13 @@
       <RepoName>application-insights</RepoName>
     </Dependency>
     <!-- once https://github.com/dotnet/arcade/issues/3099 is fixed this should have a coherency parent. -->
-    <Dependency Name="XliffTasks" Version="1.0.0-beta.20129.1">
+    <Dependency Name="XliffTasks" Version="1.0.0-beta.20502.2">
       <Uri>https://github.com/dotnet/xliff-tasks</Uri>
-      <Sha>a52f3d7fb58470749ee4035fbbcb7e63c78b0459</Sha>
+      <Sha>d2bec3a64076f8463de4756913712badfce0a01d</Sha>
     </Dependency>
-    <Dependency Name="dotnet-dev-certs" Version="5.0.5-servicing.21167.8" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
-      <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>b7a2ec8c7ed6b48857af0a69688a73e8c14fe6cb</Sha>
+    <Dependency Name="dotnet-dev-certs" Version="5.0.6-servicing.21214.11" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+      <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
+      <Sha>8b2dab3b0ce2a88856332f0e41731f4fd701bd25</Sha>
       <RepoName>aspnetcore</RepoName>
     </Dependency>
     <Dependency Name="Microsoft.FSharp.Compiler" Version="11.3.2-beta.21102.9" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
@@ -96,9 +96,9 @@
       <Uri>https://github.com/microsoft/vstest</Uri>
       <Sha>99b911a57a02fc5d2eeef23e9ab8cbea4505678b</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="5.0.202-servicing.21201.18">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="5.0.203-servicing.21216.5">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>db7cc87d512335808e3806067f2bf9b31379e1db</Sha>
+      <Sha>ff5e718c8bb1f39a880b5254924ac84759ada9d5</Sha>
       <RepoName>installer</RepoName>
     </Dependency>
     <Dependency Name="Microsoft.Diagnostics.NETCore.Client" Version="0.2.0-preview.20419.2">
