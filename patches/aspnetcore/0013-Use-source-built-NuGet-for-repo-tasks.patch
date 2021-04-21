@@ -1,7 +1,7 @@
-From 1fa8097f1a6a49606c0aefad2763f3e0adf0e845 Mon Sep 17 00:00:00 2001
+From e11a72ef45b04e841742fbe683361bd60fbe970b Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Fri, 6 Nov 2020 10:41:33 -0600
-Subject: [PATCH 13/14] Use source-built NuGet for repo tasks
+Subject: [PATCH 13/20] Use source-built NuGet for repo tasks
 
 This allows us to use the source-built version of NuGet when we
 have it, to avoid prebuilts.
@@ -10,14 +10,14 @@ have it, to avoid prebuilts.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
-index 2b09f16594..657974b2b0 100644
+index f45a6bc5d8..657974b2b0 100644
 --- a/eng/tools/RepoTasks/RepoTasks.csproj
 +++ b/eng/tools/RepoTasks/RepoTasks.csproj
 @@ -13,7 +13,7 @@
    </PropertyGroup>
  
    <ItemGroup>
--    <PackageReference Include="NuGet.Packaging" Version="5.6.0" />
+-    <PackageReference Include="NuGet.Packaging" Version="5.9.0" />
 +    <PackageReference Include="NuGet.Packaging" Version="$(NuGetVersioningPackageVersion)" />
      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
  
