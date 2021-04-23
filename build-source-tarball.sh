@@ -14,6 +14,15 @@ usage() {
     echo "use -- to send the remaining arguments to build.sh"
 }
 
+getrealpath()
+{
+    if command -v realpath > /dev/null; then
+        realpath $1
+    else
+        readlink -f $1
+    fi
+}
+
 if [ -z "${1:-}" ]; then
     usage
     exit 1
@@ -117,7 +126,7 @@ while [[ -h $fullTarballRoot ]]; do
   # symlink file was located
   [[ $fullTarballRoot != /* ]] && fullTarballRoot="$SCRIPT_ROOT/$fullTarballRoot"
 done
-export FULL_TARBALL_ROOT="$fullTarballRoot"
+export FULL_TARBALL_ROOT="$(getrealpath "$fullTarballRoot")"
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "info: '$TARBALL_ROOT' already exists"
