@@ -114,11 +114,7 @@ if [ "${internalPackageFeedPat:-}" ]; then
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-2f740adc-4/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-2f740adc-3/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-2f740adc/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-8470ff31-4/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-8470ff31-3/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-8470ff31-2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-8470ff31-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-8470ff31/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-f3eeec88/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/dotnet5-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/5.0.203-servicing.21222.11-shipping/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
