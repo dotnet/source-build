@@ -9,36 +9,36 @@ set -e
 
 usage()
 {
-  echo "Common settings:"
-  echo "  --configuration <value>    Build configuration: 'Debug' or 'Release' (short: -c)"
-  echo "  --verbosity <value>        Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)"
-  echo "  --binaryLog                Create MSBuild binary log (short: -bl)"
-  echo "  --help                     Print help and exit (short: -h)"
-  echo ""
+	cat << _EOF
+Common settings:
+  --configuration <value>    Build configuration: 'Debug' or 'Release' (short: -c)
+  --verbosity <value>        Msbuild verbosity: q[uiet], m[inimal], n[ormal], d[etailed], and diag[nostic] (short: -v)
+  --binaryLog                Create MSBuild binary log (short: -bl)
+  --help                     Print help and exit (short: -h)
 
-  echo "Actions:"
-  echo "  --restore                  Restore dependencies (short: -r)"
-  echo "  --build                    Build solution (short: -b)"
-  echo "  --rebuild                  Rebuild solution"
-  echo "  --test                     Run all unit tests in the solution (short: -t)"
-  echo "  --integrationTest          Run all integration tests in the solution"
-  echo "  --performanceTest          Run all performance tests in the solution"
-  echo "  --pack                     Package build outputs into NuGet packages and Willow components"
-  echo "  --sign                     Sign build outputs"
-  echo "  --publish                  Publish artifacts (e.g. symbols)"
-  echo "  --clean                    Clean the solution"
-  echo ""
+Actions:
+  --restore                  Restore dependencies (short: -r)
+  --build                    Build solution (short: -b)
+  --rebuild                  Rebuild solution
+  --test                     Run all unit tests in the solution (short: -t)
+  --integrationTest          Run all integration tests in the solution
+  --performanceTest          Run all performance tests in the solution
+  --pack                     Package build outputs into NuGet packages and Willow components
+  --sign                     Sign build outputs
+  --publish                  Publish artifacts (e.g. symbols)
+  --clean                    Clean the solution
 
-  echo "Advanced settings:"
-  echo "  --projects <value>       Project or solution file(s) to build"
-  echo "  --ci                     Set when running on CI server"
-  echo "  --excludeCIBinarylog     Don't output binary log (short: -nobl)"
-  echo "  --prepareMachine         Prepare machine for CI run, clean up processes after build"
-  echo "  --nodeReuse <value>      Sets nodereuse msbuild parameter ('true' or 'false')"
-  echo "  --warnAsError <value>    Sets warnaserror msbuild parameter ('true' or 'false')"
-  echo ""
-  echo "Command line arguments not listed above are passed thru to msbuild."
-  echo "Arguments can also be passed in with a single hyphen."
+Advanced settings:
+  --projects <value>       Project or solution file(s) to build
+  --ci                     Set when running on CI server
+  --excludeCIBinarylog     Don't output binary log (short: -nobl)
+  --prepareMachine         Prepare machine for CI run, clean up processes after build
+  --nodeReuse <value>      Sets nodereuse msbuild parameter ('true' or 'false')
+  --warnAsError <value>    Sets warnaserror msbuild parameter ('true' or 'false')
+
+Command line arguments not listed above are passed thru to msbuild.
+Arguments can also be passed in with a single hyphen.
+_EOF
 }
 
 source="${BASH_SOURCE[0]}"
