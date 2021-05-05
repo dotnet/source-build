@@ -10,8 +10,6 @@ DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.3
 __ROOT_REPO=$(cat "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt" | sed 's/\r$//') # remove CR if mounted repo on Windows drive
 executingUserHome=${HOME:-}
 
-echo "RID to test: ${targetRid?not specified. Use ./build.sh --run-smoke-test to detect RID, or specify manually.}"
-
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 
@@ -372,6 +370,8 @@ function copyRestoredPackages() {
         cp -rf "$restoredPackagesDir"/* "$archivedPackagesDir"
     fi
 }
+
+echo "RID to test: ${targetRid?not specified. Use ./build.sh --run-smoke-test to detect RID, or specify manually.}"
 
 if [ "$__ROOT_REPO" != "known-good" ]; then
     echo "Skipping smoke-tests since cli was not built";
