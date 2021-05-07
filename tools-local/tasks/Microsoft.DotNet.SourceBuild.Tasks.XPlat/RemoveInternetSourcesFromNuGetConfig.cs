@@ -34,6 +34,13 @@ namespace Microsoft.DotNet.Build.Tasks
         /// </summary>
         public string[] KeepFeedPrefixes { get; set; }
 
+        /// <summary>
+        /// A list of prefix strings that make the task remove a package source unconditionally. For
+        /// example, a source named 'darc-pub-dotnet-aspnetcore-e81033e' will be removed if the prefix
+        /// 'darc-pub-dotnet-aspnetcore-' is in this list.
+        /// </summary>
+        public string[] RemoveFeedPrefixes { get; set; }
+
         public override bool Execute()
         {
             XDocument d = XDocument.Load(NuGetConfigFile);
@@ -50,6 +57,13 @@ namespace Microsoft.DotNet.Build.Tasks
                         == true)
                     {
                         return true;
+                    }
+
+                    if (RemoveFeedPrefixes
+                        ?.Any(prefix => feedName.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                        == true)
+                    {
+                        return false;
                     }
 
                     string feedUrl = e.Attribute("value").Value;
