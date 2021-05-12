@@ -22,7 +22,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2037) | ✔️ | ⏱ / ❗[Blocked](https://github.com/dotnet/CliCommandLineParser/issues/180) | | | |
 | 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? | [issue](https://github.com/dotnet/source-build/issues/2038) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | [issue](https://github.com/dotnet/source-build/issues/2039) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | [issue](https://github.com/dotnet/source-build/issues/2067) | ✔️ | ✔️ | ❗[Blocked](https://github.com/dotnet/roslyn/issues/53197) (required to signoff on CI) | | |
+| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | [issue](https://github.com/dotnet/source-build/issues/2067) | ✔️ | ✔️ | ❗[Blocked](https://github.com/dotnet/roslyn/issues/53197) (required for CI exit criteria) | | |
 | 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | [issue](https://github.com/dotnet/source-build/issues/2040) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | [issue](https://github.com/dotnet/source-build/issues/2041) | ✔️ | ✔️ | ✔️ | ✔️ | |
 | 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | [issue](https://github.com/dotnet/source-build/issues/2042) | ✔️ | ✔️ | ✔️ | ✔️ | |
@@ -36,7 +36,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | [issue](https://github.com/dotnet/source-build/issues/2074) | | ✔️ | [Patches issue](https://github.com/dotnet/fsharp/issues/11435) | | |
 | 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | ✔️ | [CI issue](https://github.com/dotnet/sdk/issues/16973) [Patches issue](https://github.com/dotnet/sdk/issues/16974) | | |
 | 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ❗[Blocked](https://github.com/microsoft/vstest/issues/2804) | | | |
-| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ✔️ | [Patches issue](https://github.com/dotnet/installer/issues/10240) | | |
+| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ✔️ | ✔️ | | |
 
 | Status | Description |
 | --- | --- |
