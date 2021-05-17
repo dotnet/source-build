@@ -34,6 +34,7 @@ stages:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-359e48e-20200313130914
     matrix:
       Offline: { type: Offline }
+      BaseTarball: { type: BaseTarball }
 
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
