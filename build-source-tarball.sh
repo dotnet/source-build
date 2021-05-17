@@ -11,6 +11,7 @@ usage() {
     echo "  --with-ref-packages <dir>          use the specified directory of available reference packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "  --with-packages <dir>              use the specified directory of available previously-built packages to determine what prebuilts to delete, instead of downloading the most recent version"
     echo "  --with-sdk <dir>                   use the specified SDK to check out source code.  do not copy it to the tarball.  an external SDK will be required to build from the tarball."
+    echo "  --base-tarball                     creates a tarball without sdk, previously-build packages and reference packages"
     echo "use -- to send the remaining arguments to build.sh"
 }
 
@@ -23,6 +24,7 @@ TARBALL_ROOT=$1
 shift
 
 SKIP_BUILD=0
+BASE_TARBALL=0
 CUSTOM_SDK_DIR=''
 MINIMIZE_DISK_USAGE=0
 CUSTOM_REF_PACKAGES_DIR=''
@@ -79,6 +81,10 @@ while :; do
             MAIN_BUILD_ARGS+=( "/p:CustomPreviouslySourceBuiltPackagesDir=$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" )
             shift
             ;;
+        --base-tarball)
+            BASE_TARBALL=1
+            MAIN_BUILD_ARGS+=( "/p:PackBaseTarball=true" )
+            ;;
         --)
             shift
             echo "Detected '--': passing remaining parameters '$@' as build.sh arguments."
@@ -97,6 +103,11 @@ while :; do
 
     shift
 done
+
+# if [ $BASE_TARBALL -eq 1 ] && [[ '$CUSTOM_SDK_DIR' != ''] || [ '$CUSTOM_REF_PACKAGES_DIR' != '' ] || [ '$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR' != '' ]]; then
+#     echo "ERROR: Cannot specify --base-tarball with other --with* parameters (--with-sdk --with-ref-packages --with-packages)"
+#     exit 1
+# fi
 
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     echo "WARNING"
