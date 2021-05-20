@@ -104,10 +104,10 @@ while :; do
     shift
 done
 
-# if [ $BASE_TARBALL -eq 1 ] && [[ '$CUSTOM_SDK_DIR' != ''] || [ '$CUSTOM_REF_PACKAGES_DIR' != '' ] || [ '$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR' != '' ]]; then
-#     echo "ERROR: Cannot specify --base-tarball with other --with* parameters (--with-sdk --with-ref-packages --with-packages)"
-#     exit 1
-# fi
+if [[ $BASE_TARBALL -eq 1 && ( "$CUSTOM_SDK_DIR" != "" || "$CUSTOM_REF_PACKAGES_DIR" != "" || "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" != "" ) ]]; then
+    echo "ERROR: Cannot specify --base-tarball with other --with* parameters (--with-sdk --with-ref-packages --with-packages)"
+    exit 1
+fi
 
 if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     echo "WARNING"
