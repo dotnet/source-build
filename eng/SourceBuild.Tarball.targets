@@ -136,7 +136,7 @@
           $(DotNetCliToolDir)shared\2.1.0\**;
           $(DotNetCliToolDir)tools\**;
           "
-        Condition="'$(CustomDotNetSdkDir)' == ''"/>
+        Condition=" '$(CustomDotNetSdkDir)' == '' AND '$(PackBaseTarball)' != 'true' "/>
 
       <TarballCopyFile
         Include="@(TarballRootToolFile)"
@@ -155,6 +155,11 @@
       <TarballCopyFile
         Include="$(ProjectDir)support/tarball/build.sh"
         RelativeDestination="build.sh" />
+        
+      <TarballCopyFile
+        Condition=" '$(PackBaseTarball)' == 'true' "
+        Include="$(ProjectDir)support/tarball/prep.sh"
+        RelativeDestination="prep.sh" />
 
       <!--
         When building an internal build, the main smoke-test nuget config has authenticated sources
@@ -280,13 +285,19 @@
           DependsOnTargets="AddTarballPackages">
     <ItemGroup>
       <ExternalTarballFile
+        Condition=" '$(PackBaseTarball)' != 'true' "
         Include="$(ExternalTarballsDir)*.tar.gz"
         RelativeRoot="packages\archive\" />
 
       <!-- If not using previously source built artifacts tar.gz, use Production build output. -->
       <ExternalTarballFile
-        Condition="'$(PrivateSourceBuiltArtifactsPackageVersion)' == ''"
+        Condition=" '$(PrivateSourceBuiltArtifactsPackageVersion)' == '' AND '$(PackBaseTarball)' != 'true' "
         Include="@(PrivateSourceBuiltArtifactsTarGzFile)"
+        RelativeRoot="packages\archive\" />
+
+      <ExternalTarballFile
+        Condition=" '$(PackBaseTarball)' == 'true' "
+        Include="$(ArchiveArtifactsTextFile)"
         RelativeRoot="packages\archive\" />
 
       <TarballCopyFile Include="@(ExternalTarballFile);" />
