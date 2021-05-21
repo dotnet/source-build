@@ -21,7 +21,7 @@ stages:
 # Temporarily disable unit tests until entire product builds.
 # See https://github.com/dotnet/source-build/issues/1549
       Production: { generatePrebuiltBurndown: true, runUnitTests: false }
-      Online: { type: Online }
+      Online: { type: Online BaseTarball }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 

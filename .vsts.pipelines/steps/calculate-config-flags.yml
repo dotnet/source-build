@@ -9,6 +9,7 @@ steps:
 
     setvariable sb.configuration Release
     setvariable sb.portable false
+    setvariable sb.baseTarball false
     setvariable sb.tarball false
     setvariable sb.tarballOffline false
 
@@ -16,6 +17,10 @@ steps:
 
     for x in $TYPE; do
       case $x in
+        BaseTarball)
+          setvariable sb.baseTarball true
+          ;;
+          
         Debug|Release)
           setvariable sb.configuration $x
           ;;
