@@ -1,0 +1,82 @@
+From 9935154174cbf8b87c628a3ca67add3b490aafd6 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 21 May 2021 15:09:18 -0500
+Subject: [PATCH 30/30] Add net46 for some packages to support Omnisharp.
+
+These packages are used in the AspNetCore build to produce MS.NET.SDK.Razor.  Omnisharp hardcodes a net46 fx so we need to build that specifically.
+
+---
+ .../pkg/System.Resources.Extensions.pkgproj                   | 4 ++--
+ .../ref/System.Resources.Extensions.csproj                    | 4 ++--
+ .../src/System.Resources.Extensions.csproj                    | 2 +-
+ .../tests/System.Resources.Extensions.Tests.csproj            | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/libraries/System.Resources.Extensions/pkg/System.Resources.Extensions.pkgproj b/src/libraries/System.Resources.Extensions/pkg/System.Resources.Extensions.pkgproj
+index 3ac0955a841..9849ef91669 100644
+--- a/src/libraries/System.Resources.Extensions/pkg/System.Resources.Extensions.pkgproj
++++ b/src/libraries/System.Resources.Extensions/pkg/System.Resources.Extensions.pkgproj
+@@ -2,8 +2,8 @@
+   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.props))" />
+   <ItemGroup>
+     <ProjectReference Include="..\src\System.Resources.Extensions.csproj">
+-      <SupportedFramework>uap10.0.16299;net461;netcoreapp2.0;$(AllXamarinFrameworks)</SupportedFramework>
++      <SupportedFramework>uap10.0.16299;net46;net461;netcoreapp2.0;$(AllXamarinFrameworks)</SupportedFramework>
+     </ProjectReference>
+   </ItemGroup>
+   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets))" />
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj b/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj
+index 184133af2fa..c6eff5cf92c 100644
+--- a/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj
++++ b/src/libraries/System.Resources.Extensions/ref/System.Resources.Extensions.csproj
+@@ -1,9 +1,9 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;net46;net461</TargetFrameworks>
+     <Nullable>enable</Nullable>
+   </PropertyGroup>
+   <ItemGroup>
+     <Compile Include="System.Resources.Extensions.cs" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj b/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
+index f9d521b2354..da9b1641565 100644
+--- a/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
++++ b/src/libraries/System.Resources.Extensions/src/System.Resources.Extensions.csproj
+@@ -1,7 +1,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
++    <TargetFrameworks>netstandard2.0;net46;net461</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);RESOURCES_EXTENSIONS</DefineConstants>
+     <Nullable>enable</Nullable>
+   </PropertyGroup>
+diff --git a/src/libraries/System.Resources.Extensions/tests/System.Resources.Extensions.Tests.csproj b/src/libraries/System.Resources.Extensions/tests/System.Resources.Extensions.Tests.csproj
+index b48848c7a45..b310496f4bc 100644
+--- a/src/libraries/System.Resources.Extensions/tests/System.Resources.Extensions.Tests.csproj
++++ b/src/libraries/System.Resources.Extensions/tests/System.Resources.Extensions.Tests.csproj
+@@ -1,6 +1,6 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>$(NetCoreAppCurrent)-Windows_NT;$(NetCoreAppCurrent)-Unix;net461</TargetFrameworks>
++    <TargetFrameworks>$(NetCoreAppCurrent)-Windows_NT;$(NetCoreAppCurrent)-Unix;net461;net46</TargetFrameworks>
+     <IncludeRemoteExecutor>true</IncludeRemoteExecutor>
+   </PropertyGroup>
+   <ItemGroup>
+@@ -44,4 +44,4 @@
+     </ItemGroup>
+     <Exec Command="%(ExecuteMethod.Command)" WorkingDirectory="$(TargetDir)" />
+   </Target>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.18.0
+

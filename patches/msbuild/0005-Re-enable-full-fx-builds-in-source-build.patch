@@ -1,0 +1,78 @@
+From 9b33580763b2891002fcd1e53ec3101b3f381fca Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 21 May 2021 02:36:31 -0500
+Subject: [PATCH 5/5] Re-enable full fx builds in source-build.
+
+This also adds the net46 framework to support AspNetCore building a
+net46 version of Microsoft.NET.Sdk.Razor.dll, which is required to
+support Omnisharp in VSCode.
+
+---
+ Directory.Build.props                          | 2 +-
+ eng/Packages.props                             | 1 +
+ src/Directory.Build.props                      | 3 +--
+ src/Utilities/Microsoft.Build.Utilities.csproj | 4 ++++
+ 4 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/Directory.Build.props b/Directory.Build.props
+index 1683a4c9..4e62284c 100644
+--- a/Directory.Build.props
++++ b/Directory.Build.props
+@@ -13,7 +13,7 @@
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+-    <FullFrameworkTFM>net472</FullFrameworkTFM>
++    <FullFrameworkTFM>net472;net46</FullFrameworkTFM>
+   </PropertyGroup>
+ 
+   <PropertyGroup>
+diff --git a/eng/Packages.props b/eng/Packages.props
+index 6b716285..c38ee030 100644
+--- a/eng/Packages.props
++++ b/eng/Packages.props
+@@ -40,6 +40,7 @@
+     <PackageReference Update="System.Text.Json" Version="4.7.0" />
+     <PackageReference Update="System.Threading.Tasks.Dataflow" Version="4.9.0" />
+     <PackageReference Update="System.Threading.Thread" Version="4.0.0" />
++    <PackageReference Update="System.ValueTuple" Version="4.5.0" />
+     <PackageReference Update="System.Xml.XPath" Version="4.3.0" />
+     <PackageReference Update="xunit.assert" Version="$(XUnitVersion)" />
+     <PackageReference Update="xunit.console" Version="$(XUnitVersion)" />
+diff --git a/src/Directory.Build.props b/src/Directory.Build.props
+index 54b620c6..0100afd5 100644
+--- a/src/Directory.Build.props
++++ b/src/Directory.Build.props
+@@ -27,13 +27,12 @@
+     
+     <!-- Defaults for target frameworks and architecture -->
+     <LibraryTargetFrameworks>$(FullFrameworkTFM);netstandard2.0</LibraryTargetFrameworks>
+-    <LibraryTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netstandard2.0</LibraryTargetFrameworks>
+     <LibraryTargetFrameworks Condition="'$(MonoBuild)'=='true'">$(FullFrameworkTFM)</LibraryTargetFrameworks>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+ 
+     <!-- Target frameworks for Exe and unit test projects (ie projects with runtime output) -->
+     <RuntimeOutputTargetFrameworks>netcoreapp2.1</RuntimeOutputTargetFrameworks>
+-    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows' and '$(DotNetBuildFromSource)' != 'true'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
++    <RuntimeOutputTargetFrameworks Condition="'$(OsEnvironment)'=='windows'">$(FullFrameworkTFM);$(RuntimeOutputTargetFrameworks)</RuntimeOutputTargetFrameworks>
+     <RuntimeOutputTargetFrameworks Condition="'$(MonoBuild)' == 'true'">$(FullFrameworkTFM)</RuntimeOutputTargetFrameworks>
+ 
+     <!-- Don't automatically append target framework to output path, since we want to put the Platform Target beforehand, if it's not AnyCPU -->
+diff --git a/src/Utilities/Microsoft.Build.Utilities.csproj b/src/Utilities/Microsoft.Build.Utilities.csproj
+index 840d2bcc..78f84687 100644
+--- a/src/Utilities/Microsoft.Build.Utilities.csproj
++++ b/src/Utilities/Microsoft.Build.Utilities.csproj
+@@ -39,6 +39,10 @@
+     <PackageReference Include="Microsoft.Win32.Registry" />
+   </ItemGroup>
+ 
++  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
++    <PackageReference Include="System.ValueTuple" />
++  </ItemGroup>
++
+   <ItemGroup Label="Shared Code">
+     <Compile Include="..\Shared\AssemblyFolders\AssemblyFoldersEx.cs">
+       <Link>Shared\AssemblyFolders\AssemblyFoldersEx.cs</Link>
+-- 
+2.18.0
+
