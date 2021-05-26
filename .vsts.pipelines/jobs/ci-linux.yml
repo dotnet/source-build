@@ -228,8 +228,8 @@ jobs:
       df -h
       $(docker.run) $(docker.tb.map) $(docker.drop.map) $(docker.tb.work) $(imageName) /bin/bash -c '
         mkdir -p /drop/tarball/
-        smokeTestPackages="$(tarballName)/packages/smoke-test-packages" 
-        # Make one .tar.gz for build, another for extras necessary to smoke test:
+        smokeTestPackages="$(baseTarballName)/packages/smoke-test-packages" 
+        # Make base .tar.gz for build:
         tar --numeric-owner "--exclude=$smokeTestPackages" -zcf "/drop/tarball/$(baseTarballName).tar.gz" "$(baseTarballName)"'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Copy base tarball to output
