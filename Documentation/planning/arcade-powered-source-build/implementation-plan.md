@@ -35,7 +35,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | [issue](https://github.com/dotnet/source-build/issues/2072) | | ✔️ | [CI issue](https://github.com/dotnet/aspnetcore/issues/31445) [Patches issue](https://github.com/dotnet/aspnetcore/issues/31446) | | |
 | 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | [issue](https://github.com/dotnet/source-build/issues/2074) | | ✔️ | [Patches issue](https://github.com/dotnet/fsharp/issues/11435) | | |
 | 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | ✔️ | ✔️ | | |
-| 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ⏱ | | | |
+| 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ⏱ [PR](https://github.com/microsoft/vstest/pull/2920) | | | |
 | 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ✔️ | ✔️ | | |
 
 | Status | Description |
