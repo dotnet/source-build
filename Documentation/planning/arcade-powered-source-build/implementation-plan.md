@@ -4,39 +4,39 @@ To get each repo building with the new source-build sustainability plan, [Arcade
 
 Below, the repo status is in a graph to show the dependencies and make it easy to tell which repos are ready to work on. There's also a table, for searchable and more detailed status. These will both be kept up to date.
 
-> ![](https://pointillism.io/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/img/implementation-plan-graph.dot.svg)  
+> ![](https://pointillism.io/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/img/implementation-plan-graph.dot.svg)
 > [source (img/implementation-plan-graph.dot)](img/implementation-plan-graph.dot)
 
-| Tier | Repo | Owner | Tracking Issue | Input intermediate packages available | (Stage 1)<br>Local build infra merged | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
-| --- | --- | --- | :---: | :---: | :---: | :---: | :---: | :---: |
-| sbrp | [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages) | [Dan Seefeldt](https://github.com/dseefeld) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | [sourcelink](https://github.com/dotnet/sourcelink) | [Tomas Matousek](https://github.com/tmat) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| Tools | [arcade](https://github.com/dotnet/arcade) | [Mark Wilkie](https://github.com/markwilkie) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[application-insights](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[cssparser](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[humanizer](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[netcorecli-fsc](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[newtonsoft-json](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | *[newtonsoft-json901](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [aspnet-xdt](https://github.com/dotnet/xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | [issue](https://github.com/dotnet/source-build/issues/2036) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2037) | ✔️ | ⏱ / ❗[Blocked](https://github.com/dotnet/CliCommandLineParser/issues/180) | | | |
-| 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? | [issue](https://github.com/dotnet/source-build/issues/2038) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | [issue](https://github.com/dotnet/source-build/issues/2039) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | [issue](https://github.com/dotnet/source-build/issues/2067) | ✔️ | ✔️ | ❗[Blocked](https://github.com/dotnet/roslyn/issues/53197) (required for CI exit criteria) | | |
-| 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | [issue](https://github.com/dotnet/source-build/issues/2040) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | [issue](https://github.com/dotnet/source-build/issues/2041) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | [issue](https://github.com/dotnet/source-build/issues/2042) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 2 | [linker](https://github.com/mono/linker) | [Dan Seefeldt](https://github.com/dseefeld) | [issue](https://github.com/dotnet/source-build/issues/2043) | ✔️ | ✔️ | ✔️ | ✔️ | |
-| 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | [issue](https://github.com/dotnet/source-build/issues/2068) | | ⏱[PR](https://github.com/dotnet/msbuild/pull/6387) | | | |
-| 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) |[issue](https://github.com/dotnet/source-build/issues/2069) | ✔️ | ⏱[PR](https://github.com/NuGet/NuGet.Client/pull/3945) / ❗[Blocked](https://github.com/NuGet/Home/issues/10646)  | | | |
-| 2 | [runtime](https://github.com/dotnet/runtime) | [Jared Parsons](https://github.com/jaredpar) | [issue](https://github.com/dotnet/source-build/issues/2052) | | ⏱[PR](https://github.com/dotnet/runtime/pull/53294) | | | |
-| 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) |[issue](https://github.com/dotnet/source-build/issues/2070)  | | ✔️ | ✔️ | | |
-| 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | [issue](https://github.com/dotnet/source-build/issues/2071) | | ✔️ | ✔️ | | |
-| 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | [issue](https://github.com/dotnet/source-build/issues/2072) | | ✔️ | [CI issue](https://github.com/dotnet/aspnetcore/issues/31445) [Patches issue](https://github.com/dotnet/aspnetcore/issues/31446) | | |
-| 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | [issue](https://github.com/dotnet/source-build/issues/2074) | | ✔️ | [Patches issue](https://github.com/dotnet/fsharp/issues/11435) | | |
-| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| [issue](https://github.com/dotnet/source-build/issues/2075) | | ✔️ | ✔️ | | |
-| 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | [issue](https://github.com/dotnet/source-build/issues/2076) | | ⏱ [PR](https://github.com/microsoft/vstest/pull/2920) | | | |
-| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | [issue](https://github.com/dotnet/source-build/issues/2077) | | ✔️ | ✔️ | | |
+| Tier | Repo | Owner | Input intermediate packages available | (Stage 1)<br>Local build infra merged | (Stage 2)<br>CI implemented | (Stage 3)<br>Artifacts greenlit | (Stage 4)<br>Prebuilt regressions blocked |
+| --- | --- | --- | :---: | :---: | :---: | :---: | :---: |
+| sbrp | [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2192) |
+| Tools | [sourcelink](https://github.com/dotnet/sourcelink) | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/) |
+| Tools | [arcade](https://github.com/dotnet/arcade) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/) |
+| 1 | *[application-insights](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | *[cssparser](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | *[humanizer](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | ? | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | *[netcorecli-fsc](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | *[newtonsoft-json](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | *[newtonsoft-json901](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
+| 1 | [aspnet-xdt](https://github.com/dotnet/xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2194) |
+| 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) |  ✔️ | ⏱ / ❗[Blocked](https://github.com/dotnet/CliCommandLineParser/issues/180) | | | [issue](https://github.com/dotnet/source-build/issues/2195) |
+| 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? |  ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2196) |
+| 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2197) |
+| 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | ✔️ | ✔️ | ❗[Blocked](https://github.com/dotnet/roslyn/issues/53197) (required for CI exit criteria) | | [issue](https://github.com/dotnet/source-build/issues/2198) |
+| 1 | [symreader](https://github.com/dotnet/symreader) | [Tomas Matousek](https://github.com/tmat) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2199) |
+| 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2200) |
+| 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2201) |
+| 2 | [linker](https://github.com/mono/linker) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2202) |
+| 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | ⏱[PR](https://github.com/dotnet/msbuild/pull/6387) | | | [issue](https://github.com/dotnet/source-build/issues/2203) |
+| 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | ⏱[PR](https://github.com/NuGet/NuGet.Client/pull/3945) / ❗[Blocked](https://github.com/NuGet/Home/issues/10646)  | | | [issue](https://github.com/dotnet/source-build/issues/2204) |
+| 2 | [runtime](https://github.com/dotnet/runtime) | [Jared Parsons](https://github.com/jaredpar) | | ⏱[PR](https://github.com/dotnet/runtime/pull/53294) | | | [issue](https://github.com/dotnet/source-build/issues/2205) |
+| 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2206) |
+| 3 | [roslyn-analyzers](https://github.com/dotnet/roslyn-analyzers) | [Jonathon Marolf](https://github.com/jmarolf) | | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2207) |
+| 4 | [aspnetcore](https://github.com/dotnet/aspnetcore) | [John Luo](https://github.com/JunTaoLuo) | | ✔️ | [CI issue](https://github.com/dotnet/aspnetcore/issues/31445) [Patches issue](https://github.com/dotnet/aspnetcore/issues/31446) | | [issue](https://github.com/dotnet/source-build/issues/2208) |
+| 5 | [fsharp](https://github.com/dotnet/fsharp) | [Brett Forsgren](https://github.com/brettfo) | | ✔️ | [Patches issue](https://github.com/dotnet/fsharp/issues/11435) | | [issue](https://github.com/dotnet/source-build/issues/2209) |
+| 5 | [sdk](https://github.com/dotnet/sdk) | [Sarah Oslund](https://github.com/sfoslund) / [Vijay Ramakrishnan](https://github.com/vijayrkn)(web)| | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2211) |
+| 5 | [vstest](https://github.com/microsoft/vstest) | [Jakub Jares](https://github.com/nohwnd) | | ⏱ [PR](https://github.com/microsoft/vstest/pull/2920) | | | [issue](https://github.com/dotnet/source-build/issues/2210) |
+| 6 | [installer](https://github.com/dotnet/installer) | [Sarah Oslund](https://github.com/sfoslund) | | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2212) |
 
 | Status | Description |
 | --- | --- |
@@ -46,7 +46,8 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 
 > <sup>1</sup> — Source will be maintained in central dotnet/source-build repo. It is not feasible to add full arcade-powered source-build infrastructure in some cases.
 
-## Stage descriptions:
+## Stage descriptions
+
   - **(1) Local build infra merged**
     - (Source-build) Submit PR introducing local build infra. May include `.patch` files.
     - (**Repo team**) Review PR and merge.
