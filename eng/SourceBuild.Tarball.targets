@@ -1,11 +1,15 @@
 <Project>
 
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="AddSourceToNuGetConfig" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="RemoveInternetSourcesFromNuGetConfig" />
+
   <Target Name="PackSourceBuildTarball"
           Condition="'$(PackSourceBuildTarball)' == 'true'"
           DependsOnTargets="
             GetTarballDirProps;
             AddTarballSource;
             AddTarballSourcelinkMetadata;
+            GenerateTarballSmokeTestNuGetConfig;
             AddTarballTools;
             AddTarballPackages;
             AddTarballExternalTarballs;
@@ -106,6 +110,23 @@
       DestinationFiles="@(ArtifactsGitDir -> '$(TarballSourceDir)%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 
+  <Target Name="GenerateTarballSmokeTestNuGetConfig">
+
+    <Copy
+      SourceFiles="$(ProjectDir)smoke-testNuGet.Config"
+      DestinationFiles="$(ProjectDir)artifacts\tarball-smoke-testNuGet.Config" />
+
+    <RemoveInternetSourcesFromNuGetConfig
+      NuGetConfigFile="$(ProjectDir)artifacts\tarball-smoke-testNuGet.Config"
+      OfflineBuild="false"
+      RemoveFeedPrefixes="darc-pub-dotnet-" />
+
+    <AddSourceToNuGetConfig NuGetConfigFile="$(ProjectDir)artifacts\tarball-smoke-testNuGet.Config"
+                            SourceName="smoke-test feed"
+                            SourcePath="SMOKE_TEST_PACKAGE_FEED" />
+
+  </Target>
+
   <Target Name="AddTarballTools">
     <ItemGroup>
       <TarballRootToolFile
@@ -166,12 +187,12 @@
         in it to generate a full set of smoke-test-prereqs. This isn't necessary in the tarball
         because we have those smoke-test-prereqs, but we hit authentication errors nonetheless. Copy
         a trimmed down nuget.config in this case.
-        TODO: Automatically trim down the main nuget.config.
       -->
       <TarballCopyFile
-        Condition="Exists('$(ProjectDir)support\tarball\smoke-testNuGet.Config')"
-        Include="$(ProjectDir)support\tarball\smoke-testNuGet.Config"
+        Condition="Exists('$(ProjectDir)artifacts\tarball-smoke-testNuGet.Config')"
+        Include="$(ProjectDir)artifacts\tarball-smoke-testNuGet.Config"
         RelativeDestination="smoke-testNuGet.Config" />
+
 
       <!-- Setup package version props to include both source-built and running PackageVersions.props -->
       <TarballCopyFile
