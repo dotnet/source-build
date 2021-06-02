@@ -27,7 +27,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | [test-templates](https://github.com/dotnet/test-templates) | ? | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2200) |
 | 1 | [xliff-tasks](https://github.com/dotnet/xliff-tasks) | [Mark Wilkie](https://github.com/markwilkie) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2201) |
 | 2 | [linker](https://github.com/mono/linker) | [Dan Seefeldt](https://github.com/dseefeld) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2202) |
-| 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | ⏱[PR](https://github.com/dotnet/msbuild/pull/6387) | | | [issue](https://github.com/dotnet/source-build/issues/2203) |
+| 2 | [msbuild](https://github.com/dotnet/msbuild) | [Ben Villalobos](https://github.com/BenVillalobos) | | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2203) |
 | 2 | [NuGet.Client](https://github.com/NuGet/NuGet.Client) | [Fernando Aguilar Reyes](https://github.com/dominoFire) | ✔️ | ⏱[PR](https://github.com/NuGet/NuGet.Client/pull/3945) / ❗[Blocked](https://github.com/NuGet/Home/issues/10646)  | | | [issue](https://github.com/dotnet/source-build/issues/2204) |
 | 2 | [runtime](https://github.com/dotnet/runtime) | [Jared Parsons](https://github.com/jaredpar) | | ⏱[PR](https://github.com/dotnet/runtime/pull/53294) | | | [issue](https://github.com/dotnet/source-build/issues/2205) |
 | 2 | [templating](https://github.com/dotnet/templating) | [Vlada Shubina](https://github.com/vlada-shubina) | | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2206) |
