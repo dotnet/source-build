@@ -51,7 +51,7 @@ Generally fixing the second one is sufficient.
 
 Here's how to fix it.
 
-1. Grab the source code
+1. Grab the source code of dotnet/runtime or dotnet/corefx
 
    For .NET Core (3.1 or earlier):
 
@@ -108,7 +108,8 @@ Here's how to fix it.
         </RuntimeGroup>
    ```
 
-   Then build with the `/p:UpdateRuntimeFiles=true` flag:
+   Then build dotnet/runtime or dotnet/corefx with the
+   `/p:UpdateRuntimeFiles=true` flag:
 
    ```
    ./build.sh /p:UpdateRuntimeFiles=true
