@@ -14,22 +14,22 @@ steps:
 
 - script: sudo rm -rf /usr/local/lib/android
   displayName: Remove Android libraries
-  condition: always()
+  condition: ne(variables['Agent.OS'], 'Windows_NT')
   continueOnError: true
 
 - script: sudo rm -rf /usr/local/go*
   displayName: Remove Go
-  condition: always()
+  condition: ne(variables['Agent.OS'], 'Windows_NT')
   continueOnError: true
 
 # We download our own copy of dotnet, we don't need the image's.
 - script: sudo rm -rf /usr/share/dotnet
   displayName: Remove pre-installed version of .NET
-  condition: always()
+  condition: ne(variables['Agent.OS'], 'Windows_NT')
   continueOnError: true
 
 - script: sudo rm -rf /usr/share/rust
   displayName: Remove Rust
-  condition: always()
+  condition: ne(variables['Agent.OS'], 'Windows_NT')
   continueOnError: true
 

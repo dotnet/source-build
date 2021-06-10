@@ -101,6 +101,8 @@ stages:
       - job: centos8_Offline
       - job: debian9_Online
       - job: fedora30_Offline
+      - job: rhel7_x64_Offline
+      - job: rhel8_x64_Offline
       - job: rhel8_arm64_Offline
       gatherPortableJob: centos71_Offline_Portable
 
@@ -120,4 +122,33 @@ stages:
         scriptSuffix: .sh
       matrix:
         Production: {}
+        Offline: { type: Offline }
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel7_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 7
+        scriptPrefix: ./
+        scriptSuffix: .sh
+      matrix:
+        Offline: { type: Offline }
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel8_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 8
+        scriptPrefix: ./
+        scriptSuffix: .sh
+        useSystemLibunwind: true
+      matrix:
         Offline: { type: Offline }
