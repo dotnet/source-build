@@ -73,7 +73,7 @@ Here's how to fix it.
 2. Add your new RID to `Microsoft.NETCore.Platforms`'s
    `runtimeGroups.props` file
 
-   If you are adding a new Linux distro, the chagne might look
+   If you are adding a new Linux distro, the change might look
    something like this:
 
    ```diff
