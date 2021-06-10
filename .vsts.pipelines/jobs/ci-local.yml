@@ -9,6 +9,7 @@ parameters:
   setupWindows: false
   skipSmokeTest: false
   failOnPrebuiltBaselineError: true
+  cleanAptGet: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -39,6 +40,8 @@ jobs:
     clean: true
 
   - template: ../steps/cleanup-unneeded-files.yml
+    parameters:
+      cleanAptGet: ${{ parameters.cleanAptGet }}
 
   # If the machine is dirty, submodule URLs may be from a different branch. Sync to prevent that.
   - script: git submodule sync
