@@ -34,6 +34,8 @@ artifacts/${ARCHITECTURE}/Release/dotnet-sdk-${SDK_VERSION}-${RUNTIME_ID}.tar.gz
 
 For example, building a 3.1.105 SDK on an x64 (aka x86\_64) platform running Fedora 32 will produce `artifacts/x64/Release/dotnet-sdk-3.1.105-fedora.32-x64.tar.gz`.
 
+If you run into an error about an unknown `RuntimeIdentifier`, see [Adding a new Runtime Identifier to source-build](add-new-rid.md).
+
 If you are interested in "installing" this SDK system wide or making a Linux package out of the SDK, please see [Packaging and Installation](packaging-installation.md).
 
 `./build.{cmd|sh}` accepts a number of parameters to control the build.
