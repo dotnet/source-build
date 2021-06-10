@@ -6,6 +6,7 @@ parameters:
   reportPrebuiltLeaks: false
   generatePrebuiltBurndown: false
   runUnitTests: false
+  cleanAptGet: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -52,6 +53,8 @@ jobs:
 
   steps:
   - template: ../steps/cleanup-unneeded-files.yml
+    parameters:
+      cleanAptGet: ${{ parameters.cleanAptGet }}
   - template: ../steps/docker-cleanup-linux.yml
   - template: ../steps/calculate-config-flags.yml
 
