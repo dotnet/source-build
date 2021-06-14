@@ -46,7 +46,7 @@ index 7a3946c28a4..dfe161d6d72 100644
 -    <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildAllProjects)' == 'true'">$(AdditionalBuildTargetFrameworks);netstandard2.0</AdditionalBuildTargetFrameworks>
 +    <NETFrameworkTargetFrameworksExcept48>net45;net451;net452;net46;net461;net462;net47;net471;net472</NETFrameworkTargetFrameworksExcept48>
 +    <AdditionalBuildTargetFrameworks Condition="'$(BuildTargetFramework)' == 'net48'">$(AdditionalBuildTargetFrameworks);$(NETFrameworkTargetFrameworksExcept48)</AdditionalBuildTargetFrameworks>
-+    <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildAllProjects)' == 'true'">$(AdditionalBuildTargetFrameworks);netstandard2.0;net48;$(NETFrameworkTargetFrameworksExcept48)</AdditionalBuildTargetFrameworks>
++    <AdditionalBuildTargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true' and '$(BuildAllProjects)' == 'true'">$(AdditionalBuildTargetFrameworks);netstandard2.0;net46;net48;$(NETFrameworkTargetFrameworksExcept48)</AdditionalBuildTargetFrameworks>
      <BuildSettings>$(BuildTargetFramework)-$(TargetOS)-$(Configuration)-$(TargetArchitecture)</BuildSettings>
      <BuildSettings Condition="'$(BuildTargetFramework)' == ''">$(NetCoreAppCurrent)-$(TargetOS)-$(Configuration)-$(TargetArchitecture)</BuildSettings>
    </PropertyGroup>
