@@ -11,6 +11,7 @@ parameters:
   # See https://github.com/dotnet/source-build/issues/1552
   skipSmokeTest: true
   failOnPrebuiltBaselineError: true
+  cleanAptGet: false
 
 jobs:
 - job: ${{ parameters.job }}
@@ -56,6 +57,8 @@ jobs:
     clean: true
 
   - template: ../steps/cleanup-unneeded-files.yml
+    parameters:
+      cleanAptGet: ${{ parameters.cleanAptGet }}
 
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
