@@ -137,6 +137,20 @@
     <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Overwrite="true" />
   </Target>
 
+  <Target Name="WriteVersionsToFile"
+          AfterTargets="Build">
+
+    <WriteLinesToFile Lines="$(SdkProductVersion)" File="$(BaseOutputPath)\build-info\SdkVersion.txt" Overwrite="True" />
+    <WriteLinesToFile Lines="$(AspNetCoreProductVersion)" File="$(BaseOutputPath)\build-info\AspNetCoreVersion.txt" Overwrite="True" />
+    <WriteLinesToFile Lines="$(RuntimeProductVersion)" File="$(BaseOutputPath)\build-info\RuntimeVersion.txt" Overwrite="True" />
+
+    <Message Text="Build Info:" Importance="High"/>
+    <Message Text="  SDK Version: $(SdkProductVersion)" Importance="High"/>
+    <Message Text="  ASP.NET Core Version: $(AspNetCoreProductVersion)" Importance="High"/>
+    <Message Text="  Runtime Version: $(RuntimeProductVersion)" Importance="High"/>
+
+  </Target>
+
   <Target Name="GeneratePrebuiltBurndownData"
           Inputs="$(MSBuildProjectFullPath)"
           Outputs="$(CompletedSemaphorePath)GeneratePrebuiltBurndownData.complete" >
