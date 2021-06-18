@@ -19,7 +19,7 @@ Below, the repo status is in a graph to show the dependencies and make it easy t
 | 1 | *[newtonsoft-json](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
 | 1 | *[newtonsoft-json901](https://github.com/dotnet/source-build/tree/master/src)*<sup>1</sup> | [Chris Rummel](https://github.com/crummel) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2193) |
 | 1 | [aspnet-xdt](https://github.com/dotnet/xdt) | [Vijay Ramakrishnan](https://github.com/vijayrkn) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2194) |
-| 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) |  ✔️ |  ✔️ |  ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2195) |
+| 1 | [clicommandlineparser](https://github.com/dotnet/clicommandlineparser) | [Sarah Oslund](https://github.com/sfoslund) |  ✔️ |  ✔️ |  ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2195) |
 | 1 | [command-line-api](https://github.com/dotnet/command-line-api) | ? |  ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2196) |
 | 1 | [diagnostics](https://github.com/dotnet/diagnostics) | [Juan Hoyes](https://github.com/hoyosjs) | ✔️ | ✔️ | ✔️ | ✔️ | [issue](https://github.com/dotnet/source-build/issues/2197) |
 | 1 | [roslyn](https://github.com/dotnet/roslyn) | [Fred Silberberg](https://github.com/333fred) | ✔️ | ✔️ | ✔️ | | [issue](https://github.com/dotnet/source-build/issues/2198) |
