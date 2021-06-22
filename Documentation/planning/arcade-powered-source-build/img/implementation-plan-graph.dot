@@ -17,8 +17,6 @@ ranksep=0.08
 
 node [fillcolor="#F5F5F5",style="dotted,filled,rounded",tooltip="Built"]
 "pre0"[label="Built in 5.0"]
-"runtime-portable"
-"runtime"
 
 node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="Inputs ready"]
 "pre1"[label="Inputs ready"]
@@ -26,17 +24,20 @@ node [fillcolor="#F7CAAC",style="filled,diagonals",tooltip="Inputs ready"]
 
 node [fillcolor="#FFE599",style="dashed,filled,rounded",tooltip="1"]
 "s1"[label="#1 - Local build infra merged"]
-"aspnetcore"
 "fsharp"
-"roslyn-analyzers"
 "vstest"
+"runtime-portable"
+"runtime"
+"xliff-tasks"
 
 node [fillcolor="#F0FE86",style="dashed,filled",tooltip="2"]
 "s2"[label="#2 - CI implemented"]
+"aspnetcore"
 "clicommandlineparser"
 "installer"
 "msbuild"
 "roslyn"
+"roslyn-analyzers"
 "sdk"
 "templating"
 
@@ -57,7 +58,6 @@ node [fillcolor="#B4C6E7",style="bold,filled,rounded",tooltip="3"]
 "sourcelink"
 "symreader"
 "test-templates"
-"xliff-tasks"
 
 node [fillcolor="#CFAFE7",style="bold,filled",tooltip="4"]
 "s4"[label="#4 - Prebuilt regressions blocked"]
