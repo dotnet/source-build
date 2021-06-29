@@ -1,15 +1,14 @@
-From 5bd0887d0709aac4a8ddf31271c29a522fdb8df4 Mon Sep 17 00:00:00 2001
+From c4c09e4e4566a35b418dd37ddbe8c90e2cf9e131 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 14 May 2020 16:29:28 +0000
-Subject: [PATCH 04/20] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 04/19] Remove Yarn dependency - not used in source-build
 
 ---
  eng/targets/Npm.Common.targets                                 | 3 ---
- global.json                                                    | 1 -
  .../src/Microsoft.Authentication.WebAssembly.Msal.csproj       | 2 --
  ...oft.AspNetCore.Components.WebAssembly.Authentication.csproj | 2 --
  src/Shared/E2ETesting/E2ETesting.targets                       | 3 ---
- 5 files changed, 11 deletions(-)
+ 4 files changed, 10 deletions(-)
 
 diff --git a/eng/targets/Npm.Common.targets b/eng/targets/Npm.Common.targets
 index 696d23402b..6086dd0843 100644
@@ -24,18 +23,6 @@ index 696d23402b..6086dd0843 100644
    <PropertyGroup>
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
-diff --git a/global.json b/global.json
-index fcfeb734fd..2ad8434449 100644
---- a/global.json
-+++ b/global.json
-@@ -29,7 +29,6 @@
-     "xcopy-msbuild": "16.5.0-alpha"
-   },
-   "msbuild-sdks": {
--    "Yarn.MSBuild": "1.15.2",
-     "Microsoft.DotNet.Arcade.Sdk": "5.0.0-beta.21160.3",
-     "Microsoft.DotNet.Helix.Sdk": "5.0.0-beta.21160.3"
-   }
 diff --git a/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj b/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
 index 939ba16f88..ea2c849ea3 100644
 --- a/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
