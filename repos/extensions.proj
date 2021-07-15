@@ -2,7 +2,8 @@
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
   <PropertyGroup>
-    <PackagesOutput>$(ProjectDirectory)artifacts/build/</PackagesOutput>
+    <ShippingPackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/NonShipping</NonShippingPackagesOutput>
     <BuildArguments>--restore --build --pack</BuildArguments>
     <BuildArguments>$(BuildArguments) -c $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) -bl</BuildArguments>
@@ -14,6 +15,13 @@
   <ItemGroup>
     <RepositoryReference Include="newtonsoft-json" />
   </ItemGroup>
+
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>
