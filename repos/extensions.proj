@@ -1,0 +1,19 @@
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <PackagesOutput>$(ProjectDirectory)artifacts/build/</PackagesOutput>
+    <BuildArguments>--restore --build --pack</BuildArguments>
+    <BuildArguments>$(BuildArguments) -c $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="newtonsoft-json" />
+  </ItemGroup>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>
