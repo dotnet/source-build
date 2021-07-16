@@ -15,7 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <RepositoryReference Include="arcade" />
     <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="rosyln" />
+
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
   </ItemGroup>
 
   <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
