@@ -7,6 +7,7 @@
     <BuildArguments>--restore --build --pack</BuildArguments>
     <BuildArguments>$(BuildArguments) -c $(Configuration)</BuildArguments>
     <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) --ci</BuildArguments>
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
     <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
