@@ -1,23 +1,31 @@
-From 6c74661980483c8abd9a6f50490c4def711dc296 Mon Sep 17 00:00:00 2001
+From fb6096730c9a5d4e7bcaa57174babd4511aa7620 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 21 Jul 2021 17:33:03 -0500
-Subject: [PATCH] Update to new package name.
+Subject: [PATCH 1/6] Update to new package name.
 
 ---
- build/packages.targets                                          | 2 +-
- .../NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ build/packages.targets                                         | 3 ++-
+ .../NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj     | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/build/packages.targets b/build/packages.targets
-index 267065cd9..8dcb3d742 100644
+index 238196f13..d07a71af9 100644
 --- a/build/packages.targets
 +++ b/build/packages.targets
-@@ -28,7 +28,7 @@
+@@ -6,6 +6,7 @@
+         <VSFrameworkVersion>16.9.30701-preview-3-30804-187</VSFrameworkVersion>
+         <VSServicesVersion>16.153.0</VSServicesVersion>
+         <CryptographyPackagesVersion>5.0.0</CryptographyPackagesVersion>
++        <MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion Condition="'$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)' == ''">5.0.0-rtm.20478.5</MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion>
+     </PropertyGroup>
+ 
+     <!-- Test and package versions -->
+@@ -23,7 +24,7 @@
          <PackageReference Update="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
          <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" />
          <PackageReference Update="Microsoft.DataAI.NuGetRecommender.Contracts" Version="2.1.0" />
 -        <PackageReference Update="Microsoft.Extensions.CommandLineUtils" Version="1.0.1" />
-+        <PackageReference Update="Microsoft.Extensions.CommandLineUtils.Sources" Version="5.0.0-rtm.1.20430.3" />
++        <PackageReference Update="Microsoft.Extensions.CommandLineUtils.Sources" Version="$(MicrosoftExtensionsCommandLineUtilsSourcesPackageVersion)" />
          <PackageReference Update="Microsoft.Internal.VisualStudio.Shell.Embeddable" Version="$(VSFrameworkVersion)" />
          <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
          <PackageReference Update="Microsoft.ServiceHub.Framework" Version="2.7.327-preview" />
