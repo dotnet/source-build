@@ -1,0 +1,39 @@
+From 6c74661980483c8abd9a6f50490c4def711dc296 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 21 Jul 2021 17:33:03 -0500
+Subject: [PATCH] Update to new package name.
+
+---
+ build/packages.targets                                          | 2 +-
+ .../NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/packages.targets b/build/packages.targets
+index 267065cd9..8dcb3d742 100644
+--- a/build/packages.targets
++++ b/build/packages.targets
+@@ -28,7 +28,7 @@
+         <PackageReference Update="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildPackageVersion)" />
+         <PackageReference Update="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8" />
+         <PackageReference Update="Microsoft.DataAI.NuGetRecommender.Contracts" Version="2.1.0" />
+-        <PackageReference Update="Microsoft.Extensions.CommandLineUtils" Version="1.0.1" />
++        <PackageReference Update="Microsoft.Extensions.CommandLineUtils.Sources" Version="5.0.2-dev.21370.1" />
+         <PackageReference Update="Microsoft.Internal.VisualStudio.Shell.Embeddable" Version="$(VSFrameworkVersion)" />
+         <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0" />
+         <PackageReference Update="Microsoft.ServiceHub.Framework" Version="2.7.327-preview" />
+diff --git a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
+index 50c8efa63..dd8a24198 100644
+--- a/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
++++ b/src/NuGet.Core/NuGet.CommandLine.XPlat/NuGet.CommandLine.XPlat.csproj
+@@ -19,7 +19,7 @@
+   </ItemGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="Microsoft.Extensions.CommandLineUtils" />
++    <PackageReference Include="Microsoft.Extensions.CommandLineUtils.Sources" />
+     <PackageReference Include="System.Diagnostics.Debug" />
+   </ItemGroup>
+ 
+-- 
+2.18.0
+
