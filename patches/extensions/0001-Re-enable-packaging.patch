@@ -1,0 +1,137 @@
+From 6ca01f39f5d161ba567b07391ae74c62cc9ae67b Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 14 Jul 2021 22:55:49 -0500
+Subject: [PATCH] Re-enable packaging.
+
+---
+ src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj | 2 +-
+ .../SqlServer/src/Microsoft.Extensions.Caching.SqlServer.csproj | 2 +-
+ .../src/Microsoft.Extensions.Caching.StackExchangeRedis.csproj  | 2 +-
+ .../Microsoft.Extensions.Configuration.NewtonsoftJson.csproj    | 2 +-
+ .../Systemd/src/Microsoft.Extensions.Hosting.Systemd.csproj     | 2 +-
+ .../src/Microsoft.Extensions.Hosting.WindowsServices.csproj     | 2 +-
+ .../Polly/src/Microsoft.Extensions.Http.Polly.csproj            | 2 +-
+ .../src/Microsoft.Extensions.Logging.Analyzers.csproj           | 2 +-
+ src/Shared/src/Directory.Build.props                            | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj b/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
+index 534fcb1ce..21c43cf36 100644
+--- a/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
++++ b/src/Analyzers/Async/src/Microsoft.DotNet.Analyzers.Async.csproj
+@@ -15,7 +15,7 @@
+     <UseLatestPackageReferences>true</UseLatestPackageReferences>
+     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+     <PackageTags>analyzers;async</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>false</IsShipping>
+     <!-- This project is not included in the shared framework -->
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+diff --git a/src/Caching/SqlServer/src/Microsoft.Extensions.Caching.SqlServer.csproj b/src/Caching/SqlServer/src/Microsoft.Extensions.Caching.SqlServer.csproj
+index 4c1215c9a..816585010 100644
+--- a/src/Caching/SqlServer/src/Microsoft.Extensions.Caching.SqlServer.csproj
++++ b/src/Caching/SqlServer/src/Microsoft.Extensions.Caching.SqlServer.csproj
+@@ -6,7 +6,7 @@
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;distributedcache;sqlserver</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+diff --git a/src/Caching/StackExchangeRedis/src/Microsoft.Extensions.Caching.StackExchangeRedis.csproj b/src/Caching/StackExchangeRedis/src/Microsoft.Extensions.Caching.StackExchangeRedis.csproj
+index ebaa097f1..8d90a4b9e 100644
+--- a/src/Caching/StackExchangeRedis/src/Microsoft.Extensions.Caching.StackExchangeRedis.csproj
++++ b/src/Caching/StackExchangeRedis/src/Microsoft.Extensions.Caching.StackExchangeRedis.csproj
+@@ -6,7 +6,7 @@
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>cache;distributedcache;redis</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+diff --git a/src/Configuration/Config.NewtonsoftJson/src/Microsoft.Extensions.Configuration.NewtonsoftJson.csproj b/src/Configuration/Config.NewtonsoftJson/src/Microsoft.Extensions.Configuration.NewtonsoftJson.csproj
+index 34d6a1f42..2d453a13a 100644
+--- a/src/Configuration/Config.NewtonsoftJson/src/Microsoft.Extensions.Configuration.NewtonsoftJson.csproj
++++ b/src/Configuration/Config.NewtonsoftJson/src/Microsoft.Extensions.Configuration.NewtonsoftJson.csproj
+@@ -4,7 +4,7 @@
+     <Description>Newtonsoft JSON configuration provider implementation for Microsoft.Extensions.Configuration.</Description>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <PackageTags>$(PackageTags);json</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+diff --git a/src/Hosting/Systemd/src/Microsoft.Extensions.Hosting.Systemd.csproj b/src/Hosting/Systemd/src/Microsoft.Extensions.Hosting.Systemd.csproj
+index 3459baaea..605cd4c6e 100644
+--- a/src/Hosting/Systemd/src/Microsoft.Extensions.Hosting.Systemd.csproj
++++ b/src/Hosting/Systemd/src/Microsoft.Extensions.Hosting.Systemd.csproj
+@@ -5,7 +5,7 @@
+     <TargetFramework>netstandard2.1</TargetFramework>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+     <!-- This project is not included in the shared framework -->
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+diff --git a/src/Hosting/WindowsServices/src/Microsoft.Extensions.Hosting.WindowsServices.csproj b/src/Hosting/WindowsServices/src/Microsoft.Extensions.Hosting.WindowsServices.csproj
+index e529e8c8a..9f8d1df17 100644
+--- a/src/Hosting/WindowsServices/src/Microsoft.Extensions.Hosting.WindowsServices.csproj
++++ b/src/Hosting/WindowsServices/src/Microsoft.Extensions.Hosting.WindowsServices.csproj
+@@ -5,7 +5,7 @@
+     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+     <PackageTags>hosting</PackageTags>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+diff --git a/src/HttpClientFactory/Polly/src/Microsoft.Extensions.Http.Polly.csproj b/src/HttpClientFactory/Polly/src/Microsoft.Extensions.Http.Polly.csproj
+index 59302f0e3..682df832e 100644
+--- a/src/HttpClientFactory/Polly/src/Microsoft.Extensions.Http.Polly.csproj
++++ b/src/HttpClientFactory/Polly/src/Microsoft.Extensions.Http.Polly.csproj
+@@ -11,7 +11,7 @@
+ 
+     <!-- Don't use Microsoft.Extensions.Http.Polly as a namespace, that introduces ambiguities with 'Polly' -->
+     <RootNamespace>Microsoft.Extensions.Http</RootNamespace>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsShipping>true</IsShipping>
+   </PropertyGroup>
+ 
+diff --git a/src/Logging/Logging.Analyzers/src/Microsoft.Extensions.Logging.Analyzers.csproj b/src/Logging/Logging.Analyzers/src/Microsoft.Extensions.Logging.Analyzers.csproj
+index 4704696eb..07ea30160 100644
+--- a/src/Logging/Logging.Analyzers/src/Microsoft.Extensions.Logging.Analyzers.csproj
++++ b/src/Logging/Logging.Analyzers/src/Microsoft.Extensions.Logging.Analyzers.csproj
+@@ -7,7 +7,7 @@
+     <NoWarn>$(NoWarn);CS1591</NoWarn>
+     <BuildOutputTargetFolder>analyzers/dotnet/cs/</BuildOutputTargetFolder>
+     <UseLatestPackageReferences>true</UseLatestPackageReferences>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <!-- This is currently an experimental, internal-only analyzer. -->
+     <IsShipping>false</IsShipping>
+     <!-- This project is not included in the shared framework -->
+diff --git a/src/Shared/src/Directory.Build.props b/src/Shared/src/Directory.Build.props
+index f0af10269..840562701 100644
+--- a/src/Shared/src/Directory.Build.props
++++ b/src/Shared/src/Directory.Build.props
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <!-- This does not represent the TFM for the code. It's only here because /t:Pack requires it. -->
+     <TargetFramework>netstandard1.0</TargetFramework>
+-    <IsPackable>false</IsPackable>
++    <IsPackable>true</IsPackable>
+     <IsSourcePackage>true</IsSourcePackage>
+     <IsShipping>false</IsShipping>
+     <NoBuild>true</NoBuild>
+-- 
+2.18.0
+

@@ -6,7 +6,7 @@ TARBALL_PREFIX=dotnet-sdk-
 VERSION_PREFIX=5.0
 # See https://github.com/dotnet/source-build/issues/579, this version
 # needs to be compatible with the runtime produced from source-build
-DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.3
+DEV_CERTS_VERSION_DEFAULT=5.0.0-preview.5.20223.13
 __ROOT_REPO=$(sed 's/\r$//' "$SCRIPT_ROOT/artifacts/obj/rootrepo.txt") # remove CR if mounted repo on Windows drive
 executingUserHome=${HOME:-}
 

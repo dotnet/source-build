@@ -1,0 +1,34 @@
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <ShippingPackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/Shipping</ShippingPackagesOutput>
+    <NonShippingPackagesOutput>$(ProjectDirectory)/artifacts/packages/$(Configuration)/NonShipping</NonShippingPackagesOutput>
+    <BuildArguments>--restore --build --pack</BuildArguments>
+    <BuildArguments>$(BuildArguments) -c $(Configuration)</BuildArguments>
+    <BuildArguments>$(BuildArguments) -bl</BuildArguments>
+    <BuildArguments>$(BuildArguments) --ci</BuildArguments>
+    <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
+    <CleanCommand>$(ProjectDirectory)/clean$(ShellExtension) $(BuildArguments)</CleanCommand>
+    <GlobalJsonFile>$(ProjectDirectory)global.json</GlobalJsonFile>
+    <NuGetConfigFile>$(ProjectDirectory)/NuGet.config</NuGetConfigFile>
+    <OutputPlacementRepoApiImplemented>false</OutputPlacementRepoApiImplemented>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="newtonsoft-json" />
+    <RepositoryReference Include="roslyn" />
+
+    <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <Target Name="SetOutputList" AfterTargets="Package" BeforeTargets="GatherBuiltPackages">
+    <ItemGroup>
+      <PackagesOutputList Include="$(ShippingPackagesOutput)" />
+      <PackagesOutputList Include="$(NonShippingPackagesOutput)" />
+    </ItemGroup>
+  </Target>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+</Project>
