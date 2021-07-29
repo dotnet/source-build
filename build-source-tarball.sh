@@ -126,6 +126,7 @@ while [[ -h $fullTarballRoot ]]; do
   # symlink file was located
   [[ $fullTarballRoot != /* ]] && fullTarballRoot="$SCRIPT_ROOT/$fullTarballRoot"
 done
+mkdir -p "$fullTarballRoot"
 export FULL_TARBALL_ROOT="$(getrealpath "$fullTarballRoot")"
 
 if [ -e "$TARBALL_ROOT" ]; then
@@ -154,8 +155,6 @@ if [ $SKIP_BUILD -ne 1 ]; then
 else
     MAIN_BUILD_ARGS+=( "/p:SkipProductionBuild=true" )
 fi
-
-mkdir -p "$FULL_TARBALL_ROOT"
 
 MAIN_BUILD_ARGS+=( "/p:TarballRoot=$FULL_TARBALL_ROOT" )
 MAIN_BUILD_ARGS+=( "/p:PackSourceBuildTarball=true" )
