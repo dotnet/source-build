@@ -210,7 +210,7 @@ function doCommand() {
             else
                 "${dotnetCmd}" $newArgs --no-restore >> "$logFile" 2>&1
             fi
-        elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|razor|blazorwasm|blazorserver)$ ]]; then
+        elif [[ "$1" == "run" && "$proj" =~ ^(web|mvc|webapi|webapp|worker|razor|blazorwasm|blazorserver)$ ]]; then
             # A separate log file that we will over-write all the time.
             exitLogFile="$testingDir/exitLogFile"
             echo > "$exitLogFile"
@@ -293,6 +293,7 @@ function runAllTests() {
         doCommand C# classlib new restore build multi-rid-publish
         doCommand C# xunit new restore test
         doCommand C# mstest new restore test
+        doCommand C# worker new restore build run multi-rid-publish
 
         doCommand VB console new restore build run multi-rid-publish
         doCommand VB classlib new restore build multi-rid-publish
@@ -300,6 +301,7 @@ function runAllTests() {
         doCommand VB mstest new restore test
 
         doCommand F# console new restore build run multi-rid-publish
+        doCommand F# worker new restore build run multi-rid-publish
         doCommand F# classlib new restore build multi-rid-publish
         doCommand F# xunit new restore test
         doCommand F# mstest new restore test
@@ -323,6 +325,7 @@ function runWebTests() {
     doCommand C# web "$@" new restore build run multi-rid-publish
     doCommand C# mvc "$@" new restore build run multi-rid-publish
     doCommand C# webapi "$@" new restore build multi-rid-publish
+    doCommand C# webapp "$@" new restore build multi-rid-publish
     doCommand C# razor "$@" new restore build run multi-rid-publish
     doCommand C# blazorwasm "$@" new restore build run publish
     doCommand C# blazorserver "$@" new restore build run publish
