@@ -1,4 +1,4 @@
-From 4e13df71744951074afe1d5be80444ce4177a486 Mon Sep 17 00:00:00 2001
+From 8a3fdaa201a599d29475456d24bdf4a541e6a218 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Wed, 23 Oct 2019 15:43:57 -0400
 Subject: [PATCH 11/14] Support global.json on arm64 as well
@@ -19,12 +19,12 @@ This gets us a working SDK/Runtime combo on arm64.
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/global.json b/global.json
-index 189bcfa376..45c86c5e61 100644
+index b74e0f1129..83d7666c92 100644
 --- a/global.json
 +++ b/global.json
 @@ -5,10 +5,7 @@
    "tools": {
-     "dotnet": "3.1.116",
+     "dotnet": "3.1.117",
      "runtimes": {
 -      "dotnet/x64": [
 -        "$(MicrosoftNETCoreAppInternalPackageVersion)"
