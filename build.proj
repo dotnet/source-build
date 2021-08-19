@@ -233,7 +233,6 @@
   <Target Name="RunSmokeTest" DependsOnTargets="GetProdConBlobFeedUrl">
     <PropertyGroup>
       <SmokeTestCommand>./smoke-test.sh</SmokeTestCommand>
-      <SmokeTestCommand>$(SmokeTestCommand) --minimal</SmokeTestCommand>
       <SmokeTestCommand>$(SmokeTestCommand) --projectOutput</SmokeTestCommand>
       <SmokeTestCommand>$(SmokeTestCommand) --configuration $(Configuration)</SmokeTestCommand>
       <SmokeTestCommand>$(SmokeTestCommand) --archiveRestoredPackages</SmokeTestCommand>
