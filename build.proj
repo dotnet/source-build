@@ -5,6 +5,7 @@
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="WriteUsageBurndownData" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ReplaceTextInFile" />
   <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="DownloadFileSB" />
+  <UsingTask AssemblyFile="$(XPlatSourceBuildTasksAssembly)" TaskName="ParseDotNetVersions" />
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
@@ -135,6 +136,45 @@
                     PoisonReportOutputFilePath="$(PoisonUsageReportFile)" />
 
     <WriteLinesToFile File="$(CompletedSemaphorePath)ReportPoisonUsage.complete" Overwrite="true" />
+  </Target>
+
+  <Target Name="WriteVersionsToFile"
+          AfterTargets="Build">
+
+    <ItemGroup>
+      <FinalSdkTarball Include="$(OutputPath)\dotnet-sdk-$(MajorVersion)*$(TarBallExtension)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <ExtractedPath>$(BaseOutputPath)\extracted-sdk\</ExtractedPath>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(ExtractedPath)" />
+
+    <Exec Command="tar xf @(FinalSdkTarball) -C $(ExtractedPath)" />
+
+    <ParseDotNetVersions SdkRootDirectory="$(ExtractedPath)">
+      <Output TaskParameter="SdkVersion" PropertyName="BuiltSdkVersion" />
+      <Output TaskParameter="AspNetCoreVersion" PropertyName="BuiltAspNetCoreVersion" />
+      <Output TaskParameter="RuntimeVersion" PropertyName="BuiltRuntimeVersion" />
+    </ParseDotNetVersions>
+
+    <Message Text="Build Info:" Importance="High"/>
+    <Message Text="  SDK Version: $(BuiltSdkVersion)" Importance="High"/>
+    <Message Text="  ASP.NET Core Version: $(BuiltAspNetCoreVersion)" Importance="High"/>
+    <Message Text="  Runtime Version: $(BuiltRuntimeVersion)" Importance="High"/>
+
+    <WriteLinesToFile Lines="$(BuiltSdkVersion)" File="$(BaseOutputPath)\build-info\SdkVersion.txt" Overwrite="True" />
+    <WriteLinesToFile Lines="$(BuiltAspNetCoreVersion)" File="$(BaseOutputPath)\build-info\AspNetCoreVersion.txt" Overwrite="True" />
+    <WriteLinesToFile Lines="$(BuiltRuntimeVersion)" File="$(BaseOutputPath)\build-info\RuntimeVersion.txt" Overwrite="True" />
+
+    <Error Text="Mismatch in SDK version between what was built ($(BuiltSdkVersion)) and what's in Version.props ($(SdkProductVersion))"
+           Condition="'$(BuiltSdkVersion)' != '$(SdkProductVersion)'" />
+    <Error Text="Mismatch in ASP.NET Core version between what was built ($(BuiltAspNetCoreVersion)) and what's in Version.props ($(AspNetCoreProductVersion))"
+           Condition="'$(BuiltAspNetCoreVersion)' != '$(AspNetCoreProductVersion)'" />
+    <Error Text="Mismatch in Runtime version between what was built ($(BuiltRuntimeVersion)) and what's in Version.props ($(RuntimeProductVersion))"
+           Condition="'$(BuiltRuntimeVersion)' != '$(RuntimeProductVersion)'" />
+
   </Target>
 
   <Target Name="GeneratePrebuiltBurndownData"
