@@ -29,6 +29,7 @@ stages:
     name: debian9
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-bfcd90a-20200121150012
+      cleanAptGet: true
     matrix:
       Production: {}
       Online: { type: Online }
@@ -51,6 +52,7 @@ stages:
     name: ubuntu1804
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-85814b7-20200324125103
+      cleanAptGet: true
 
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
