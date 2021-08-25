@@ -101,7 +101,7 @@ stages:
       setupMac: true
 
 # RHEL builds only internal
-- ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
+- ${{ if not(eq(variables['System.TeamProject'], 'public')) }}:
   - template: ../stages/stage-jobs-matrix.yml
     parameters:
       jobTemplateName: ../jobs/ci-local.yml
