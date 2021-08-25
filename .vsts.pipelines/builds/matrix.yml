@@ -29,6 +29,7 @@ stages:
     name: debian9
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-bfcd90a-20200121150012
+      cleanAptGet: true
     matrix:
       Production: {}
       Online: { type: Online }
@@ -51,6 +52,7 @@ stages:
     name: ubuntu1804
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-85814b7-20200324125103
+      cleanAptGet: true
 
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
@@ -76,3 +78,35 @@ stages:
       setupWindows: true
       skipSmokeTest: true
       failOnPrebuiltBaselineError: false
+
+# RHEL builds only internal
+- ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel7_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 7
+        scriptPrefix: ./
+        scriptSuffix: .sh
+        useSystemLibunwind: true
+      matrix:
+        Offline: { type: Offline }
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel8_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 8
+        scriptPrefix: ./
+        scriptSuffix: .sh
+      matrix:
+        Offline: { type: Offline }
