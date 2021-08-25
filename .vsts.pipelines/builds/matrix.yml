@@ -91,6 +91,7 @@ stages:
           - rhel -equals 7
         scriptPrefix: ./
         scriptSuffix: .sh
+        useSystemLibunwind: true
       matrix:
         Offline: { type: Offline }
   - template: ../stages/stage-jobs-matrix.yml
@@ -105,6 +106,5 @@ stages:
           - rhel -equals 8
         scriptPrefix: ./
         scriptSuffix: .sh
-        useSystemLibunwind: true
       matrix:
         Offline: { type: Offline }
