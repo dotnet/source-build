@@ -78,7 +78,7 @@ namespace Microsoft.DotNet.Build.Tasks
             _process.StartInfo.RedirectStandardOutput = true;
             _process.StartInfo.UseShellExecute = false;
             _process.Start();
-            returnData = _process.StandardOutput.ReadToEnd().Split('\n');
+            returnData = _process.StandardOutput.ReadToEnd().Split(Environment.NewLine);
             _process.WaitForExit();
             return returnData;
         }
