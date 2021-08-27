@@ -30,30 +30,28 @@ namespace Microsoft.DotNet.Build.Tasks
 
         public override bool Execute()
         {
-
             var pathToDotNet = Path.Join(SdkRootDirectory, "dotnet");
+
             SdkVersion = ExecuteDotNetCommand(SdkRootDirectory,
                                               pathToDotNet,
                                               new List<string> { "--list-sdks" })
                             .First()
                             .Split(" ")
                             .First();
-            AspNetCoreVersion = ExecuteDotNetCommand(SdkRootDirectory,
-                                                     pathToDotNet,
-                                                     new List<string> { "--list-runtimes" })
-                                    .Where(line => line.Contains("Microsoft.AspNetCore.App"))
-                                    .First()
-                                    .Split(" ")
-                                    .Skip(1)
-                                    .First();
-            RuntimeVersion = ExecuteDotNetCommand(SdkRootDirectory,
-                                                  pathToDotNet,
-                                                  new List<string> { "--list-runtimes"})
-                                .Where(line => line.Contains("Microsoft.NETCore.App"))
-                                .First()
-                                .Split(" ")
-                                .Skip(1)
-                                .First();
+
+            var runtimesOutput = ExecuteDotNetCommand(SdkRootDirectory,
+                                                      pathToDotNet,
+                                                      new List<string> { "--list-runtimes" });
+
+            AspNetCoreVersion = runtimesOutput
+                .First(line => line.Contains("Microsoft.AspNetCore.App"))
+                .Split(" ")
+                .ElementAt(1);
+
+            RuntimeVersion = runtimesOutput
+                .First(line => line.Contains("Microsoft.NETCore.App"))
+                .Split(" ")
+                .ElementAt(1);
 
             return true;
         }
