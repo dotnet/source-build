@@ -263,7 +263,7 @@ jobs:
 
   - bash: |
       set -ex
-      rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
+      sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
     displayName: Cleanup extra staging directories
     condition: always()
     continueOnError: true
