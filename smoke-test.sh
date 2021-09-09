@@ -343,6 +343,8 @@ function resetCaches() {
     # Copy NuGet plugins if running user has HOME and we have auth. In particular, the auth plugin.
     if [ "${internalPackageFeedPat:-}" ] && [ "${executingUserHome:-}" ]; then
         cp -r "$executingUserHome/.nuget/" "$HOME/.nuget/" || :
+        # remove cached packages if there were any
+        rm -rf "$HOME/.nuget/packages"
     fi
 }
 
@@ -429,7 +431,6 @@ if [ "$excludeLocalTests" == "false" ]; then
     fi
     echo "RUN ALL TESTS - LOCAL RESTORE SOURCE"
     runAllTests
-    copyRestoredPackages
     echo "LOCAL RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
