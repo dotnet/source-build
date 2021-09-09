@@ -51,7 +51,8 @@ excludeLocalTests=false
 excludeOnlineTests=false
 devCertsVersion="$DEV_CERTS_VERSION_DEFAULT"
 testingDir="$SCRIPT_ROOT/testing-smoke"
-cliDir="$testingDir/builtCli"
+# Shared path with build.proj
+cliDir="$SCRIPT_ROOT/artifacts/builtCli"
 logFile="$testingDir/smoke-test.log"
 restoredPackagesDir="$testingDir/packages"
 testingHome="$testingDir/home"
@@ -613,11 +614,14 @@ echo "<Project />" | tee Directory.Build.props > Directory.Build.targets
 
 # Unzip dotnet if the dotnetDir is not specified
 if [ "$dotnetDir" == "" ]; then
-    OUTPUT_DIR="$SCRIPT_ROOT/artifacts/$buildArch/$configuration/"
-    DOTNET_TARBALL="$(ls "${OUTPUT_DIR}${TARBALL_PREFIX}${VERSION_PREFIX}"*)"
+    # It's possible that build.proj extracted the just-built dotnet tarball for other processing already
+    if [ ! -d "$cliDir" ]; then
+        OUTPUT_DIR="$SCRIPT_ROOT/artifacts/$buildArch/$configuration/"
+        DOTNET_TARBALL="$(ls "${OUTPUT_DIR}${TARBALL_PREFIX}${VERSION_PREFIX}"*)"
 
-    mkdir -p "$cliDir"
-    tar xzf "$DOTNET_TARBALL" -C "$cliDir"
+        mkdir -p "$cliDir"
+        tar xzf "$DOTNET_TARBALL" -C "$cliDir"
+    fi
     dotnetDir="$cliDir"
 else
     if ! [[ "$dotnetDir" = /* ]]; then
