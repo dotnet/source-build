@@ -207,7 +207,7 @@ For each patch that isn't incorporated directly:
     </ItemGroup>
 
     <Exec
-      Command="git apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
+      Command="git --work-tree=&quot;$(RepoRoot)&quot; apply --ignore-whitespace --whitespace=nowarn &quot;%(SourceBuildPatchFile.FullPath)&quot;"
       WorkingDirectory="$(RepoRoot)"
       Condition="'@(SourceBuildPatchFile)' != ''" />
   </Target>
