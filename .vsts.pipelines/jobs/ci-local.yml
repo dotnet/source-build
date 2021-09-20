@@ -66,12 +66,15 @@ jobs:
 
   - script: bash -c 'echo PATH=$PATH'
     displayName: Check path
+    condition: always()
 
   - script: which clang
     displayName: Check clang
+    condition: always()
 
   - script: clang --version
     displayName: Check clang version
+    condition: always()
 
   # Run 'clean -a' script to recursively clean submodules: AzDO doesn't do this, and otherwise we
   # fail to apply patches on persistent machines like dotnet-external-temp.
