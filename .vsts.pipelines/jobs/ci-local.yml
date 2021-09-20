@@ -64,6 +64,15 @@ jobs:
   - script: git clean -xdff
     displayName: Clean leftover submodules
 
+  - script: bash -c 'echo PATH=$PATH'
+    displayName: Check path
+
+  - script: which clang
+    displayName: Check clang
+
+  - script: clang --version
+    displayName: Check clang version
+
   # Run 'clean -a' script to recursively clean submodules: AzDO doesn't do this, and otherwise we
   # fail to apply patches on persistent machines like dotnet-external-temp.
   - script: ${{ format('{0}clean{1} -a', parameters.scriptPrefix, parameters.scriptSuffix) }}
