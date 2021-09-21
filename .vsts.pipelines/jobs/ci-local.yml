@@ -88,15 +88,18 @@ jobs:
   # Build source-build.
   # Use bash task here because it allows us to use the .bashrc, which sets up the correct
   # paths for clang and llvm on RHEL machines.
-  - bash: |
-      set -x
-      $(SetInternalPackageFeedPatBashCommand)
-      set -e
-      ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+  - task: Bash@3
+    inputs:
+      targetType: inline
+      script: |
+        set -x
+        $(SetInternalPackageFeedPatBashCommand)
+        set -e
+        ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
+      noProfile: false
+      noRc: false
     displayName: Build source-build
     timeoutInMinutes: 150
-    noProfile: false
-    noRc: false
 
   - template: ../steps/check-space-powershell.yml
 
@@ -174,29 +177,32 @@ jobs:
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Build tarball.
-  - bash: |
-      set -ex
-      df -h
-      networkArg=
-      if [ "$(sb.tarballOffline)" = "true" ]; then
-        networkArg="sudo unshare -n"
-      fi
-      poisonArg=
-      if [ "$(reportPrebuiltLeaks)" = "true" ]; then
-        poisonArg="/p:EnablePoison=true"
-      fi
-      $networkArg "$(tarballDirectory)/$(tarballName)/build.sh" -- \
-        /p:Configuration=$(sb.configuration) \
-        /p:PortableBuild=$(sb.portable) \
-        /p:UseSystemLibunwind=$(systemLibunwind) \
-        /p:FailOnPrebuiltBaselineError=true \
-        $poisonArg
-      du -h $(rootDirectory) | sort -h | tail -n 50
+  - task: Bash@3
+    inputs:
+      targetType: inline
+      script: |
+        set -ex
+        df -h
+        networkArg=
+        if [ "$(sb.tarballOffline)" = "true" ]; then
+          networkArg="sudo unshare -n"
+        fi
+        poisonArg=
+        if [ "$(reportPrebuiltLeaks)" = "true" ]; then
+          poisonArg="/p:EnablePoison=true"
+        fi
+        $networkArg "$(tarballDirectory)/$(tarballName)/build.sh" -- \
+          /p:Configuration=$(sb.configuration) \
+          /p:PortableBuild=$(sb.portable) \
+          /p:UseSystemLibunwind=$(systemLibunwind) \
+          /p:FailOnPrebuiltBaselineError=true \
+          $poisonArg
+        du -h $(rootDirectory) | sort -h | tail -n 50
+      noProfile: false
+      noRc: false
     displayName: Build tarball
     timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
-    noProfile: false
-    noRc: false
 
   # Run smoke tests.
   - script: |
