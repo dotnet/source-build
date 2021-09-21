@@ -5,7 +5,11 @@ parameters:
   scriptSuffix: null
   setupMac: false
   setupWindows: false
+  skipSmokeTest: false
   failOnPrebuiltBaselineError: true
+  reportPrebuiltLeaks: false
+  generatePrebuiltBurndown: false
+  runUnitTests: false
   cleanAptGet: false
 
 jobs:
@@ -63,18 +67,6 @@ jobs:
   # Make sure submodules from other branches are removed: pass extra f.
   - script: git clean -xdff
     displayName: Clean leftover submodules
-
-  - script: bash -c 'echo PATH=$PATH'
-    displayName: Check path
-    condition: always()
-
-  - script: which clang
-    displayName: Check clang
-    condition: always()
-
-  - script: clang --version
-    displayName: Check clang version
-    condition: always()
 
   # Run 'clean -a' script to recursively clean submodules: AzDO doesn't do this, and otherwise we
   # fail to apply patches on persistent machines like dotnet-external-temp.
