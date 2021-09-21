@@ -86,13 +86,17 @@ jobs:
   - template: ../steps/check-space-powershell.yml
 
   # Build source-build.
-  - script: |
+  # Use bash task here because it allows us to use the .bashrc, which sets up the correct
+  # paths for clang and llvm on RHEL machines.
+  - bash: |
       set -x
       $(SetInternalPackageFeedPatBashCommand)
       set -e
       ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
     timeoutInMinutes: 150
+    noProfile: false
+    noRc: false
 
   - template: ../steps/check-space-powershell.yml
 
@@ -170,7 +174,7 @@ jobs:
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
   # Build tarball.
-  - script: |
+  - bash: |
       set -ex
       df -h
       networkArg=
@@ -191,6 +195,8 @@ jobs:
     displayName: Build tarball
     timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
+    noProfile: false
+    noRc: false
 
   # Run smoke tests.
   - script: |
