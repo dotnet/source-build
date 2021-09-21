@@ -137,8 +137,8 @@ while [[ -h $fullTarballRoot ]]; do
   # symlink file was located
   [[ $fullTarballRoot != /* ]] && fullTarballRoot="$SCRIPT_ROOT/$fullTarballRoot"
 done
+mkdir -p "$fullTarballRoot"
 export FULL_TARBALL_ROOT="$(getrealpath "$fullTarballRoot")"
-mkdir -p "$FULL_TARBALL_ROOT"
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "info: '$TARBALL_ROOT' already exists"

@@ -39,6 +39,7 @@ jobs:
     # Prefix to distinguish artifacts from different legs.
     artifactName: ${{ parameters.job }}
     failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
+    reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
     tarballDownloadArgs: >-
       /p:SkipDownloadingReferencePackages=true
       /p:SkipDownloadingPreviouslySourceBuiltPackages=true
