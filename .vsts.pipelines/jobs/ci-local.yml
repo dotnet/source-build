@@ -40,9 +40,10 @@ jobs:
     artifactName: ${{ parameters.job }}
     failOnPrebuiltBaselineError: ${{ parameters.failOnPrebuiltBaselineError }}
     reportPrebuiltLeaks: ${{ parameters.reportPrebuiltLeaks }}
+    systemLibunwind: ${{ parameters.systemLibunwind }}
     tarballDownloadArgs: >-
-      /p:SkipDownloadingReferencePackages=true
-      /p:SkipDownloadingPreviouslySourceBuiltPackages=true
+      /p:DownloadSourceBuildReferencePackagesTimeoutSeconds=600
+      /p:DownloadSourceBuiltArtifactsTimeoutSeconds=1500
     SOURCE_BUILD_SKIP_SUBMODULE_CHECK: true
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
