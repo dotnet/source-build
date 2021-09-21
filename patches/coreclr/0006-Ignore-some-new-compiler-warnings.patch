@@ -1,0 +1,27 @@
+From d88575f6f10fd4b04ea488f857b1a50b50420d00 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 21 May 2021 13:06:24 -0500
+Subject: [PATCH 6/6] Ignore some new compiler warnings.
+
+---
+ configurecompiler.cmake | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/configurecompiler.cmake b/configurecompiler.cmake
+index 9b3d3c5c3c..f5c0885f36 100644
+--- a/configurecompiler.cmake
++++ b/configurecompiler.cmake
+@@ -503,6 +503,10 @@ if (CLR_CMAKE_PLATFORM_UNIX)
+     # to a struct or a class that has virtual members or a base class. In that case, clang
+     # may not generate the same object layout as MSVC.
+     add_compile_options(-Wno-incompatible-ms-struct)
++
++    # ignore warnings that were added after the version of the compiler the official build uses
++    add_compile_options(-Wno-misleading-indentation)
++
+     # Do not convert a #warning into an #error
+     add_compile_options("-Wno-error=#warnings")
+   else()
+-- 
+2.18.0
+
