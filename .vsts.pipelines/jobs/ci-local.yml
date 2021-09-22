@@ -61,10 +61,6 @@ jobs:
   - checkout: self
     clean: true
 
-  - script: echo PATH=$PATH
-    displayName: Check path
-    condition: always()
-
   - template: ../steps/cleanup-unneeded-files.yml
     parameters:
       cleanAptGet: ${{ parameters.cleanAptGet }}
@@ -99,7 +95,6 @@ jobs:
       targetType: inline
       script: |
         set -x
-        echo PATH=$PATH
         $(SetInternalPackageFeedPatBashCommand)
         set -e
         ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
@@ -218,6 +213,7 @@ jobs:
       sudo chown -R "$(id -u):$(id -g)" "$(tarballDirectory)/$(tarballName)"
       "$(tarballDirectory)/$(tarballName)/build.sh" \
         --run-smoke-test \
+        -- \
         /p:Configuration=$(sb.configuration) \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix)
       du -h $(rootDirectory) | sort -h | tail -n 50
