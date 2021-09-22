@@ -15,6 +15,15 @@ usage() {
     echo "use -- to send the remaining arguments to build.sh"
 }
 
+getrealpath()
+{
+    if command -v realpath > /dev/null; then
+        realpath $1
+    else
+        readlink -f $1
+    fi
+}
+
 if [ -z "${1:-}" ]; then
     usage
     exit 1
@@ -119,7 +128,17 @@ if [ $MINIMIZE_DISK_USAGE -eq 1 ]; then
     sleep 10
 fi
 
-export FULL_TARBALL_ROOT=$(readlink -f $TARBALL_ROOT)
+export SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
+fullTarballRoot="$TARBALL_ROOT"
+while [[ -h $fullTarballRoot ]]; do
+  fullTarballRoot="$(readlink "$fullTarballRoot")"
+
+  # if $source was a relative symlink, we need to resolve it relative to the path where the
+  # symlink file was located
+  [[ $fullTarballRoot != /* ]] && fullTarballRoot="$SCRIPT_ROOT/$fullTarballRoot"
+done
+mkdir -p "$fullTarballRoot"
+export FULL_TARBALL_ROOT="$(getrealpath "$fullTarballRoot")"
 
 if [ -e "$TARBALL_ROOT" ]; then
     echo "info: '$TARBALL_ROOT' already exists"
@@ -149,7 +168,6 @@ else
     MAIN_BUILD_ARGS+=( "/p:SkipProductionBuild=true" )
 fi
 
-mkdir -p "$FULL_TARBALL_ROOT"
 
 MAIN_BUILD_ARGS+=( "/p:TarballRoot=$FULL_TARBALL_ROOT" )
 MAIN_BUILD_ARGS+=( "/p:PackSourceBuildTarball=true" )

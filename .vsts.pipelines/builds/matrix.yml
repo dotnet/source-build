@@ -54,6 +54,7 @@ stages:
     name: debian9
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114
+      cleanAptGet: true
     matrix:
       Production: {}
       Online: { type: Online }
@@ -86,6 +87,7 @@ stages:
     name: ubuntu1804
     jobParameters:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-source-build-20200401093015-ed32d26
+      cleanAptGet: true
 
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
@@ -98,6 +100,38 @@ stages:
       scriptSuffix: .sh
       setupMac: true
 
+# RHEL builds only internal
+- ${{ if not(eq(variables['System.TeamProject'], 'public')) }}:
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel7_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 7
+        scriptPrefix: ./
+        scriptSuffix: .sh
+      matrix:
+        Offline: { type: Offline }
+  - template: ../stages/stage-jobs-matrix.yml
+    parameters:
+      jobTemplateName: ../jobs/ci-local.yml
+      name: rhel8_x64
+      jobParameters:
+        pool:
+          name: DotNet-SourceBuild-Internal
+          demands:
+          - Agent.OSArchitecture -equals X64
+          - rhel -equals 8
+        scriptPrefix: ./
+        scriptSuffix: .sh
+        useSystemLibunwind: true
+      matrix:
+        Offline: { type: Offline }
+
 # Prepare artifacts in all situations but public PR validation.
 - ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
   - template: ../stages/prepare-artifacts.yml
@@ -108,4 +142,6 @@ stages:
       - job: centos8_Offline
       - job: debian9_Online
       - job: fedora31_Offline
+      - job: rhel7_x64_Offline
+      - job: rhel8_x64_Offline
       gatherPortableJob: centos71_Offline_Portable
