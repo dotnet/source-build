@@ -36,7 +36,19 @@
       - [3.1]
         - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` matches N-1 release artifacts.
         - [ ] Update the `global.json` SDK version to N-1: the latest released "3.1.XYY" SDK version, where "3.1.X" matches the SDK we're building.
-        - [ ] Verify that all repos that are not pinned were updated, or that we have confirmed that there are not expected to update for this release.
+        - [ ] Verify that all repos were updated, except for these expected to usually be stable:
+          - arcade
+          - sourcelink
+          - aspnet-xdt
+          - cliCommandLineParser
+          - xliff-tasks
+          - Newtonsoft.Json
+          - common
+          - Roslyn (except for feature band updates)
+          - MSBuild (except for feature band updates)
+          - NuGet-client (except for feature band updates)
+          - fsharp (except for feature band updates)
+          - VSTest (except for feature band updates)
 1.  - [ ] [2.1] Fetch internal git data for submodules.
       1.  Run `git submodule update --init --recursive` and see errors due to missing commits.
       1.  Run `fetch-vsts-commits.sh` with a PAT to automatically fetch internal refs.
@@ -99,6 +111,7 @@
         - [ ] CentOS 8 - dseefeld
         - [ ] Debian - dagood
 1.  - [ ] [Internal] Download the artifacts from the green PR validation build onto a machine with Bash.
+      - The smoke-test prereqs are platform-independent but should be taken from a non-portable build, e.g. CentOS7 Offline, *not* CentOS7 Offline Portable.
       - We may require only a subset of the artifacts for certain releases: refer to the previous release email thread corresponding to 2.1 vs. 3.1 build.
       - Can use <https://github.com/dotnet/source-build/blob/release/3.1/scripts/fetch-azdo-artifact-tarball.sh> as a library.
         - E.g. download the tarballs with `download_tarball`, and fix them up with `fix_azdo_tarball` if necessary.
