@@ -1,0 +1,41 @@
+From ee902f6648f5cb58ce950ebf9f116a074a32ef0b Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Tue, 28 Sep 2021 21:50:00 +0000
+Subject: [PATCH 1/1] fix System.Text.Json references
+
+---
+ .../src/Microsoft.AspNetCore.Http.Connections.Common.csproj    | 3 +--
+ .../src/Microsoft.AspNetCore.SignalR.Common.csproj             | 3 +--
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/src/SignalR/common/Http.Connections.Common/src/Microsoft.AspNetCore.Http.Connections.Common.csproj b/src/SignalR/common/Http.Connections.Common/src/Microsoft.AspNetCore.Http.Connections.Common.csproj
+index 281e2fdd32..bbb4511559 100644
+--- a/src/SignalR/common/Http.Connections.Common/src/Microsoft.AspNetCore.Http.Connections.Common.csproj
++++ b/src/SignalR/common/Http.Connections.Common/src/Microsoft.AspNetCore.Http.Connections.Common.csproj
+@@ -19,8 +19,7 @@
+     <Reference Include="Microsoft.AspNetCore.Connections.Abstractions" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR
+-      ('$(MSBuildRestoreSessionId)' == '' AND '$(CompileUsingReferenceAssemblies)' != 'false') " >
++  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
+diff --git a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
+index 97b6f25451..7266518961 100644
+--- a/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
++++ b/src/SignalR/common/SignalR.Common/src/Microsoft.AspNetCore.SignalR.Common.csproj
+@@ -24,8 +24,7 @@
+     <Reference Include="Microsoft.Extensions.Options" />
+   </ItemGroup>
+ 
+-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR
+-      ('$(MSBuildRestoreSessionId)' == '' AND '$(CompileUsingReferenceAssemblies)' != 'false') ">
++  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
+     <Reference Include="System.Text.Json" />
+   </ItemGroup>
+ 
+-- 
+2.30.2
+
