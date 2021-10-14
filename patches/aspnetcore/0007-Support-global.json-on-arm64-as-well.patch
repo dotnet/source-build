@@ -1,7 +1,7 @@
-From 8179783f0b2e78658257660b4bd7db47668469dc Mon Sep 17 00:00:00 2001
+From 40f9998c310272ffd9fcb207ca50206548061a64 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Wed, 23 Oct 2019 15:43:57 -0400
-Subject: [PATCH 07/19] Support global.json on arm64 as well
+Subject: [PATCH] Support global.json on arm64 as well
 
 arcade uses the runtime section of global.json to decide which
 architecture + runtime combination needs to be installed.
@@ -19,24 +19,24 @@ This gets us a working SDK/Runtime combo on arm64.
  1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/global.json b/global.json
-index 25bf32016b..8127174d10 100644
+index e63ebf7aa7..b8508d981d 100644
 --- a/global.json
 +++ b/global.json
 @@ -5,13 +5,10 @@
    "tools": {
-     "dotnet": "5.0.205",
+     "dotnet": "5.0.207",
      "runtimes": {
 -      "dotnet/x64": [
 +      "dotnet": [
-         "2.1.28",
+         "2.1.30",
          "$(MicrosoftNETCoreAppInternalPackageVersion)"
        ],
 -      "dotnet/x86": [
 -        "$(MicrosoftNETCoreAppInternalPackageVersion)"
 -      ],
        "aspnetcore/x64": [
-         "3.1.17"
+         "3.1.19"
        ]
 -- 
-2.18.0
+2.30.2
 
