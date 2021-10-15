@@ -4,12 +4,10 @@ Date: Fri, 15 Oct 2021 18:10:34 +0000
 Subject: [PATCH] Eliminate prebuilts
 
 * Updated SourceLink reference to pick up the source-build version
-* Removed references that aren't need for source-build which introduce prebuilts
-    * Nerdbank.GitVersioning - used for generating assembly version attributes, instead version property is set as build prop
-    * MicroBuild.Core - only relevant in offical builds
+* Removed Nerdbank.GitVersioning references because it would introduce a prebuilt. Instead version property is set as build prop
 ---
  Directory.Build.props                             | 3 +--
- src/MSBuildLocator/Microsoft.Build.Locator.csproj | 3 +--
+ src/MSBuildLocator/Microsoft.Build.Locator.csproj | 2 +-
  2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
@@ -39,11 +37,4 @@ index 712f67c..56b1196 100644
      <DebugType>full</DebugType>
  
      <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-@@ -26,7 +26,6 @@
-   </ItemGroup>
- 
-   <ItemGroup>
--    <PackageReference Include="MicroBuild.Core" Version="0.3.0" PrivateAssets="all" />
-     <Content Include="build\Microsoft.Build.Locator.props">
-       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-       <PackagePath>build\</PackagePath>
+
