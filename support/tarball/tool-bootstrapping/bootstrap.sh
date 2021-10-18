@@ -50,7 +50,7 @@ function BuildStage1Sdk {
     # Build stage1 source
     LogMessage "Building stage1"
     pushd $stage1Dir
-    ./build.sh
+    ./build.sh /p:CheckEolTargetFramework=false
     popd
 
     LogMessage "Completing Step1 - Build stage1 sdk"
@@ -138,7 +138,7 @@ function buildFinalSdk {
 
     LogMessage "Build final sdk"
     pushd $finalSdkDir
-    ./build.sh --with-ref-packages $refPkgsDir/artifacts/reference-packages --with-packages $stage1SourceBuiltArtifactsInstallDir --with-sdk $stage1SdkInstallDir
+    ./build.sh --with-ref-packages $refPkgsDir/artifacts/reference-packages --with-packages $stage1SourceBuiltArtifactsInstallDir --with-sdk $stage1SdkInstallDir /p:CheckEolTargetFramework=false
     popd
 
     LogMessage "Completing Step3 - Build final sdk"
