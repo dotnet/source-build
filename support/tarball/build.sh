@@ -14,7 +14,7 @@ usage() {
 
 SCRIPT_ROOT="$(cd -P "$( dirname "$0" )" && pwd)"
 
-MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/p:CheckEolTargetFramework=false" "/flp:v=detailed")
+MSBUILD_ARGUMENTS=("/p:OfflineBuild=true" "/flp:v=detailed")
 CUSTOM_REF_PACKAGES_DIR=''
 CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR=''
 alternateTarget=false
