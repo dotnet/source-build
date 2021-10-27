@@ -21,6 +21,7 @@
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:PublishCompressedFilesPathPrefix=$(SourceBuiltAspNetCoreRuntime)</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:CheckEolTargetFramework=false</BuildCommandArgs>
 
     <!-- Update to 1.0.0 version of reference assemblies which are built in SBRP instead of the preview.2 version
          included by Arcade -->
