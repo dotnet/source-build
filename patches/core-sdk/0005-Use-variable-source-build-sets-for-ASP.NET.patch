@@ -1,25 +1,24 @@
-From 229fe862e741a7aa9b108503e79acb6dd3602b33 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Tue, 19 Nov 2019 00:34:09 -0600
-Subject: [PATCH 5/9] Use variable source-build sets for ASP.NET
+Subject: [PATCH 08/10] Use variable source-build sets for ASP.NET
 
 ---
- src/redist/targets/GenerateLayout.targets | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ src/redist/targets/GenerateLayout.targets | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 3cdaef7ea..171a89a36 100644
+index 7e7d069d3..01b813aa7 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -11,7 +11,7 @@
+@@ -11,8 +11,8 @@
+   <Target Name="SetupBundledComponents" DependsOnTargets="GetCurrentRuntimeInformation;SetupFileExtensions;SetSdkVersionInfo;SetBuildDefaults">
+     <PropertyGroup>
+       <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
+-      <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
+-    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
++      <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreAppRuntimewinx64PackageVersion)</AspNetCoreBlobVersion>
++      <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
  
-   <PropertyGroup>
-     <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
--    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
-+    <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreAppRuntimewinx64PackageVersion)</AspNetCoreBlobVersion>
-     <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
- 
-     <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
--- 
-2.21.0
-
+       <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
+       <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
