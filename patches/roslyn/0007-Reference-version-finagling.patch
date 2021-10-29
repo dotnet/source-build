@@ -1,48 +1,34 @@
-From bb2ac4275811ddaeca059edf7cb54f71beaff0b1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 10 May 2020 22:01:06 -0500
-Subject: [PATCH 8/8] Reference version finagling
+Subject: [PATCH 7/7] Reference version finagling
 
 ---
- eng/Versions.props                                          | 2 +-
  .../CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj    | 6 +++++-
  src/Compilers/CSharp/csc/csc.csproj                         | 4 ++++
  src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj   | 6 +++---
  src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj       | 4 ++++
- .../Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj      | 6 +++++-
+ .../Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj      | 4 ++++
  src/Compilers/VisualBasic/vbc/vbc.csproj                    | 4 ++++
- .../Microsoft.CodeAnalysis.Debugging.Package.csproj         | 4 ++--
- .../Microsoft.CodeAnalysis.PooledObjects.Package.csproj     | 4 ++--
- .../Core/Microsoft.CodeAnalysis.EditorFeatures.csproj       | 4 ++--
- .../Microsoft.CodeAnalysis.FunctionResolver.csproj          | 4 ++--
+ .../Microsoft.CodeAnalysis.Debugging.Package.csproj         | 2 +-
+ .../Microsoft.CodeAnalysis.PooledObjects.Package.csproj     | 2 +-
+ .../Core/Microsoft.CodeAnalysis.EditorFeatures.csproj       | 2 +-
+ .../Microsoft.CodeAnalysis.FunctionResolver.csproj          | 2 +-
  .../Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj  | 2 +-
  src/Tools/BuildBoss/BuildBoss.csproj                        | 2 +-
- .../Microsoft.CodeAnalysis.CSharp.Workspaces.csproj         | 6 +++++-
+ .../Microsoft.CodeAnalysis.CSharp.Workspaces.csproj         | 4 ++++
  .../Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj  | 4 ++++
- .../Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj    | 4 ++--
- .../Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj    | 6 +++++-
- 17 files changed, 52 insertions(+), 20 deletions(-)
+ .../Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj    | 2 +-
+ .../Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj    | 4 ++++
+ 16 files changed, 43 insertions(+), 11 deletions(-)
 
-diff --git a/eng/Versions.props b/eng/Versions.props
-index 3b80e7eda1..1e5bb3e0c7 100644
---- a/eng/Versions.props
-+++ b/eng/Versions.props
-@@ -185,7 +185,7 @@
-     <SystemIOFileSystemPrimitivesVersion>4.3.0</SystemIOFileSystemPrimitivesVersion>
-     <SystemIOPipesAccessControlVersion>4.3.0</SystemIOPipesAccessControlVersion>
-     <SystemMemoryVersion>4.5.3</SystemMemoryVersion>
--    <SystemRuntimeCompilerServicesUnsafeVersion>4.5.2</SystemRuntimeCompilerServicesUnsafeVersion>
-+    <SystemRuntimeCompilerServicesUnsafeVersion>4.7.0</SystemRuntimeCompilerServicesUnsafeVersion>
-     <SystemRuntimeLoaderVersion>4.3.0</SystemRuntimeLoaderVersion>
-     <SystemTextEncodingCodePagesVersion>4.5.1</SystemTextEncodingCodePagesVersion>
-     <SystemTextEncodingExtensionsVersion>4.3.0</SystemTextEncodingExtensionsVersion>
 diff --git a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
-index ca1c241a5f..d1835034a6 100644
+index 51dc95ba257..d9d17b6418a 100644
 --- a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
 +++ b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
-@@ -75,5 +75,9 @@
-     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.EditorFeatures2.UnitTests" />
+@@ -66,5 +66,9 @@
      <InternalsVisibleTo Include="CompilerBenchmarks" />
+     <InternalsVisibleTo Include="Microsoft.Build.Tasks.CodeAnalysis.UnitTests" />
    </ItemGroup>
 +  <ItemGroup>
 +    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
@@ -50,13 +36,13 @@ index ca1c241a5f..d1835034a6 100644
 +  </ItemGroup>
    <Import Project="..\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems" Label="Shared" />
 -</Project>
-\ No newline at end of file
 +</Project>
+\ No newline at end of file
 diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
-index 83c5b205f8..f13f5ff315 100644
+index 9c5297b238c..b3d40ba01bc 100644
 --- a/src/Compilers/CSharp/csc/csc.csproj
 +++ b/src/Compilers/CSharp/csc/csc.csproj
-@@ -38,6 +38,10 @@
+@@ -37,6 +37,10 @@
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
@@ -68,10 +54,10 @@ index 83c5b205f8..f13f5ff315 100644
    <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
  </Project>
 diff --git a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
-index 17db99fc4b..5bda0edb22 100644
+index de357e2be6d..4f1fb3982f5 100644
 --- a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
 +++ b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
-@@ -38,9 +38,9 @@
+@@ -32,9 +32,9 @@
        will import everything but content files from Microsoft.CodeAnalysis.Analyzers, specifically, analyzers.
      -->
      <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" PrivateAssets="ContentFiles" />
@@ -85,10 +71,10 @@ index 17db99fc4b..5bda0edb22 100644
      <PackageReference Include="System.Threading.Tasks.Extensions" Version="$(SystemThreadingTasksExtensionsVersion)" />
      <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
 diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-index 14f1d15e66..47b51bf188 100644
+index ec4dd26af5c..f69f8e81a74 100644
 --- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
 +++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
-@@ -37,6 +37,10 @@
+@@ -35,6 +35,10 @@
      <InternalsVisibleTo Include="Microsoft.CodeAnalysis.VisualBasic.CommandLine.UnitTests" />
      <InternalsVisibleTo Include="VBCSCompiler.UnitTests" />
    </ItemGroup>
@@ -100,10 +86,10 @@ index 14f1d15e66..47b51bf188 100644
    <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
  </Project>
 diff --git a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
-index 34cd5fbfe4..d5759e9ca6 100644
+index 25243e68430..965dc117b05 100644
 --- a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
 +++ b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
-@@ -88,5 +88,9 @@
+@@ -78,5 +78,9 @@
        <SubType>Designer</SubType>
      </None>
    </ItemGroup>
@@ -112,14 +98,13 @@ index 34cd5fbfe4..d5759e9ca6 100644
 +    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
 +  </ItemGroup>
    <Import Project="..\BasicAnalyzerDriver\BasicAnalyzerDriver.projitems" Label="Shared" />
--</Project>
+ </Project>
 \ No newline at end of file
-+</Project>
 diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
-index d6486810e5..de0aa616fc 100644
+index afff3795422..73559ee3aaa 100644
 --- a/src/Compilers/VisualBasic/vbc/vbc.csproj
 +++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
-@@ -37,6 +37,10 @@
+@@ -36,6 +36,10 @@
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
@@ -131,10 +116,10 @@ index d6486810e5..de0aa616fc 100644
    <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
  </Project>
 diff --git a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
-index 8a99faa199..0faa37bd51 100644
+index 6ad24b84621..81a021574f8 100644
 --- a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
 +++ b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
-@@ -19,9 +19,9 @@
+@@ -19,7 +19,7 @@
      <NoWarn>$(NoWarn);NU5128</NoWarn>
    </PropertyGroup>
    <ItemGroup>
@@ -143,15 +128,11 @@ index 8a99faa199..0faa37bd51 100644
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
      <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
      <ProjectReference Include="..\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.Package.csproj" />
-   </ItemGroup>
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
-index 40692205a1..3569e18316 100644
+index 8944bdd3150..cb6c642a56a 100644
 --- a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
 +++ b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
-@@ -19,9 +19,9 @@
+@@ -19,7 +19,7 @@
      <NoWarn>$(NoWarn);NU5128</NoWarn>
    </PropertyGroup>
    <ItemGroup>
@@ -160,12 +141,8 @@ index 40692205a1..3569e18316 100644
    </ItemGroup>
    <ItemGroup>
      <InternalsVisibleTo Include="Microsoft.CodeAnalysis.Debugging.Package"/>
-   </ItemGroup>
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
-index 32f4ae0c4d..96e570e9e5 100644
+index e8d427fb7e3..b0de0fe0411 100644
 --- a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
 +++ b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
 @@ -27,7 +27,7 @@
@@ -177,15 +154,8 @@ index 32f4ae0c4d..96e570e9e5 100644
      <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="$(MicrosoftVisualStudioImageCatalogVersion)" />
      <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="$(MicrosoftVisualStudioImagingVersion)" />
      <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="$(MicrosoftVisualStudioLanguageStandardClassificationVersion)" />
-@@ -115,4 +115,4 @@
-     <PublicAPI Include="PublicAPI.Shipped.txt" />
-     <PublicAPI Include="PublicAPI.Unshipped.txt" />
-   </ItemGroup>
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
-index 50ab8f0a8d..3e3673ecb0 100644
+index bb120da2ac5..83b821e81bd 100644
 --- a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
 +++ b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
 @@ -47,7 +47,7 @@
@@ -197,15 +167,8 @@ index 50ab8f0a8d..3e3673ecb0 100644
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
      <PackageReference Include="Microsoft.VisualStudio.Debugger.Engine-implementation" Version="$(MicrosoftVisualStudioDebuggerEngineimplementationVersion)" />
      <PackageReference Include="Microsoft.VisualStudio.Debugger.Metadata-implementation">
-@@ -56,4 +56,4 @@
-     </PackageReference>
-   </ItemGroup>
-   <Import Project="$(RepositoryEngineeringDir)targets\Vsdconfig.targets" />
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
-index e2d52e1b7b..f5f5a665fe 100644
+index 7870ab13294..bc36eab3924 100644
 --- a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
 +++ b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
 @@ -20,7 +20,7 @@
@@ -218,7 +181,7 @@ index e2d52e1b7b..f5f5a665fe 100644
    </ItemGroup>
    <ItemGroup Label="Linked Files">
 diff --git a/src/Tools/BuildBoss/BuildBoss.csproj b/src/Tools/BuildBoss/BuildBoss.csproj
-index e531135abe..72f14a5f52 100644
+index b3e129fb776..cc770116970 100644
 --- a/src/Tools/BuildBoss/BuildBoss.csproj
 +++ b/src/Tools/BuildBoss/BuildBoss.csproj
 @@ -15,7 +15,7 @@
@@ -231,25 +194,26 @@ index e531135abe..72f14a5f52 100644
      <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerVersion)" />
      <PackageReference Include="Mono.Options" Version="$(MonoOptionsVersion)" />
 diff --git a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
-index 295352c9c0..bd083bfbba 100644
+index ad75c19fd68..32adc2fe248 100644
 --- a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
 +++ b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
-@@ -62,4 +62,8 @@
+@@ -56,6 +56,10 @@
      <PublicAPI Include="PublicAPI.Shipped.txt" />
      <PublicAPI Include="PublicAPI.Unshipped.txt" />
    </ItemGroup>
--</Project>
-\ No newline at end of file
 +  <ItemGroup>
 +    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
 +    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
 +  </ItemGroup>
-+</Project>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
+ </Project>
+\ No newline at end of file
 diff --git a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
-index 0b93f092c3..4e277cf97d 100644
+index 413580feef0..5588c3e6a5f 100644
 --- a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
 +++ b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
-@@ -351,5 +351,9 @@
+@@ -142,6 +142,10 @@
      <PublicAPI Include="PublicAPI.Shipped.txt" />
      <PublicAPI Include="PublicAPI.Unshipped.txt" />
    </ItemGroup>
@@ -258,9 +222,10 @@ index 0b93f092c3..4e277cf97d 100644
 +    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
 +  </ItemGroup>
    <Import Project="..\..\..\Dependencies\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.projitems" Label="Shared" />
- </Project>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\Core\CompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\Core\WorkspaceExtensions.projitems" Label="Shared" />
 diff --git a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
-index 4bf2c81a6d..6e6238f71a 100644
+index f3383206d8d..3a220679b8c 100644
 --- a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
 +++ b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
 @@ -31,7 +31,7 @@
@@ -269,31 +234,22 @@ index 4bf2c81a6d..6e6238f71a 100644
      <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
 -    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
 +    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
-     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="$(MicrosoftVisualStudioCodingConventionsVersion)" />
-     <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="$(MicrosoftVisualStudioTelemetryVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="$(MicrosoftVisualStudioCodingConventionsVersion)" PrivateAssets="all" />
+     <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="$(MicrosoftVisualStudioTelemetryVersion)" PrivateAssets="all" />
    </ItemGroup>
-@@ -51,4 +51,4 @@
-     <InternalsVisibleTo Include="Roslyn.Services.UnitTests.Utilities" />
-     <InternalsVisibleTo Include="Microsoft.VisualStudio.Completion.Tests" Key="$(CompletionTestsKey)" WorkItem="https://github.com/dotnet/roslyn/issues/35081" />
-   </ItemGroup>
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
-index 7c8ef6336f..2d885505f4 100644
+index 946169e6d65..9f4f420ec0e 100644
 --- a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
 +++ b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
-@@ -69,4 +69,8 @@
+@@ -52,6 +52,10 @@
      <PublicAPI Include="PublicAPI.Shipped.txt" />
      <PublicAPI Include="PublicAPI.Unshipped.txt" />
    </ItemGroup>
--</Project>
-\ No newline at end of file
 +  <ItemGroup>
 +    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
 +    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
 +  </ItemGroup>
-+</Project>
--- 
-2.18.0
-
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\VisualBasic\VisualBasicCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\VisualBasic\VisualBasicWorkspaceExtensions.projitems" Label="Shared" />
+ </Project>
+\ No newline at end of file
