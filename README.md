@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/dotnet/source-build](https://badges.gitter.im/dotnet/source-build.svg)](https://gitter.im/dotnet/source-build?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This repository helps .NET SDK and .NET Runtime package maintainers comply with common Linux distribution guidelines.
+This repo is the starting point for building .NET from source.
 
 ## .NET 6.0
 
