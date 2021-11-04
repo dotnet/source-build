@@ -49,6 +49,7 @@ For example, in Fedora 33:
     > sed -i -E 's|<MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.1</|> <MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
     > sed -i -E 's|<MicrosoftNETHostModelVersion>6.0.0-rtm.21521.1</|> <MicrosoftNETHostModelVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
     > tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
+    > prep.sh --bootstrap
     > ```
     > 
     > This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2599).
