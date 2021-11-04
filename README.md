@@ -39,7 +39,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     ./prep.sh
     ```
 
-    This downloads a .NET SDK and a number of .NET packages and other prebuilts needed to build .NET from source.
+    This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
 
     > On Linux distros other than Fedora 33, an additional bootstrapping step is required.  After running `prep.sh` above, run the following:
     >
