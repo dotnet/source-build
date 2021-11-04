@@ -55,7 +55,9 @@ For example, in Fedora 33:
 
 4. Build the .NET SDK
 
-    `./build.sh`
+    ```bash
+    ./build.sh
+    ```
 
     This builds the entire .NET SDK from source. The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz`.
 
