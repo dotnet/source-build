@@ -13,8 +13,7 @@ The dependencies for building .NET 6.0 from source can be found [here](https://g
 ### Building
 
 .NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
-...
-For example, in Fedora 33:
+The steps to build vary slightly depending on your distro.  The following set of instructions walk through how to build on Fedora.33.  
 
 1. Clone the repo and check out the tag for the desired release.
     ```bash
@@ -31,7 +30,7 @@ For example, in Fedora 33:
 
    This fetches the complete .NET source code and creates a tarball at `artifacts/packages/<Release|Debug>/Shipping/`.
    The extracted source code is also placed at `/path/to/place/complete/dotnet/sources`.
-   The source directory should be outside (and not somewhere under) this repository.
+   The source directory should be outside (and not somewhere under) the installer directory.
 
 3. Prep the source to build on your distro.
 
@@ -65,7 +64,8 @@ For example, in Fedora 33:
 5. (Optional) Unpack and install the .NET SDK
 
     ```bash
-    mkdir -p $HOME/dotnet && tar zxf artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz -C $HOME/dotnet
+    mkdir -p $HOME/dotnet
+    tar zxf artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz -C $HOME/dotnet
     ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
     ```
     
@@ -81,7 +81,6 @@ To build older versions of the .NET SDK from source, pick a specific Git tag wit
 * [`release/5.0`](https://github.com/dotnet/source-build/tree/release/5.0)
 * [`release/3.1`](https://github.com/dotnet/source-build/tree/release/3.1)
 
-The scripts are written for Bash and supported on macOS and Linux.
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
@@ -100,7 +99,7 @@ Source-build solves common challenges that most developers encounter when trying
 * By default, most .NET repositories download prebuilt binary dependencies from online sources. These are forbidden by typical Linux distribution rules, and interfere with build output flow.
 * Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem.
 
-The source-build repository contains scripts and build logic to help Linux distribution maintainers address these challenges.
+.NET source-build contains scripts and build logic to help Linux distribution maintainers address these challenges.
 
 ## License
 
