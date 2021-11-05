@@ -87,7 +87,7 @@ To build older versions of the .NET SDK from source, pick a specific Git tag wit
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
-## Source build goals
+## Source-build goals
 
 The key goal of source-build is to satisfy the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have two main principles: consistent reproducibility, and source code for everything.
 
@@ -102,7 +102,7 @@ Source-build solves common challenges that most developers encounter when trying
 * By default, most .NET repositories download prebuilt binary dependencies from online sources. These are forbidden by typical Linux distribution rules, and interfere with build output flow.
 * Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem.
 
-.NET source-build contains scripts and build logic to help Linux distribution maintainers address these challenges.
+Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
 ## License
 
