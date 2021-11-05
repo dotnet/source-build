@@ -13,7 +13,7 @@ The dependencies for building .NET 6.0 from source can be found [here](https://g
 ### Building
 
 .NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
-The steps to build vary slightly depending on your distro.  The following set of instructions walk through how to build on Fedora.33.  
+The steps to build vary slightly depending on your distro.  The following set of instructions walk through how to build on Fedora 33.  
 
 1. Clone the repo and check out the tag for the desired release.
     ```bash
