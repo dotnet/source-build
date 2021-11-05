@@ -4,13 +4,11 @@
 
 This repo is the starting point for building .NET 6 from source. Instructions for building other .NET versions are provided near the end of this document.
 
-## .NET 6.0
-
-### Prerequisites
+## Prerequisites
 
 The dependencies for building .NET 6.0 from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md).
 
-### Building
+## Building
 
 .NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
 The steps to build vary slightly depending on your distro.  The following set of instructions walk through how to build on Fedora 33.  
@@ -80,6 +78,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     ```
 
 ## .NET 5.0 and .NET Core 3.1
+
 To build older versions of the .NET SDK from source, pick a specific Git tag with your desired version, or use a release branch to build the latest servicing release of that version. Refer to the tag/branch's README for build instructions:
 
 * [`release/5.0`](https://github.com/dotnet/source-build/tree/release/5.0)
@@ -88,7 +87,7 @@ To build older versions of the .NET SDK from source, pick a specific Git tag wit
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
-# Source build goals
+## Source build goals
 
 The key goal of source-build is to satisfy the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have two main principles: consistent reproducibility, and source code for everything.
 
