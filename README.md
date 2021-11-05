@@ -44,10 +44,14 @@ The steps to build vary slightly depending on your distro.  The following set of
     > On Linux distros other than Fedora 33, an additional bootstrapping step is required.  After running `prep.sh` above, run the following:
     >
     > ```bash
+    > mkdir ./privateSourceBuiltArtifacts
+    > cd ./privateSourceBuiltArtifacts
     > tar xf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz
     > sed -i -E 's|<MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.1</|<MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
     > sed -i -E 's|<MicrosoftNETHostModelVersion>6.0.0-rtm.21521.1</|<MicrosoftNETHostModelVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
     > tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
+    > cd ..
+    > rm -r ./privateSourceBuiltArtifacts
     > prep.sh --bootstrap
     > ```
     > 
