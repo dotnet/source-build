@@ -17,7 +17,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     ```bash
     git clone https://github.com/dotnet/installer
     cd installer/
-    git checkout v6.0.100-rtm.21527.11
+    git checkout v6.0.100
     ```
 
 3. Create a .NET source tarball.
