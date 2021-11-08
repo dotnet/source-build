@@ -17,7 +17,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     ```bash
     git clone https://github.com/dotnet/installer
     cd installer/
-    git checkout v6.0.100
+    git switch -c v6.0.100 v6.0.100
     ```
 
 3. Create a .NET source tarball.
@@ -50,7 +50,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     > tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
     > cd ..
     > rm -r ./privateSourceBuiltArtifacts
-    > prep.sh --bootstrap
+    > ./prep.sh --bootstrap
     > ```
     > 
     > This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2599).
