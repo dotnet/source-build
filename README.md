@@ -50,7 +50,7 @@ The steps to build vary slightly depending on your distro.  The following set of
     > tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
     > cd ..
     > rm -r ./privateSourceBuiltArtifacts
-    > prep.sh --bootstrap
+    > ./prep.sh --bootstrap
     > ```
     > 
     > This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2599).
