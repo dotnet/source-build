@@ -1,7 +1,7 @@
-From 9680ebee4f350299cf4a37d1fccca4e0852c40fb Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Nikola Milosavljevic <nikolam@microsoft.com>
 Date: Fri, 6 Sep 2019 18:18:33 +0000
-Subject: [PATCH 02/14] Do not build .NET Fx binaries in source build.
+Subject: [PATCH 02/15] Do not build .NET Fx binaries in source build.
 
 ---
  Directory.Build.props                                          | 1 +
@@ -27,7 +27,7 @@ index eba8e1c9..06382559 100644
    </PropertyGroup>
  </Project>
 diff --git a/eng/Versions.props b/eng/Versions.props
-index b8f5b548..4610d005 100644
+index b067bb18..458f9fe8 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -6,7 +6,7 @@
@@ -40,7 +40,7 @@ index b8f5b548..4610d005 100644
      <CommandLineParserVersion>2.2.1</CommandLineParserVersion>
      <CredentialManagementVersion>1.0.2</CredentialManagementVersion>
 diff --git a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
-index aaaf4dac..f16405e7 100644
+index d3b94cc5..53a514ad 100644
 --- a/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 +++ b/src/Microsoft.DotNet.Arcade.Sdk/Microsoft.DotNet.Arcade.Sdk.csproj
 @@ -2,6 +2,7 @@
@@ -137,6 +137,3 @@ index a201af86..e84959e2 100644
      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
      <LangVersion>Latest</LangVersion>
      <IsPackable>true</IsPackable>
--- 
-2.21.0
-
