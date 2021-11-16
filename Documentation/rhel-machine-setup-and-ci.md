@@ -22,4 +22,4 @@
 onenote:https://microsoft.sharepoint.com/teams/dotNETDeployment/Shared%20Documents/General/NET%20Core%20Acquisition%20and%20Deployment/source-build/Servicing.one#RHEL%20CI%20Reference&section-id={594D6D3A-E971-4C2A-8BA6-4E13782F4585}&page-id={1157395A-8D3D-4897-B3A5-C1FE22035C25}&end).
   - These can only be remoted into from a REDMOND-joined machine.  The username is dotnet-bot and the password can be found in Keyvault as usual.
 - The most common operation needed is to clean up their source directories.  Typically this is when we get the "object reference is not a tree" or "missing submodule MessagePack" errors in CI and the cause is not missing commits.
-  - Log in to the machines, go to the agent work directory (/data/a/_work), and delete \*/s/\* (this will be 1/s/\*, 2/s/\*, etc).  You may have to sudo to do it.
+  - Log in to the machines, go to the agent work directory (/data/a/_work), and delete \*/[abs]/\* and \*/[abs]/.\* (this will be 1/a/\*, 1/b/\*, 1/s/\*, 1/s/.*, 2/a/\*, etc).  You may have to sudo to do it.
