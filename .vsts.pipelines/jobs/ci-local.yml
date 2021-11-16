@@ -275,6 +275,8 @@ jobs:
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 
+  # Most of these are directories we manually created and it's our responsibility to clean up (or the machine will fill up).
+  # /tmp/PackageVersions.props is created under sudo and later builds want to write to it unelevated so we have to clean that as well.
   - bash: |
       set -ex
       sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)" /tmp/PackageVersions.props
