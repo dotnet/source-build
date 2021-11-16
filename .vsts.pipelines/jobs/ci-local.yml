@@ -277,7 +277,7 @@ jobs:
 
   - bash: |
       set -ex
-      rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
-    displayName: Cleanup extra staging directories
+      rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)" /tmp/PackageVersions.props
+    displayName: Cleanup extra directories and files
     condition: always()
     continueOnError: true
