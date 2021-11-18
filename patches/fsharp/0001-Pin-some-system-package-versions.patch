@@ -1,17 +1,17 @@
-From f692ae027838bc17e79e443cca4c8dbee531a751 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 4 Sep 2019 16:09:32 -0500
-Subject: [PATCH] Pin S.R.Emit to a ref version.
+Subject: [PATCH] Pin some system package versions
 
 ---
- .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj      | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj    | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
-index fd35444c3..3eee20e13 100644
+index 83511648f..29917af80 100644
 --- a/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
 +++ b/src/fsharp/FSharp.Compiler.Private/FSharp.Compiler.Private.fsproj
-@@ -725,7 +725,7 @@
+@@ -753,7 +753,7 @@
      <PackageReference Include="System.Linq.Queryable" Version="$(SystemLinqExpressionsVersion)" />
      <PackageReference Include="System.Net.Requests" Version="$(SystemNetRequestsVersion)" />
      <PackageReference Include="System.Net.Security" Version="$(SystemNetSecurityVersion)" />
@@ -20,6 +20,12 @@ index fd35444c3..3eee20e13 100644
      <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
      <PackageReference Include="System.Reflection.TypeExtensions" Version="$(SystemReflectionTypeExtensionsVersion)" />
      <PackageReference Include="System.Runtime" Version="$(SystemRuntimeVersion)" />
--- 
-2.18.0
-
+@@ -766,6 +766,8 @@
+     <PackageReference Include="System.Threading.ThreadPool" Version="$(SystemThreadingThreadPoolVersion)" />
+     <PackageReference Include="System.Buffers" Version="$(SystemBuffersVersion)" />
+     <PackageReference Include="System.Memory" Version="$(SystemMemoryVersion)" />
++    <PackageReference Include="System.Buffers" Version="4.5.1" />
++    <PackageReference Include="System.Memory" Version="4.5.4" />
+   </ItemGroup>
+ 
+ </Project>
