@@ -284,8 +284,9 @@ jobs:
     condition: always()
     continueOnError: true
 
-  # These can get stuck in a bad state, especially if the same machine is used for public and then an internal build or
-  # vice-versa.  It costs us a little time to clean them up every time but it makes the builds much more consistent.
+  # These can get stuck in a bad state, especially if the same machine is used for builds from the public repos and then
+  # builds from the internal repos or vice-versa.  It costs us a little time to clean them up every time but it makes the
+  # builds much more consistent.
   - bash: |
       set -ex
       sudo rm -rf $(rootDirectory)/source-build/.git/modules/src $(rootDirectory)/source-build/artifacts
