@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Thu, 18 Nov 2021 23:23:52 +0000
+Subject: [PATCH] remove Nuget.Build.Tasks.Console reference
+
+---
+ src/redist/redist.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index 18260cfc2..a774412de 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -19,7 +19,7 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
+-    <PackageReference Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />
++    <PackageReference Condition="'$(DotNetBuildFromSource)' != 'true'" Include="NuGet.Build.Tasks.Console" Version="$(NuGetBuildTasksConsolePackageVersion)" />
+     <PackageReference Include="Microsoft.Build.NuGetSdkResolver" Version="$(MicrosoftBuildNuGetSdkResolverPackageVersion)" />
+     <PackageReference Include="Microsoft.TestPlatform.CLI" Version="$(MicrosoftTestPlatformCLIPackageVersion)" ExcludeAssets="All" />
+     <PackageReference Include="Microsoft.TestPlatform.Build" Version="$(MicrosoftTestPlatformBuildPackageVersion)" />
