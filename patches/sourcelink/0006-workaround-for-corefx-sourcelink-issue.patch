@@ -3,6 +3,8 @@ From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
 Date: Tue, 16 Nov 2021 20:03:11 +0000
 Subject: [PATCH] workaround for corefx sourcelink issue
 
+For some reason here in the corefx build, SourceRoot has a couple of incorrect
+items. This clears them before setting the true SourceRoot.
 ---
  .../build/Microsoft.Build.Tasks.Git.targets                 | 6 ++++++
  1 file changed, 6 insertions(+)
