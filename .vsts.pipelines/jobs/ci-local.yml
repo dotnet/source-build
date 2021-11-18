@@ -206,6 +206,15 @@ jobs:
     timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
+  # /tmp/PackageVersions.props is created under sudo in the previous step but smoke-tests want to use that path as well.
+  # Remove the existing copy so we can write a new one.
+  - bash: |
+      set -ex
+      sudo rm /tmp/PackageVersions.props
+    displayName: Remove root-owned temp files
+    condition: always()
+    continueOnError: true
+
   # Run smoke tests.
   - script: |
       set -ex
