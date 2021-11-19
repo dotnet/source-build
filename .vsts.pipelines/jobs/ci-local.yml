@@ -250,26 +250,20 @@ jobs:
     continueOnError: true
 
   # Publish artifacts.
-  - task: PublishBuildArtifacts@1
+  - publish: $(logsDirectory)
+    artifact: Logs $(artifactName)
     displayName: Publish Logs artifact
     condition: always()
     continueOnError: true
-    inputs:
-      PathtoPublish: $(logsDirectory)
-      ArtifactName: Logs $(artifactName)
-      ArtifactType: Container
-  - task: PublishBuildArtifacts@1
+  - publish: $(dropDirectory)/tarball
+    artifact: Tarball $(artifactName)
     displayName: Publish Tarball artifact
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
-    inputs:
-      PathtoPublish: $(dropDirectory)/tarball
-      ArtifactName: Tarball $(artifactName)
-      ArtifactType: Container
 
   - bash: |
       set -ex
-      rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
+      sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
     displayName: Cleanup extra staging directories
     condition: always()
     continueOnError: true

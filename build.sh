@@ -121,14 +121,18 @@ if [ "${internalPackageFeedPat:-}" ]; then
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-7e8bbb70/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-535da077/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-0a2e366e/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-198cc5ec/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-4c6b4aa2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-60938620/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-b908e913/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-c04846dc/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-tooling-048f8096/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-core-setup-2833dab8/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-extensions-513f727d/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-templating-241b4771-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-f8760d03/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-public/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet-eng/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/dotnet3.1-internal-transport/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/3-1-13-2-18-21/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
-    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/3.1.118-servicing-015350-shipping/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/3.1.120-servicing-015384-shipping/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"}
   ]}'
 fi
 

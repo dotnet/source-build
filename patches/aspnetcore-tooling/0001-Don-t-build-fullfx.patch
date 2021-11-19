@@ -1,7 +1,7 @@
-From 44486c4ab27e8667ab5c42467759f1cccb92697c Mon Sep 17 00:00:00 2001
+From 484d221b0cffc9a547da73456a5ade254a5deb55 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 20 Oct 2019 15:51:49 -0500
-Subject: [PATCH 1/5] Don't build fullfx
+Subject: [PATCH 1/4] Don't build fullfx
 
 ---
  .../Microsoft.NET.Sdk.Razor.csproj                     | 10 +++++-----
@@ -46,7 +46,7 @@ index ba32df8e2..4f8eccee6 100644
  
      <Copy SourceFiles="@(ProjectOutput)" DestinationFiles="$(SdkOutputPath)tasks\%(RecursiveDir)%(FileName)%(Extension)" SkipUnchangedFiles="true">
 diff --git a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
-index e5e8d926a..b0a7c5ea3 100644
+index 1e04cb257..a993e24c4 100644
 --- a/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 +++ b/src/Razor/src/Microsoft.NET.Sdk.Razor/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
 @@ -30,8 +30,8 @@ Copyright (c) .NET Foundation. All rights reserved.
@@ -58,8 +58,8 @@ index e5e8d926a..b0a7c5ea3 100644
 +    <_RazorSdkTasksTFM Condition=" '$(MSBuildRuntimeType)' == 'Core'">$(DefaultNetCoreTargetFramework)</_RazorSdkTasksTFM>
 +    <_RazorSdkTasksTFM Condition=" '$(_RazorSdkTasksTFM)' == ''">net472</_RazorSdkTasksTFM>
      <RazorSdkBuildTasksAssembly>$(RazorSdkBuildTasksDirectoryRoot)$(_RazorSdkTasksTFM)\Microsoft.NET.Sdk.Razor.Tasks.dll</RazorSdkBuildTasksAssembly>
+     <_RazorSdkToolAssembly>$(RazorSdkDirectoryRoot)tools\netcoreapp3.0\rzc.dll</_RazorSdkToolAssembly>
    </PropertyGroup>
- 
 -- 
 2.18.0
 
