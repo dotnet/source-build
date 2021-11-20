@@ -1,7 +1,7 @@
-From 8c41b92970ab74678ae1b7f7ea6e602f4cba1fae Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 24 Oct 2019 13:00:54 +0000
-Subject: [PATCH 08/14] Import PackageVersions props if exists and update
+Subject: [PATCH 07/14] Import PackageVersions props if exists and update
  CodeAnalysis version
 
 ---
@@ -9,18 +9,15 @@ Subject: [PATCH 08/14] Import PackageVersions props if exists and update
  1 file changed, 4 insertions(+)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 03895313..a8a2a0ca 100644
+index 7728009d..0bf1c859 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
-@@ -72,4 +72,8 @@
-     <MicrosoftDotNetMaestroClientVersion>1.1.0-beta.19454.3</MicrosoftDotNetMaestroClientVersion>
-     <MicrosoftDotNetSwaggerGeneratorMSBuildVersion>1.0.0-beta.19459.10</MicrosoftDotNetSwaggerGeneratorMSBuildVersion>
+@@ -77,4 +77,8 @@
+     <XliffTasksVersion>1.0.0-beta.20206.1</XliffTasksVersion>
+     <MicrosoftSourceLinkVersion>1.1.0-beta-20206-02</MicrosoftSourceLinkVersion>
    </PropertyGroup>
 +  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
 +  <PropertyGroup>
 +    <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
 +  </PropertyGroup>
  </Project>
--- 
-2.21.0
-
