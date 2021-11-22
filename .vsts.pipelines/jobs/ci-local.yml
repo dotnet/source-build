@@ -193,6 +193,15 @@ jobs:
     timeoutInMinutes: 150
     condition: and(succeeded(), eq(variables['sb.tarball'], true))
 
+  # /tmp/PackageVersions.props is created under sudo in the previous step but smoke-tests want to use that path as well.
+  # Remove the existing copy so we can write a new one.
+  - bash: |
+      set -ex
+      sudo rm /tmp/PackageVersions.props
+    displayName: Remove root-owned temp files
+    condition: always()
+    continueOnError: true
+
   # Run smoke tests.
   - script: |
       set -ex
@@ -261,9 +270,21 @@ jobs:
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true
 
+  # Most of these are directories we manually created and it's our responsibility to clean up (or the machine will fill up).
+  # /tmp/PackageVersions.props is created under sudo and later builds want to write to it unelevated so we have to clean that as well.
   - bash: |
       set -ex
-      sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)"
+      sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)" /tmp/PackageVersions.props
+    displayName: Cleanup extra directories and files
+    condition: always()
+    continueOnError: true
+
+  # These can get stuck in a bad state, especially if the same machine is used for builds from the public repos and then
+  # builds from the internal repos or vice-versa.  It costs us a little time to clean them up every time but it makes the
+  # builds much more consistent.
+  - bash: |
+      set -ex
+      sudo rm -rf "$(tarballDirectory)" "$(stagingDirectory)" "$(dropDirectory)" "$(logsDirectory)" "$(rootDirectory)/source-build/.git/modules/src" "$(rootDirectory)/source-build/artifacts"
     displayName: Cleanup extra staging directories
     condition: always()
     continueOnError: true
