@@ -1,14 +1,14 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From eba0dbf3bcab054767eddf8223d7da369d018590 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 24 Oct 2019 13:36:06 +0000
-Subject: [PATCH 10/15] Fix version of NewtonsoftJson
+Subject: [PATCH 10/14] Fix version of NewtonsoftJson
 
 ---
  eng/Versions.props | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/eng/Versions.props b/eng/Versions.props
-index 0bf1c859..395f3c22 100644
+index a8a2a0ca..e0bb462d 100644
 --- a/eng/Versions.props
 +++ b/eng/Versions.props
 @@ -35,7 +35,6 @@
@@ -19,7 +19,7 @@ index 0bf1c859..395f3c22 100644
      <MicrosoftBclJsonSourcesVersion>4.6.0-preview4.19202.2</MicrosoftBclJsonSourcesVersion>
      <NuGetVersioningVersion>4.4.0</NuGetVersioningVersion>
      <NuGetVersion>5.1.0</NuGetVersion>
-@@ -79,6 +78,7 @@
+@@ -74,6 +73,7 @@
    </PropertyGroup>
    <Import Project="$(DotNetPackageVersionPropsPath)" Condition="'$(DotNetPackageVersionPropsPath)' != ''" />
    <PropertyGroup>
@@ -27,3 +27,6 @@ index 0bf1c859..395f3c22 100644
      <MsbuildTaskMicrosoftCodeAnalysisCSharpVersion Condition="'$(DotNetBuildFromSource)' == 'true'">$(MicrosoftCodeAnalysisCSharpVersion)</MsbuildTaskMicrosoftCodeAnalysisCSharpVersion>
    </PropertyGroup>
  </Project>
+-- 
+2.21.0
+
