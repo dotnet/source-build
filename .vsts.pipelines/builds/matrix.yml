@@ -20,7 +20,7 @@ stages:
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: true }
       Online: { type: Online }
-      Offline: { type: Offline }
+      Offline: { type: Offline BaseTarball }
       Offline Portable: { type: Offline Portable }
 
 - template: ../stages/stage-jobs-matrix.yml
