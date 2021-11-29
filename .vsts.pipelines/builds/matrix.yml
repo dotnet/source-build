@@ -19,8 +19,8 @@ stages:
       reportPrebuiltLeaks: false
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: true }
-      Online: { type: Online }
-      Offline: { type: Offline BaseTarball }
+      Online: { type: Online BaseTarball }
+      Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 
 - template: ../stages/stage-jobs-matrix.yml
