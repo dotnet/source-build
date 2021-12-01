@@ -19,7 +19,7 @@ stages:
       reportPrebuiltLeaks: false
     matrix:
       Production: { generatePrebuiltBurndown: true, runUnitTests: true }
-      Online: { type: Online }
+      Online: { type: Online BaseTarball }
       Offline: { type: Offline }
       Offline Portable: { type: Offline Portable }
 

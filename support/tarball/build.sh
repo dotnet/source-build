@@ -74,6 +74,31 @@ while :; do
     shift
 done
 
+if [ -f "$SCRIPT_ROOT/packages/archive/archiveArtifacts.txt" ]; then
+  ARCHIVE_ERROR=0
+  if [ ! -d "$SCRIPT_ROOT/.dotnet" ] && [ "$CUSTOM_SDK_DIR" == "" ]; then
+    echo "ERROR: SDK not found at $SCRIPT_ROOT/.dotnet"
+    ARCHIVE_ERROR=1
+  fi
+  if [ ! -f $SCRIPT_ROOT/packages/archive/Private.SourceBuilt.Artifacts*.tar.gz ] && [ "$CUSTOM_PREVIOUSLY_BUILT_PACKAGES_DIR" == "" ]; then
+    echo "ERROR: Private.SourceBuilt.Artifacts artifact not found at $SCRIPT_ROOT/packages/archive/ - Either run prep.sh or pass --with-packages parameter"
+    ARCHIVE_ERROR=1
+  fi
+  if [ ! -f $SCRIPT_ROOT/packages/archive/Private.SourceBuild.ReferencePackages*.tar.gz ] && [ "$CUSTOM_REF_PACKAGES_DIR" == "" ]; then
+    echo "ERROR: Private.SourceBuild.ReferencePackages artifact not found at $SCRIPT_ROOT/packages/archive/ - Either run prep.sh or pass --with-ref-packages parameter"
+    ARCHIVE_ERROR=1
+  fi
+  if [ $ARCHIVE_ERROR == 1 ]; then
+    echo ""
+    echo "    Errors detected in tarball. To prep the tarball, run prep.sh while online to install an SDK,"
+    echo "    a Private.SourceBuilt.Artifacts tarball and a Private.SourceBuild.ReferencePackages tarball."
+    echo "    After prepping the tarball, the tarball can be built offline.  As an alternative to prepping"
+    echo "    the tarball, these assets can be provided using the --with-sdk, --with-packages and"
+    echo "    --with-ref-packages parameters."
+    exit 1
+  fi
+fi
+
 if [ -d "$CUSTOM_SDK_DIR" ]; then
   export SDK_VERSION=`"$CUSTOM_SDK_DIR/dotnet" --version`
   export CLI_ROOT="$CUSTOM_SDK_DIR"
