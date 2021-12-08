@@ -23,15 +23,22 @@
       - [ ] [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
         - [ ] Retrieve the source tarball artifact - BlobArtifacts/dotnet-sdk-source-6.0.xxx.tar.gz
 1.  - [ ] Run poison report and confirm results.
+      - [Automation tracking issue](https://github.com/dotnet/source-build/issues/2652) for this step.
 1.  - [ ] Compare source-built to Microsoft build and confirm results.
+      - [Automation tracking issue](https://github.com/dotnet/source-build/issues/2653) for this step.
 1.  - [ ] [Internal] Gather smoke-test prereqs and package in dotnet-smoke-test-prereqs-6.0.101.tar.gz.
+      - [Automation tracking issue](https://github.com/dotnet/source-build/issues/2550) for this step.
 1.  - [ ] [Internal] Upload source and smoke-test-prereqs tarball to dotnetclimsrc storage account.
 1.  - [ ] Send notification for manual testing.
-1.  - [ ] [Internal] Send the tarball to partners. Include info about how certain we are that this will be the final Microsoft build.
-      - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
+      - Provide links to source tarball.
+1.  - [ ] Notify partners of release.  Include info about how certain we are that this will be the final Microsoft build.
+      - [Internal] Send the dotnetclimsrc tarball links to partners.
+          - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
+      - [Non-Internal] Send the dotnet/installer commit sha along w/link to publicly built source tarball.  Link to the public instructions for building source-build.
 1.  - [ ] SYNC POINT: Wait for Microsoft build release.
 1.  - [ ] Update tarball artifacts w/previous release.
       - [ ] global.json
+        - [Automation tracking issue](https://github.com/dotnet/source-build/issues/2632) for this step.
       - [ ] Previous source-built artifacts
 1.  - [ ] Cleanup any SBRP dependencies - https://github.com/dotnet/source-build-reference-packages/blob/main/eng/Build.props
 1.  - [ ] Clean up retrospective notes if necessary.
