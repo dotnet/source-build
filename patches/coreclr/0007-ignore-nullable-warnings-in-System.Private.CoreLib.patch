@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Mon, 8 Nov 2021 18:44:15 +0000
+Subject: [PATCH] ignore nullable warnings in System.Private.CoreLib
+
+---
+ src/System.Private.CoreLib/System.Private.CoreLib.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/System.Private.CoreLib/System.Private.CoreLib.csproj b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+index 6b2b4e8875..9c85340a81 100644
+--- a/src/System.Private.CoreLib/System.Private.CoreLib.csproj
++++ b/src/System.Private.CoreLib/System.Private.CoreLib.csproj
+@@ -26,6 +26,7 @@
+     <OutputPath>$(BinDir)IL/</OutputPath>
+     <Configurations>Debug;Release;Checked</Configurations>
+     <Platforms>x64;x86;arm;arm64</Platforms>
++    <NoWarn>$(NoWarn);nullable</NoWarn>
+   </PropertyGroup>
+ 
+   <!-- Note that various places in SPCL depend on this resource name i.e. TplEventSource -->

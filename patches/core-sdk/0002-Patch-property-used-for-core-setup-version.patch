@@ -1,4 +1,4 @@
-From 5b5b7032a8d289afbcfefc421a7c0c5e41cc9364 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Tue, 12 Nov 2019 20:27:43 +0000
 Subject: [PATCH 2/9] Patch property used for core-setup version
@@ -8,18 +8,18 @@ Subject: [PATCH 2/9] Patch property used for core-setup version
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index 43ea706d4..b1f5d5772 100644
+index 7e42d1163..2a2c64588 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
 @@ -12,7 +12,7 @@
-   <PropertyGroup>
-     <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
-     <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
--    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
+     <PropertyGroup>
+       <!-- Blob storage directories are not stabilized, so these must refer to a package that does not stabilize -->
+       <AspNetCoreBlobVersion>$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)</AspNetCoreBlobVersion>
+-      <CoreSetupBlobVersion>$(MicrosoftNETCoreAppInternalPackageVersion)</CoreSetupBlobVersion>
 +    <CoreSetupBlobVersion>$(MicrosoftNETCoreAppRuntimePackageVersion)</CoreSetupBlobVersion>
  
-     <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
-     <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
+       <!-- Change these individually to or $(CoreSetupBlobVersion), $(AspNetCoreBlobVersion), or appropriate fixed version depending if corresponding .Ref packages are unpinned. -->
+       <NETCoreAppTargetingPackBlobVersion Condition="'$(Rid)' != 'win-arm64'">3.1.0-rtm.19565.2</NETCoreAppTargetingPackBlobVersion>
 -- 
-2.21.0
+2.31.1
 

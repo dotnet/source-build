@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 10 Dec 2021 13:18:08 -0600
+Subject: [PATCH] Update platform abstractions
+
+---
+ src/core-sdk-tasks/core-sdk-tasks.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/core-sdk-tasks/core-sdk-tasks.csproj b/src/core-sdk-tasks/core-sdk-tasks.csproj
+index d6c8968d4..7a44004b1 100644
+--- a/src/core-sdk-tasks/core-sdk-tasks.csproj
++++ b/src/core-sdk-tasks/core-sdk-tasks.csproj
+@@ -10,9 +10,9 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" />
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="3.1.22" />
+     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+-    <PackageReference Include="NuGet.Versioning" Version="4.3.0" />
++    <PackageReference Include="NuGet.Versioning" Version="5.7.1-rtm.4" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
+     <PackageReference Include="WindowsAzure.Storage" Version="8.4.0" Condition="'$(DotNetBuildFromSource)' != 'true'" />
+   </ItemGroup>
+-- 
+2.31.1
+

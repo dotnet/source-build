@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Tue, 2 Nov 2021 17:30:39 +0000
+Subject: [PATCH] workaround for improperly escaped characters in resource file
+
+---
+ src/Compilers/Core/MSBuildTask/ErrorString.resx | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/Compilers/Core/MSBuildTask/ErrorString.resx b/src/Compilers/Core/MSBuildTask/ErrorString.resx
+index 0bb6ae2d598..25a51080b6e 100644
+--- a/src/Compilers/Core/MSBuildTask/ErrorString.resx
++++ b/src/Compilers/Core/MSBuildTask/ErrorString.resx
+@@ -199,19 +199,19 @@
+     <value>MSB3402: There was an error creating the pdb file "{0}". {1}</value>
+     <comment>{StrBegin="MSB3402: "}</comment>
+   </data>
+-  <data name="MapSourceRoots.ContainsDuplicate">
++  <data name="MapSourceRoots_ContainsDuplicate">
+     <value>{0} contains duplicate items '{1}' with conflicting metadata '{2}': '{3}' and '{4}'</value>
+   </data>
+-  <data name="MapSourceRoots.NoSuchTopLevelSourceRoot">
++  <data name="MapSourceRoots_NoSuchTopLevelSourceRoot">
+     <value>The value of {0} not found in {1} items, or the corresponding item is not a top-level source root: '{2}'</value>
+   </data>
+-  <data name="MapSourceRoots.PathMustEndWithSlashOrBackslash">
++  <data name="MapSourceRoots_PathMustEndWithSlashOrBackslash">
+     <value>{0} paths are required to end with a slash or backslash: '{1}'</value>
+   </data>
+-  <data name="MapSourceRoots.NoTopLevelSourceRoot">
++  <data name="MapSourceRoots_NoTopLevelSourceRoot">
+     <value>{0} items must include at least one top-level (not nested) item when {1} is true</value>
+   </data>
+   <data name="General_UnableToReadFile" xml:space="preserve">
+     <value>File "{0}" could not be read: {1}</value>
+   </data>
+-</root>
+\ No newline at end of file
++</root>

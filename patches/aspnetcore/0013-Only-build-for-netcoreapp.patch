@@ -1,0 +1,167 @@
+From 7b3ee56ce8b8d02cd9b1e12e580da34e750d03e1 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 23 Jan 2020 20:32:29 +0000
+Subject: [PATCH 13/15] Only build for netcoreapp
+
+---
+ .../ref/Microsoft.AspNetCore.Components.Authorization.csproj     | 1 +
+ .../Web/ref/Microsoft.AspNetCore.Components.Web.csproj           | 1 +
+ .../ref/Microsoft.AspNetCore.DataProtection.csproj               | 1 +
+ .../ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj    | 1 +
+ .../Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj  | 1 +
+ .../ref/Microsoft.Extensions.Identity.Core.csproj                | 1 +
+ .../ref/Microsoft.Extensions.Identity.Stores.csproj              | 1 +
+ .../Core/ref/Microsoft.AspNetCore.Authorization.csproj           | 1 +
+ .../ref/Microsoft.AspNetCore.Connections.Abstractions.csproj     | 1 +
+ .../ref/Microsoft.AspNetCore.Http.Connections.Common.csproj      | 1 +
+ .../ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj       | 1 +
+ .../ref/Microsoft.AspNetCore.SignalR.Common.csproj               | 1 +
+ 12 files changed, 12 insertions(+)
+
+diff --git a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
+index 5e6c8fb34c..5cf3f1eedb 100644
+--- a/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
++++ b/src/Components/Authorization/ref/Microsoft.AspNetCore.Components.Authorization.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Components.Authorization.netstandard2.0.cs" />
+diff --git a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
+index 13a6a503eb..54cd401221 100644
+--- a/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
++++ b/src/Components/Web/ref/Microsoft.AspNetCore.Components.Web.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Components.Web.netstandard2.0.cs" />
+diff --git a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
+index 91b47483f9..6af17d7d46 100644
+--- a/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
++++ b/src/DataProtection/DataProtection/ref/Microsoft.AspNetCore.DataProtection.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.DataProtection.netstandard2.0.cs" />
+diff --git a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+index 42e3a30cc5..93f4956cdf 100644
+--- a/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
++++ b/src/DataProtection/Extensions/ref/Microsoft.AspNetCore.DataProtection.Extensions.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.DataProtection.Extensions.netstandard2.0.cs" />
+diff --git a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
+index d312e44940..14cf5afa7e 100644
+--- a/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
++++ b/src/Http/Http.Features/ref/Microsoft.AspNetCore.Http.Features.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Http.Features.netstandard2.0.cs" />
+diff --git a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
+index 9bd6ba236a..06690fb58c 100644
+--- a/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
++++ b/src/Identity/Extensions.Core/ref/Microsoft.Extensions.Identity.Core.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.Extensions.Identity.Core.netstandard2.0.cs" />
+diff --git a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
+index f277fc6634..164354cb85 100644
+--- a/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
++++ b/src/Identity/Extensions.Stores/ref/Microsoft.Extensions.Identity.Stores.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.Extensions.Identity.Stores.netstandard2.0.cs" />
+diff --git a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
+index 6c84d4e54d..7f1202a788 100644
+--- a/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
++++ b/src/Security/Authorization/Core/ref/Microsoft.AspNetCore.Authorization.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Authorization.netstandard2.0.cs" />
+diff --git a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
+index 9eccf06da0..100a08a744 100644
+--- a/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
++++ b/src/Servers/Connections.Abstractions/ref/Microsoft.AspNetCore.Connections.Abstractions.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Connections.Abstractions.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
+index ca3ba9ad87..d7519cc026 100644
+--- a/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
++++ b/src/SignalR/common/Http.Connections.Common/ref/Microsoft.AspNetCore.Http.Connections.Common.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.Http.Connections.Common.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+index 2d45dbe1f3..fc2a517d4b 100644
+--- a/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
++++ b/src/SignalR/common/Protocols.Json/ref/Microsoft.AspNetCore.SignalR.Protocols.Json.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.SignalR.Protocols.Json.netstandard2.0.cs" />
+diff --git a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
+index e48b558087..c550e6e0e8 100644
+--- a/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
++++ b/src/SignalR/common/SignalR.Common/ref/Microsoft.AspNetCore.SignalR.Common.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.AspNetCore.SignalR.Common.netstandard2.0.cs" />
+-- 
+2.31.1
+

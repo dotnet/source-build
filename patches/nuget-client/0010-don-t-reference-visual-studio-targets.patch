@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Wed, 17 Nov 2021 18:36:09 +0000
+Subject: [PATCH 2/2] don't reference visual studio targets
+
+---
+ .../NuGet.VisualStudio.OnlineEnvironment.Client.csproj          | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Clients/NuGet.VisualStudio.OnlineEnvironment.Client/NuGet.VisualStudio.OnlineEnvironment.Client.csproj b/src/NuGet.Clients/NuGet.VisualStudio.OnlineEnvironment.Client/NuGet.VisualStudio.OnlineEnvironment.Client.csproj
+index 86bd3306b..521913e81 100644
+--- a/src/NuGet.Clients/NuGet.VisualStudio.OnlineEnvironment.Client/NuGet.VisualStudio.OnlineEnvironment.Client.csproj
++++ b/src/NuGet.Clients/NuGet.VisualStudio.OnlineEnvironment.Client/NuGet.VisualStudio.OnlineEnvironment.Client.csproj
+@@ -98,7 +98,7 @@
+   <Import Project="$(BuildCommonDirectory)common.targets" />
+   <Import Project="$(BuildCommonDirectory)embedinterop.targets" />
+   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+-  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
++  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != '' And '$(DotNetBuildFromSource)' != 'true'"/>
+   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+        Other similar extension points exist, see Microsoft.Common.targets.
+   <Target Name="BeforeBuild">

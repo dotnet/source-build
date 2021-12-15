@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 9 Dec 2021 18:11:51 -0600
+Subject: [PATCH] Experimental TFM patch
+
+---
+ src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+index 94af37322..2f678570e 100644
+--- a/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
++++ b/src/NuGet.Core/NuGet.Frameworks/NuGet.Frameworks.csproj
+@@ -4,7 +4,7 @@
+ 
+   <PropertyGroup>
+     <Description>NuGet's understanding of target frameworks.</Description>
+-    <TargetFrameworks>$(TargetFrameworksLibrary);net40</TargetFrameworks>
++    <TargetFrameworks>$(TargetFrameworksLibrary)</TargetFrameworks>
+     <TargetFramework />
+     <NoWarn>$(NoWarn);CS1591;CS1574;CS1573</NoWarn>
+     <LangVersion>5</LangVersion>
+-- 
+2.31.1
+

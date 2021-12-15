@@ -84,7 +84,7 @@ jobs:
         /p:FailOnPrebuiltBaselineError=$failOnBaselineError \
         /p:ProdConBlobFeedUrlPrefix=$(prodConBlobFeedUrlPrefix) \
         $(tarballDownloadArgs) \
-        /p:AzDoPat=$(System.AccessToken)
+        /p:AzDoPat=$(user.PAT)
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: Build source-build
     timeoutInMinutes: 180

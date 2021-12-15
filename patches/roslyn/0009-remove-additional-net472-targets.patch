@@ -1,0 +1,106 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Fri, 29 Oct 2021 20:50:19 +0000
+Subject: [PATCH] remove additional net472 targets
+
+---
+ .../Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj  | 2 +-
+ .../Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj      | 2 +-
+ src/Interactive/csi/csi.csproj                                  | 2 +-
+ src/Interactive/vbi/vbi.vbproj                                  | 2 +-
+ .../Microsoft.Net.Compilers.Toolset.Package.csproj              | 2 +-
+ src/Tools/IdeCoreBenchmarks/IdeCoreBenchmarks.csproj            | 2 +-
+ .../MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj    | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+index 9802a8ebac0..26ecd0c679f 100644
+--- a/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
++++ b/src/Compilers/Core/MSBuildTask/Microsoft.Build.Tasks.CodeAnalysis.csproj
+@@ -6,7 +6,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.BuildTasks</RootNamespace>
+     <DefaultLanguage>en-US</DefaultLanguage>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <Nullable>enable</Nullable>
+     <AutoGenerateAssemblyVersion>true</AutoGenerateAssemblyVersion>
+     <AssemblyVersion/>
+diff --git a/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj b/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
+index edc6e416875..1828c1c0275 100644
+--- a/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
++++ b/src/EditorFeatures/Text/Microsoft.CodeAnalysis.EditorFeatures.Text.csproj
+@@ -4,7 +4,7 @@
+   <PropertyGroup>
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis.Text</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <ApplyNgenOptimization>partial</ApplyNgenOptimization>
+ 
+     <!-- NuGet -->
+diff --git a/src/Interactive/csi/csi.csproj b/src/Interactive/csi/csi.csproj
+index 3970bb4e9ea..5566deb3ee4 100644
+--- a/src/Interactive/csi/csi.csproj
++++ b/src/Interactive/csi/csi.csproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <RootNamespace>CSharpInteractive</RootNamespace>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Label="Project References">
+     <ProjectReference Include="..\..\Compilers\Core\Portable\Microsoft.CodeAnalysis.csproj" />
+diff --git a/src/Interactive/vbi/vbi.vbproj b/src/Interactive/vbi/vbi.vbproj
+index 5bbdf7f03a7..02cc6bc4226 100644
+--- a/src/Interactive/vbi/vbi.vbproj
++++ b/src/Interactive/vbi/vbi.vbproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <StartupObject>Sub Main</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <RootNamespace></RootNamespace>
+   </PropertyGroup>
+   <ItemGroup Label="Project References">
+diff --git a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+index cefd5f48e0f..f4fbf3516c5 100644
+--- a/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
++++ b/src/NuGet/Microsoft.Net.Compilers.Toolset/Microsoft.Net.Compilers.Toolset.Package.csproj
+@@ -1,7 +1,7 @@
+ ﻿<!-- Licensed to the .NET Foundation under one or more agreements. The .NET Foundation licenses this file to you under the MIT license. See the LICENSE file in the project root for more information. -->
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">netcoreapp3.1</TargetFrameworks>
+ 
+     <IsPackable>true</IsPackable>
+diff --git a/src/Tools/IdeCoreBenchmarks/IdeCoreBenchmarks.csproj b/src/Tools/IdeCoreBenchmarks/IdeCoreBenchmarks.csproj
+index 3239fb042e1..6092e4c728e 100644
+--- a/src/Tools/IdeCoreBenchmarks/IdeCoreBenchmarks.csproj
++++ b/src/Tools/IdeCoreBenchmarks/IdeCoreBenchmarks.csproj
+@@ -5,7 +5,7 @@
+ 
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <IsShipping>false</IsShipping>
+     <PlatformTarget>AnyCPU</PlatformTarget>
+     <!-- Automatically generate the necessary assembly binding redirects -->
+diff --git a/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj b/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
+index 4f635d489ac..a10b59ff35d 100644
+--- a/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
++++ b/src/Workspaces/Core/MSBuild/Microsoft.CodeAnalysis.Workspaces.MSBuild.csproj
+@@ -5,7 +5,7 @@
+     <OutputType>Library</OutputType>
+     <RootNamespace>Microsoft.CodeAnalysis</RootNamespace>
+     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <DefineConstants>$(DefineConstants);WORKSPACE_MSBUILD</DefineConstants>
+     <ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>
+ 
