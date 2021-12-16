@@ -169,7 +169,6 @@ fi
 
 MAIN_BUILD_ARGS+=( "/p:TarballRoot=$FULL_TARBALL_ROOT" )
 MAIN_BUILD_ARGS+=( "/p:PackSourceBuildTarball=true" )
-MAIN_BUILD_ARGS+=( "/p:EnableSourceLink=false" )
 
 $SCRIPT_ROOT/build.sh ${MAIN_BUILD_ARGS[@]} /bl:$SCRIPT_ROOT/artifacts/log/Debug/BuildTarball_$(date +"%m%d%H%M%S").binlog "$@"
 
