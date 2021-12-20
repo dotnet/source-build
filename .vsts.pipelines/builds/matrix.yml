@@ -81,10 +81,10 @@ stages:
 - template: ../stages/stage-jobs-matrix.yml
   parameters:
     jobTemplateName: ../jobs/ci-local.yml
-    name: macos11
+    name: macos
     jobParameters:
       pool:
-        vmImage: 'macOS-11'
+        vmImage: 'macOS-1015'
       scriptPrefix: ./
       scriptSuffix: .sh
       setupMac: true
