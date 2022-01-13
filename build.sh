@@ -140,9 +140,6 @@ fi
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
 
-# runtime 3.1.1 required for darc
-"$scriptroot/eng/common/dotnet-install.sh"  -runtime dotnet -version 3.1.1
-
 if [ "$alternateTarget" == "true" ]; then
   "$CLIPATH/dotnet" $SDKPATH/MSBuild.dll "$scriptroot/build.proj" /bl:source-build-test.binlog /flp:v=diag /clp:v=m "$@"
 else
