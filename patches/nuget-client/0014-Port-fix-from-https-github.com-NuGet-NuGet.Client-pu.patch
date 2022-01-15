@@ -1,0 +1,28 @@
+From 66708d5504d32d54b701ef443e3d6555b7cc5f76 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 14 Jan 2022 15:31:48 -0600
+Subject: [PATCH] Port fix from
+ https://github.com/NuGet/NuGet.Client/pull/3934.
+
+---
+ .../NuGet.Packaging/RuntimeModel/JsonRuntimeFormat.cs          | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/NuGet.Core/NuGet.Packaging/RuntimeModel/JsonRuntimeFormat.cs b/src/NuGet.Core/NuGet.Packaging/RuntimeModel/JsonRuntimeFormat.cs
+index 7fd638ee2..682fdc519 100644
+--- a/src/NuGet.Core/NuGet.Packaging/RuntimeModel/JsonRuntimeFormat.cs
++++ b/src/NuGet.Core/NuGet.Packaging/RuntimeModel/JsonRuntimeFormat.cs
+@@ -52,8 +52,9 @@ public static void WriteRuntimeGraph(string filePath, RuntimeGraph runtimeGraph)
+             using (var writer = new JsonObjectWriter(jsonWriter))
+             {
+                 jsonWriter.Formatting = Formatting.Indented;
+-
++                jsonWriter.WriteStartObject();
+                 WriteRuntimeGraph(writer, runtimeGraph);
++                jsonWriter.WriteEndObject();
+             }
+         }
+ 
+-- 
+2.31.1
+
