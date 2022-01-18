@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 10 Dec 2021 13:14:14 -0600
+Subject: [PATCH] Force S.Text.Json package version
+
+---
+ src/redist/redist.csproj             | 1 +
+ src/tool_msbuild/tool_msbuild.csproj | 1 +
+ src/tool_nuget/tool_nuget.csproj     | 3 ++-
+ 3 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/redist/redist.csproj b/src/redist/redist.csproj
+index a774412de..886fe60cc 100644
+--- a/src/redist/redist.csproj
++++ b/src/redist/redist.csproj
+@@ -30,6 +30,7 @@
+     <!-- Lift up dependencies of dependencies to prevent build tasks from getting pinned to older versions -->
+     <PackageReference Include="System.CodeDom" Version="$(SystemCodeDomPackageVersion)" />
+     <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesPackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+     <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="$(SystemSecurityCryptographyProtectedDataPackageVersion)" />
+   </ItemGroup>
+ 
+diff --git a/src/tool_msbuild/tool_msbuild.csproj b/src/tool_msbuild/tool_msbuild.csproj
+index 44251ee26..6454c1f76 100644
+--- a/src/tool_msbuild/tool_msbuild.csproj
++++ b/src/tool_msbuild/tool_msbuild.csproj
+@@ -10,5 +10,6 @@
+     <PackageReference Include="Microsoft.Build.Runtime" Version="$(MicrosoftBuildRuntimePackageVersion)" />
+     <PackageReference Include="Microsoft.Build.Localization" Version="$(MicrosoftBuildLocalizationPackageVersion)" />
+     <PackageReference Include="System.Resources.Extensions" Version="$(SystemResourcesExtensionsPackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+ </Project>
+diff --git a/src/tool_nuget/tool_nuget.csproj b/src/tool_nuget/tool_nuget.csproj
+index c240e6a2e..62983f18a 100644
+--- a/src/tool_nuget/tool_nuget.csproj
++++ b/src/tool_nuget/tool_nuget.csproj
+@@ -8,5 +8,6 @@
+ 
+   <ItemGroup>
+     <PackageReference Include="NuGet.CommandLine.XPlat" Version="$(NuGetCommandLineXPlatPackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.31.1
+

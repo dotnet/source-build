@@ -52,6 +52,7 @@
       is already loaded
     -->
     <BuildArguments>$(BuildArguments) $(FlagParameterPrefix)nodereuse $(ArcadeFalseBoolBuildArg) $(FlagParameterPrefix)ci</BuildArguments>
+    <BuildArguments>$(BuildArguments) /p:UpdateRuntimeFiles=true</BuildArguments>
 
     <BuildCommand>$(ProjectDirectory)/build$(ShellExtension) $(BuildArguments)</BuildCommand>
     <BuildCommand Condition="$(Platform.Contains('arm')) AND '$(BuildArchitecture)' != 'arm64'">$(ArmEnvironmentVariables) $(BuildCommand)</BuildCommand>

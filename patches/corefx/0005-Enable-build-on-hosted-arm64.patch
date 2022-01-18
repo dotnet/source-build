@@ -1,7 +1,7 @@
-From df94ae653f5c08f284a21c11343d63845f05bda5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 20 Aug 2019 13:40:19 -0400
-Subject: [PATCH 5/7] Enable build on hosted arm64
+Subject: [PATCH 5/9] Enable build on hosted arm64
 
 This is attempt #2. The first attempt was commit
 176da26d634fd760d7c8c99956f2e8d3f7d485e7.
@@ -15,7 +15,7 @@ Use the HostArch for the tool runtime instead of assuming x64.
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index b4dd085c1b..37e04cf8d6 100644
+index 283074637e..392451c8b0 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
 @@ -64,9 +64,9 @@
@@ -45,5 +45,5 @@ index b4dd085c1b..37e04cf8d6 100644
      <!-- There are no WebAssembly tools, so treat them as Windows -->
      <ToolRuntimeRID Condition="'$(RuntimeOS)' == 'WebAssembly'">win-x64</ToolRuntimeRID>
 -- 
-2.18.0
+2.31.1
 

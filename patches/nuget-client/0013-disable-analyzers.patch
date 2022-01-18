@@ -1,0 +1,39 @@
+From 4033645b1c1ea98f33d189b266affe5ed0354b79 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 9 Dec 2021 23:59:19 -0600
+Subject: [PATCH] disable analyzers
+
+---
+ build/common.project.props | 2 +-
+ build/packages.targets     | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build/common.project.props b/build/common.project.props
+index 38b563584..3b3f366ef 100644
+--- a/build/common.project.props
++++ b/build/common.project.props
+@@ -285,7 +285,7 @@
+   </ItemGroup>
+ 
+     <!-- FxCop Analyzers -->
+-  <ItemGroup Condition="'$(Shipping)' == 'true' AND '$(SkipAnalyzers)' != 'true'">
++  <ItemGroup Condition="'$(Shipping)' == 'true' AND '$(SkipAnalyzers)' != 'true' AND '$(DotNetBuildFromSource)' != 'true'">
+     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers">
+       <PrivateAssets>all</PrivateAssets>
+       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+diff --git a/build/packages.targets b/build/packages.targets
+index 7ceec6b95..661e93b55 100644
+--- a/build/packages.targets
++++ b/build/packages.targets
+@@ -8,7 +8,7 @@
+         <VSServicesVersion>16.153.0</VSServicesVersion>
+         <VSThreadingVersion>16.6.13</VSThreadingVersion>
+         <!-- TODO - remove this when temporary patching is no longer necessary. See https://github.com/nuget/home/issues/8952 -->
+-        <PatchedSystemPackagesVersion>5.0.0-preview.3.20214.6</PatchedSystemPackagesVersion>
++        <PatchedSystemPackagesVersion>4.7.0</PatchedSystemPackagesVersion>
+     </PropertyGroup>
+ 
+     <!-- Test and package versions -->
+-- 
+2.31.1
+

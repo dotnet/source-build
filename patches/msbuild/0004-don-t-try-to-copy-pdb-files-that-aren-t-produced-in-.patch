@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Tue, 16 Nov 2021 23:55:49 +0000
+Subject: [PATCH] don't try to copy pdb files that aren't produced in source
+ build
+
+This new target was added, but these pdb files aren't (and haven't been)
+produced by source build, so we shouldn't try to copy them.
+
+---
+ eng/AfterSigning.targets | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/AfterSigning.targets b/eng/AfterSigning.targets
+index e699c81e7..6077b12cc 100644
+--- a/eng/AfterSigning.targets
++++ b/eng/AfterSigning.targets
+@@ -1,5 +1,5 @@
+ <Project>
+-    <Target Name="CopyAMD64Symbols" Condition="'$(OfficialBuild)' == 'true'" BeforeTargets="Build">
++    <Target Name="CopyAMD64Symbols" Condition="'$(OfficialBuild)' == 'true' And '$(DotNetBuildFromSource)' != 'true'" BeforeTargets="Build">
+         <Copy 
+             SourceFiles="$(ArtifactsBinDir)MSBuild\x64\Release\net472\MSBuild.pdb"
+             DestinationFolder="$(ArtifactsSymStoreDirectory)\MSBuild\net472\amd64"

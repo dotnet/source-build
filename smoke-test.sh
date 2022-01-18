@@ -453,7 +453,7 @@ if [ "$excludeOnlineTests" == "false" ]; then
 fi
 
 fullSdkVersion="$($dotnetDir/dotnet --version)"
-"$SCRIPT_ROOT/scripts/fetch-microsoft-sdk.sh" "$fullSdkVersion" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz" || true
-"$SCRIPT_ROOT/scripts/compare-builds.sh" "$dotnetDir" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz" || true
+# "$SCRIPT_ROOT/scripts/fetch-microsoft-sdk.sh" "$fullSdkVersion" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz" || true
+# "$SCRIPT_ROOT/scripts/compare-builds.sh" "$dotnetDir" "microsoft-built-dotnet-sdk-${fullSdkVersion}.tar.gz" || true
 
 echo "ALL TESTS PASSED!"

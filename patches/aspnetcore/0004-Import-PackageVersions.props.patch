@@ -1,0 +1,26 @@
+From d079306ba1ac6eea31ffc96a99edc747d997c7f1 Mon Sep 17 00:00:00 2001
+From: adaggarwal <aditya.aggarwal@microsoft.com>
+Date: Thu, 14 Nov 2019 16:55:29 +0000
+Subject: [PATCH 04/15] Import PackageVersions.props
+
+---
+ eng/Versions.props | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/eng/Versions.props b/eng/Versions.props
+index 4dcc1ad866..60abba6a7e 100644
+--- a/eng/Versions.props
++++ b/eng/Versions.props
+@@ -268,6 +268,9 @@
+     <XunitExtensibilityExecutionPackageVersion>$(XunitVersion)</XunitExtensibilityExecutionPackageVersion>
+     <MicrosoftDataSqlClientPackageVersion>1.0.19249.1</MicrosoftDataSqlClientPackageVersion>
+   </PropertyGroup>
++
++  <Import Project="$(DotNetPackageVersionPropsPath)" Condition="Exists('$(DotNetPackageVersionPropsPath)')" />
++
+   <!-- Restore feeds -->
+   <PropertyGroup Label="Restore feeds">
+     <!-- In an orchestrated build, this may be overridden to other Azure feeds. -->
+-- 
+2.31.1
+

@@ -1,4 +1,4 @@
-From 99cb956f9a326aebc956fc21fae9476fa50eef88 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 8 Oct 2019 17:02:29 -0400
 Subject: [PATCH 3/9] Enable building on arm64 machines
@@ -46,7 +46,7 @@ index fe43161d7..b17389329 100644
      <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
      <DebugType>embedded</DebugType>
 diff --git a/src/redist/targets/Crossgen.targets b/src/redist/targets/Crossgen.targets
-index 47adeabea..3fccba0e6 100644
+index 30454c73a..9d53b7a82 100644
 --- a/src/redist/targets/Crossgen.targets
 +++ b/src/redist/targets/Crossgen.targets
 @@ -5,14 +5,14 @@
@@ -68,10 +68,10 @@ index 47adeabea..3fccba0e6 100644
        <SharedFrameworkNameVersionPath>$(RedistLayoutPath)shared/$(SharedFrameworkName)/$(MicrosoftNETCoreAppRuntimePackageVersion)</SharedFrameworkNameVersionPath>
        <DIASymReaderCrossgenFilter>*</DIASymReaderCrossgenFilter>
 diff --git a/src/redist/targets/GenerateLayout.targets b/src/redist/targets/GenerateLayout.targets
-index b1f5d5772..3cdaef7ea 100644
+index 2a2c64588..7e7d069d3 100644
 --- a/src/redist/targets/GenerateLayout.targets
 +++ b/src/redist/targets/GenerateLayout.targets
-@@ -42,11 +42,11 @@
+@@ -46,11 +46,11 @@
  
        <!-- Use the "x64" Rid when downloading Linux shared framework 'DEB' installer files. -->
        <SharedFrameworkInstallerFileRid>$(CoreSetupRid)</SharedFrameworkInstallerFileRid>
@@ -86,7 +86,7 @@ index b1f5d5772..3cdaef7ea 100644
        <AlternateArchitecture Condition="'$(Architecture)' == 'x86'">x64</AlternateArchitecture>
        <AlternateArchitecture Condition="'$(Architecture)' == 'x64'">x86</AlternateArchitecture>
 diff --git a/src/redist/targets/GetRuntimeInformation.targets b/src/redist/targets/GetRuntimeInformation.targets
-index bdc42db26..6e010c5ce 100644
+index abaecb8a4..306155b56 100644
 --- a/src/redist/targets/GetRuntimeInformation.targets
 +++ b/src/redist/targets/GetRuntimeInformation.targets
 @@ -13,7 +13,6 @@
@@ -98,5 +98,5 @@ index bdc42db26..6e010c5ce 100644
      </PropertyGroup>
      
 -- 
-2.21.0
+2.31.1
 

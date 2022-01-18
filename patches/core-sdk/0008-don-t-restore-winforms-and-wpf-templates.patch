@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Fri, 19 Nov 2021 00:00:51 +0000
+Subject: [PATCH 8/9] don't restore winforms and wpf templates
+
+---
+ src/redist/targets/BundledTemplates.targets | 18 ------------------
+ 1 file changed, 18 deletions(-)
+
+diff --git a/src/redist/targets/BundledTemplates.targets b/src/redist/targets/BundledTemplates.targets
+index caffdaa6f..ce953bbd0 100644
+--- a/src/redist/targets/BundledTemplates.targets
++++ b/src/redist/targets/BundledTemplates.targets
+@@ -32,8 +32,6 @@
+     <Bundled31Templates Include="Microsoft.DotNet.Common.ItemTemplates" PackageVersion="$(MicrosoftDotNetCommonItemTemplates31PackageVersion)" />
+     <Bundled31Templates Include="Microsoft.DotNet.Common.ProjectTemplates.3.1" PackageVersion="$(MicrosoftDotNetCommonProjectTemplates31PackageVersion)" />
+     <Bundled31Templates Include="Microsoft.DotNet.Test.ProjectTemplates.3.1" PackageVersion="$(MicrosoftDotNetTestProjectTemplates31PackageVersion)" />
+-    <Bundled31Templates Include="Microsoft.Dotnet.Wpf.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWpfProjectTemplates31PackageVersion)" />
+-    <Bundled31Templates Include="Microsoft.Dotnet.WinForms.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWinFormsProjectTemplates31PackageVersion)" />
+     <Bundled31Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor31Templates)" />
+     <Bundled31Templates Include="Microsoft.DotNet.Web.ProjectTemplates.3.1" PackageVersion="$(AspNetCorePackageVersionFor31Templates)" />
+     <Bundled31Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.1" PackageVersion="$(AspNetCorePackageVersionFor31Templates)" />
+@@ -43,8 +41,6 @@
+     <Bundled30Templates Include="Microsoft.DotNet.Common.ItemTemplates" PackageVersion="$(MicrosoftDotNetCommonItemTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Common.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetCommonProjectTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Test.ProjectTemplates.3.0" PackageVersion="$(MicrosoftDotNetTestProjectTemplates30PackageVersion)" />
+-    <Bundled30Templates Include="Microsoft.Dotnet.Wpf.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWpfProjectTemplates30PackageVersion)" />
+-    <Bundled30Templates Include="Microsoft.Dotnet.WinForms.ProjectTemplates" PackageVersion="$(MicrosoftDotnetWinFormsProjectTemplates30PackageVersion)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.ItemTemplates" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+     <Bundled30Templates Include="Microsoft.DotNet.Web.Spa.ProjectTemplates.3.0" PackageVersion="$(AspNetCorePackageVersionFor30Templates)" />
+@@ -110,16 +106,6 @@
+                               [$(NUnit3Templates30PackageVersion)];
+                               [$(NUnit3Templates31PackageVersion)];
+                               " />
+-
+-   <PackageDownload Update="Microsoft.Dotnet.Wpf.ProjectTemplates"
+-                    Version="[$(MicrosoftDotnetWpfProjectTemplates30PackageVersion)];
+-                             [$(MicrosoftDotnetWpfProjectTemplates31PackageVersion)];
+-                             " />
+-
+-    <PackageDownload Update="Microsoft.Dotnet.Winforms.ProjectTemplates"
+-                     Version="[$(MicrosoftDotnetWinFormsProjectTemplates30PackageVersion)];
+-                              [$(MicrosoftDotnetWinFormsProjectTemplates31PackageVersion)];
+-                             " />
+   </ItemGroup>
+ 
+   <Target Name="LayoutTemplates"
+@@ -127,10 +113,6 @@
+ 
+   <Target Name="LayoutTemplatesForSDK"
+           DependsOnTargets="SetupBundledComponents;CalculateTemplatesVersions">
+-    <ItemGroup Condition="!$(ProductMonikerRid.StartsWith('win'))">
+-      <BundledTemplate Remove="Microsoft.Dotnet.Wpf.ProjectTemplates" />
+-      <BundledTemplate Remove="Microsoft.Dotnet.WinForms.ProjectTemplates" />
+-    </ItemGroup>
+     <Copy SourceFiles="%(Bundled31Templates.RestoredNupkgPath)"
+           DestinationFolder="$(RedistLayoutPath)templates/$(BundledTemplates31InstallPath)"/>
+   </Target>
+-- 
+2.31.1
+

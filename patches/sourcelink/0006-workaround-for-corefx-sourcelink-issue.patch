@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Tue, 16 Nov 2021 20:03:11 +0000
+Subject: [PATCH] workaround for corefx sourcelink issue
+
+For some reason here in the corefx build, SourceRoot has a couple of incorrect
+items. This clears them before setting the true SourceRoot.
+---
+ .../build/Microsoft.Build.Tasks.Git.targets                 | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.targets b/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.targets
+index 213daf5..d1d8411 100644
+--- a/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.targets
++++ b/src/Microsoft.Build.Tasks.Git/build/Microsoft.Build.Tasks.Git.targets
+@@ -18,6 +18,12 @@
+   </PropertyGroup>
+   
+   <Target Name="InitializeSourceControlInformationFromSourceControlManager">
++
++    <!-- Workaround for source build corefx/sourcelink issue -->
++    <ItemGroup>
++      <SourceRoot Remove="@(SourceRoot)"/>
++    </ItemGroup>
++
+     <!--
+       Reports a warning if the given project doesn't belong to a repository under source control.
+     -->

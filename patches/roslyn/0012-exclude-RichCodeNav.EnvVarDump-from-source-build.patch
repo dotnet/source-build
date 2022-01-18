@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Thu, 9 Dec 2021 16:44:08 -0800
+Subject: [PATCH] exclude RichCodeNav.EnvVarDump from source build
+
+---
+ eng/targets/Settings.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/eng/targets/Settings.props b/eng/targets/Settings.props
+index bf032bfe021..60d08638f31 100644
+--- a/eng/targets/Settings.props
++++ b/eng/targets/Settings.props
+@@ -132,7 +132,7 @@
+      Code indexing targets to help generating LSIF from indexing builds.
+   -->
+   <ItemGroup>
+-    <PackageReference Include="RichCodeNav.EnvVarDump" Version="$(RichCodeNavEnvVarDumpVersion)" PrivateAssets="all" />
++    <PackageReference Include="RichCodeNav.EnvVarDump" Version="$(RichCodeNavEnvVarDumpVersion)" PrivateAssets="all" Condition="'$(DotNetBuildFromSource)' != 'true'"/>
+   </ItemGroup>
+ 
+   <!-- 

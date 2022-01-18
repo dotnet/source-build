@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Mon, 8 Nov 2021 18:47:44 +0000
+Subject: [PATCH] ignore warning NU5128
+
+---
+ src/XliffTasks/XliffTasks.csproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/XliffTasks/XliffTasks.csproj b/src/XliffTasks/XliffTasks.csproj
+index d967ac3..37ed255 100644
+--- a/src/XliffTasks/XliffTasks.csproj
++++ b/src/XliffTasks/XliffTasks.csproj
+@@ -11,6 +11,7 @@
+     <IsPackable>true</IsPackable>
+     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+     <LangVersion>7.2</LangVersion>
++    <NoWarn>$(NoWarn);NU5128</NoWarn>
+   </PropertyGroup>
+ 
+   <ItemGroup>
