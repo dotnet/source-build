@@ -197,7 +197,7 @@ jobs:
   # Remove the existing copy so we can write a new one.
   - bash: |
       set -ex
-      sudo rm /tmp/PackageVersions.props
+      sudo rm -f /tmp/PackageVersions.props
     displayName: Remove root-owned temp files
     condition: always()
     continueOnError: true
