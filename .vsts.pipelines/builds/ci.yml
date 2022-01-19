@@ -50,24 +50,6 @@ stages:
           submodules: true
         - template: /eng/common/templates/steps/source-build.yml
 
-      # Jobs that are useful to validate the build runs on the platform, but shouldn't run in the
-      # official build. In dotnet/source-build, we should *only* produce the intermediate nupkg in
-      # the official build. Our source-built packages are not necessarily the same as the versions
-      # on nuget.org and must not make their way into the channel. (E.g. ours are not signed.)
-      - ${{ if or(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest')) }}:
-
-        - job: macOS
-          pool:
-            name: Hosted macOS
-          variables:
-          - name: _BuildConfig
-            value: Release
-          steps:
-          - checkout: self
-            submodules: true
-          - script: ./build.sh --ci --restore --build --pack --publish
-            displayName: Build
-
 - ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
   - template: /eng/common/templates/post-build/post-build.yml
     parameters:
