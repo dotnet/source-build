@@ -10,7 +10,8 @@ In general, you should aim to use one version of each package.  If you are using
 
 ## Deciding what version to use
 - If you are using the package as reference-only and want the version to be pinned, use a literal version number in the csprojs that reference the project.  You can also set up a reference-only package version variable in eng/Versions.props, for instance `<PackageNameReferenceOnly>1.2.3</PackageNameReferenceOnly>` in addition to `<PackageNamePackageVersion>4.5.6</PackageNamePackageVersion>`.  Also verify that the package is available in source-build-reference-packages, and if not, contact the source-build team.
-- If you are using the package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in eng/Versions.props.  This will be overridden in some cases by source-build. 
+- If you are using the package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in eng/Versions.props.  This will be overridden in some cases by source-build.
+- If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package.  Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
 
 ## Internal dependencies
 Adding a new dotnet dependency is usually pretty straightforward but does have some edge cases.  Use this checklist:
