@@ -93,7 +93,7 @@ jobs:
       set -e
       ${{ format('{0}build{1} $(args.build)', parameters.scriptPrefix, parameters.scriptSuffix) }}
     displayName: Build source-build
-    timeoutInMinutes: 150
+    timeoutInMinutes: 240
 
   - template: ../steps/check-space-powershell.yml
 
