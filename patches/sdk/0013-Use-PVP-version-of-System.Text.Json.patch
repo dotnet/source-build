@@ -1,16 +1,16 @@
-From c8c8d9853eb8431064d88e5135db83f5e31dd58c Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 5 Nov 2020 14:23:06 +0000
-Subject: [PATCH] Use PVP version of System.Text.Json
+Subject: [PATCH 13/24] Use PVP version of System.Text.Json
 
 ---
- .../Microsoft.DotNet.TemplateLocator.csproj                   | 2 +-
- .../Microsoft.DotNet.MSBuildSdkResolver.csproj                | 4 ++--
- .../Microsoft.NET.Sdk.WorkloadManifestReader.csproj           | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ .../Microsoft.DotNet.TemplateLocator.csproj                     | 2 +-
+ .../Microsoft.DotNet.MSBuildSdkResolver.csproj                  | 2 +-
+ .../Microsoft.NET.Sdk.WorkloadManifestReader.csproj             | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
-index 910e50c6f..c39ef136e 100644
+index c31b3b179d..026126a487 100644
 --- a/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
 +++ b/src/Microsoft.DotNet.TemplateLocator/Microsoft.DotNet.TemplateLocator.csproj
 @@ -55,7 +55,7 @@
@@ -23,10 +23,10 @@ index 910e50c6f..c39ef136e 100644
    </ItemGroup>
  </Project>
 diff --git a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
-index 22662b41a..8061ddead 100644
+index 9daf6545ff..3e60b15fa8 100644
 --- a/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
 +++ b/src/Resolvers/Microsoft.DotNet.MSBuildSdkResolver/Microsoft.DotNet.MSBuildSdkResolver.csproj
-@@ -74,7 +74,7 @@
+@@ -81,7 +81,7 @@
    </ItemGroup>
    
    <ItemGroup>
@@ -35,15 +35,8 @@ index 22662b41a..8061ddead 100644
      <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'"/>
      
      <!-- Reference this package to avoid package downgrade errors.  See https://github.com/dotnet/sdk/issues/3044 for details -->
-@@ -102,4 +102,4 @@
-     </ItemGroup>
-   </Target>
- 
--</Project>
-\ No newline at end of file
-+</Project>
 diff --git a/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj b/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
-index 4c151eaad..2bac54eff 100644
+index 3eec3fe5be..1fb9fe73f2 100644
 --- a/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
 +++ b/src/Resolvers/Microsoft.NET.Sdk.WorkloadManifestReader/Microsoft.NET.Sdk.WorkloadManifestReader.csproj
 @@ -20,7 +20,7 @@
@@ -55,6 +48,3 @@ index 4c151eaad..2bac54eff 100644
      <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonPackageVersion)" Condition="'$(UseSystemTextJson)'!='True'" />
    </ItemGroup>
  
--- 
-2.25.4
-
