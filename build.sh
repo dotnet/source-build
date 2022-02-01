@@ -115,6 +115,7 @@ if [ "${internalPackageFeedPat:-}" ]; then
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-f431858f-2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-f431858f-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-5709275b/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-runtime-b3afe992/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-5a6c095d/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-5a6c095d-2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/public/_packaging/darc-pub-dotnet-templating-5a6c095d-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
@@ -125,6 +126,7 @@ if [ "${internalPackageFeedPat:-}" ]; then
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-c663adee/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-c663adee-1/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-c663adee-2/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
+    {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-55738ff9/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/darc-int-dotnet-aspnetcore-0bc3c376/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/internal/_packaging/darc-int-dotnet-runtime-7211aa01/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
     {"endpoint":"https://pkgs.dev.azure.com/dnceng/_packaging/darc-int-dotnet-aspnetcore-b92c9f50/nuget/v3/index.json", "username":"optional", "password":"'$internalPackageFeedPat'"},
@@ -137,9 +139,6 @@ fi
 
 set -x
 scriptroot="$( cd -P "$( dirname "$source" )" && pwd )"
-
-# runtime 3.1.1 required for darc
-"$scriptroot/eng/common/dotnet-install.sh"  -runtime dotnet -version 3.1.1
 
 if [ "$alternateTarget" == "true" ]; then
   "$CLIPATH/dotnet" $SDKPATH/MSBuild.dll "$scriptroot/build.proj" /bl:source-build-test.binlog /flp:v=diag /clp:v=m "$@"
