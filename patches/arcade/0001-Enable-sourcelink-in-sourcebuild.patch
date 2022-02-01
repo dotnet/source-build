@@ -1,0 +1,41 @@
+From 0c5f1d4096d7ecba330f2bde130d98ea51a1fb55 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 7 Aug 2019 19:23:07 -0500
+Subject: [PATCH 01/14] Enable sourcelink in sourcebuild.
+
+---
+ .../tools/RepositoryInfo.targets                   | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
+
+diff --git a/src/Microsoft.DotNet.Arcade.Sdk/tools/RepositoryInfo.targets b/src/Microsoft.DotNet.Arcade.Sdk/tools/RepositoryInfo.targets
+index 550ad298..8d31d833 100644
+--- a/src/Microsoft.DotNet.Arcade.Sdk/tools/RepositoryInfo.targets
++++ b/src/Microsoft.DotNet.Arcade.Sdk/tools/RepositoryInfo.targets
+@@ -4,23 +4,11 @@
+   <!--
+     Include both GitHub and Azure DevOps (formerly VSTS) packages to enable SourceLink in repositories that mirror to Azure DevOps (formerly VSTS).
+   -->
+-  <ItemGroup Condition="'$(DotNetBuildFromSource)' != 'true'">
++  <ItemGroup>
+     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+     <PackageReference Include="Microsoft.SourceLink.Vsts.Git" Version="$(MicrosoftSourceLinkVersion)" PrivateAssets="all" IsImplicitlyDefined="true" />
+   </ItemGroup>
+ 
+-  <!--
+-    Workarounds for Source Link not being available for source build.
+-    Set the SourceRoot to repo root to facilitate deterministic source paths when SCM queries are disabled.
+-    Set the RepositoryUrl to the Build.Repository.Uri Azure DevOps build variable if on CI, otherwise to local repo path.
+-  -->
+-
+-  <!-- Disable SourceLink when building from source -->
+-  <PropertyGroup Condition="'$(DotNetBuildFromSource)' == 'true'">
+-    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+-    <EnableSourceLink>false</EnableSourceLink>
+-  </PropertyGroup>
+-
+   <ItemGroup Condition="'$(EnableSourceControlManagerQueries)' != 'true'">
+     <SourceRoot Include="$(RepoRoot)" />
+   </ItemGroup>
+-- 
+2.21.0
+
