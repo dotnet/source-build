@@ -1,19 +1,19 @@
-From 0b9ffe559f7715b283378bfa50563dde380ce679 Mon Sep 17 00:00:00 2001
+From bf38cdc2de084b391e40e8d7244ad1c6e11b0e42 Mon Sep 17 00:00:00 2001
 From: adaggarwal <aditya.aggarwal@microsoft.com>
 Date: Thu, 14 Nov 2019 17:34:41 +0000
-Subject: [PATCH 07/14] Remove Yarn dependency - not used in source-build
+Subject: [PATCH 07/15] Remove Yarn dependency - not used in source-build
 
 ---
  eng/targets/Npm.Common.targets                                 | 3 ---
  .../src/Microsoft.Authentication.WebAssembly.Msal.csproj       | 2 --
  ...oft.AspNetCore.Components.WebAssembly.Authentication.csproj | 2 --
- .../NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj  | 3 ---
- .../SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj    | 3 ---
- src/Shared/E2ETesting/E2ETesting.targets                       | 2 --
- 6 files changed, 15 deletions(-)
+ .../NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj  | 2 --
+ .../SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj    | 2 --
+ src/Shared/E2ETesting/E2ETesting.targets                       | 3 ---
+ 6 files changed, 14 deletions(-)
 
 diff --git a/eng/targets/Npm.Common.targets b/eng/targets/Npm.Common.targets
-index 062a9d3a8f..3f91b02d42 100644
+index 0529a0c358..1489f52abf 100644
 --- a/eng/targets/Npm.Common.targets
 +++ b/eng/targets/Npm.Common.targets
 @@ -1,8 +1,5 @@
@@ -26,11 +26,11 @@ index 062a9d3a8f..3f91b02d42 100644
      <NormalizedPackageId>$(PackageId.Replace('@','').Replace('/','-'))</NormalizedPackageId>
      <PackageFileName>$(NormalizedPackageId)-$(PackageVersion).tgz</PackageFileName>
 diff --git a/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj b/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
-index 132816fbb0..c641900d37 100644
+index d246ea4058..6f56e826d1 100644
 --- a/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
 +++ b/src/Components/WebAssembly/Authentication.Msal/src/Microsoft.Authentication.WebAssembly.Msal.csproj
 @@ -1,7 +1,5 @@
- <Project Sdk="Microsoft.NET.Sdk.Razor">
+ ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
  
 -  <Sdk Name="Yarn.MSBuild" />
 -
@@ -38,7 +38,7 @@ index 132816fbb0..c641900d37 100644
      <TargetFramework>netstandard2.1</TargetFramework>
      <Description>Authenticate your Blazor webassembly applications with Azure Active Directory and Azure Active Directory B2C</Description>
 diff --git a/src/Components/WebAssembly/WebAssembly.Authentication/src/Microsoft.AspNetCore.Components.WebAssembly.Authentication.csproj b/src/Components/WebAssembly/WebAssembly.Authentication/src/Microsoft.AspNetCore.Components.WebAssembly.Authentication.csproj
-index 139307f052..0dc54bf406 100644
+index 2b471e7073..314fc3f3c2 100644
 --- a/src/Components/WebAssembly/WebAssembly.Authentication/src/Microsoft.AspNetCore.Components.WebAssembly.Authentication.csproj
 +++ b/src/Components/WebAssembly/WebAssembly.Authentication/src/Microsoft.AspNetCore.Components.WebAssembly.Authentication.csproj
 @@ -1,7 +1,5 @@
@@ -50,44 +50,43 @@ index 139307f052..0dc54bf406 100644
      <TargetFramework>netstandard2.1</TargetFramework>
      <Description>Build client-side authentication for single-page applications (SPAs).</Description>
 diff --git a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
-index e67862ea45..29c3b8c137 100644
+index 5a55186f3c..4fdeb33a4e 100644
 --- a/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
 +++ b/src/Middleware/NodeServices/src/Microsoft.AspNetCore.NodeServices.csproj
-@@ -16,9 +16,6 @@
-     <Reference Include="Newtonsoft.Json" />
+@@ -17,8 +17,6 @@
    </ItemGroup>
  
--  <!-- Version of this SDK is set in global.json -->
+   <!-- Version of this SDK is set in global.json -->
 -  <Sdk Name="Yarn.MSBuild" />
 -
    <Target Name="YarnInstall">
      <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
-     <Yarn Command="install --mutex network" />
+     <Yarn Command="install --mutex network --frozen-lockfile" />
 diff --git a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
-index 3db479b01e..ad0149356f 100644
+index 4551b12d2c..d05a3662cb 100644
 --- a/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
 +++ b/src/Middleware/SpaServices/src/Microsoft.AspNetCore.SpaServices.csproj
-@@ -20,9 +20,6 @@
-     <Reference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" />
+@@ -21,8 +21,6 @@
    </ItemGroup>
  
--  <!-- Version of this SDK is set in global.json -->
+   <!-- Version of this SDK is set in global.json -->
 -  <Sdk Name="Yarn.MSBuild" />
 -
    <Target Name="YarnInstall">
      <Message Text="Running yarn install on $(MSBuildProjectFile)" Importance="High" />
-     <Yarn Command="install --mutex network" />
+     <Yarn Command="install --mutex network --frozen-lockfile" />
 diff --git a/src/Shared/E2ETesting/E2ETesting.targets b/src/Shared/E2ETesting/E2ETesting.targets
-index 1cb421de3b..85849ff5c0 100644
+index 5e04cdaf56..766f7c100e 100644
 --- a/src/Shared/E2ETesting/E2ETesting.targets
 +++ b/src/Shared/E2ETesting/E2ETesting.targets
-@@ -1,6 +1,4 @@
+@@ -1,7 +1,4 @@
  <Project>
 -  <!-- Version of this SDK is set in global.json -->
 -  <Sdk Name="Yarn.MSBuild" />
- 
+-
    <!-- Make sure the settings files get copied to the test output folder. -->
    <ItemGroup>
+     <None Update="e2eTestSettings*.json">
 -- 
-2.18.0
+2.31.1
 

@@ -34,11 +34,16 @@
 
   <ItemGroup>
     <RepositoryReference Include="arcade" />
+    <RepositoryReference Include="humanizer" />
     <RepositoryReference Include="xliff-tasks" />
   </ItemGroup>
 
   <ItemGroup>
     <UseSourceBuiltSdkOverride Include="@(ArcadeSdkOverride)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EnvironmentVariables Include="PATH=$(PATH):$(DotNetCliToolDir)" />
   </ItemGroup>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

@@ -133,7 +133,7 @@
           $(DotNetCliToolDir)shared\2.1.0\**;
           $(DotNetCliToolDir)tools\**;
           "
-        Condition="'$(CustomDotNetSdkDir)' == ''"/>
+        Condition=" '$(CustomDotNetSdkDir)' == '' AND '$(PackBaseTarball)' != 'true' "/>
 
       <TarballCopyFile
         Include="@(TarballRootToolFile)"
@@ -152,6 +152,11 @@
       <TarballCopyFile
         Include="$(ProjectDir)support/tarball/build.sh"
         RelativeDestination="build.sh" />
+
+      <TarballCopyFile
+        Condition=" '$(PackBaseTarball)' == 'true' "
+        Include="$(ProjectDir)support/tarball/prep.sh"
+        RelativeDestination="prep.sh" />
 
       <!-- Setup package version props to include both source-built and running PackageVersions.props -->
       <TarballCopyFile
@@ -280,7 +285,13 @@
   <Target Name="AddTarballExternalTarballs">
     <ItemGroup>
       <ExternalTarballFile
+        Condition=" '$(PackBaseTarball)' != 'true' "
         Include="$(ExternalTarballsDir)*.tar.gz"
+        RelativeRoot="packages\archive\" />
+
+      <ExternalTarballFile
+        Condition=" '$(PackBaseTarball)' == 'true' "
+        Include="$(ArchiveArtifactsTextFile)"
         RelativeRoot="packages\archive\" />
 
       <TarballCopyFile Include="@(ExternalTarballFile);" />

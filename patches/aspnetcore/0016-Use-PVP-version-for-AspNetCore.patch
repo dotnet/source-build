@@ -1,0 +1,27 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 9 Dec 2021 20:04:10 -0600
+Subject: [PATCH] Use PVP version for AspNetCore
+
+---
+ eng/tools/RepoTasks/RepoTasks.csproj | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/eng/tools/RepoTasks/RepoTasks.csproj b/eng/tools/RepoTasks/RepoTasks.csproj
+index e9c04926a8..1153429439 100644
+--- a/eng/tools/RepoTasks/RepoTasks.csproj
++++ b/eng/tools/RepoTasks/RepoTasks.csproj
+@@ -12,8 +12,8 @@
+   </PropertyGroup>
+ 
+   <ItemGroup>
+-    <PackageReference Include="NuGet.Build.Tasks" Version="5.1.0" />
+-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
++    <PackageReference Include="NuGet.Build.Tasks" Version="$(NuGetBuildTasksPackageVersion)" />
++    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="$(MicrosoftExtensionsDependencyModelPackageVersion)" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFramework)' == '$(DefaultNetCoreTargetFramework)'">
+-- 
+2.31.1
+

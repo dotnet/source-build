@@ -1,0 +1,105 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Fri, 5 Nov 2021 18:12:11 +0000
+Subject: [PATCH] work around generated resource code errors
+
+---
+ .../Core/Portable/WorkspacesResources.resx    | 26 +++++++++----------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/src/Workspaces/Core/Portable/WorkspacesResources.resx b/src/Workspaces/Core/Portable/WorkspacesResources.resx
+index cc037f4c4dd..01c8661a656 100644
+--- a/src/Workspaces/Core/Portable/WorkspacesResources.resx
++++ b/src/Workspaces/Core/Portable/WorkspacesResources.resx
+@@ -177,16 +177,16 @@
+   <data name="Workspace_is_not_empty" xml:space="preserve">
+     <value>Workspace is not empty.</value>
+   </data>
+-  <data name="_0_is_not_part_of_the_workspace" xml:space="preserve">
++  <data name="0_is_not_part_of_the_workspace" xml:space="preserve">
+     <value>'{0}' is not part of the workspace.</value>
+   </data>
+-  <data name="_0_is_already_part_of_the_workspace" xml:space="preserve">
++  <data name="0_is_already_part_of_the_workspace" xml:space="preserve">
+     <value>'{0}' is already part of the workspace.</value>
+   </data>
+-  <data name="_0_is_not_referenced" xml:space="preserve">
++  <data name="0_is_not_referenced" xml:space="preserve">
+     <value>'{0}' is not referenced.</value>
+   </data>
+-  <data name="_0_is_already_referenced" xml:space="preserve">
++  <data name="0_is_already_referenced" xml:space="preserve">
+     <value>'{0}' is already referenced.</value>
+   </data>
+   <data name="Adding_project_reference_from_0_to_1_will_cause_a_circular_reference" xml:space="preserve">
+@@ -198,10 +198,10 @@
+   <data name="Metadata_is_already_referenced" xml:space="preserve">
+     <value>Metadata is already referenced.</value>
+   </data>
+-  <data name="_0_is_not_present" xml:space="preserve">
++  <data name="0_is_not_present" xml:space="preserve">
+     <value>{0} is not present.</value>
+   </data>
+-  <data name="_0_is_already_present" xml:space="preserve">
++  <data name="0_is_already_present" xml:space="preserve">
+     <value>{0} is already present.</value>
+   </data>
+   <data name="The_specified_document_is_not_a_version_of_this_document" xml:space="preserve">
+@@ -234,7 +234,7 @@
+   <data name="Temporary_storage_cannot_be_written_more_than_once" xml:space="preserve">
+     <value>Temporary storage cannot be written more than once.</value>
+   </data>
+-  <data name="_0_is_not_open" xml:space="preserve">
++  <data name="0_is_not_open" xml:space="preserve">
+     <value>'{0}' is not open.</value>
+   </data>
+   <data name="A_language_name_cannot_be_specified_for_this_option" xml:space="preserve">
+@@ -267,7 +267,7 @@
+   <data name="Expected_0" xml:space="preserve">
+     <value>Expected {0}.</value>
+   </data>
+-  <data name="_0_must_be_a_non_null_and_non_empty_string" xml:space="preserve">
++  <data name="0_must_be_a_non_null_and_non_empty_string" xml:space="preserve">
+     <value>"{0}" must be a non-null and non-empty string.</value>
+   </data>
+   <data name="Expected_header_colon_0" xml:space="preserve">
+@@ -285,10 +285,10 @@
+   <data name="Only_submission_project_can_reference_submission_projects" xml:space="preserve">
+     <value>Only submission project can reference submission projects.</value>
+   </data>
+-  <data name="_0_still_contains_open_documents" xml:space="preserve">
++  <data name="0_still_contains_open_documents" xml:space="preserve">
+     <value>{0} still contains open documents.</value>
+   </data>
+-  <data name="_0_is_still_open" xml:space="preserve">
++  <data name="0_is_still_open" xml:space="preserve">
+     <value>{0} is still open.</value>
+   </data>
+   <data name="Arrays_with_more_than_one_dimension_cannot_be_serialized" xml:space="preserve">
+@@ -453,7 +453,7 @@
+   <data name="Exceptions_colon" xml:space="preserve">
+     <value>Exceptions:</value>
+   </data>
+-  <data name="_0_returned_an_uninitialized_ImmutableArray" xml:space="preserve">
++  <data name="0_returned_an_uninitialized_ImmutableArray" xml:space="preserve">
+     <value>'{0}' returned an uninitialized ImmutableArray</value>
+   </data>
+   <data name="Failure" xml:space="preserve">
+@@ -471,7 +471,7 @@
+   <data name="Enable_and_ignore_future_errors" xml:space="preserve">
+     <value>Enable and ignore future errors</value>
+   </data>
+-  <data name="_0_encountered_an_error_and_has_been_disabled" xml:space="preserve">
++  <data name="0_encountered_an_error_and_has_been_disabled" xml:space="preserve">
+     <value>'{0}' encountered an error and has been disabled.</value>
+   </data>
+   <data name="Show_Stack_Trace" xml:space="preserve">
+@@ -541,7 +541,7 @@
+   <data name="Document_does_not_support_syntax_trees" xml:space="preserve">
+     <value>Document does not support syntax trees</value>
+   </data>
+-  <data name="_0_is_in_a_different_project" xml:space="preserve">
++  <data name="0_is_in_a_different_project" xml:space="preserve">
+     <value>{0} is in a different project.</value>
+   </data>
+   <data name="Project_does_not_contain_specified_reference" xml:space="preserve">

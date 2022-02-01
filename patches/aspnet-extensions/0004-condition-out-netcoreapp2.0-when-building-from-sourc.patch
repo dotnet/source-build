@@ -1,0 +1,229 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Wed, 17 Nov 2021 22:43:34 +0000
+Subject: [PATCH] condition out netcoreapp2.0 when building from source
+
+---
+ .../Memory/ref/Microsoft.Extensions.Caching.Memory.csproj        | 1 +
+ .../ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj     | 1 +
+ src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj      | 1 +
+ .../Systemd/ref/Microsoft.Extensions.Hosting.Systemd.csproj      | 1 +
+ src/HttpClientFactory/Http/ref/Microsoft.Extensions.Http.csproj  | 1 +
+ .../Localization/ref/Microsoft.Extensions.Localization.csproj    | 1 +
+ .../ref/Microsoft.Extensions.Logging.Configuration.csproj        | 1 +
+ .../ref/Microsoft.Extensions.Logging.Console.csproj              | 1 +
+ .../Logging.Debug/ref/Microsoft.Extensions.Logging.Debug.csproj  | 1 +
+ .../ref/Microsoft.Extensions.Logging.EventLog.csproj             | 1 +
+ .../ref/Microsoft.Extensions.Logging.EventSource.csproj          | 1 +
+ .../ref/Microsoft.Extensions.Logging.TraceSource.csproj          | 1 +
+ src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj      | 1 +
+ .../Microsoft.Extensions.Options.ConfigurationExtensions.csproj  | 1 +
+ .../ref/Microsoft.Extensions.Options.DataAnnotations.csproj      | 1 +
+ src/Options/Options/ref/Microsoft.Extensions.Options.csproj      | 1 +
+ src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj      | 1 +
+ 17 files changed, 17 insertions(+)
+
+diff --git a/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj b/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj
+index ea36e245c..8bab2c60d 100644
+--- a/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj
++++ b/src/Caching/Memory/ref/Microsoft.Extensions.Caching.Memory.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Caching.Memory.netstandard2.0.cs" />
+diff --git a/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj b/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
+index 83dae521f..938f88cd2 100644
+--- a/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
++++ b/src/HealthChecks/HealthChecks/ref/Microsoft.Extensions.Diagnostics.HealthChecks.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Diagnostics.HealthChecks.netstandard2.0.cs" />
+diff --git a/src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj b/src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj
+index e75cb1125..ce91e2230 100644
+--- a/src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj
++++ b/src/Hosting/Hosting/ref/Microsoft.Extensions.Hosting.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;netstandard2.1;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Hosting.netstandard2.0.cs" />
+diff --git a/src/Hosting/Systemd/ref/Microsoft.Extensions.Hosting.Systemd.csproj b/src/Hosting/Systemd/ref/Microsoft.Extensions.Hosting.Systemd.csproj
+index 798cfdcc1..2f7b5870e 100644
+--- a/src/Hosting/Systemd/ref/Microsoft.Extensions.Hosting.Systemd.csproj
++++ b/src/Hosting/Systemd/ref/Microsoft.Extensions.Hosting.Systemd.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+     <Compile Include="Microsoft.Extensions.Hosting.Systemd.netstandard2.1.cs" />
+diff --git a/src/HttpClientFactory/Http/ref/Microsoft.Extensions.Http.csproj b/src/HttpClientFactory/Http/ref/Microsoft.Extensions.Http.csproj
+index 097173637..1dfaba101 100644
+--- a/src/HttpClientFactory/Http/ref/Microsoft.Extensions.Http.csproj
++++ b/src/HttpClientFactory/Http/ref/Microsoft.Extensions.Http.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Http.netstandard2.0.cs" />
+diff --git a/src/Localization/Localization/ref/Microsoft.Extensions.Localization.csproj b/src/Localization/Localization/ref/Microsoft.Extensions.Localization.csproj
+index 67e8f38f8..f4fcb12ab 100644
+--- a/src/Localization/Localization/ref/Microsoft.Extensions.Localization.csproj
++++ b/src/Localization/Localization/ref/Microsoft.Extensions.Localization.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Localization.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.Configuration/ref/Microsoft.Extensions.Logging.Configuration.csproj b/src/Logging/Logging.Configuration/ref/Microsoft.Extensions.Logging.Configuration.csproj
+index 7071343de..ffe4209d3 100644
+--- a/src/Logging/Logging.Configuration/ref/Microsoft.Extensions.Logging.Configuration.csproj
++++ b/src/Logging/Logging.Configuration/ref/Microsoft.Extensions.Logging.Configuration.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.Configuration.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.Console/ref/Microsoft.Extensions.Logging.Console.csproj b/src/Logging/Logging.Console/ref/Microsoft.Extensions.Logging.Console.csproj
+index b82bf7ebd..d4f8a5a9f 100644
+--- a/src/Logging/Logging.Console/ref/Microsoft.Extensions.Logging.Console.csproj
++++ b/src/Logging/Logging.Console/ref/Microsoft.Extensions.Logging.Console.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.Console.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.Debug/ref/Microsoft.Extensions.Logging.Debug.csproj b/src/Logging/Logging.Debug/ref/Microsoft.Extensions.Logging.Debug.csproj
+index b35fb8a34..53ee8e7e2 100644
+--- a/src/Logging/Logging.Debug/ref/Microsoft.Extensions.Logging.Debug.csproj
++++ b/src/Logging/Logging.Debug/ref/Microsoft.Extensions.Logging.Debug.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.Debug.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.EventLog/ref/Microsoft.Extensions.Logging.EventLog.csproj b/src/Logging/Logging.EventLog/ref/Microsoft.Extensions.Logging.EventLog.csproj
+index 19e726785..a2735b99f 100644
+--- a/src/Logging/Logging.EventLog/ref/Microsoft.Extensions.Logging.EventLog.csproj
++++ b/src/Logging/Logging.EventLog/ref/Microsoft.Extensions.Logging.EventLog.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.EventLog.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.EventSource/ref/Microsoft.Extensions.Logging.EventSource.csproj b/src/Logging/Logging.EventSource/ref/Microsoft.Extensions.Logging.EventSource.csproj
+index eb007ac3b..675d2d10b 100644
+--- a/src/Logging/Logging.EventSource/ref/Microsoft.Extensions.Logging.EventSource.csproj
++++ b/src/Logging/Logging.EventSource/ref/Microsoft.Extensions.Logging.EventSource.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.EventSource.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging.TraceSource/ref/Microsoft.Extensions.Logging.TraceSource.csproj b/src/Logging/Logging.TraceSource/ref/Microsoft.Extensions.Logging.TraceSource.csproj
+index 780246fa7..f4422aa88 100644
+--- a/src/Logging/Logging.TraceSource/ref/Microsoft.Extensions.Logging.TraceSource.csproj
++++ b/src/Logging/Logging.TraceSource/ref/Microsoft.Extensions.Logging.TraceSource.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.TraceSource.netstandard2.0.cs" />
+diff --git a/src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj b/src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj
+index 0a6d562eb..311b8ee2b 100644
+--- a/src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj
++++ b/src/Logging/Logging/ref/Microsoft.Extensions.Logging.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Logging.netstandard2.0.cs" />
+diff --git a/src/Options/ConfigurationExtensions/ref/Microsoft.Extensions.Options.ConfigurationExtensions.csproj b/src/Options/ConfigurationExtensions/ref/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
+index 3b29d61c4..b49a7dfae 100644
+--- a/src/Options/ConfigurationExtensions/ref/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
++++ b/src/Options/ConfigurationExtensions/ref/Microsoft.Extensions.Options.ConfigurationExtensions.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Options.ConfigurationExtensions.netstandard2.0.cs" />
+diff --git a/src/Options/DataAnnotations/ref/Microsoft.Extensions.Options.DataAnnotations.csproj b/src/Options/DataAnnotations/ref/Microsoft.Extensions.Options.DataAnnotations.csproj
+index a7d7979ae..eb71c9bc8 100644
+--- a/src/Options/DataAnnotations/ref/Microsoft.Extensions.Options.DataAnnotations.csproj
++++ b/src/Options/DataAnnotations/ref/Microsoft.Extensions.Options.DataAnnotations.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Options.DataAnnotations.netstandard2.0.cs" />
+diff --git a/src/Options/Options/ref/Microsoft.Extensions.Options.csproj b/src/Options/Options/ref/Microsoft.Extensions.Options.csproj
+index 8358f43d5..fba72cdc0 100644
+--- a/src/Options/Options/ref/Microsoft.Extensions.Options.csproj
++++ b/src/Options/Options/ref/Microsoft.Extensions.Options.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.Options.netstandard2.0.cs" />
+diff --git a/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj b/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj
+index 5beee97dd..2de6fed70 100644
+--- a/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj
++++ b/src/WebEncoders/ref/Microsoft.Extensions.WebEncoders.csproj
+@@ -2,6 +2,7 @@
+ <Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <TargetFrameworks>netstandard2.0;$(DefaultNetCoreTargetFramework)</TargetFrameworks>
++    <TargetFrameworks Condition="'$(DotNetBuildFromSource)' == 'true'">$(DefaultNetCoreTargetFramework)</TargetFrameworks>
+   </PropertyGroup>
+   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+     <Compile Include="Microsoft.Extensions.WebEncoders.netstandard2.0.cs" />

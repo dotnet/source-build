@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 10 Dec 2021 13:10:56 -0600
+Subject: [PATCH] Force some package versions
+
+---
+ src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj | 1 +
+ .../Microsoft.DotNet.Configurer.csproj                           | 1 +
+ src/dotnet/dotnet.csproj                                         | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+index ded654b09..417ce3e36 100644
+--- a/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
++++ b/src/Microsoft.DotNet.Cli.Utils/Microsoft.DotNet.Cli.Utils.csproj
+@@ -29,6 +29,7 @@
+     <PackageReference Include="NuGet.ProjectModel" Version="$(NuGetProjectModelPackageVersion)" />
+     <PackageReference Include="Microsoft.Build" Version="$(MicrosoftBuildPackageVersion)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCorePackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+ 
+ </Project>
+diff --git a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj b/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
+index 6745ae02d..95e1603cd 100644
+--- a/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
++++ b/src/Microsoft.DotNet.Configurer/Microsoft.DotNet.Configurer.csproj
+@@ -18,6 +18,7 @@
+   <ItemGroup>
+     <PackageReference Include="NuGet.Common" Version="$(NuGetCommonPackageVersion)" />
+     <PackageReference Include="NuGet.Configuration" Version="$(NuGetConfigurationPackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+ 
+   <ItemGroup>
+diff --git a/src/dotnet/dotnet.csproj b/src/dotnet/dotnet.csproj
+index 76d162b0f..1f06f2a6e 100644
+--- a/src/dotnet/dotnet.csproj
++++ b/src/dotnet/dotnet.csproj
+@@ -71,6 +71,7 @@
+     <PackageReference Include="Microsoft.TemplateEngine.Orchestrator.RunnableProjects" Version="$(MicrosoftTemplateEngineOrchestratorRunnableProjectsPackageVersion)" />
+     <PackageReference Include="Microsoft.TemplateEngine.Utils" Version="$(MicrosoftTemplateEngineUtilsPackageVersion)" />
+     <PackageReference Include="Microsoft.TemplateSearch.Common" Version="$(MicrosoftTemplateSearchCommonPackageVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+   <ItemGroup Condition=" '$(IncludeAspNetCoreRuntime)' != 'false' ">
+     <PackageReference Include="Microsoft.AspNetCore.DeveloperCertificates.XPlat" Version="$(MicrosoftAspNetCoreDeveloperCertificatesXPlatPackageVersion)" />
+-- 
+2.31.1
+

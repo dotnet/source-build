@@ -21,11 +21,11 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(OfflineBuild)' == 'true'">
-    <BuildTasksOfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)</BuildTasksOfflineSources>
+    <BuildTasksOfflineSources>$(ReferencePackagesDir)%3B$(PrebuiltPackagesPath)%3B$(PrebuiltSourceBuiltPackagesPath)</BuildTasksOfflineSources>
   </PropertyGroup>
 
   <Target Name="Build">
-    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
+    <CallTarget Targets="UnpackTarballs;BuildXPlatTasks;AcquireDarc;FetchSources;CleanClonedSource;WriteSourceLinkMetadata;BuildTasks;ExtractToolPackage;WriteDynamicPropsToStaticPropsFiles;GenerateRootFs;ApplyPatches;PoisonPrebuiltPackages" />
   </Target>
 
   <Target Name="PrepareOfflineLocalTools"
@@ -50,6 +50,9 @@
     <Exec Command="tar -xzf $(ExternalTarballsDir)$(SourceBuiltArtifactsTarballName).*.tar.gz"
           WorkingDirectory="$(PrebuiltSourceBuiltPackagesPath)"
           Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' == ''" />
+
+    <Delete Files="$(ReferencePackagesDir)System.Collections.Immutable.1.7.1.nupkg" />
+    <Delete Files="$(ReferencePackagesDir)System.Reflection.Metadata.1.8.1.nupkg" />
 
     <Copy SourceFiles="$(PrebuiltSourceBuiltPackagesPath)PackageVersions.props" DestinationFiles="$(IntermediatePath)SourceBuiltPackageVersions.props" />
 
@@ -205,6 +208,16 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done getting source code for repos in Version.Details.xml." />
 
     <WriteLinesToFile File="$(CompletedSemaphorePath)FetchSources.complete" Overwrite="true" />
+  </Target>
+
+  <Target Name="CleanClonedSource"
+          DependsOnTargets="FetchSources">
+    <ItemGroup>
+      <TarballSrcNonOpenSourceFiles Include="$(ClonedSubmoduleDirectory)\Humanizer\samples\**\*.js" />
+    </ItemGroup>
+
+    <Message Importance="High" Text="Deleting files with questionable licenses: @(TarballSrcNonOpenSourceFiles, ' ')" />
+    <Delete Files="@(TarballSrcNonOpenSourceFiles)" />
   </Target>
 
   <Target Name="WriteSourceLinkMetadata" 

@@ -1,0 +1,255 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 10 May 2020 22:01:06 -0500
+Subject: [PATCH 7/7] Reference version finagling
+
+---
+ .../CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj    | 6 +++++-
+ src/Compilers/CSharp/csc/csc.csproj                         | 4 ++++
+ src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj   | 6 +++---
+ src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj       | 4 ++++
+ .../Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj      | 4 ++++
+ src/Compilers/VisualBasic/vbc/vbc.csproj                    | 4 ++++
+ .../Microsoft.CodeAnalysis.Debugging.Package.csproj         | 2 +-
+ .../Microsoft.CodeAnalysis.PooledObjects.Package.csproj     | 2 +-
+ .../Core/Microsoft.CodeAnalysis.EditorFeatures.csproj       | 2 +-
+ .../Microsoft.CodeAnalysis.FunctionResolver.csproj          | 2 +-
+ .../Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj  | 2 +-
+ src/Tools/BuildBoss/BuildBoss.csproj                        | 2 +-
+ .../Microsoft.CodeAnalysis.CSharp.Workspaces.csproj         | 4 ++++
+ .../Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj  | 4 ++++
+ .../Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj    | 2 +-
+ .../Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj    | 4 ++++
+ 16 files changed, 43 insertions(+), 11 deletions(-)
+
+diff --git a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
+index 51dc95ba257..d9d17b6418a 100644
+--- a/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
++++ b/src/Compilers/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.csproj
+@@ -66,5 +66,9 @@
+     <InternalsVisibleTo Include="CompilerBenchmarks" />
+     <InternalsVisibleTo Include="Microsoft.Build.Tasks.CodeAnalysis.UnitTests" />
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\CSharpAnalyzerDriver\CSharpAnalyzerDriver.projitems" Label="Shared" />
+-</Project>
++</Project>
+\ No newline at end of file
+diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
+index 9c5297b238c..b3d40ba01bc 100644
+--- a/src/Compilers/CSharp/csc/csc.csproj
++++ b/src/Compilers/CSharp/csc/csc.csproj
+@@ -37,6 +37,10 @@
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\Core\CommandLine\CommandLine.projitems" Label="Shared" />
+   <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
+ </Project>
+diff --git a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
+index de357e2be6d..4f1fb3982f5 100644
+--- a/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
++++ b/src/Compilers/Core/Portable/Microsoft.CodeAnalysis.csproj
+@@ -32,9 +32,9 @@
+       will import everything but content files from Microsoft.CodeAnalysis.Analyzers, specifically, analyzers.
+     -->
+     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="$(MicrosoftCodeAnalysisAnalyzersVersion)" Condition="'$(DotNetBuildFromSource)' != 'true'" PrivateAssets="ContentFiles" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
+-    <PackageReference Include="System.Memory" Version="$(SystemMemoryVersion)" />
+-    <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Memory" Version="4.5.4" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
+     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafeVersion)" />
+     <PackageReference Include="System.Threading.Tasks.Extensions" Version="$(SystemThreadingTasksExtensionsVersion)" />
+     <PackageReference Include="System.Text.Encoding.CodePages" Version="$(SystemTextEncodingCodePagesVersion)" />
+diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+index ec4dd26af5c..f69f8e81a74 100644
+--- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
++++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+@@ -35,6 +35,10 @@
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.VisualBasic.CommandLine.UnitTests" />
+     <InternalsVisibleTo Include="VBCSCompiler.UnitTests" />
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\Core\CommandLine\CommandLine.projitems" Label="Shared" />
+   <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
+ </Project>
+diff --git a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
+index 25243e68430..965dc117b05 100644
+--- a/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
++++ b/src/Compilers/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.vbproj
+@@ -78,5 +78,9 @@
+       <SubType>Designer</SubType>
+     </None>
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\BasicAnalyzerDriver\BasicAnalyzerDriver.projitems" Label="Shared" />
+ </Project>
+\ No newline at end of file
+diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
+index afff3795422..73559ee3aaa 100644
+--- a/src/Compilers/VisualBasic/vbc/vbc.csproj
++++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
+@@ -36,6 +36,10 @@
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\Core\CommandLine\CommandLine.projitems" Label="Shared" />
+   <Import Project="$(RepositoryEngineeringDir)targets\DiaSymReaderNative.targets" />
+ </Project>
+diff --git a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
+index 6ad24b84621..81a021574f8 100644
+--- a/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
++++ b/src/Dependencies/CodeAnalysis.Debugging/Microsoft.CodeAnalysis.Debugging.Package.csproj
+@@ -19,7 +19,7 @@
+     <NoWarn>$(NoWarn);NU5128</NoWarn>
+   </PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="System.ValueTuple" Version="$(SystemValueTupleVersion)" />
+     <ProjectReference Include="..\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.Package.csproj" />
+diff --git a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
+index 8944bdd3150..cb6c642a56a 100644
+--- a/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
++++ b/src/Dependencies/PooledObjects/Microsoft.CodeAnalysis.PooledObjects.Package.csproj
+@@ -19,7 +19,7 @@
+     <NoWarn>$(NoWarn);NU5128</NoWarn>
+   </PropertyGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+   </ItemGroup>
+   <ItemGroup>
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.Debugging.Package"/>
+diff --git a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+index e8d427fb7e3..b0de0fe0411 100644
+--- a/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
++++ b/src/EditorFeatures/Core/Microsoft.CodeAnalysis.EditorFeatures.csproj
+@@ -27,7 +27,7 @@
+     <Reference Include="System" />
+     <Reference Include="System.ComponentModel.Composition" />
+     <Reference Include="System.Core" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="$(MicrosoftVisualStudioImageCatalogVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="$(MicrosoftVisualStudioImagingVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="$(MicrosoftVisualStudioLanguageStandardClassificationVersion)" />
+diff --git a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
+index bb120da2ac5..83b821e81bd 100644
+--- a/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
++++ b/src/ExpressionEvaluator/Core/Source/FunctionResolver/Microsoft.CodeAnalysis.FunctionResolver.csproj
+@@ -47,7 +47,7 @@
+     <InternalsVisibleTo Include="Microsoft.CodeAnalysis.ExpressionEvaluator.FunctionResolver.UnitTests" />
+   </ItemGroup>
+   <ItemGroup>
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Engine-implementation" Version="$(MicrosoftVisualStudioDebuggerEngineimplementationVersion)" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Metadata-implementation">
+diff --git a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
+index 7870ab13294..bc36eab3924 100644
+--- a/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
++++ b/src/ExpressionEvaluator/Core/Test/ResultProvider/Microsoft.CodeAnalysis.ResultProvider.Utilities.csproj
+@@ -20,7 +20,7 @@
+   </ItemGroup>
+   <ItemGroup>
+     <Reference Include="System" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.Debugger.Metadata-implementation" Version="$(MicrosoftVisualStudioDebuggerMetadataimplementationVersion)" />
+   </ItemGroup>
+   <ItemGroup Label="Linked Files">
+diff --git a/src/Tools/BuildBoss/BuildBoss.csproj b/src/Tools/BuildBoss/BuildBoss.csproj
+index b3e129fb776..cc770116970 100644
+--- a/src/Tools/BuildBoss/BuildBoss.csproj
++++ b/src/Tools/BuildBoss/BuildBoss.csproj
+@@ -15,7 +15,7 @@
+     <Reference Include="System.Xml.Linq" />
+     <Reference Include="WindowsBase" />
+     <PackageReference Include="Newtonsoft.Json" Version="$(NewtonsoftJsonVersion)" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataVersion)" />
+     <PackageReference Include="MSBuild.StructuredLogger" Version="$(MSBuildStructuredLoggerVersion)" />
+     <PackageReference Include="Mono.Options" Version="$(MonoOptionsVersion)" />
+diff --git a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+index ad75c19fd68..32adc2fe248 100644
+--- a/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
++++ b/src/Workspaces/CSharp/Portable/Microsoft.CodeAnalysis.CSharp.Workspaces.csproj
+@@ -56,6 +56,10 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\CSharp\CSharpCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\CSharp\CSharpWorkspaceExtensions.projitems" Label="Shared" />
+ </Project>
+\ No newline at end of file
+diff --git a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+index 413580feef0..5588c3e6a5f 100644
+--- a/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
++++ b/src/Workspaces/Core/Portable/Microsoft.CodeAnalysis.Workspaces.csproj
+@@ -142,6 +142,10 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\..\Dependencies\PooledObjects\Microsoft.CodeAnalysis.PooledObjects.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\Core\CompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\Core\WorkspaceExtensions.projitems" Label="Shared" />
+diff --git a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+index f3383206d8d..3a220679b8c 100644
+--- a/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
++++ b/src/Workspaces/Remote/Core/Microsoft.CodeAnalysis.Remote.Workspaces.csproj
+@@ -31,7 +31,7 @@
+     <Reference Include="System" />
+     <Reference Include="System.Core" />
+     <PackageReference Include="System.Composition" Version="$(SystemCompositionVersion)" />
+-    <PackageReference Include="System.Collections.Immutable" Version="$(SystemCollectionsImmutableVersion)" />
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+     <PackageReference Include="Microsoft.VisualStudio.CodingConventions" Version="$(MicrosoftVisualStudioCodingConventionsVersion)" PrivateAssets="all" />
+     <PackageReference Include="Microsoft.VisualStudio.Telemetry" Version="$(MicrosoftVisualStudioTelemetryVersion)" PrivateAssets="all" />
+   </ItemGroup>
+diff --git a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
+index 946169e6d65..9f4f420ec0e 100644
+--- a/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
++++ b/src/Workspaces/VisualBasic/Portable/Microsoft.CodeAnalysis.VisualBasic.Workspaces.vbproj
+@@ -52,6 +52,10 @@
+     <PublicAPI Include="PublicAPI.Shipped.txt" />
+     <PublicAPI Include="PublicAPI.Unshipped.txt" />
+   </ItemGroup>
++  <ItemGroup>
++    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
++    <PackageReference Include="System.Reflection.Metadata" Version="1.6.0" />
++  </ItemGroup>
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Compiler\VisualBasic\VisualBasicCompilerExtensions.projitems" Label="Shared" />
+   <Import Project="..\..\..\Workspaces\SharedUtilitiesAndExtensions\Workspace\VisualBasic\VisualBasicWorkspaceExtensions.projitems" Label="Shared" />
+ </Project>
+\ No newline at end of file

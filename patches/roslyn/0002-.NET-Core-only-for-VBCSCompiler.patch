@@ -1,0 +1,50 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Wed, 23 Oct 2019 13:58:31 -0500
+Subject: [PATCH 2/7] .NET Core only for VBCSCompiler
+
+---
+ src/Compilers/CSharp/csc/csc.csproj                   | 2 +-
+ src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj | 2 +-
+ src/Compilers/VisualBasic/vbc/vbc.csproj              | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Compilers/CSharp/csc/csc.csproj b/src/Compilers/CSharp/csc/csc.csproj
+index 01e6741bb09..9c5297b238c 100644
+--- a/src/Compilers/CSharp/csc/csc.csproj
++++ b/src/Compilers/CSharp/csc/csc.csproj
+@@ -8,7 +8,7 @@
+     <Prefer32Bit>false</Prefer32Bit>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.CSharp.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>
+diff --git a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+index 3fde7d77d3d..ec4dd26af5c 100644
+--- a/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
++++ b/src/Compilers/Server/VBCSCompiler/VBCSCompiler.csproj
+@@ -5,7 +5,7 @@
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+     <LargeAddressAware>true</LargeAddressAware>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <UseVSHostingProcess>false</UseVSHostingProcess>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+diff --git a/src/Compilers/VisualBasic/vbc/vbc.csproj b/src/Compilers/VisualBasic/vbc/vbc.csproj
+index 48843d2c542..afff3795422 100644
+--- a/src/Compilers/VisualBasic/vbc/vbc.csproj
++++ b/src/Compilers/VisualBasic/vbc/vbc.csproj
+@@ -7,7 +7,7 @@
+     <RootNamespace>Microsoft.CodeAnalysis.VisualBasic.CommandLine</RootNamespace>
+     <LargeAddressAware>true</LargeAddressAware>
+     <StartupObject>Microsoft.CodeAnalysis.VisualBasic.CommandLine.Program</StartupObject>
+-    <TargetFrameworks>netcoreapp3.1;net472</TargetFrameworks>
++    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+     <ServerGarbageCollection>true</ServerGarbageCollection>
+     <UseAppHost>false</UseAppHost>
+     <GenerateMicrosoftCodeAnalysisCommitHashAttribute>true</GenerateMicrosoftCodeAnalysisCommitHashAttribute>

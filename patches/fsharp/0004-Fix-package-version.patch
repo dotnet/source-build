@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 10 Dec 2021 13:05:12 -0600
+Subject: [PATCH] Fix package version
+
+---
+ src/fsharp/FSharp.Build/FSharp.Build.fsproj | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/fsharp/FSharp.Build/FSharp.Build.fsproj b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+index 2960aec35..51dd066b1 100644
+--- a/src/fsharp/FSharp.Build/FSharp.Build.fsproj
++++ b/src/fsharp/FSharp.Build/FSharp.Build.fsproj
+@@ -50,6 +50,7 @@
+     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="$(MicrosoftBuildTasksCoreVersion)" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="$(MicrosoftBuildUtilitiesCoreVersion)" />
+     <PackageReference Include="Microsoft.Win32.Registry" Version="$(MicrosoftWin32RegistryVersion)" />
++    <PackageReference Include="System.Text.Json" Version="$(SystemTextJsonPackageVersion)" />
+   </ItemGroup>
+ 
+ </Project>
+-- 
+2.31.1
+

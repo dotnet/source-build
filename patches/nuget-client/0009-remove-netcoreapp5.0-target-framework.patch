@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <36081148+lbussell@users.noreply.github.com>
+Date: Wed, 17 Nov 2021 18:34:28 +0000
+Subject: [PATCH 1/2] remove netcoreapp5.0 target framework
+
+---
+ build/common.project.props | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/common.project.props b/build/common.project.props
+index ded83df8b..85dc0c2f2 100644
+--- a/build/common.project.props
++++ b/build/common.project.props
+@@ -15,7 +15,7 @@
+     <NETFXTargetFramework>net472</NETFXTargetFramework>
+     <NETCoreTargetFramework>netcoreapp2.1</NETCoreTargetFramework>
+     <NETCoreTargetFrameworks Condition=" '$(RequiresSigningXplatAPIs)' != 'true' ">netcoreapp2.1</NETCoreTargetFrameworks>
+-    <NETCoreTargetFrameworks Condition=" '$(RequiresSigningXplatAPIs)' == 'true' ">netcoreapp2.1;netcoreapp5.0</NETCoreTargetFrameworks>
++    <NETCoreTargetFrameworks Condition=" '$(RequiresSigningXplatAPIs)' == 'true' ">netcoreapp2.1</NETCoreTargetFrameworks>
+     <NETCoreTestTargetFrameworks>netcoreapp3.1;netcoreapp5.0</NETCoreTestTargetFrameworks>
+     <NetStandardVersion>netstandard2.0</NetStandardVersion>
+     <TargetFrameworksExe>$(NETFXTargetFramework);$(NETCoreTargetFrameworks)</TargetFrameworksExe>

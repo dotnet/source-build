@@ -47,7 +47,7 @@ jobs:
       set -ex
       df -h
       $(docker.run) $(docker.bst.map) $(docker.bst.work) $(imageName) bash -c '
-      git clone --single-branch --branch pre-arcade-release/3.1 --depth 1 https://github.com/dotnet/source-build-reference-packages'
+      git clone --single-branch --branch release/3.1 --depth 1 https://github.com/dotnet/source-build-reference-packages'
       du -h $(rootDirectory) | sort -h | tail -n 50
     displayName: clone source-build-reference-packages
     condition: always()
