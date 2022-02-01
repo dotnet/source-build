@@ -138,7 +138,7 @@ while :; do
             excludeOnlineTests=true
             ;;
         --excludexmldoctests)
-            excludexmldoctests=true
+            excludeXmlDocTests=true
             ;;
         --devcertsversion)
             shift
