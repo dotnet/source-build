@@ -49,6 +49,7 @@ excludeWebNoHttpsTests=false
 excludeWebHttpsTests=false
 excludeLocalTests=false
 excludeOnlineTests=false
+excludeXmlDocTests=false
 devCertsVersion="$DEV_CERTS_VERSION_DEFAULT"
 testingDir="$SCRIPT_ROOT/testing-smoke"
 # Shared path with build.proj
@@ -77,6 +78,7 @@ function usage() {
     echo "  --excludeWebHttpsTests         don't run web project tests with https using dotnet-dev-certs"
     echo "  --excludeLocalTests            exclude tests that use local sources for nuget packages"
     echo "  --excludeOnlineTests           exclude test that use online sources for nuget packages"
+    echo "  --excludeXmlDocTests           don't check for the presence of xml docs"
     echo "  --devCertsVersion <version>    use dotnet-dev-certs <version> instead of default $DEV_CERTS_VERSION_DEFAULT"
     echo "  --prodConBlobFeedUrl <url>     override the prodcon blob feed specified in ProdConFeed.txt, removing it if empty"
     echo "  --archiveRestoredPackages      capture all restored packages to $archivedPackagesDir"
@@ -134,6 +136,9 @@ while :; do
             ;;
         --excludeonlinetests)
             excludeOnlineTests=true
+            ;;
+        --excludexmldoctests)
+            excludeXmlDocTests=true
             ;;
         --devcertsversion)
             shift
@@ -677,6 +682,8 @@ if [ "$excludeOnlineTests" == "false" ]; then
     echo "ONLINE RESTORE SOURCE - ALL TESTS PASSED!"
 fi
 
-runXmlDocTests
+if [ "$excludeXmlDocTests" == "false" ]; then
+    runXmlDocTests
+fi
 
 echo "ALL TESTS PASSED!"

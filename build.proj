@@ -200,6 +200,9 @@
 
       <!-- Dev certs don't work on this platform. -->
       <SmokeTestCommand Condition="'$(TargetOS)' == 'OSX'">$(SmokeTestCommand) --excludeWebHttpsTests</SmokeTestCommand>
+
+      <!-- Temporary workaround due to https://github.com/dotnet/source-build/issues/2700 -->
+      <SmokeTestCommand Condition="'$(TargetOS)' == 'OSX'">$(SmokeTestCommand) --excludeXmlDocTests</SmokeTestCommand>
     </PropertyGroup>
 
     <!--
