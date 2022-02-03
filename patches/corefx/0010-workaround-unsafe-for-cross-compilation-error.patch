@@ -1,0 +1,26 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Mon, 31 Jan 2022 15:53:00 -0800
+Subject: [PATCH] workaround unsafe for cross-compilation error
+
+See https://github.com/dotnet/source-build/issues/1794
+and https://github.com/dotnet/runtime/issues/41095
+
+---
+ src/Native/Unix/CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/src/Native/Unix/CMakeLists.txt b/src/Native/Unix/CMakeLists.txt
+index c5772c7e02..37c3044085 100644
+--- a/src/Native/Unix/CMakeLists.txt
++++ b/src/Native/Unix/CMakeLists.txt
+@@ -107,6 +107,9 @@ if (APPLE)
+ 
+    # We cannot enable "stack-protector-strong" on OS X due to a bug in clang compiler (current version 7.0.2)
+    add_compile_options(-fstack-protector)
++   
++   # Source-build fails on macOS due to unsafe cross-compilation error without this flag
++   add_compile_options(-Wno-poison-system-directories)
+ else ()
+    add_compile_options(-fstack-protector-strong)
+ endif ()
