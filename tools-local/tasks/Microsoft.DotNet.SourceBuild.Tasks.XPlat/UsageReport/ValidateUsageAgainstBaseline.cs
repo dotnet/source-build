@@ -76,7 +76,7 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
 
                 Log.LogMessage(
                     MessageImportance.High,
-                    "##[error]" + BaselineErrorMessage);
+                    "##vso[task.complete result=SucceededWithIssues;]" + BaselineErrorMessage);
 
                 // In the report, list full usage info, not only identity.
                 report.Add(
