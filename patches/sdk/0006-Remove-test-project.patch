@@ -1,16 +1,16 @@
-From e2b2c391df3466b6b71d07bac9fc2d7f3911912f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 30 Sep 2020 22:05:26 +0000
-Subject: [PATCH] Remove test project.
+Subject: [PATCH 06/24] Remove test project.
 
 ---
- .../v1/dotnet-hello/dotnet-hello.csproj       |  17 +-
- .../v2/dotnet-hello/dotnet-hello.csproj       |  16 +-
- .../BuildTestPackages.targets                 |  16 --
+ .../v1/dotnet-hello/dotnet-hello.csproj         | 17 +----------------
+ .../v2/dotnet-hello/dotnet-hello.csproj         | 16 +---------------
+ .../BuildTestPackages.targets                   | 16 ----------------
  3 files changed, 2 insertions(+), 47 deletions(-)
 
 diff --git a/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj b/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
-index 48a78a6e7..5f282702b 100644
+index 2ca2af173c..5f282702bb 100644
 --- a/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
 +++ b/src/Assets/TestPackages/dotnet-hello/v1/dotnet-hello/dotnet-hello.csproj
 @@ -1,16 +1 @@
@@ -25,7 +25,7 @@ index 48a78a6e7..5f282702b 100644
 -    <TargetFramework>netcoreapp2.2</TargetFramework>
 -    <AssemblyName>dotnet-hello</AssemblyName>
 -    <OutputType>Exe</OutputType>
--    <RuntimeIdentifiers>win7-x64;win7-x86;osx.10.10-x64;osx.10.11-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;ubuntu.16.10-x64;centos.7-x64;rhel.7.2-x64;debian.8-x64;fedora.24-x64;opensuse.42.1-x64</RuntimeIdentifiers>
+-    <RuntimeIdentifiers>win7-x64;win7-x86;osx.10.10-x64;osx.10.11-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;ubuntu.18.04-x64;ubuntu.16.10-x64;centos.7-x64;rhel.7.2-x64;debian.8-x64;fedora.24-x64;opensuse.42.1-x64</RuntimeIdentifiers>
 -    <IsPackable>true</IsPackable>
 -  </PropertyGroup>
 -
@@ -33,7 +33,7 @@ index 48a78a6e7..5f282702b 100644
 +﻿
 \ No newline at end of file
 diff --git a/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj b/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
-index 8956d362f..5f282702b 100644
+index f395ad136e..5f282702bb 100644
 --- a/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
 +++ b/src/Assets/TestPackages/dotnet-hello/v2/dotnet-hello/dotnet-hello.csproj
 @@ -1,15 +1 @@
@@ -48,14 +48,14 @@ index 8956d362f..5f282702b 100644
 -    <TargetFramework>netcoreapp2.2</TargetFramework>
 -    <AssemblyName>dotnet-hello</AssemblyName>
 -    <OutputType>Exe</OutputType>
--    <RuntimeIdentifiers>win7-x64;win7-x86;osx.10.10-x64;osx.10.11-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;ubuntu.16.10-x64;centos.7-x64;rhel.7.2-x64;debian.8-x64;fedora.24-x64;opensuse.42.1-x64</RuntimeIdentifiers>
+-    <RuntimeIdentifiers>win7-x64;win7-x86;osx.10.10-x64;osx.10.11-x64;ubuntu.14.04-x64;ubuntu.16.04-x64;ubuntu.18.04-x64;ubuntu.16.10-x64;centos.7-x64;rhel.7.2-x64;debian.8-x64;fedora.24-x64;opensuse.42.1-x64</RuntimeIdentifiers>
 -    <IsPackable>true</IsPackable>
 -  </PropertyGroup>
 -</Project>
 +﻿
 \ No newline at end of file
 diff --git a/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets b/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
-index 34d58c2f1..611b838eb 100644
+index 962c06d35e..2a88a2fc22 100644
 --- a/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
 +++ b/src/Tests/Microsoft.NET.TestFramework/BuildTestPackages.targets
 @@ -84,22 +84,6 @@
@@ -81,6 +81,3 @@ index 34d58c2f1..611b838eb 100644
        <BaseTestPackageProject Include="src/Assets/TestPackages/dotnet-outputsframeworkversion/dotnet-outputsframeworkversion-netcoreapp1.0">
          <Name>dotnet-outputsframeworkversion-netcoreapp1.0</Name>
          <ProjectName>dotnet-outputsframeworkversion-netcoreapp1.0.csproj</ProjectName>
--- 
-2.25.4
-
