@@ -88,7 +88,6 @@ Source-build solves common challenges that most developers encounter when trying
 
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
-
 ## Support
 
 .NET Source-Build is supported on the oldest available .NET SDK feature update.
