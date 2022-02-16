@@ -30,14 +30,15 @@ The following set of instructions walk through how to build on Fedora 33.
    The extracted source code is also placed at `/path/to/place/complete/dotnet/sources`.
    The source directory should be outside (and not somewhere under) the installer directory.
 
-3. Prep the source to build on your distro.
+3. Prep the source to build on your distro. This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
 
     ```bash
     cd /path/to/complete/dotnet/sources
     ./prep.sh
     ```
-
-    This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
+    
+    On arm64, please use `./prep.sh --bootstrap` instead.
+    This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2758).
 
 4. Build the .NET SDK
 
