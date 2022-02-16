@@ -11,13 +11,13 @@ The dependencies for building .NET 6.0 from source can be found [here](https://g
 ## Building
 
 .NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
-The steps to build vary slightly depending on your distro.  The following set of instructions walk through how to build on Fedora 33.  
+The following set of instructions walk through how to build on Fedora 33.  
 
 1. Clone the repo and check out the tag for the desired release.
     ```bash
     git clone https://github.com/dotnet/installer
     cd installer/
-    git switch -c v6.0.100 v6.0.100
+    git switch -c v6.0.1XX v6.0.1XX
     ```
 
 3. Create a .NET source tarball.
@@ -30,30 +30,15 @@ The steps to build vary slightly depending on your distro.  The following set of
    The extracted source code is also placed at `/path/to/place/complete/dotnet/sources`.
    The source directory should be outside (and not somewhere under) the installer directory.
 
-3. Prep the source to build on your distro.
+3. Prep the source to build on your distro. This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
 
     ```bash
     cd /path/to/complete/dotnet/sources
     ./prep.sh
     ```
-
-    This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
-
-    > On Linux distros other than Fedora 33, an additional bootstrapping step is required.  After running `prep.sh` above, run the following:
-    >
-    > ```bash
-    > mkdir ./privateSourceBuiltArtifacts
-    > cd ./privateSourceBuiltArtifacts
-    > tar xf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz
-    > sed -i -E 's|<MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.1</|<MicrosoftNETHostModelPackageVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
-    > sed -i -E 's|<MicrosoftNETHostModelVersion>6.0.0-rtm.21521.1</|<MicrosoftNETHostModelVersion>6.0.0-rtm.21521.4</|' PackageVersions.props
-    > tar czf ../packages/archive/Private.SourceBuilt.Artifacts.*.tar.gz *
-    > cd ..
-    > rm -r ./privateSourceBuiltArtifacts
-    > ./prep.sh --bootstrap
-    > ```
-    > 
-    > This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2599).
+    
+    On arm64, please use `./prep.sh --bootstrap` instead.
+    This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2758).
 
 4. Build the .NET SDK
 
@@ -103,6 +88,15 @@ Source-build solves common challenges that most developers encounter when trying
 * Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem.
 
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
+
+## Support
+
+.NET Source-Build is supported on the oldest available .NET SDK feature update.
+For example, if both .NET 6.0.1XX and 6.0.2XX feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support 6.0.1XX.
+For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
+
+* [More information about .NET Versioning](https://docs.microsoft.com/en-us/dotnet/core/versions/)
+* [More information about .NET Support Policies](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
 
 ## License
 
