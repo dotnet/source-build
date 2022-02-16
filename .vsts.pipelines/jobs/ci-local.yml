@@ -274,7 +274,7 @@ jobs:
 
   # Publish artifacts.
   - publish: $(logsDirectory)
-    artifact: Logs $(artifactName)
+    artifact: Logs $(artifactName) Attempt $(System.JobAttempt)
     displayName: Publish Logs artifact
     condition: always()
     continueOnError: true

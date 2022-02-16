@@ -247,7 +247,7 @@ steps:
   continueOnError: true
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
-    ArtifactName: Logs $(artifactName)
+    ArtifactName: Logs $(artifactName) Attempt $(System.JobAttempt)
     ArtifactType: Container
 
 # Publish tarball artifacts
