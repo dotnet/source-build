@@ -97,6 +97,7 @@ For the latest information about Source-Build support for new .NET versions, ple
 
 * [More information about .NET Versioning](https://docs.microsoft.com/en-us/dotnet/core/versions/)
 * [More information about .NET Support Policies](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core)
+
 ## License
 
 This repo is licensed under the [MIT](LICENSE.txt) license.
