@@ -260,12 +260,12 @@ jobs:
 
   # Publish artifacts.
   - publish: $(logsDirectory)
-    artifact: Logs $(artifactName)
+    artifact: Logs $(artifactName) Attempt $(System.JobAttempt)
     displayName: Publish Logs artifact
     condition: always()
     continueOnError: true
   - publish: $(dropDirectory)/tarball
-    artifact: Tarball $(artifactName)
+    artifact: Tarball $(artifactName) Attempt $(System.JobAttempt)
     displayName: Publish Tarball artifact
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true

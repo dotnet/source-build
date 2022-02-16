@@ -244,7 +244,7 @@ steps:
   continueOnError: true
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
-    ArtifactName: Logs $(artifactName)
+    ArtifactName: Logs $(artifactName) $(System.JobAttempt)
     ArtifactType: Container
 
 # Publish tarball artifacts
@@ -254,5 +254,5 @@ steps:
   continueOnError: true
   inputs:
     PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
-    ArtifactName: Tarball Artifacts $(artifactName)
+    ArtifactName: Tarball Artifacts $(artifactName) $(System.JobAttempt)
     ArtifactType: Container
