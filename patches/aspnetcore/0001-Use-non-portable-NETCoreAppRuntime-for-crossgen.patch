@@ -1,7 +1,7 @@
-From 6eda93ee35f9e0b4bce73569d308e53259e75b50 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Wed, 13 May 2020 19:46:47 +0000
-Subject: [PATCH 01/14] Use non-portable NETCoreAppRuntime for crossgen
+Subject: [PATCH 01/19] Use non-portable NETCoreAppRuntime for crossgen
 
 ---
  eng/Dependencies.props                                      | 1 +
@@ -9,7 +9,7 @@ Subject: [PATCH 01/14] Use non-portable NETCoreAppRuntime for crossgen
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index 36a24451f0..d573a7bde9 100644
+index bfc8c66145..311bcdeeda 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
 @@ -98,6 +98,7 @@ and are generated based on the last package release.
@@ -21,7 +21,7 @@ index 36a24451f0..d573a7bde9 100644
  
    <ItemGroup Label=".NET team dependencies (Non-source-build)" Condition="'$(DotNetBuildFromSource)' != 'true'">
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index dd7368806f..4199691fdb 100644
+index adc03bf835..5e61db943e 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 @@ -104,8 +104,10 @@ This package is an internal implementation of the .NET Core SDK and is not meant
@@ -45,6 +45,3 @@ index dd7368806f..4199691fdb 100644
          ExcludeAssets="All"
          PrivateAssets="All"
          GeneratePathProperty="true" />
--- 
-2.18.0
-

@@ -1,7 +1,7 @@
-From 2196196a6308eb52af91b1213dbfbdb8917e587f Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Omair Majid <omajid@redhat.com>
 Date: Tue, 23 Feb 2021 09:42:29 -0500
-Subject: [PATCH] Publish compressed files to a provided location
+Subject: [PATCH 17/19] Publish compressed files to a provided location
 
 This allows source-build to consume these files directly.
 ---
@@ -9,10 +9,10 @@ This allows source-build to consume these files directly.
  1 file changed, 15 insertions(+)
 
 diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-index cfbe759aff..285acbd07a 100644
+index eda46cff1d..b8c1c62d4c 100644
 --- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
 +++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
-@@ -183,6 +183,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -185,6 +185,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
        _CreateInternalSharedFxArchive;
        _CreateRedistSharedFxArchive;
        _InstallFrameworkIntoLocalDotNet;
@@ -20,7 +20,7 @@ index cfbe759aff..285acbd07a 100644
      </CoreBuildDependsOn>
      <CrossGenDependsOn>
        ResolveReferences;
-@@ -560,4 +561,18 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+@@ -558,4 +559,18 @@ This package is an internal implementation of the .NET Core SDK and is not meant
      </ItemGroup>
    </Target>
  
@@ -39,6 +39,3 @@ index cfbe759aff..285acbd07a 100644
 +  </Target>
 +
  </Project>
--- 
-2.29.2
-

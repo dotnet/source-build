@@ -1,7 +1,7 @@
-From f9ca4bdfbf9ac7802310e86428c8fca2c1f2f6c1 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Davis Goodin <dagood@microsoft.com>
 Date: Mon, 21 Dec 2020 15:17:22 -0600
-Subject: [PATCH 17/18] Don't use RTMVersion in source-build
+Subject: [PATCH 15/19] Don't use RTMVersion in source-build
 
 This seems like it would bring in prebuilts, and more directly, causes:
 
@@ -13,10 +13,10 @@ This seems like it would bring in prebuilts, and more directly, causes:
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/eng/Dependencies.props b/eng/Dependencies.props
-index d573a7bde9..79436b5a16 100644
+index 311bcdeeda..34c52ac9e1 100644
 --- a/eng/Dependencies.props
 +++ b/eng/Dependencies.props
-@@ -198,7 +198,11 @@ and are generated based on the last package release.
+@@ -197,7 +197,11 @@ and are generated based on the last package release.
      <!-- Get versions. -->
      <LatestPackageReference Update="@(LatestPackageReference)">
        <Version>$(%(VersionName)PackageVersion)</Version>
@@ -29,6 +29,3 @@ index d573a7bde9..79436b5a16 100644
  
        <!-- Remove excess metadata. -->
        <RTMVersion Condition=" '%(Version)' == '%(RTMVersion)' " />
--- 
-2.18.0
-

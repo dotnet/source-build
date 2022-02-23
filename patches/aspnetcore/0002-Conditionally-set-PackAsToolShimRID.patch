@@ -1,7 +1,7 @@
-From 64d2efe24308d9e8b99fdea60c92ee1115259506 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: dseefeld <dseefeld@microsoft.com>
 Date: Thu, 31 Oct 2019 20:38:26 +0000
-Subject: [PATCH 02/14] Conditionally set PackAsToolShimRID
+Subject: [PATCH 02/19] Conditionally set PackAsToolShimRID
 
 ---
  Directory.Build.targets | 5 +++++
@@ -23,6 +23,3 @@ index 4b72a52947..1a3b01e858 100644
    <PropertyGroup Condition=" '$(MSBuildProjectExtension)' == '.csproj' ">
      <PackageId Condition=" '$(PackageId)' == '' ">$(AssemblyName)</PackageId>
      <IsPackable
--- 
-2.18.0
-

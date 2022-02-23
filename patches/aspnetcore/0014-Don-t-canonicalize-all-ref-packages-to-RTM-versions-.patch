@@ -1,7 +1,7 @@
-From 93b584d3905b1abe7b7e3bb09fd853fe372c9da5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Wed, 16 Dec 2020 19:36:48 -0600
-Subject: [PATCH 15/18] Don't canonicalize all ref packages to RTM versions for
+Subject: [PATCH 14/19] Don't canonicalize all ref packages to RTM versions for
  source-build. This is because we turn on BuildAllPackages in runtime since we
  don't use the previous version's prebuilt bits. This target makes the version
  numbers mismatch, resulting in errors like error MSB3106: Assembly strong
@@ -16,10 +16,10 @@ because while 5.0.x was restored properly, this target changes the reference in 
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/eng/targets/ResolveReferences.targets b/eng/targets/ResolveReferences.targets
-index 032e73b069..9029bd08fc 100644
+index 2c3de80d2e..754246a087 100644
 --- a/eng/targets/ResolveReferences.targets
 +++ b/eng/targets/ResolveReferences.targets
-@@ -259,7 +259,7 @@
+@@ -258,7 +258,7 @@
      about the "invalid strong name".
    -->
    <Target Name="_UseRTMReferenceAssemblies"
@@ -28,6 +28,3 @@ index 032e73b069..9029bd08fc 100644
        AfterTargets="ResolvePackageAssets"
        BeforeTargets="GenerateBuildDependencyFile;GeneratePublishDependencyFile;ILLink;ResolveLockFileReferences"
        DependsOnTargets="ResolvePackageAssets">
--- 
-2.18.0
-
