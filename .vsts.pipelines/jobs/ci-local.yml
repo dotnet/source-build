@@ -265,7 +265,7 @@ jobs:
     condition: always()
     continueOnError: true
   - publish: $(dropDirectory)/tarball
-    artifact: Tarball $(artifactName) Attempt $(System.JobAttempt)
+    artifact: Tarball $(artifactName)
     displayName: Publish Tarball artifact
     condition: eq(variables['sb.tarball'], true)
     continueOnError: true

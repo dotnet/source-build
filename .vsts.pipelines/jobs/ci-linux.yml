@@ -330,7 +330,7 @@ jobs:
     continueOnError: true
     inputs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/tarball
-      ArtifactName: Tarball $(artifactName) Attempt $(System.JobAttempt)
+      ArtifactName: Tarball $(artifactName)
       ArtifactType: Container
 
   # Publish prebuilt report data to blob storage.

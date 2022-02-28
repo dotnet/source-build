@@ -24,7 +24,7 @@ jobs:
     imageName: ${{ parameters.imageName }}
     rootDirectory: $(Build.SourcesDirectory)/..
     stagingDirectory: $(rootDirectory)/bst/staging
-    tarballArtifactName: Tarball centos71_Offline Attempt $(System.JobAttempt)
+    tarballArtifactName: Tarball centos71_Offline
     tarballName: tarball_$(Build.BuildId)
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
