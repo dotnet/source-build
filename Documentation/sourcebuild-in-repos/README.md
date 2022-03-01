@@ -4,7 +4,8 @@ These docs aim to be a collection of useful information for repo owners who work
 
 ## Index
 
-[Adding new dependencies](new-dependencies.md)
-[Updating dependencies](update-dependencies.md)
-[Considerations when adding features](adding-features.md)
-[General notes on the source-build build](build-info.md)
+* [Adding new dependencies](new-dependencies.md)
+* [Updating dependencies](update-dependencies.md)
+* [Considerations when adding features](adding-features.md)
+* [General notes on the source-build build](build-info.md)
+* [Adding new repositories](new-repo.md)
