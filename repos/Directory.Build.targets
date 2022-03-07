@@ -632,7 +632,7 @@
                        OutputDirectory="$(PackageReportDir)" />
 
     <PropertyGroup Condition="'$(ContinueOnPrebuiltBaselineError)' == ''">
-      <ContinueOnPrebuiltBaselineError>false</ContinueOnPrebuiltBaselineError>
+      <ContinueOnPrebuiltBaselineError>true</ContinueOnPrebuiltBaselineError>
       <ContinueOnPrebuiltBaselineError Condition="'$(FailOnPrebuiltBaselineError)' != 'true'">true</ContinueOnPrebuiltBaselineError>
     </PropertyGroup>
 

@@ -44,10 +44,16 @@ namespace Microsoft.DotNet.SourceBuild.Tasks.UsageReport
             if (diff.Added.Any())
             {
                 tellUserToUpdateBaseline = true;
-                Log.LogError(
-                    $"{diff.Added.Length} new packages used not in baseline! See report " +
+
+                string BaselineErrorMessage = $"{diff.Added.Length} new packages used not in baseline! See report " +
                     $"at {OutputReportFile} for more information. Package IDs are:\n" +
-                    string.Join("\n", diff.Added.Select(u => u.ToString())));
+                    string.Join("\n", diff.Added.Select(u => u.ToString()));
+
+                Log.LogError(BaselineErrorMessage);
+
+                Log.LogMessage(
+                    MessageImportance.High,
+                    "##vso[task.complete result=SucceededWithIssues;]" + BaselineErrorMessage);
 
                 // In the report, list full usage info, not only identity.
                 report.Add(

@@ -343,7 +343,7 @@ jobs:
     continueOnError: true
     inputs:
       PathtoPublish: $(Build.ArtifactStagingDirectory)/drop/logs
-      ArtifactName: Logs $(artifactName)
+      ArtifactName: Logs $(artifactName) Attempt $(System.JobAttempt)
       ArtifactType: Container
   - task: PublishBuildArtifacts@1
     displayName: Publish Tarball artifact
