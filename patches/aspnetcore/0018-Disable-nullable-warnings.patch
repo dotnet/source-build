@@ -1,17 +1,17 @@
-From c70232268e76633ee9bb1c5c384890bdc46c90e5 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Michael Simons <msimons@microsoft.com>
 Date: Fri, 2 Apr 2021 16:18:27 +0000
-Subject: [PATCH] Disable nullable warnings
+Subject: [PATCH 18/19] Disable nullable warnings
 
 ---
  Directory.Build.props | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/Directory.Build.props b/Directory.Build.props
-index 1057387..f029e23 100644
+index 72cee68b4e..982ed72d46 100644
 --- a/Directory.Build.props
 +++ b/Directory.Build.props
-@@ -107,9 +107,9 @@
+@@ -109,9 +109,9 @@
  
    <!-- Warnings and errors -->
    <PropertyGroup>
@@ -23,6 +23,3 @@ index 1057387..f029e23 100644
      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
      <!-- Don't make missing XML docs a fatal build error, but still surface so we have visibility into undocumented APIs. -->
      <WarningsNotAsErrors>$(WarningsNotAsErrors);CS1591</WarningsNotAsErrors>
--- 
-1.8.3.1
-
