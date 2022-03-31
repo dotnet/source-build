@@ -1,6 +1,6 @@
-<!-- This file is a template for a GitHub Discussion. 
-The line prefixed by 'Title:' will be submitted as the title of the discussion, and the rest of the file will be submitted as the body. -->
-Title: .NET $DATE Update - .NET $RUNTIME_VERSION and SDK $SDK_VERSION
+<!-- This file is a template for a GitHub Discussion post.  -->
+<!-- The line prefixed by 'Title:' will be submitted as the title of the discussion, and the rest of the file will be submitted as the body. -->
+Title: .NET $DOTNET_MAJOR_MINOR_VERSION $DATE Update - .NET $RUNTIME_VERSION and SDK $SDK_VERSION
 
 [Release Notes]($RELEASE_NOTES_URL) | [Tag]($TAG_URL)
 
