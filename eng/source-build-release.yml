@@ -29,10 +29,12 @@ parameters:
     default: v6.0.XYY-source-build
 
 variables:
-  repoId: ''
-  discussionCategoryId: ''
-  announcementOrg: 'dotnet'
-  announcementRepo: 'source-build'
+- group: DotNet-Source-Build-Bot-Secrets
+- name: announcementOrg
+  value: 'lbussell'
+- name: announcementRepo
+  value: 'discussion-test'
+
 
 stages:
 
@@ -75,7 +77,8 @@ stages:
         cd $(Build.SourcesDirectory)
         git checkout $(SetTag.Tag)
         runtime_version=$(cat eng/Version.Details.xml | grep 'Microsoft.NETCore.App.Runtime.win-x64' | grep -P -o -e '(?<=Version=").*?(?=")') # e.g. 6.0.3
-        dotnet_major_minor_version=$(echo "$runtime_version" | head -c 3) # e.g. 6.0
+        readarray -d '.' -t version_parts <<< $runtime_version  # split version on dots
+        dotnet_major_minor_version=$(echo "${version_parts[0]}.${version_parts[1]}")
         set +x
         echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]${runtime_version}"
         echo "##vso[task.setvariable variable=DotNetMajorMinorVersion;isOutput=true]${dotnet_major_minor_version}"
