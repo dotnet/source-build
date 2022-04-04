@@ -21,8 +21,6 @@
      - [ ] [Installer](https://dev.azure.com/dnceng/internal/_build?definitionId=286) (internal link)
        - [ ] Retrieve the source tarball artifact - `BlobArtifacts/dotnet-sdk-source-6.0.xxx.tar.gz`
      - [ ] [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
-1. - [ ] Run poison report and confirm results.
-     - [Automation tracking issue](https://github.com/dotnet/source-build/issues/2652) for this step.
 1. - [ ] [Internal] Gather smoke-test prereqs and package in dotnet-smoke-test-prereqs-6.0.101.tar.gz.
      - [ ] Retrieve the smoke-test prereqs artifact from [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link) - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
      - [ ] Manually add `microsoft.net.runtime.monoaotcompiler.task::6.0.x` by running `dotnet workload install macos` or manually downloading package. [Automation tracking issue](https://github.com/dotnet/source-build/issues/2774) for this step.
