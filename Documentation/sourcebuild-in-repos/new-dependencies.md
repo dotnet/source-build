@@ -3,23 +3,30 @@
 ## Basics
 When adding a new dependency, there are a few steps common between any type of dependency.  If you use darc, `darc add-dependency` will take care of this process for you.  Otherwise:
 1. Add the package and a default version to eng/Versions.props.  The default version property should be named `<PackageName>PackageVersion`, e.g. `SystemCollectionsImmutablePackageVersion`.
-2. Add the package and a repo reference to eng/Version.Details.xml.
+2. Add the package and a repo reference to eng/Version.Details.xml.  This should include a SourceBuild metadata entry, looking something like:
+   ```<Dependency Name="Microsoft.Net.Compilers.Toolset" Version="4.2.0-3.22205.5" CoherentParentDependency="Microsoft.NET.Sdk">
+      <Uri>https://github.com/dotnet/roslyn</Uri>
+      <Sha>0167599e0e1634ea3ed8d0e41390a3c0d9b3e4e9</Sha>
+      <SourceBuild RepoName="roslyn" ManagedOnly="true" />
+    </Dependency>```
 3. Set up dependency flow from the foreign repo to your repo.
 
 In general, you should aim to use one version of each package.  If you are using a package as reference-only, it is possible to use multiple versions, but only one implementation version of each package will be used - source-build will override it to the version that is being built in this version of the SDK.
 
 ## Deciding what version to use
-- If you are using the package as reference-only and want the version to be pinned, use a literal version number in the csprojs that reference the project.  You can also set up a reference-only package version variable in eng/Versions.props, for instance `<PackageNameReferenceOnly>1.2.3</PackageNameReferenceOnly>` in addition to `<PackageNamePackageVersion>4.5.6</PackageNamePackageVersion>`.  Also verify that the package is available in source-build-reference-packages, and if not, contact the source-build team.
+- If you are using the package as reference-only and want the version to be pinned, use a literal version number in the csprojs that reference the project.  You can also set up a reference-only package version variable in eng/Versions.props, for instance `<PackageNameReferenceOnly>1.2.3</PackageNameReferenceOnly>` in addition to `<PackageNamePackageVersion>4.5.6</PackageNamePackageVersion>`.  Also verify that the package is available in [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages), and if not, contact the source-build team.
 - If you are using the package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in eng/Versions.props.  This will be overridden in some cases by source-build.
 - If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package.  Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
 
 ## Internal dependencies
 Adding a new dotnet dependency is usually pretty straightforward but does have some edge cases.  Use this checklist:
-1. Are you already using a package from the same repo?
-	1. This is the simplest case.  You can add new dependencies from repos you are already using freely.
+1. Are you already using a package from the same repo and is the new dependency already source-built?
+	1. This is the simplest case.  You can add new dependencies from repos you are already using freely.  Note that you need to use the same version for all packages from the repo.
+2. Is the repo already built in source-build but the specific package is not?
+	1. There's probably an issue with source-building this package.  Please talk to a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal) about why that is and whether we can fix it.
 2. Is this a Microsoft repo that uses Arcade to build?
 	1. Does the foreign repo depend on your repo, directly or indirectly?  i.e. would adding the dependency create a cycle?
-		1. This isn't necessarily a deal-breaker - it can sometimes be worked around with reference-only packages.  Please contact a source-build team member to discuss.
+		1. This isn't necessarily a deal-breaker - it can sometimes be worked around with reference-only packages.  Please contact a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal) to discuss.
 	2. Does the foreign repo publish to BAR?
 		1. If not, please contact them to get them publishing to BAR in an appropriate channel.
 	3. If neither of these caveats apply you should be in good shape.  Follow the instructions under "Basics" above.
