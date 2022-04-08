@@ -117,35 +117,32 @@ upstream_url="https://github.com/${target_repo}"
 
 # clone forked repo
 repo_dir="repo-${time}" # "dotnet-installer-${time}"
-git clone "${fork_url}" "${repo_dir}"
+git clone "${fork_url}" "${repo_dir}" --depth 1
 cd "${repo_dir}"
 
 # set up upstream remote
 git remote add upstream "${upstream_url}"
-git fetch upstream
-
-# check out upstream target branch to make a new branch from
-git checkout upstream/$pr_target_branch
+git fetch upstream "${pr_target_branch}"
 
 # checkout a new branch on fork
-date=$(date +"%b%Y" | sed 's/.*/\L&/')
-new_branch_name="${sdk_version}-${date}-source-build-${time}"
-git checkout -b "${new_branch_name}"
+monthYear=$(date +"%b%Y" | sed 's/.*/\L&/')
+new_branch_name="${sdk_version}-${monthYear}-source-build-${time}"
+git checkout -b "${new_branch_name}" "upstream/${pr_target_branch}"
 
 # make pr changes
-cat "$global_json_path" \
-    | jq --unbuffered ".tools.dotnet=\"$sdk_version\"" \
-    | tee "$global_json_path"
+cat "${global_json_path}" \
+    | jq --unbuffered ".tools.dotnet=\"${sdk_version}\"" \
+    | tee "${global_json_path}"
 cat "$versions_props_path" \
-    | sed "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" \
-    | tee "$versions_props_path"
-git add "$global_json_path" "$versions_props_path"
-git commit -m "update global.json and Versions.props for .NET SDK $sdk_version"
+    | sed "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>${sdk_version}</PrivateSourceBuiltArtifactsPackageVersion>#" \
+    | tee "${versions_props_path}"
+git add "${global_json_path}" "${versions_props_path}"
+git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
 # push changes to fork
 git push -u origin "${new_branch_name}"
 
-readarray -d '/' -t fork_repo_split <<< "$fork_repo"
+readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
 fork_owner="${fork_repo_split[0]}"
 
 # create pull request

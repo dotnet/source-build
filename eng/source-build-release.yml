@@ -133,7 +133,7 @@ stages:
         export SDK_VERSION="${{ parameters.sdkVersion }}"
         export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
         export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$DOTNET_MAJOR_MINOR_VERSION/$RUNTIME_VERSION/$SDK_VERSION.md"
-        export DATE=$(date +"%B %Y") # e.g. "March 2022"
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
 
         template="$(envsubst < $(Build.SourcesDirectory)/eng/source-build-release-announcement.md)"
         # Get the line in the template that is prefixed with "Title:" and remove the prefix
@@ -171,13 +171,14 @@ stages:
     steps:
 
     - script: |
-        sudo apt install -y jq
+        sudo apt-get update
+        sudo apt-get install -y jq
       displayName: Install tools
 
     - script: |
         set -euxo pipefail
 
-        export DATE=$(date +"%B %Y") # e.g. "March 2022"
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
         export RUNTIME_VERSION="$(RuntimeVersion)"
         export SDK_VERSION="${{ parameters.sdkVersion }}"
 
