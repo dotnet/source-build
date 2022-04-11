@@ -133,7 +133,7 @@ stages:
         export SDK_VERSION="${{ parameters.sdkVersion }}"
         export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
         export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$DOTNET_MAJOR_MINOR_VERSION/$RUNTIME_VERSION/$SDK_VERSION.md"
-        export DATE=$(date +"%B %Y") # e.g. "March 2022"
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
 
         template="$(envsubst < $(Build.SourcesDirectory)/eng/source-build-release-announcement.md)"
         # Get the line in the template that is prefixed with "Title:" and remove the prefix
@@ -148,5 +148,56 @@ stages:
         echo "Tag URL: $TAG_URL"
         echo "Release Notes URL: $RELEASE_NOTES_URL"
       displayName: Submit announcement discussion
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+
+- stage: SubmitReleasePr
+  displayName: Submit Release PR
+  dependsOn: Setup
+  jobs:
+  - job: SubmitReleasePrJob
+    displayName: Submit Release PR
+    variables:
+    - name: DotNetMajorMinorVersion
+      value: $[ stageDependencies.Setup.SetupJob.outputs['SetVersions.DotNetMajorMinorVersion'] ]
+    - name: RuntimeVersion
+      value: $[ stageDependencies.Setup.SetupJob.outputs['SetVersions.RuntimeVersion'] ]
+    - name: TargetRepo
+      value: dotnet/installer
+    - name: ForkRepo
+      value: dotnet-sb-bot/installer
+
+    steps:
+
+    - script: |
+        sudo apt-get update
+        sudo apt-get install -y jq
+      displayName: Install tools
+
+    - script: |
+        set -euxo pipefail
+
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
+        export RUNTIME_VERSION="$(RuntimeVersion)"
+        export SDK_VERSION="${{ parameters.sdkVersion }}"
+
+        template="$(envsubst < $(Build.SourcesDirectory)/eng/source-build-release-pr.md)"
+        # Get the line in the template that is prefixed with "Title:" and remove the prefix
+        title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
+        # Get the inverse of the above selection
+        body=$(echo "$template" | grep -v "^Title:")
+
+        cd $(Agent.WorkFolder)/
+
+        $(Build.SourcesDirectory)/eng/submit-source-build-release-pr.sh \
+            --setupGitAuth \
+            --targetRepo $(TargetRepo) \
+            --forkRepo $(ForkRepo) \
+            --sdkVersion ${{ parameters.sdkVersion }} \
+            --title "${title}" \
+            --body "${body}"
+
+      displayName: Submit PR
       env:
         GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
