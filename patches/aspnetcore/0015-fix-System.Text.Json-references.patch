@@ -18,7 +18,8 @@ index 281e2fdd32..bbb4511559 100644
  
 -  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' OR
 -      ('$(MSBuildRestoreSessionId)' == '' AND '$(CompileUsingReferenceAssemblies)' != 'false') " >
-+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
++  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+     <Reference Include="System.Text.Encodings.Web" />
      <Reference Include="System.Text.Json" />
    </ItemGroup>
  
@@ -34,6 +35,7 @@ index 97b6f25451..7266518961 100644
 -      ('$(MSBuildRestoreSessionId)' == '' AND '$(CompileUsingReferenceAssemblies)' != 'false') ">
 +  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0'">
      <Reference Include="System.Text.Json" />
+     <Reference Include="System.Text.Encodings.Web" />
    </ItemGroup>
  
 -- 
