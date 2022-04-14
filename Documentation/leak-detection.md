@@ -2,7 +2,7 @@
 
 ## Overview
 
-Source-build includes a mechanism for *poisoning* its input files, and then for checking for that poison after the build is complete.  This allows us to ensure that all output files were built during the build rather than copied directly from the input, which would be an illegal prebuilt usage.
+Source-build includes a mechanism for *poisoning* its input files, and then for checking for that poison in the build output.  This allows us to ensure that all output files were built during the build rather than copied directly from the input, which would be an illegal prebuilt usage.
 
 ## Before the build
 
@@ -11,7 +11,7 @@ Before the build, the MarkAndCatalogFiles task runs.  This does a few things:
 - Record the hash of every file in the source-build binary input directories (prebuilts and previously-source-built.  future expansion: [reference-packages](https://github.com/dotnet/source-build/issues/2817)).  If the file is a zip, tarball, or nupkg, unpack it and do the same thing recursively.
 - For managed DLLs, either bare or in an archive, add a custom attribute that marks the file as poisoned.
 - For nupkgs, drop a `.poisoned` file.
-- Repack the poisoned assemblies and extra files, removing signatures so they don't fail verification.
+- Repack the poisoned assemblies and extra files, removing nupkg signatures so they don't fail verification.
 - Replace the binary inputs with these new packages and archives.
 - Record the hash of each file again, to make sure we will be able to track output files whether they were used poisoned or unpoisoned.
 

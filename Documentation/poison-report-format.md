@@ -1,6 +1,6 @@
 # Interpreting the poison report
 
-The poison report looks something like this:
+This is an explanation of the poison report and its interpretation.  For an overview of poisoning, [see this document](leak-detection.md).  The poison report looks something like this:
 
 ```
 <PrebuiltLeakReport>
@@ -31,6 +31,7 @@ This means that we detected a custom attribute that source-build adds to each pr
 - Localization assemblies, e.g. .../langcode/Assembly.Resources.dll
 - Reference assemblies (these should not ship, but also will very rarely cause problems).
 - Test or resource assemblies - these should be removed.
+- N-1 (previously-source-built) assemblies included in shipping packages to break cycles - this is expected behavior.  Usually this use case is covered by reference packages but in rare cases we need to actually run an N-1 binary in the build.
 
 ### Hash
 
