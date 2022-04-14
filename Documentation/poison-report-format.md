@@ -34,17 +34,16 @@ This means that we detected a custom attribute that source-build adds to each pr
 
 ### Hash
 
-Hash failures mean that a file matches the catalog of hashes that we take of existing files before the build.  These are commonly false positives due to:
+Hash failures mean that a file matches the catalog of hashes that we take of existing files before the build.  These are commonly false positives due to shipping static files not produced by the build such as:
 
 - Text files (licenses, templates, etc)
 - Empty files (\_.\_)
-- Anything else not processed by the build.
 
 However, if this is a DLL this is probably a legitimate leak.
 
 ### NupkgFile
 
-This type of failure means that a nupkg was copied wholesale to the final output - we add a `.poisoned` file to each nupkg before the build and one was detected in the output.  This is a definite leak, but very uncommon and likely easy to trace in the binlogs.
+This type of failure means that a nupkg was copied wholesale to the final output.  This is a definite leak, but very uncommon and likely easy to trace in the binlogs.
 
 ## Other metadata
 
