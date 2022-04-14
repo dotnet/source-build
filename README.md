@@ -1,6 +1,6 @@
 # .NET Source-Build
 
-We now use [GitHub discussions](https://github.com/dotnet/source-build/discussions) for announcements, questions, suggestions, and sharing information with other members of the source-build community.  Please join in!
+Please use [GitHub discussions](https://github.com/dotnet/source-build/discussions) to see announcements, ask questions, make suggestions, and share information with other members of the source-build community.
 
 This repo is the starting point for building .NET 6 from source. Instructions for building other .NET versions are provided near the end of this document.
 
