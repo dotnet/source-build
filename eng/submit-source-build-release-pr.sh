@@ -130,13 +130,16 @@ new_branch_name="${sdk_version}-${monthYear}-source-build-${time}"
 git checkout -b "${new_branch_name}" "upstream/${pr_target_branch}"
 
 # make pr changes
-cat "${global_json_path}" \
+cat $global_json_path \
     | jq --unbuffered ".tools.dotnet=\"${sdk_version}\"" \
-    | tee "${global_json_path}"
-cat "$versions_props_path" \
-    | sed "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>${sdk_version}</PrivateSourceBuiltArtifactsPackageVersion>#" \
-    | tee "${versions_props_path}"
-git add "${global_json_path}" "${versions_props_path}"
+    | tee $global_json_path
+cat $versions_props_path \
+    | sed "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" \
+    | tee $versions_props_path
+git add "$global_json_path" "$versions_props_path"
+
+git config --global user.name "dotnet-sb-bot"
+git config --global user.email "dotnet-sb-bot@microsoft.com"
 git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
 # push changes to fork
