@@ -13,15 +13,16 @@ When adding a new dependency, there are a few steps common between any type of d
 
 In general, you should aim to use one version of each package.  If you are using a package as reference-only, it is possible to use multiple versions, but only one implementation version of each package will be used - source-build will override it to the version that is being built in this version of the SDK.
 
-## Deciding what version to use
-- If you are using the package as reference-only and want the version to be pinned, use a literal version number in the csprojs that reference the project.  You can also set up a reference-only package version variable in eng/Versions.props, for instance `<PackageNameReferenceOnly>1.2.3</PackageNameReferenceOnly>` in addition to `<PackageNamePackageVersion>4.5.6</PackageNamePackageVersion>`.  Also verify that the package is available in [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages), and if not, contact the source-build team.
-- If you are using the package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in eng/Versions.props.  This will be overridden in some cases by source-build.
-- If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package.  Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
+The source-build metadata is important - this tells source-build which repo package contains the specific nupkg you want.  A `<SourceBuild>` tag means that the dependency is needed both in the individual repo builds and the overall tarball build.  A `<SourceBuildTarball>` tag can be used for temporary issues when the required package is not included in the source-build intermediate package for that repo, or the source-build intermediate package is not produced.
+
+Another uncommon case that can cause problems is when the repo `<Dependency>` version and the source-built intermediate package version don't match.  In this case, a direct dependency should be added to the source-build intermediate package and the CoherentParentDependency attribute should be set to the repo that consumes the dependency. For an example, see [installer's F# dependency](https://github.com/dotnet/installer/blob/ba1739a2363b1062f03ea386ec67174c6468d3b2/eng/Version.Details.xml#L128).  You can find the version needed by running `darc get-build` or using [BAR](https://aka.ms/bar).
 
 ## Internal dependencies
-Adding a new dotnet dependency is usually pretty straightforward but does have some edge cases.  Use this checklist:
+Internal dependencies are from Microsoft .NET repos.  Adding a new dotnet dependency is usually pretty straightforward but does have some edge cases.  Use this checklist:
 1. Are you already using a package from the same repo and is the new dependency already source-built?
 	1. This is the simplest case.  You can add new dependencies from repos you are already using freely.  Note that you need to use the same version for all packages from the repo.
+2. Is the repo already built in source-build including the specific package you want?
+	1. Add the dependency using `darc add-dependency` as normal, then add the [source-build metadata](#Basics) as above.
 2. Is the repo already built in source-build but the specific package is not?
 	1. There's probably an issue with source-building this package.  Please talk to a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal) about why that is and whether we can fix it.
 2. Is this a Microsoft repo that uses Arcade to build?
@@ -38,3 +39,8 @@ External (non-Microsoft or even non-dotnet) dependencies need to be carefully co
 1. Microsoft but non-dotnet repos should usually be able to use the same Arcade wrapper to publish appropriate packages for source-build - please contact a source-build team member to discuss.
 2. Dependencies that have no code (e.g. SDKs with just props and targets) can usually be added using the source-build text-only-package process.  Contact a source-build team member for more information.
 3. We build some external dependencies in the dotnet/source-build repo.  Good targets for this generally have very few if any dependencies and very simple build processes.  Contact a source-build team member for more information.
+
+## Deciding what version to use
+- If you are using the package as reference-only and want the version to be pinned, use a literal version number in the csprojs that reference the project.  You can also set up a reference-only package version variable in eng/Versions.props, for instance `<PackageNameReferenceOnly>1.2.3</PackageNameReferenceOnly>` in addition to `<PackageNamePackageVersion>4.5.6</PackageNamePackageVersion>`.  Also verify that the package is available in [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages), and if not, [file a source-build issue](https://github.com/dotnet/source-build/issues).
+- If you are using the package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in eng/Versions.props.  When performing a source-build, the version number will get updated to the current source-built version.
+- If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package.  Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
