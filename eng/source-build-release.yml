@@ -49,10 +49,10 @@ stages:
         set -euxo pipefail
         if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
           tag=${{ parameters.customTag }}
-          echo "Using custom tag $(tag)"
+          echo "Using custom tag ${tag}"
         else
           tag=v${{ parameters.sdkVersion }}
-          echo "Using tag $(tag)"
+          echo "Using tag ${tag}"
         fi
         set +x
         echo "##vso[task.setvariable variable=Tag;isOutput=true]${tag}"
