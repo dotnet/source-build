@@ -1,10 +1,6 @@
 # Updating a dependency
 
-In most cases, dependency flow should automatically update the packages you depend on.  There are some special considerations and things to keep in mind when doing manual updates.
-
-## External packages
-
-Updating a non-Microsoft (e.g. Newtonsoft.Json 9.0.1 to 13.0.1) or non-Arcade (e.g. ApplicationInsights) package is typically equivalent to adding the new version all over again.  Please contact a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal) to discuss this.
+In most cases, dependency flow should automatically update the packages you depend on.  There are some special considerations and things to keep in mind when doing manual updates.  If you are manually updating a version, also see [the doc on new dependencies](new-dependencies.md) for special considerations.
 
 ## Internal packages
 
@@ -12,8 +8,12 @@ If you are manually updating a package, please make sure it's from a compatible 
 
 Another common error we see is updating eng/Versions.props but not eng/Version.Details.xml.  This causes problems for source-build because we depend on these files being updated in lockstep.  Please prefer updating with Darc - it takes care of these issues - or, if a manual update really is necessary, make sure you update both files.
 
-An example Darc command could be
+Example Darc command:
 `darc update-dependencies --name MyCoolPackage -v 1.2.3`
+
+## External packages
+
+Updating a non-Microsoft (e.g. Newtonsoft.Json 9.0.1 to 13.0.1) or non-Arcade (e.g. ApplicationInsights) package is typically equivalent to adding the new version all over again.  Please [log an issue](https://github.com/dotnet/source-build/issues/new/choose) to discuss this.  You can check if the external package you want is already included in source-build in the [source-build-externals](https://github.com/dotnet/source-build-externals) repo.
 
 ## Splitting, combining, and moving packages
 

@@ -247,7 +247,7 @@ The graph defined by `eng/Version.Details.xml` defines what is included in sourc
 [dotnet/installer](https://github.com/dotnet/installer/blob/main/eng/Version.Details.xml). The .NET source build insfrastructure walks this graph and determines
 the full set of repos to build. Source build will only build one copy/commit of each repo (the first commit found in the dependency graph). Therefore, when adding
 a new repositories, a dependency must be created within the `eng/Version.Details.xml` graph. To do this, go to the repo which depends on the new repo and add a [new
-source build dependency](#eng/Version.Details.xml) to the new source build repo.
+source build dependency](#engversiondetailsxml) to the new source build repo.
 
 ## Validate
 
