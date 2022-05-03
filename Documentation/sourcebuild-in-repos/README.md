@@ -1,6 +1,7 @@
 # Repo owner's handbook for source-build
 
-These docs aim to be a collection of useful information for repo owners who work with and participate in source-build.
+These docs aim to be a collection of useful information for repo owners who work
+with and participate in source-build.
 
 ## Index
 
