@@ -14,7 +14,7 @@ The source code for the build tasks that run for prebuilt validation and interme
 
 Configuring source build involves setting up files in `eng/` that determine the behavior of source build in the repo.
 
-These changes are all needed before the inner source build will work:
+These changes are all needed before source build will work:
 
 * [`eng/SourceBuild.props`](#engsourcebuildprops) - Basic properties, such as repo name.
 * [`eng/SourceBuildPrebuiltBaseline.xml`](#engsourcebuildprebuiltbaselinexml) - Allow prebuilts. Until prebuilt detection is enabled/enforced, we allow all
@@ -58,7 +58,7 @@ MSBuild code that can change the way source build behaves.
 </UsageData>
 ```
 
-This defines which prebuilt NuGet packages are allowed to be used during thebuild. Initially, all package IDs and versions are permitted (`*/*`).
+This defines which prebuilt NuGet packages are allowed to be used during the build. Initially, all package IDs and versions are permitted (`*/*`).
 
 The `*/*` glob means "any nupkg id, any version". It will be replaced with more specific rules at a later phase once the repo level prebuilt detection
 infrastructure is completed. The goal is to make it specific, so when a PR introduces an unexpected prebuilt, PR validation will fail and let us resolve
@@ -251,6 +251,6 @@ source build dependency](#engversiondetailsxml) to the new source build repo.
 
 ## Validate
 
-Once the downstream dependency(s) are added to the new repo and those changes flow into `dotnet/installer`, a complete .NET source tarball can be build.
-This will validate that no prebuilts we added to the system and everything is functioning correctly. Please notify
+Once the downstream dependency(s) are added to the new repo and those changes flow into `dotnet/installer`, a complete .NET source tarball can be built.
+This will validate that no prebuilts were added to the system and everything is functioning correctly. Please notify
 [@source-build-internal](https://github.com/orgs/dotnet/teams/source-build-internal) to be on the lookout for the new repo and they will validate as necessary.

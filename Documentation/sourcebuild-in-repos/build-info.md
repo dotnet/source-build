@@ -1,6 +1,6 @@
 # Source-build build info
 
-This is a collection of notes about how source-build can differ in general from your repo's build and what kind of issues that can create. 
+This is a collection of notes about how source-build can differ in general from your repo's build and what kind of issues that can create.
 
 ## Single-version and single-RID build
 
