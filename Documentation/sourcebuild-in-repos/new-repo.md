@@ -1,9 +1,6 @@
 # Adding a new repository to source build
 
-This document describes the overall process of onboarding new repos onto arcade powered source build (ArPow). For more details about how the build executes, see
-[dotnet/arcade/.../Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild).
-The source code for the build tasks that run for prebuilt validation and intermediate nupkg dependency reading are maintained at
-[dotnet/arcade/.../Microsoft.DotNet.SourceBuild](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild).
+This document describes the overall process of onboarding new repos onto arcade powered source build (ArPow).
 
 1. [Source Build Configuration](#source-build-configuration)
 1. [Setup CI](#setup-ci)
@@ -19,7 +16,7 @@ These changes are all needed before source build will work:
 * [`eng/SourceBuild.props`](#engsourcebuildprops) - Basic properties, such as repo name.
 * [`eng/SourceBuildPrebuiltBaseline.xml`](#engsourcebuildprebuiltbaselinexml) - Allow prebuilts. Until prebuilt detection is enabled/enforced, we allow all
   prebuilts.
-* [`eng/Version.Details.xml`](#engversiondetailsxml) - Already exists, but modifications are needed to pull dependencies from upstream intermediate nupkgs.
+* [`eng/Version.Details.xml`](#engversiondetailsxml) - Already exists, but modifications are needed to pull dependencies from upstream [intermediate nupkgs](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs).
 
 See the following sections for details:
 
@@ -84,7 +81,7 @@ the meat of the build: the "inner" build runs inside an `Exec` task. The inner b
 
 ### Excluding components
 
-It is not always necessary or correct to include all repo components in source build because they introduce prebuilt that cannot be source built.
+It is not always necessary or correct to include all repo components in source build.  Components should be excluded if they are not required for the platform being source-built.  Including them expands the source-build graph and may not be possible because of licensing.
 Examples include tests, Windows components (rmember source build currently only supports Linux and macOS), etc. To exlcude these components
 use the `DotNetBuildFromSource` msbuild property to conditionally exclude.
 
@@ -113,10 +110,12 @@ Condition="'$(DotNetBuildFromSource)' != 'true'"
 Dependency changes may include adding `SourceBuild` to existing dependency elements, and adding a new `source-build-reference-packages` element.
 
 `SourceBuild` causes the source build targets in the Arcade SDK to download [intermediate nupkg]s from the upstream repo's official build, rather than using
-prebuilt binaries to fulfill the dependencies. Note that `RepoName` is used to calculate the ID of the [intermediate nupkg]: the `Dependency` `Name` is
+prebuilt binaries to fulfill the dependencies. Note that `RepoName` is used to calculate the ID of the [intermediate nupkg](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs): the `Dependency` `Name` is
 ignored by source build.
 
-`ManagedOnly` determines whether a RID suffix is necessary on the [intermediate nupkg] ID. For example, running source build on `dotnet/installer` with
+Building with the source-built versions of your dependencies also means that any upstream repos will have been built in a source-build context, including things projects that are excluded from the source-build.  This can help you find issues where your source-build depends on an upstream component that isn't actually built in source-build.
+
+`ManagedOnly` determines whether a RID suffix is necessary on the [intermediate nupkg](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs) ID. For example, running source build on `dotnet/installer` with
 `linux-x64` with the above example configuration will restore:
 
 * `Microsoft.SourceBuild.Intermediate.runtime.linux-x64`
@@ -254,3 +253,10 @@ source build dependency](#engversiondetailsxml) to the new source build repo.
 Once the downstream dependency(s) are added to the new repo and those changes flow into `dotnet/installer`, a complete .NET source tarball can be built.
 This will validate that no prebuilts were added to the system and everything is functioning correctly. Please notify
 [@source-build-internal](https://github.com/orgs/dotnet/teams/source-build-internal) to be on the lookout for the new repo and they will validate as necessary.
+
+# Additional resources
+
+- For more details about how the build executes, see
+[Arcade's build tools](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild).
+- The source code for the build tasks that run for prebuilt validation and intermediate nupkg dependency reading are maintained in
+[Arcade](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild) as well.
