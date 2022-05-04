@@ -14,12 +14,3 @@
 1.  If authenticated feeds were added to `/NuGet.config`, copy them into `/smoke-testNuGet.config`.
 1.  Commit changes.
 1.  Verify the final state of the repos in `/eng/Version.Details.xml` matches `manifest.json`.
-
-## Look for an automatic Maestro++ PR
-
-There might be an auto-PR. Check:
-
-* Public: <https://github.com/dotnet/source-build/pulls/app%2Fdotnet-maestro>
-* Internal: <https://dev.azure.com/dnceng/internal/_git/dotnet-source-build/pullrequests?_a=active>
-
-*Do not use an auto-update PR*: we can't be sure it's accurate to the exact build Microsoft plans to ship (there may have been an unplanned build since then), and there may also be more general problems updating from a channel. Run the update manually, instead. More info at <https://github.com/dotnet/core-eng/issues/10155>.
