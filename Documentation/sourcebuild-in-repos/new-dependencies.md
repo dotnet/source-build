@@ -42,19 +42,16 @@ see [installer's F# dependency](https://github.com/dotnet/installer/blob/ba1739a
 You can find the version needed by running `darc get-build`
 or using [BAR](https://aka.ms/bar).
 
-## Microsoft dependencies
+## Adding dependencies
 
-.NET dependencies are from a Microsoft .NET project, like
-[dotnet/roslyn](https://github.com/dotnet/roslyn),
-[dotnet/runtime](https://github.com/dotnet/runtime),
-and [dotnet/fsharp](https://github.com/dotnet/fsharp).  These repos use
-Arcade to build and publish.  Adding a new .NET dependency is usually
-quite easy.  Internal dependencies are from Microsoft repos but not .NET,
-like [Microsoft/msbuild](https://github.com/dotnet/msbuild),
-[NuGet/NuGet.Client](https://github.com/NuGet/NuGet.Client),
-and [Microsoft/ApplicationInsights](https://github.com/Microsoft/ApplicationInsights-dotnet).
-Adding a new internal dependency is usually pretty straightforward but does
-have some edge cases.  Use this checklist:
+Source build classifies dependencies in the following ways
+
+1. .NET - a dependency on a component from the .NET org - e.g. dotnet/runtime
+1. Microsoft - a dependency on a component from the Microsoft org - e.g. microsoft/vstest
+1. External - a dependency on a component outside of Microsoft/.NET - e.g. JamesNK/Newtonsoft.Json
+
+The following checklist can be used to determine how to handle each type of
+dependency and the nuances it may have.
 
 1. Are you already using a package from the same repo and is the new
   dependency already source-built?  You can determine this by checking if
@@ -72,7 +69,7 @@ have some edge cases.  Use this checklist:
     1. There's probably an issue with source-building this package.  Please
       talk to a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal)
       about why that is and whether we can fix it.
-1. Is this a Microsoft repo that uses Arcade to build?
+1. Is this a repo that uses Arcade to build?
     1. Does the foreign repo depend on your repo, directly or indirectly?
       i.e. would adding the dependency create a cycle?
         1. This isn't necessarily a deal-breaker - it can sometimes be worked
@@ -84,22 +81,15 @@ have some edge cases.  Use this checklist:
           in an appropriate channel.
     1. If neither of these caveats apply you should be in good shape.
       Follow the instructions under "Basics" above.
-1. Source-build has in the past used Arcade shims to allow non-Arcade repos
-  to build appropriate packages for source-build.  Please contact the
-  [source-build team](https://github.com/orgs/dotnet/teams/source-build-internal)
-  to determine if this is a workable approach for your foreign repo.
-
-## External dependencies
-
-External (non-Microsoft or even non-dotnet) dependencies need to be carefully
-considered for source-build in addition to the licensing issues you are
-probably already familiar with.
-
 1. Dependencies that have no code (e.g. SDKs with just props and targets) can
   usually be added using the [source-build text-only-package process](https://github.com/dotnet/source-build-reference-packages/tree/main/src/textOnlyPackages/src).
   If the package is not already included there, you can [open a PR](https://github.com/dotnet/source-build-reference-packages/pulls)
   or [file an issue](https://github.com/dotnet/source-build/issues/new/choose)
   to include it.
+1. Source-build has in the past used Arcade shims to allow non-Arcade repos
+  to build appropriate packages for source-build.  Please
+  [log an issue](https://github.com/dotnet/source-build/issues/new/choose)
+  to determine if this is a workable approach for your foreign repo.
 1. We build some external dependencies in the [dotnet/source-build-externals](https://github.com/dotnet/source-build-externals)
   repo.  Good targets for this generally have very few if any dependencies and
   very simple build processes.
