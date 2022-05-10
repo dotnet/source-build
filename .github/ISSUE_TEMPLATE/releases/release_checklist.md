@@ -34,8 +34,9 @@
      - [ ] Retrieve the source-build artifacts from [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link) - `Build Tarball CentOS7-Offline_Artifacts/Private.SourceBuilt.Artifacts.6.0.xxx.tar.gz`
 1. - [ ] Run the [source-build-release pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1124) (internal link).
      - Set the `SDK Version` parameter.
-     - If a special source-build tag was created for the release, check `Use custom tag?` and set the `Installer custom tag` parameter.
-     - Do not edit the `Branch/tag` parameter. The pipeline will check out `dotnet/installer` itself and verify that the specified release tag exists.
+         - If a special source-build tag was created for the release, check `Use custom tag?` and set the `Installer custom tag` parameter.
+         - Do not edit the `Branch/tag` parameter. The pipeline will check out `dotnet/installer` itself and verify that the specified release tag exists.
+     - Click `Run` and wait for the pipeline stages to complete.
      - Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
           - If special edits to the announcement are needed, or the content of the announcement discussion is incorrect, source-build repo maintainers can edit the discussion directly once it is posted.
      - Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.
