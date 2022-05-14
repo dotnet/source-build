@@ -29,14 +29,14 @@
 1.  - [ ] Version update cleanup and confirmations
       - [3.1]
         - [ ] Verify that the `PrivateSourceBuiltArtifactsPackageVersion` in `eng/Versions.props` matches N-1 release artifacts.
-        - [ ] Update the `global.json` SDK version to N-1: the latest released "3.1.XYY" SDK version, where "3.1.X" matches the SDK we're building.
+        - [ ] In `global.json`, update `dotnet` to the latest released 3.1 SDK version. It should be one version behind the version we are building. For example, if we are building 3.1.214, then the line should read `"dotnet": "3.1.213"`.
         - [ ] Update feeds:
              - [ ] If new feeds were added to NuGet.config, copy them to smoke-testNuGet.config and the `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS` section in `build.sh`.
              - [ ] Add the servicing feed to build.sh and smoke-testNuGet.config
 				1. The URL will look like this: https://pkgs.dev.azure.com/dnceng/internal/_packaging/3.1.419-servicing.22219.28-shipping/nuget/v3/index.json
 				1. In build.sh, add this feed to the `VSS_NUGET_EXTERNAL_FEED_ENDPOINTS`.
 				1. In smoke-testNuGet.config, add another feed entry that looks like the others, with key="5.0.408-servicing.22219.28-shipping" (for example) and value as the servicing url.
-        - [ ] Verify that all repos were updated, except for these expected to usually be stable:
+        - [ ] In `eng/Version.Details.Xml`, verify that the `<Sha>` tag for all repos were updated, except for these expected to usually be stable:
           - arcade
           - sourcelink
           - aspnet-xdt
@@ -55,7 +55,7 @@
 1.  - [ ] Start building locally (for quick diagnosis) and in CI (for super clean build) and iterate towards a green build.
       - [Internal] [3.1] Set environment variable `internalPackageFeedPat` to dnceng internal PAT with package read and code read access.
         - E.g. run `export internalPackageFeedPat;read internalPackageFeedPat` and paste the PAT. This sets up your running shell for an authenticated build. Passing `/p:` isn't sufficient.
-      - [Internal] [3.1] Also pass arg `/p:AzDoPat=$internalPackageFeedPat` to build.sh.
+      - [Internal] [3.1] run `build.sh /p:AzDoPat=$internalPackageFeedPat`.
       - [Internal] To run CI, from [dnceng/internal/source-build-pre-arcade-CI](https://dev.azure.com/dnceng/internal/_build?definitionId=251), click "Run pipeline" and select your dev/… branch under "Branch/tag", then click "Run"
          - If you are unsure if your build will be successful, you can run only the centos71_* stages to save resources.
 1.  - [ ] Review prebuilt baseline diff and iterate builds to drive to zero.
