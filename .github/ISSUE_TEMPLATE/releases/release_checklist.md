@@ -25,11 +25,11 @@
 1. - [ ] Work in the [dotnet-source-build](https://dnceng.visualstudio.com/internal/_git/dotnet-source-build?path=%2F&version=GBmain&_a=contents)
          repo.
 1. - [ ] Ensure [internal/release/3.1](https://dnceng.visualstudio.com/internal/_git/dotnet-source-build?path=/&version=GBinternal/release/3.1&_a=history)
-         branch is up to date with mirrored [release/3.1](https://github.com/dotnet/source-build/commits/release/3.1)
+         branch contains all commits made to the public [release/3.1](https://github.com/dotnet/source-build/commits/release/3.1) GitHub branch during this servicing cycle.
          branch.
 1. - [ ] Update to new version.
       - [/Documentation/servicing/update-3.1.md](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/update-3.1.md)
-      - Start a new working branch and PR for WIP so others can
+      - Start a new working branch off of [internal/release/3.1](https://dnceng.visualstudio.com/internal/_git/dotnet-source-build?path=/&version=GBinternal/release/3.1&_a=history) and open a PR for WIP so others can
         easily look if needed and CI starts running.
         - Use the branch name `dev/<youralias>/<SDK-version>-<month name><YYYY>`.
           This is necessary because some branch protection kicks in on branches
@@ -90,7 +90,7 @@
 1. - [ ] Start building locally (for quick diagnosis) and in CI (for super
          clean build) and iterate towards a green build.
       - For local builds:
-        - Set environment variable `internalPackageFeedPat` to the generated PAT.
+        - Set environment variable `internalPackageFeedPat` to the PAT generated in the previous step.
           - E.g. run `export internalPackageFeedPat;read internalPackageFeedPat`
             and paste the PAT. This sets up your running shell for an authenticated
             build. Passing `/p:` isn't sufficient.
@@ -109,7 +109,7 @@
       - If there's a prebuilt issue in a build, it will fail with an error
         similar to:
 
-          ```
+          ```text
           /src/repos/Directory.Build.targets(639,5): warning : 3 new packages
             used not in baseline! See report at /src/artifacts/prebuilt-report/baseline-comparison.xml
             for more information. Package IDs are: [/src/repos/known-good.proj]
