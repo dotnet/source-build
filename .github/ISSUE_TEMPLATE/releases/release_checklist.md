@@ -96,6 +96,8 @@
             build. Passing `/p:` isn't sufficient.
         - Run `build.sh /p:AzDoPat=$internalPackageFeedPat`.
       - For CI builds:
+        - Make sure all your changes are pushed to the dnceng internal remote.
+          - Very importantly, *do not* push any changes to any GitHub remote.  
         - To run CI, from [dnceng/internal/source-build-pre-arcade-CI](https://dev.azure.com/dnceng/internal/_build?definitionId=251),
           click "Run pipeline" and select your dev/… branch under "Branch/tag",
           then click "Run".
@@ -165,13 +167,14 @@
 1. - [ ] Rename tarball and smoke-test prereqs to human-friendly names.
          (Can use `rename_tarball_inner_dir`.)
       - Refer to previous release's email threads for naming pattern.
+        - This will be something like `dotnet-3.1.419` for the inner directory, `dotnet-3.1.419.tar.gz` for the SDK tarball, and `dotnet-3.1.419-smoke-test-prereqs.tar.gz` for the prereqs tarball. 
 1. - [ ] Upload tarballs and smoke-test prereqs to the `dotnetclimsrc` blob
          storage under the `source-build` container in `red-hat/3.1/` under a
          new folder named for the runtime and SDK version.  The access key for
          this blob storage is in the `EngKeyVault` vault in the "Dotnet
          Engineering Services" subscription.
 1. - [ ] Complete manual validation steps
-      - For 3.1, the build is poison-checked during the CI build.  If you get
+      - The 3.1 build is poison-checked during the CI build.  If you get
         an error related to "leak detection" or "CheckForPoison", get the source-build
         team involved as these can be difficult to diagnose and fix.
       - [ ] Verify the packs included in the SDK are from source-build-reference-packages,
@@ -181,9 +184,9 @@
           | grep "built by"` and make sure this includes `built by: SOURCEBUILD`.
       - [ ] Verify the packs included in the SDK have XML documentation comments
         - From the `testing-smoke/builtCli` directory, run `ls packs/Microsoft.NETCore.App.Ref/<version>/ref/netcoreapp3.1/*.xml`.
-          There should be about 110 XML files here.
+          There should be about 110 XML files here.  If there are fewer than 50, there is definitely a problem.
         - From the `testing-smoke/builtCli` directory, run `ls packs/Microsoft.AspNetCore.App.Ref/<version>/ref/netcoreapp3.1/*.xml`.
-          There should be about 130 XML files here.
+          There should be about 130 XML files here.  If there are fewer than 50, there is definitely a problem.
         - Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
       - [ ] Re-validate the SHA1s in the `eng/Version.Details.xml` file with
         the manifest in VSU share dir.
@@ -200,6 +203,9 @@
           - [#1630](https://github.com/dotnet/source-build/issues/1630) tracks
             a checked-in baseline.
 1. - [ ] Complete manual smoke-testing on our primary testing platforms:
+      - Steps:
+        1. Download the tarball on to each of the following platforms.
+        2.  
       - [ ] RHEL 7 VM
       - [ ] RHEL 8 VM
       - [ ] Fedora 30 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223)
@@ -240,7 +246,9 @@
       - Paste into the release title
       - Click submit.
 1. - [ ] [Source-build team] Notify distro maintainers and partners about
-     the release tags
+     the release tags.
+      - This can be over public channels like Slack and GitHub announcements.
+      - Include the version numbers for the runtime and SDK and the link for the GitHub tag.
 1. - [ ] Download merged Private.SourceBuilt.Artifacts.XX.tar.gz files from
      the prepare-artifacts leg in source-build-rolling-CI.
 1. - [ ] Upload merged Private.SourceBuilt.Artifacts.XX.tar.gz file to dotnetcli
