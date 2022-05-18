@@ -78,12 +78,7 @@
         - NuGet-client (except for feature band updates)
         - fsharp (except for feature band updates)
         - VSTest (except for feature band updates)
-1. - [ ] [Regenerate patches as necessary](patch-updates.md).
-      - Run `./build.sh` to begin clone and patch application and see what,
-        if anything, needs to be regenerated.
-      - ASP.NET will always need to be regenerated because it contains a
-        version number that needs to be updated.  The version should be updated
-        to the SDK version being built.  See <https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0006-Fix-version-number.patch>.
+      - [ ] Update `<SourceDirectory>` tags in the `repo/*.proj` files to match the directory that is being cloned.  Usually this means that each repo that changed in servicing needs to have its `<SourceDirectory>` updated to `dotnet-<reponame>`.
 1. - [ ] [Generate a PAT for AzDo](https://dev.azure.com/dnceng/_usersSettings/tokens).
       - This should include the `dnceng` organization.
       - Scope should include Read for Code and Packages.
@@ -104,6 +99,12 @@
         - If you are unsure if your build will be successful, you can run only
           the centos71_* stages to save resources by selecting "Stages to run"
           in the run dialog.
+1. - [ ] [Regenerate patches as necessary](patch-updates.md).
+      - Run `./build.sh` to begin clone and patch application and see what,
+        if anything, needs to be regenerated.
+      - ASP.NET will always need to be regenerated because it contains a
+        version number that needs to be updated.  The version should be updated
+        to the SDK version being built.  See <https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0006-Fix-version-number.patch>.
 1. - [ ] Review prebuilt baseline diff and iterate builds to drive to zero.
       - Prebuilts are packages used in a source-build that come from outside
         of source-build.  These are not allowed by our Linux partners so we
@@ -190,7 +191,7 @@
         - Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
       - [ ] Re-validate the SHA1s in the `eng/Version.Details.xml` file with
         the manifest in VSU share dir.
-      - [ ] Review the file list diff between Microsoft-built SDK and source-built
+      - [ ] [Source-build team] Review the file list diff between Microsoft-built SDK and source-built
         SDK in smoke-test output.
         - For internal builds, smoke-test fails to acquire the Microsoft-built
           SDK. Manually acquire the Microsoft-built SDK from the build email
@@ -205,7 +206,11 @@
 1. - [ ] Complete manual smoke-testing on our primary testing platforms:
       - Steps:
         1. Download the tarball on to each of the following platforms.
-        2.  
+        2. Extract it to a drive with at least 150GB of empty space.
+        3. Run `./prep.sh` to populate the previously-source-built and SBRP tarballs and the bootstrap SDK.
+        4. Run `sudo unshare -n ./build.sh` to build the tarball.  Unshare is usually located in a package called `util-linux` or `moreutils`.  Or if running in Docker, use the `--offline` flag.
+        5. If not running in Docker, use `sudo chown -R $(whoami) .` to retake ownership of all files.
+        6. Run `./build.sh --run-smoke-test` to run the source-build tests.
       - [ ] RHEL 7 VM
       - [ ] RHEL 8 VM
       - [ ] Fedora 30 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223)
@@ -225,6 +230,7 @@
 1. - [ ] In a dev branch on your GitHub fork of source-build, clean up.
       - [ ] Convert internal URIs to public in `eng/Version.Details.xml`.
         - `https://dev.azure.com/dnceng/internal/_git/<org>-<repo>` => `https://github.com/<org>/<repo>`
+      - [ ] Convert internal `<SourceDirectory>` tags in `repo/*.proj` to the external ones. 
       - [ ] Remove internal package feeds from source-build.
         - `/NuGet.Config`
         - `/smoke-testNuGet.Config`

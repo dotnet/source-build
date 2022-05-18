@@ -9,7 +9,7 @@ be occasional large changes, especially when doing feature-band upgrades.
 
 ## Process
 
-1. Clone the repo and update the version of contributing repos as
+1. Clone the source-build repo and update the version of contributing repos as
   appropriate for the branch.
 1. Build the repo as normal.  If the build succeeds, no patch
   changes were necessary and you're done.
@@ -60,6 +60,6 @@ be occasional large changes, especially when doing feature-band upgrades.
 1. `git add` all files involved in the patch, then `git am --continue`.
   If another patch fails, repeat the process.  If the patching
   succeeds all the way through, you're done.
-1. Extract the patches using `git format-patch --zero-commit -o ../../../patches/<reponame>`.
+1. Extract the patches using `git format-patch --zero-commit --no-signature -o ../../../patches/<reponame> <updated hash>`.
 1. `git add` the changed patch files at the top level of the repo
   and commit them with your other changes.
