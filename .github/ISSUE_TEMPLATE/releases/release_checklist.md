@@ -26,9 +26,7 @@
          repo.
 1. - [ ] Ensure [internal/release/3.1](https://dnceng.visualstudio.com/internal/_git/dotnet-source-build?path=/&version=GBinternal/release/3.1&_a=history)
          branch contains all commits made to the public [release/3.1](https://github.com/dotnet/source-build/commits/release/3.1) GitHub branch during this servicing cycle.
-         branch.
-1. - [ ] Update to new version.
-      - [/Documentation/servicing/update-3.1.md](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/update-3.1.md)
+1. - [ ] [Update to new version](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/update-3.1.md).
       - Start a new working branch off of [internal/release/3.1](https://dnceng.visualstudio.com/internal/_git/dotnet-source-build?path=/&version=GBinternal/release/3.1&_a=history) and open a PR for WIP so others can
         easily look if needed and CI starts running.
         - Use the branch name `dev/<youralias>/<SDK-version>-<month name><YYYY>`.
@@ -82,15 +80,23 @@
 1. - [ ] [Generate a PAT for AzDo](https://dev.azure.com/dnceng/_usersSettings/tokens).
       - This should include the `dnceng` organization.
       - Scope should include Read for Code and Packages.
-1. - [ ] Start building locally (for quick diagnosis) and in CI (for super
-         clean build) and iterate towards a green build.
+1. - [ ] Iterate towards a green build.
       - For local builds:
         - Set environment variable `internalPackageFeedPat` to the PAT generated in the previous step.
           - E.g. run `export internalPackageFeedPat;read internalPackageFeedPat`
             and paste the PAT. This sets up your running shell for an authenticated
             build. Passing `/p:` isn't sufficient.
         - Run `build.sh /p:AzDoPat=$internalPackageFeedPat`.
+        - This will likely have patch conflicts, see below.
+      - [ ] [Regenerate patches as necessary](patch-updates.md).
+        - Run `./build.sh` to begin clone and patch application and see what,
+          if anything, needs to be regenerated.
+        - ASP.NET will always need to be regenerated because it contains a
+          version number that needs to be updated.  The version should be updated
+          to the SDK version being built.  See <https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0006-Fix-version-number.patch>.
+        - Reach out to the source-build team if you are stuck on a patch issue.
       - For CI builds:
+        - After patches have been updated, you can start running CI builds to make sure a clean build works.
         - Make sure all your changes are pushed to the dnceng internal remote.
           - Very importantly, *do not* push any changes to any GitHub remote.  
         - To run CI, from [dnceng/internal/source-build-pre-arcade-CI](https://dev.azure.com/dnceng/internal/_build?definitionId=251),
@@ -99,12 +105,7 @@
         - If you are unsure if your build will be successful, you can run only
           the centos71_* stages to save resources by selecting "Stages to run"
           in the run dialog.
-1. - [ ] [Regenerate patches as necessary](patch-updates.md).
-      - Run `./build.sh` to begin clone and patch application and see what,
-        if anything, needs to be regenerated.
-      - ASP.NET will always need to be regenerated because it contains a
-        version number that needs to be updated.  The version should be updated
-        to the SDK version being built.  See <https://github.com/dotnet/source-build/blob/release/3.1/patches/aspnetcore/0006-Fix-version-number.patch>.
+1. 
 1. - [ ] Review prebuilt baseline diff and iterate builds to drive to zero.
       - Prebuilts are packages used in a source-build that come from outside
         of source-build.  These are not allowed by our Linux partners so we
@@ -174,6 +175,10 @@
          new folder named for the runtime and SDK version.  The access key for
          this blob storage is in the `EngKeyVault` vault in the "Dotnet
          Engineering Services" subscription.
+      - Never overwrite a tarball. At least change the blob storage virtual
+        dir to represent a new build. This can help avoid timing issues and
+        make it more obvious if stale links were accidentally re-sent rather
+        than new ones.
 1. - [ ] Complete manual validation steps
       - The 3.1 build is poison-checked during the CI build.  If you get
         an error related to "leak detection" or "CheckForPoison", get the source-build
@@ -191,7 +196,7 @@
         - Issue tracking automation of this: [#1579](https://github.com/dotnet/source-build/issues/1579)
       - [ ] Re-validate the SHA1s in the `eng/Version.Details.xml` file with
         the manifest in VSU share dir.
-      - [ ] [Source-build team] Review the file list diff between Microsoft-built SDK and source-built
+      - [ ] Review the file list diff between Microsoft-built SDK and source-built
         SDK in smoke-test output.
         - For internal builds, smoke-test fails to acquire the Microsoft-built
           SDK. Manually acquire the Microsoft-built SDK from the build email
@@ -203,6 +208,7 @@
           as a loose baseline.
           - [#1630](https://github.com/dotnet/source-build/issues/1630) tracks
             a checked-in baseline.
+       - [ ] Get signoff from the source-build team on the file diffs.
 1. - [ ] Complete manual smoke-testing on our primary testing platforms:
       - Steps:
         1. Download the tarball on to each of the following platforms.
@@ -213,16 +219,12 @@
         6. Run `./build.sh --run-smoke-test` to run the source-build tests.
       - [ ] RHEL 7 VM
       - [ ] RHEL 8 VM
-      - [ ] Fedora 30 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223)
-      - [ ] CentOS 7 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343)
-      - [ ] CentOS 8 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212)
-      - [ ] Debian 9 - VM or [Docker](mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114)
+      - [ ] Fedora 30 - VM or Docker (image: mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223)
+      - [ ] CentOS 7 - VM or Docker (image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343)
+      - [ ] CentOS 8 - VM or Docker (image: mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212)
+      - [ ] Debian 9 - VM or Docker (image: mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-d61254f-20190807161114)
 1. - [ ] [Source-build team] Send the tarball to partners. Include info about
      how certain we are that this will be the final Microsoft build.
-      - Never overwrite a tarball. At least change the blob storage virtual
-        dir to represent a new build. This can help avoid timing issues and
-        make it more obvious if stale links were accidentally re-sent rather
-        than new ones.
 1. - [ ] SYNC POINT: Wait for Microsoft build release.
       - Wait for dotnet/announcements post. `Watch` the repo to get emails so
         you don't have to poll.
@@ -238,8 +240,10 @@
           automatically while modifying each subrepo nuget.config file.
 1. - [ ] Push the servicing branch to your GitHub fork and submit a
          source-build PR.
-1. - [ ] If a build hits `fatal: reference is not a tree: cb5f173b`,
-        [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/make-commit-available.md).
+1. - [ ] If a build hits `fatal: reference is not a tree: cb5f173b`, the contributing repo commit has not been merged or tagged yet, which will block the public PR build.
+     - This has been happening regularly in the recent past.
+     - Find the relevant PR in the failing repo (this will be titled something like "Merge internal commits for release/3.1.419") and let the owner know that it is blocking source-build and ask to tag the release commit in the meantime.
+     - If there's a blocking issue in the contributing repo we can [make the commit available on a fork and switch to it temporarily](https://github.com/dotnet/source-build/tree/release/3.1/Documentation/servicing/make-commit-available.md).
 1. - [ ] Add crummel, MichaelSimons, and lbussell as reviewers.
 1. - [ ] When CI is green and two reviewers approve, merge.
       - Avoid squash/rebase: nice to preserve commit hashes. However, there
