@@ -105,7 +105,6 @@
         - If you are unsure if your build will be successful, you can run only
           the centos71_* stages to save resources by selecting "Stages to run"
           in the run dialog.
-1. 
 1. - [ ] Review prebuilt baseline diff and iterate builds to drive to zero.
       - Prebuilts are packages used in a source-build that come from outside
         of source-build.  These are not allowed by our Linux partners so we
