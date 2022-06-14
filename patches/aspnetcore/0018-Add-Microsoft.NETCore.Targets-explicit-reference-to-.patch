@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Fri, 10 Jun 2022 15:42:16 -0500
+Subject: [PATCH 18/18] Add Microsoft.NETCore.Targets explicit reference to
+ lift auto-reference and fix runtime.any prebuilts.
+
+---
+ .../App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj      | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+index e2f18a1874..7d8e24fe7e 100644
+--- a/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
++++ b/src/Framework/App.Runtime/src/Microsoft.AspNetCore.App.Runtime.csproj
+@@ -122,6 +122,7 @@ This package is an internal implementation of the .NET Core SDK and is not meant
+   </PropertyGroup>
+ 
+   <ItemGroup>
++    <PackageReference Include="Microsoft.NETCore.Targets" Version="3.1.0" />
+     <!-- Note: do not add _TransitiveExternalAspNetCoreAppReference to this list. This is intentionally not listed as a direct package reference. -->
+     <Reference Include="@(AspNetCoreAppReference);@(AspNetCoreAppReferenceAndPackage);@(ExternalAspNetCoreAppReference)">
+       <IncludeAssets>Runtime;Native</IncludeAssets>

@@ -1,0 +1,40 @@
+From 206070cb3e9645b7b47bde9fc6dbf5b1b765516e Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Sun, 12 Jun 2022 19:03:15 -0500
+Subject: [PATCH] more component governance
+
+---
+ src/toolset-tasks/toolset-tasks.csproj                        | 2 +-
+ .../Microsoft.DotNet.Tools.Tests.Utilities.csproj             | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/toolset-tasks/toolset-tasks.csproj b/src/toolset-tasks/toolset-tasks.csproj
+index 119acf5a5..264c36a39 100644
+--- a/src/toolset-tasks/toolset-tasks.csproj
++++ b/src/toolset-tasks/toolset-tasks.csproj
+@@ -11,7 +11,7 @@
+     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
+     <PackageReference Include="NuGet.Versioning" Version="4.3.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
+-    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
++    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+   </ItemGroup>
+ 
+   <ItemGroup Condition="'$(TargetFrameworkIdentifier)' == '.NETFramework'">
+diff --git a/test/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj b/test/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
+index 83b591e46..4f7abd8b5 100644
+--- a/test/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
++++ b/test/Microsoft.DotNet.Tools.Tests.Utilities/Microsoft.DotNet.Tools.Tests.Utilities.csproj
+@@ -15,6 +15,6 @@
+     <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
+     <PackageReference Include="Microsoft.DotNet.Cli.Utils" Version="$(MicrosoftDotNetCliUtilsPackageVersion)" />
+     <PackageReferenve Include="NuGet.Frameworks" Version="$(NuGetProjectModelPackageVersion)" />
+-    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.2" />
++    <PackageReference Include="System.Security.Cryptography.X509Certificates" Version="4.3.0" />
+   </ItemGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+-- 
+2.31.1
+
