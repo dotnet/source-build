@@ -78,19 +78,6 @@ stages:
       imageName: mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20200918145614-047508b
       cleanAptGet: true
 
-- template: ../stages/stage-jobs-matrix.yml
-  parameters:
-    jobTemplateName: ../jobs/ci-local.yml
-    name: macos
-    jobParameters:
-      pool:
-        vmImage: 'macOS-1015'
-      scriptPrefix: ./
-      scriptSuffix: .sh
-      setupMac: true
-    matrix:
-      Production: {}
-
 # Prepare artifacts in all situations but public PR validation.
 - ${{ if not(and(eq(variables['System.TeamProject'], 'public'), in(variables['Build.Reason'], 'PullRequest'))) }}:
   - template: ../stages/prepare-artifacts.yml
