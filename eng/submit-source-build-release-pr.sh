@@ -133,9 +133,7 @@ git checkout -b "${new_branch_name}" "upstream/${pr_target_branch}"
 cat $global_json_path \
     | jq --unbuffered ".tools.dotnet=\"${sdk_version}\"" \
     | tee $global_json_path
-cat $versions_props_path \
-    | sed "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" \
-    | tee $versions_props_path
+sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 git add "$global_json_path" "$versions_props_path"
 
 git config --global user.name "dotnet-sb-bot"
