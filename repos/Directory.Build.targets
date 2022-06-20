@@ -29,9 +29,15 @@
       <PatchCommand>git --work-tree=$(ProjectDirectory) apply --ignore-whitespace --whitespace=nowarn</PatchCommand>
     </PropertyGroup>
 
+    <!-- in the installer tarball, we want to remove the objects directory from the .gitdir to save space.
+         This causes a problem specifically in the combination of submodules which have redirected .gitdirs
+         when we are applying patches in the current directory (which is required due to the way Git
+         interprets the paths in a patch).  GIT_DIR=/dev/null short-circuits the .gitdir discovery process
+         and lets Git treat the directory like any non-Git-controlled directory instead.            -->
     <Exec Command="$(PatchCommand) %(PatchesToApply.Identity)"
           WorkingDirectory="$(ProjectDirectory)"
-          Condition="'@(PatchesToApply)' != ''" />
+          Condition="'@(PatchesToApply)' != ''"
+          EnvironmentVariables="GIT_DIR=/dev/null" />
 
     <WriteLinesToFile File="$(RepoCompletedSemaphorePath)ApplyPatches.complete" Overwrite="true" />
   </Target>
