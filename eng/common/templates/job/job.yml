@@ -24,7 +24,7 @@ parameters:
 
   workspace: ''
 
-# Job base template specific parameters
+  # Job base template specific parameters
   # Optional: Enable installing Microbuild plugin
   #           if 'true', these "variables" must be specified in the variables object or as part of the queue matrix
   #             _TeamName - the name of your team
@@ -45,6 +45,9 @@ parameters:
 
   # Optional: enable sending telemetry
   enableTelemetry: false
+
+  # Options: Don't run CG
+  disableComponentGovernance: false
 
   # Optional: define the helix repo for telemetry (example: 'dotnet/arcade')
   helixRepo: ''
@@ -140,7 +143,7 @@ jobs:
 
   - ${{ if eq(parameters.enableMicrobuild, 'true') }}:
     - ${{ if and(eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
-      - task: MicroBuildSigningPlugin@2
+      - task: MicroBuildSigningPlugin@3
         displayName: Install MicroBuild plugin
         inputs:
           signType: $(_SignType)
@@ -151,8 +154,15 @@ jobs:
         continueOnError: ${{ parameters.continueOnError }}
         condition: and(succeeded(), in(variables['_SignType'], 'real', 'test'), eq(variables['Agent.Os'], 'Windows_NT'))
 
+  - ${{ if and(eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    - task: NuGetAuthenticate@0
+
   - ${{ each step in parameters.steps }}:
     - ${{ step }}
+
+  - ${{ if and(eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'), ne(parameters.disableComponentGovernance, 'true')) }}:
+      - task: ComponentGovernanceComponentDetection@0
+        continueOnError: true
 
   - ${{ if eq(parameters.enableMicrobuild, 'true') }}:
     - ${{ if and(eq(parameters.runAsPublic, 'false'), ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
