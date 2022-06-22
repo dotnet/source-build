@@ -1,7 +1,9 @@
 From 206070cb3e9645b7b47bde9fc6dbf5b1b765516e Mon Sep 17 00:00:00 2001
 From: Chris Rummel <crummel@microsoft.com>
 Date: Sun, 12 Jun 2022 19:03:15 -0500
-Subject: [PATCH] more component governance
+Subject: [PATCH] Downgrade some ref packages to avoid prebuilts
+In the source-build these will get the live version so there is no
+security issue caused by using these as reference packages.
 
 ---
  src/toolset-tasks/toolset-tasks.csproj                        | 2 +-
