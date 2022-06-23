@@ -19,6 +19,7 @@
     <!-- The arch flag (defaults to x64) overrides any value of TargetArchitecture that we might set -->
     <BuildCommandArgs>$(BuildCommandArgs) --arch $(Platform)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:BuildNodeJs=false</BuildCommandArgs>
+    <BuildCommandArgs>$(BuildCommandArgs) /p:DisablePackageReferenceRestrictions=true</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:SourceBuildRuntimeIdentifier=$(OverrideTargetRid)</BuildCommandArgs>
     <BuildCommandArgs>$(BuildCommandArgs) /p:UseAppHost=false</BuildCommandArgs>
 

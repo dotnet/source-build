@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Logan Bussell <loganbussell@microsoft.com>
+Date: Fri, 3 Jun 2022 17:10:31 -0700
+Subject: [PATCH 2/2] Remove direct references to packages with vulnerabilities
+
+These references are included in aspnetcore so that they can directly reference
+the package versions that have vulnerabilities fixed. In a source-build context,
+we already build the latest versions of these packages, which are not
+vulnerable. Referencing the packages directly can pull in unwanted prebuilts.
+---
+ eng/Dependencies.props | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/eng/Dependencies.props b/eng/Dependencies.props
+index 5151295f73..1dd190c7fa 100644
+--- a/eng/Dependencies.props
++++ b/eng/Dependencies.props
+@@ -94,13 +94,11 @@ and are generated based on the last package release.
+     <LatestPackageReference Include="System.IO.Pipelines" Version="$(SystemIOPipelinesPackageVersion)" />
+     <LatestPackageReference Include="System.Net.Http" Version="$(SystemNetHttpPackageVersion)" />
+     <LatestPackageReference Include="System.Net.Http.Json" Version="$(SystemNetHttpJsonPackageVersion)" />
+-    <LatestPackageReference Include="System.Private.Uri" Version="$(SystemPrivateUriPackageVersion)" />
+     <LatestPackageReference Include="System.Reflection.Metadata" Version="$(SystemReflectionMetadataPackageVersion)" />
+     <LatestPackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="$(SystemRuntimeCompilerServicesUnsafePackageVersion)" />
+     <LatestPackageReference Include="System.Security.Cryptography.Cng" Version="$(SystemSecurityCryptographyCngPackageVersion)" />
+     <LatestPackageReference Include="System.Security.Cryptography.Pkcs" Version="$(SystemSecurityCryptographyPkcsPackageVersion)" />
+     <LatestPackageReference Include="System.Security.Cryptography.Xml" Version="$(SystemSecurityCryptographyXmlPackageVersion)" />
+-    <LatestPackageReference Include="System.Security.Cryptography.X509Certificates" Version="$(SystemSecurityCryptographyX509CertificatesPackageVersion)" />
+     <LatestPackageReference Include="System.Security.Permissions" Version="$(SystemSecurityPermissionsPackageVersion)" />
+     <LatestPackageReference Include="System.Security.Principal.Windows" Version="$(SystemSecurityPrincipalWindowsPackageVersion)" />
+     <LatestPackageReference Include="System.Text.Encodings.Web" Version="$(SystemTextEncodingsWebPackageVersion)" />
