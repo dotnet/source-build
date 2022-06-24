@@ -13,6 +13,10 @@
 -->
 # {runtime-version} / {sdk-version}
 
+1. - [ ] First-time setup
+      - [ ] Request access to the "DNC Internal" and "DevDiv Source - FTE – Code-Read-only" or "DevDiv Source – Vendors – Code-Read-only" projects in <http://myaccess>.
+      - [ ] Join the [arcade-contrib](https://github.com/orgs/dotnet/teams/arcade-contrib) team on GitHub.
+      - [ ] Set up a VM or Docker container with at least 300GB of disk space.  [This](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/blob/main/src/fedora/34/amd64/Dockerfile) or [this](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/tree/main/src/ubuntu) Dockerfile are good guides to the packages you will need.
 1. - [ ] Create a OneNote page in the NET Core Acquisition and Deployment
     OneNote > source-build > Servicing > Retrospective > "May 2022"
     (for example) to take ongoing notes on problems with the process,
@@ -78,7 +82,7 @@
         - VSTest (except for feature band updates)
       - [ ] Update `<SourceDirectory>` tags in the `repo/*.proj` files to match the directory that is being cloned.  Usually this means that each repo that changed in servicing needs to have its `<SourceDirectory>` updated to `dotnet-<reponame>`.
 1. - [ ] [Generate a PAT for AzDo](https://dev.azure.com/dnceng/_usersSettings/tokens).
-      - This should include the `dnceng` organization.
+      - This should include the `dnceng` organization.  If your account is not allowed to do this, you can use Arcade's [PatGeneratorTool](https://github.com/dotnet/arcade-services/tree/main/src/Microsoft.DncEng.PatGeneratorTool) to do it programmatically.
       - Scope should include Read for Code and Packages.
 1. - [ ] Iterate towards a green build.
       - For local builds:
@@ -134,6 +138,7 @@
         This will include where each prebuilt is coming from.
       - Find an explanation for each change in each (online/offline) baseline.
         - If possible, figure out the cause and fix.
+          - See [/Documentation/servicing/common-prebuilt-issues.md](here) for docs on issues we see regularly.
           - One typical case is just an update from the previous-previous
             version to the previous version.  For instance, when building
             3.1.25 some templates will go from 3.1.23 to 3.1.24.  These are
