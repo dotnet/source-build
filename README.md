@@ -8,59 +8,12 @@ This repo is the starting point for building .NET 6 from source. Instructions fo
 
 The dependencies for building .NET 6.0 from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md).
 
-## Building
+## Building .NET 6.0
 
 .NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
-The following set of instructions walk through how to build on Fedora 33.  
-
-1. Clone the repo and check out the tag for the desired release.
-    ```bash
-    git clone https://github.com/dotnet/installer
-    cd installer/
-    git switch -c v6.0.1XX v6.0.1XX
-    ```
-
-3. Create a .NET source tarball.
-
-   ```bash
-   ./build.sh /p:ArcadeBuildTarball=true /p:TarballDir=/path/to/place/complete/dotnet/sources
-   ```
-
-   This fetches the complete .NET source code and creates a tarball at `artifacts/packages/<Release|Debug>/Shipping/`.
-   The extracted source code is also placed at `/path/to/place/complete/dotnet/sources`.
-   The source directory should be outside (and not somewhere under) the installer directory.
-
-3. Prep the source to build on your distro. This downloads a .NET SDK and a number of .NET packages needed to build .NET from source.
-
-    ```bash
-    cd /path/to/complete/dotnet/sources
-    ./prep.sh
-    ```
-    
-    On arm64, please use `./prep.sh --bootstrap` instead.
-    This issue is being tracked [here](https://github.com/dotnet/source-build/issues/2758).
-
-4. Build the .NET SDK
-
-    ```bash
-    ./build.sh
-    ```
-
-    This builds the entire .NET SDK from source. The resulting SDK is placed at `artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz`.
-
-5. (Optional) Unpack and install the .NET SDK
-
-    ```bash
-    mkdir -p $HOME/dotnet
-    tar zxf artifacts/x64/Release/dotnet-sdk-6.0.100-fedora.33-x64.tar.gz -C $HOME/dotnet
-    ln -s $HOME/dotnet/dotnet /usr/bin/dotnet
-    ```
-    
-    To test your source-built SDK, run the following:
-
-    ```bash
-    dotnet --info
-    ```
+Clone the dotnet/installer repo and check out the tag for the desired release.
+Then, follow the instructions in [dotnet/installer's README](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to build .NET from source.
+Please see the [support](#support) section below to see which feature branches are currently supported.
 
 ## .NET 5.0 and .NET Core 3.1
 
