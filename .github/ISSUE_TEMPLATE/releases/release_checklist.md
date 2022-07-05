@@ -21,9 +21,17 @@
        - [ ] Retrieve the source tarball artifact - `BlobArtifacts/dotnet-sdk-source-6.0.xxx.tar.gz`
      - [ ] [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
        - [ ] Ensure the PoisonTests and SdkContentTests are passing.  Warnings indicate a baseline diff and should be inspected carefully.
-1. - [ ] [Internal] Gather smoke-test prereqs and package in dotnet-smoke-test-prereqs-6.0.101.tar.gz.
-     - [ ] Retrieve the smoke-test prereqs artifact for each architecture (e.g. x64 and arm64) from [tarball build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link) - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-     - [ ] Manually retrieve `microsoft.net.runtime.monoaotcompiler.task` package by running `dotnet workload install macos` or manually downloading. Add package to each smoke-test prereqs tarball. [Automation tracking issue](https://github.com/dotnet/source-build/issues/2774) for this step.
+1. - [ ] [Internal] Gather smoke-test prereqs
+     - [ ] Retrieve smoke-test prereqs artifact for each architecture (e.g. x64 and arm64) from [tarball build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
+       - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
+       - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
+     - [ ] Retrieve `microsoft.net.runtime.monoaotcompiler.task` package from internal MSFT feed. [Automation tracking issue](https://github.com/dotnet/source-build/issues/2774) for this step.
+     - [ ] Create new tarball of unique packages
+       - [ ] Extract x64 tarball
+       - [ ] Add `microsoft.net.runtime.monoaotcompiler.task` package to x64 packages
+       - [ ] Extact arm64 tarball
+       - [ ] Copy four `*linux-arm64*` packages to x64 packages
+       - [ ] Create new `dotnet-smoke-test-prereqs.6.0.xxx.tar.gz` tarball
 1. - [ ] [Internal] Upload source and smoke-test-prereqs tarball to dotnetclimsrc storage account.
 1. - [ ] Notify partners of release.  Include info about how certain we are that this will be the final Microsoft build.
      - [Internal] Send the dotnetclimsrc tarball links to partners.
