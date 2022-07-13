@@ -15,6 +15,7 @@
       discussion about using channel vs. build ID.
     * If darc fails on XliffTasks, comment out its `/eng/Version.Details.xml`
       entry temporarily and try again.
+    * This command takes about 20-30 minutes on a good corpnet connection, or up to four hours on a home or VPN connection.
 1. If authenticated feeds were added to `/NuGet.config`, copy them into `/smoke-testNuGet.config`.
 1. Commit changes.
 1. Verify the final state of the repos in `/eng/Version.Details.xml` matches `manifest.json`.
