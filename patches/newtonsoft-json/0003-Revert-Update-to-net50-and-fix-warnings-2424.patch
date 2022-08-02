@@ -1,0 +1,766 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Mon, 1 Aug 2022 20:14:50 -0500
+Subject: [PATCH 3/3] Revert "Update to net50 and fix warnings (#2424)"
+
+This reverts commit a222c8b69cc8ae55d938339362c2550c939a1e4d.
+---
+ Build/build.ps1                               | 16 +++++---------
+ Src/Directory.Build.props                     |  1 +
+ .../Newtonsoft.Json.TestConsole.csproj        |  2 +-
+ Src/Newtonsoft.Json.Tests/ExceptionTests.cs   |  2 --
+ .../JsonTextReaderTests/ParseAsyncTests.cs    |  4 ++--
+ .../JsonTextReaderTests/ParseTests.cs         |  4 ++--
+ .../JsonTextWriterAsyncTests.cs               |  2 +-
+ .../JsonTextWriterTest.cs                     |  2 +-
+ .../Newtonsoft.Json.Tests.csproj              | 14 ++++++-------
+ .../JsonSerializerCollectionsTests.cs         |  2 +-
+ .../Serialization/JsonSerializerTest.cs       | 20 ++----------------
+ Src/Newtonsoft.Json/JsonConvert.cs            | 16 +++++++-------
+ Src/Newtonsoft.Json/JsonConverter.cs          | 10 ++++-----
+ Src/Newtonsoft.Json/JsonSerializer.cs         |  5 +++--
+ Src/Newtonsoft.Json/Linq/Extensions.cs        | 21 ++++++++++---------
+ Src/Newtonsoft.Json/Linq/JContainer.cs        |  4 ++--
+ Src/Newtonsoft.Json/Linq/JEnumerable.cs       |  2 +-
+ Src/Newtonsoft.Json/Linq/JToken.cs            | 16 +++++++-------
+ Src/Newtonsoft.Json/Linq/JValue.cs            |  2 +-
+ Src/Newtonsoft.Json/Newtonsoft.Json.csproj    |  2 +-
+ .../JsonSerializerInternalReader.cs           |  2 +-
+ .../JsonSerializerInternalWriter.cs           |  8 +++----
+ Src/Newtonsoft.Json/Utilities/AsyncUtils.cs   |  4 ++--
+ .../Utilities/DictionaryWrapper.cs            |  4 +---
+ .../Utilities/JavaScriptUtils.cs              |  2 +-
+ Src/global.json                               |  4 ++--
+ azure-pipelines.yml                           |  2 +-
+ 27 files changed, 76 insertions(+), 97 deletions(-)
+
+diff --git a/Build/build.ps1 b/Build/build.ps1
+index ea2c22f8..c0ee04c9 100644
+--- a/Build/build.ps1
++++ b/Build/build.ps1
+@@ -14,9 +14,8 @@
+   $workingName = if ($workingName) {$workingName} else {"Working"}
+   $assemblyVersion = if ($assemblyVersion) {$assemblyVersion} else {$majorVersion + '.0.0'}
+   $netCliChannel = "Current"
+-  $netCliVersion = "5.0.200"
++  $netCliVersion = "3.0.100"
+   $nugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
+-  $ensureNetCliSdk = $true
+ 
+   $baseDir  = resolve-path ..
+   $buildDir = "$baseDir\Build"
+@@ -32,8 +31,8 @@
+   $nunitConsolePath = "$buildDir\Temp\NUnit.ConsoleRunner.$nunitConsoleVersion"
+ 
+   $builds = @(
+-    @{Framework = "netstandard2.0"; TestsFunction = "NetCliTests"; TestFramework = "net5.0"; Enabled=$true},
+-    @{Framework = "netstandard1.3"; TestsFunction = "NetCliTests"; TestFramework = "netcoreapp3.1"; Enabled=$true},
++    @{Framework = "netstandard2.0"; TestsFunction = "NetCliTests"; TestFramework = "netcoreapp3.0"; Enabled=$true},
++    @{Framework = "netstandard1.3"; TestsFunction = "NetCliTests"; TestFramework = "netcoreapp2.2"; Enabled=$true},
+     @{Framework = "netstandard1.0"; TestsFunction = "NetCliTests"; TestFramework = "netcoreapp2.1"; Enabled=$true},
+     @{Framework = "net45"; TestsFunction = "NUnitTests"; TestFramework = "net46"; NUnitFramework="net-4.0"; Enabled=$true},
+     @{Framework = "net40"; TestsFunction = "NUnitTests"; NUnitFramework="net-4.0"; Enabled=$true},
+@@ -70,10 +69,7 @@ task Build -depends Clean {
+ 
+   mkdir "$buildDir\Temp" -Force
+   
+-  if ($ensureNetCliSdk)
+-  {
+-    EnsureDotNetCli
+-  }
++  EnsureDotNetCli
+   EnsureNuGetExists
+   EnsureNuGetPackage "vswhere" $vswherePath $vswhereVersion
+   EnsureNuGetPackage "NUnit.ConsoleRunner" $nunitConsolePath $nunitConsoleVersion
+@@ -174,8 +170,6 @@ function EnsureDotnetCli()
+     -OutFile "$buildDir\Temp\dotnet-install.ps1"
+ 
+   exec { & $buildDir\Temp\dotnet-install.ps1 -Channel $netCliChannel -Version $netCliVersion | Out-Default }
+-  exec { & $buildDir\Temp\dotnet-install.ps1 -Channel $netCliChannel -Version '3.1.402' | Out-Default }
+-  exec { & $buildDir\Temp\dotnet-install.ps1 -Channel $netCliChannel -Version '2.1.811' | Out-Default }
+ }
+ 
+ function EnsureNuGetExists()
+@@ -326,4 +320,4 @@ function Execute-Command($command) {
+             $currentRetry = $currentRetry + 1
+         }
+     } while (!$success)
+-}
+\ No newline at end of file
++}
+diff --git a/Src/Directory.Build.props b/Src/Directory.Build.props
+index 66135088..5535438b 100644
+--- a/Src/Directory.Build.props
++++ b/Src/Directory.Build.props
+@@ -6,6 +6,7 @@
+     <MicrosoftCodeAnalysisNetAnalyzersPackageVersion>5.0.3</MicrosoftCodeAnalysisNetAnalyzersPackageVersion>
+     <MicrosoftCSharpPackageVersion>4.3.0</MicrosoftCSharpPackageVersion>
+     <MicrosoftSourceLinkGitHubPackageVersion>1.0.0</MicrosoftSourceLinkGitHubPackageVersion>
++    <MicrosoftNetCompilersToolsetPackageVersion>3.3.1</MicrosoftNetCompilersToolsetPackageVersion>
+     <MicrosoftNETTestSdkPackageVersion>16.3.0</MicrosoftNETTestSdkPackageVersion>
+     <MoqPackageVersion>4.8.1</MoqPackageVersion>
+     <NunitPackageVersion>3.11.0</NunitPackageVersion>
+diff --git a/Src/Newtonsoft.Json.TestConsole/Newtonsoft.Json.TestConsole.csproj b/Src/Newtonsoft.Json.TestConsole/Newtonsoft.Json.TestConsole.csproj
+index 5959077a..a60bfbca 100644
+--- a/Src/Newtonsoft.Json.TestConsole/Newtonsoft.Json.TestConsole.csproj
++++ b/Src/Newtonsoft.Json.TestConsole/Newtonsoft.Json.TestConsole.csproj
+@@ -1,7 +1,7 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+     <OutputType>Exe</OutputType>
+-    <TargetFrameworks>net46;net5.0</TargetFrameworks>
++    <TargetFrameworks>net46;netcoreapp3.0</TargetFrameworks>
+     <LangVersion>latest</LangVersion>
+     <RootNamespace>Newtonsoft.Json.TestConsole</RootNamespace>
+     <AssemblyName>Newtonsoft.Json.TestConsole</AssemblyName>
+diff --git a/Src/Newtonsoft.Json.Tests/ExceptionTests.cs b/Src/Newtonsoft.Json.Tests/ExceptionTests.cs
+index ff0b1148..ce93ecd0 100644
+--- a/Src/Newtonsoft.Json.Tests/ExceptionTests.cs
++++ b/Src/Newtonsoft.Json.Tests/ExceptionTests.cs
+@@ -113,9 +113,7 @@ public void BinarySerializeException()
+             using (var memoryStream = new MemoryStream())
+             {
+                 var binaryFormatter = new BinaryFormatter();
+-#pragma warning disable SYSLIB0011 // Type or member is obsolete
+                 binaryFormatter.Serialize(memoryStream, exception);
+-#pragma warning restore SYSLIB0011 // Type or member is obsolete
+             }
+         }
+ #endif
+diff --git a/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseAsyncTests.cs b/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseAsyncTests.cs
+index 2d61a6b9..09e2aab2 100644
+--- a/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseAsyncTests.cs
++++ b/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseAsyncTests.cs
+@@ -200,7 +200,7 @@ public async Task ParseDoublesAsync()
+             Assert.AreEqual(Double.MinValue, reader.Value);
+ 
+             reader = new JsonTextReader(new StringReader("1E+309"));
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             await ExceptionAssert.ThrowsAsync<JsonReaderException>(async () => await reader.ReadAsync(), "Input string '1E+309' is not a valid number. Path '', line 1, position 6.");
+ #else
+             Assert.IsTrue(await reader.ReadAsync());
+@@ -209,7 +209,7 @@ public async Task ParseDoublesAsync()
+ #endif
+ 
+             reader = new JsonTextReader(new StringReader("-1E+5000"));
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             await ExceptionAssert.ThrowsAsync<JsonReaderException>(async () => await reader.ReadAsync(), "Input string '-1E+5000' is not a valid number. Path '', line 1, position 8.");
+ #else
+             Assert.IsTrue(await reader.ReadAsync());
+diff --git a/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseTests.cs b/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseTests.cs
+index 0347a2ad..aff080da 100644
+--- a/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseTests.cs
++++ b/Src/Newtonsoft.Json.Tests/JsonTextReaderTests/ParseTests.cs
+@@ -220,7 +220,7 @@ public void ParseDoubles()
+             Assert.AreEqual(Double.MinValue, reader.Value);
+ 
+             reader = new JsonTextReader(new StringReader("1E+309"));
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             ExceptionAssert.Throws<JsonReaderException>(() => reader.Read(), "Input string '1E+309' is not a valid number. Path '', line 1, position 6.");
+ #else
+             Assert.IsTrue(reader.Read());
+@@ -229,7 +229,7 @@ public void ParseDoubles()
+ #endif
+ 
+             reader = new JsonTextReader(new StringReader("-1E+5000"));
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             ExceptionAssert.Throws<JsonReaderException>(() => reader.Read(), "Input string '-1E+5000' is not a valid number. Path '', line 1, position 8.");
+ #else
+             Assert.IsTrue(reader.Read());
+diff --git a/Src/Newtonsoft.Json.Tests/JsonTextWriterAsyncTests.cs b/Src/Newtonsoft.Json.Tests/JsonTextWriterAsyncTests.cs
+index f61d7e5e..56d9b8c8 100644
+--- a/Src/Newtonsoft.Json.Tests/JsonTextWriterAsyncTests.cs
++++ b/Src/Newtonsoft.Json.Tests/JsonTextWriterAsyncTests.cs
+@@ -1018,7 +1018,7 @@ public async Task WriteFloatingPointNumberAsync()
+                 await jsonWriter.WriteEndArrayAsync();
+             }
+ 
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             Assert.AreEqual(@"[0.0,0.0,0.1,1.0,1.000001,1E-06,4.94065645841247E-324,Infinity,-Infinity,NaN,1.7976931348623157E+308,-1.7976931348623157E+308,Infinity,-Infinity,NaN]", sb.ToString());
+ #else
+             Assert.AreEqual(@"[0.0,0.0,0.1,1.0,1.000001,1E-06,5E-324,Infinity,-Infinity,NaN,1.7976931348623157E+308,-1.7976931348623157E+308,Infinity,-Infinity,NaN]", sb.ToString());
+diff --git a/Src/Newtonsoft.Json.Tests/JsonTextWriterTest.cs b/Src/Newtonsoft.Json.Tests/JsonTextWriterTest.cs
+index f0c46233..a9478fb9 100644
+--- a/Src/Newtonsoft.Json.Tests/JsonTextWriterTest.cs
++++ b/Src/Newtonsoft.Json.Tests/JsonTextWriterTest.cs
+@@ -880,7 +880,7 @@ public void WriteFloatingPointNumber()
+                 jsonWriter.WriteEndArray();
+             }
+ 
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             Assert.AreEqual(@"[0.0,0.0,0.1,1.0,1.000001,1E-06,4.94065645841247E-324,Infinity,-Infinity,NaN,1.7976931348623157E+308,-1.7976931348623157E+308,Infinity,-Infinity,NaN]", sb.ToString());
+ #else
+             Assert.AreEqual(@"[0.0,0.0,0.1,1.0,1.000001,1E-06,5E-324,Infinity,-Infinity,NaN,1.7976931348623157E+308,-1.7976931348623157E+308,Infinity,-Infinity,NaN]", sb.ToString());
+diff --git a/Src/Newtonsoft.Json.Tests/Newtonsoft.Json.Tests.csproj b/Src/Newtonsoft.Json.Tests/Newtonsoft.Json.Tests.csproj
+index c074971d..7f5c11e9 100644
+--- a/Src/Newtonsoft.Json.Tests/Newtonsoft.Json.Tests.csproj
++++ b/Src/Newtonsoft.Json.Tests/Newtonsoft.Json.Tests.csproj
+@@ -1,6 +1,6 @@
+ ﻿<Project Sdk="Microsoft.NET.Sdk">
+   <PropertyGroup>
+-    <TargetFrameworks Condition="'$(TestFrameworks)'==''">net46;net40;net35;net20;net5.0;netcoreapp3.1;netcoreapp2.1</TargetFrameworks>
++    <TargetFrameworks Condition="'$(TestFrameworks)'==''">net46;net40;net35;net20;netcoreapp3.0;netcoreapp2.2;netcoreapp2.1</TargetFrameworks>
+     <TargetFrameworks Condition="'$(TestFrameworks)'!=''">$(TestFrameworks)</TargetFrameworks>
+     <LangVersion>9.0</LangVersion>
+     <VersionPrefix>1.0</VersionPrefix>
+@@ -13,7 +13,7 @@
+     <RootNamespace>Newtonsoft.Json.Tests</RootNamespace>
+     <IsPackable>false</IsPackable>
+     <!-- Workaround for https://github.com/nunit/nunit3-vs-adapter/issues/296 -->
+-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp2.1' AND '$(TargetFramework)' != 'netcoreapp3.1' AND '$(TargetFramework)' != 'net5.0'">Full</DebugType>    
++    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp2.1' AND '$(TargetFramework)' != 'netcoreapp2.2' AND '$(TargetFramework)' != 'netcoreapp3.0'">Full</DebugType>
+     <!-- Disabled because SourceLink isn't referenced to calculate paths -->
+     <DeterministicSourcePaths>false</DeterministicSourcePaths>
+   </PropertyGroup>
+@@ -107,7 +107,7 @@
+     <DefineConstants>NET20;$(AdditionalConstants)</DefineConstants>
+   </PropertyGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)'=='net5.0'">
++  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+     <PackageReference Include="BenchmarkDotNet" Version="$(BenchmarkDotNetPackageVersion)" />
+     <PackageReference Include="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
+     <PackageReference Include="System.ObjectModel" Version="$(SystemObjectModelPackageVersion)" />
+@@ -122,13 +122,13 @@
+     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)" />
+     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
+   </ItemGroup>
+-  <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
++  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+     <AssemblyTitle>Json.NET Tests .NET Standard 2.0</AssemblyTitle>
+     <ReferringTargetFrameworkForProjectReferences>.NETStandard,Version=v2.0</ReferringTargetFrameworkForProjectReferences>
+     <DefineConstants>NETSTANDARD2_0;DNXCORE50;PORTABLE;HAVE_BENCHMARKS;HAVE_REGEX_TIMEOUTS;$(AdditionalConstants)</DefineConstants>
+   </PropertyGroup>
+ 
+-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
++  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp2.2'">
+     <PackageReference Include="BenchmarkDotNet" Version="$(BenchmarkDotNetPackageVersion)" />
+     <PackageReference Include="FSharp.Core" Version="$(FSharpCorePackageVersion)" />
+     <PackageReference Include="System.ObjectModel" Version="$(SystemObjectModelPackageVersion)" />
+@@ -143,7 +143,7 @@
+     <PackageReference Include="xunit.runner.visualstudio" Version="$(XunitRunnerVisualStudioPackageVersion)" />
+     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(MicrosoftNETTestSdkPackageVersion)" />
+   </ItemGroup>
+-  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
++  <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.2'">
+     <AssemblyTitle>Json.NET Tests .NET Standard 1.3</AssemblyTitle>
+     <ReferringTargetFrameworkForProjectReferences>.NETStandard,Version=v1.3</ReferringTargetFrameworkForProjectReferences>
+     <DefineConstants>NETSTANDARD1_3;DNXCORE50;PORTABLE;HAVE_BENCHMARKS;HAVE_REGEX_TIMEOUTS;$(AdditionalConstants)</DefineConstants>
+@@ -168,4 +168,4 @@
+     <ReferringTargetFrameworkForProjectReferences>.NETStandard,Version=v1.0</ReferringTargetFrameworkForProjectReferences>
+     <DefineConstants>NETSTANDARD1_0;DNXCORE50;PORTABLE;HAVE_REGEX_TIMEOUTS;$(AdditionalConstants)</DefineConstants>
+   </PropertyGroup>
+-</Project>
+\ No newline at end of file
++</Project>
+diff --git a/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerCollectionsTests.cs b/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerCollectionsTests.cs
+index ab790c4b..631cd6ec 100644
+--- a/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerCollectionsTests.cs
++++ b/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerCollectionsTests.cs
+@@ -187,7 +187,7 @@ public void FloatKey_MaxValue()
+         {
+             Dictionary<float, int> dictionary = new Dictionary<float, int> { { float.MaxValue, 1 } };
+             string output = JsonConvert.SerializeObject(dictionary);
+-#if !(NETSTANDARD2_0 || NETSTANDARD1_3)
++#if !NETSTANDARD2_0
+             Assert.AreEqual(@"{""3.40282347E+38"":1}", output);
+ #else
+             Assert.AreEqual(@"{""3.4028235E+38"":1}", output);
+diff --git a/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerTest.cs b/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerTest.cs
+index 6ad965a3..62a0cdcc 100644
+--- a/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerTest.cs
++++ b/Src/Newtonsoft.Json.Tests/Serialization/JsonSerializerTest.cs
+@@ -2258,7 +2258,7 @@ public void SerializeConverableObjects()
+             string json = JsonConvert.SerializeObject(new ConverableMembers(), Formatting.Indented);
+ 
+             string expected = null;
+-#if (NETSTANDARD2_0)
++#if NETSTANDARD2_0
+             expected = @"{
+   ""String"": ""string"",
+   ""Int32"": 2147483647,
+@@ -2275,23 +2275,7 @@ public void SerializeConverableObjects()
+   ""Bool"": true,
+   ""Char"": ""\u0000""
+ }";
+-#elif NETSTANDARD1_3
+-            expected = @"{
+-  ""String"": ""string"",
+-  ""Int32"": 2147483647,
+-  ""UInt32"": 4294967295,
+-  ""Byte"": 255,
+-  ""SByte"": 127,
+-  ""Short"": 32767,
+-  ""UShort"": 65535,
+-  ""Long"": 9223372036854775807,
+-  ""ULong"": 9223372036854775807,
+-  ""Double"": 1.7976931348623157E+308,
+-  ""Float"": 3.4028235E+38,
+-  ""Bool"": true,
+-  ""Char"": ""\u0000""
+-}";
+-#elif !(PORTABLE || DNXCORE50) || NETSTANDARD1_3
++#elif !(PORTABLE || DNXCORE50)
+             expected = @"{
+   ""String"": ""string"",
+   ""Int32"": 2147483647,
+diff --git a/Src/Newtonsoft.Json/JsonConvert.cs b/Src/Newtonsoft.Json/JsonConvert.cs
+index 5bf7e2a6..82bcfe45 100644
+--- a/Src/Newtonsoft.Json/JsonConvert.cs
++++ b/Src/Newtonsoft.Json/JsonConvert.cs
+@@ -715,7 +715,7 @@ private static string SerializeObjectInternal(object? value, Type? type, JsonSer
+         /// <param name="value">The JSON to deserialize.</param>
+         /// <returns>The deserialized object from the JSON string.</returns>
+         [DebuggerStepThrough]
+-        public static T? DeserializeObject<T>(string value)
++        public static T DeserializeObject<T>(string value)
+         {
+             return DeserializeObject<T>(value, (JsonSerializerSettings?)null);
+         }
+@@ -732,7 +732,7 @@ private static string SerializeObjectInternal(object? value, Type? type, JsonSer
+         /// <param name="anonymousTypeObject">The anonymous type object.</param>
+         /// <returns>The deserialized anonymous type from the JSON string.</returns>
+         [DebuggerStepThrough]
+-        public static T? DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
++        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject)
+         {
+             return DeserializeObject<T>(value);
+         }
+@@ -753,7 +753,7 @@ private static string SerializeObjectInternal(object? value, Type? type, JsonSer
+         /// </param>
+         /// <returns>The deserialized anonymous type from the JSON string.</returns>
+         [DebuggerStepThrough]
+-        public static T? DeserializeAnonymousType<T>(string value, T anonymousTypeObject, JsonSerializerSettings settings)
++        public static T DeserializeAnonymousType<T>(string value, T anonymousTypeObject, JsonSerializerSettings settings)
+         {
+             return DeserializeObject<T>(value, settings);
+         }
+@@ -766,9 +766,10 @@ private static string SerializeObjectInternal(object? value, Type? type, JsonSer
+         /// <param name="converters">Converters to use while deserializing.</param>
+         /// <returns>The deserialized object from the JSON string.</returns>
+         [DebuggerStepThrough]
+-        public static T? DeserializeObject<T>(string value, params JsonConverter[] converters)
++        [return: MaybeNull]
++        public static T DeserializeObject<T>(string value, params JsonConverter[] converters)
+         {
+-            return (T?)DeserializeObject(value, typeof(T), converters);
++            return (T)DeserializeObject(value, typeof(T), converters);
+         }
+ 
+         /// <summary>
+@@ -782,9 +783,10 @@ private static string SerializeObjectInternal(object? value, Type? type, JsonSer
+         /// </param>
+         /// <returns>The deserialized object from the JSON string.</returns>
+         [DebuggerStepThrough]
+-        public static T? DeserializeObject<T>(string value, JsonSerializerSettings? settings)
++        [return: MaybeNull]
++        public static T DeserializeObject<T>(string value, JsonSerializerSettings? settings)
+         {
+-            return (T?)DeserializeObject(value, typeof(T), settings);
++            return (T)DeserializeObject(value, typeof(T), settings);
+         }
+ 
+         /// <summary>
+diff --git a/Src/Newtonsoft.Json/JsonConverter.cs b/Src/Newtonsoft.Json/JsonConverter.cs
+index 2c04a09d..ad224296 100644
+--- a/Src/Newtonsoft.Json/JsonConverter.cs
++++ b/Src/Newtonsoft.Json/JsonConverter.cs
+@@ -94,7 +94,7 @@ public sealed override void WriteJson(JsonWriter writer, object? value, JsonSeri
+             {
+                 throw new JsonSerializationException("Converter cannot write specified value to JSON. {0} is required.".FormatWith(CultureInfo.InvariantCulture, typeof(T)));
+             }
+-            WriteJson(writer, (T?)value, serializer);
++            WriteJson(writer, (T)value, serializer);
+         }
+ 
+         /// <summary>
+@@ -103,7 +103,7 @@ public sealed override void WriteJson(JsonWriter writer, object? value, JsonSeri
+         /// <param name="writer">The <see cref="JsonWriter"/> to write to.</param>
+         /// <param name="value">The value.</param>
+         /// <param name="serializer">The calling serializer.</param>
+-        public abstract void WriteJson(JsonWriter writer, T? value, JsonSerializer serializer);
++        public abstract void WriteJson(JsonWriter writer, [AllowNull]T value, JsonSerializer serializer);
+ 
+         /// <summary>
+         /// Reads the JSON representation of the object.
+@@ -120,7 +120,7 @@ public sealed override void WriteJson(JsonWriter writer, object? value, JsonSeri
+             {
+                 throw new JsonSerializationException("Converter cannot read JSON with the specified existing value. {0} is required.".FormatWith(CultureInfo.InvariantCulture, typeof(T)));
+             }
+-            return ReadJson(reader, objectType, existingIsNull ? default : (T?)existingValue, !existingIsNull, serializer);
++            return ReadJson(reader, objectType, existingIsNull ? default : (T)existingValue, !existingIsNull, serializer);
+         }
+ 
+         /// <summary>
+@@ -132,7 +132,7 @@ public sealed override void WriteJson(JsonWriter writer, object? value, JsonSeri
+         /// <param name="hasExistingValue">The existing value has a value.</param>
+         /// <param name="serializer">The calling serializer.</param>
+         /// <returns>The object value.</returns>
+-        public abstract T? ReadJson(JsonReader reader, Type objectType, T? existingValue, bool hasExistingValue, JsonSerializer serializer);
++        public abstract T ReadJson(JsonReader reader, Type objectType, [AllowNull]T existingValue, bool hasExistingValue, JsonSerializer serializer);
+ 
+         /// <summary>
+         /// Determines whether this instance can convert the specified object type.
+@@ -146,4 +146,4 @@ public sealed override bool CanConvert(Type objectType)
+             return typeof(T).IsAssignableFrom(objectType);
+         }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/Src/Newtonsoft.Json/JsonSerializer.cs b/Src/Newtonsoft.Json/JsonSerializer.cs
+index 23f5c6b6..e4d58152 100644
+--- a/Src/Newtonsoft.Json/JsonSerializer.cs
++++ b/Src/Newtonsoft.Json/JsonSerializer.cs
+@@ -865,9 +865,10 @@ internal virtual void PopulateInternal(JsonReader reader, object target)
+         /// <typeparam name="T">The type of the object to deserialize.</typeparam>
+         /// <returns>The instance of <typeparamref name="T"/> being deserialized.</returns>
+         [DebuggerStepThrough]
+-        public T? Deserialize<T>(JsonReader reader)
++        [return: MaybeNull]
++        public T Deserialize<T>(JsonReader reader)
+         {
+-            return (T?)Deserialize(reader, typeof(T));
++            return (T)Deserialize(reader, typeof(T));
+         }
+ 
+         /// <summary>
+diff --git a/Src/Newtonsoft.Json/Linq/Extensions.cs b/Src/Newtonsoft.Json/Linq/Extensions.cs
+index e05fd262..da19f8a2 100644
+--- a/Src/Newtonsoft.Json/Linq/Extensions.cs
++++ b/Src/Newtonsoft.Json/Linq/Extensions.cs
+@@ -115,7 +115,7 @@ public static IJEnumerable<JProperty> Properties(this IEnumerable<JObject> sourc
+         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the values of every token in the source collection with the given key.</returns>
+         public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source, object? key)
+         {
+-            return Values<JToken, JToken>(source, key)!.AsJEnumerable();
++            return Values<JToken, JToken>(source, key).AsJEnumerable();
+         }
+ 
+         /// <summary>
+@@ -135,7 +135,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
+         /// <param name="key">The token key.</param>
+         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection with the given key.</returns>
+-        public static IEnumerable<U?> Values<U>(this IEnumerable<JToken> source, object key)
++        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source, object key)
+         {
+             return Values<JToken, U>(source, key);
+         }
+@@ -146,7 +146,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <typeparam name="U">The type to convert the values to.</typeparam>
+         /// <param name="source">An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the source collection.</param>
+         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection.</returns>
+-        public static IEnumerable<U?> Values<U>(this IEnumerable<JToken> source)
++        public static IEnumerable<U> Values<U>(this IEnumerable<JToken> source)
+         {
+             return Values<JToken, U>(source, null);
+         }
+@@ -157,7 +157,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <typeparam name="U">The type to convert the value to.</typeparam>
+         /// <param name="value">A <see cref="JToken"/> cast as a <see cref="IEnumerable{T}"/> of <see cref="JToken"/>.</param>
+         /// <returns>A converted value.</returns>
+-        public static U? Value<U>(this IEnumerable<JToken> value)
++        public static U Value<U>(this IEnumerable<JToken> value)
+         {
+             return value.Value<JToken, U>();
+         }
+@@ -169,7 +169,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <typeparam name="U">The type to convert the value to.</typeparam>
+         /// <param name="value">A <see cref="JToken"/> cast as a <see cref="IEnumerable{T}"/> of <see cref="JToken"/>.</param>
+         /// <returns>A converted value.</returns>
+-        public static U? Value<T, U>(this IEnumerable<T> value) where T : JToken
++        public static U Value<T, U>(this IEnumerable<T> value) where T : JToken
+         {
+             ValidationUtils.ArgumentNotNull(value, nameof(value));
+ 
+@@ -181,7 +181,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+             return token.Convert<JToken, U>();
+         }
+ 
+-        internal static IEnumerable<U?> Values<T, U>(this IEnumerable<T> source, object? key) where T : JToken
++        internal static IEnumerable<U> Values<T, U>(this IEnumerable<T> source, object? key) where T : JToken
+         {
+             ValidationUtils.ArgumentNotNull(source, nameof(source));
+ 
+@@ -226,7 +226,7 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="JToken"/> that contains the values of every token in the source collection.</returns>
+         public static IJEnumerable<JToken> Children<T>(this IEnumerable<T> source) where T : JToken
+         {
+-            return Children<T, JToken>(source)!.AsJEnumerable();
++            return Children<T, JToken>(source).AsJEnumerable();
+         }
+ 
+         /// <summary>
+@@ -236,14 +236,14 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+         /// <typeparam name="U">The type to convert the values to.</typeparam>
+         /// <typeparam name="T">The source collection type.</typeparam>
+         /// <returns>An <see cref="IEnumerable{T}"/> that contains the converted values of every token in the source collection.</returns>
+-        public static IEnumerable<U?> Children<T, U>(this IEnumerable<T> source) where T : JToken
++        public static IEnumerable<U> Children<T, U>(this IEnumerable<T> source) where T : JToken
+         {
+             ValidationUtils.ArgumentNotNull(source, nameof(source));
+ 
+             return source.SelectMany(c => c.Children()).Convert<JToken, U>();
+         }
+ 
+-        internal static IEnumerable<U?> Convert<T, U>(this IEnumerable<T> source) where T : JToken
++        internal static IEnumerable<U> Convert<T, U>(this IEnumerable<T> source) where T : JToken
+         {
+             ValidationUtils.ArgumentNotNull(source, nameof(source));
+ 
+@@ -253,7 +253,8 @@ public static IJEnumerable<JToken> Values(this IEnumerable<JToken> source)
+             }
+         }
+ 
+-        internal static U? Convert<T, U>(this T token) where T : JToken?
++        [return: MaybeNull]
++        internal static U Convert<T, U>(this T token) where T : JToken?
+         {
+             if (token == null)
+             {
+diff --git a/Src/Newtonsoft.Json/Linq/JContainer.cs b/Src/Newtonsoft.Json/Linq/JContainer.cs
+index 945de5c7..12b164e9 100644
+--- a/Src/Newtonsoft.Json/Linq/JContainer.cs
++++ b/Src/Newtonsoft.Json/Linq/JContainer.cs
+@@ -275,7 +275,7 @@ public override JEnumerable<JToken> Children()
+         /// <returns>
+         /// A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.
+         /// </returns>
+-        public override IEnumerable<T?> Values<T>() where T : default
++        public override IEnumerable<T> Values<T>()
+         {
+             return ChildrenTokens.Convert<JToken, T>();
+         }
+@@ -318,7 +318,7 @@ internal IEnumerable<JToken> GetDescendants(bool self)
+             }
+         }
+ 
+-        internal bool IsMultiContent([NotNullWhen(true)]object? content)
++        internal bool IsMultiContent([NotNull]object? content)
+         {
+             return (content is IEnumerable && !(content is string) && !(content is JToken) && !(content is byte[]));
+         }
+diff --git a/Src/Newtonsoft.Json/Linq/JEnumerable.cs b/Src/Newtonsoft.Json/Linq/JEnumerable.cs
+index 541f1beb..93bbe1a7 100644
+--- a/Src/Newtonsoft.Json/Linq/JEnumerable.cs
++++ b/Src/Newtonsoft.Json/Linq/JEnumerable.cs
+@@ -88,7 +88,7 @@ IEnumerator IEnumerable.GetEnumerator()
+                     return JEnumerable<JToken>.Empty;
+                 }
+ 
+-                return new JEnumerable<JToken>(_enumerable.Values<T, JToken>(key)!);
++                return new JEnumerable<JToken>(_enumerable.Values<T, JToken>(key));
+             }
+         }
+ 
+diff --git a/Src/Newtonsoft.Json/Linq/JToken.cs b/Src/Newtonsoft.Json/Linq/JToken.cs
+index d1f6c451..1925fd8b 100644
+--- a/Src/Newtonsoft.Json/Linq/JToken.cs
++++ b/Src/Newtonsoft.Json/Linq/JToken.cs
+@@ -334,7 +334,7 @@ public IEnumerable<JToken> BeforeSelf()
+         /// <typeparam name="T">The type to convert the token to.</typeparam>
+         /// <param name="key">The token key.</param>
+         /// <returns>The converted token value.</returns>
+-        public virtual T? Value<T>(object key)
++        public virtual T Value<T>(object key)
+         {
+             JToken? token = this[key];
+ 
+@@ -378,7 +378,7 @@ public virtual JEnumerable<JToken> Children()
+         /// </summary>
+         /// <typeparam name="T">The type to convert the values to.</typeparam>
+         /// <returns>A <see cref="IEnumerable{T}"/> containing the child values of this <see cref="JToken"/>, in document order.</returns>
+-        public virtual IEnumerable<T?> Values<T>()
++        public virtual IEnumerable<T> Values<T>()
+         {
+             throw new InvalidOperationException("Cannot access child value on {0}.".FormatWith(CultureInfo.InvariantCulture, GetType()));
+         }
+@@ -1929,9 +1929,10 @@ public static JToken FromObject(object o, JsonSerializer jsonSerializer)
+         /// </summary>
+         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
+         /// <returns>The new object created from the JSON value.</returns>
+-        public T? ToObject<T>()
++        [return: MaybeNull]
++        public T ToObject<T>()
+         {
+-            return (T?)ToObject(typeof(T));
++            return (T)ToObject(typeof(T));
+         }
+ 
+         /// <summary>
+@@ -2062,9 +2063,10 @@ public static JToken FromObject(object o, JsonSerializer jsonSerializer)
+         /// <typeparam name="T">The object type that the token will be deserialized to.</typeparam>
+         /// <param name="jsonSerializer">The <see cref="JsonSerializer"/> that will be used when creating the object.</param>
+         /// <returns>The new object created from the JSON value.</returns>
+-        public T? ToObject<T>(JsonSerializer jsonSerializer)
++        [return: MaybeNull]
++        public T ToObject<T>(JsonSerializer jsonSerializer)
+         {
+-            return (T?)ToObject(typeof(T), jsonSerializer);
++            return (T)ToObject(typeof(T), jsonSerializer);
+         }
+ 
+         /// <summary>
+@@ -2747,4 +2749,4 @@ internal void CopyAnnotations(JToken target, JToken source)
+             }
+         }
+     }
+-}
+\ No newline at end of file
++}
+diff --git a/Src/Newtonsoft.Json/Linq/JValue.cs b/Src/Newtonsoft.Json/Linq/JValue.cs
+index 27d5de88..1560f1e5 100644
+--- a/Src/Newtonsoft.Json/Linq/JValue.cs
++++ b/Src/Newtonsoft.Json/Linq/JValue.cs
+@@ -842,7 +842,7 @@ private static bool ValuesEquals(JValue v1, JValue v2)
+         /// <c>true</c> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <c>false</c>.
+         /// </returns>
+         /// <param name="other">An object to compare with this object.</param>
+-        public bool Equals(JValue? other)
++        public bool Equals([AllowNull] JValue other)
+         {
+             if (other == null)
+             {
+diff --git a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+index 2be426fa..29f09405 100644
+--- a/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
++++ b/Src/Newtonsoft.Json/Newtonsoft.Json.csproj
+@@ -2,7 +2,7 @@
+   <PropertyGroup>
+     <TargetFrameworks Condition="'$(LibraryFrameworks)'==''">net45;net40;net35;net20;netstandard1.0;netstandard1.3;netstandard2.0</TargetFrameworks>
+     <TargetFrameworks Condition="'$(LibraryFrameworks)'!=''">$(LibraryFrameworks)</TargetFrameworks>
+-    <LangVersion>9.0</LangVersion>
++    <LangVersion>8.0</LangVersion>
+     <!-- version numbers will be updated by build -->
+     <AssemblyVersion>13.0.0.0</AssemblyVersion>
+     <FileVersion>13.0.1</FileVersion>
+diff --git a/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs b/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs
+index 53b39030..e19ea79d 100644
+--- a/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs
++++ b/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalReader.cs
+@@ -598,7 +598,7 @@ internal string GetExpectedDescription(JsonContract contract)
+             throw JsonSerializationException.Create(reader, message);
+         }
+ 
+-        private bool ReadMetadataPropertiesToken(JTokenReader reader, ref Type? objectType, ref JsonContract? contract, JsonProperty? member, JsonContainerContract? containerContract, JsonProperty? containerMember, object? existingValue, out object? newValue, out string? id)
++        private bool ReadMetadataPropertiesToken(JTokenReader reader, ref Type? objectType, ref JsonContract? contract, JsonProperty? member, JsonContainerContract? containerContract, JsonProperty? containerMember, object? existingValue, [NotNullWhen(true)]out object? newValue, out string? id)
+         {
+             id = null;
+             newValue = null;
+diff --git a/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalWriter.cs b/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalWriter.cs
+index 675b5fed..2a21a4f7 100644
+--- a/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalWriter.cs
++++ b/Src/Newtonsoft.Json/Serialization/JsonSerializerInternalWriter.cs
+@@ -528,7 +528,7 @@ private void SerializeObject(JsonWriter writer, object value, JsonObjectContract
+             OnSerialized(writer, contract, value);
+         }
+ 
+-        private bool CalculatePropertyValues(JsonWriter writer, object value, JsonContainerContract contract, JsonProperty? member, JsonProperty property, [NotNullWhen(true)]out JsonContract? memberContract, out object? memberValue)
++        private bool CalculatePropertyValues(JsonWriter writer, object value, JsonContainerContract contract, JsonProperty? member, JsonProperty property, [NotNullWhen(true)]out JsonContract? memberContract, [NotNullWhen(true)]out object? memberValue)
+         {
+             if (!property.Ignored && property.Readable && ShouldSerialize(writer, property, value) && IsSpecified(writer, property, value))
+             {
+@@ -542,14 +542,14 @@ private bool CalculatePropertyValues(JsonWriter writer, object value, JsonContai
+ 
+                 if (ShouldWriteProperty(memberValue, contract as JsonObjectContract, property))
+                 {
+-                    if (ShouldWriteReference(memberValue, property, memberContract, contract, member))
++                    if (ShouldWriteReference(memberValue, property, memberContract!, contract, member))
+                     {
+                         property.WritePropertyName(writer);
+                         WriteReference(writer, memberValue!);
+                         return false;
+                     }
+ 
+-                    if (!CheckForCircularReference(writer, memberValue, property, memberContract, contract, member))
++                    if (!CheckForCircularReference(writer, memberValue, property, memberContract!, contract, member))
+                     {
+                         return false;
+                     }
+@@ -568,9 +568,7 @@ private bool CalculatePropertyValues(JsonWriter writer, object value, JsonContai
+                         }
+                     }
+ 
+-#pragma warning disable CS8762 // Parameter must have a non-null value when exiting in some condition.
+                     return true;
+-#pragma warning restore CS8762 // Parameter must have a non-null value when exiting in some condition.
+                 }
+             }
+ 
+diff --git a/Src/Newtonsoft.Json/Utilities/AsyncUtils.cs b/Src/Newtonsoft.Json/Utilities/AsyncUtils.cs
+index e863e735..80ff463a 100644
+--- a/Src/Newtonsoft.Json/Utilities/AsyncUtils.cs
++++ b/Src/Newtonsoft.Json/Utilities/AsyncUtils.cs
+@@ -61,9 +61,9 @@ public static Task FromCanceled(this CancellationToken cancellationToken)
+         public static Task<T> FromCanceled<T>(this CancellationToken cancellationToken)
+         {
+             MiscellaneousUtils.Assert(cancellationToken.IsCancellationRequested);
+-#pragma warning disable CS8603 // Possible null reference return.
++#pragma warning disable CS8653 // A default expression introduces a null value for a type parameter.
+             return new Task<T>(() => default, cancellationToken);
+-#pragma warning restore CS8603 // Possible null reference return.
++#pragma warning restore CS8653 // A default expression introduces a null value for a type parameter.
+         }
+ 
+         // Task.Delay(0) is optimised as a cached task within the framework, and indeed
+diff --git a/Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs b/Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs
+index a92e2639..e5acb379 100644
+--- a/Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs
++++ b/Src/Newtonsoft.Json/Utilities/DictionaryWrapper.cs
+@@ -166,9 +166,7 @@ public bool Remove(TKey key)
+             }
+         }
+ 
+-#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
+-        public bool TryGetValue(TKey key, out TValue? value)
+-#pragma warning restore CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
++        public bool TryGetValue(TKey key, [MaybeNull]out TValue value)
+         {
+             if (_dictionary != null)
+             {
+diff --git a/Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs b/Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs
+index 9619e699..fbcacf97 100644
+--- a/Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs
++++ b/Src/Newtonsoft.Json/Utilities/JavaScriptUtils.cs
+@@ -629,7 +629,7 @@ public static bool TryGetDateFromConstructorJson(JsonReader reader, out DateTime
+             return true;
+         }
+ 
+-        private static bool TryGetDateConstructorValue(JsonReader reader, out long? integer, [NotNullWhen(false)] out string? errorMessage)
++        private static bool TryGetDateConstructorValue(JsonReader reader, out long? integer, out string? errorMessage)
+         {
+             integer = null;
+             errorMessage = null;
+diff --git a/Src/global.json b/Src/global.json
+index 6d19c9f6..79422f0c 100644
+--- a/Src/global.json
++++ b/Src/global.json
+@@ -1,5 +1,5 @@
+ {
+   "sdk": {
+-    "version": "5.0.200"
++    "version": "3.0.100"
+   }
+-}
+\ No newline at end of file
++}
+diff --git a/azure-pipelines.yml b/azure-pipelines.yml
+index e946ce43..a48f9595 100644
+--- a/azure-pipelines.yml
++++ b/azure-pipelines.yml
+@@ -32,7 +32,7 @@ steps:
+     write-host "Prerelease $nugetPrerelease" -fore white
+     $assemblyVersion = if ($version.Assembly) { $version.Assembly } else { "$($version.Major).0.0.0" }
+     write-host "Assembly $assemblyVersion" -fore white
+-    .\Build\runbuild.ps1 -properties @{"majorVersion"="$($version.Major).0"; "majorWithReleaseVersion"="$($version.Major).0.$($version.Release)"; "nugetPrerelease"=$nugetPrerelease; "assemblyVersion"=$assemblyVersion; "zipFileName"="Json$($version.Major)0r$($version.Release).zip"; "signAssemblies"=$sign; "signKeyPath"=$keyPath; "treatWarningsAsErrors"=$true; "buildNuGet"=$true; "ensureNetCliSdk"=$false}
++    .\Build\runbuild.ps1 -properties @{"majorVersion"="$($version.Major).0"; "majorWithReleaseVersion"="$($version.Major).0.$($version.Release)"; "nugetPrerelease"=$nugetPrerelease; "assemblyVersion"=$assemblyVersion; "zipFileName"="Json$($version.Major)0r$($version.Release).zip"; "signAssemblies"=$sign; "signKeyPath"=$keyPath; "treatWarningsAsErrors"=$true; "buildNuGet"=$true}
+   env:
+     BuildId: $(Build.BuildId)
+     SourceBranch: $(Build.SourceBranch)
