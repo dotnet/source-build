@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Chris Rummel <crummel@microsoft.com>
+Date: Thu, 11 Aug 2022 11:10:35 -0500
+Subject: [PATCH] Fix hard-coded PlatformAbstractions version.
+
+---
+ src/toolset-tasks/toolset-tasks.csproj | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/toolset-tasks/toolset-tasks.csproj b/src/toolset-tasks/toolset-tasks.csproj
+index d49bf5842..f31bba6f2 100644
+--- a/src/toolset-tasks/toolset-tasks.csproj
++++ b/src/toolset-tasks/toolset-tasks.csproj
+@@ -8,7 +8,7 @@
+   <ItemGroup>
+     <PackageReference Include="Microsoft.Build" Version="15.7.179" />
+     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.7.179" />
+-    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="2.0.0" />
++    <PackageReference Include="Microsoft.DotNet.PlatformAbstractions" Version="$(MicrosoftDotNetPlatformAbstractionsPackageVersion)" />
+     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+     <PackageReference Include="NuGet.Versioning" Version="4.3.0" />
+     <PackageReference Include="System.Reflection.Metadata" Version="1.4.2" />
