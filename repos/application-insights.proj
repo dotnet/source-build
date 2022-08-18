@@ -7,6 +7,11 @@
     <DeterministicBuildOptOut>true</DeterministicBuildOptOut>
   </PropertyGroup>
 
+  <ItemGroup>
+    <NuGetConfigFiles Include="$(ProjectDirectory)/NuGet.config" />
+    <NuGetConfigFiles Include="$(ProjectDirectory)/BASE/NuGet.config" />
+  </ItemGroup>
+
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="RepoBuild">
