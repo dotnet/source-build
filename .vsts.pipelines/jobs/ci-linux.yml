@@ -41,9 +41,9 @@ jobs:
     # Default type, can be overridden by matrix legs.
     type: ${{ coalesce(parameters.type, 'Production') }}
 
-    ${{ if not(and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest'))) }}:
+    ${{ if eq(variables['System.TeamProject'], 'public') }}:
       SetInternalPackageFeedPatDockerArg: ''
-    ${{ if and(ne(variables['System.TeamProject'], 'public'), notin(variables['Build.Reason'], 'PullRequest')) }}:
+    ${{ if ne(variables['System.TeamProject'], 'public') }}:
       # In the internal build, we have one definition that provides dn-bot-dnceng-artifact-feeds-rw,
       # and another that doesn't (to be more like a public build). For the definition that doesn't
       # define dn-bot-dnceng-artifact-feeds-rw, this line relies on the subshell to fail when it
