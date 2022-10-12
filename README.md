@@ -6,20 +6,19 @@ This repo is the starting point for building .NET 6 from source. Instructions fo
 
 ## Prerequisites
 
-The dependencies for building .NET 6.0 from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md).
+The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md). It may also be helpful to reference the [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) repo, which we use to build our container images for development and CI.
 
-## Building .NET 6.0
+## Building .NET 7.0 and .NET 6.0
 
-.NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
+.NET 6.0 and 7.0 are built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
 Clone the dotnet/installer repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/installer's README](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to build .NET from source.
 Please see the [support](#support) section below to see which feature branches are currently supported.
 
-## .NET 5.0 and .NET Core 3.1
+## .NET Core 3.1
 
-To build older versions of the .NET SDK from source, pick a specific Git tag with your desired version, or use a release branch to build the latest servicing release of that version. Refer to the tag/branch's README for build instructions:
+To build .NET Core 3.1 from source, pick a specific Git tag from this repo with your desired version, or use a release branch to build the latest servicing release of that version. Refer to the tag/branch's README for build instructions:
 
-* [`release/5.0`](https://github.com/dotnet/source-build/tree/release/5.0)
 * [`release/3.1`](https://github.com/dotnet/source-build/tree/release/3.1)
 
 
