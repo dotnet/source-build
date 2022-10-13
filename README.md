@@ -6,7 +6,7 @@ This repo is the starting point for building .NET 6 from source. Instructions fo
 
 ## Prerequisites
 
-The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md). It may also be helpful to reference the [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) repo, which we use to build our container images for development and CI.
+The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md). It may also be helpful to reference the Dockerfiles in [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker). We use these images to build and test source-build CI [here](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16).
 
 ## Building .NET 7.0 and .NET 6.0
 
