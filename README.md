@@ -26,9 +26,26 @@ To build .NET Core 3.1 from source, pick a specific Git tag from this repo with 
 
 ## Source-build goals
 
-The key goal of source-build is to satisfy the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have two main principles: consistent reproducibility, and source code for everything.
+There are two primary goals of the source-build effort:
 
-A secondary goal of source-build is to allow .NET contributors to build a .NET SDK with coordinated changes in multiple repositories. However, the developer experience is significantly better in individual repositories and, if possible, contributors should make and test changes in the target repo, not source-build.
+1. Increase .NET adaption by focusing on making .NET available everywhere
+
+   If .NET was available everywhere - including Linux distributions and package managers like Homebrew - as a first class citizen it, would make .NET a more attractive option for developers who might otherwise look at other languages or runtimes. Users would be more likely to start using and keep using .NET if .NET is available on their development and release platforms of choice.
+
+   To achieve this, we try to make it easier for community and partner maintainers to build and release .NET for their platforms. We need to make sure source-build satisfies the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have three main principles:
+
+   - Limited or no network access
+   - Consistent reproducibility
+   - Source code for everything.
+
+2. Make maintenance of the .NET product easier
+
+   The current way of making changes to .NET during a servicing release is to make changes to individual product repositories and then adjust the dependency versions to flow the changes to the next set of repositories. This is repeated until all the repositories are updated. If there's an issue discovered late in the release cycle, the fixes and the dependency updates need to be re-done quickly, which becomes difficult. It's also difficult to verify that the issue is fixed in the final product. It would be much easier to make and test product-wide changes if we could make atomic changes to one repository and be able to build the whole product based on that source code at once.
+
+   In addition, getting source-build fully functional would provide everyone place to make/test changes that would otherwise require a lot of coordination between multiple repositories - such as landing features that require changes both the runtime and the SDK.
+
+Source-build can help achieve both these goals by making it easier for everyone to build and release the entire .NET product end-to-end.
+
 
 ## What does the source-build infrastructure do?
 
@@ -37,7 +54,10 @@ Source-build solves common challenges that most developers encounter when trying
 * .NET is composed of many repositories that need to be built at a specific combination of commits.
 * Each repository's build output needs to flow into the next repository's build.
 * By default, most .NET repositories download prebuilt binary dependencies from online sources. These are forbidden by typical Linux distribution rules, and interfere with build output flow.
-* Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem.
+* Some of the binary build dependencies are under a proprietary license, making it difficult to build everything without taking accidental dependencies on non-Open Source code. Many of our community members and partners want to build an Open Source .NET only.
+* Flowing the build output automatically also means we can make and test changes that require coordination across a number of repositories.
+* Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem, whether that's bringing up new architectures (eg, riscv), or support new operating systems (eg, FreeBSD).
+* Microsoft controls the SDKs used by `dotnet-install.sh` scripts and `Microsoft.*` and `runtime.*` nuget packages at nuget.org; source-build makes it possible for the community to bring up the platforms without Microsoft having to accept/bless things.
 
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
