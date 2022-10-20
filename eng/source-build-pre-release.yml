@@ -97,14 +97,6 @@ stages:
       value: $[ stageDependencies.GetBuildInfoStage.GetBuildInfoJob.outputs['ReadReleaseInfoStep.ReleaseChannel'] ]
     steps:
     - script: |
-        set -euxo pipefail
-        echo $(ReleaseChannel)
-        echo $(RuntimeVersion)
-        echo $(SdkVersion)
-        echo $(InstallerCommit)
-      name: TestVariablesStep
-      displayName: Test Variables
-    - script: |
         set -euo pipefail
         az config set extension.use_dynamic_install=yes_without_prompt
 
