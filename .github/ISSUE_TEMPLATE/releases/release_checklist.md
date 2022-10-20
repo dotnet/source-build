@@ -15,13 +15,14 @@
      - This is useful to make sure context is available to review later. It may end up blank if the release goes very smoothly.
      - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
      - File issues appropriately as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
-1. - [ ] Retrieve dotnet/installer commit sha from internal communications for the release.
+1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
+1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline. When staging the pipeline run, click "Resources" and provide select the final run of Stage-DotNet mentioned above.
+     - [ ] When the pipeline finishes, look in the logs for the dotnet/installer commit sha that represents the final release.
+     - This pipeline automatically uploads the dotnet source tarball to dotnetclimsrc
 1. - [ ] Ensure the official installer and tarball builds have completed for the release's commit sha.
-     - [ ] [Installer](https://dev.azure.com/dnceng/internal/_build?definitionId=286) (internal link)
-       - [ ] Retrieve the source tarball artifact - `BlobArtifacts/dotnet-sdk-source-6.0.xxx.tar.gz`
      - [ ] [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
        - [ ] Ensure the PoisonTests and SdkContentTests are passing.  Warnings indicate a baseline diff and should be inspected carefully.
-1. - [ ] [Internal] Gather smoke-test prereqs
+1. - [ ] [Internal] Gather smoke-test prereqs ([automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
      - [ ] Retrieve smoke-test prereqs artifact for each architecture (e.g. x64 and arm64) from [tarball build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
        - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
        - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
@@ -32,13 +33,13 @@
        - [ ] Extact arm64 tarball
        - [ ] Copy four `*linux-arm64*` packages to x64 packages
        - [ ] Create new `dotnet-smoke-test-prereqs.6.0.xxx.tar.gz` tarball
-1. - [ ] [Internal] Upload source and smoke-test-prereqs tarball to dotnetclimsrc storage account.
+1. - [ ] [Internal] Upload smoke-test-prereqs tarball to dotnetclimsrc storage account.
 1. - [ ] Notify partners of release.  Include info about how certain we are that this will be the final Microsoft build.
      - [Internal] Send the dotnetclimsrc tarball links to partners.
          - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
      - [Non-Internal] Send the dotnet/installer commit sha along w/link to publicly built source tarball.  Link to the public instructions for building source-build.
 1. - [ ] SYNC POINT: Wait for Microsoft build release.
-1. - [ ] Upload the source-build artifacts to dotnetcli/source-built-artifacts blob storage.
+1. - [ ] Upload the source-build artifacts to dotnetcli/source-built-artifacts blob storage. ([automation tracking issue](https://github.com/dotnet/source-build/issues/3080))
      - [ ] Retrieve the source-build artifacts from [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link) - `Build Tarball CentOS7-Offline_Artifacts/Private.SourceBuilt.Artifacts.6.0.xxx.tar.gz`
 1. - [ ] Run the [source-build-release pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1124) (internal link).
      - Set the `SDK Version` parameter.
