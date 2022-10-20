@@ -120,7 +120,7 @@ stages:
       inputs:
         source: 'specific'
         artifact: 'BlobArtifacts'
-        patterns: 'BlobArtifacts/dotnet-sdk-source-*.tar.gz'
+        patterns: 'BlobArtifacts/dotnet-sdk-source-$(SdkVersion).tar.gz'
         project: 'internal'
         pipeline: $(installerOfficialCiPipelineId)
         runVersion: 'specific'
