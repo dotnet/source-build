@@ -10,129 +10,63 @@ resources:
   - pipeline: dotnet-staging-pipeline-resource
     source: Stage-DotNet
 
+parameters:
+  - name: useSpecificPipelineRunIDs
+    displayName: Use Specific Pipeline Run IDs
+    type: boolean
+    default: false
+  - name: dotnetInstallerOfficialRunID
+    displayName: dotnet-installer-official-ci run ID
+    type: string
+    default: '200XXXX'
+  - name: dotnetInstallerTarballBuildRunID
+    displayName: dotnet-installer-source-build-tarball-build run ID
+    type: string
+    default: '200XXXX'
+
 variables:
+- template: templates/installer-pipeline-variables.yml
 - group: DotNet-MSRC-Storage
-- name: azDoOrg
-  value: 'https://dev.azure.com/dnceng/'
-- name: azDoProject
-  value: 'internal'
-- name: installerOfficialCiPipelineId
-  value: '286'
-- name: installerTarabllBuildCiPipelineId
-  value: '1011'
 - name: storageAccountName
   value: 'dotnetclimsrc'
 - name: blobContainerName
   value: 'source-build'
 - name: blobContainerUploadBaseFilePath
-  value: 'release'
+  value: 'Dev'
 
-stages:
-
-- stage: GetBuildInfoStage
-  displayName: Get Build Info
-  jobs:
-  - job: GetBuildInfoJob
-    displayName: Get Build Info
-    steps:
-    - download: dotnet-staging-pipeline-resource
-      artifact: manifests
-      patterns: 'manifest.json'
-      displayName: Download Release Manifest
-    - download: dotnet-staging-pipeline-resource
-      artifact: drop
-      patterns: 'config.json'
-      displayName: Download Release Config
-    - script: |
-        set -euo pipefail
-
-        manifest_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/manifests/manifest.json
-        config_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/drop/config.json
-
-        runtime_version="$(jq -r '.Runtime' $config_path)"
-        release_channel="$(jq -r '.Channel' $config_path)"
-
-        # Source-build only supports the lowest avaiable feature band.
-        # Sort the SDK releases by number and pick the lowest value.
-        sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(tonumber)) | .[0]' $config_path)"
-
-        # replace the last two characters in sdk_version with xx
-        branch_version=$(echo $sdk_version | sed 's/..$/xx/')
-        branch_name="refs/heads/internal/release/${branch_version}"
-
-        commit=$(jq -r --arg BRANCH "${branch_name}" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
-
-        if [[ ! $commit ]]; then
-          echo "Installer commit not set. Exiting..."
-          exit 1
-        fi
-
-        echo "Release channel: ${release_channel}"
-        echo "Runtime version: ${runtime_version}"
-        echo "SDK version: ${sdk_version}"
-        echo "Installer branch: ${branch_name}"
-        echo "Installer commit: ${commit}"
-
-        echo "##vso[task.setvariable variable=SdkVersion;isOutput=true]${sdk_version}"
-        echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]${runtime_version}"
-        echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
-        echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
-      name: ReadReleaseInfoStep
-      displayName: Read Release Info
-
-- stage: UploadSourceTarballStage
+jobs:
+- job: UploadSourceTarballJob
   displayName: Upload Source Tarball
-  dependsOn: GetBuildInfoStage
-  jobs:
-  - job: UploadSourceTarballJob
+
+  steps:
+  - template: templates/get-build-info.yml
+    parameters:
+      stageDotNetPipelineResource: dotnet-staging-pipeline-resource
+      getAssociatedPipelineRuns: true
+      useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
+      dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
+      dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+
+  - task: DownloadPipelineArtifact@2
+    name: DownloadSourceTarballStep
+    displayName: Download Source Tarball
+    inputs:
+      source: 'specific'
+      artifact: 'BlobArtifacts'
+      patterns: 'BlobArtifacts/dotnet-sdk-source-$(SdkVersion).tar.gz'
+      project: 'internal'
+      pipeline: $(installerOfficialCiPipelineId)
+      runVersion: 'specific'
+      runId: $(InstallerOfficialRunId)
+
+  - script: |
+      set -euxo pipefail
+      az config set extension.use_dynamic_install=yes_without_prompt
+
+      source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
+      source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
+      az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
+    name: UploadSourceTarballStep
     displayName: Upload Source Tarball
-    variables:
-    - name: InstallerCommit
-      value: $[ stageDependencies.GetBuildInfoStage.GetBuildInfoJob.outputs['ReadReleaseInfoStep.InstallerCommit'] ]
-    - name: SdkVersion
-      value: $[ stageDependencies.GetBuildInfoStage.GetBuildInfoJob.outputs['ReadReleaseInfoStep.SdkVersion'] ]
-    - name: RuntimeVersion
-      value: $[ stageDependencies.GetBuildInfoStage.GetBuildInfoJob.outputs['ReadReleaseInfoStep.RuntimeVersion'] ]
-    - name: ReleaseChannel
-      value: $[ stageDependencies.GetBuildInfoStage.GetBuildInfoJob.outputs['ReadReleaseInfoStep.ReleaseChannel'] ]
-    steps:
-    - script: |
-        set -euo pipefail
-        az config set extension.use_dynamic_install=yes_without_prompt
-
-        installer_official_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerOfficialCiPipelineId))
-        installer_official_run_id=$(echo $installer_official_runs | jq -r '.[] | select(.sourceVersion == "$(InstallerCommit)") | .id')
-        echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
-
-        installer_tarball_build_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerTarabllBuildCiPipelineId))
-        installer_tarball_build_run_id=$(echo $installer_tarball_build_runs | jq -r '.[] | select(.sourceVersion == "$(InstallerCommit)") | .id')
-        echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
-
-        echo "##vso[task.setvariable variable=InstallerOfficialRunId]${installer_official_run_id}"
-        echo "##vso[task.setvariable variable=InstallerTarballBuildRunId]${installer_tarball_build_run_id}"
-      name: GetAssociatedPipelineRunsStep
-      displayName: Get Associated Pipeline Run IDs
-      env:
-        AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
-    - task: DownloadPipelineArtifact@2
-      name: DownloadSourceTarballStep
-      displayName: Download Source Tarball
-      inputs:
-        source: 'specific'
-        artifact: 'BlobArtifacts'
-        patterns: 'BlobArtifacts/dotnet-sdk-source-$(SdkVersion).tar.gz'
-        project: 'internal'
-        pipeline: $(installerOfficialCiPipelineId)
-        runVersion: 'specific'
-        runId: $(InstallerOfficialRunId)
-    - script: |
-        set -euxo pipefail
-        az config set extension.use_dynamic_install=yes_without_prompt
-
-        source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
-        source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
-        az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
-      name: UploadSourceTarballStep
-      displayName: Upload Source Tarball
-      env:
-        AZURE_STORAGE_KEY: $(dotnetclimsrc-access-key)
+    env:
+      AZURE_STORAGE_KEY: $(dotnetclimsrc-access-key)
