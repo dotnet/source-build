@@ -16,7 +16,7 @@
      - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
      - File issues appropriately as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
-1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline. When staging the pipeline run, click "Resources" and provide select the final run of Stage-DotNet mentioned above.
+1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline. When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
      - [ ] When the pipeline finishes, look in the logs for the dotnet/installer commit sha that represents the final release.
      - This pipeline automatically uploads the dotnet source tarball to dotnetclimsrc
 1. - [ ] Ensure the official installer and tarball builds have completed for the release's commit sha.
