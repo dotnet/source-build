@@ -65,7 +65,23 @@ jobs:
 
       source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
       source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
+
+      if [ ! -f "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" ]; then
+        echo "##vso[task.logissue type=error]File ${source_tarball_filename} not found on disk. It might not have been downloaded. Exiting..."
+      fi
+
       az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
+
+      source_tarball_blob_list=$(az storage blob list --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --prefix "${source_tarball_upload_path}/${source_tarball_filename}")
+      number_of_blobs=$(echo $source_tarball_blob_list | jq -r 'length')
+      
+      if [ $number_of_blobs -eq 0 ]; then
+        echo "##vso[task.logissue type=error]File ${source_tarball_filename} not found in blob storage. It might not have been downloaded earlier, and might not have been uploaded to $(blobContainerName). Exiting..."
+        exit 1
+      elif [ $number_of_blobs -gt 1 ]; then
+        echo "##vso[task.logissue type=error]More than one blob named ${source_tarball_filename} found in blob storage. Exiting..."
+        exit 1
+      fi
     name: UploadSourceTarballStep
     displayName: Upload Source Tarball
     env:

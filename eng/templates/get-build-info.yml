@@ -81,7 +81,7 @@ steps:
         installer_official_run_id=$(echo $installer_official_run_ids | jq -r '.[0]')
 
         installer_tarball_build_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerTarabllBuildCiPipelineId))
-        installer_tarball_build_run_ids=$(echo $installer_tarball_build_runs | jq -r '[.[] | select(.sourceVersion == "$(InstallerCommit)") | .id]')
+        installer_tarball_build_run_ids=$(echo $installer_tarball_build_runs | jq -r '[.[] | select(.sourceVersion == "$(InstallerCommit)") | { "result": .result, "id": .id }]')
         num_tarball_build_runs=$(echo $installer_tarball_build_run_ids | jq 'length')
 
         if [ "$num_tarball_build_runs" != "1" ]; then
@@ -90,7 +90,13 @@ steps:
           exit 1
         fi
 
-        installer_tarball_build_run_id=$(echo $installer_tarball_build_run_ids | jq -r '.[0]')
+        installer_tarball_build_run_id=$(echo $installer_tarball_build_run_ids | jq -r '.[0].id')
+        installer_tarball_build_run_result=$(echo $installer_tarball_build_run_ids | jq -r '.[0].result')
+
+        if [[ ("$installer_tarball_build_run_result" == "failed") && "$(useSpecificPipelineRunIDs)" ]]; then
+          echo "##vso[task.logissue type=error]: dotnet-installer-source-build-tarball-build run ID ${installer_tarball_build_run_id} failed. Please manually specify a tarball build ID to use instead. Exiting..."
+          exit 1
+        fi
 
         echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
         echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
