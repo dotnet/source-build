@@ -1,5 +1,5 @@
 parameters:
-  - name: stageDotNetPipelineResource
+  - name: dotnetStagingPipelineResource
     type: string
     default: ''
   - name: getAssociatedPipelineRuns
@@ -16,12 +16,12 @@ parameters:
     default: ''
 
 steps:
-- download: ${{ parameters.stageDotNetPipelineResource }}
+- download: ${{ parameters.dotnetStagingPipelineResource }}
   artifact: manifests
   patterns: 'manifest.json'
   displayName: Download Release Manifest
 
-- download: ${{ parameters.stageDotNetPipelineResource }}
+- download: ${{ parameters.dotnetStagingPipelineResource }}
   artifact: drop
   patterns: 'config.json'
   displayName: Download Release Config
