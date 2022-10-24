@@ -65,8 +65,7 @@ jobs:
 
       source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
       source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
-      # az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
-      az storage fs file upload --source "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" -p "${source_tarball_upload_path}/${source_tarball_filename}" -f "$(blobContainerName)" --account-name "$(storageAccountName)"
+      az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
     name: UploadSourceTarballStep
     displayName: Upload Source Tarball
     env:
