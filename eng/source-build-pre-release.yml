@@ -41,7 +41,7 @@ jobs:
   steps:
   - template: templates/get-build-info.yml
     parameters:
-      stageDotNetPipelineResource: dotnet-staging-pipeline-resource
+      dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: true
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
