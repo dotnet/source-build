@@ -72,7 +72,7 @@ jobs:
 
       az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
 
-      az storage blob directory list --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --directory-path "${source_tarball_upload_path}"
+      az storage blob list --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --prefix "${source_tarball_upload_path}"
     name: UploadSourceTarballStep
     displayName: Upload Source Tarball
     env:
