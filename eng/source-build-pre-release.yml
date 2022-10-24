@@ -65,7 +65,14 @@ jobs:
 
       source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
       source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
+
+      if [ ! -f "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" ]; then
+        echo "##vso[task.logissue type=error]File ${source_tarball_filename} not found. It might not have been downloaded. Exiting..."
+      fi
+
       az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
+
+      az storage blob directory list --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --directory-path "${source_tarball_upload_path}"
     name: UploadSourceTarballStep
     displayName: Upload Source Tarball
     env:
