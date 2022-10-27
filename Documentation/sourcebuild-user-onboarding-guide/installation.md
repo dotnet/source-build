@@ -18,10 +18,13 @@ If you want to install the SDK globally (and not per user), here are some sugges
 
 4. Define DOTNET_ROOT and update PATH by saving the following as /etc/profile.d/dotnet.sh (or equivalent).
 
-    Set location for AppHost lookup[ -z "$DOTNET_ROOT"] &&exportDOTNET_ROOT=/usr/lib64/dotnet.  
+    Set location for AppHost lookup:  
+`[ -z "$DOTNET_ROOT"] && export DOTNET_ROOT=/usr/lib64/dotnet.`  
     
-    Add dotnet tools directory to PATHDOTNET_TOOLS_PATH="$HOME/.dotnet/tools"case"$PATH"in*"$DOTNET_TOOLS_PATH"*) true;; 
-         *) PATH="$PATH:$DOTNET_TOOLS_PATH";; 
-         esac
+    Add dotnet tools directory to PATH:  
+```code
+    DOTNET_TOOLS_PATH="$HOME/.dotnet/tools"
+    export PATH="$PATH:$DOTNET_TOOLS_PATH"
+```
 
-    Adjust the paths to match what the distribution policies. This snippet should work in sh (including dash) and bash. You may need to adapt it, or use something entirely different, for other shells. This allows apphost-lookup to work via DOTNET_ROOT and allows users to easily use dotnet tools directly after a dotnet tool install.
+Adjust the paths to match what the distribution policies. This snippet should work in sh (including dash) and bash. You may need to adapt it, or use something entirely different, for other shells. This allows `apphost-lookup` to work via `DOTNET_ROOT` and allows users to easily use dotnet tools directly after a dotnet tool install.
