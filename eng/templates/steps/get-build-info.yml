@@ -1,0 +1,124 @@
+parameters:
+  - name: dotnetStagingPipelineResource
+    type: string
+    default: ''
+  - name: getAssociatedPipelineRuns
+    type: boolean
+    default: false
+  - name: useSpecificPipelineRunIDs
+    type: boolean
+    default: false
+  - name: dotnetInstallerOfficialRunID
+    type: string
+    default: ''
+  - name: dotnetInstallerTarballBuildRunID
+    type: string
+    default: ''
+
+steps:
+- download: ${{ parameters.dotnetStagingPipelineResource }}
+  artifact: manifests
+  patterns: 'manifest.json'
+  displayName: Download Release Manifest
+
+- download: ${{ parameters.dotnetStagingPipelineResource }}
+  artifact: drop
+  patterns: 'config.json'
+  displayName: Download Release Config
+
+- script: |
+    set -euo pipefail
+
+    manifest_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/manifests/manifest.json
+    config_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/drop/config.json
+
+    runtime_version="$(jq -r '.Runtime' $config_path)"
+    release_channel="$(jq -r '.Channel' $config_path)"
+
+    # Source-build only supports the lowest avaiable feature band.
+    # Sort the SDK releases by number and pick the lowest value.
+    sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(tonumber)) | .[0]' $config_path)"
+
+    # replace the last two characters in sdk_version with xx
+    branch_version=$(echo $sdk_version | sed 's/..$/xx/')
+    branch_name="refs/heads/internal/release/${branch_version}"
+
+    commit=$(jq -r --arg BRANCH "${branch_name}" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
+
+    if [[ ! $commit ]]; then
+      echo "##vso[task.logissue type=error]Installer commit not set. Exiting..."
+      exit 1
+    fi
+
+    echo "Release channel: ${release_channel}"
+    echo "Runtime version: ${runtime_version}"
+    echo "SDK version: ${sdk_version}"
+    echo "Installer commit: ${commit}"
+
+    echo "##vso[task.setvariable variable=SdkVersion]${sdk_version}"
+    echo "##vso[task.setvariable variable=RuntimeVersion]${runtime_version}"
+    echo "##vso[task.setvariable variable=ReleaseChannel]${release_channel}"
+    echo "##vso[task.setvariable variable=InstallerCommit]${commit}"
+  name: ReadReleaseInfoStep
+  displayName: Read Release Info
+
+- ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
+  - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
+    - script: |
+        set -euo pipefail
+        az config set extension.use_dynamic_install=yes_without_prompt
+
+        installer_official_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerOfficialCiPipelineId))
+        installer_official_run_ids=$(echo $installer_official_runs | jq -r '[.[] | select(.sourceVersion == "$(InstallerCommit)") | .id]')
+        num_official_runs=$(echo $installer_official_run_ids | jq 'length')
+
+        if [ "$num_official_runs" != "1" ]; then
+          echo "##vso[task.logissue type=error]There are ${num_official_runs} of dotnet-installer-official-ci for $(InstallerCommit). Please manually specify run IDs to use."
+          echo "##vso[task.logissue type=error]Run IDs are: ${installer_official_run_ids}"
+          exit 1
+        fi
+
+        installer_official_run_id=$(echo $installer_official_run_ids | jq -r '.[0]')
+
+        installer_tarball_build_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerTarabllBuildCiPipelineId))
+        installer_tarball_build_run_ids=$(echo $installer_tarball_build_runs | jq -r '[.[] | select(.sourceVersion == "$(InstallerCommit)") | { "result": .result, "id": .id }]')
+        num_tarball_build_runs=$(echo $installer_tarball_build_run_ids | jq 'length')
+
+        if [ "$num_tarball_build_runs" != "1" ]; then
+          echo "##vso[task.logissue type=error]There are ${num_tarball_build_runs} runs of dotnet-installer-source-build-tarball-build for $(InstallerCommit). Please manually specify run IDs to use."
+          echo "##vso[task.logissue type=error]Run IDs are: ${installer_tarball_build_run_ids}"
+          exit 1
+        fi
+
+        installer_tarball_build_run_id=$(echo $installer_tarball_build_run_ids | jq -r '.[0].id')
+        installer_tarball_build_run_result=$(echo $installer_tarball_build_run_ids | jq -r '.[0].result')
+
+        if [[ ("$installer_tarball_build_run_result" == "failed") && "$(useSpecificPipelineRunIDs)" ]]; then
+          echo "##vso[task.logissue type=error]: dotnet-installer-source-build-tarball-build run ID ${installer_tarball_build_run_id} failed. Please manually specify a tarball build ID to use instead. Exiting..."
+          exit 1
+        fi
+
+        echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
+        echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
+
+        echo "##vso[task.setvariable variable=InstallerOfficialRunId]${installer_official_run_id}"
+        echo "##vso[task.setvariable variable=InstallerTarballBuildRunId]${installer_tarball_build_run_id}"
+      name: GetAssociatedPipelineRunsStep
+      displayName: Get Associated Pipeline Run IDs
+      env:
+        AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+
+  - ${{ if eq(parameters.useSpecificPipelineRunIDs, true) }}:
+    - script: |
+        set -euo pipefail
+
+        installer_official_run_id="${{ parameters.dotnetInstallerOfficialRunID }}"
+        installer_tarball_build_run_id="${{ parameters.dotnetInstallerTarballBuildRunID }}"
+
+        echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
+        echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
+
+        echo "##vso[task.setvariable variable=InstallerOfficialRunId]${installer_official_run_id}"
+        echo "##vso[task.setvariable variable=InstallerTarballBuildRunId]${installer_tarball_build_run_id}"
+      name: SetAssociatedPipelineRunsStep
+      displayName: Set Associated Pipeline Run IDs
