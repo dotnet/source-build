@@ -44,7 +44,7 @@ parameters:
     displayName: dotnet-installer-source-build-tarball-build run ID
     type: string
     default: '200XXXX'
-  - name: testingMode
+  - name: isDryRun
     displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
     type: boolean
     default: false
@@ -62,7 +62,7 @@ variables:
 - name: blobContainerName
   value: 'source-built-artifacts'
 - name: blobContainerUploadBaseFilePath
-  ${{ if eq( parameters['testingMode'], true) }}:
+  ${{ if eq( parameters['isDryRun'], true) }}:
     value: 'testing'
   ${{ else }}:
     value: 'assets'
@@ -129,8 +129,10 @@ jobs:
 
       query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 
-      if [ ${{ parameters.testingMode }} = True ]; then
-        echo "Testing mode is set to True, not submitting announcement."
+      if [ ${{ parameters.isDryRun }} = True ]; then
+        echo "Doing a dry run, not submitting announcement."
+        echo "Announcement title: ${title}"
+        echo "Announcement body: ${body}"
       else
         echo "Submitting announcement."
         announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
@@ -224,8 +226,8 @@ jobs:
       echo "title: ${title}"
       echo "body: ${body}"
 
-      if [ ${{ parameters.testingMode }} = True ]; then
-        echo "Testing mode is set to True, not submitting PR."
+      if [ ${{ parameters.isDryRun }} = True ]; then
+        echo "Doing a dry run, not submitting PR."
       else
         echo "Submitting PR"
         $(Build.SourcesDirectory)/eng/submit-source-build-release-pr.sh \

@@ -23,8 +23,8 @@ parameters:
     displayName: dotnet-installer-source-build-tarball-build run ID
     type: string
     default: '200XXXX'
-  - name: testingMode
-    displayName: Testing mode
+  - name: isDryRun
+    displayName: Dry Run
     type: boolean
     default: false
 
@@ -36,7 +36,7 @@ variables:
 - name: blobContainerName
   value: 'source-build'
 - name: blobContainerUploadBaseFilePath
-  ${{ if eq( parameters['testingMode'], true) }}:
+  ${{ if eq( parameters['isDryRun'], true) }}:
     value: 'Dev'
   ${{ else }}:
     value: 'release'
