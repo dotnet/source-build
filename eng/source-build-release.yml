@@ -210,8 +210,9 @@ jobs:
       export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
       export RUNTIME_VERSION="$(RuntimeVersion)"
       export SDK_VERSION="$(SdkVersion)"
-
-      template_path="$(Build.SourcesDirectory)/$(Build.Repository.Name)/eng"
+      
+      source_build_repo_root="$(Build.SourcesDirectory)/$(Build.Repository.Name)"
+      template_path="${source_build_repo_root}/eng"
       template="$(envsubst < ${template_path}/source-build-release-pr.md)"
       # Get the line in the template that is prefixed with "Title:" and remove the prefix
       title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
@@ -230,7 +231,7 @@ jobs:
         echo "Doing a dry run, not submitting PR."
       else
         echo "Submitting PR"
-        $(Build.SourcesDirectory)/eng/submit-source-build-release-pr.sh \
+        ${source_build_repo_root}/eng/submit-source-build-release-pr.sh \
             --setupGitAuth \
             --targetRepo $(TargetRepo) \
             --forkRepo $(ForkRepo) \
