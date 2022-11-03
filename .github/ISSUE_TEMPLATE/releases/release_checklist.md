@@ -39,13 +39,11 @@
          - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
      - [Non-Internal] Send the dotnet/installer commit sha along w/link to publicly built source tarball.  Link to the public instructions for building source-build.
 1. - [ ] SYNC POINT: Wait for Microsoft build release.
-1. - [ ] Upload the source-build artifacts to dotnetcli/source-built-artifacts blob storage. ([automation tracking issue](https://github.com/dotnet/source-build/issues/3080))
-     - [ ] Retrieve the source-build artifacts from [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link) - `Build Tarball CentOS7-Offline_Artifacts/Private.SourceBuilt.Artifacts.6.0.xxx.tar.gz`
 1. - [ ] Run the [source-build-release pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1124) (internal link).
-     - Set the `SDK Version` parameter.
-         - If a special source-build tag was created for the release, check `Use custom tag?` and set the `Installer custom tag` parameter.
-         - Do not edit the `Branch/tag` parameter. The pipeline will check out `dotnet/installer` itself and verify that the specified release tag exists.
-     - Click `Run` and wait for the pipeline stages to complete.
+     - Under Resources, select the same pipeline run of `Stage-DotNet` that was used in the `source-build-pre-release` pipeline. Leave the version of `dotnet/installer` alone, the pipeline will checkout the correct tag.
+     - If a special source-build tag was created for the release, check `Use custom tag?` and set the `Installer custom tag` parameter.
+     - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
+     - Click `Run` and wait for the pipeline to complete.
      - Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
           - If special edits to the announcement are needed, or the content of the announcement discussion is incorrect, source-build repo maintainers can edit the discussion directly once it is posted.
      - Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.

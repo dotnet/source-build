@@ -23,23 +23,30 @@ parameters:
     displayName: dotnet-installer-source-build-tarball-build run ID
     type: string
     default: '200XXXX'
+  - name: isDryRun
+    displayName: Dry Run
+    type: boolean
+    default: false
 
 variables:
-- template: templates/installer-pipeline-variables.yml
+- template: templates/variables/installer-pipelines.yml
 - group: DotNet-MSRC-Storage
 - name: storageAccountName
   value: 'dotnetclimsrc'
 - name: blobContainerName
   value: 'source-build'
 - name: blobContainerUploadBaseFilePath
-  value: 'release'
+  ${{ if eq( parameters['isDryRun'], true) }}:
+    value: 'Dev'
+  ${{ else }}:
+    value: 'release'
 
 jobs:
 - job: UploadSourceTarballJob
   displayName: Upload Source Tarball
 
   steps:
-  - template: templates/get-build-info.yml
+  - template: templates/steps/get-build-info.yml
     parameters:
       dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: true
@@ -54,35 +61,15 @@ jobs:
       source: 'specific'
       artifact: 'BlobArtifacts'
       patterns: 'BlobArtifacts/dotnet-sdk-source-$(SdkVersion).tar.gz'
-      project: 'internal'
+      project: $(azDoProject)
       pipeline: $(installerOfficialCiPipelineId)
       runVersion: 'specific'
       runId: $(InstallerOfficialRunId)
 
-  - script: |
-      set -euxo pipefail
-      az config set extension.use_dynamic_install=yes_without_prompt
-
-      source_tarball_upload_path="$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)"
-      source_tarball_filename="dotnet-sdk-source-$(SdkVersion).tar.gz"
-
-      if [ ! -f "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" ]; then
-        echo "##vso[task.logissue type=error]File ${source_tarball_filename} not found on disk. It might not have been downloaded. Exiting..."
-      fi
-
-      az storage blob upload --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --file "$(PIPELINE.WORKSPACE)/${source_tarball_filename}" --name "${source_tarball_upload_path}/${source_tarball_filename}"
-
-      source_tarball_blob_list=$(az storage blob list --account-name "$(storageAccountName)" --container-name "$(blobContainerName)" --prefix "${source_tarball_upload_path}/${source_tarball_filename}")
-      number_of_blobs=$(echo $source_tarball_blob_list | jq -r 'length')
-      
-      if [ $number_of_blobs -eq 0 ]; then
-        echo "##vso[task.logissue type=error]File ${source_tarball_filename} not found in blob storage. It might not have been downloaded earlier, and might not have been uploaded to $(blobContainerName). Exiting..."
-        exit 1
-      elif [ $number_of_blobs -gt 1 ]; then
-        echo "##vso[task.logissue type=error]More than one blob named ${source_tarball_filename} found in blob storage. Exiting..."
-        exit 1
-      fi
-    name: UploadSourceTarballStep
-    displayName: Upload Source Tarball
-    env:
-      AZURE_STORAGE_KEY: $(dotnetclimsrc-access-key)
+  - template: templates/steps/upload-to-blob-storage.yml
+    parameters:
+      file: '$(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(SdkVersion).tar.gz'
+      accountName: '$(storageAccountName)'
+      containerName: '$(blobContainerName)'
+      uploadPath: '$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)'
+      azureStorageKey: '$(dotnetclimsrc-access-key)'
