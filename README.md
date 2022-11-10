@@ -41,6 +41,18 @@ Source-build solves common challenges that most developers encounter when trying
 
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
+## .NET in Linux Distributions
+| Distro | Package Feed | Maintainer |
+|---|---|---|
+| Alpine | [Community](https://pkgs.alpinelinux.org/packages?name=dotnet*&branch=v3.16&repo=&arch=&maintainer=) | [@ayakael](https://github.com/ayakael) |
+| Arch Linux | [Community](https://archlinux.org/packages/?q=dotnet)<br>[Arch User Repo](https://aur.archlinux.org/packages?K=dotnet) | [@alucryd](https://github.com/alucryd) |
+| CentOS Stream | [CentOS Stream Mirror](http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/) | [@omajid](https://github.com/omajid) |
+| [Fedora](https://fedoraproject.org/wiki/DotNet) | [Default](https://packages.fedoraproject.org/search?query=dotnet) | [@omajid](https://github.com/omajid), [@crummel](https://github.com/crummel) |
+| Homebrew | [Formula](https://formulae.brew.sh/formula/dotnet) | [@asbjornu](https://github.com/asbjornu) |
+| [Red Hat Enterprise Linux](https://developers.redhat.com/products/dotnet/overview) | [Default](https://access.redhat.com/documentation/en-us/net/6.0) | [@omajid](https://github.com/omajid) |
+| [Ubuntu](https://canonical.com/blog/install-dotnet-on-ubuntu) | [Default](https://packages.ubuntu.com/search?suite=default&section=all&arch=any&keywords=dotnet&searchon=names)<br>[Personal Package Archives](https://launchpad.net/ubuntu/+ppas?name_filter=dotnet) | [@mirespace](https://github.com/mirespace) |
+
+
 ## Support
 
 .NET Source-Build is supported on the oldest available .NET SDK feature update for each major release, and on Linux only.
