@@ -71,7 +71,6 @@ jobs:
       runId: $(InstallerOfficialRunId)
 
   - template: templates/steps/upload-to-blob-storage.yml
-    condition: and(succeeded(), ne('${{ parameters.isDryRun }}', 'true'))
     parameters:
       file: '$(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(SdkVersion).tar.gz'
       accountName: '$(storageAccountName)'
@@ -84,24 +83,17 @@ jobs:
       
       upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
 
-      $(Build.SourcesDirectory)/eng/update-vmr.sh \
-        --releaseChannel $(ReleaseChannel) \
-        --sdkVersion $(SdkVersion) \
-        --upstream ${upstream_with_pat} \
-        --tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz
-
-      month_year=$(date +"%b%Y" -d "+1 month" | sed 's/.*/\L&/') # e.g. aug2022
-      new_branch_name="dev/$(SdkVersion)-${month_year}"
-      
-      cd dotnet-vmr/
+      args=()
+      args+=(--releaseChannel $(ReleaseChannel))
+      args+=(--sdkVersion $(SdkVersion))
+      args+=(--upstream ${upstream_with_pat})
+      args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz)
 
       if [ ${{ parameters.isDryRun }} = True ]; then
-        echo "Doing a dry run, not pushing to $(vmrUpstreamUrl). List of changes:"
-        git log --name-status HEAD^..HEAD
-      else
-        echo "Pushing branch to $(vmrUpstreamUrl)."
-        git push -u upstream "${new_branch_name}"
+        args+=(--isDryRun)
       fi
+
+      $(Build.SourcesDirectory)/eng/update-vmr.sh "${args[@]}"
     displayName: Update security-partners-dotnet
     env:
       AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
