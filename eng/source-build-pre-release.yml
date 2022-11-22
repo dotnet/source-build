@@ -31,15 +31,19 @@ parameters:
 variables:
 - template: templates/variables/installer-pipelines.yml
 - group: DotNet-MSRC-Storage
+- group: DotNet-Source-Build-All-Orgs-Source-Access
 - name: storageAccountName
   value: 'dotnetclimsrc'
 - name: blobContainerName
   value: 'source-build'
+- name: vmrUpstreamUrl
+  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet'
 - name: blobContainerUploadBaseFilePath
   ${{ if eq( parameters['isDryRun'], true) }}:
     value: 'Dev'
   ${{ else }}:
     value: 'release'
+
 
 jobs:
 - job: UploadSourceTarballJob
@@ -73,3 +77,23 @@ jobs:
       containerName: '$(blobContainerName)'
       uploadPath: '$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)'
       azureStorageKey: '$(dotnetclimsrc-access-key)'
+  
+  - script: |
+      set -euxo pipefail
+      
+      upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+
+      $(Build.SourcesDirectory)/eng/update-vmr.sh \
+        --releaseChannel $(ReleaseChannel) \
+        --sdkVersion $(SdkVersion) \
+        --upstream ${upstream_with_pat} \
+        --tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz
+
+      month_year=$(date +"%b%Y" -d "+1 month" | sed 's/.*/\L&/') # e.g. aug2022
+      new_branch_name="dev/$(SdkVersion)-${month_year}"
+      
+      cd dotnet-vmr/
+      git push -u upstream "${new_branch_name}"
+    displayName: Update security-partners-dotnet
+    env:
+      AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
