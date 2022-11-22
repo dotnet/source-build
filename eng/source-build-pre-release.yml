@@ -46,8 +46,8 @@ variables:
 
 
 jobs:
-- job: UploadSourceTarballJob
-  displayName: Upload Source Tarball
+- job: SourceBuildPreRelease
+  displayName: Source Build Pre-Release
 
   steps:
   - template: templates/steps/get-build-info.yml
@@ -71,6 +71,7 @@ jobs:
       runId: $(InstallerOfficialRunId)
 
   - template: templates/steps/upload-to-blob-storage.yml
+    condition: and(succeeded(), ne('${{ parameters.isDryRun }}', 'true'))
     parameters:
       file: '$(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(SdkVersion).tar.gz'
       accountName: '$(storageAccountName)'
@@ -79,7 +80,7 @@ jobs:
       azureStorageKey: '$(dotnetclimsrc-access-key)'
   
   - script: |
-      set -euxo pipefail
+      set -euo pipefail
       
       upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
 
@@ -93,7 +94,14 @@ jobs:
       new_branch_name="dev/$(SdkVersion)-${month_year}"
       
       cd dotnet-vmr/
-      git push -u upstream "${new_branch_name}"
+
+      if [ ${{ parameters.isDryRun }} = True ]; then
+        echo "Doing a dry run, not pushing to $(vmrUpstreamUrl). List of changes:"
+        git log --name-status HEAD^..HEAD
+      else
+        echo "Pushing branch to $(vmrUpstreamUrl)."
+        git push -u upstream "${new_branch_name}"
+      fi
     displayName: Update security-partners-dotnet
     env:
       AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)

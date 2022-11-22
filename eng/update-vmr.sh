@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euxo pipefail
+set -euo pipefail
 
 time="$(date +%m%d%y-%H%M)"
 
@@ -96,7 +96,6 @@ pushd "${vmr_path}"
 
     git add -f .
     
-    # taken from https://github.com/dotnet/installer/blob/2fd58dc7e984cacf8c455428bf9bfce75f736f32/eng/pipelines/templates/jobs/vmr-synchronization.yml#L97-L98
     git config user.email "dotnet-maestro[bot]@users.noreply.github.com"
     git config user.name "dotnet-maestro[bot]"
     git commit -m "Update to .NET ${sdk_version}"
