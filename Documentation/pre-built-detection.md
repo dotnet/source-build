@@ -20,10 +20,9 @@ This guide places several assumptions on the repository and the maintainer in ch
 # Pre-builts
 
 _Source-build_ is a process of building a given product on a single machine with no internet access.
-As such, all of the upstream packages must be part of the current source-build, since their _pre-built_ versions cannot be retrieved from, for example, `nuget.org` or some internal feed.
 
-By definition, _pre-builts_ are dependencies that a repo has on binary files that are not build from source, where _build from source_ points to any package produced during the _current source-build_.
-In lament terms, this means that packages from `nuget.org`, Microsoft builds or other unrelated source-builds cannot be used for source-building a given repository.
+By definition, _pre-builts_ are dependencies that a repo has on binary files that are not built from source, where _build from source_ points to any package produced during the _current source-build_ or _already present_ in the distro at the time of building.
+In layman terms, this means that packages from `nuget.org`, Microsoft builds or other non-source-built binaries cannot be used for source-building a given repository.
 
 Several different methods are provided to repositories to be able to handle pre-builts for their individual builds while being source-buildable.
 These methods are expanded on in the [Eliminating pre-builts](#eliminating-pre-builts) section of the guide.
@@ -49,12 +48,12 @@ To receive the afore-mentioned report, the repository must be source-build first
 This can be done via the following command:
 
 ```
-./build.sh --sb --bl
+./build.sh -bl --sb
 ```
 
-Once the source-build succeddes, several files related to pre-built detection can be found in the `./artifacts/source-build/self/prebuild-report` directory.
+Once the source-build succeeds, several files related to pre-built detection can be found in the `./artifacts/source-build/self/prebuild-report` directory.
 For now, the one that is of particular interest is `./prebuild-usage.xml`.
-It contains a list of pre-builts discovered during the build process together with a path to the project that requires the pre-built in question. 
+It contains a list of pre-builts discovered during the build process and, if applicable, other useful information such as a path to the project that requires the pre-build in question (in case of a project reference). 
 
 If the list is empty - the build does not utilize any pre-builts. 
 However, in most cases it will contain several of them and will require additional actions before mandatory pre-built detection can be enabled.
@@ -83,9 +82,7 @@ This can be done by fetching the list of source-build repositories from the late
 If yes, then [adding source-build metadata](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md#basics) to the upstream repository's declaration in `Version.Details.xml` would allow free usage of the said package.
 Nevertheless, currently the approach has several limitations:
   - the same version for all packages from the repo should be used. Example: repo A depends on libraries B and C from runtime. The B and C versions should be identical or the source-build intermediate dependency will not be resolved.
-  - the source-build metadata for a specific repository can be declared only once. Example: repo A depends on librabries B and C from runtime. Only B or only C can have the source-build metadata for runtime, otherwise a duplicate dependency exception will be raised during build [GitHub issue](https://github.com/dotnet/source-build/issues/3003). 
-
-TODO - if product dependency is not part of source-build
+  - the source-build metadata for a specific repository can be declared only once. Example: repo A depends on librabries B and C from runtime. Only B or only C can have the source-build metadata for runtime, otherwise a duplicate dependency exception will be raised during build ([GitHub issue](https://github.com/dotnet/source-build/issues/3003)). 
 
 ### Utilizing latest versions
 
@@ -94,7 +91,7 @@ This stems from a mariad of reasons, the primary one being that in an end produc
 As a result, any older version of a repository would normally be overriden by the source-built one and down-stream repositories would have to utilize it.
 
 Deviation from this policy would result in higher maintanance cost for the source-build team, higher infrastructure load and bigger end product size.
-Nevertheless, if absolutely required, older versions of packages / libraries can be added to source-build throught a dedicated repository [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages). 
+Nevertheless, if absolutely required, older versions of packages / libraries can be added to source-build throught a dedicated repository - [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages). 
 
 To have a package added to the repo, please [log an issue](https://github.com/dotnet/source-build/issues/new/choose) explaining the use-case in question and the source-build team will help you make the right decision.
 
@@ -144,4 +141,4 @@ WIP
 
 # Contacts
 
-WIP
+For any questions or additional information about this document, pre-builts or source-build in general, please contact the `@dotnet/source-build-internal` team.
