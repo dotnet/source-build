@@ -31,19 +31,23 @@ parameters:
 variables:
 - template: templates/variables/installer-pipelines.yml
 - group: DotNet-MSRC-Storage
+- group: DotNet-Source-Build-All-Orgs-Source-Access
 - name: storageAccountName
   value: 'dotnetclimsrc'
 - name: blobContainerName
   value: 'source-build'
+- name: vmrUpstreamUrl
+  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet'
 - name: blobContainerUploadBaseFilePath
   ${{ if eq( parameters['isDryRun'], true) }}:
     value: 'Dev'
   ${{ else }}:
     value: 'release'
 
+
 jobs:
-- job: UploadSourceTarballJob
-  displayName: Upload Source Tarball
+- job: SourceBuildPreRelease
+  displayName: Source Build Pre-Release
 
   steps:
   - template: templates/steps/get-build-info.yml
@@ -73,3 +77,23 @@ jobs:
       containerName: '$(blobContainerName)'
       uploadPath: '$(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)'
       azureStorageKey: '$(dotnetclimsrc-access-key)'
+  
+  - script: |
+      set -euo pipefail
+      
+      upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+
+      args=()
+      args+=(--releaseChannel $(ReleaseChannel))
+      args+=(--sdkVersion $(SdkVersion))
+      args+=(--upstream ${upstream_with_pat})
+      args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz)
+
+      if [ ${{ parameters.isDryRun }} = True ]; then
+        args+=(--isDryRun)
+      fi
+
+      $(Build.SourcesDirectory)/eng/update-vmr.sh "${args[@]}"
+    displayName: Update security-partners-dotnet
+    env:
+      AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
