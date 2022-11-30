@@ -4,12 +4,12 @@ This is a detailed guide on how to eliminate pre-builts in a source-buildable re
 It is primarily intended for developers contributing to the `dotnet` organization.
 
 ## Table of content
-  - [Pre-builts](#pre-builts)
+  - [What is a Prebuilt](#what-is-a-prebuilt)
   - [Elimitating pre-builts](#eliminating-pre-builts)
   - [FAQ](#faq)
   - [Contacts](#contacts)
 
-# Pre-builts
+# What is a Prebuilt
 
 _Source-build_ is a process of building a given product on a single machine from source with no internet access.
 
@@ -30,20 +30,48 @@ Pre-built detection identifies the source of dependencies used to built the repo
 These dependencies include not only direct dependencies, but also build tooling as well as dangling dependencies - packages downloaded / used by tooling during the build process and not referenced by the project itself.
 A dependency that contains sources (binaries), was retrieved from an external source and was not explicitly excluded from pre-built detection it will be flagged as a pre-built.
 
-Since any given project can require packages / libraries from other .NET repositories or outside the organization, pre-built detection can contain exceptions for packages with source-built content ([_intermediate packages_](https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md)) or packages without any sources, such as _text-only packages_ (for example, SDKs with MSBuild props and targets) and _reference packages_ (essentially reference assemblies).
+Since any given project can require packages / libraries from other .NET repositories or outside the organization, pre-built detection can contain ignore rules for packages with source-built content ([_intermediate packages_](https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md)) or packages without any sources, such as _text-only packages_ (for example, SDKs with MSBuild props and targets) and _reference packages_ (essentially reference assemblies).
 The packages are exempt from pre-build detection as they do not contain actual sources or, in case of intermediate packages, are used for local / non-release CI builds only.
-This and other exceptions can be found in the `./eng/SourceBuildPrebuiltBaseline.xml` file in the root of the repository.
+The list of permitted pre-builts can be found in the `./eng/SourceBuildPrebuiltBaseline.xml` file in the root of the repository.
 
+## Understanding `SourceBuildPrebuiltBaseline.xml`
+
+The file in question contains package information of pre-builts that for one reason or another are allowed in the source-build of the repository.
+
+One type of such packages that is present in several .NET repositories is an [_intermediate package_](https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md).
+When a repository utilizes an intermediate package, it will be excluded from pre-built detection with the following declaration in the above-mentioned file:
+
+```xml
+<UsageData>
+  <IgnorePatterns>
+    <UsagePattern IdentityGlob="Microsoft.SourceBuild.Intermediate.*" />
+  </IgnorePatterns>
+</UsageData>
+```
+
+With this ignore pattern in place, pre-built detection will not mark any .NET intermediate package as long as it confronts to the naming in the pattern.
+
+In cases where a specific package needs to be excluded from pre-built detection (for example, to not block the introduction of changes until a source-build acceptable solution for the pre-built is provided), the developer can directly specify the name / version of the depedency:
+
+```xml
+<UsageData>
+    <Usage Id="Foo.Bar" Version="x.y.z" />
+  </Usages>
+</UsageData>
+```
+
+If a new pre-built is encountered, pre-build detection will also generate a new version of the baseline file by adding the dependency that contains the pre-build to the existing baseline.
+The new file can be found at `./artifacts/source-build/self/prebuild-report/generated-new-baseline.xml`.
 
 # Eliminating pre-builts
 
-When adding a new dependecy to a repository, there is a posibility that the dependency in question will be flagged as a pre-built, failing the build and blocking any merge.
+When altering the dependecy tree of a repository, specifically adding or updating dependencies, there is a posibility that a new pre-built is introduced, failing the build and blocking any merge.
 This can be resolved by identifying what exactly is the pre-built and following the approriate steps listed below.
 
 To check if new pre-builts were introduce, the repository needs to be source-built first. This can be done trough the following command:
 
 ```sh
-./build.sh -bl --sb
+./build.sh --sb
 ```
 
 If a new unhandled pre-built is found, the build will fail with a detailed exception pointing to the exact package / version of the dependency that caused the failure.
