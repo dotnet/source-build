@@ -99,7 +99,9 @@ steps:
         fi
 
         echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
+        echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${installer_official_run_id}"
         echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
+        echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${installer_tarball_build_run_id}"
 
         echo "##vso[task.setvariable variable=InstallerOfficialRunId]${installer_official_run_id}"
         echo "##vso[task.setvariable variable=InstallerTarballBuildRunId]${installer_tarball_build_run_id}"
@@ -116,7 +118,9 @@ steps:
         installer_tarball_build_run_id="${{ parameters.dotnetInstallerTarballBuildRunID }}"
 
         echo "dotnet-installer-official-ci run ID: ${installer_official_run_id}"
+        echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${installer_official_run_id}"
         echo "dotnet-installer-source-build-tarball-build run ID: ${installer_tarball_build_run_id}"
+        echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${installer_tarball_build_run_id}"
 
         echo "##vso[task.setvariable variable=InstallerOfficialRunId]${installer_official_run_id}"
         echo "##vso[task.setvariable variable=InstallerTarballBuildRunId]${installer_tarball_build_run_id}"
