@@ -1,0 +1,69 @@
+trigger: none
+pr: none
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+parameters:
+  - name: mirrors
+    type: object
+    default:
+    - sourceUrl: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
+      destinationUrl: https://dotnet-security-partners@dev.azure.com/dotnet-security-partners/dotnet/_git/dotnet
+      branches:
+      - name: release/6.0.1xx
+        sdkVersion: 6.0.1xx
+      - name: release/7.0.1xx
+        sdkVersion: 7.0.1xx
+
+variables:
+- group: DotNet-Source-Build-All-Orgs-Source-Access
+- name: RepoDir
+  value: 'vmr'
+- name: GitUser
+  value: 'dn-bot'
+- name: GitEmail
+  value: 'dn-bot@microsoft.com'
+
+jobs:
+- ${{ each mirror in parameters.mirrors }}:
+  - job:
+    steps:
+    - checkout: none
+
+    - script: |
+        set -euo pipefail
+
+        repo_dir=$(Pipeline.Workspace)/$(RepoDir)
+        git init "${repo_dir}"
+        cd "${repo_dir}"
+
+        git config --global user.name "${{ variables.GitUser }}"
+        git config --global user.email "${{ variables.GitEmail }}"
+
+        source_url=$(echo "${{ mirror.sourceUrl }}" | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
+        destination_url=$(echo "${{ mirror.destinationUrl }}" | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
+
+        git remote add source "${source_url}"
+        git remote add destination "${destination_url}"
+      displayName: Setup Git Repo
+      env:
+        AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
+
+    - ${{ each branch in mirror.branches }}:
+      - script: |
+          set -euxo pipefail
+
+          git fetch source "${{ branch.name }}"
+          git checkout "${{ branch.name }}"
+
+          tag_name="v${{ branch.sdkVersion }}-SDK"
+          message=".NET Source-build ${{ branch.sdkVersion }}-SDK"
+          git tag "${tag_name}" HEAD -m "${message}"
+
+          git fetch destination "${{ branch.name }}"
+
+          git push --follow-tags destination "${{ branch.name }}"
+        workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
+        displayName: Mirror and tag ${{ branch.sdkVersion }}
