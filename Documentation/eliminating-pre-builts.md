@@ -13,7 +13,7 @@ It is primarily intended for developers contributing to the `dotnet` organizatio
 
 _Source-build_ is a process of building a given product on a single machine from source with no internet access.
 
-By definition, _pre-builts_ are dependencies that a repo has on binary files that are not built from source, where _build from source_ points to any package produced during the _current source-build_. Exceptions to this rule are dependencies that are picked up from the host distro such as `cmake`.
+By definition, _pre-builts_ are dependencies that are not built from source, such as reference packages, nuget packages and built tools. _Build from source_ points to any package produced during the _current source-build_ with the exception of dependencies that are picked up from the host distro such as `cmake`.
 In layman terms, this means that packages from `nuget.org`, Microsoft builds or other non-source-built binaries cannot be used for source-building a given repository.
 
 When onboarding a repository to source-build or adding a new dependency to a source-buildable one, the contributor runs the risk of introducing a new pre-built to the product. 
@@ -28,10 +28,7 @@ To protect against this and catch any new pre-builts as soon as possible, Arcade
 
 Pre-built detection identifies the source of dependencies used to build the repository. 
 These dependencies include not only direct dependencies, but also build tooling as well as dangling dependencies - packages downloaded / used by tooling during the build process and not referenced by the project itself.
-Dependencies retrieved from external sources that are not explicitly excluded from pre-build detection will be flagged as pre-builts.
-
-Since any given project can require packages / libraries from other .NET repositories or outside the organization, pre-built detection can contain ignore rules for packages with source-built content ([_intermediate packages_](https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md)). Additionally, in certain cases such as repositories requiring use of historical packages,_reference packages_ (essentially reference assemblies) of dependencies can also be ommited from pre-build detection through [_source-buid reference packages_](https://github.com/dotnet/source-build-reference-packages).
-In both cases the the resulting source-built packages are used for local / non-release CI builds only.
+Dependencies retrieved from external sources that are not explicitly excluded from pre-built detection will be flagged as pre-builts.
 
 # Eliminating pre-builts
 
@@ -77,7 +74,7 @@ In cases where a specific package needs to be excluded from pre-built detection 
 </UsageData>
 ```
 
-If a new pre-built is encountered, pre-build detection will also generate a new version of the baseline file by adding the dependency that contains the pre-build to the existing baseline.
+If a new pre-built is encountered, pre-built detection will also generate a new version of the baseline file by adding the dependency that contains the pre-built to the existing baseline.
 The new file can be found at `./artifacts/source-build/self/prebuild-report/generated-new-baseline.xml`.
 
 # Contacts
