@@ -140,7 +140,7 @@ jobs:
         echo "Announcement body: ${body}"
       else
         echo "Submitting announcement."
-        announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+        # announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
 
         echo "Announcement URL: $announcement_url"
         echo "Tag URL: $TAG_URL"
@@ -246,13 +246,13 @@ jobs:
         echo "Doing a dry run, not submitting PR."
       else
         echo "Submitting PR"
-        ${source_build_repo_root}/eng/submit-source-build-release-pr.sh \
-            --setupGitAuth \
-            --targetRepo $(TargetRepo) \
-            --forkRepo $(ForkRepo) \
-            --sdkVersion $(SdkVersion) \
-            --title "${title}" \
-            --body "${body}"
+        # ${source_build_repo_root}/eng/submit-source-build-release-pr.sh \
+        #     --setupGitAuth \
+        #     --targetRepo $(TargetRepo) \
+        #     --forkRepo $(ForkRepo) \
+        #     --sdkVersion $(SdkVersion) \
+        #     --title "${title}" \
+        #     --body "${body}"
       fi
     displayName: Submit Release PR
     env:
