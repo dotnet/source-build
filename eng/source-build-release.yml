@@ -199,9 +199,19 @@ jobs:
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'
-      patterns: |
-        'Private.SourceBuilt.Artifacts.$(SdkVersion).tar.gz'
-        'dotnet-sdk-$(SdkVersion)-*.tar.gz'
+      patterns: 'Private.SourceBuilt.Artifacts.$(SdkVersion).tar.gz'
+
+  - task: DownloadPipelineArtifact@2
+    name: DownloadSourceBuiltSDKStep
+    displayName: Download Source-Built SDK
+    inputs:
+      source: 'specific'
+      project: '$(azDoProject)'
+      pipeline: '$(installerTarabllBuildCiPipelineId)'
+      runVersion: 'specific'
+      runId: '$(InstallerTarballBuildRunId)'
+      artifact: '$(TarballBuildArtifactLeg)'
+      patterns: 'dotnet-sdk-$(SdkVersion)-*.tar.gz'
 
   - template: templates/steps/upload-to-blob-storage.yml
     parameters:
