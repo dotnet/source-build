@@ -43,7 +43,6 @@ steps:
       echo "##vso[task.logissue type=error]More than one blob named ${filename} found in blob storage. Exiting..."
       exit 1
     fi
-  name: UploadToBlobStorageStep
   displayName: Upload To Blob Storage
   env:
     AZURE_STORAGE_KEY: ${{ parameters.azureStorageKey }}

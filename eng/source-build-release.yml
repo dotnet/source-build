@@ -61,9 +61,14 @@ variables:
   value: 'dotnetcli'
 - name: blobContainerName
   value: 'source-built-artifacts'
-- name: blobContainerUploadBaseFilePath
+- name: artifactsUploadBaseFilePath
   ${{ if eq( parameters['isDryRun'], true) }}:
     value: 'testing'
+  ${{ else }}:
+    value: 'assets'
+- name: sdkUploadBaseFilePath
+  ${{ if eq( parameters['isDryRun'], true) }}:
+    value: 'sdks'
   ${{ else }}:
     value: 'assets'
 
@@ -194,14 +199,24 @@ jobs:
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'
-      patterns: 'Private.SourceBuilt.Artifacts.$(SdkVersion).tar.gz'
+      patterns: |
+        'Private.SourceBuilt.Artifacts.$(SdkVersion).tar.gz'
+        'dotnet-sdk-$(SdkVersion)-*.tar.gz'
 
   - template: templates/steps/upload-to-blob-storage.yml
     parameters:
       file: '$(PIPELINE.WORKSPACE)/Private.SourceBuilt.Artifacts.$(SdkVersion).tar.gz'
       accountName: '$(storageAccountName)'
       containerName: '$(blobContainerName)'
-      uploadPath: '$(blobContainerUploadBaseFilePath)'
+      uploadPath: '$(artifactsUploadBaseFilePath)'
+      azureStorageKey: '$(dotnetcli-storage-key)'
+
+  - template: templates/steps/upload-to-blob-storage.yml
+    parameters:
+      file: '$(PIPELINE.WORKSPACE)/dotnet-sdk-$(SdkVersion)-*.tar.gz'
+      accountName: '$(storageAccountName)'
+      containerName: '$(blobContainerName)'
+      uploadPath: '$(sdkUploadBaseFilePath)'
       azureStorageKey: '$(dotnetcli-storage-key)'
 
   - script: |
