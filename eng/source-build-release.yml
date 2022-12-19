@@ -68,9 +68,9 @@ variables:
     value: 'assets'
 - name: sdkUploadBaseFilePath
   ${{ if eq( parameters['isDryRun'], true) }}:
-    value: 'sdks'
+    value: 'testing'
   ${{ else }}:
-    value: 'assets'
+    value: 'sdks'
 
 
 jobs:
