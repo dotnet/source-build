@@ -33,7 +33,7 @@ OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
 if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
 eval set -- "$OPTS"
 
-global_json_path='src/SourceBuild/tarball/content/global.json'
+global_json_path='src/SourceBuild/content/global.json'
 versions_props_path='eng/Versions.props'
 custom_target_branch=''
 setup_git_auth=''
