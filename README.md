@@ -41,6 +41,14 @@ Source-build solves common challenges that most developers encounter when trying
 
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
+## Comprehensive Guidelines
+This section provides detailed end-to-end guidelines on bootstrapping, building, packaging, and more, covering different scenarios for source-build.
+* [System Requirements]()
+* [Quick Build Instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)
+* [Bootstrapping]()
+* [Packaging](https://learn.microsoft.com/en-us/dotnet/core/distribution-packaging)
+* [Troubleshooting]()
+
 ## .NET in Linux Distributions
 | Distro | Package Feed | Maintainer |
 |---|---|---|
