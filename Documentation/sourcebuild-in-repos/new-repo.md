@@ -329,9 +329,10 @@ In order for the sources of the new repo to by synchronized into the VMR,
 the repo needs to be registered in the
 [`source-mappings.json` file](https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json)
 which tells the tooling where from and which sources should be synchronized.
-Please open a PR in [`dotnet/dotnet`](https://github.com/dotnet/dotnet) and
-add your repository. The name must match the name declared in the `SourceBuild`
-tag in `Version.Details.xml` created in the previous step.
+Please open a PR in [`dotnet/installer`](https://github.com/dotnet/installer)
+and add your repository into `src/SourceBuild/content/src/source-mappings.json`.
+The name must match the name declared in the `SourceBuild` tag in
+`Version.Details.xml` created in the previous step.
 
 ### Cloaking (filtering) the repository sources
 
@@ -343,6 +344,8 @@ by 3rd party .NET distro builders who do not accept any non-text sources
 time to consider which files are required for it to build and only synchronize
 those. Commonly, repositories contain binaries that are required for testing
 or similar purposes. Files like these should not be synchronized into the VMR.
+Another common scenario is that the repo has multiple products/ship vehicles
+and only a subset is needed for the source-built .NET scenario.
 
 ## Validate
 
