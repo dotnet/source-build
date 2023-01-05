@@ -35,7 +35,7 @@
 1. - [ ] Run the [source-build-release-mirror](https://dev.azure.com/dnceng/internal/_build?definitionId=1221&_a=summary) pipeline
      - **Important**: this pipeline should be ran only once per hand-off. It mirrors and tags all of the branches listed in the parameters of `source-build-release-mirror.yml`. If you need to mirror and tag only some branches/repos, you can edit the yaml object directly at pipeline queue time.
      - **Important**: replace the `sdkVersion` with the new SDK version (e.g. 6.0.112) in the "mirrors" parameter for each branch.
-1. - [ ] Notify partners of release. Send one email for all releases. Include the following in your email:
+1. - [ ] Notify partners of release. Send one email for all releases ([automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
      - links to MSRC work items in the dotnet-security-partners org, being careful not to disclose any vulnerable info in the email.
      - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account.
      - links to each release's dotnet-security-partners tag that was created with the source-build-release-mirror pipeline.
