@@ -16,10 +16,11 @@ steps:
     az config set extension.use_dynamic_install=yes_without_prompt
 
     filename="$(basename ${{ parameters.file }})"
+    full_filepath="$(realpath ${{ parameters.file }})"
 
     # Check if the file is on disk
-    if [ ! -f "${{ parameters.file }}" ]; then
-      echo "##vso[task.logissue type=error]File ${{ parameters.file }} not found on disk. It might not have been downloaded. Exiting..."
+    if [ ! -f "${full_filepath}" ]; then
+      echo "##vso[task.logissue type=error]File ${full_filepath} not found on disk. It might not have been downloaded. Exiting..."
     fi
 
     # Check if the file already exists in blob storage
@@ -31,7 +32,7 @@ steps:
       exit 0
     fi
 
-    az storage blob upload --account-name "${{ parameters.accountName }}" --container-name "${{ parameters.containerName }}" --file "${{ parameters.file }}" --name "${{ parameters.uploadPath }}/${filename}"
+    az storage blob upload --account-name "${{ parameters.accountName }}" --container-name "${{ parameters.containerName }}" --file "${full_filepath}" --name "${{ parameters.uploadPath }}/${filename}"
 
     # Check if the uploaded file is reachable in the blob storage account
     file_blob_list=$(az storage blob list --account-name "${{ parameters.accountName }}" --container-name "${{ parameters.containerName }}" --prefix "${{ parameters.uploadPath }}/${filename}")
@@ -43,7 +44,6 @@ steps:
       echo "##vso[task.logissue type=error]More than one blob named ${filename} found in blob storage. Exiting..."
       exit 1
     fi
-  name: UploadToBlobStorageStep
   displayName: Upload To Blob Storage
   env:
     AZURE_STORAGE_KEY: ${{ parameters.azureStorageKey }}
