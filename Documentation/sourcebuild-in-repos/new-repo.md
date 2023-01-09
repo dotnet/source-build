@@ -330,7 +330,7 @@ the repo needs to be registered in the
 [`source-mappings.json` file](https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json)
 which tells the tooling where from and which sources should be synchronized.
 Please open a PR in [`dotnet/installer`](https://github.com/dotnet/installer)
-and add your repository into `src/SourceBuild/content/src/source-mappings.json`.
+and add your repository into `src/VirtualMonoRepo/source-mappings.json`.
 The name must match the name declared in the `SourceBuild` tag in
 `Version.Details.xml` created in the previous step.
 
