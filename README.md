@@ -21,7 +21,6 @@ To build .NET Core 3.1 from source, pick a specific Git tag from this repo with 
 
 * [`release/3.1`](https://github.com/dotnet/source-build/tree/release/3.1)
 
-
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
 ## Source-build goals
@@ -42,14 +41,16 @@ Source-build solves common challenges that most developers encounter when trying
 Starting with .NET 6, the core source-build infrastructure is integrated into the [dotnet/installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild) repo. The `main` branch on this repo now contains the tooling needed to build .NET's external dependencies from source.
 
 ## Comprehensive Guidelines
+
 This section provides detailed end-to-end guidelines on bootstrapping, building, packaging, and more, covering different scenarios for source-build.
-* [System Requirements]()
+
+* [System Requirements](Documentation/system-requirements.md)
 * [Quick Build Instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)
-* [Bootstrapping]()
+* [Bootstrapping](Documentation/bootstrapping-guidelines.md)
 * [Packaging](https://learn.microsoft.com/en-us/dotnet/core/distribution-packaging)
-* [Troubleshooting]()
 
 ## .NET in Linux Distributions
+
 | Distro | Package Feed | Maintainer |
 |---|---|---|
 | Alpine | [Community](https://pkgs.alpinelinux.org/packages?name=dotnet*&branch=v3.16&repo=&arch=&maintainer=) | [@ayakael](https://github.com/ayakael) |
@@ -59,7 +60,6 @@ This section provides detailed end-to-end guidelines on bootstrapping, building,
 | Homebrew | [Formula](https://formulae.brew.sh/formula/dotnet) | [@asbjornu](https://github.com/asbjornu) |
 | [Red Hat Enterprise Linux](https://developers.redhat.com/products/dotnet/overview) | [Default](https://access.redhat.com/documentation/en-us/net/6.0) | [@omajid](https://github.com/omajid) |
 | [Ubuntu](https://canonical.com/blog/install-dotnet-on-ubuntu) | [Default](https://packages.ubuntu.com/search?suite=default&section=all&arch=any&keywords=dotnet&searchon=names)<br>[Personal Package Archives](https://launchpad.net/ubuntu/+ppas?name_filter=dotnet) | [@mirespace](https://github.com/mirespace) |
-
 
 ## Support
 
