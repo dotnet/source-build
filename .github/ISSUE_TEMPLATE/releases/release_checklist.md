@@ -1,5 +1,5 @@
 <!--
-  .NET 6.0 Release Checklist
+  .NET 6.0+ Release Checklist
 
   To start the checklist for a new release:
   - Open a new issue in dotnet/release (private repo).
@@ -17,27 +17,30 @@
      - File issues appropriately as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
 1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline. When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
-     - [ ] When the pipeline finishes, look in the logs for the dotnet/installer commit sha that represents the final release.
-     - This pipeline automatically uploads the dotnet source tarball to dotnetclimsrc
-1. - [ ] Ensure the official installer and tarball builds have completed for the release's commit sha.
-     - [ ] [Tarball](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
-       - [ ] Ensure the PoisonTests and SdkContentTests are passing.  Warnings indicate a baseline diff and should be inspected carefully.
-1. - [ ] [Internal] Gather smoke-test prereqs ([automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
+     - This pipeline automatically uploads the dotnet source tarball to dotnetclimsrc and automatically pushes a branch to dnceng/security-partners-dotnet with the tarball contents.
+     - The `dotnet/installer` commit that represents the release will be in the logs for "Read Release Info"
+     - The `dotnet-installer-official-ci` and `dotnet-installer-source-build-tarball-build` pipeline will be linked in the logs for "Get Associated Pipeline Run IDs"
+        - [ ] Ensure the PoisonTests and SdkContentTests are passing.  Warnings indicate a baseline diff and should be inspected carefully.
+1. - [ ] Gather smoke-test prereqs ([automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
      - [ ] Retrieve smoke-test prereqs artifact for each architecture (e.g. x64 and arm64) from [tarball build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
        - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
        - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-     - [ ] Retrieve `microsoft.net.runtime.monoaotcompiler.task` package from internal MSFT feed. [Automation tracking issue](https://github.com/dotnet/source-build/issues/2774) for this step.
-     - [ ] Create new tarball of unique packages
-       - [ ] Extract x64 tarball
-       - [ ] Add `microsoft.net.runtime.monoaotcompiler.task` package to x64 packages
-       - [ ] Extact arm64 tarball
-       - [ ] Copy four `*linux-arm64*` packages to x64 packages
-       - [ ] Create new `dotnet-smoke-test-prereqs.6.0.xxx.tar.gz` tarball
-1. - [ ] [Internal] Upload smoke-test-prereqs tarball to dotnetclimsrc storage account.
-1. - [ ] Notify partners of release.  Include info about how certain we are that this will be the final Microsoft build.
-     - [Internal] Send the dotnetclimsrc tarball links to partners.
+     - [ ] Retrieve additional packages from internal MSFT feed using [this project](https://gist.github.com/lbussell/47a3953686c218ede865e305478df74a).
+     - [ ] Create a new tarball of unique packages using [this script](https://gist.github.com/lbussell/5789974491e3d3ed737aac0e8b97b594).
+     - [ ] Upload smoke-test-prereqs tarball to dotnetclimsrc storage account, following the pattern of previous releases for directory and filename.
          - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
-     - [Non-Internal] Send the dotnet/installer commit sha along w/link to publicly built source tarball.  Link to the public instructions for building source-build.
+1. - [ ] Update dotnet-security-partners
+     - [ ] Submit a PR to the appropriate `release/*` branch on [`dnceng/security-partners-dotnet`](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet). A branch was automatically created with the source-build-pre-release pipeline, you just have to submit the PR. ([automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3069))
+     - [ ] squash merge the PR once CI finishes successfully.
+1. - [ ] Run the [source-build-release-mirror](https://dev.azure.com/dnceng/internal/_build?definitionId=1221&_a=summary) pipeline
+     - **Important**: this pipeline should be ran only once per hand-off. It mirrors and tags all of the branches listed in the parameters of `source-build-release-mirror.yml`. If you need to mirror and tag only some branches/repos, you can edit the yaml object directly at pipeline queue time.
+     - **Important**: replace the `sdkVersion` with the new SDK version (e.g. 6.0.112) in the "mirrors" parameter for each branch.
+1. - [ ] Notify partners of release. Send one email for all releases ([automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
+     - links to MSRC work items in the dotnet-security-partners org, being careful not to disclose any vulnerable info in the email.
+     - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account.
+     - links to each release's dotnet-security-partners tag that was created with the source-build-release-mirror pipeline.
+     - the expected release date.
+     - information about how confident we are that this is the final release.
 1. - [ ] SYNC POINT: Wait for Microsoft build release.
 1. - [ ] Run the [source-build-release pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1124) (internal link).
      - Under Resources, select the same pipeline run of `Stage-DotNet` that was used in the `source-build-pre-release` pipeline. Leave the version of `dotnet/installer` alone, the pipeline will checkout the correct tag.
@@ -46,6 +49,7 @@
      - Click `Run` and wait for the pipeline to complete.
      - Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
           - If special edits to the announcement are needed, or the content of the announcement discussion is incorrect, source-build repo maintainers can edit the discussion directly once it is posted.
+          - [ ] 7.0 only: Fix the release notes link ([known issue](https://github.com/dotnet/source-build/issues/3178))
      - Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.
           - If there is an error in the PR, commit directly to the PR branch directly to fix the problem by hand, then submit an issue to [dotnet/source-build](https://github.com/dotnet/source-build).
 1. - [ ] Once the internal changes have been merged to the public GitHub repos, update the PoisonTests and SdkContentTests with any diffs from the tarball build in step 3.
