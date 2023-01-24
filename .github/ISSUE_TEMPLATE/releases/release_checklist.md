@@ -24,15 +24,16 @@
     - ⚠️ 6.0 / 7.0: This pipeline also uploads the dotnet source tarball to `dotnetclimsrc` with the tarball contents.
     - The `dotnet/installer` commit that represents the release will be in the logs for "Read Release Info"
     - The `Get Associated Pipeline Run IDs` build step will contain links to pipelines associated with this release:
-        - ⚠️ 6.0 / 7.0 - [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
-        - ⚠️ 8.0 - [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+        - ⚠️ 6.0 / 7.0: [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
+        - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+        - ⚠️ 8.0: The `dotnet/dotnet` commit that represents the release
     - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing.  Warnings indicate a baseline diff and should be inspected carefully.
 1. - [ ] Gather smoke-test prereqs ([automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
     - [ ] Retrieve smoke-test prereqs artifact for each architecture (
-        - [ ] ⚠️ 6.0 / 7.0 - [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
+        - [ ] ⚠️ 6.0 / 7.0: [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
             - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
             - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-        - [ ] ⚠️ 8.0 - [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+        - [ ] ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
             - [ ] x64 - `CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.tar.gz`
             - [ ] arm64 - `Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.tar.gz`
     - [ ] Retrieve additional packages from internal MSFT feed using [this project](https://gist.github.com/lbussell/47a3953686c218ede865e305478df74a).

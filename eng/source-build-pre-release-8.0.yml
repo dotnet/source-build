@@ -27,9 +27,9 @@ parameters:
 variables:
 - template: templates/variables/installer-pipelines.yml
 - name: sourceVmrUrl
-  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet'
+  value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
 - name: destVmrUrl
-  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet'
+  value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
 
 jobs:
 - job: SourceBuildPreRelease
@@ -46,19 +46,21 @@ jobs:
   - script: |
       set -euo pipefail
 
-      upstream_with_pat=$(echo $(destVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+      source_remote_with_pat=$(echo $(sourceVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+      dest_remote_with_pat=$(echo $(destVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
 
       args=()
       args+=(--releaseChannel $(ReleaseChannel))
       args+=(--sdkVersion $(SdkVersion))
-      args+=(--upstream ${upstream_with_pat})
-      args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz)
+      args+=(--source ${source_remote_with_pat})
+      args+=(--destination ${dest_remote_with_pat})
+      args+=(--sha $(DotnetDotnetSourceVersion))
 
       if [ ${{ parameters.isDryRun }} = True ]; then
         args+=(--isDryRun)
       fi
 
-      $(Build.SourcesDirectory)/eng/update-vmr.sh "${args[@]}"
+      $(Build.SourcesDirectory)/eng/mirror-vmrs.sh "${args[@]}"
     displayName: Update security-partners-dotnet
     env:
       AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)

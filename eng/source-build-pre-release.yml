@@ -93,7 +93,7 @@ jobs:
         args+=(--isDryRun)
       fi
 
-      $(Build.SourcesDirectory)/eng/update-vmr.sh "${args[@]}"
+      $(Build.SourcesDirectory)/eng/update-vmr-from-tarball.sh "${args[@]}"
     displayName: Update security-partners-dotnet
     env:
       AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)

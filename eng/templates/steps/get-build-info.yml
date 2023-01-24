@@ -72,20 +72,33 @@ steps:
         az config set extension.use_dynamic_install=yes_without_prompt
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
-          dotnet_dotnet_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(dotnetDotnetCiPipelineId)) --tags "installer-$(InstallerCommit)"
-          dotnet_dotnet_run_ids=$(echo $dotnet_dotnet_runs | jq -r '[.[] | { "result": .result, "id": .id }]')
-          num_build_runs=$(echo $dotnet_dotnet_run_ids | jq 'length')
+          dotnet_dotnet_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(dotnetDotnetCiPipelineId) --tags "installer-$(InstallerCommit)")
+          dotnet_dotnet_runs=$(echo $dotnet_dotnet_runs | jq -r '[.[] | { "result": .result, "id": .id, "sourceVersion": .sourceVersion }]')
+          num_build_runs=$(echo $dotnet_dotnet_runs | jq 'length')
 
           if [ "$num_build_runs" != "1" ]; then
             echo "##vso[task.logissue type=error]There are ${num_build_runs} runs of dotnet-dotnet tagged installer-$(InstallerCommit). Please manually specify run ID to use."
-            echo "##vso[task.logissue type=error]Run IDs are: ${dotnet_dotnet_run_ids}"
+            echo "##vso[task.logissue type=error]Run IDs are: ${dotnet_dotnet_runs}"
+            exit 1
+          fi
+
+          dotnet_dotnet_run_id=$(echo $dotnet_dotnet_runs | jq -r '.[0].id')
+          dotnet_dotnet_run_result=$(echo $dotnet_dotnet_runs | jq -r '.[0].result')
+          dotnet_dotnet_run_source_version=$(echo $dotnet_dotnet_runs | jq -r '.[0].sourceVersion')
+
+          if [[ "$dotnet_dotnet_run_result" == "failed" ]]; then
+            echo "##vso[task.logissue type=error]: dotnet-dotnet run ID ${dotnet_dotnet_run_id} failed. Please manually specify a tarball build ID to use instead. Exiting..."
             exit 1
           fi
 
           echo "dotnet-dotnet run ID: ${dotnet_dotnet_run_id}"
           echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${dotnet_dotnet_run_id}"
+          echo "  Released revision: ${dotnet_dotnet_run_source_version}"
+          echo "  Associated commit: https://dev.azure.com/dnceng/internal/_git/dotnet-dotnet/commit/${dotnet_dotnet_run_source_version}"
 
           echo "##vso[task.setvariable variable=DotnetDotnetRunId]${dotnet_dotnet_run_id}"
+          echo "##vso[task.setvariable variable=DotnetDotnetSourceVersion]${dotnet_dotnet_run_source_version}"
+
         else
           installer_official_runs=$(az pipelines runs list --organization $(azDoOrg) --project $(azDoProject) --pipeline-ids $(installerOfficialCiPipelineId))
           installer_official_run_ids=$(echo $installer_official_runs | jq -r '[.[] | select(.sourceVersion == "$(InstallerCommit)") | .id]')
@@ -112,7 +125,7 @@ steps:
           installer_tarball_build_run_id=$(echo $installer_tarball_build_run_ids | jq -r '.[0].id')
           installer_tarball_build_run_result=$(echo $installer_tarball_build_run_ids | jq -r '.[0].result')
 
-          if [[ ("$installer_tarball_build_run_result" == "failed") && "$(useSpecificPipelineRunIDs)" ]]; then
+          if [[ "$installer_tarball_build_run_result" == "failed" ]]; then
             echo "##vso[task.logissue type=error]: dotnet-installer-source-build-tarball-build run ID ${installer_tarball_build_run_id} failed. Please manually specify a tarball build ID to use instead. Exiting..."
             exit 1
           fi
