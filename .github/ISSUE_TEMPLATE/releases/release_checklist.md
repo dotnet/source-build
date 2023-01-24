@@ -16,7 +16,10 @@
     - There are other notes on servicing in this OneNote. It may be useful to review if something goes wrong to see if it's been fixed before.
     - File issues appropriately as you encounter problems, and link to them from the notes. Provide info in the issue rather than in the notes.
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
-1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline. When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
+1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline.
+    - ⚠️ 6.0 / 7.0: [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188)
+    - ⚠️ 8.0: [source-build-pre-release-8.0](https://dev.azure.com/dnceng/internal/_build?definitionId=[[[[[[[[[[[[ TODO ]]]]]]]]]]]]])
+    - When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
     - This pipeline automatically pushes a branch with the sources that are being released to [`dnceng/security-partners-dotnet`](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet).
     - ⚠️ 6.0 / 7.0: This pipeline also uploads the dotnet source tarball to `dotnetclimsrc` with the tarball contents.
     - The `dotnet/installer` commit that represents the release will be in the logs for "Read Release Info"

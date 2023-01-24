@@ -1,0 +1,64 @@
+trigger: none
+pr: none
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+resources:
+  pipelines:
+  - pipeline: dotnet-staging-pipeline-resource
+    source: Stage-DotNet
+
+parameters:
+  - name: useSpecificPipelineRunIDs
+    displayName: Use Specific Pipeline Run IDs
+    type: boolean
+    default: false
+  - name: dotnetDotnetRunID
+    displayName: dotnet-dotnet run ID
+    type: string
+    default: '200XXXX'
+  - name: isDryRun
+    displayName: Dry Run
+    type: boolean
+    default: false
+
+variables:
+- template: templates/variables/installer-pipelines.yml
+- name: sourceVmrUrl
+  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet'
+- name: destVmrUrl
+  value: 'https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet'
+
+jobs:
+- job: SourceBuildPreRelease
+  displayName: Source Build Pre-Release
+
+  steps:
+  - template: templates/steps/get-build-info.yml
+    parameters:
+      dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+      getAssociatedPipelineRuns: true
+      useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
+      dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
+  
+  - script: |
+      set -euo pipefail
+
+      upstream_with_pat=$(echo $(destVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+
+      args=()
+      args+=(--releaseChannel $(ReleaseChannel))
+      args+=(--sdkVersion $(SdkVersion))
+      args+=(--upstream ${upstream_with_pat})
+      args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz)
+
+      if [ ${{ parameters.isDryRun }} = True ]; then
+        args+=(--isDryRun)
+      fi
+
+      $(Build.SourcesDirectory)/eng/update-vmr.sh "${args[@]}"
+    displayName: Update security-partners-dotnet
+    env:
+      AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
