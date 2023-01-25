@@ -42,12 +42,12 @@ Starting with .NET 6, the core source-build infrastructure is integrated into th
 
 ## Comprehensive Guidelines
 
-This section provides detailed end-to-end guidelines on bootstrapping, building, packaging, and more, covering different scenarios for source-build.
+This section provides detailed guidelines on bootstrapping, building, packaging, and more for .NET SDK building from source.
 
-* [System Requirements](Documentation/system-requirements.md)
-* [Quick Build Instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)
-* [Bootstrapping](Documentation/bootstrapping-guidelines.md)
-* [Packaging](https://learn.microsoft.com/en-us/dotnet/core/distribution-packaging)
+* To build .NET SDK using source-build without interruptions and in a reasonable amount of time, [system requirements](Documentation/system-requirements.md) document provides recommendations on host machine and network requirements.
+* Refer [build instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) if looking for quick instructions guide. These instructions work for most of .NET SDK source-build scenarios.
+* If building for new major version or for new platform using source-build, refer [bootstrapping guidelines](Documentation/bootstrapping-guidelines.md) which provides recommendations on creation of bootstrapping SDK to build .NET from source.
+* package maintainers refer [packaging guidelines](https://learn.microsoft.com/dotnet/core/distribution-packaging) to have consistent packaging as that of Microsoft official packages and to avoid .NET packaging related issues.
 
 ## .NET in Linux Distributions
 

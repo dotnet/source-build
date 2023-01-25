@@ -1,6 +1,9 @@
-This document covers system requirements to build .NET SDK for targeted platform using source-build.
+# System Requirements to Source-Build
+
+This document provides recommendation on host system and network requirements to build .NET SDK for a targeted platform using source-build. Refer this to avoid interruptions while building SDK using source-build.  
 
 ## Network Requirement
+
 Acquiring .NET SDK source code ([Step 1](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)) takes ~1.5 GB of network transfer.  
 
 When building for new .NET version or new platform, you will need to get SDK and other toolset packages to create bootstrapping source-built SDK. This requires to run ([Step 2](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)), which takes 4 GB of network transfer for .NET 6.0 and 1.2 GB for .NET 7.0.
