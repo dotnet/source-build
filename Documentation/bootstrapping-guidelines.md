@@ -8,15 +8,15 @@ Check out quick [instructions](https://github.com/dotnet/installer/blob/main/REA
 
 Building New .NET Version is two stage process:  
 
-**Stage 1:**  
+**Stage 1:**
 Build bootstrapping .NET SDK and toolset for the targeted platform.
 
 - prep.sh (args???)  
  This downloads platform-native version of .NET SDK and toolset. So if you are building on x64 machine, you get x64.
-- build.sh (args???)  
+- build.sh (args???)
 Create source built .NET SDK
 
-**Stage 2:**  
+**Stage 2:**
 Use source built .NET SDK created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
 
 - Build.sh (Args - path to the source built SDK?????)
@@ -35,12 +35,12 @@ To build .NET SDK from source -
 [List](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16) of Linux distribution officially building and testing using source-build.  
 Community building .NET for the [following](https://github.com/dotnet/source-build#net-in-linux-distributions) linux distributions.
 
-**Supported RIDs**  
+**Supported RIDs**
 You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
 Follow this two stage build process:
 
-**Stage 1:**  
+**Stage 1:**
 Build bootstrapping .NET SDK and toolset.
 
 - prep.sh (args???)  
@@ -48,7 +48,7 @@ Build bootstrapping .NET SDK and toolset.
 - build.sh (args???)  
 Create source built .NET SDK.
 
-**Stage 2:**  
+**Stage 2:**
 Use source built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
 
 - Build.sh (Args?????)
@@ -64,7 +64,7 @@ Build bootstrapping .NET SDK and toolset.
 
 - prep.sh (args???)  
  Downloads platform-native version of .NET SDK and toolset. So if you are building on x64 you get x64.
-- build.sh (args???)  
+- build.sh (args???)
 Create source built .NET SDK which will be utilized to bootstrap in stage 2.
 
 **Stage 2:**
@@ -73,7 +73,7 @@ Use source built .NET SDK and toolset created in stage 1 to build .NET SDK from 
 - Build.sh (Arg?????)
 [UPDATE THE RID GRAPH???]
 
-**If no compatible OS/platform found**  
+**If no compatible OS/platform found**
 In stage 1, create portable SDK (this step works for .NET 6, but not for .NET 7). [Define the steps in here???]
 
 ## Building for New Architecture (Supported, RID Existing)
@@ -82,10 +82,10 @@ In stage 1, create portable SDK (this step works for .NET 6, but not for .NET 7)
 Officially building and testing for the following architectures - x64, Arm64  
 Community building for following architectures - x64, Arm64, S390, Arm32, IBM Z
 
-**Supported RIDs**  
+**Supported RIDs**
 You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
-To build for new supported platform, follow this two stage build process:  
+To build for new supported platform, follow this two stage build process:
 
 **Stage 1:**
 Build bootstrapping .NET SDK and toolset.
@@ -107,7 +107,7 @@ Use source built .NET SDK and toolset created in stage 1 to build .NET SDK from 
 **RIDs**  
 The RID graph or runtime fallback graph is a list of RIDs that are compatible with each other. You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
-Approach 1: Building for unsupported architectures require cross-compilaton on the supported  paltform. Determine the compatible host to build which provides cross-compilation toolchain.
+Approach 1: Building for unsupported architectures require cross-compilaton on the supported paltform. Determine the compatible host to build which provides cross-compilation toolchain.
 
 Approach 2:
 The alternative to this is to support creating a bootstrap SDK directly on the target platform by combining: pre-compiled managed bits, with native assets that are built directly on the platform.

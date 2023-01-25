@@ -5,8 +5,10 @@ arcade powered source build (ArPow).
 
 1. [Source Build Configuration](#source-build-configuration)
 1. [Setup CI](#setup-ci)
-1. [Add Downstream Dependency](#add-downstream-dependency)
-1. [Validate](##validate)
+1. [Incorporate the new repo into the Source-Build dependency tree](#incorporate-the-new-repo-into-the-source-build-dependency-tree)
+1. [Source build repos and the VMR](#source-build-repos-and-the-vmr)
+1. [Validate](#validate)
+1. [Additional resources](#additional-resources)
 
 ## Source Build Configuration
 
@@ -302,26 +304,56 @@ will detect and publish.
 
 [intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
 
-## Add Downstream Dependency
+## Incorporate the new repo into the Source-Build dependency tree
 
-The graph defined by `eng/Version.Details.xml` defines what is included
-in source build. This dependency graph starts at
+Once your repo can be source-built, it is time to register it into the
+Source-Build dependency tree. The graph of the product is defined by the
+`eng/Version.Details.xml` files. This dependency graph starts at
 [dotnet/installer](https://github.com/dotnet/installer/blob/main/eng/Version.Details.xml).
-The .NET source build insfrastructure walks this graph and determines
-the full set of repos to build. Source build will only build one copy/commit
-of each repo (the first commit found in the dependency graph). Therefore,
-when adding a new repositories, a dependency must be created within the
-`eng/Version.Details.xml` graph. To do this, go to the repo which depends on
-the new repo and add a
-[new source build dependency](#engversiondetailsxml) to the new source build
-repo.
+The dependendecies of repos declared in these files are walked and the
+first copy/commit of each repo found in the dependency graph is used.
+
+Therefore, when adding new repositories, a dependency must be created within
+the `eng/Version.Details.xml` graph. To do this, **go to the repo which depends
+on the new repo and add a [new source build dependency](#engversiondetailsxml)
+to the new source build repo**.
+
+## Source build repos and the VMR
+
+Another effect of adding a new source build repository is that its sources
+will be synchronized into the [Virtual Monolithic Repository of .NET](https://github.com/dotnet/dotnet).
+The VMR is then where the official Source-Build happens from. The sources
+are synchronized once the associated commit/package flows into `dotnet/installer`.
+
+In order for the sources of the new repo to by synchronized into the VMR,
+the repo needs to be registered in the
+[`source-mappings.json` file](https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json)
+which tells the tooling where from and which sources should be synchronized.
+Please open a PR in [`dotnet/installer`](https://github.com/dotnet/installer)
+and add your repository into `src/VirtualMonoRepo/source-mappings.json`.
+The name must match the name declared in the `SourceBuild` tag in
+`Version.Details.xml` created in the previous step.
+
+### Cloaking (filtering) the repository sources
+
+When creating the `source-mappings.json` record for the new repo, there is
+a possibility of filtering which sources get synchronized into the VMR.
+The VMR should only really contain plain text-based files as it is consumed
+by 3rd party .NET distro builders who do not accept any non-text sources
+(e.g. binaries). When registering the repository into the VMR, it is a good
+time to consider which files are required for it to build and only synchronize
+those. Commonly, repositories contain binaries that are required for testing
+or similar purposes. Files like these should not be synchronized into the VMR.
+Another common scenario is that the repo has multiple products/ship vehicles
+and only a subset is needed for the source-built .NET scenario.
 
 ## Validate
 
 Once the downstream dependency(s) are added to the new repo and those changes
-flow into `dotnet/installer`, a complete .NET source tarball can be built.
-This will validate that no prebuilts were added to the system and everything
-is functioning correctly. Please notify
+flow into `dotnet/installer`, a complete .NET product can be built from source.
+The repository will be synchronized into the VMR during the first build and the
+VMR will be built. This will validate that no prebuilts were added to the system
+and everything is functioning correctly. Please notify
 [@source-build-internal](https://github.com/orgs/dotnet/teams/source-build-internal)
 to be on the lookout for the new repo and they will validate as necessary.
 

@@ -10,21 +10,52 @@ When building for new .NET version or new platform, you will need to get SDK and
 
 ## Operating System
 
-**Linux**  
-Source-build is supported on Linux. [Here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md) is the toolchain required to build on Linux. To get Linux distribution specific toolchain [refer](https://github.com/dotnet/dotnet-buildtools-prereqs-docker/tree/main/src).  
+### Linux
 
-[List](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16) of Linux distribution officially building and testing using source-build.  
-Community building .NET for [following](https://github.com/dotnet/source-build#net-in-linux-distributions) linux distributions.  
+Refer to the [requirements](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md) for building on Linux. You may use one of our [preconfigured container images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker).
 
-**Windows/MacOS**  
-Windows and MacOS are not yet supported. Issues tracking [Windows](https://github.com/dotnet/source-build/issues/2910) and [MacOS](https://github.com/dotnet/source-build/issues/2909).
+Additional links:
+
+* [distros source building .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
+
+### MacOS
+
+MacOS is not currently supported. [Tracking Issue](https://github.com/dotnet/source-build/issues/2909)
+
+### Windows
+
+Windows is not currently supported. [Tracking Issue](https://github.com/dotnet/source-build/issues/2910)
 
 ## Hardware
 
-**Disk Space/Memory**  
-Inflating to a repository can consume ~600 MB. A build of .NET SDK product can take ~80 GB of space for a single OS and Platform configuration. This might increase over time, so consider this to be a minimum bar.
-Consider the system with the minimum of 8 GB memory to source-build.
+### Disk Space
 
-**Architecture Supported**  
-Officially building and testing for following architectures - x64, Arm64  
-Community building for following architectures - x64, Arm64, S390, Arm32, IBM Z
+80 GB of space is required for a typical build. You can reduced this down to ~30 GB if you build with the ``clean-while-building` option. This might increase over time, so consider this to be a minimum bar.
+
+### Memory
+
+A minimum of 8 GB of memory is recommended.
+
+### Architectures
+
+#### Officially Supported
+
+* arm64
+* x64
+
+#### Community Supported
+
+* arm32
+* s390
+* IBM Z
+
+## Network
+
+The following assets will need to be downloaded in order to build.
+
+* Source: 525 GB
+* SDK: 230 MB
+* Artifacts
+  * .NET 8.0: 1 GB
+  * .NET 7.0: 1.2 GB
+  * .NET 6.0: 4 GB
