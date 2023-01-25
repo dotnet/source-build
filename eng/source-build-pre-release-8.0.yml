@@ -12,24 +12,16 @@ resources:
 
 parameters:
   - name: useSpecificPipelineRunIDs
-    displayName: Use Specific Pipeline Run IDs
+    displayName: Use specific pipeline run IDs
     type: boolean
     default: false
   - name: dotnetDotnetRunID
-    displayName: dotnet-dotnet run ID
+    displayName: Specific dotnet-dotnet run ID
     type: string
     default: '200XXXX'
-  - name: isDryRun
-    displayName: Dry Run
-    type: boolean
-    default: false
 
 variables:
 - template: templates/variables/installer-pipelines.yml
-- name: sourceVmrUrl
-  value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
-- name: destVmrUrl
-  value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
 
 jobs:
 - job: SourceBuildPreRelease
@@ -42,25 +34,3 @@ jobs:
       getAssociatedPipelineRuns: true
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
-  
-  - script: |
-      set -euo pipefail
-
-      source_remote_with_pat=$(echo $(sourceVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
-      dest_remote_with_pat=$(echo $(destVmrUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
-
-      args=()
-      args+=(--releaseChannel $(ReleaseChannel))
-      args+=(--sdkVersion $(SdkVersion))
-      args+=(--source ${source_remote_with_pat})
-      args+=(--destination ${dest_remote_with_pat})
-      args+=(--sha $(DotnetDotnetSourceVersion))
-
-      if [ ${{ parameters.isDryRun }} = True ]; then
-        args+=(--isDryRun)
-      fi
-
-      $(Build.SourcesDirectory)/eng/mirror-vmrs.sh "${args[@]}"
-    displayName: Update security-partners-dotnet
-    env:
-      AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
