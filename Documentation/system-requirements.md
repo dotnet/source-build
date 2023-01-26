@@ -30,7 +30,7 @@ Windows is not currently supported. [Tracking Issue](https://github.com/dotnet/s
 
 ### Disk Space
 
-80 GB of space is required for a typical build. You can reduced this down to ~30 GB if you build with the ``clean-while-building` option. This might increase over time, so consider this to be a minimum bar.
+80 GB of space is required for a typical build. You can reduced this down to ~30 GB if you build with the `clean-while-building` option. This might increase over time, so consider this to be a minimum bar.
 
 ### Memory
 
@@ -40,14 +40,14 @@ A minimum of 8 GB of memory is recommended.
 
 #### Officially Supported
 
-* arm64
+* ARM64
 * x64
 
 #### Community Supported
 
-* arm32
-* s390
-* IBM Z
+* ARM32
+* s390x
+* ppc64le
 
 ## Network
 
