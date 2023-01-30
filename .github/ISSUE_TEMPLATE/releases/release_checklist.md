@@ -18,7 +18,7 @@
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
 1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline.
     - ⚠️ 6.0 / 7.0: [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188)
-    - ⚠️ 8.0: [source-build-pre-release-8.0](https://dev.azure.com/dnceng/internal/_build?definitionId=[[[[[[[[[[[[ TODO ]]]]]]]]]]]]])
+    - ⚠️ 8.0: [source-build-pre-release-8.0](https://dev.azure.com/dnceng/internal/_build?definitionId=TODO)
     - When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
     - This pipeline automatically pushes a branch with the sources that are being released to [`dnceng/security-partners-dotnet`](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet).
     - ⚠️ 6.0 / 7.0: This pipeline also uploads the dotnet source tarball to `dotnetclimsrc` with the tarball contents.
@@ -29,7 +29,7 @@
         - ⚠️ 8.0: The `dotnet/dotnet` commit that represents the release
     - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing.  Warnings indicate a baseline diff and should be inspected carefully.
 1. - [ ] Gather smoke-test prereqs ([🔁 automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
-    - [ ] Retrieve smoke-test prereqs artifact for each architecture (
+    - [ ] Retrieve smoke-test prereqs artifact for each architecture
         - [ ] ⚠️ 6.0 / 7.0: [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
             - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
             - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
