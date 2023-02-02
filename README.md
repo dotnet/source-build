@@ -36,7 +36,7 @@ There are two primary goals of the source-build effort:
 
    - Limited or no network access
    - Consistent reproducibility
-   - Source code for everything.
+   - Source code for everything
 
 2. Make maintenance of the .NET product easier
 
