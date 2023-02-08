@@ -18,7 +18,7 @@
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
 1. - [ ] Run the [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188) pipeline.
     - ⚠️ 6.0 / 7.0: [source-build-pre-release](https://dev.azure.com/dnceng/internal/_build?definitionId=1188)
-    - ⚠️ 8.0: [source-build-pre-release-8.0](https://dev.azure.com/dnceng/internal/_build?definitionId=TODO)
+    - ⚠️ 8.0: [source-build-pre-release-8.0](https://dev.azure.com/dnceng/internal/_build?definitionId=1227)
     - When staging the pipeline run, click "Resources" and select the final run of Stage-DotNet mentioned above.
     - This pipeline automatically pushes a branch with the sources that are being released to [`dnceng/security-partners-dotnet`](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet).
     - ⚠️ 6.0 / 7.0: This pipeline also uploads the dotnet source tarball to `dotnetclimsrc` with the tarball contents.
