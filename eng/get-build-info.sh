@@ -29,13 +29,13 @@ function get_build_run () {
     fi
 
     run_id=$(echo "$runs" | jq -r '.[0].id')
-    run_result=$(echo "$runs" | jq -r '.[0].result')
     run_source_version=$(echo "$runs" | jq -r '.[0].sourceVersion')
 
-    if [[ "$run_result" == "failed" ]]; then
-        echo "##vso[task.logissue type=error]: ${pipeline_name} run ID ${run_id} failed. Please manually specify a build ID to use instead. Exiting..."
-        exit 1
-    fi
+    # run_result=$(echo "$runs" | jq -r '.[0].result')
+    # if [[ "$run_result" == "failed" ]]; then
+    #     echo "##vso[task.logissue type=error]: ${pipeline_name} run ID ${run_id} failed. Please manually specify a build ID to use instead. Exiting..."
+    #     exit 1
+    # fi
 
     echo "${run_id} ${run_source_version}"
 }
@@ -62,6 +62,12 @@ function get_build_info () {
     local tag="$6"
 
     IFS=' '
-    read -r run_id source_version<<<"$(get_build "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$tag")"
+    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$tag")
+    if [[ $? != "0" ]]; then
+        echo "$run_info"
+        exit 1
+    fi
+
+    read -r run_id source_version<<<"$run_info"
     print_build_info "$pipeline_name" "$pipeline_variable_name" "$run_id" "$source_version"
 }

@@ -32,7 +32,7 @@ steps:
   displayName: Download Release Config
 
 - script: |
-    set -xeuo pipefail
+    set -euo pipefail
 
     manifest_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/manifests/manifest.json
     config_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/drop/config.json
@@ -71,7 +71,7 @@ steps:
 - ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
   - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
     - script: |
-        set -xeuo pipefail
+        set -euo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
@@ -87,7 +87,7 @@ steps:
 
   - ${{ else }}:
     - script: |
-        set -xeuo pipefail
+        set -euo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
