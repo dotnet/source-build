@@ -11,14 +11,17 @@ resources:
     source: Stage-DotNet-Test
 
 parameters:
-  - name: useSpecificPipelineRunIDs
-    displayName: Use specific pipeline run IDs
-    type: boolean
-    default: false
-  - name: dotnetDotnetRunID
-    displayName: Specific dotnet-dotnet run ID
-    type: string
-    default: '200XXXX'
+- name: useSpecificPipelineRunIDs
+  displayName: Use specific pipeline run IDs
+  type: boolean
+  default: false
+- name: dotnetDotnetRunID
+  displayName: Specific dotnet-dotnet run ID
+  type: string
+  default: '200XXXX'
+- name: releaseBranchName
+  displayName: Release branch name without the refs/heads prefix. For example, release/7.0.1xx or release/8.0.1xx-preview1
+  type: string
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -34,3 +37,4 @@ jobs:
       getAssociatedPipelineRuns: true
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
+      releaseBranchName: ${{ parameters.releaseBranchName }}

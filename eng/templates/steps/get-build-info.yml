@@ -1,36 +1,38 @@
 parameters:
-  - name: dotnetStagingPipelineResource
-    type: string
-    default: ''
-  - name: getAssociatedPipelineRuns
-    type: boolean
-    default: false
-  - name: useSpecificPipelineRunIDs
-    type: boolean
-    default: false
-  - name: dotnetInstallerOfficialRunID
-    type: string
-    default: ''
-  - name: dotnetInstallerTarballBuildRunID
-    type: string
-    default: ''
-  - name: dotnetDotnetRunID
-    type: string
-    default: ''
+- name: dotnetStagingPipelineResource
+  type: string
+  default: ''
+- name: getAssociatedPipelineRuns
+  type: boolean
+  default: false
+- name: useSpecificPipelineRunIDs
+  type: boolean
+  default: false
+- name: dotnetInstallerOfficialRunID
+  type: string
+  default: ''
+- name: dotnetInstallerTarballBuildRunID
+  type: string
+  default: ''
+- name: dotnetDotnetRunID
+  type: string
+  default: ''
+- name: releaseBranchName
+  type: string
 
 steps:
 - download: ${{ parameters.dotnetStagingPipelineResource }}
   artifact: manifests
-  patterns: 'manifest.json'
+  patterns: manifest.json
   displayName: Download Release Manifest
 
 - download: ${{ parameters.dotnetStagingPipelineResource }}
   artifact: drop
-  patterns: 'config.json'
+  patterns: config.json
   displayName: Download Release Config
 
 - script: |
-    set -euo pipefail
+    set -xeuo pipefail
 
     manifest_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/manifests/manifest.json
     config_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/drop/config.json
@@ -38,18 +40,19 @@ steps:
     runtime_version="$(jq -r '.Runtime' $config_path)"
     release_channel="$(jq -r '.Channel' $config_path)"
 
-    # Source-build only supports the lowest avaiable feature band.
+    # Source-build only supports the lowest available feature band.
     # Sort the SDK releases by number and pick the lowest value.
-    sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(tonumber)) | .[0]' $config_path)"
+    # We also need to remove the label from the version such as '-preview', '-rc1'...
+    sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(sub("-[a-z0-9]+"; "")) | map(tonumber)) | .[0]' $config_path)"
 
-    # replace the last two characters in sdk_version with xx
-    branch_version=$(echo $sdk_version | sed 's/..$/xx/')
-    branch_name="refs/heads/internal/release/${branch_version}"
-
-    commit=$(jq -r --arg BRANCH "${branch_name}" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
+    branch_name="${{ parameters.releaseBranchName }}"
+    if [[ ! "$branch_name" =~ ^refs/heads/ ]]; then
+      branch_name="refs/heads/$branch_name"
+    fi
+    commit=$(jq -r --arg BRANCH "$branch_name" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer" or .repo == "https://github.com/dotnet/installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
 
     if [[ ! $commit ]]; then
-      echo "##vso[task.logissue type=error]Installer commit not set. Exiting..."
+      echo "##vso[task.logissue type=error]Installer build on a commit for branch $branch_name not found. Exiting..."
       exit 1
     fi
 
@@ -68,7 +71,7 @@ steps:
 - ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
   - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
     - script: |
-        set -euo pipefail
+        set -xeuo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
@@ -84,7 +87,7 @@ steps:
 
   - ${{ else }}:
     - script: |
-        set -euo pipefail
+        set -xeuo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
