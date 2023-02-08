@@ -48,9 +48,6 @@ parameters:
   displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
   type: boolean
   default: false
-- name: releaseBranchName
-  displayName: Release branch name without the refs/heads prefix. For example, internal/release/7.0.1xx or release/8.0.1xx-preview1
-  type: string
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -90,7 +87,6 @@ jobs:
     parameters:
       dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: false
-      releaseBranchName: ${{ parameters.releaseBranchName }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
@@ -176,7 +172,6 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
       dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
-      releaseBranchName: ${{ parameters.releaseBranchName }}
 
   - template: templates/steps/validate-tag.yml
     parameters:

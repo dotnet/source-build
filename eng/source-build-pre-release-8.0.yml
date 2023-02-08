@@ -20,8 +20,9 @@ parameters:
   type: string
   default: '200XXXX'
 - name: releaseBranchName
-  displayName: Release branch name without the refs/heads prefix. For example, internal/release/7.0.1xx or release/8.0.1xx-preview1
+  displayName: '[Preview releases only] Release branch name, for example release/8.0.1xx-preview1'
   type: string
+  default: ' '
 
 variables:
 - template: templates/variables/installer-pipelines.yml

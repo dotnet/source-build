@@ -19,6 +19,7 @@ parameters:
   default: ''
 - name: releaseBranchName
   type: string
+  default: ''
 
 steps:
 - download: ${{ parameters.dotnetStagingPipelineResource }}
@@ -42,13 +43,22 @@ steps:
 
     # Source-build only supports the lowest available feature band.
     # Sort the SDK releases by number and pick the lowest value.
-    # We also need to remove the label from the version such as '-preview', '-rc1'...
+    # We also need to remove the preview label from the version
     sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(sub("-[a-z0-9]+"; "")) | map(tonumber)) | .[0]' $config_path)"
 
-    branch_name="${{ parameters.releaseBranchName }}"
+    # Trim whitespace as the default is a space
+    branch_name=`echo "${{ parameters.releaseBranchName }}" | sed 's/ *//g'`
+    if [ -z "$branch_name" ]; then
+      # For non-preview releases, the branch name can be determined from the SDK version
+      # Replace the last two characters in sdk_version with xx
+      branch_version=$(echo $sdk_version | sed 's/..$/xx/')
+      branch_name="refs/heads/internal/release/${branch_version}"
+    fi
+
     if [[ ! "$branch_name" =~ ^refs/heads/ ]]; then
       branch_name="refs/heads/$branch_name"
     fi
+
     commit=$(jq -r --arg BRANCH "$branch_name" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer" or .repo == "https://github.com/dotnet/installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
 
     if [[ ! $commit ]]; then
