@@ -16,38 +16,41 @@ resources:
     name: dotnet/installer
 
 parameters:
-  - name: createReleaseAnnouncement
-    displayName:  Create Release Announcement
-    type: boolean
-    default: true
-  - name: submitReleasePR
-    displayName: Submit Release PR
-    type: boolean
-    default: true
-  - name: useCustomTag
-    displayName: Use custom tag?
-    type: boolean
-    default: false
-  - name: customTag
-    displayName: Installer custom tag
-    type: string
-    default: v6.0.XYY-source-build
-  - name: useSpecificPipelineRunIDs
-    displayName: Use Specific Pipeline Run IDs
-    type: boolean
-    default: false
-  - name: dotnetInstallerOfficialRunID
-    displayName: dotnet-installer-official-ci run ID
-    type: string
-    default: '200XXXX'
-  - name: dotnetInstallerTarballBuildRunID
-    displayName: dotnet-installer-source-build-tarball-build run ID
-    type: string
-    default: '200XXXX'
-  - name: isDryRun
-    displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
-    type: boolean
-    default: false
+- name: createReleaseAnnouncement
+  displayName:  Create Release Announcement
+  type: boolean
+  default: true
+- name: submitReleasePR
+  displayName: Submit Release PR
+  type: boolean
+  default: true
+- name: useCustomTag
+  displayName: Use custom tag?
+  type: boolean
+  default: false
+- name: customTag
+  displayName: Installer custom tag
+  type: string
+  default: v6.0.XYY-source-build
+- name: useSpecificPipelineRunIDs
+  displayName: Use Specific Pipeline Run IDs
+  type: boolean
+  default: false
+- name: dotnetInstallerOfficialRunID
+  displayName: dotnet-installer-official-ci run ID
+  type: string
+  default: '200XXXX'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: dotnet-installer-source-build-tarball-build run ID
+  type: string
+  default: '200XXXX'
+- name: isDryRun
+  displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
+  type: boolean
+  default: false
+- name: releaseBranchName
+  displayName: Release branch name without the refs/heads prefix. For example, internal/release/7.0.1xx or release/8.0.1xx-preview1
+  type: string
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -87,6 +90,7 @@ jobs:
     parameters:
       dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: false
+      releaseBranchName: ${{ parameters.releaseBranchName }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
@@ -172,6 +176,7 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
       dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+      releaseBranchName: ${{ parameters.releaseBranchName }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
