@@ -33,12 +33,13 @@ function get_build_run () {
 
     run_id=$(echo "$runs" | jq -r '.[0].id')
     run_source_version=$(echo "$runs" | jq -r '.[0].sourceVersion')
-    set -x
 
     if [[ "$check_build_status" == "True" ]]; then
         run_result=$(echo "$runs" | jq -r '.[0].result')
         if [[ "$run_result" == "failed" ]]; then
+            set -x
             echo "##vso[task.logissue type=error]: ${pipeline_name} run ID ${run_id} failed. Please manually specify a build ID to use instead. Exiting..."
+            set +x
             exit 1
         fi
     fi
