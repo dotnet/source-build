@@ -83,7 +83,7 @@ steps:
 - ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
   - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
     - script: |
-        set -euo pipefail
+        set -xeuo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
@@ -99,7 +99,7 @@ steps:
 
   - ${{ else }}:
     - script: |
-        set -euo pipefail
+        set -xeuo pipefail
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then

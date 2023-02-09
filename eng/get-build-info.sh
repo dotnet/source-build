@@ -8,7 +8,9 @@ function get_build_run () {
     local azdo_org="$3"
     local azdo_project="$4"
     local check_build_status="$5"
+    set +u # tag is optional
     local tag="$6"
+    set -u
 
     if [[ -n "$tag" ]]; then
         build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$tag")
@@ -62,10 +64,13 @@ function get_build_info () {
     local pipeline_id="$3"
     local pipeline_name="$4"
     local pipeline_variable_name="$5"
-    local tag="$6"
+    local check_build_status="$6"
+    set +u # tag is optional
+    local tag="$7"
+    set -u
 
     IFS=' '
-    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$tag")
+    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$tag")
     if [[ $? != "0" ]]; then
         echo "$run_info"
         exit 1
