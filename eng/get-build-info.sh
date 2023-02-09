@@ -33,6 +33,7 @@ function get_build_run () {
 
     run_id=$(echo "$runs" | jq -r '.[0].id')
     run_source_version=$(echo "$runs" | jq -r '.[0].sourceVersion')
+    set -x
 
     if [[ "$check_build_status" == "True" ]]; then
         run_result=$(echo "$runs" | jq -r '.[0].result')
