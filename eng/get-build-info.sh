@@ -7,7 +7,8 @@ function get_build_run () {
     local pipeline_name="$2"
     local azdo_org="$3"
     local azdo_project="$4"
-    local tag="$5"
+    local check_build_status="$5"
+    local tag="$6"
 
     if [[ -n "$tag" ]]; then
         build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$tag")
@@ -31,11 +32,13 @@ function get_build_run () {
     run_id=$(echo "$runs" | jq -r '.[0].id')
     run_source_version=$(echo "$runs" | jq -r '.[0].sourceVersion')
 
-    # run_result=$(echo "$runs" | jq -r '.[0].result')
-    # if [[ "$run_result" == "failed" ]]; then
-    #     echo "##vso[task.logissue type=error]: ${pipeline_name} run ID ${run_id} failed. Please manually specify a build ID to use instead. Exiting..."
-    #     exit 1
-    # fi
+    if [[ "$check_build_status" == "true" ]]; then
+        run_result=$(echo "$runs" | jq -r '.[0].result')
+        if [[ "$run_result" == "failed" ]]; then
+            echo "##vso[task.logissue type=error]: ${pipeline_name} run ID ${run_id} failed. Please manually specify a build ID to use instead. Exiting..."
+            exit 1
+        fi
+    fi
 
     echo "${run_id} ${run_source_version}"
 }

@@ -48,6 +48,10 @@ parameters:
   displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
   type: boolean
   default: false
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -87,6 +91,7 @@ jobs:
     parameters:
       dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: false
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
@@ -172,6 +177,7 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
       dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
 
   - template: templates/steps/validate-tag.yml
     parameters:

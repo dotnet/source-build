@@ -20,6 +20,8 @@ parameters:
 - name: releaseBranchName
   type: string
   default: ''
+- name: verifyBuildSuccess
+  type: boolean
 
 steps:
 - download: ${{ parameters.dotnetStagingPipelineResource }}
@@ -85,10 +87,10 @@ steps:
         source eng/get-build-info.sh
 
         if [[ "$(ReleaseChannel)" == "8.0" ]]; then
-            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(dotnetDotnetCiPipelineId)" dotnet-dotnet DotnetDotnetRunId "installer-$(InstallerCommit)"
+            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(dotnetDotnetCiPipelineId)" dotnet-dotnet DotnetDotnetRunId "${{ parameters.verifyBuildSuccess }}" "installer-$(InstallerCommit)"
         else
-            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerOfficialCiPipelineId)" dotnet-installer-official-ci InstallerOfficialRunId
-            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerTarballBuildCiPipelineId)" dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId
+            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerOfficialCiPipelineId)" dotnet-installer-official-ci InstallerOfficialRunId "${{ parameters.verifyBuildSuccess }}"
+            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerTarballBuildCiPipelineId)" dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "${{ parameters.verifyBuildSuccess }}"
         fi
       name: GetAssociatedPipelineRunsStep
       displayName: Get Associated Pipeline Run IDs

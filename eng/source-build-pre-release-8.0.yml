@@ -23,6 +23,10 @@ parameters:
   displayName: '[Preview releases only] Release branch name, for example release/8.0.1xx-preview1'
   type: string
   default: ' '
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -39,3 +43,4 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
       releaseBranchName: ${{ parameters.releaseBranchName }}
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
