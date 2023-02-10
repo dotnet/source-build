@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)/restored/</RestorePackagesPath>
+    <PackageVersionToDownload>6.0.0</PackageVersionToDownload>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NET.Runtime.Emscripten.2.0.23.Node.linux-x64" Version="[$(PackageVersionToDownload)]" Condition="$(PackageVersionToDownload.StartsWith('6.0'))" />
+    <PackageDownload Include="Microsoft.NET.Runtime.Emscripten.2.0.23.Sdk.linux-x64" Version="[$(PackageVersionToDownload)]" Condition="$(PackageVersionToDownload.StartsWith('6.0'))" />
+    <PackageDownload Include="Microsoft.NET.Runtime.Emscripten.3.1.12.Node.linux-x64" Version="[$(PackageVersionToDownload)]" Condition="$(PackageVersionToDownload.StartsWith('7.0'))" />
+    <PackageDownload Include="Microsoft.NET.Runtime.Emscripten.3.1.12.Sdk.linux-x64" Version="[$(PackageVersionToDownload)]" Condition="$(PackageVersionToDownload.StartsWith('7.0'))" />
+    <PackageDownload Include="Microsoft.NET.Runtime.MonoAOTCompiler.Task" Version="[$(PackageVersionToDownload)]" />
+    <PackageDownload Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="[$(PackageVersionToDownload)]" />
+    <PackageDownload Include="Microsoft.NET.Runtime.WebAssembly.Sdk" Version="[$(PackageVersionToDownload)]" />
+    <PackageDownload Include="Microsoft.NETCore.App.Runtime.AOT.linux-x64.Cross.browser-wasm" Version="[$(PackageVersionToDownload)]" />
+    <PackageDownload Include="microsoft.netcore.app.runtime.mono.browser-wasm" Version="[$(PackageVersionToDownload)]" />
+  </ItemGroup>
+
+</Project>
