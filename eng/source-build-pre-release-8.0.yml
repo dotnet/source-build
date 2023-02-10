@@ -30,6 +30,9 @@ parameters:
 
 variables:
 - template: templates/variables/installer-pipelines.yml
+# we strip spaces as the default value for releaseBranchName has a space to make it non-required
+- name: ReleaseBranchName
+  value: ${{ replace(parameters.releaseBranchName, ' ', '') }}
 
 jobs:
 - job: SourceBuildPreRelease
@@ -42,5 +45,5 @@ jobs:
       getAssociatedPipelineRuns: true
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
-      releaseBranchName: ${{ parameters.releaseBranchName }}
+      releaseBranchName: ${{ variables.ReleaseBranchName }}
       verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}

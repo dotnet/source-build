@@ -48,8 +48,7 @@ steps:
     # We also need to remove the preview label from the version
     sdk_version="$(jq -r '.Sdks | sort_by(. | split(".") | map(sub("-[a-z0-9]+"; "")) | map(tonumber)) | .[0]' $config_path)"
 
-    # Trim whitespace as the default is a space
-    branch_name=`echo "${{ parameters.releaseBranchName }}" | sed 's/ *//g'`
+    branch_name="${{ parameters.releaseBranchName }}"
     if [ -z "$branch_name" ]; then
       # For non-preview releases, the branch name can be determined from the SDK version
       # Replace the last two characters in sdk_version with xx
