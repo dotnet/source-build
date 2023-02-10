@@ -25,7 +25,7 @@
      - [ ] Retrieve smoke-test prereqs artifact for each architecture (e.g. x64 and arm64) from [tarball build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011) (internal link)
        - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
        - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-     - [ ] Retrieve additional packages from internal MSFT feed using [this project](../../test/GatherPackages.csproj).
+     - [ ] Retrieve additional packages from internal MSFT feed using [this project](../../../test/GatherPackages.csproj).
      - [ ] Create a new tarball of unique packages using [this script](https://gist.github.com/lbussell/5789974491e3d3ed737aac0e8b97b594).
      - [ ] Upload smoke-test-prereqs tarball to dotnetclimsrc storage account, following the pattern of previous releases for directory and filename.
          - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
