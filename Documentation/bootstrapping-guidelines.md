@@ -10,25 +10,25 @@ On high-level, you need to acquire .NET SDK and toolset for the targeted platfor
 Building new .NET major version is two stage process:  
 
 **Stage 1:**
-Build bootstrapping .NET SDK and toolset for the targeted platform.
+Build bootstrapping .NET SDK and toolset for the targeted platform.  `prep.sh` downloads a portable Microsoft-built version of the dotnet SDK for bootstrapping as well as an archive of already-built packages called the previously-source-built archive.
 
-- Prep.sh (args???)  
+- `./prep.sh`
  This downloads platform-native version of .NET SDK and toolset. So if you are building on x64 machine, you get x64.
 
-- Build.sh (args???)
-Create source built .NET SDK
+- `./build.sh`
+Create source built .NET SDK.
 
 **Stage 2:**
-Use source built .NET SDK created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
+Use source built .NET SDK created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.  Before running this command, extract your freshly-built stage1 SDK from `bin/arch/dotnet-sdk-version.tar.gz` to a convenient location.
 
-- Build.sh (Args - path to the source built SDK?????)
+- `./build.sh --with-sdk /path/to/stage1/sdk --with-packages /path/to/stage1/obj/bin/arch/blob-feed/packages`
 
 ## Building Subsequent .NET (Servicing)
 
-If you already have source-built .NET SDK and toolset in archive for the targeted platform and .NET version, then you do not need to create the bootstrapping .NET SDK and toolset. Subsequent versions will use the N-1 version toolset from the archive to build. Note, N-1 in this context means the previous version of .NET that was already built from source. As an example, to build SDK “N” (7.0.101) using “N-1” (7.0.100).
+If you already have source-built .NET SDK and toolset in archive for the targeted platform and .NET version, then you do not need to create the bootstrapping .NET SDK and toolset. Subsequent versions will use the N-1 version toolset from the archive to build. Note, N-1 in this context means the previous version of .NET that was already built from source. As an example, to build SDK “N” (7.0.101) using “N-1” (7.0.100).  These paths will vary based on where your distro installs these.
 
 To build .NET SDK from source -  
-- Build.sh (args - path to the source built SDK???)
+- `./build.sh --with-sdk /usr/bin/dotnet --with-packages /lib/dotnet/previously-source-built`
 
 ## Building for New OS/Arch (Supported, RID Existing)
 
@@ -55,15 +55,15 @@ Determine the compatible supported OS to use as host to build. Choose the host w
 **Stage 1:**
 Build bootstrapping .NET SDK and toolset.
 
-- prep.sh (args???)  
+- `./prep.sh`
  Downloads platform-native version of .NET SDK and toolset. So if you are building on x64 you get x64.
-- build.sh (args???)
+- `./build.sh`
 Create source built .NET SDK which will be utilized to bootstrap in stage 2.
 
 **Stage 2:**
 Use source built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
 
-- Build.sh (Arg?????)
+- `./build.sh --with-sdk /path/to/stage1/sdk --with-packages /path/to/stage1/obj/bin/arch/blob-feed/packages`
 [NO NEED TO UPDATE THE RID GRAPH, though parameters may need to be passed?????]
 
 **If no compatible OS/platform found**
