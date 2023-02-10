@@ -16,38 +16,42 @@ resources:
     name: dotnet/installer
 
 parameters:
-  - name: createReleaseAnnouncement
-    displayName:  Create Release Announcement
-    type: boolean
-    default: true
-  - name: submitReleasePR
-    displayName: Submit Release PR
-    type: boolean
-    default: true
-  - name: useCustomTag
-    displayName: Use custom tag?
-    type: boolean
-    default: false
-  - name: customTag
-    displayName: Installer custom tag
-    type: string
-    default: v6.0.XYY-source-build
-  - name: useSpecificPipelineRunIDs
-    displayName: Use Specific Pipeline Run IDs
-    type: boolean
-    default: false
-  - name: dotnetInstallerOfficialRunID
-    displayName: dotnet-installer-official-ci run ID
-    type: string
-    default: '200XXXX'
-  - name: dotnetInstallerTarballBuildRunID
-    displayName: dotnet-installer-source-build-tarball-build run ID
-    type: string
-    default: '200XXXX'
-  - name: isDryRun
-    displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
-    type: boolean
-    default: false
+- name: createReleaseAnnouncement
+  displayName:  Create Release Announcement
+  type: boolean
+  default: true
+- name: submitReleasePR
+  displayName: Submit Release PR
+  type: boolean
+  default: true
+- name: useCustomTag
+  displayName: Use custom tag?
+  type: boolean
+  default: false
+- name: customTag
+  displayName: Installer custom tag
+  type: string
+  default: v6.0.XYY-source-build
+- name: useSpecificPipelineRunIDs
+  displayName: Use Specific Pipeline Run IDs
+  type: boolean
+  default: false
+- name: dotnetInstallerOfficialRunID
+  displayName: dotnet-installer-official-ci run ID
+  type: string
+  default: '200XXXX'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: dotnet-installer-source-build-tarball-build run ID
+  type: string
+  default: '200XXXX'
+- name: isDryRun
+  displayName: Testing mode (run the pipeline but don't submit PRs or announcements)
+  type: boolean
+  default: false
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -87,6 +91,7 @@ jobs:
     parameters:
       dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
       getAssociatedPipelineRuns: false
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
@@ -172,6 +177,7 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
       dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
 
   - template: templates/steps/validate-tag.yml
     parameters:
@@ -197,7 +203,7 @@ jobs:
     inputs:
       source: 'specific'
       project: '$(azDoProject)'
-      pipeline: '$(installerTarabllBuildCiPipelineId)'
+      pipeline: '$(installerTarballBuildCiPipelineId)'
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'
@@ -209,7 +215,7 @@ jobs:
     inputs:
       source: 'specific'
       project: '$(azDoProject)'
-      pipeline: '$(installerTarabllBuildCiPipelineId)'
+      pipeline: '$(installerTarballBuildCiPipelineId)'
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'

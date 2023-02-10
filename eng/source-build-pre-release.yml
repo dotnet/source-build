@@ -11,22 +11,26 @@ resources:
     source: Stage-DotNet
 
 parameters:
-  - name: useSpecificPipelineRunIDs
-    displayName: Use Specific Pipeline Run IDs
-    type: boolean
-    default: false
-  - name: dotnetInstallerOfficialRunID
-    displayName: dotnet-installer-official-ci run ID
-    type: string
-    default: '200XXXX'
-  - name: dotnetInstallerTarballBuildRunID
-    displayName: dotnet-installer-source-build-tarball-build run ID
-    type: string
-    default: '200XXXX'
-  - name: isDryRun
-    displayName: Dry Run
-    type: boolean
-    default: false
+- name: useSpecificPipelineRunIDs
+  displayName: Use Specific Pipeline Run IDs
+  type: boolean
+  default: false
+- name: dotnetInstallerOfficialRunID
+  displayName: dotnet-installer-official-ci run ID
+  type: string
+  default: '200XXXX'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: dotnet-installer-source-build-tarball-build run ID
+  type: string
+  default: '200XXXX'
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
+- name: isDryRun
+  displayName: Dry Run
+  type: boolean
+  default: false
 
 variables:
 - template: templates/variables/installer-pipelines.yml
@@ -57,6 +61,7 @@ jobs:
       useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
       dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
       dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+      verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
 
   - task: DownloadPipelineArtifact@2
     name: DownloadSourceTarballStep
