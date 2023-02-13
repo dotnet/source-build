@@ -1,7 +1,8 @@
 parameters:
 - name: dotnetStagingPipelineResource
   type: string
-  default: ''
+- name: releaseBranchName
+  type: string
 - name: getAssociatedPipelineRuns
   type: boolean
   default: false
@@ -15,9 +16,6 @@ parameters:
   type: string
   default: ''
 - name: dotnetDotnetRunID
-  type: string
-  default: ''
-- name: releaseBranchName
   type: string
   default: ''
 - name: verifyBuildSuccess

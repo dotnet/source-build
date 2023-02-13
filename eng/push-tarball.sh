@@ -3,7 +3,7 @@ set -euo pipefail
 
 print-help ()
 {
-   echo "Updates the VMR"
+   echo "Pushes sources from a given tarball into a given repository"
    echo
    echo "Syntax: ./update-vmr.sh --releaseChannel 7.0 --sdkVersion 7.0.100 --upstream <valid git url> --tarball dotnet-sdk-source.tar.gz"
    echo

@@ -1,0 +1,57 @@
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+  - pipeline: dotnet-staging-pipeline-resource
+    source: Stage-DotNet-Test
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+parameters:
+- name: dotnetMajorVersion
+  displayName: Major .NET version being released
+  type: string
+  values: [ '6.0', '7.0', '8.0' ]
+- name: releaseBranchName
+  displayName: Release branch name (e.g. release/8.0.1xx-preview1)
+  type: string
+- name: useSpecificPipelineRunIDs
+  displayName: Use specific pipeline run IDs
+  type: boolean
+  default: false
+- name: dotnetDotnetRunID
+  displayName: '[⚠️ 8.0] Specific dotnet-dotnet run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerOfficialRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-official-ci run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-source-build-tarball-build run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
+- name: isDryRun
+  displayName: Dry Run
+  type: boolean
+  default: false
+
+stages:
+- template: templates/stages/pre-release.yml
+  parameters:
+    dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
+    useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
+    dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
+    dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+    verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+    isDryRun: ${{ parameters.isDryRun }}
