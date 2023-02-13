@@ -34,6 +34,7 @@ jobs:
 
     - script: |
         set -euo pipefail
+        set -x
 
         repo_dir=$(Pipeline.Workspace)/$(RepoDir)
         git init "${repo_dir}"
@@ -56,6 +57,7 @@ jobs:
     - ${{ each branch in mirror.branches }}:
       - script: |
           set -euxo pipefail
+          set -x
 
           git fetch source "${{ branch.name }}"
           git checkout "${{ branch.name }}"
