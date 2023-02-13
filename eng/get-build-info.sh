@@ -55,7 +55,7 @@ function print_build_info() {
     echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${run_id}"
     echo "  Run revision: ${source_version}"
     echo "                https://dev.azure.com/dnceng/internal/_git/${pipeline_name}/commit/${source_version}"
-    echo "##vso[task.setvariable variable=${pipeline_variable_name}]${run_id}"
+    echo "##vso[task.setvariable variable=${pipeline_variable_name};isOutput=true]${run_id}"
 }
 
 function get_build_info () {

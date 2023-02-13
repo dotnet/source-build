@@ -35,10 +35,14 @@ parameters:
   default: false
 
 stages:
-- stage: SourceBuildPreRelease
+- stage: PreRelease
+  displayName: Pre-Release
   jobs:
-  - job: SourceBuildPreRelease
-    displayName: Source Build Pre-Release
+  - job: PreRelease
+    ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      displayName: Get build info & push tarball
+    ${{ else }}:
+      displayName: Get build info
     variables:
     - template: ../variables/installer-pipelines.yml
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
@@ -75,18 +79,18 @@ stages:
         inputs:
           source: specific
           artifact: BlobArtifacts
-          patterns: BlobArtifacts/dotnet-sdk-source-$(SdkVersion).tar.gz
+          patterns: BlobArtifacts/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
           project: $(azDoProject)
           pipeline: $(installerOfficialCiPipelineId)
           runVersion: specific
-          runId: $(InstallerOfficialRunId)
+          runId: $(ReadReleaseInfo.InstallerOfficialRunId)
 
       - template: templates/steps/upload-to-blob-storage.yml
         parameters:
-          file: $(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(SdkVersion).tar.gz
+          file: $(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
           accountName: $(storageAccountName)
           containerName: $(blobContainerName)
-          uploadPath: $(blobContainerUploadBaseFilePath)/$(ReleaseChannel)/$(RuntimeVersion)-$(SdkVersion)
+          uploadPath: $(blobContainerUploadBaseFilePath)/$(ReadReleaseInfo.ReleaseChannel)/$(ReadReleaseInfo.RuntimeVersion)-$(ReadReleaseInfo.SdkVersion)
           azureStorageKey: $(dotnetclimsrc-access-key)
       
       - script: |
@@ -95,10 +99,10 @@ stages:
           upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
 
           args=()
-          args+=(--releaseChannel $(ReleaseChannel))
-          args+=(--sdkVersion $(SdkVersion))
+          args+=(--releaseChannel $(ReadReleaseInfo.ReleaseChannel))
+          args+=(--sdkVersion $(ReadReleaseInfo.SdkVersion))
           args+=(--upstream ${upstream_with_pat})
-          args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(SdkVersion).tar.gz)
+          args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz)
 
           if [ '${{ parameters.isDryRun }}' = True ]; then
             args+=(--isDryRun)

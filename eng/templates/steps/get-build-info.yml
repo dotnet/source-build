@@ -70,11 +70,11 @@ steps:
     echo "SDK version: ${sdk_version}"
     echo "Installer commit: ${commit}"
 
-    echo "##vso[task.setvariable variable=SdkVersion]${sdk_version}"
-    echo "##vso[task.setvariable variable=RuntimeVersion]${runtime_version}"
-    echo "##vso[task.setvariable variable=ReleaseChannel]${release_channel}"
-    echo "##vso[task.setvariable variable=InstallerCommit]${commit}"
-  name: ReadReleaseInfoStep
+    echo "##vso[task.setvariable variable=SdkVersion;isOutput=true]${sdk_version}"
+    echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]${runtime_version}"
+    echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
+    echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
+  name: ReadReleaseInfo
   displayName: Read Release Info
 
 - ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
@@ -83,13 +83,13 @@ steps:
         set -euo pipefail
         source eng/get-build-info.sh
 
-        if [[ "$(ReleaseChannel)" == "8.0" ]]; then
-            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(dotnetDotnetCiPipelineId)" dotnet-dotnet DotnetDotnetRunId "${{ parameters.verifyBuildSuccess }}" "installer-$(InstallerCommit)"
+        if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
+            get_build_info "$(azDoOrg)" "$(azDoProject)" "$(dotnetDotnetCiPipelineId)" dotnet-dotnet DotnetDotnetRunId "${{ parameters.verifyBuildSuccess }}" "installer-$(ReadReleaseInfo.InstallerCommit)"
         else
             get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerOfficialCiPipelineId)" dotnet-installer-official-ci InstallerOfficialRunId "${{ parameters.verifyBuildSuccess }}"
             get_build_info "$(azDoOrg)" "$(azDoProject)" "$(installerTarballBuildCiPipelineId)" dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "${{ parameters.verifyBuildSuccess }}"
         fi
-      name: GetAssociatedPipelineRunsStep
+      name: GetAssociatedPipelineRuns
       displayName: Get Associated Pipeline Run IDs
       env:
         AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
@@ -99,11 +99,11 @@ steps:
         set -euo pipefail
         source eng/get-build-info.sh
 
-        if [[ "$(ReleaseChannel)" == "8.0" ]]; then
-          print_build_info dotnet-dotnet DotnetDotnetRunId "$(DotnetDotnetRunId)" "See the build info"
+        if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
+          print_build_info dotnet-dotnet DotnetDotnetRunId "$(ReadReleaseInfo.DotnetDotnetRunId)" "See the build info"
         else
-          print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(InstallerOfficialRunId)" "$(InstallerCommit)"
-          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(InstallerTarballBuildRunId)" "N/A"
+          print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(ReadReleaseInfo.InstallerOfficialRunId)" "$(ReadReleaseInfo.InstallerCommit)"
+          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(ReadReleaseInfo.InstallerTarballBuildRunId)" "N/A"
         fi
       name: SetAssociatedPipelineRunsStep
       displayName: Set Associated Pipeline Run IDs

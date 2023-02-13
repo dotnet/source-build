@@ -57,3 +57,20 @@ stages:
     dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
     verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
     isDryRun: ${{ parameters.isDryRun }}
+
+- stage: MirrorApproval
+  ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+    displayName: Approval - Test prereqs & PR
+  ${{ else }}:
+    displayName: Approval - Test prereqs
+  dependsOn: PreRelease
+  jobs:
+  - deployment: MirrorApproval
+    displayName: Smoke test prereqs confirmation
+    environment: Source Build Release - Mirror
+    pool: server
+
+- template: templates/stages/mirror.yml
+  parameters:
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
