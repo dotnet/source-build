@@ -20,11 +20,11 @@ parameters:
 variables:
 - group: DotNet-Source-Build-All-Orgs-Source-Access
 - name: RepoDir
-  value: 'vmr'
+  value: vmr
 - name: GitUser
-  value: 'dn-bot'
+  value: dn-bot
 - name: GitEmail
-  value: 'dn-bot@microsoft.com'
+  value: dn-bot@microsoft.com
 
 jobs:
 - ${{ each mirror in parameters.mirrors }}:
@@ -35,7 +35,6 @@ jobs:
 
     - script: |
         set -euo pipefail
-        set -x
 
         repo_dir=$(Pipeline.Workspace)/$(RepoDir)
         git init "${repo_dir}"
@@ -58,7 +57,6 @@ jobs:
     - ${{ each branch in mirror.branches }}:
       - script: |
           set -euxo pipefail
-          set -x
 
           git fetch source "${{ branch.name }}"
           git checkout "${{ branch.name }}"
