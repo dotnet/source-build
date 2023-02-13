@@ -24,8 +24,10 @@ function get_build_run () {
         if [[ -n "$tag" ]]; then
             tagged=" tagged ${tag}"
         fi
+        set -x
         echo "##vso[task.logissue type=error]There are ${run_count} runs of ${pipeline_name}${tagged}. Please manually specify run ID to use."
         echo "##vso[task.logissue type=error]Run IDs are: ${runs}"
+        set +x
         exit 1
     fi
 
