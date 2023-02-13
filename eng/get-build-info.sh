@@ -16,7 +16,7 @@ function get_build_run () {
         build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id")
     fi
 
-    runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "sourceVersion": .sourceVersion }]')
+    runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "buildNumber": .buildNumber, "sourceVersion": .sourceVersion }]')
     run_count=$(echo "$runs" | jq 'length')
 
     if [ "$run_count" != "1" ]; then
