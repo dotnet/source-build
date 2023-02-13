@@ -39,6 +39,8 @@ jobs:
         git init "${repo_dir}"
         cd "${repo_dir}"
 
+        echo "Setting up git in ${repo_dir} repo for ${{ mirror.sourceUrl }} -> ${{ mirror.destinationUrl }}"
+
         git config --global user.name "${{ variables.GitUser }}"
         git config --global user.email "${{ variables.GitEmail }}"
 
