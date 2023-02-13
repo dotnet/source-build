@@ -38,8 +38,8 @@ steps:
     manifest_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/manifests/manifest.json
     config_path=$(PIPELINE.WORKSPACE)/dotnet-staging-pipeline-resource/drop/config.json
 
-    runtime_version="$(jq -r '.Runtime' $config_path)"
-    release_channel="$(jq -r '.Channel' $config_path)"
+    runtime_version="$(jq -r '.Runtime' "$config_path")"
+    release_channel="$(jq -r '.Channel' "$config_path")"
 
     # Source-build only supports the lowest available feature band.
     # Sort the SDK releases by number and pick the lowest value.
@@ -58,6 +58,7 @@ steps:
       branch_name="refs/heads/$branch_name"
     fi
 
+    branch_name='refs/heads/release/8.0.1xx-preview1' # TODO - For testing; remove this
     commit=$(jq -r --arg BRANCH "$branch_name" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer" or .repo == "https://github.com/dotnet/installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
 
     if [[ ! $commit ]]; then
@@ -81,6 +82,7 @@ steps:
   - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
     - script: |
         set -euo pipefail
+        set -x # TODO - For testing; remove this
         source eng/get-build-info.sh
 
         if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
