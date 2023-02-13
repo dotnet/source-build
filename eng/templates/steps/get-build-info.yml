@@ -75,6 +75,8 @@ steps:
     echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]${runtime_version}"
     echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
     echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
+
+    echo "##vso[build.updatebuildnumber]${sdk_version}"
   name: ReadReleaseInfo
   displayName: Read Release Info
 
