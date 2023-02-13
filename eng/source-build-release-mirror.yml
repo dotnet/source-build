@@ -20,15 +20,16 @@ parameters:
 variables:
 - group: DotNet-Source-Build-All-Orgs-Source-Access
 - name: RepoDir
-  value: 'vmr'
+  value: vmr
 - name: GitUser
-  value: 'dn-bot'
+  value: dn-bot
 - name: GitEmail
-  value: 'dn-bot@microsoft.com'
+  value: dn-bot@microsoft.com
 
 jobs:
 - ${{ each mirror in parameters.mirrors }}:
   - job:
+    displayName: Mirror ${{ mirror.sourceUrl }}
     steps:
     - checkout: none
 
@@ -39,11 +40,13 @@ jobs:
         git init "${repo_dir}"
         cd "${repo_dir}"
 
+        echo "Setting up git in ${repo_dir} repo for ${{ mirror.sourceUrl }} -> ${{ mirror.destinationUrl }}"
+
         git config --global user.name "${{ variables.GitUser }}"
         git config --global user.email "${{ variables.GitEmail }}"
 
-        source_url=$(echo "${{ mirror.sourceUrl }}" | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
-        destination_url=$(echo "${{ mirror.destinationUrl }}" | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
+        source_url=$(echo '${{ mirror.sourceUrl }}' | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
+        destination_url=$(echo '${{ mirror.destinationUrl }}' | sed "s,https://.*@,https://${{ variables.GitUser }}:${AZDO_PAT}@,g")
 
         git remote add source "${source_url}"
         git remote add destination "${destination_url}"
@@ -62,7 +65,7 @@ jobs:
           message=".NET Source-build ${{ branch.sdkVersion }}-SDK"
           git tag "${tag_name}" HEAD -m "${message}"
 
-          git fetch destination "${{ branch.name }}"
+          git fetch destination '${{ branch.name }}' || echo 'Branch ${{ branch.name }} does not exist in destination yet'
 
           git push --follow-tags destination "${{ branch.name }}"
         workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
