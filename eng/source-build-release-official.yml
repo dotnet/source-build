@@ -4,11 +4,13 @@ pr: none
 resources:
   pipelines:
   - pipeline: dotnet-staging-pipeline-resource
-    source: Stage-DotNet-Test
+    source: Stage-DotNet-Test # TODO: Change to Stage-DotNet
+    branch: dkurepa/Net8ReleaseConfig # TODO: Remove this line
 
 pool:
-  name: NetCore1ESPool-Svc-Internal
-  demands: ImageOverride -equals 1es-ubuntu-2004
+  # name: NetCore1ESPool-Svc-Internal
+  # demands: ImageOverride -equals 1es-ubuntu-2004
+  vmImage: ubuntu-latest # TODO: Use the proper pool from above
 
 parameters:
 - name: dotnetMajorVersion
