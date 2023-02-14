@@ -96,6 +96,7 @@ stages:
   parameters:
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
+    isDryRun: ${{ parameters.isDryRun }}
 
 - stage: NotificationApproval
   displayName: Approval - Partner notification

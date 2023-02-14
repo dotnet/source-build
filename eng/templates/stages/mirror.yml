@@ -5,6 +5,9 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: isDryRun
+  type: boolean
+  default: false
 
 stages:
 - stage: Mirror
@@ -70,6 +73,11 @@ stages:
 
         git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
 
-        git push --follow-tags destination "${{ parameters.releaseBranchName }}"
+        if [ ${{ parameters.isDryRun }} = True ]; then
+          echo "Doing a dry run, not pushing the branch"
+        else
+          echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
+          git push --follow-tags destination "${{ parameters.releaseBranchName }}"
+        fi
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag
