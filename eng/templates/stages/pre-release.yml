@@ -70,6 +70,7 @@ stages:
         dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
         dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
         verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+        isDryRun: ${{ parameters.isDryRun }}
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - task: DownloadPipelineArtifact@2

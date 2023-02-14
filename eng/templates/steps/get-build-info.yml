@@ -20,6 +20,9 @@ parameters:
   default: ''
 - name: verifyBuildSuccess
   type: boolean
+- name: isDryRun
+  type: boolean
+  default: false
 
 steps:
 - download: ${{ parameters.dotnetStagingPipelineResource }}
@@ -76,7 +79,12 @@ steps:
     echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
     echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
 
-    echo "##vso[build.updatebuildnumber]${sdk_version}"
+    build_name="$sdk_version"
+    if [ ${{ parameters.isDryRun }} = True ]; then
+      build_name="${build_name}-dryrun"
+    fi
+
+    echo "##vso[build.updatebuildnumber]${build_name}"
   name: ReadReleaseInfo
   displayName: Read Release Info
 
