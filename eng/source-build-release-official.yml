@@ -41,6 +41,18 @@ parameters:
   displayName: Verify that associated pipeline runs succeeded
   type: boolean
   default: true
+- name: createReleaseAnnouncement
+  displayName:  Create Release Announcement
+  type: boolean
+  default: true
+- name: submitReleasePR
+  displayName: Submit Release PR
+  type: boolean
+  default: true
+- name: useCustomTag
+  displayName: Use custom tag?
+  type: boolean
+  default: false
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -67,7 +79,7 @@ stages:
   dependsOn: PreRelease
   jobs:
   - deployment: MirrorApproval
-    displayName: Smoke test prereqs confirmation
+    displayName: Confirm PR merged & prereqs uploaded
     environment: Source Build Release - Mirror
     pool: server
 
@@ -75,3 +87,29 @@ stages:
   parameters:
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
+
+- stage: NotificationApproval
+  displayName: Approval - Partner notification
+  dependsOn: Mirror
+  jobs:
+  - deployment: NotificationApproval
+    displayName: Confirm partner notification sent
+    environment: Source Build Release - Partner Notification
+    pool: server
+
+- stage: ReleaseApproval
+  displayName: Approval - Release
+  dependsOn: NotificationApproval
+  jobs:
+  - deployment: ReleaseApproval
+    displayName: Confirm Microsoft build released
+    environment: Source Build Release - Release
+    pool: server
+
+- template: templates/stages/release.yml
+  parameters:
+    dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+    createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
+    useCustomTag: ${{ parameters.useCustomTag }}
+    submitReleasePR: ${{ parameters.submitReleasePR }}
+    isDryRun: ${{ parameters.isDryRun }}
