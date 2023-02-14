@@ -101,7 +101,7 @@ stages:
           echo "##vso[task.setvariable variable=DiscussionCategoryId;]${category_id}"
         displayName: Get category IDs
         env:
-          GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+          GH_TOKEN: '' # TODO $(BotAccount-dotnet-sb-bot-pat)
 
       - script: |
           set -euxo pipefail
@@ -140,7 +140,7 @@ stages:
           fi
         displayName: Submit announcement discussion
         env:
-          GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+          GH_TOKEN: '' # TODO $(BotAccount-dotnet-sb-bot-pat)
 
   - job: SubmitReleasePrJob
     displayName: Submit Release PR
@@ -252,4 +252,4 @@ stages:
         fi
       displayName: Submit Release PR
       env:
-        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+        GH_TOKEN: '' # TODO $(BotAccount-dotnet-sb-bot-pat)
