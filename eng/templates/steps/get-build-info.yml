@@ -116,5 +116,5 @@ steps:
           print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(ReadReleaseInfo.InstallerOfficialRunId)" "$(ReadReleaseInfo.InstallerCommit)"
           print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(ReadReleaseInfo.InstallerTarballBuildRunId)" "N/A"
         fi
-      name: SetAssociatedPipelineRunsStep
+      name: GetAssociatedPipelineRuns
       displayName: Set Associated Pipeline Run IDs
