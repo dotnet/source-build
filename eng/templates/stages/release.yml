@@ -1,6 +1,8 @@
 parameters:
 - name: dotnetStagingPipelineResource
   type: string
+- name: dotnetMajorVersion
+  type: string
 - name: createReleaseAnnouncement
   type: boolean
   default: true
@@ -25,7 +27,7 @@ stages:
   - ReleaseApproval
 
   variables:
-  - template: templates/variables/installer-pipelines.yml
+  - template: ../variables/installer-pipelines.yml
   - group: DotNet-Source-Build-Bot-Secrets
   - group: DotNet-DotNetCli-Storage
   - name: announcementOrg
@@ -76,7 +78,7 @@ stages:
       - checkout: self
       - checkout: installer
 
-      - template: templates/steps/validate-tag.yml
+      - template: ../steps/validate-tag.yml
         parameters:
           useCustomTag: ${{ parameters.useCustomTag }}
           customTag: ${{ parameters.customTag }}
@@ -153,7 +155,7 @@ stages:
     - checkout: self
     - checkout: installer
 
-    - template: templates/steps/validate-tag.yml
+    - template: ../steps/validate-tag.yml
       parameters:
         useCustomTag: ${{ parameters.useCustomTag }}
         customTag: ${{ parameters.customTag }}
@@ -197,7 +199,7 @@ stages:
         artifact: $(SourceBuildArtifactLeg)
         patterns: dotnet-sdk-$(sdkVersion)-*.tar.gz
 
-    - template: templates/steps/upload-to-blob-storage.yml
+    - template: ../steps/upload-to-blob-storage.yml
       parameters:
         file: $(PIPELINE.WORKSPACE)/Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
         accountName: $(storageAccountName)
@@ -205,7 +207,7 @@ stages:
         uploadPath: $(artifactsUploadBaseFilePath)
         azureStorageKey: $(dotnetcli-storage-key)
 
-    - template: templates/steps/upload-to-blob-storage.yml
+    - template: ../steps/upload-to-blob-storage.yml
       parameters:
         file: $(PIPELINE.WORKSPACE)/dotnet-sdk-$(sdkVersion)-*.tar.gz
         accountName: $(storageAccountName)

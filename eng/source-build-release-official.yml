@@ -7,6 +7,11 @@ resources:
   - pipeline: dotnet-staging-pipeline-resource
     source: Stage-DotNet # TODO: Change to Stage-DotNet
     version: 20230209.1-8.0.100-preview.1.23108.10-166172 # TODO: Remove this line
+  repositories:
+  - repository: installer
+    type: github
+    endpoint: dotnet
+    name: dotnet/installer
 
 pool:
   # name: NetCore1ESPool-Svc-Internal
@@ -53,6 +58,10 @@ parameters:
   displayName: Use custom tag?
   type: boolean
   default: false
+- name: customTag
+  displayName: Installer custom tag
+  type: string
+  default: v6.0.XYY-source-build
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -109,7 +118,9 @@ stages:
 - template: templates/stages/release.yml
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
     useCustomTag: ${{ parameters.useCustomTag }}
+    customTag: ${{ parameters.customTag }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}
