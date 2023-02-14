@@ -79,8 +79,8 @@ stages:
           source: specific
           artifact: BlobArtifacts
           patterns: BlobArtifacts/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
-          project: $(azDoProject)
-          pipeline: $(installerOfficialCiPipelineId)
+          project: $(AZDO_PROJECT)
+          pipeline: $(INSTALLER_OFFICIAL_CI_PIPELINE_ID)
           runVersion: specific
           runId: $(ReadReleaseInfo.InstallerOfficialRunId)
 

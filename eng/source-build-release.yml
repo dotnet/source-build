@@ -202,8 +202,8 @@ jobs:
     displayName: Download Source-Built Artifacts
     inputs:
       source: 'specific'
-      project: '$(azDoProject)'
-      pipeline: '$(installerTarballBuildCiPipelineId)'
+      project: '$(AZDO_PROJECT)'
+      pipeline: '$(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)'
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'
@@ -214,8 +214,8 @@ jobs:
     displayName: Download Source-Built SDK
     inputs:
       source: 'specific'
-      project: '$(azDoProject)'
-      pipeline: '$(installerTarballBuildCiPipelineId)'
+      project: '$(AZDO_PROJECT)'
+      pipeline: '$(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)'
       runVersion: 'specific'
       runId: '$(InstallerTarballBuildRunId)'
       artifact: '$(TarballBuildArtifactLeg)'
