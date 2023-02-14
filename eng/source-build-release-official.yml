@@ -59,9 +59,9 @@ parameters:
   type: boolean
   default: false
 - name: customTag
-  displayName: Installer custom tag
+  displayName: Installer custom tag (e.g. v6.0.XYY-source-build)
   type: string
-  default: v6.0.XYY-source-build
+  default: ' '
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -121,6 +121,6 @@ stages:
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
     useCustomTag: ${{ parameters.useCustomTag }}
-    customTag: ${{ parameters.customTag }}
+    customTag: ${{ replace(parameters.customTag, ' ', '') }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}
