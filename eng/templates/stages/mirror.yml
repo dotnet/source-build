@@ -62,6 +62,11 @@ stages:
         AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
 
     - script: |
+        if [ ${{ parameters.isDryRun }} = True ]; then
+          echo "Doing a dry run, not pushing the branch ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
+          exit 0
+        fi
+
         set -euxo pipefail
 
         git fetch source "${{ parameters.releaseBranchName }}"
@@ -73,11 +78,7 @@ stages:
 
         git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
 
-        if [ ${{ parameters.isDryRun }} = True ]; then
-          echo "Doing a dry run, not pushing the branch"
-        else
-          echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
-          git push --follow-tags destination "${{ parameters.releaseBranchName }}"
-        fi
+        echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
+        git push --follow-tags destination "${{ parameters.releaseBranchName }}"
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag
