@@ -84,7 +84,10 @@ steps:
       build_name="${build_name}-dryrun"
     fi
 
-    echo "##vso[build.updatebuildnumber]${build_name}"
+    original_build_name='$(Build.BuildNumber)'
+    revision="${original_build_name:10}"
+
+    echo "##vso[build.updatebuildnumber]${build_name}-${revision}"
   name: ReadReleaseInfo
   displayName: Read Release Info
 
