@@ -93,12 +93,14 @@ stages:
         tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
 
         if echo "$tags" | grep -q "map\[name:$tag\]"; then
-          echo "Tag $tag exists";
+          echo "##vso[task.setvariable variable=Tag;isOutput=true]$tag"
+          echo "Tag $tag exists"
         else
           echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/installer"
           exit 1
         fi
       displayName: Validate release tag
+      name: TagValidation
       env:
         GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
@@ -106,6 +108,9 @@ stages:
     displayName: Create Release Announcement
     condition: and(succeeded(), eq('${{ parameters.createReleaseAnnouncement }}', true))
     dependsOn: ValidateReleaseTag
+    variables:
+    - name: Tag
+      value: $[ dependencies.ValidateReleaseTag.outputs['TagValidation.Tag'] ]
     steps:
     - script: |
         set -euxo pipefail
