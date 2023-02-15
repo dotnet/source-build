@@ -8,16 +8,19 @@ function get_build_run () {
     local azdo_org="$3"
     local azdo_project="$4"
     local check_build_status="$5"
-    local tag="${6-}" # Optional
+    local search_by="$6"
+    local commit="$7"
 
-    if [[ -n "$tag" ]]; then
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$tag")
+    # We search by a tag or by a commit for which the build was running
+    # We use the tag for the VMR builds (8.0+) and the commit for older installer builds
+    if [[ "$search_by" == 'tag' ]]; then
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$commit")
     else
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id")
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --query "[?sourceVersion == '$commit']")
     fi
 
     runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "buildNumber": .buildNumber, "sourceVersion": .sourceVersion }]')
-    run_count=$(echo "$runs" | jq 'length')
+    run_count=$(echo "$runs"  | jq 'length')
 
     if [ "$run_count" != "1" ]; then
         local tagged=''
@@ -67,10 +70,11 @@ function get_build_info () {
     local pipeline_name="$4"
     local pipeline_variable_name="$5"
     local check_build_status="$6"
-    local tag="${7-}" # Optional
+    local search_by="$7"
+    local commit="$8"
 
     IFS=' '
-    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$tag")
+    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$search_by" "$commit")
     if [[ $? != "0" ]]; then
         echo "$run_info"
         exit 1
