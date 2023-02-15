@@ -83,7 +83,7 @@ stages:
           project: $(AZDO_PROJECT)
           pipeline: $(INSTALLER_OFFICIAL_CI_PIPELINE_ID)
           runVersion: specific
-          runId: $(ReadReleaseInfo.InstallerOfficialRunId)
+          runId: $(AssociatedPipelineRuns.InstallerOfficialRunId)
 
       - template: ../steps/upload-to-blob-storage.yml
         parameters:
