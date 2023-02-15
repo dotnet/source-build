@@ -61,7 +61,6 @@ steps:
       branch_name="refs/heads/$branch_name"
     fi
 
-    branch_name='refs/heads/release/8.0.1xx-preview1' # TODO - For testing; remove this
     commit=$(jq -r --arg BRANCH "$branch_name" '.builds[] | select(.repo == "https://dev.azure.com/dnceng/internal/_git/dotnet-installer" or .repo == "https://github.com/dotnet/installer") | select(.branch == $BRANCH) | .commit' $manifest_path)
 
     if [[ ! $commit ]]; then
