@@ -176,29 +176,25 @@ stages:
     - name: ForkRepo
       value: dotnet-sb-bot/installer
 
+    - ${{ if eq(parameters.dotnetMajorVersion, '6.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: Build_Tarball_x64 CentOS7-Offline_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '7.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: Build_Tarball_x64 CentOSStream8-Offline_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '8.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: CentOSStream8_Offline_x64_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.8.0.100.centos.8-x64.tar.gz
+
     steps:
-    - script: |
-        set -euo pipefail
-        if [ '$(releaseChannel)' == '6.0' ]; then
-          echo "##vso[task.setvariable variable=SourceBuildArtifactLeg]Build_Tarball_x64 CentOS7-Offline_Artifacts"
-        elif [ '$(releaseChannel)' == '7.0' ]; then
-          echo "##vso[task.setvariable variable=SourceBuildArtifactLeg]Build_Tarball_x64 CentOSStream8-Offline_Artifacts"
-        elif [ '$(releaseChannel)' == '8.0' ]; then
-          echo "##vso[task.setvariable variable=SourceBuildArtifactLeg]CentOSStream8_Offline_x64_Artifacts"
-        else
-          echo "##vso[task.logissue type=error]Release channel $(releaseChannel) is not supported. Exiting..."
-          exit 1
-        fi
-      displayName: Set artifact name
-
-    - script: |
-        echo "sdkVersion='$(sdkVersion)'"
-        echo "releaseChannel='$(releaseChannel)'"
-        echo "runtimeVersion='$(runtimeVersion)'"
-        echo "officialBuildPipelineId='$(officialBuildPipelineId)'"
-        echo "officialBuildRunId='$(officialBuildRunId)'"
-      displayName: Debug step
-
     - task: DownloadPipelineArtifact@2
       name: DownloadSourceBuiltArtifactsStep
       displayName: Download Source-Built Artifacts
@@ -209,7 +205,7 @@ stages:
         runVersion: specific
         runId: $(officialBuildRunId)
         artifact: $(SourceBuildArtifactLeg)
-        patterns: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+        patterns: $(SourceBuiltArtifactsFileName)
 
     - task: DownloadPipelineArtifact@2
       name: DownloadSourceBuiltSDKStep
