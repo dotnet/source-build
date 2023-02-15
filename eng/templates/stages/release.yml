@@ -63,14 +63,14 @@ stages:
 
   - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
     - name: officialBuildPipelineId
-      value: $(DOTNET_DOTNET_CI_PIPELINE_ID)
-    - name: officialBuildRunId
-      value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetRunId'] ]
-  - ${{ else }}:
-    - name: officialBuildPipelineId
       value: $(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)
     - name: officialBuildRunId
       value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerTarballBuildRunId'] ]
+  - ${{ else }}:
+    - name: officialBuildPipelineId
+      value: $(DOTNET_DOTNET_CI_PIPELINE_ID)
+    - name: officialBuildRunId
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetRunId'] ]
 
   jobs:
   - job: ValidateReleaseTag

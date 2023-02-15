@@ -114,10 +114,10 @@ steps:
         source eng/get-build-info.sh
 
         if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
-          print_build_info dotnet-dotnet DotnetDotnetRunId "$(ReadReleaseInfo.DotnetDotnetRunId)" "See the build info"
+          print_build_info dotnet-dotnet DotnetDotnetRunId "$(dotnetDotnetRunID)" "See the build info"
         else
-          print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(ReadReleaseInfo.InstallerOfficialRunId)" "$(ReadReleaseInfo.InstallerCommit)"
-          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(ReadReleaseInfo.InstallerTarballBuildRunId)" "N/A"
+          print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(dotnetInstallerOfficialRunID)" "$(ReadReleaseInfo.InstallerCommit)"
+          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(dotnetInstallerTarballBuildRunID)" "N/A"
         fi
       name: AssociatedPipelineRuns
       displayName: Set Associated Pipeline Run IDs
