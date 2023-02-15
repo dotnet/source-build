@@ -85,7 +85,7 @@ stages:
           runVersion: specific
           runId: $(ReadReleaseInfo.InstallerOfficialRunId)
 
-      - template: templates/steps/upload-to-blob-storage.yml
+      - template: ../steps/upload-to-blob-storage.yml
         parameters:
           file: $(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
           accountName: $(storageAccountName)
