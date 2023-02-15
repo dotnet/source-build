@@ -76,14 +76,31 @@ stages:
   - job: ValidateReleaseTag
     displayName: Validate release tag
     steps:
-    - checkout: self
-    - checkout: installer
+    - checkout: none
 
-    - template: ../steps/validate-tag.yml
-      parameters:
-        useCustomTag: ${{ parameters.useCustomTag }}
-        customTag: ${{ parameters.customTag }}
-        repoPath: $(Build.SourcesDirectory)/installer
+    - script: |
+        set -euo pipefail
+        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
+          tag="${{ parameters.customTag }}"
+          echo "Using custom tag ${tag}"
+        else
+          tag="v$(SdkVersion)"
+          echo "Using tag ${tag}"
+        fi
+
+        # Checks for all graphs that match the tag name (there can be more, e.g. 7.0.100 will match 7.0.100-preview.1.21102.12)
+        query="{ repository(owner: \"dotnet\", name: \"installer\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$tag\") { nodes { name }}}}"
+        tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
+
+        if echo "$tags" | grep "map\[name:$tag\]"; then
+          echo "Tag $tag exists";
+        else
+          echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/installer"
+          exit 1
+        fi
+      displayName: Get category IDs
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
   - job: CreateReleaseAnnouncementJob
     displayName: Create Release Announcement
