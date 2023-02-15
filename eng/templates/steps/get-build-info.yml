@@ -84,7 +84,7 @@ steps:
     fi
 
     original_build_name='$(Build.BuildNumber)'
-    revision="${original_build_name:10}"
+    revision="${original_build_name:9}"
 
     echo "##vso[build.updatebuildnumber]${build_name}-${revision}"
   name: ReadReleaseInfo
