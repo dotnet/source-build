@@ -98,7 +98,7 @@ stages:
           echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/installer"
           exit 1
         fi
-      displayName: Get category IDs
+      displayName: Validate release tag
       env:
         GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
@@ -107,8 +107,6 @@ stages:
     condition: and(succeeded(), eq('${{ parameters.createReleaseAnnouncement }}', true))
     dependsOn: ValidateReleaseTag
     steps:
-    - checkout: self
-
     - script: |
         set -euxo pipefail
 
@@ -166,7 +164,7 @@ stages:
         fi
       displayName: Submit announcement discussion
       env:
-        GH_TOKEN: '' # TODO $(BotAccount-dotnet-sb-bot-pat)
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
   - job: SubmitReleasePrJob
     displayName: Submit Release PR
@@ -179,8 +177,6 @@ stages:
       value: dotnet-sb-bot/installer
 
     steps:
-    - checkout: self
-
     - script: |
         set -euo pipefail
         if [ '$(releaseChannel)' == '6.0' ]; then
@@ -194,6 +190,14 @@ stages:
           exit 1
         fi
       displayName: Set artifact name
+
+    - script: |
+        echo "sdkVersion='$(sdkVersion)'"
+        echo "releaseChannel='$(releaseChannel)'"
+        echo "runtimeVersion='$(runtimeVersion)'"
+        echo "officialBuildPipelineId='$(officialBuildPipelineId)'"
+        echo "officialBuildRunId='$(officialBuildRunId)'"
+      displayName: Debug step
 
     - task: DownloadPipelineArtifact@2
       name: DownloadSourceBuiltArtifactsStep
@@ -272,4 +276,4 @@ stages:
         fi
       displayName: Submit Release PR
       env:
-        GH_TOKEN: '' # TODO $(BotAccount-dotnet-sb-bot-pat)
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
