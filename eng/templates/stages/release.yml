@@ -88,15 +88,21 @@ stages:
           echo "Using tag ${tag}"
         fi
 
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          repo='installer'
+        else
+          repo='dotnet'
+        fi
+
         # Checks for all graphs that match the tag name (there can be more, e.g. 7.0.100 will match 7.0.100-preview.1.21102.12)
-        query="{ repository(owner: \"dotnet\", name: \"installer\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$tag\") { nodes { name }}}}"
+        query="{ repository(owner: \"dotnet\", name: \"$repo\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$tag\") { nodes { name }}}}"
         tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
 
         if echo "$tags" | grep -q "map\[name:$tag\]"; then
           echo "##vso[task.setvariable variable=Tag;isOutput=true]$tag"
           echo "Tag $tag exists"
         else
-          echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/installer"
+          echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/$repo"
           exit 1
         fi
       displayName: Validate release tag
@@ -141,9 +147,14 @@ stages:
         export RUNTIME_VERSION="$(runtimeVersion)"
         export RELEASE_CHANNEL="$(releaseChannel)"
         export SDK_VERSION="$(sdkVersion)"
-        export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
         export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
         export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
+
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
+        else
+          export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$TAG"
+        fi
 
         template="$(envsubst < source-build-release-announcement.md)"
         # Get the line in the template that is prefixed with "Title:" and remove the prefix
