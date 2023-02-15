@@ -92,7 +92,7 @@ stages:
         query="{ repository(owner: \"dotnet\", name: \"installer\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$tag\") { nodes { name }}}}"
         tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
 
-        if echo "$tags" | grep "map\[name:$tag\]"; then
+        if echo "$tags" | grep -q "map\[name:$tag\]"; then
           echo "Tag $tag exists";
         else
           echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/installer"
@@ -140,8 +140,7 @@ stages:
         export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
         export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
 
-        template_path="$(Build.SourcesDirectory)/$(Build.Repository.Name)/eng"
-        template="$(envsubst < ${template_path}/source-build-release-announcement.md)"
+        template="$(envsubst < source-build-release-announcement.md)"
         # Get the line in the template that is prefixed with "Title:" and remove the prefix
         title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
         # Get the inverse of the above selection
@@ -163,6 +162,7 @@ stages:
           echo "Release Notes URL: $RELEASE_NOTES_URL"
         fi
       displayName: Submit announcement discussion
+      workingDirectory: $(Build.SourcesDirectory)/eng
       env:
         GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
@@ -245,10 +245,8 @@ stages:
         export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
         export RUNTIME_VERSION="$(runtimeVersion)"
         export SDK_VERSION="$(sdkVersion)"
-        
-        source_build_repo_root="$(Build.SourcesDirectory)/$(Build.Repository.Name)"
-        template_path="${source_build_repo_root}/eng"
-        template="$(envsubst < ${template_path}/source-build-release-pr.md)"
+
+        template="$(envsubst < source-build-release-pr.md)"
         # Get the line in the template that is prefixed with "Title:" and remove the prefix
         title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
         # Get the inverse of the above selection
@@ -266,14 +264,15 @@ stages:
           echo "Doing a dry run, not submitting PR."
         else
           echo "Submitting PR"
-          ${source_build_repo_root}/eng/submit-source-build-release-pr.sh \
-              --setupGitAuth \
-              --targetRepo $(TargetRepo) \
-              --forkRepo $(ForkRepo) \
-              --sdkVersion $(sdkVersion) \
-              --title "${title}" \
-              --body "${body}"
+          ./submit-source-build-release-pr.sh \
+            --setupGitAuth \
+            --targetRepo $(TargetRepo) \
+            --forkRepo $(ForkRepo) \
+            --sdkVersion $(sdkVersion) \
+            --title "${title}" \
+            --body "${body}"
         fi
       displayName: Submit Release PR
+      workingDirectory: $(Build.SourcesDirectory)/eng
       env:
         GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
