@@ -7,14 +7,11 @@ pr: none
 resources:
   pipelines:
   - pipeline: dotnet-staging-pipeline-resource
-    source: Stage-DotNet # TODO: Change to Stage-DotNet
-    #version: 20230209.1-8.0.100-preview.1.23108.10-166172 # TODO: Remove this line
-    version: 20230131.1-7.0.200-rtm.23080.6,7.0.103-servicing.23080.5-164867,164865 # TODO: Remove this line
+    source: Stage-DotNet
 
 pool:
-  # name: NetCore1ESPool-Svc-Internal
-  # demands: ImageOverride -equals 1es-ubuntu-2004
-  vmImage: ubuntu-latest # TODO: Use the proper pool from above
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
 
 parameters:
 - name: dotnetMajorVersion
