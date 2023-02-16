@@ -164,8 +164,9 @@ stages:
 
         query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 
-        set +x
         if [ ${{ parameters.isDryRun }} = True ]; then
+          set +x
+          echo -e "\n\n\n#########################\n\n\n#########################\n\n\n"
           echo "Doing a dry run, not submitting announcement."
           echo "Announcement title: ${title}"
           echo "Announcement body: ${body}"
@@ -197,18 +198,24 @@ stages:
         value: Build_Tarball_x64 CentOS7-Offline_Artifacts
       - name: SourceBuiltArtifactsFileName
         value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-$(sdkVersion)-*.tar.gz
 
     - ${{ if eq(parameters.dotnetMajorVersion, '7.0') }}:
       - name: SourceBuildArtifactLeg
         value: Build_Tarball_x64 CentOSStream8-Offline_Artifacts
       - name: SourceBuiltArtifactsFileName
         value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-$(sdkVersion)-*.tar.gz
 
     - ${{ if eq(parameters.dotnetMajorVersion, '8.0') }}:
       - name: SourceBuildArtifactLeg
         value: CentOSStream8_Offline_x64_Artifacts
       - name: SourceBuiltArtifactsFileName
         value: Private.SourceBuilt.Artifacts.8.0.100.centos.8-x64.tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-*.tar.gz
 
     steps:
     - task: DownloadPipelineArtifact@2
@@ -233,11 +240,11 @@ stages:
         runVersion: specific
         runId: $(officialBuildRunId)
         artifact: $(SourceBuildArtifactLeg)
-        patterns: dotnet-sdk-$(sdkVersion)-*.tar.gz
+        patterns: $(SdkArtifactFileName)
 
     - template: ../steps/upload-to-blob-storage.yml
       parameters:
-        file: $(PIPELINE.WORKSPACE)/Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+        file: $(PIPELINE.WORKSPACE)/$(SourceBuiltArtifactsFileName)
         accountName: $(storageAccountName)
         containerName: $(blobContainerName)
         uploadPath: $(artifactsUploadBaseFilePath)
@@ -245,14 +252,14 @@ stages:
 
     - template: ../steps/upload-to-blob-storage.yml
       parameters:
-        file: $(PIPELINE.WORKSPACE)/dotnet-sdk-$(sdkVersion)-*.tar.gz
+        file: $(PIPELINE.WORKSPACE)/$(SdkArtifactFileName)
         accountName: $(storageAccountName)
         containerName: $(blobContainerName)
         uploadPath: $(sdkUploadBaseFilePath)
         azureStorageKey: $(dotnetcli-storage-key)
 
     - script: |
-        set -euxo pipefail
+        set -euo pipefail
 
         export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
         export RUNTIME_VERSION="$(runtimeVersion)"
