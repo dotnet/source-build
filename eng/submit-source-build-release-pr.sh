@@ -33,8 +33,8 @@ OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
 if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
 eval set -- "$OPTS"
 
-global_json_path='src/SourceBuild/tarball/content/global.json'
-versions_props_path='eng/Versions.props'
+global_json_path='src/SourceBuild/content/global.json'
+versions_props_path='src/SourceBuild/content/eng/Versions.props'
 custom_target_branch=''
 setup_git_auth=''
 
@@ -106,7 +106,7 @@ if [[ ${setup_git_auth} == true ]]; then
   gh auth setup-git
 fi
 
-if [ -z ${custom_target_branch} ]; then
+if [ -z "${custom_target_branch}" ]; then
   pr_target_branch=$(echo "release/${sdk_version}" | sed 's/..$/xx/')
 else
   pr_target_branch="${custom_target_branch}"
@@ -130,9 +130,9 @@ new_branch_name="${sdk_version}-${monthYear}-source-build-${time}"
 git checkout -b "${new_branch_name}" "upstream/${pr_target_branch}"
 
 # make pr changes
-cat $global_json_path \
+cat "$global_json_path" \
     | jq --unbuffered ".tools.dotnet=\"${sdk_version}\"" \
-    | tee $global_json_path
+    | tee "$global_json_path"
 sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 git add "$global_json_path" "$versions_props_path"
 
@@ -148,7 +148,7 @@ fork_owner="${fork_repo_split[0]}"
 
 # create pull request
 gh pr create \
-    --head ${fork_owner}:${new_branch_name} \
+    --head "${fork_owner}:${new_branch_name}" \
     --repo "${target_repo}" \
     --base "${pr_target_branch}" \
     --title "${title}" \

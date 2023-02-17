@@ -282,6 +282,12 @@ stages:
         if [ ${{ parameters.isDryRun }} = True ]; then
           echo "Doing a dry run, not submitting PR."
         else
+          extraArgs=()
+          if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+            extraArgs+=("--globalJson" "src/SourceBuild/tarball/content/global.json")
+            extraArgs+=("--versionProps" "eng/Versions.props")
+          fi
+        
           echo "Submitting PR"
           ./submit-source-build-release-pr.sh \
             --setupGitAuth \
@@ -289,7 +295,8 @@ stages:
             --forkRepo $(ForkRepo) \
             --sdkVersion $(sdkVersion) \
             --title "${title}" \
-            --body "${body}"
+            --body "${body}" \
+            "${extraArgs[@]}"
         fi
       displayName: Submit Release PR
       workingDirectory: $(Build.SourcesDirectory)/eng
