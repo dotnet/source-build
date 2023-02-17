@@ -115,6 +115,7 @@ stages:
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
     useCustomTag: ${{ parameters.useCustomTag }}
     customTag: ${{ replace(parameters.customTag, ' ', '') }}

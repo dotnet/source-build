@@ -3,6 +3,8 @@ parameters:
   type: string
 - name: dotnetMajorVersion
   type: string
+- name: releaseBranchName
+  type: string
 - name: createReleaseAnnouncement
   type: boolean
   default: true
@@ -296,6 +298,7 @@ stages:
             --sdkVersion $(sdkVersion) \
             --title "${title}" \
             --body "${body}" \
+            --targetBranch "${{ parameters.releaseBranchName }}" \
             "${extraArgs[@]}"
         fi
       displayName: Submit Release PR
