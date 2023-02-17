@@ -281,15 +281,24 @@ stages:
         echo "title: ${title}"
         echo "body: ${body}"
 
+        extraArgs=()
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          extraArgs+=("--globalJson" "src/SourceBuild/tarball/content/global.json")
+          extraArgs+=("--versionProps" "eng/Versions.props")
+        fi
+
         if [ ${{ parameters.isDryRun }} = True ]; then
-          echo "Doing a dry run, not submitting PR."
+          echo "Doing a dry run, not submitting PR. Would have called:"
+          echo "./submit-source-build-release-pr.sh"
+          echo "  --setupGitAuth"
+          echo "  --targetRepo $(TargetRepo)"
+          echo "  --forkRepo $(ForkRepo)"
+          echo "  --sdkVersion $(sdkVersion)"
+          echo "  --title ${title}"
+          echo "  --body ${body}"
+          echo "  --targetBranch ${{ parameters.releaseBranchName }}"
+          echo "  ${extraArgs[@]}"
         else
-          extraArgs=()
-          if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
-            extraArgs+=("--globalJson" "src/SourceBuild/tarball/content/global.json")
-            extraArgs+=("--versionProps" "eng/Versions.props")
-          fi
-        
           echo "Submitting PR"
           ./submit-source-build-release-pr.sh \
             --setupGitAuth \
