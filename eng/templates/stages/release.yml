@@ -168,8 +168,9 @@ stages:
 
         if [ ${{ parameters.isDryRun }} = True ]; then
           set +x
-          echo -e "\n\n\n#########################\n\n\n#########################\n\n\n"
+          echo -e "\n\n\n#########################\n\n"
           echo "Doing a dry run, not submitting announcement."
+          echo -e "\n\n#########################\n\n\n"
           echo "Announcement title: ${title}"
           echo "Announcement body: ${body}"
         else
