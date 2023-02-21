@@ -10,9 +10,8 @@ resources:
     source: Stage-DotNet
 
 pool:
-  # name: NetCore1ESPool-Svc-Internal
-  # demands: ImageOverride -equals 1es-ubuntu-2004
-  vmImage: ubuntu-latest # TODO: Use the proper pool from above
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
 
 parameters:
 - name: dotnetMajorVersion
