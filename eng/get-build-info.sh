@@ -53,14 +53,15 @@ function get_build_run () {
 function print_build_info() {
     local pipeline_name="$1"
     local pipeline_variable_name="$2"
-    local run_id="$3"
-    local source_version="$4"
+    local source_version_variable_name="$3"
+    local run_id="$4"
+    local source_version="$5"
 
     echo "${pipeline_name} run ID: ${run_id}"
     echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${run_id}"
     echo "  Run revision: ${source_version}"
-    echo "                https://dev.azure.com/dnceng/internal/_git/${pipeline_name}/commit/${source_version}"
     echo "##vso[task.setvariable variable=${pipeline_variable_name};isOutput=true]${run_id}"
+    echo "##vso[task.setvariable variable=${source_version_variable_name};isOutput=true]${source_version}"
 }
 
 function get_build_info () {
@@ -69,9 +70,10 @@ function get_build_info () {
     local pipeline_id="$3"
     local pipeline_name="$4"
     local pipeline_variable_name="$5"
-    local check_build_status="$6"
-    local search_by="$7"
-    local commit="$8"
+    local source_version_variable_name="$6"
+    local check_build_status="$7"
+    local search_by="$8"
+    local commit="$9"
 
     IFS=' '
     run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$search_by" "$commit")
@@ -81,5 +83,5 @@ function get_build_info () {
     fi
 
     read -r run_id source_version<<<"$run_info"
-    print_build_info "$pipeline_name" "$pipeline_variable_name" "$run_id" "$source_version"
+    print_build_info "$pipeline_name" "$pipeline_variable_name" "$source_version_variable_name" "$run_id" "$source_version"
 }

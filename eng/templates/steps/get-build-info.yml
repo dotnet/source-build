@@ -101,7 +101,9 @@ steps:
               "$(AZDO_ORG)" \
               "$(AZDO_PROJECT)" \
               "$(DOTNET_DOTNET_CI_PIPELINE_ID)" \
-              dotnet-dotnet DotnetDotnetRunId \
+              dotnet-dotnet \
+              DotnetDotnetRunId \
+              DotnetDotnetCommit \
               "${{ parameters.verifyBuildSuccess }}" \
               tag \
               "installer-$(ReadReleaseInfo.InstallerCommit)"
@@ -112,6 +114,7 @@ steps:
               "$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)" \
               dotnet-installer-official-ci \
               InstallerOfficialRunId \
+              InstallerCommit \
               "${{ parameters.verifyBuildSuccess }}" \
               sourceVersion \
               "$(ReadReleaseInfo.InstallerCommit)"
@@ -122,6 +125,7 @@ steps:
               "$(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)" \
               dotnet-installer-source-build-tarball-build \
               InstallerTarballBuildRunId \
+              InstallerCommit \
               "${{ parameters.verifyBuildSuccess }}" \
               sourceVersion \
               "$(ReadReleaseInfo.InstallerCommit)"
@@ -137,10 +141,10 @@ steps:
         source eng/get-build-info.sh
 
         if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
-          print_build_info dotnet-dotnet DotnetDotnetRunId "$(dotnetDotnetRunID)" "See the build info"
+          print_build_info dotnet-dotnet DotnetDotnetRunId DotnetDotnetCommit "$(dotnetDotnetRunID)" "See the build info"
         else
-          print_build_info dotnet-installer-official-ci InstallerOfficialRunId "$(dotnetInstallerOfficialRunID)" "$(ReadReleaseInfo.InstallerCommit)"
-          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId "$(dotnetInstallerTarballBuildRunID)" "N/A"
+          print_build_info dotnet-installer-official-ci InstallerOfficialRunId InstallerCommit "$(dotnetInstallerOfficialRunID)" "$(ReadReleaseInfo.InstallerCommit)"
+          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId InstallerCommit "$(dotnetInstallerTarballBuildRunID)" "N/A"
         fi
       name: AssociatedPipelineRuns
       displayName: Set Associated Pipeline Run IDs

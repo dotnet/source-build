@@ -27,15 +27,20 @@ stages:
       value: dn-bot
     - name: GitEmail
       value: dn-bot@microsoft.com
-    - name: sourceUrl
-      ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
-      ${{ else }}:
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
     - name: destinationUrl
       value: https://dotnet-security-partners@dev.azure.com/dotnet-security-partners/dotnet/_git/dotnet
     - name: sdkVersion
       value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
+    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
+    - ${{ else }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
 
     steps:
     - checkout: none
@@ -70,7 +75,7 @@ stages:
         set -euxo pipefail
 
         git fetch source "${{ parameters.releaseBranchName }}"
-        git checkout "${{ parameters.releaseBranchName }}"
+        git checkout "${{ variables.sourceVersion }}"
 
         tag_name="v$(sdkVersion)-SDK"
         message=".NET Source-build $(sdkVersion)-SDK"
