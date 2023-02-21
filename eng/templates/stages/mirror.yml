@@ -67,11 +67,6 @@ stages:
         AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
 
     - script: |
-        if [ ${{ parameters.isDryRun }} = True ]; then
-          echo "Doing a dry run, not pushing the branch ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
-          exit 0
-        fi
-
         set -euxo pipefail
 
         git fetch source "${{ parameters.releaseBranchName }}"
@@ -82,6 +77,11 @@ stages:
         git tag "$tag_name" HEAD -m "$message"
 
         git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
+
+        if [ ${{ parameters.isDryRun }} = True ]; then
+          echo "Doing a dry run, not pushing the tag $tag_name on branch ${{ parameters.releaseBranchName }} / ${{ variables.sourceVersion }} to ${{ variables.destinationUrl }}"
+          exit 0
+        fi
 
         echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
         git push --follow-tags destination "${{ parameters.releaseBranchName }}"
