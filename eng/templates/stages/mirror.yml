@@ -97,6 +97,6 @@ stages:
         fi
 
         echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
-        git push --follow-tags destination "${{ parameters.releaseBranchName }}"
+        git push destination "$tag_name"
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag
