@@ -28,9 +28,8 @@ stages:
   - ReleaseApproval
 
   variables:
-  - ${{ if parameters.isDryRun }}:
-    - group: DotNet-Source-Build-Bot-Secrets
-    - group: DotNet-DotNetCli-Storage
+  - group: DotNet-Source-Build-Bot-Secrets
+  - group: DotNet-DotNetCli-Storage
 
   - template: ../variables/pipelines.yml
   - name: announcementOrg
