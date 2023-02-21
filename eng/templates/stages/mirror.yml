@@ -74,7 +74,7 @@ stages:
 
         tag_name="v$(sdkVersion)-SDK"
         message=".NET Source-build $(sdkVersion)-SDK"
-        git tag "$tag_name" HEAD -m "$message"
+        git tag "$tag_name" "${{ variables.sourceVersion }}" -m "$message"
 
         git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
 
