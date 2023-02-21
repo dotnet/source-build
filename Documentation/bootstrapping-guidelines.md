@@ -50,21 +50,22 @@ You can see the list of supported RIDs and the RID graph in the [runtime.json](h
 
 **RIDs**  
 The RID graph or runtime fallback graph is a list of RIDs that are compatible with each other. You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
-Determine the compatible supported OS to use as host to build. Choose the host with same processor architecture as that of the new targeted platform.  
+Determine the compatible supported OS to use as host to build. Choose the host with same processor architecture as that of the new targeted platform.
 
 **Stage 1:**
 Build bootstrapping .NET SDK and toolset.
 
 - `./prep.sh`
- Downloads platform-native version of .NET SDK and toolset. So if you are building on x64 you get x64.
+ Downloads platform-native version of .NET SDK and toolset. If you are building on x64, you will get x64.
 - `./build.sh`
-Create source built .NET SDK which will be utilized to bootstrap in stage 2.
+Create source-built .NET SDK which will be utilized to bootstrap in stage 2.
+
+Now that you have a stage1 SDK which knows about your new RID, you can build stage2 targeting that RID.
 
 **Stage 2:**
-Use source built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
+Use source-built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
 
 - `./build.sh --with-sdk /path/to/stage1/sdk --with-packages /path/to/stage1/obj/bin/arch/blob-feed/packages`
-[NO NEED TO UPDATE THE RID GRAPH, though parameters may need to be passed?????]
 
 **If no compatible OS/platform found**
 
@@ -72,25 +73,24 @@ Use portable SDK (works for .NET 6, but require validation for .NET 7) and follo
 
 **Stage 0:**
 
-- Get Microsoft protable SDK
-- Update RID graph to include new RID
+- Get Microsoft portable SDK.
+- Update the RID graph (runtime.json) in the Microsoft-built portable SDK with the same changes you will make below to add your new RID to the RID graph.  This should include a fallback to the portable RID (linux-x64 or similar).
 
 **Stage 1:**
 
-- Update RID graph in source
-- Build with Stage 0 SDK
+- Before building your stage1 SDK, update the RID graph in source to include your new target RID.  For an example, see https://github.com/dotnet/runtime/pull/74372.
+- Build with Stage 0 SDK using `--with-sdk` with your modified portable SDK.
 
 **Stage 2:**
 
-- Build with Stage 1 SDK
+- Now you have a RID-specific SDK that knows about your new RID.
+- Build with Stage 1 SDK as above, using `--with-sdk` and `--with-packages`.
 
 ## Building for New Architecture (Unsupported)
-
-[Define the recommended process and add the steps in this section???]
 
 **RIDs**  
 The RID graph or runtime fallback graph is a list of RIDs that are compatible with each other. You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
-Building for unsupported architectures require cross-compilaton on the supported paltform. Determine the compatible host to build which provides cross-compilation toolchain.
+You will need to update the RID graph to include your new platform and runtime IDs.  See https://github.com/dotnet/runtime/pull/82382 or https://github.com/dotnet/runtime/pull/75396 for examples.
 
-[Define the steps?????]
+Building for unsupported architectures require cross-compilaton on the supported platform. Determine the compatible host to build which provides cross-compilation toolchain.
