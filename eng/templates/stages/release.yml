@@ -272,8 +272,6 @@ stages:
         # Get the inverse of the above selection
         body=$(echo "$template" | grep -v "^Title:")
 
-        cd $(Agent.WorkFolder)/
-
         echo "TargetRepo: $(TargetRepo)"
         echo "ForkRepo: $(ForkRepo)"
         echo "SdkVersion: $(sdkVersion)"
