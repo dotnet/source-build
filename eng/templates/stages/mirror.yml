@@ -5,6 +5,11 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: useCustomTag
+  type: boolean
+  default: false
+- name: customTag
+  type: string
 - name: isDryRun
   type: boolean
   default: false
@@ -70,16 +75,24 @@ stages:
         set -euxo pipefail
 
         git fetch source "${{ parameters.releaseBranchName }}"
-        git checkout "${{ variables.sourceVersion }}"
+        git checkout "$(sourceVersion)"
 
-        tag_name="v$(sdkVersion)-SDK"
+        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
+          tag_name="${{ parameters.customTag }}"
+          echo "Using custom tag ${tag_name}"
+        else
+          tag_name="v$(SdkVersion)-SDK"
+          echo "Using tag ${tag_name}"
+        fi
+
         message=".NET Source-build $(sdkVersion)-SDK"
-        git tag "$tag_name" "${{ variables.sourceVersion }}" -m "$message"
+        git tag "$tag_name" "$(sourceVersion)" -m "$message"
 
         git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
 
-        if [ ${{ parameters.isDryRun }} = True ]; then
-          echo "Doing a dry run, not pushing the tag $tag_name on branch ${{ parameters.releaseBranchName }} / ${{ variables.sourceVersion }} to ${{ variables.destinationUrl }}"
+        if [ "${{ parameters.isDryRun }}" = "True" ]; then
+          set +x
+          echo "Doing a dry run, not pushing the tag $tag_name ${{ parameters.releaseBranchName }} / $(sourceVersion) to ${{ variables.destinationUrl }}"
           exit 0
         fi
 
