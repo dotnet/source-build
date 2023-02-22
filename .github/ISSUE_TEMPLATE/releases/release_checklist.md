@@ -37,6 +37,7 @@
                 - ⚠️ 6.0 / 7.0: [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
                 - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) and the `dotnet/dotnet` commit that represents the release
            - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
+                - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
       1. - [ ] `Approval - Test prereqs` stage
            - [ ] Gather smoke-test prereqs ([🔁 automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
                 - [ ] Retrieve smoke-test prereqs artifact for each architecture
