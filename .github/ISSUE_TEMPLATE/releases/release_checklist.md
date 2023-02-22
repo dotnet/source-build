@@ -29,6 +29,8 @@
 
       1. - [ ] `Pre-Release` stage
            - This stage automatically pushes a branch with the sources that are being released to [`dnceng/security-partners-dotnet`](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet).
+           - **It is advised to run this stage a day prior to the release to verify that all required builds exist.**
+           - ⚠️ 8.0: It can happen that the commit of installer that the staging pipeline is associated with doesn't have a corresponding VMR build (as this one is batched). In this case, the stage will fail to find it and let you know it didn't find the build. When this happens, queue the [`dotnet-dotnet`](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) pipeline from the VMR commit that has synchronized the installer commit that is being released (you can search commits in VMR for the commit SHA as it's part of the commit message). The resulting build run should be tagged with the installer SHA. You can then re-run the `Pre-Release` stage and it should find this build.
            - ⚠️ 6.0 / 7.0: This pipeline also uploads the dotnet source tarball to `dotnetclimsrc` with the tarball contents.
            - The `dotnet/installer` commit that represents the release will be in the logs for "Read Release Info"
            - The `Get Associated Pipeline Run IDs` build step will contain links to pipelines associated with this release:
