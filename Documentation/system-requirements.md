@@ -20,7 +20,7 @@ Additional links:
 
 ### MacOS
 
-MacOS is not currently supported. [Tracking Issue](https://github.com/dotnet/source-build/issues/2909)
+MacOS is not currently supported: [Tracking Issue](https://github.com/dotnet/source-build/issues/2909).  However, community users have created a [Homebrew project](https://github.com/Homebrew/homebrew-core/blob/master/Formula/dotnet.rb) to build .NET for OSX.  Please feel free to open new issues in individual repos or in source-build for OSX issues and we can redirect them if possible.
 
 ### Windows
 

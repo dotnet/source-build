@@ -35,7 +35,7 @@ To build .NET SDK from source -
 **Supported OS**  
 [Check](https://learn.microsoft.com/en-us/dotnet/core/install/linux) officially supported linux distributions.  
 [List](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16) of Linux distribution officially building and testing using source-build.  
-Community building .NET for the [following](https://github.com/dotnet/source-build#net-in-linux-distributions) linux distributions.
+Community building .NET for the [following](https://github.com/dotnet/source-build#net-in-linux-distributions) linux distributions.  If the RID for your platform is already in the [runtime RID graph](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json), you can source-build the SDK without any source changes.
 
 **Supported Archs**  
 Officially building and testing for the following architectures - x64, ARM64  
@@ -63,7 +63,7 @@ Create source-built .NET SDK which will be utilized to bootstrap in stage 2.
 Now that you have a stage1 SDK which knows about your new RID, you can build stage2 targeting that RID.
 
 **Stage 2:**
-Use source-built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
+Extract the source-built .NET SDK and toolset created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.
 
 - `./build.sh --with-sdk /path/to/stage1/sdk --with-packages /path/to/stage1/obj/bin/arch/blob-feed/packages`
 
@@ -93,4 +93,4 @@ The RID graph or runtime fallback graph is a list of RIDs that are compatible wi
 
 You will need to update the RID graph to include your new platform and runtime IDs.  See https://github.com/dotnet/runtime/pull/82382 or https://github.com/dotnet/runtime/pull/75396 for examples.
 
-Building for unsupported architectures require cross-compilaton on the supported platform. Determine the compatible host to build which provides cross-compilation toolchain.
+Building for unsupported architectures require cross-compilaton on the supported platform. Determine the compatible host to build which provides cross-compilation toolchain.  [IBM has published](https://community.ibm.com/community/user/powerdeveloper/blogs/sapana-khemkar/2023/01/13/cross-build-dotnet7-on-x86-ibm-power?CommunityKey=8cc2a1f0-6307-48cb-9178-ace50920244e) a detailed description of how they successfully built .NET 7 for IBM Power.
