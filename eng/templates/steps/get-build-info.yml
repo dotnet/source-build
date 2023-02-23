@@ -78,7 +78,7 @@ steps:
     echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
     echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
 
-    build_name="$sdk_version"
+    build_name="$(resources.pipeline.dotnet-staging-pipeline-resource.runName)"
     if [ ${{ parameters.isDryRun }} = True ]; then
       build_name="${build_name}-dryrun"
     fi
