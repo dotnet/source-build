@@ -1,13 +1,3 @@
-<!--
-  .NET 6.0+ Release Checklist
-
-  To start the checklist for a new release:
-  - Open a new issue in dotnet/release (private repo).
-  - Delete lines starting with [Internal] if running a non-internal release.
-  - Delete lines starting with [Non-Internal] if running an internal release.
-  - Delete lines/sections specific to a different .NET version than you're releasing
--->
-
 <!-- Issue Title: --> Source-build {runtime-version} / {sdk-version} {Month} {Year} Servicing
 
 # {runtime-version} / {sdk-version}
