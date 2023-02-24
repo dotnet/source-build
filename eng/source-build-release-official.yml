@@ -18,6 +18,9 @@ parameters:
   displayName: Major .NET version being released
   type: string
   values: [ '6.0', '7.0', '8.0' ]
+- name: releaseName
+  displayName: Release name (e.g. ".NET 8.0 Preview 1")
+  type: string
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
@@ -57,6 +60,10 @@ parameters:
   displayName: Custom release tag (e.g. v6.0.XYY-source-build)
   type: string
   default: ' '
+- name: pushGitHubTag
+  displayName: Push release tag to GitHub
+  type: boolean
+  default: true
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -73,6 +80,8 @@ stages:
     dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
     dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
     verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+    useCustomTag: ${{ parameters.useCustomTag }}
+    customTag: ${{ replace(parameters.customTag, ' ', '') }}
     isDryRun: ${{ parameters.isDryRun }}
 
 - stage: MirrorApproval
@@ -117,9 +126,9 @@ stages:
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseName: ${{ parameters.releaseName }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
-    useCustomTag: ${{ parameters.useCustomTag }}
-    customTag: ${{ replace(parameters.customTag, ' ', '') }}
+    pushGitHubTag: ${{ parameters.pushGitHubTag }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}

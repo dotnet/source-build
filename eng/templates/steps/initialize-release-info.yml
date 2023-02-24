@@ -20,6 +20,11 @@ parameters:
   default: ''
 - name: verifyBuildSuccess
   type: boolean
+- name: useCustomTag
+  type: boolean
+  default: false
+- name: customTag
+  type: string
 - name: isDryRun
   type: boolean
   default: false
@@ -43,6 +48,7 @@ steps:
 
     runtime_version="$(jq -r '.Runtime' "$config_path")"
     release_channel="$(jq -r '.Channel' "$config_path")"
+    release="$(jq -r '.Release' "$config_path")"
 
     # Source-build only supports the lowest available feature band.
     # Sort the SDK releases by number and pick the lowest value.
@@ -68,15 +74,26 @@ steps:
       exit 1
     fi
 
-    echo "Release channel: ${release_channel}"
-    echo "Runtime version: ${runtime_version}"
-    echo "SDK version: ${sdk_version}"
-    echo "Installer commit: ${commit}"
+    if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
+      tag="${{ parameters.customTag }}"
+      echo "Using custom tag $tag"
+    else
+      tag="v$release"
+    fi
 
-    echo "##vso[task.setvariable variable=SdkVersion;isOutput=true]${sdk_version}"
-    echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]${runtime_version}"
-    echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]${release_channel}"
-    echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]${commit}"
+    echo "Release: $release"
+    echo "Release channel: $release_channel"
+    echo "Runtime version: $runtime_version"
+    echo "Release tag: $tag"
+    echo "SDK version: $sdk_version"
+    echo "Installer commit: $commit"
+
+    echo "##vso[task.setvariable variable=Release;isOutput=true]$release"
+    echo "##vso[task.setvariable variable=SdkVersion;isOutput=true]$sdk_version"
+    echo "##vso[task.setvariable variable=RuntimeVersion;isOutput=true]$runtime_version"
+    echo "##vso[task.setvariable variable=ReleaseChannel;isOutput=true]$release_channel"
+    echo "##vso[task.setvariable variable=ReleaseTag;isOutput=true]$tag"
+    echo "##vso[task.setvariable variable=InstallerCommit;isOutput=true]$commit"
 
     build_name="$(resources.pipeline.dotnet-staging-pipeline-resource.runName)"
     if [ ${{ parameters.isDryRun }} = True ]; then
@@ -86,7 +103,7 @@ steps:
     original_build_name='$(Build.BuildNumber)'
     revision="${original_build_name:9}"
 
-    echo "##vso[build.updatebuildnumber]${build_name}-${revision}"
+    echo "##vso[build.updatebuildnumber]$build_name-$revision"
   name: ReadReleaseInfo
   displayName: Read Release Info
 
