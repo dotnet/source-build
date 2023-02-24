@@ -16,8 +16,10 @@ resources:
     ref: ${{ parameters.releaseBranchName }}
 
 pool:
-  name: NetCore1ESPool-Svc-Internal
-  demands: ImageOverride -equals 1es-ubuntu-2004
+  # TODO
+  # name: NetCore1ESPool-Svc-Internal
+  # demands: ImageOverride -equals 1es-ubuntu-2004
+  vmImage: ubuntu-latest
 
 parameters:
 - name: dotnetMajorVersion
