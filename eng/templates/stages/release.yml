@@ -111,7 +111,7 @@ stages:
 
   jobs:
   - job: Release
-    displayName: Announce & Release
+    displayName: Announcements, PRs & Release
     steps:
     - checkout: self
 
@@ -123,7 +123,7 @@ stages:
         fetchTags: true
 
       - script: |
-          set -euxo pipefail
+          set -euo pipefail
           tarball_path="$(Build.ArtifactStagingDirectory)/dotnet-sdk-source-$(release).tar.gz"
           echo "Creating source tarball from dotnet-dotnet / $(dotnetDotnetCommit)"
 
@@ -136,7 +136,7 @@ stages:
         workingDirectory: $(Build.SourcesDirectory)/dotnet-dotnet
 
       - script: |
-          set -euxo pipefail
+          set -euo pipefail
 
           prerelease=''
           if [ ${{ parameters.isPreviewRelease }} = True ]; then
