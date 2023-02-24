@@ -1,0 +1,313 @@
+parameters:
+- name: dotnetStagingPipelineResource
+  type: string
+- name: dotnetMajorVersion
+  type: string
+- name: releaseBranchName
+  type: string
+- name: createReleaseAnnouncement
+  type: boolean
+  default: true
+- name: submitReleasePR
+  type: boolean
+  default: true
+- name: useCustomTag
+  type: boolean
+  default: false
+- name: customTag
+  type: string
+- name: isDryRun
+  type: boolean
+  default: false
+
+stages:
+- stage: Release
+  displayName: Release
+  dependsOn:
+  - PreRelease
+  - ReleaseApproval
+
+  variables:
+  - group: DotNet-Source-Build-Bot-Secrets
+  - group: DotNet-DotNetCli-Storage
+
+  - template: ../variables/pipelines.yml
+  - name: announcementOrg
+    value: dotnet
+  - name: announcementRepo
+    value: source-build
+  - name: storageAccountName
+    value: dotnetcli
+  - name: blobContainerName
+    value: source-built-artifacts
+  - name: artifactsUploadBaseFilePath
+    ${{ if parameters.isDryRun }}:
+      value: testing
+    ${{ else }}:
+      value: assets
+  - name: sdkUploadBaseFilePath
+    ${{ if parameters.isDryRun }}:
+      value: testing
+    ${{ else }}:
+      value: sdks
+  - name: Codeql.Enabled
+    value: true
+
+  # Variables from the Pre-Release stage (from get-build-info)
+  - name: sdkVersion
+    value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
+  - name: runtimeVersion
+    value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.RuntimeVersion'] ]
+  - name: releaseChannel
+    value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseChannel'] ]
+
+  - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+    - name: officialBuildPipelineId
+      value: $(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)
+    - name: officialBuildRunId
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerTarballBuildRunId'] ]
+  - ${{ else }}:
+    - name: officialBuildPipelineId
+      value: $(DOTNET_DOTNET_CI_PIPELINE_ID)
+    - name: officialBuildRunId
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetRunId'] ]
+
+  jobs:
+  - job: ValidateReleaseTag
+    displayName: Validate release tag
+    steps:
+    - checkout: none
+
+    - script: |
+        set -euo pipefail
+        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
+          tag="${{ parameters.customTag }}"
+          echo "Using custom tag ${tag}"
+        else
+          tag="v$(SdkVersion)"
+          echo "Using tag ${tag}"
+        fi
+
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          repo='installer'
+        else
+          repo='dotnet'
+        fi
+
+        # Checks for all graphs that match the tag name (there can be more, e.g. 7.0.100 will match 7.0.100-preview.1.21102.12)
+        query="{ repository(owner: \"dotnet\", name: \"$repo\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$tag\") { nodes { name }}}}"
+        tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
+
+        if echo "$tags" | grep -q "map\[name:$tag\]"; then
+          echo "##vso[task.setvariable variable=Tag;isOutput=true]$tag"
+          echo "Tag $tag exists"
+        else
+          echo "##vso[task.logissue type=error]Tag $tag does not exist in dotnet/$repo"
+          exit 1
+        fi
+      displayName: Validate release tag
+      name: TagValidation
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+  - job: CreateReleaseAnnouncementJob
+    displayName: Create Release Announcement
+    condition: and(succeeded(), eq('${{ parameters.createReleaseAnnouncement }}', true))
+    dependsOn: ValidateReleaseTag
+    variables:
+    - name: Tag
+      value: $[ dependencies.ValidateReleaseTag.outputs['TagValidation.Tag'] ]
+    steps:
+    - script: |
+        set -euxo pipefail
+
+        query='query { repository(owner: "${{ variables.announcementOrg }}", name: "${{ variables.announcementRepo }}") { id } }'
+        echo "${query}"
+        repo_id=$( gh api graphql -f query="$query" --template '{{.data.repository.id}}' )
+        echo ${{ variables.announcementOrg }}/${{ variables.announcementRepo }} repo ID is ${repo_id}
+
+        query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussionCategories(first: 10) { edges { node { id, name } } } } }'
+        echo "${query}"
+        category_id=$( gh api graphql -f query="$query" --template '{{range .data.repository.discussionCategories.edges}}{{if eq .node.name "Announcements"}}{{.node.id}}{{end}}{{end}}' )
+        echo Discussion Category ID is ${category_id}
+
+        echo "##vso[task.setvariable variable=RepoId;]${repo_id}"
+        echo "##vso[task.setvariable variable=DiscussionCategoryId;]${category_id}"
+      displayName: Get category IDs
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+    - script: |
+        set -euxo pipefail
+        echo "Repo ID is $(RepoId)"
+        echo "Discussion Category ID is $(DiscussionCategoryId)"
+
+        # Set environment variables that go in the announcement template
+        export TAG=$(Tag)
+        export RUNTIME_VERSION="$(runtimeVersion)"
+        export RELEASE_CHANNEL="$(releaseChannel)"
+        export SDK_VERSION="$(sdkVersion)"
+        export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
+
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
+        else
+          export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$TAG"
+        fi
+
+        template="$(envsubst < source-build-release-announcement.md)"
+        # Get the line in the template that is prefixed with "Title:" and remove the prefix
+        title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
+        # Get the inverse of the above selection
+        body=$(echo "$template" | grep -v "^Title:")
+
+        query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
+
+        if [ ${{ parameters.isDryRun }} = True ]; then
+          set +x
+          echo -e "\n\n\n#########################\n\n"
+          echo "Doing a dry run, not submitting announcement."
+          echo -e "\n\n#########################\n\n\n"
+          echo "Announcement title: ${title}"
+          echo "Announcement body: ${body}"
+        else
+          echo "Submitting announcement."
+          announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+
+          echo "Announcement URL: $announcement_url"
+          echo "Tag URL: $TAG_URL"
+          echo "Release Notes URL: $RELEASE_NOTES_URL"
+        fi
+      displayName: Submit announcement discussion
+      workingDirectory: $(Build.SourcesDirectory)/eng
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+
+  - job: SubmitReleasePrJob
+    displayName: Submit Release PR
+    dependsOn: ValidateReleaseTag
+    condition: and(succeeded(), eq('${{ parameters.submitReleasePR }}', true))
+    variables:
+    - name: TargetRepo
+      value: dotnet/installer
+    - name: ForkRepo
+      value: dotnet-sb-bot/installer
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '6.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: Build_Tarball_x64 CentOS7-Offline_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-$(sdkVersion)-*.tar.gz
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '7.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: Build_Tarball_x64 CentOSStream8-Offline_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.$(sdkVersion).tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-$(sdkVersion)-*.tar.gz
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '8.0') }}:
+      - name: SourceBuildArtifactLeg
+        value: CentOSStream8_Offline_x64_Artifacts
+      - name: SourceBuiltArtifactsFileName
+        value: Private.SourceBuilt.Artifacts.8.0.100.centos.8-x64.tar.gz
+      - name: SdkArtifactFileName
+        value: dotnet-sdk-*.tar.gz
+
+    steps:
+    - task: DownloadPipelineArtifact@2
+      name: DownloadSourceBuiltArtifactsStep
+      displayName: Download Source-Built Artifacts
+      inputs:
+        source: specific
+        project: $(AZDO_PROJECT)
+        pipeline: $(officialBuildPipelineId)
+        runVersion: specific
+        runId: $(officialBuildRunId)
+        artifact: $(SourceBuildArtifactLeg)
+        patterns: $(SourceBuiltArtifactsFileName)
+
+    - task: DownloadPipelineArtifact@2
+      name: DownloadSourceBuiltSDKStep
+      displayName: Download Source-Built SDK
+      inputs:
+        source: specific
+        project: $(AZDO_PROJECT)
+        pipeline: $(officialBuildPipelineId)
+        runVersion: specific
+        runId: $(officialBuildRunId)
+        artifact: $(SourceBuildArtifactLeg)
+        patterns: $(SdkArtifactFileName)
+
+    - template: ../steps/upload-to-blob-storage.yml
+      parameters:
+        file: $(PIPELINE.WORKSPACE)/$(SourceBuiltArtifactsFileName)
+        accountName: $(storageAccountName)
+        containerName: $(blobContainerName)
+        uploadPath: $(artifactsUploadBaseFilePath)
+        azureStorageKey: $(dotnetcli-storage-key)
+
+    - template: ../steps/upload-to-blob-storage.yml
+      parameters:
+        file: $(PIPELINE.WORKSPACE)/$(SdkArtifactFileName)
+        accountName: $(storageAccountName)
+        containerName: $(blobContainerName)
+        uploadPath: $(sdkUploadBaseFilePath)
+        azureStorageKey: $(dotnetcli-storage-key)
+
+    - script: |
+        set -euo pipefail
+
+        export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
+        export RUNTIME_VERSION="$(runtimeVersion)"
+        export SDK_VERSION="$(sdkVersion)"
+
+        template="$(envsubst < source-build-release-pr.md)"
+        # Get the line in the template that is prefixed with "Title:" and remove the prefix
+        title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
+        # Get the inverse of the above selection
+        body=$(echo "$template" | grep -v "^Title:")
+
+        echo "TargetRepo: $(TargetRepo)"
+        echo "ForkRepo: $(ForkRepo)"
+        echo "SdkVersion: $(sdkVersion)"
+        echo "title: ${title}"
+        echo "body: ${body}"
+
+        extraArgs=()
+        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+          extraArgs+=("--globalJson" "src/SourceBuild/tarball/content/global.json")
+          extraArgs+=("--versionProps" "eng/Versions.props")
+        fi
+
+        if [ ${{ parameters.isDryRun }} = True ]; then
+          echo "Doing a dry run, not submitting PR. Would have called:"
+          echo "./submit-source-build-release-pr.sh"
+          echo "  --setupGitAuth"
+          echo "  --targetRepo $(TargetRepo)"
+          echo "  --forkRepo $(ForkRepo)"
+          echo "  --sdkVersion $(sdkVersion)"
+          echo "  --title ${title}"
+          echo "  --body ${body}"
+          echo "  --targetBranch ${{ parameters.releaseBranchName }}"
+          echo "  ${extraArgs[@]}"
+        else
+          echo "Submitting PR"
+          ./submit-source-build-release-pr.sh \
+            --setupGitAuth \
+            --targetRepo $(TargetRepo) \
+            --forkRepo $(ForkRepo) \
+            --sdkVersion $(sdkVersion) \
+            --title "${title}" \
+            --body "${body}" \
+            --targetBranch "${{ parameters.releaseBranchName }}" \
+            "${extraArgs[@]}"
+        fi
+      displayName: Submit Release PR
+      workingDirectory: $(Build.SourcesDirectory)/eng
+      env:
+        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)

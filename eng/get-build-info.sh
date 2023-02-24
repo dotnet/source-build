@@ -8,24 +8,29 @@ function get_build_run () {
     local azdo_org="$3"
     local azdo_project="$4"
     local check_build_status="$5"
-    local tag="${6-}" # Optional
+    local search_by="$6"
+    local commit="$7"
 
-    if [[ -n "$tag" ]]; then
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$tag")
+    # We search by a tag or by a commit for which the build was running
+    # We use the tag for the VMR builds (8.0+) and the commit for older installer builds
+    if [[ "$search_by" == 'tag' ]]; then
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$commit")
     else
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id")
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --query "[?sourceVersion == '$commit']")
     fi
 
-    runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "sourceVersion": .sourceVersion }]')
-    run_count=$(echo "$runs" | jq 'length')
+    runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "buildNumber": .buildNumber, "sourceVersion": .sourceVersion }]')
+    run_count=$(echo "$runs"  | jq 'length')
 
     if [ "$run_count" != "1" ]; then
         local tagged=''
         if [[ -n "$tag" ]]; then
             tagged=" tagged ${tag}"
         fi
+        set -x
         echo "##vso[task.logissue type=error]There are ${run_count} runs of ${pipeline_name}${tagged}. Please manually specify run ID to use."
         echo "##vso[task.logissue type=error]Run IDs are: ${runs}"
+        set +x
         exit 1
     fi
 
@@ -48,14 +53,15 @@ function get_build_run () {
 function print_build_info() {
     local pipeline_name="$1"
     local pipeline_variable_name="$2"
-    local run_id="$3"
-    local source_version="$4"
+    local source_version_variable_name="$3"
+    local run_id="$4"
+    local source_version="$5"
 
     echo "${pipeline_name} run ID: ${run_id}"
     echo "  Link: https://dev.azure.com/dnceng/internal/_build/results?buildId=${run_id}"
     echo "  Run revision: ${source_version}"
-    echo "                https://dev.azure.com/dnceng/internal/_git/${pipeline_name}/commit/${source_version}"
-    echo "##vso[task.setvariable variable=${pipeline_variable_name}]${run_id}"
+    echo "##vso[task.setvariable variable=${pipeline_variable_name};isOutput=true]${run_id}"
+    echo "##vso[task.setvariable variable=${source_version_variable_name};isOutput=true]${source_version}"
 }
 
 function get_build_info () {
@@ -64,16 +70,18 @@ function get_build_info () {
     local pipeline_id="$3"
     local pipeline_name="$4"
     local pipeline_variable_name="$5"
-    local check_build_status="$6"
-    local tag="${7-}" # Optional
+    local source_version_variable_name="$6"
+    local check_build_status="$7"
+    local search_by="$8"
+    local commit="$9"
 
     IFS=' '
-    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$tag")
+    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$search_by" "$commit")
     if [[ $? != "0" ]]; then
         echo "$run_info"
         exit 1
     fi
 
     read -r run_id source_version<<<"$run_info"
-    print_build_info "$pipeline_name" "$pipeline_variable_name" "$run_id" "$source_version"
+    print_build_info "$pipeline_name" "$pipeline_variable_name" "$source_version_variable_name" "$run_id" "$source_version"
 }

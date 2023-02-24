@@ -1,0 +1,114 @@
+parameters:
+- name: dotnetMajorVersion
+  displayName: Major .NET version being released
+  type: string
+  values: [ '6.0', '7.0', '8.0' ]
+- name: releaseBranchName
+  displayName: Release branch name (e.g. release/8.0.1xx-preview1)
+  type: string
+- name: dotnetStagingPipelineResource
+  type: string
+- name: useSpecificPipelineRunIDs
+  displayName: Use specific pipeline run IDs
+  type: boolean
+  default: false
+- name: dotnetDotnetRunID
+  displayName: '[⚠️ 8.0] Specific dotnet-dotnet run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerOfficialRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-official-ci run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-source-build-tarball-build run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
+- name: isDryRun
+  displayName: Dry Run
+  type: boolean
+  default: false
+
+stages:
+- stage: PreRelease
+  displayName: Pre-Release
+  jobs:
+  - job: PreRelease
+    ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      displayName: Get build info & push tarball
+    ${{ else }}:
+      displayName: Get build info
+    variables:
+    - template: ../variables/pipelines.yml
+    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - group: DotNet-MSRC-Storage
+      - group: DotNet-Source-Build-All-Orgs-Source-Access
+      - name: storageAccountName
+        value: dotnetclimsrc
+      - name: blobContainerName
+        value: source-build
+      - name: vmrUpstreamUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
+      - name: blobContainerUploadBaseFilePath
+        ${{ if parameters.isDryRun }}:
+          value: Dev
+        ${{ else }}:
+          value: release
+
+    steps:
+    - template: ../steps/get-build-info.yml
+      parameters:
+        dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+        releaseBranchName: ${{ parameters.releaseBranchName }}
+        getAssociatedPipelineRuns: true
+        useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
+        dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
+        dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
+        dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+        verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+        isDryRun: ${{ parameters.isDryRun }}
+
+    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - task: DownloadPipelineArtifact@2
+        name: DownloadSourceTarballStep
+        displayName: Download Source Tarball
+        inputs:
+          source: specific
+          artifact: BlobArtifacts
+          patterns: BlobArtifacts/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
+          project: $(AZDO_PROJECT)
+          pipeline: $(INSTALLER_OFFICIAL_CI_PIPELINE_ID)
+          runVersion: specific
+          runId: $(AssociatedPipelineRuns.InstallerOfficialRunId)
+
+      - template: ../steps/upload-to-blob-storage.yml
+        parameters:
+          file: $(PIPELINE.WORKSPACE)/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz
+          accountName: $(storageAccountName)
+          containerName: $(blobContainerName)
+          uploadPath: $(blobContainerUploadBaseFilePath)/$(ReadReleaseInfo.ReleaseChannel)/$(ReadReleaseInfo.RuntimeVersion)-$(ReadReleaseInfo.SdkVersion)
+          azureStorageKey: $(dotnetclimsrc-access-key)
+      
+      - script: |
+          set -euo pipefail
+
+          upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
+
+          args=()
+          args+=(--releaseChannel $(ReadReleaseInfo.ReleaseChannel))
+          args+=(--sdkVersion $(ReadReleaseInfo.SdkVersion))
+          args+=(--upstream ${upstream_with_pat})
+          args+=(--tarball $(Pipeline.Workspace)/dotnet-sdk-source-$(ReadReleaseInfo.SdkVersion).tar.gz)
+
+          if [ '${{ parameters.isDryRun }}' = True ]; then
+            args+=(--isDryRun)
+          fi
+
+          $(Build.SourcesDirectory)/eng/push-tarball.sh "${args[@]}"
+        displayName: Update security-partners-dotnet
+        env:
+          AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)

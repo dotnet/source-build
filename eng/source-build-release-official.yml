@@ -1,0 +1,125 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)
+appendCommitMessageToRunName: false
+
+trigger: none
+pr: none
+
+resources:
+  pipelines:
+  - pipeline: dotnet-staging-pipeline-resource
+    source: Stage-DotNet
+
+pool:
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
+
+parameters:
+- name: dotnetMajorVersion
+  displayName: Major .NET version being released
+  type: string
+  values: [ '6.0', '7.0', '8.0' ]
+- name: releaseBranchName
+  displayName: Release branch name (e.g. release/8.0.1xx-preview1)
+  type: string
+- name: useSpecificPipelineRunIDs
+  displayName: Use specific pipeline run IDs
+  type: boolean
+  default: false
+- name: dotnetDotnetRunID
+  displayName: '[⚠️ 8.0] Specific dotnet-dotnet run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerOfficialRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-official-ci run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: dotnetInstallerTarballBuildRunID
+  displayName: '[⚠️ 6.0 / 7.0] Specific dotnet-installer-source-build-tarball-build run ID'
+  type: string
+  default: '200XXXX.Y'
+- name: verifyBuildSuccess
+  displayName: Verify that associated pipeline runs succeeded
+  type: boolean
+  default: true
+- name: createReleaseAnnouncement
+  displayName:  Create Release Announcement
+  type: boolean
+  default: true
+- name: submitReleasePR
+  displayName: Submit Release PR
+  type: boolean
+  default: true
+- name: useCustomTag
+  displayName: Use custom tag?
+  type: boolean
+  default: false
+- name: customTag
+  displayName: Custom release tag (e.g. v6.0.XYY-source-build)
+  type: string
+  default: ' '
+- name: isDryRun
+  displayName: Dry Run
+  type: boolean
+  default: false
+
+stages:
+- template: templates/stages/pre-release.yml
+  parameters:
+    dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
+    useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
+    dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
+    dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
+    dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
+    verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+    isDryRun: ${{ parameters.isDryRun }}
+
+- stage: MirrorApproval
+  ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+    displayName: Approval - Test prereqs & PR
+  ${{ else }}:
+    displayName: Approval - Test prereqs
+  dependsOn: PreRelease
+  jobs:
+  - deployment: MirrorApproval
+    displayName: Confirm PR merged & prereqs uploaded
+    environment: Source Build Release - Mirror
+    pool: server
+
+- template: templates/stages/mirror.yml
+  parameters:
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
+    useCustomTag: ${{ parameters.useCustomTag }}
+    customTag: ${{ replace(parameters.customTag, ' ', '') }}
+    isDryRun: ${{ parameters.isDryRun }}
+
+- stage: NotificationApproval
+  displayName: Approval - Partner notification
+  dependsOn: Mirror
+  jobs:
+  - deployment: NotificationApproval
+    displayName: Confirm partner notification sent
+    environment: Source Build Release - Partner Notification
+    pool: server
+
+- stage: ReleaseApproval
+  displayName: Approval - Release
+  dependsOn: NotificationApproval
+  jobs:
+  - deployment: ReleaseApproval
+    displayName: Confirm Microsoft build released
+    environment: Source Build Release - Release
+    pool: server
+
+- template: templates/stages/release.yml
+  parameters:
+    dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+    dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseBranchName: ${{ parameters.releaseBranchName }}
+    createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
+    useCustomTag: ${{ parameters.useCustomTag }}
+    customTag: ${{ replace(parameters.customTag, ' ', '') }}
+    submitReleasePR: ${{ parameters.submitReleasePR }}
+    isDryRun: ${{ parameters.isDryRun }}
