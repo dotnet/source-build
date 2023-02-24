@@ -3,9 +3,6 @@ parameters:
   type: string
 - name: releaseBranchName
   type: string
-- name: getAssociatedPipelineRuns
-  type: boolean
-  default: false
 - name: useSpecificPipelineRunIDs
   type: boolean
   default: false
@@ -107,61 +104,63 @@ steps:
   name: ReadReleaseInfo
   displayName: Read Release Info
 
-- ${{ if eq(parameters.getAssociatedPipelineRuns, true) }}:
-  - ${{ if eq(parameters.useSpecificPipelineRunIDs, false) }}:
-    - script: |
-        set -euo pipefail
-        source eng/get-build-info.sh
+- script: |
+    set -euo pipefail
+    source eng/get-build-info.sh
 
-        if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
-            get_build_info \
-              "$(AZDO_ORG)" \
-              "$(AZDO_PROJECT)" \
-              "$(DOTNET_DOTNET_CI_PIPELINE_ID)" \
-              dotnet-dotnet \
-              DotnetDotnetRunId \
-              DotnetDotnetCommit \
-              "${{ parameters.verifyBuildSuccess }}" \
-              tag \
-              "installer-$(ReadReleaseInfo.InstallerCommit)"
-        else
-            get_build_info \
-              "$(AZDO_ORG)" \
-              "$(AZDO_PROJECT)" \
-              "$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)" \
-              dotnet-installer-official-ci \
-              InstallerOfficialRunId \
-              InstallerCommit \
-              "${{ parameters.verifyBuildSuccess }}" \
-              sourceVersion \
-              "$(ReadReleaseInfo.InstallerCommit)"
+    if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "6.0" || "$(ReadReleaseInfo.ReleaseChannel)" == "7.0" ]]; then
+      if [[ "${{ parameters.useSpecificPipelineRunIDs }}" == "True" ]]; then
+        search_by=name
+        query1="$(dotnetInstallerOfficialRunID)"
+        query2="$(dotnetInstallerTarballBuildRunID)"
+      else
+        search_by=sourceVersion
+        query1="$(ReadReleaseInfo.InstallerCommit)"
+        query2="$(ReadReleaseInfo.InstallerCommit)"
+      fi
 
-            get_build_info \
-              "$(AZDO_ORG)" \
-              "$(AZDO_PROJECT)" \
-              "$(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)" \
-              dotnet-installer-source-build-tarball-build \
-              InstallerTarballBuildRunId \
-              InstallerCommit \
-              "${{ parameters.verifyBuildSuccess }}" \
-              sourceVersion \
-              "$(ReadReleaseInfo.InstallerCommit)"
-        fi
-      name: AssociatedPipelineRuns
-      displayName: Get Associated Pipeline Run IDs
-      env:
-        AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
+      get_build_info \
+        "$(AZDO_ORG)" \
+        "$(AZDO_PROJECT)" \
+        "$(INSTALLER_OFFICIAL_CI_PIPELINE_ID)" \
+        dotnet-installer-official-ci \
+        InstallerOfficialRunId \
+        InstallerCommit \
+        "${{ parameters.verifyBuildSuccess }}" \
+        $search_by \
+        $query1
 
-  - ${{ else }}:
-    - script: |
-        set -euo pipefail
-        source eng/get-build-info.sh
+      get_build_info \
+        "$(AZDO_ORG)" \
+        "$(AZDO_PROJECT)" \
+        "$(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)" \
+        dotnet-installer-source-build-tarball-build \
+        InstallerTarballBuildRunId \
+        InstallerCommit \
+        "${{ parameters.verifyBuildSuccess }}" \
+        $search_by \
+        $query2
+    else
+      if [[ "${{ parameters.useSpecificPipelineRunIDs }}" == "True" ]]; then
+        search_by=name
+        query="$(dotnetInstallerOfficialRunID)"
+      else
+        search_by=tag
+        query="installer-$(ReadReleaseInfo.InstallerCommit)"
+      fi
 
-        if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "8.0" ]]; then
-          print_build_info dotnet-dotnet DotnetDotnetRunId DotnetDotnetCommit "$(dotnetDotnetRunID)" "See the build info"
-        else
-          print_build_info dotnet-installer-official-ci InstallerOfficialRunId InstallerCommit "$(dotnetInstallerOfficialRunID)" "$(ReadReleaseInfo.InstallerCommit)"
-          print_build_info dotnet-installer-source-build-tarball-build InstallerTarballBuildRunId InstallerCommit "$(dotnetInstallerTarballBuildRunID)" "N/A"
-        fi
-      name: AssociatedPipelineRuns
-      displayName: Set Associated Pipeline Run IDs
+      get_build_info \
+        "$(AZDO_ORG)" \
+        "$(AZDO_PROJECT)" \
+        "$(DOTNET_DOTNET_CI_PIPELINE_ID)" \
+        dotnet-dotnet \
+        DotnetDotnetRunId \
+        DotnetDotnetCommit \
+        "${{ parameters.verifyBuildSuccess }}" \
+        $search_by \
+        $query
+    fi
+  name: AssociatedPipelineRuns
+  displayName: Get associated pipeline runs
+  env:
+    AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)

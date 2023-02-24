@@ -9,14 +9,16 @@ function get_build_run () {
     local azdo_project="$4"
     local check_build_status="$5"
     local search_by="$6"
-    local commit="$7"
+    local query="$7"
 
     # We search by a tag or by a commit for which the build was running
     # We use the tag for the VMR builds (8.0+) and the commit for older installer builds
     if [[ "$search_by" == 'tag' ]]; then
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$commit")
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --tags "$query")
+    elif [[ "$search_by" == 'name' ]]; then
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --query "[?buildNumber == '$query']")
     else
-        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --query "[?sourceVersion == '$commit']")
+        build_runs=$(az pipelines runs list --organization "$azdo_org" --project "$azdo_project" --pipeline-ids "$pipeline_id" --query "[?sourceVersion == '$query']")
     fi
 
     runs=$(echo "$build_runs" | jq -r '[.[] | { "result": .result, "id": .id, "buildNumber": .buildNumber, "sourceVersion": .sourceVersion }]')
@@ -64,7 +66,7 @@ function print_build_info() {
     echo "##vso[task.setvariable variable=${source_version_variable_name};isOutput=true]${source_version}"
 }
 
-function get_build_info () {
+function get_build_info() {
     local azdo_org="$1"
     local azdo_project="$2"
     local pipeline_id="$3"
