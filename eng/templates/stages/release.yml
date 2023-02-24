@@ -3,6 +3,8 @@ parameters:
   type: string
 - name: dotnetMajorVersion
   type: string
+- name: isPreviewRelease
+  type: boolean
 - name: releaseName
   type: string
 - name: releaseBranchName
@@ -13,8 +15,8 @@ parameters:
 - name: submitReleasePR
   type: boolean
   default: true
-- name: pushGitHubTag
-  type: boolean
+- name: createGitHubRelease
+  type: string
 - name: isDryRun
   type: boolean
   default: false
@@ -103,12 +105,58 @@ stages:
       value: $(DOTNET_DOTNET_CI_PIPELINE_ID)
     - name: officialBuildRunId
       value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetRunId'] ]
+    - name: dotnetDotnetCommit
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
 
   jobs:
   - job: Release
     displayName: Announce & Release
     steps:
     - checkout: self
+
+    # TODO: Add not(parameters.isDryRun)
+    - ${{ if and(ne(parameters.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
+      - checkout: dotnet-dotnet
+        displayName: Checkout dotnet-dotnet
+        fetchDepth: 0
+        fetchTags: true
+
+      - script: |
+          set -euxo pipefail
+          tarball_path="$(Build.ArtifactStagingDirectory)/dotnet-sdk-source-$(release).tar.gz"
+          echo "Creating source tarball from dotnet-dotnet / $(dotnetDotnetCommit)"
+
+          git checkout "$(dotnetDotnetCommit)"
+          ./eng/pack-sources.sh --output "$tarball_path"
+
+          echo "##vso[task.setvariable variable=SourceTarballPath]$tarball_path"
+
+        displayName: Prepare source tarball
+        workingDirectory: $(Agent.BuildDirectory)/dotnet-dotnet
+
+      - script: |
+          set -euxo pipefail
+
+          prerelease=''
+          if [ ${{ parameters.isPreviewRelease }} = True ]; then
+            prerelease='--prerelease'
+          fi
+
+          draft=''
+          if [ ${{ parameters.createGitHubRelease }} = draft ]; then
+            draft='--draft'
+          fi
+
+          gh release create "$(releaseTag)" "$(SourceTarballPath)#Packed sources" \
+            --repo dotnet/dotnet \
+            --title "${{ parameters.releaseName }}" \
+            --target "$(dotnetDotnetCommit)" \
+            $prerelease \
+            $draft
+
+        displayName: Create GitHub release
+        env:
+          GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
     - script: |
         set -euo pipefail
@@ -148,8 +196,8 @@ stages:
           category_id=$( gh api graphql -f query="$query" --template '{{range .data.repository.discussionCategories.edges}}{{if eq .node.name "Announcements"}}{{.node.id}}{{end}}{{end}}' )
           echo Discussion Category ID is ${category_id}
 
-          echo "##vso[task.setvariable variable=RepoId;]${repo_id}"
-          echo "##vso[task.setvariable variable=DiscussionCategoryId;]${category_id}"
+          echo "##vso[task.setvariable variable=RepoId]$repo_id"
+          echo "##vso[task.setvariable variable=DiscussionCategoryId]$category_id"
         displayName: Get announcement category
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
@@ -187,18 +235,18 @@ stages:
             echo -e "\n\n\n#########################\n\n"
             echo "Doing a dry run, not submitting announcement."
             echo -e "\n\n#########################\n\n\n"
-            echo "Announcement title: ${title}"
-            echo "Announcement body: ${body}"
+            echo "Announcement title: $title"
+            echo "Announcement body: $body"
           else
             echo "Submitting announcement."
-            announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="${body}" -F title="${title}" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+            announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
 
             echo "Announcement URL: $announcement_url"
             echo "Tag URL: $TAG_URL"
             echo "Release Notes URL: $RELEASE_NOTES_URL"
           fi
         displayName: Submit announcement discussion
-        workingDirectory: $(Build.SourcesDirectory)/eng
+        workingDirectory: $(Agent.BuildDirectory)/source-build/eng
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
@@ -259,8 +307,8 @@ stages:
           echo "TargetRepo: $(releasePrRepo)"
           echo "ForkRepo: $(releasePrForkRepo)"
           echo "SdkVersion: $(sdkVersion)"
-          echo "Title: ${title}"
-          echo "Body: ${body}"
+          echo "Title: $title"
+          echo "Body: $body"
 
           extraArgs=()
           if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
@@ -275,8 +323,8 @@ stages:
             echo "  --targetRepo $(releasePrRepo)"
             echo "  --forkRepo $(releasePrForkRepo)"
             echo "  --sdkVersion $(sdkVersion)"
-            echo "  --title ${title}"
-            echo "  --body ${body}"
+            echo "  --title $title"
+            echo "  --body $body"
             echo "  --targetBranch ${{ parameters.releaseBranchName }}"
             echo "  ${extraArgs[@]}"
           else
@@ -286,12 +334,12 @@ stages:
               --targetRepo $(releasePrRepo) \
               --forkRepo $(releasePrForkRepo) \
               --sdkVersion $(sdkVersion) \
-              --title "${title}" \
-              --body "${body}" \
+              --title "$title" \
+              --body "$body" \
               --targetBranch "${{ parameters.releaseBranchName }}" \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR
-        workingDirectory: $(Build.SourcesDirectory)/eng
+        workingDirectory: $(Agent.BuildDirectory)/source-build/eng
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)

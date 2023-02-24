@@ -8,6 +8,12 @@ resources:
   pipelines:
   - pipeline: dotnet-staging-pipeline-resource
     source: Stage-DotNet
+    version: 20230215.2-8.0.100-preview.1.23115.2-167122 # TODO: Remove this
+  repositories:
+  - repository: dotnet-dotnet
+    type: git
+    name: dotnet-dotnet
+    ref: ${{ parameters.releaseBranchName }}
 
 pool:
   name: NetCore1ESPool-Svc-Internal
@@ -24,6 +30,18 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: isPreviewRelease
+  displayName: Preview release
+  type: boolean
+  default: false
+- name: useCustomTag
+  displayName: Use custom tag
+  type: boolean
+  default: false
+- name: customTag
+  displayName: Custom release tag (e.g. v6.0.XYY-source-build)
+  type: string
+  default: ' '
 - name: useSpecificPipelineRunIDs
   displayName: Use specific pipeline run IDs
   type: boolean
@@ -45,25 +63,18 @@ parameters:
   type: boolean
   default: true
 - name: createReleaseAnnouncement
-  displayName:  Create Release Announcement
+  displayName: Create Release Announcement
   type: boolean
   default: true
 - name: submitReleasePR
   displayName: Submit Release PR
   type: boolean
   default: true
-- name: useCustomTag
-  displayName: Use custom tag?
-  type: boolean
-  default: false
-- name: customTag
-  displayName: Custom release tag (e.g. v6.0.XYY-source-build)
+- name: createGitHubRelease
+  displayName: '[⚠️ 8.0] Create tag & release in dotnet/dotnet'
   type: string
-  default: ' '
-- name: pushGitHubTag
-  displayName: Push release tag to GitHub
-  type: boolean
-  default: true
+  values: [ 'skip', 'draft', 'full' ]
+  default: draft
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -128,7 +139,8 @@ stages:
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     releaseName: ${{ parameters.releaseName }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
+    isPreviewRelease: ${{ parameters.isPreviewRelease }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
-    pushGitHubTag: ${{ parameters.pushGitHubTag }}
+    createGitHubRelease: ${{ parameters.createGitHubRelease }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}
