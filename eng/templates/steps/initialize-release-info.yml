@@ -107,7 +107,7 @@ steps:
 - script: |
     set -euo pipefail
     source eng/get-build-info.sh
-
+    set -x
     if [[ "$(ReadReleaseInfo.ReleaseChannel)" == "6.0" || "$(ReadReleaseInfo.ReleaseChannel)" == "7.0" ]]; then
       if [[ "${{ parameters.useSpecificPipelineRunIDs }}" == "True" ]]; then
         search_by=name

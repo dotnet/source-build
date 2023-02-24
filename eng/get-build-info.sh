@@ -75,10 +75,10 @@ function get_build_info() {
     local source_version_variable_name="$6"
     local check_build_status="$7"
     local search_by="$8"
-    local commit="$9"
+    local query="$9"
 
     IFS=' '
-    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$search_by" "$commit")
+    run_info=$(get_build_run "$pipeline_id" "$pipeline_name" "$azdo_org" "$azdo_project" "$check_build_status" "$search_by" "$query")
     if [[ $? != "0" ]]; then
         echo "$run_info"
         exit 1
