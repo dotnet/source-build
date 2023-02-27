@@ -84,6 +84,20 @@ stages:
     - name: sdkArtifactFileName
       value: dotnet-sdk-*.tar.gz
 
+  # GitHub release is skipped for 6.0/7.0
+  # For dry run, we only create a draft release
+  - name: createGitHubRelease
+    ${{ if eq(parameters.createGitHubRelease, 'auto') }}:
+      ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+        value: skip
+      ${{ else }}:
+        ${{ if parameters.isDryRun }}:
+          value: draft
+        ${{ else }}:
+          value: full
+    ${{ else }}:
+      value: ${{ parameters.createGitHubRelease }}
+
   # Variables from the Pre-Release stage
   - name: release
     value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.Release'] ]
@@ -115,7 +129,7 @@ stages:
     steps:
     - checkout: self
 
-    - ${{ if and(ne(parameters.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
+    - ${{ if and(ne(variables.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
       - checkout: dotnet-dotnet
         displayName: Checkout dotnet-dotnet
         fetchDepth: 0
@@ -143,7 +157,7 @@ stages:
           fi
 
           draft=''
-          if [ ${{ parameters.createGitHubRelease }} = draft ]; then
+          if [ ${{ variables.createGitHubRelease }} = draft ]; then
             draft='--draft'
           fi
 
@@ -159,7 +173,7 @@ stages:
           GH_TOKEN: $(BotAccount-dotnet-bot-repo-PAT)
 
     # Skip release tag validation for draft releases as the tag won't be immediately visible until the draft is published
-    - ${{ if or(eq(parameters.createGitHubRelease, 'skip'), eq(parameters.createGitHubRelease, 'full'), eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+    - ${{ if or(eq(variables.createGitHubRelease, 'skip'), eq(variables.createGitHubRelease, 'full'), eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - script: |
           set -euo pipefail
 
