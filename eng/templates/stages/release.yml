@@ -115,7 +115,6 @@ stages:
     steps:
     - checkout: self
 
-    # TODO: Add not(parameters.isDryRun)
     - ${{ if and(ne(parameters.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
       - checkout: dotnet-dotnet
         displayName: Checkout dotnet-dotnet
@@ -159,29 +158,31 @@ stages:
         env:
           GH_TOKEN: $(BotAccount-dotnet-bot-repo-PAT)
 
-    - script: |
-        set -euo pipefail
+    # Skip release tag validation for draft releases as the tag won't be immediately visible until the draft is published
+    - ${{ if or(eq(parameters.createGitHubRelease, 'skip'), eq(parameters.createGitHubRelease, 'full'), eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - script: |
+          set -euo pipefail
 
-        if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
-          repo='installer'
-        else
-          repo='dotnet'
-        fi
+          if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
+            repo='installer'
+          else
+            repo='dotnet'
+          fi
 
-        # Checks for all matching tags (there can be more, e.g. 7.0.100 will match 7.0.100-preview.1.21102.12)
-        query="{ repository(owner: \"dotnet\", name: \"$repo\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$(releaseTag)\") { nodes { name }}}}"
-        tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
+          # Checks for all matching tags (there can be more, e.g. 7.0.100 will match 7.0.100-preview.1.21102.12)
+          query="{ repository(owner: \"dotnet\", name: \"$repo\") { refs(refPrefix: \"refs/tags/\", last: 100, query: \"$(releaseTag)\") { nodes { name }}}}"
+          tags=$(gh api graphql -f query="$query" --template '{{.data.repository.refs.nodes}}')
 
-        # Find the exact match
-        if echo "$tags" | grep -q "map\[name:$(releaseTag)\]"; then
-          echo "Tag $(releaseTag) exists"
-        else
-          echo "##vso[task.logissue type=error]Tag $(releaseTag) does not exist in dotnet/$repo"
-          exit 1
-        fi
-      displayName: Validate release tag
-      env:
-        GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
+          # Find the exact match
+          if echo "$tags" | grep -q "map\[name:$(releaseTag)\]"; then
+            echo "Tag $(releaseTag) exists"
+          else
+            echo "##vso[task.logissue type=error]Tag $(releaseTag) does not exist in dotnet/$repo"
+            exit 1
+          fi
+        displayName: Validate release tag
+        env:
+          GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
     - ${{ if parameters.createReleaseAnnouncement }}:
       - script: |
