@@ -58,10 +58,7 @@
            - [ ] Approve the `Approval - Partner notification` approval stage.
       1. - [ ] `Approval - Release` stage
            - [ ] **SYNC POINT**: Wait for Microsoft build release.
-           - [ ] ⚠️ 8.0: In case you decided to not create the GitHub release (you set the pipeline parameter to `skip`), push the release tag to `dotnet/dotnet`
-                - The tag name should match the custom tag used when staging the release pipeline.
-                - The tag should be available in the `dnceng/dotnet-security-partners` repository.
-                - The commit to which this tag belongs is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
+           - [ ] ⚠️ 8.0: Verify the release tag in the `dnceng/dotnet-security-partners` repository matches theVMR commit to which is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
            - [ ] Approve the `Approval - Release` approval stage.
       1. - [ ] `Release` stage
            - [ ] Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
