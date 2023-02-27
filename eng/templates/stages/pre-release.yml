@@ -28,6 +28,10 @@ parameters:
   displayName: Verify that associated pipeline runs succeeded
   type: boolean
   default: true
+- name: useCustomTag
+  type: boolean
+- name: customTag
+  type: string
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -60,16 +64,17 @@ stages:
           value: release
 
     steps:
-    - template: ../steps/get-build-info.yml
+    - template: ../steps/initialize-release-info.yml
       parameters:
         dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
         releaseBranchName: ${{ parameters.releaseBranchName }}
-        getAssociatedPipelineRuns: true
         useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
         dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
         dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
         dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
         verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+        useCustomTag: ${{ parameters.useCustomTag }}
+        customTag: ${{ replace(parameters.customTag, ' ', '') }}
         isDryRun: ${{ parameters.isDryRun }}
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:

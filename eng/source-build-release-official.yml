@@ -8,6 +8,11 @@ resources:
   pipelines:
   - pipeline: dotnet-staging-pipeline-resource
     source: Stage-DotNet
+  repositories:
+  - repository: dotnet-dotnet
+    type: git
+    name: dotnet-dotnet
+    ref: ${{ parameters.releaseBranchName }}
 
 pool:
   name: NetCore1ESPool-Svc-Internal
@@ -18,9 +23,24 @@ parameters:
   displayName: Major .NET version being released
   type: string
   values: [ '6.0', '7.0', '8.0' ]
+- name: releaseName
+  displayName: Release name (e.g. ".NET 8.0 Preview 1")
+  type: string
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: isPreviewRelease
+  displayName: Preview release
+  type: boolean
+  default: false
+- name: useCustomTag
+  displayName: Use custom tag
+  type: boolean
+  default: false
+- name: customTag
+  displayName: Custom release tag (e.g. v6.0.XYY-source-build)
+  type: string
+  default: ' '
 - name: useSpecificPipelineRunIDs
   displayName: Use specific pipeline run IDs
   type: boolean
@@ -42,21 +62,19 @@ parameters:
   type: boolean
   default: true
 - name: createReleaseAnnouncement
-  displayName:  Create Release Announcement
+  displayName: Create Release Announcement
   type: boolean
   default: true
 - name: submitReleasePR
   displayName: Submit Release PR
   type: boolean
   default: true
-- name: useCustomTag
-  displayName: Use custom tag?
-  type: boolean
-  default: false
-- name: customTag
-  displayName: Custom release tag (e.g. v6.0.XYY-source-build)
+# Auto means that for dry run, we only create a draft release; full otherwise.
+- name: createGitHubRelease
+  displayName: '[⚠️ 8.0] Create tag & release in dotnet/dotnet'
   type: string
-  default: ' '
+  values: [ 'auto', 'skip', 'draft', 'full' ]
+  default: auto
 - name: isDryRun
   displayName: Dry Run
   type: boolean
@@ -73,6 +91,8 @@ stages:
     dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
     dotnetInstallerTarballBuildRunID: ${{ parameters.dotnetInstallerTarballBuildRunID }}
     verifyBuildSuccess: ${{ parameters.verifyBuildSuccess }}
+    useCustomTag: ${{ parameters.useCustomTag }}
+    customTag: ${{ replace(parameters.customTag, ' ', '') }}
     isDryRun: ${{ parameters.isDryRun }}
 
 - stage: MirrorApproval
@@ -117,9 +137,10 @@ stages:
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    releaseName: ${{ parameters.releaseName }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
+    isPreviewRelease: ${{ parameters.isPreviewRelease }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
-    useCustomTag: ${{ parameters.useCustomTag }}
-    customTag: ${{ replace(parameters.customTag, ' ', '') }}
+    createGitHubRelease: ${{ parameters.createGitHubRelease }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}
