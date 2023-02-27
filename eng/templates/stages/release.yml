@@ -147,7 +147,7 @@ stages:
             draft='--draft'
           fi
 
-          gh release create "$(releaseTag)" "$(SourceTarballPath)#Packed sources" \
+          gh release create "$(releaseTag)" "$(SourceTarballPath)#Source code (tar.gz)" \
             --repo dotnet/dotnet \
             --title "${{ parameters.releaseName }}" \
             --target "$(dotnetDotnetCommit)" \
