@@ -62,9 +62,13 @@ parameters:
   type: boolean
   default: true
 - name: createReleaseAnnouncement
-  displayName: Create Release Announcement
+  displayName: Create release announcement
   type: boolean
   default: true
+- name: announcementGist
+  displayName: Release announcement gist URL
+  type: string
+  default: ' '
 - name: submitReleasePR
   displayName: Submit Release PR
   type: boolean
@@ -141,6 +145,7 @@ stages:
     releaseBranchName: ${{ parameters.releaseBranchName }}
     isPreviewRelease: ${{ parameters.isPreviewRelease }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
+    announcementGist: ${{ replace(parameters.announcementGist, ' ', '') }}
     createGitHubRelease: ${{ parameters.createGitHubRelease }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}
