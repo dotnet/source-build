@@ -7,8 +7,6 @@ This repo is the starting point for building .NET from source. It contains docum
 ## Prerequisites
 
 * [Build system requirements](Documentation/system-requirements.md)
-* [Toolchain Setup](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md#toolchain-setup)
-* [Prebuilt Docker Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - We use these images to build and test source-build CI [here](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16).
 
 ## Building .NET 8.0
 

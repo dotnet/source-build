@@ -1,26 +1,18 @@
 # System Requirements to Source-Build
 
-This document provides recommendation on host system and network requirements to build .NET SDK for a targeted platform using source-build. Refer this to avoid interruptions while building SDK using source-build.  
-
-## Network Requirement
-
-Acquiring .NET SDK source code ([Step 1](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)) takes ~1.5 GB of network transfer.  
-
-When building for new .NET version or new platform, you will need to get SDK and other toolset packages to create bootstrapping source-built SDK. This requires to run ([Step 2](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)), which takes 4 GB of network transfer for .NET 6.0 and 1.2 GB for .NET 7.0.
+This document provides the system requirements to source build the .NET SDK for a targeted platform.
 
 ## Operating System
 
 ### Linux
 
-Refer to the [requirements](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md) for building on Linux. You may use one of our [preconfigured container images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker).
-
-Additional links:
-
-* [distros source building .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
+* [Toolchain Setup](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md#toolchain-setup)
+* [Preconfigured Container Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - We use these images to build and test source-build CI [here](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16).
+* [Distros Source Building .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
 
 ### MacOS
 
-MacOS is not currently supported: [Tracking Issue](https://github.com/dotnet/source-build/issues/2909).  However, community users have created a [Homebrew project](https://github.com/Homebrew/homebrew-core/blob/master/Formula/dotnet.rb) to build .NET for OSX.  Please feel free to open new issues in individual repos or in source-build for OSX issues and we can redirect them if possible.
+MacOS is not currently supported: [Tracking Issue](https://github.com/dotnet/source-build/issues/2909).  However, community users have created a [Homebrew project](https://github.com/Homebrew/homebrew-core/blob/master/Formula/dotnet.rb) to build .NET for OSX.  Please feel free to open new issues in individual repos or in source-build for OSX issues.
 
 ### Windows
 
