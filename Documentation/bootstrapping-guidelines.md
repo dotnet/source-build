@@ -1,36 +1,54 @@
 # Bootstrapping Guidelines to Build .NET SDK from Source
-To build the .NET from source for version "N" (7.0.101), you will need "N-1" version of .NET SDK (7.0.100) supplying the tools required to build, referred to as bootstrapping .NET SDK and toolset. For new major version or new platform, you need to acquire or build the bootstrapping SDK and toolset as you cannot use the previous source-built SDK. As in to build 7.0.100, you cannot use 6.0.400.
 
-This document provides guidance for acquiring or building bootstrapping .NET SDK and toolset in different scenarios (covering step 2 and step 3 of source-build instructions).
-Check out quick [instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to build SDK using source-build.
+.NET utilizes itself to build therefore in order to build .NET from source, you first need to acquire or build a bootstrapping .NET SDK. This document provides guideance around acquiring and building this bootstrapping .NET SDK.
 
-On high-level, you need to acquire .NET SDK and toolset for the targeted platform, create source-built SDK, and use either the acquired or source-built SDK to fully build from source.
+The version of the SDK used to source build .NET is referred to as "N-1" (e.g. 7.0.100). The version of the SDK produced by source build is referred to as "N" (e.g. 7.0.101). The previous SDK (e.g. N-1) supplies the tools required to build.
 
-## Building New .NET Major Version
-Building new .NET major version is two stage process:  
+For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 6.0 version of the SDK to build a 7.0 SDK. There is an [open issue](https://github.com/dotnet/source-build/issues/3100) to add support for this.
 
-**Stage 1:**
-Build bootstrapping .NET SDK and toolset for the targeted platform.  `prep.sh` downloads a portable Microsoft-built version of the dotnet SDK for bootstrapping as well as an archive of already-built packages called the previously-source-built archive.
+Refer to the [build instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to review how to build the .NET SDK from source.
 
-- `./prep.sh`
- This downloads platform-native version of .NET SDK and toolset. So if you are building on x64 machine, you get x64.
+## Building a New .NET Major Version
 
-- `./build.sh`
-Create source built .NET SDK.
+Building a new .NET major version is two stage process:
 
-**Stage 2:**
-Use source built .NET SDK created in stage 1 to build .NET SDK from source. No need to run prep.sh in this stage.  Before running this command, extract your freshly-built stage1 SDK from `bin/arch/dotnet-sdk-version.tar.gz` to a convenient location.
+**Stage 1:** Build bootstrapping .NET SDK for the targeted platform.
 
-- `./build.sh --with-sdk /path/to/stage1/sdk --with-packages /path/to/stage1/obj/bin/arch/blob-feed/packages`
+1. Download a platform-native portable Microsoft-built version of the dotnet SDK for bootstrapping as well as the previously-source-built package archive.
 
-## Building Subsequent .NET (Servicing)
+    ``` bash
+    ./prep.sh
+    ```
 
-If you already have source-built .NET SDK and toolset in archive for the targeted platform and .NET version, then you do not need to create the bootstrapping .NET SDK and toolset. Subsequent versions will use the N-1 version toolset from the archive to build. Note, N-1 in this context means the previous version of .NET that was already built from source. As an example, to build SDK “N” (7.0.101) using “N-1” (7.0.100).  These paths will vary based on where your distro installs these.
+1. Build the source built .NET SDK.
 
-To build .NET SDK from source -  
-- `./build.sh --with-sdk /usr/bin/dotnet --with-packages /lib/dotnet/previously-source-built`
+    ``` bash
+    ./build.sh
+    ```
 
-## Building for New OS/Arch (Supported, RID Existing)
+**Stage 2:** Use the source built .NET SDK created in stage 1 to build .NET SDK from source. There is no need to run `prep.sh` in this stage.
+
+1. Extract your freshly-built stage 1 SDK to a convenient location.
+
+    ``` bash
+    tar -ozxf /<stage1-path>/artifacts/<arch>/Release/dotnet-sdk-<version>-<rid>-tar.gz -C <extracted-stage1-sdk-path>
+    ```
+
+1. Build the source built .NET SDK.
+
+    ``` bash
+    ./build.sh --with-sdk <extracted-stage1-sdk-path> --with-packages /<stage1-path>/obj/bin/<arch>/blob-feed/packages
+    ```
+
+## Building a Servicing Release of .NET
+
+Building a subsequent or servicing version of .NET requires that you have source built the previous version of .NET available as descibed in [Building New .NET Major Version](#building-a-new-net-major-version). If you already have the previous verions of the .NET SDK available, all you have to do is run the following build command.
+
+``` bash
+./build.sh --with-sdk <extracted-previously-source-built-sdk-path> --with-packages <extracted-previously-source-built-packages-path>
+```
+
+## Building for a New OS/Arch (Supported RID)
 
 **Supported OS**  
 [Check](https://learn.microsoft.com/en-us/dotnet/core/install/linux) officially supported linux distributions.  
@@ -48,7 +66,8 @@ You can see the list of supported RIDs and the RID graph in the [runtime.json](h
 
 ## Building for New OS (Unsupported)  
 
-**RIDs**  
+**RIDs:**
+
 The RID graph or runtime fallback graph is a list of RIDs that are compatible with each other. You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 Determine the compatible supported OS to use as host to build. Choose the host with same processor architecture as that of the new targeted platform.
 
@@ -78,7 +97,7 @@ Use portable SDK (works for .NET 6, but require validation for .NET 7) and follo
 
 **Stage 1:**
 
-- Before building your stage1 SDK, update the RID graph in source to include your new target RID.  For an example, see https://github.com/dotnet/runtime/pull/74372.
+- Before building your stage1 SDK, update the RID graph in source to include your new target RID.  For an example, see <https://github.com/dotnet/runtime/pull/74372>.
 - Build with Stage 0 SDK using `--with-sdk` with your modified portable SDK.
 
 **Stage 2:**
@@ -88,9 +107,10 @@ Use portable SDK (works for .NET 6, but require validation for .NET 7) and follo
 
 ## Building for New Architecture (Unsupported)
 
-**RIDs**  
+**RIDs:**
+
 The RID graph or runtime fallback graph is a list of RIDs that are compatible with each other. You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
-You will need to update the RID graph to include your new platform and runtime IDs.  See https://github.com/dotnet/runtime/pull/82382 or https://github.com/dotnet/runtime/pull/75396 for examples.
+You will need to update the RID graph to include your new platform and runtime IDs.  See <https://github.com/dotnet/runtime/pull/82382> or <https://github.com/dotnet/runtime/pull/75396> for examples.
 
 Building for unsupported architectures require cross-compilaton on the supported platform. Determine the compatible host to build which provides cross-compilation toolchain.  [IBM has published](https://community.ibm.com/community/user/powerdeveloper/blogs/sapana-khemkar/2023/01/13/cross-build-dotnet7-on-x86-ibm-power?CommunityKey=8cc2a1f0-6307-48cb-9178-ace50920244e) a detailed description of how they successfully built .NET 7 for IBM Power.
