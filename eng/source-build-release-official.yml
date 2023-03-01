@@ -8,7 +8,6 @@ resources:
   pipelines:
   - pipeline: dotnet-staging-pipeline-resource
     source: Stage-DotNet
-    version: '20230226.1-6.0.407-servicing.23126.6,6.0.310-servicing.23126.5,6.0.115-servicing.23126.4-168350,168352,168351' # TODO
   repositories:
   - repository: dotnet-dotnet
     type: git
@@ -16,9 +15,8 @@ resources:
     ref: main
 
 pool:
-  # name: NetCore1ESPool-Svc-Internal
-  # demands: ImageOverride -equals 1es-ubuntu-2004
-  vmImage: ubuntu-latest # TODO
+  name: NetCore1ESPool-Svc-Internal
+  demands: ImageOverride -equals 1es-ubuntu-2004
 
 parameters:
 - name: dotnetMajorVersion
