@@ -72,7 +72,7 @@ if [ ! -f "${source_tarball}" ]; then
   echo "##vso[task.logissue type=error]File ${source_tarball} not found on disk. Exiting..."
 fi
 
-month_year=$(date +"%b%Y" -d "+1 month" | sed 's/.*/\L&/') # e.g. aug2022
+month_year=$(date +"%b%Y" -d "+14 days" | sed 's/.*/\L&/') # e.g. aug2022
 
 vmr_path="$(pwd)/dotnet-vmr"
 
