@@ -82,7 +82,12 @@ stages:
         echo "Mirroring $branch_name from ${{ variables.sourceUrl }} to ${{ variables.destinationUrl }}"
 
         git fetch source "$branch_name"
-        git checkout "$(sourceVersion)"
+
+        if [[ "${{ parameters.dotnetMajorVersion }}" == '6.0' || "${{ parameters.dotnetMajorVersion }}" == '7.0' ]]; then
+          git checkout "$branch_name"
+        else
+          git checkout "$(sourceVersion)"
+        fi
 
         if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
           tag_name="${{ parameters.customTag }}"
