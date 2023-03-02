@@ -101,7 +101,14 @@ pushd "${vmr_path}"
   
   git config user.email "dotnet-maestro[bot]@users.noreply.github.com"
   git config user.name "dotnet-maestro[bot]"
-  git commit -m "Update to .NET ${sdk_version}"
+
+  # Dry-run re-runs should expect the branch being merged already
+  allow_empty=''
+  if [[ "$is_dry_run" = true ]]; then
+    allow_empty='--allow-empty'
+  fi
+
+  git commit $allow_empty -m "Update to .NET ${sdk_version}"
 
   if [ "$is_dry_run" = true ]; then
     echo "Doing a dry run, not pushing to upstream. List of changes:"
