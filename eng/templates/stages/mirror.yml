@@ -81,34 +81,32 @@ stages:
 
         echo "Mirroring $branch_name from ${{ variables.sourceUrl }} to ${{ variables.destinationUrl }}"
 
-        git fetch source "$branch_name"
-
         if [[ "${{ parameters.dotnetMajorVersion }}" == '6.0' || "${{ parameters.dotnetMajorVersion }}" == '7.0' ]]; then
-          git checkout "$branch_name"
+          ref_to_tag="$branch_name"
         else
-          git checkout "$(sourceVersion)"
+          ref_to_tag="$(sourceVersion)"
         fi
+
+        git fetch source "$ref_to_tag"
+        git checkout "$ref_to_tag"
 
         if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
           tag_name="${{ parameters.customTag }}"
           echo "Using custom tag ${tag_name}"
         else
-          tag_name="v$(SdkVersion)-SDK"
+          tag_name="v$(SdkVersion)"
           echo "Using tag ${tag_name}"
         fi
 
         message=".NET Source-build $(sdkVersion)-SDK"
-        git tag "$tag_name" "$(sourceVersion)" -m "$message"
-
-        git fetch destination '$branch_name' || echo 'Branch $branch_name does not exist in destination yet'
+        git tag "$tag_name" "$ref_to_tag" -m "$message"
 
         if [ "${{ parameters.isDryRun }}" = "True" ]; then
           set +x
-          echo "Doing a dry run, not pushing the tag $tag_name $branch_name / $(sourceVersion) to ${{ variables.destinationUrl }}"
-          exit 0
+          echo "Doing a dry run, not pushing the tag $tag_name / $(ref_to_tag) to ${{ variables.destinationUrl }}"
+        else
+          echo "Pushing tag $tag_name to ${{ variables.destinationUrl }}"
+          git push destination "$tag_name"
         fi
-
-        echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
-        git push destination "$tag_name"
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag
