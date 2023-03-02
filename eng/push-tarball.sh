@@ -97,22 +97,16 @@ pushd "${vmr_path}"
   ls | grep -v ".git" | xargs rm -rf
   tar -xzf "${source_tarball}" -C "${vmr_path}"
 
-  git add -f .
-  
   git config user.email "dotnet-maestro[bot]@users.noreply.github.com"
   git config user.name "dotnet-maestro[bot]"
 
-  # Dry-run re-runs should expect the branch being merged already
-  allow_empty=''
-  if [[ "$is_dry_run" = true ]]; then
-    allow_empty='--allow-empty'
-  fi
-
-  git commit $allow_empty -m "Update to .NET ${sdk_version}"
+  # Re-runs should expect the branch being merged previously already
+  git add -f .
+  git diff --staged --quiet || git commit -m "Update to .NET ${sdk_version}"
 
   if [ "$is_dry_run" = true ]; then
     echo "Doing a dry run, not pushing to upstream. List of changes:"
-    git log --name-status HEAD^..HEAD
+    git log --name-status HEAD^..HEAD || echo "No changes to commit."
   else
     echo "Pushing branch to upstream."
     git push -u upstream "${new_branch_name}"
