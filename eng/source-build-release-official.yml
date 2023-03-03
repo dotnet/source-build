@@ -97,18 +97,22 @@ stages:
 
 - stage: MirrorApproval
   ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
-    displayName: Approval - Test prereqs & PR
+    displayName: Approval - PR merged & ready for dotnet-security-partners mirroring.
   ${{ else }}:
-    displayName: Approval - Test prereqs
+    displayName: Approval - Ready for dotnet-security-partners mirroring.
   dependsOn: PreRelease
   jobs:
   - deployment: MirrorApproval
-    displayName: Confirm PR merged & prereqs uploaded
+    ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      displayName: Confirm PR merged & ready for dotnet-security-partners mirroring
+    ${{ else }}:
+      displayName: Confirm ready for dotnet-security-partners mirroring
     environment: Source Build Release - Mirror
     pool: server
 
 - template: templates/stages/mirror.yml
   parameters:
+    dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
     useCustomTag: ${{ parameters.useCustomTag }}

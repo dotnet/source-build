@@ -13,16 +13,18 @@ parameters:
 - name: isDryRun
   type: boolean
   default: false
+- name: dotnetStagingPipelineResource
+  type: string
 
 stages:
 - stage: Mirror
-  displayName: Mirror branch to DSP
+  displayName: Mirror to DSP
   dependsOn:
   - PreRelease
   - MirrorApproval
 
   jobs:
-  - job: Mirror
+  - job: MirrorSource
     displayName: Mirror ${{ parameters.releaseBranchName }}
     variables:
     - group: DotNet-Source-Build-All-Orgs-Source-Access
@@ -112,3 +114,47 @@ stages:
         fi
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag
+
+  - job: MirrorPackages
+    displayName: Mirror Packages
+    variables:
+    # Destination package feed. If this feed changes, you must also change feedServiceConnection to point to that feed.
+    - name: destinationPackageFeed
+      value: https://pkgs.dev.azure.com/dotnet-security-partners/dotnet/_packaging/dotnet/nuget/v3/index.json
+    - name: feedServiceConnection
+      value: 'dotnet-security-partners-dotnet-dotnet feed'
+    - name: packagesArtifactName
+      value: signed
+    - name: shippingPackages
+      value: 'shipping/packages'
+    - name: packagesDownloadLocation
+      value: $(PIPELINE.WORKSPACE)/${{ parameters.dotnetStagingPipelineResource }}/$(packagesArtifactName)/$(shippingPackages)
+
+    steps:
+    - checkout: none
+
+    # First, download all shipping nupks from the staging pipeline.
+    # These should come from the signed directory, because in 6.0 post-build signing
+    # means that the 'signed' and 'shipping' artifacts are different in content.
+    - download: ${{ parameters.dotnetStagingPipelineResource }}
+      artifact: ${{ variables.packagesArtifactName }}
+      patterns: ${{ variables.shippingPackages }}/*
+      displayName: Download shipping packages
+
+    # Then, upload these to DSP.
+    - ${{ if parameters.isDryRun }}:
+      # List the packages that would be pushed
+      - script: |
+          echo "Would push the following packages to $(destinationPackageFeed)"
+          find $(packagesDownloadLocation) -name '*.nupkg'
+    - ${{ else }}:
+      - task: NuGetCommand@2
+        displayName: Publish packages to ${{ variables.destinationPackageFeed }}
+        continueOnError: true
+        inputs:
+          command: push
+          packagesToPush: '${{ variables.packagesDownloadLocation }}/*.nupkg'
+          nuGetFeedType: external
+          publishFeedCredentials: ${{ variables.feedServiceConnection }}
+          allowPackageConflicts: true 
+
