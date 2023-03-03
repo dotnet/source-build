@@ -103,7 +103,7 @@ stages:
 
         if [ "${{ parameters.isDryRun }}" = "True" ]; then
           set +x
-          echo "Doing a dry run, not pushing the tag $tag_name / $(ref_to_tag) to ${{ variables.destinationUrl }}"
+          echo "Doing a dry run, not pushing the tag $tag_name / $ref_to_tag to ${{ variables.destinationUrl }}"
         else
           echo "Pushing tag $tag_name to ${{ variables.destinationUrl }}"
           git push destination "$tag_name"
