@@ -82,8 +82,10 @@ stages:
         echo "Mirroring $branch_name from ${{ variables.sourceUrl }} to ${{ variables.destinationUrl }}"
 
         if [[ "${{ parameters.dotnetMajorVersion }}" == '6.0' || "${{ parameters.dotnetMajorVersion }}" == '7.0' ]]; then
+          # For 6.0 and 7.0 we tag the release branch into which we merged the release PR
           ref_to_tag="$branch_name"
         else
+          # For 8.0+ we tag a given VMR commit
           ref_to_tag="$(sourceVersion)"
         fi
 
