@@ -74,29 +74,41 @@ stages:
     - script: |
         set -euxo pipefail
 
-        git fetch source "${{ parameters.releaseBranchName }}"
-        git checkout "$(sourceVersion)"
+        branch_name="${{ parameters.releaseBranchName }}"
+        if [[ "$branch_name" == internal/* ]]; then
+          branch_name="${branch_name#internal/}"
+        fi
+
+        echo "Mirroring $branch_name from ${{ variables.sourceUrl }} to ${{ variables.destinationUrl }}"
+
+        if [[ "${{ parameters.dotnetMajorVersion }}" == '6.0' || "${{ parameters.dotnetMajorVersion }}" == '7.0' ]]; then
+          # For 6.0 and 7.0 we tag the release branch into which we merged the release PR
+          ref_to_tag="$branch_name"
+        else
+          # For 8.0+ we tag a given VMR commit
+          ref_to_tag="$(sourceVersion)"
+        fi
+
+        git fetch source "$ref_to_tag"
+        git checkout "$ref_to_tag"
 
         if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
           tag_name="${{ parameters.customTag }}"
           echo "Using custom tag ${tag_name}"
         else
-          tag_name="v$(SdkVersion)-SDK"
+          tag_name="v$(SdkVersion)"
           echo "Using tag ${tag_name}"
         fi
 
         message=".NET Source-build $(sdkVersion)-SDK"
-        git tag "$tag_name" "$(sourceVersion)" -m "$message"
-
-        git fetch destination '${{ parameters.releaseBranchName }}' || echo 'Branch ${{ parameters.releaseBranchName }} does not exist in destination yet'
+        git tag "$tag_name" "$ref_to_tag" -m "$message"
 
         if [ "${{ parameters.isDryRun }}" = "True" ]; then
           set +x
-          echo "Doing a dry run, not pushing the tag $tag_name ${{ parameters.releaseBranchName }} / $(sourceVersion) to ${{ variables.destinationUrl }}"
-          exit 0
+          echo "Doing a dry run, not pushing the tag $tag_name / $ref_to_tag to ${{ variables.destinationUrl }}"
+        else
+          echo "Pushing tag $tag_name to ${{ variables.destinationUrl }}"
+          git push destination "$tag_name"
         fi
-
-        echo "Pushing ${{ parameters.releaseBranchName }} to ${{ variables.destinationUrl }}"
-        git push destination "$tag_name"
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
       displayName: Mirror and tag

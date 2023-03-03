@@ -128,6 +128,7 @@ stages:
     displayName: Announcements, PRs & Release
     steps:
     - checkout: self
+      path: dotnet-source-build
 
     - ${{ if and(ne(variables.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
       - checkout: dotnet-dotnet
@@ -146,7 +147,7 @@ stages:
           echo "##vso[task.setvariable variable=SourceTarballPath]$tarball_path"
 
         displayName: Prepare source tarball
-        workingDirectory: $(Build.SourcesDirectory)/dotnet-dotnet
+        workingDirectory: $(Agent.BuildDirectory)/dotnet-dotnet
 
       - script: |
           set -euo pipefail
@@ -262,7 +263,7 @@ stages:
             echo "Release Notes URL: $RELEASE_NOTES_URL"
           fi
         displayName: Submit announcement discussion
-        workingDirectory: $(Build.SourcesDirectory)/dotnet-source-build/eng
+        workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
@@ -332,6 +333,11 @@ stages:
             extraArgs+=("--versionProps" "eng/Versions.props")
           fi
 
+          target_branch="${{ parameters.releaseBranchName }}"
+          if [[ "$target_branch" == internal/* ]]; then
+            target_branch="${target_branch#internal/}"
+          fi
+
           if [ ${{ parameters.isDryRun }} = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
             echo "./submit-source-build-release-pr.sh"
@@ -341,21 +347,21 @@ stages:
             echo "  --sdkVersion $(sdkVersion)"
             echo "  --title $title"
             echo "  --body $body"
-            echo "  --targetBranch ${{ parameters.releaseBranchName }}"
+            echo "  --targetBranch $target_branch"
             echo "  ${extraArgs[@]}"
           else
             echo "Submitting PR"
             ./submit-source-build-release-pr.sh \
               --setupGitAuth \
-              --targetRepo $(releasePrRepo) \
-              --forkRepo $(releasePrForkRepo) \
-              --sdkVersion $(sdkVersion) \
+              --targetRepo "$(releasePrRepo)" \
+              --forkRepo "$(releasePrForkRepo)" \
+              --sdkVersion "$(sdkVersion)" \
               --title "$title" \
               --body "$body" \
-              --targetBranch "${{ parameters.releaseBranchName }}" \
+              --targetBranch "$target_branch" \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR
-        workingDirectory: $(Build.SourcesDirectory)/dotnet-source-build/eng
+        workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)

@@ -94,7 +94,7 @@ steps:
 
     build_name="$(resources.pipeline.dotnet-staging-pipeline-resource.runName)"
     if [ ${{ parameters.isDryRun }} = True ]; then
-      build_name="${build_name}-dryrun"
+      build_name="dryrun-${build_name}"
     fi
 
     original_build_name='$(Build.BuildNumber)'

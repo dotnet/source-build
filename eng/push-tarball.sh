@@ -68,46 +68,52 @@ done
 : ${upstream_url:?Missing --upstream}
 : ${source_tarball:?Missing --tarball}
 
-if [ ! -f "${source_tarball}" ]; then
-  echo "##vso[task.logissue type=error]File ${source_tarball} not found on disk. Exiting..."
+if [ ! -f "$source_tarball" ]; then
+  echo "##vso[task.logissue type=error]File $source_tarball not found on disk. Exiting..."
 fi
 
-month_year=$(date +"%b%Y" -d "+1 month" | sed 's/.*/\L&/') # e.g. aug2022
+month_year=$(date +"%b%Y" -d "+14 days" | sed 's/.*/\L&/') # e.g. aug2022
 
 vmr_path="$(pwd)/dotnet-vmr"
 
 # replace the last two characters in sdk_version with xx
-branch_version=$(echo ${sdk_version} | sed 's/..$/xx/')
-target_branch="release/${branch_version}" # e.g. release/6.0.1xx
+branch_version=$(echo "$sdk_version" | sed 's/..$/xx/')
+target_branch="release/$branch_version" # e.g. release/6.0.1xx
 
-rm -rf "${vmr_path}"
-git init "${vmr_path}"
+rm -rf "$vmr_path"
+git init "$vmr_path"
 
-pushd "${vmr_path}"
-  git remote add upstream "${upstream_url}"
-  git fetch upstream "${target_branch}" --depth=1
+pushd "$vmr_path"
+  git remote add upstream "$upstream_url"
+  git fetch upstream "$target_branch" --depth=1
+  git checkout "$target_branch"
 
-  git checkout "${target_branch}"
-
-  new_branch_name="dev/${sdk_version}-${month_year}"
-  git checkout -b "${new_branch_name}"
+  new_branch_name="dev/$sdk_version-$month_year"
+  if git fetch upstream "$new_branch_name"; then
+    echo "Branch $new_branch_name already exists (possibly from a previous run)"
+    git checkout "$new_branch_name"
+  else
+    echo "Branch $new_branch_name not found in the remote"
+    git checkout -b "$new_branch_name"
+  fi
 
   # delete all contents except the .git folder
   # otherwise we won't catch deleted files in a commit
   ls | grep -v ".git" | xargs rm -rf
-  tar -xzf "${source_tarball}" -C "${vmr_path}"
+  tar -xzf "$source_tarball" -C "$vmr_path"
 
-  git add -f .
-  
   git config user.email "dotnet-maestro[bot]@users.noreply.github.com"
   git config user.name "dotnet-maestro[bot]"
-  git commit -m "Update to .NET ${sdk_version}"
+
+  # Re-runs should expect the branch being merged previously already
+  git add -f .
+  git diff --staged --quiet || git commit -m "Update to .NET $sdk_version"
 
   if [ "$is_dry_run" = true ]; then
     echo "Doing a dry run, not pushing to upstream. List of changes:"
-    git log --name-status HEAD^..HEAD
+    git log --name-status HEAD^..HEAD || echo "No changes to commit."
   else
     echo "Pushing branch to upstream."
-    git push -u upstream "${new_branch_name}"
+    git push -u upstream "$new_branch_name"
   fi
 popd
