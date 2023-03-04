@@ -78,6 +78,7 @@ stages:
 
   - ${{ if eq(parameters.dotnetMajorVersion, '8.0') }}:
     - name: sourceBuildArtifactLeg
+      # When .NET 8.0 is released, gather artifacts from the `PreviousSourceBuiltSdk` leg instead
       value: CentOSStream8_Offline_MsftSdk_x64_Artifacts
     - name: sourceBuiltArtifactsFileName
       value: Private.SourceBuilt.Artifacts.8.0.100.centos.8-x64.tar.gz
