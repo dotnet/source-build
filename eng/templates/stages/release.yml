@@ -241,11 +241,23 @@ stages:
             export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$TAG"
           fi
 
-          template="$(envsubst < source-build-release-announcement.md)"
-          # Get the line in the template that is prefixed with "Title:" and remove the prefix
-          title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
-          # Get the inverse of the above selection
-          body=$(echo "$template" | grep -v "^Title:")
+          if [[ -z '${{ parameters.announcementGist }}' ]]; then
+            echo "Loading announcement template from source-build-release-announcement.md"
+            template="$(envsubst < source-build-release-announcement.md)"
+
+            # Get the line in the template that is prefixed with "Title:" and remove the prefix
+            title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
+            # Get the inverse of the above selection
+            body=$(echo "$template" | grep -v "^Title:")
+          else
+            echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
+
+            # Get title from the name of the file
+            title=$(gh gist view '${{ parameters.announcementGist }}' --files)
+            title=${title%.md}
+
+            body="$(envsubst < $(gh gist view '${{ parameters.announcementGist }}'))"
+          fi
 
           query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 

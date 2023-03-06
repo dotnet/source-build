@@ -82,12 +82,12 @@ stages:
 
         announcement_file="$(Pipeline.Workspace)/release-announcement.md"
 
-        "$(Build.SourcesDirectory)/eng/eng/create-announcement-draft.sh" \
-          --template "source-build-release-announcement.md"              \
-          --output-file "$announcement_file"                             \
-          --channel "$(ReadReleaseInfo.ReleaseChannel)"                  \
-          --sdk-version "$(ReadReleaseInfo.SdkVersion)"                  \
-          --runtime-version "$(ReadReleaseInfo.RuntimeVersion)"          \
+        "$(Build.SourcesDirectory)/eng/create-announcement-draft.sh" \
+          --template "source-build-release-announcement.md"          \
+          --output-file "$announcement_file"                         \
+          --channel "$(ReadReleaseInfo.ReleaseChannel)"              \
+          --sdk-version "$(ReadReleaseInfo.SdkVersion)"              \
+          --runtime-version "$(ReadReleaseInfo.RuntimeVersion)"      \
           --tag "$(ReadReleaseInfo.ReleaseTag)"
 
         cat "$announcement_file"
