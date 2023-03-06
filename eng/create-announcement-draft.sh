@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 print-help ()
 {
@@ -16,12 +17,6 @@ print-help ()
    echo
 }
 
-LONG=template:,channel:,output-file:,release-name:,sdk-version:,runtime-version:,tag:,help
-
-OPTS=$(getopt --options --long $LONG --name "$0" -- "$@")
-if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
-eval set -- "$OPTS"
-
 template=''
 output_file=''
 channel=''
@@ -30,8 +25,9 @@ sdk_version=''
 runtime_version=''
 tag=''
 
-while true ; do
-  case "$1" in
+while [[ $# -gt 0 ]]; do
+  opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
+  case "$opt" in
     -h | --help )
       print-help
       exit 0
@@ -70,6 +66,14 @@ while true ; do
       ;;
   esac
 done
+
+: "${template:?Missing --template}"
+: "${output_file:?Missing --output-file}"
+: "${channel:?Missing --channel}"
+: "${release_name:?Missing --release-name}"
+: "${sdk_version:?Missing --sdk-version}"
+: "${runtime_version:?Missing --runtime-version}"
+: "${tag:?Missing --tag}"
 
 # Set environment variables that go in the announcement template
 export TAG="$tag"

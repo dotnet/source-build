@@ -135,6 +135,7 @@ stages:
     - ${{ if and(ne(variables.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
       - checkout: dotnet-dotnet
         displayName: Checkout dotnet-dotnet
+        path: dotnet-dotnet
         fetchDepth: 0
         fetchTags: true
 
@@ -256,7 +257,7 @@ stages:
             title=$(gh gist view '${{ parameters.announcementGist }}' --files)
             title=${title%.md}
 
-            body="$(envsubst < $(gh gist view '${{ parameters.announcementGist }}'))"
+            body="$(gh gist view '${{ parameters.announcementGist }}' | envsubst | tail -n +2)"
           fi
 
           query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'

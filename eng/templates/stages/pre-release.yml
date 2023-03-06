@@ -6,6 +6,9 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: releaseName
+  displayName: Release name (e.g. ".NET 8.0 Preview 1")
+  type: string
 - name: dotnetStagingPipelineResource
   type: string
 - name: useSpecificPipelineRunIDs
@@ -83,7 +86,8 @@ stages:
         announcement_file="$(Pipeline.Workspace)/release-announcement.md"
 
         "$(Build.SourcesDirectory)/eng/create-announcement-draft.sh" \
-          --template "source-build-release-announcement.md"          \
+          --template "$(Build.SourcesDirectory)/eng/source-build-release-announcement.md" \
+          --release-name '${{ parameters.releaseName }}'             \
           --output-file "$announcement_file"                         \
           --channel "$(ReadReleaseInfo.ReleaseChannel)"              \
           --sdk-version "$(ReadReleaseInfo.SdkVersion)"              \
