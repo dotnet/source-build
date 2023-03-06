@@ -100,7 +100,12 @@ steps:
     original_build_name='$(Build.BuildNumber)'
     revision="${original_build_name:9}"
 
+    # Tag & name the release build
     echo "##vso[build.updatebuildnumber]$build_name-$revision"
+    echo "##vso[build.addbuildtag]$release"
+    if [ '${{ parameters.isDryRun }}' = True ]; then
+      echo "##vso[build.addbuildtag]dry-run"
+    fi
   name: ReadReleaseInfo
   displayName: Read Release Info
 
