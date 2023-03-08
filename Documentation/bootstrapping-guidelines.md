@@ -65,7 +65,7 @@ Community building for following architectures - s390x, ARM32, ppc64le
 
 You can see the list of supported RIDs and the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json). Learn more about RID catalog in [here](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog#linux-rids).
 
-**Refer to [Building a New .NET Major Version](#Building_a_New_NET_Major_Version) for the steps to build.**
+**Refer to [Building a New .NET Major Version](#building-a-new-net-major-version) for the steps to build.**
 
 ## Building for New OS (Using a RID unknown to .NET)
 
