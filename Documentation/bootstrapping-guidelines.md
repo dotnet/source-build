@@ -1,4 +1,4 @@
-# Bootstrapping Guidelines to Build .NET SDK from Source
+# Bootstrapping Guidelines to Build .NET from Source
 
 .NET utilizes itself to build therefore in order to build .NET from source, you first need to acquire or build a bootstrapping .NET SDK. This document provides guideance around acquiring and building this bootstrapping .NET SDK.
 
@@ -42,7 +42,7 @@ Building a new .NET major version is two stage process:
 
 ## Building a Servicing Release of .NET
 
-Building a subsequent or servicing version of .NET requires that you have source built the previous version of .NET available as descibed in [Building New .NET Major Version](#building-a-new-net-major-version). If you already have the previous verions of the .NET SDK available, all you have to do is run the following build command.
+Building a subsequent or servicing version of .NET requires that you have source built the previous version of .NET available as descibed in [Building a New .NET Major Version](#building-a-new-net-major-version). If you already have the previous verions of the .NET SDK available, all you have to do is run the following build command.
 
 ``` bash
 ./build.sh --with-sdk <extracted-previously-source-built-sdk-path> --with-packages <extracted-previously-source-built-packages-path>
