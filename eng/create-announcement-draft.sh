@@ -7,7 +7,6 @@ print-help ()
    echo
    echo "Options:"
    echo "--template            The base template to use for the announcement"
-   echo "--output-file         The file to output the announcement to"
    echo "--channel             Release channel, e.g. '8.0'"
    echo "--release-name        Human readable name of the release, e.g. '.NET 8 Preview 1'"
    echo "--sdk-version         The .NET SDK version that is being released"
@@ -18,7 +17,6 @@ print-help ()
 }
 
 template=''
-output_file=''
 channel=''
 release_name=''
 sdk_version=''
@@ -34,10 +32,6 @@ while [[ $# -gt 0 ]]; do
       ;;
     --template )
       template="$2"
-      shift 2
-      ;;
-    --output-file )
-      output_file="$2"
       shift 2
       ;;
     --channel )
@@ -68,7 +62,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 : "${template:?Missing --template}"
-: "${output_file:?Missing --output-file}"
 : "${channel:?Missing --channel}"
 : "${release_name:?Missing --release-name}"
 : "${sdk_version:?Missing --sdk-version}"
@@ -90,6 +83,4 @@ else
     export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$tag"
 fi
 
-template="$(envsubst < "$template")"
-
-echo "$template" > "$output_file"
+envsubst < "$template"

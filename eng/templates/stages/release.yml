@@ -244,12 +244,19 @@ stages:
 
           if [[ -z '${{ parameters.announcementGist }}' ]]; then
             echo "Loading announcement template from source-build-release-announcement.md"
-            template="$(envsubst < source-build-release-announcement.md)"
+
+            announcement=$("./create-announcement-draft.sh"     \
+              --template "source-build-release-announcement.md" \
+              --release-name '$RELEASE_NAME'                    \
+              --channel "RELEASE_CHANNEL"                       \
+              --sdk-version "$SDK_VERSION"                      \
+              --runtime-version "$RUNTIME_VERSION"              \
+              --tag "$TAG")
 
             # Get the line in the template that is prefixed with "Title:" and remove the prefix
-            title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
+            title=$(echo "$announcement" | grep "^Title:" | cut -d " " -f2-)
             # Get the inverse of the above selection
-            body=$(echo "$template" | grep -v "^Title:")
+            body=$(echo "$announcement" | grep -v "^Title:")
           else
             echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
 
