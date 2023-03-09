@@ -1,10 +1,10 @@
 # Bootstrapping Guidelines to Build .NET from Source
 
-.NET utilizes itself to build therefore in order to build .NET from source, you first need to acquire or build a bootstrapping .NET SDK. This document provides guideance around acquiring and building this bootstrapping .NET SDK.
+.NET utilizes itself to build therefore in order to build .NET from source, you first need to acquire or build a bootstrapping .NET SDK. This document provides guidance around acquiring and building this bootstrapping .NET SDK.
 
 The version of the SDK used to source build .NET is referred to as "N-1" (e.g. 7.0.100). The version of the SDK produced by source build is referred to as "N" (e.g. 7.0.101). The previous SDK (e.g. N-1) supplies the tools required to build.
 
-For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 6.0 version of the SDK to build a 7.0 SDK. There is an [open issue](https://github.com/dotnet/source-build/issues/3100) to add support for this.
+For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 6.0 version of the SDK to build a 7.0 SDK.
 
 Refer to the [build instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to review how to build the .NET SDK from source.
 
@@ -78,7 +78,6 @@ Determine the compatible supported OS to use as host to build. Choose the host w
 
 **Stage 1:**
 Build bootstrapping .NET SDK and toolset.
-
 
    ``` bash
    ./prep.sh
