@@ -3,17 +3,18 @@ set -euo pipefail
 
 print-help ()
 {
-   echo "Uses a template to draft a release announcement and outputs it into a file."
-   echo
-   echo "Options:"
-   echo "--template            The base template to use for the announcement"
-   echo "--channel             Release channel, e.g. '8.0'"
-   echo "--release-name        Human readable name of the release, e.g. '.NET 8 Preview 1'"
-   echo "--sdk-version         The .NET SDK version that is being released"
-   echo "--runtime-version     The .NET runtime version that is being released"
-   echo "--tag                 The release tag, e.g. v8.0.0-preview.1"
-   echo "--help, -h            (Optional) print this help message and exit"
-   echo
+  echo "Uses a template to draft a release announcement and outputs it into a file."
+  echo
+  echo "Options:"
+  echo "--template            The base template to use for the announcement"
+  echo "--channel             Release channel, e.g. '8.0'"
+  echo "                      Note that when 6.0/7.0, dotnet/installer is targeted, otherwise dotnet/dotnet"
+  echo "--release-name        Human readable name of the release, e.g. '.NET 8 Preview 1'"
+  echo "--sdk-version         The .NET SDK version that is being released"
+  echo "--runtime-version     The .NET runtime version that is being released"
+  echo "--tag                 The release tag, e.g. v8.0.0-preview.1"
+  echo "--help, -h            (Optional) print this help message and exit"
+  echo
 }
 
 template=''
