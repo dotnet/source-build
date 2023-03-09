@@ -62,11 +62,15 @@ parameters:
   type: boolean
   default: true
 - name: createReleaseAnnouncement
-  displayName: Create Release Announcement
+  displayName: Create release announcement
   type: boolean
   default: true
+- name: announcementGist
+  displayName: Release announcement gist URL
+  type: string
+  default: ' '
 - name: submitReleasePR
-  displayName: Submit Release PR
+  displayName: Submit release PR
   type: boolean
   default: true
 # Auto means that for dry run, we only create a draft release; full otherwise.
@@ -76,7 +80,7 @@ parameters:
   values: [ 'auto', 'skip', 'draft', 'full' ]
   default: auto
 - name: isDryRun
-  displayName: Dry Run
+  displayName: Dry run
   type: boolean
   default: false
 
@@ -86,6 +90,7 @@ stages:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
+    releaseName: ${{ parameters.releaseName }}
     useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
     dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
     dotnetInstallerOfficialRunID: ${{ parameters.dotnetInstallerOfficialRunID }}
@@ -145,6 +150,7 @@ stages:
     releaseBranchName: ${{ parameters.releaseBranchName }}
     isPreviewRelease: ${{ parameters.isPreviewRelease }}
     createReleaseAnnouncement: ${{ parameters.createReleaseAnnouncement }}
+    announcementGist: ${{ replace(parameters.announcementGist, ' ', '') }}
     createGitHubRelease: ${{ parameters.createGitHubRelease }}
     submitReleasePR: ${{ parameters.submitReleasePR }}
     isDryRun: ${{ parameters.isDryRun }}

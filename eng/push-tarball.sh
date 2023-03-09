@@ -17,7 +17,7 @@ print-help ()
    echo
 }
 
-SHORT=r:v:u:t:dh
+SHORT=r:v:u:t:d:h
 LONG=releaseChannel:,sdkVersion:,upstream:,tarball:,isDryRun,help
 
 OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")

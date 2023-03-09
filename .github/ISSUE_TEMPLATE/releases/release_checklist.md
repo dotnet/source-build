@@ -13,6 +13,7 @@
      - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
      - In case a different installer commit is being released than the one in the associated staging pipeline, input the official build numbers of the builds belonging to the released commit.
      - The pipeline has several stages with approval gates in between them where each approval should follow some verification described in this checklist.
+     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the file what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 and SDK 8.0.100-preview.2.23153.6.md`. The title of the whole gist is not relevant. Suggested content of the announcement will be shown in the `Pre-Release` stage.
      - Follow the steps below as the pipeline progresses. There will be manual steps needed through out the run.
 
      #### `source-build-release-official` stages:
@@ -26,6 +27,7 @@
            - The `Get Associated Pipeline Run IDs` build step will contain links to pipelines associated with this release:
                 - ⚠️ 6.0 / 7.0: [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
                 - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) and the `dotnet/dotnet` commit that represents the release
+           - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the title to your gist's file name (add `.md`).
            - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
       1. - [ ] `Approval - Test prereqs` stage

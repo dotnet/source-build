@@ -12,6 +12,8 @@ parameters:
 - name: createReleaseAnnouncement
   type: boolean
   default: true
+- name: announcementGist
+  type: string
 - name: submitReleasePR
   type: boolean
   default: true
@@ -133,6 +135,7 @@ stages:
     - ${{ if and(ne(variables.createGitHubRelease, 'skip'), ne(parameters.dotnetMajorVersion, '6.0'), ne(parameters.dotnetMajorVersion, '7.0')) }}:
       - checkout: dotnet-dotnet
         displayName: Checkout dotnet-dotnet
+        path: dotnet-dotnet
         fetchDepth: 0
         fetchTags: true
 
@@ -220,7 +223,7 @@ stages:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
       - script: |
-          set -euxo pipefail
+          set -euo pipefail
           echo "Repo ID is $(RepoId)"
           echo "Discussion Category ID is $(DiscussionCategoryId)"
 
@@ -239,11 +242,30 @@ stages:
             export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$TAG"
           fi
 
-          template="$(envsubst < source-build-release-announcement.md)"
-          # Get the line in the template that is prefixed with "Title:" and remove the prefix
-          title=$(echo "$template" | grep "^Title:" | cut -d " " -f2-)
-          # Get the inverse of the above selection
-          body=$(echo "$template" | grep -v "^Title:")
+          if [[ -z '${{ parameters.announcementGist }}' ]]; then
+            echo "Loading announcement template from source-build-release-announcement.md"
+
+            announcement=$("./create-announcement-draft.sh"     \
+              --template "source-build-release-announcement.md" \
+              --release-name "$RELEASE_NAME"                    \
+              --channel "RELEASE_CHANNEL"                       \
+              --sdk-version "$SDK_VERSION"                      \
+              --runtime-version "$RUNTIME_VERSION"              \
+              --tag "$TAG")
+
+            # Get the line in the template that is prefixed with "Title:" and remove the prefix
+            title=$(echo "$announcement" | grep "^Title:" | cut -d " " -f2-)
+            # Get the inverse of the above selection
+            body=$(echo "$announcement" | grep -v "^Title:")
+          else
+            echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
+
+            # Get title from the name of the file
+            title=$(gh gist view '${{ parameters.announcementGist }}' --files)
+            title=${title%.md}
+
+            body="$(gh gist view '${{ parameters.announcementGist }}' | envsubst | tail -n +2)"
+          fi
 
           query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 

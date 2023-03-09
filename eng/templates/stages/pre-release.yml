@@ -6,6 +6,9 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: releaseName
+  displayName: Release name (e.g. ".NET 8.0 Preview 1")
+  type: string
 - name: dotnetStagingPipelineResource
   type: string
 - name: useSpecificPipelineRunIDs
@@ -76,6 +79,16 @@ stages:
         useCustomTag: ${{ parameters.useCustomTag }}
         customTag: ${{ replace(parameters.customTag, ' ', '') }}
         isDryRun: ${{ parameters.isDryRun }}
+
+    - script: |
+        "$(Build.SourcesDirectory)/eng/create-announcement-draft.sh" \
+          --template "$(Build.SourcesDirectory)/eng/source-build-release-announcement.md" \
+          --release-name '${{ parameters.releaseName }}'             \
+          --channel "$(ReadReleaseInfo.ReleaseChannel)"              \
+          --sdk-version "$(ReadReleaseInfo.SdkVersion)"              \
+          --runtime-version "$(ReadReleaseInfo.RuntimeVersion)"      \
+          --tag "$(ReadReleaseInfo.ReleaseTag)"
+      displayName: Create announcement draft
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - task: DownloadPipelineArtifact@2
