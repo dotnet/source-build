@@ -45,7 +45,7 @@ A minimum of 8 GB of memory is recommended.
 
 The following assets will need to be downloaded in order to build.
 
-* Source: 525 GB
+* Source: 525 MB
 * SDK: 230 MB
 * Artifacts
   * .NET 8.0: 1 GB
