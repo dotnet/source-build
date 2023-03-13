@@ -8,6 +8,14 @@ For new major versions or new platforms, you need to acquire or build the bootst
 
 Refer to the [build instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to review how to build the .NET SDK from source.
 
+## Scenarios
+
+There are three major scenarios for bootstrapping:
+
+- There is already a Microsoft-released SDK for your platform and .NET is already compatible with the runtime ID, but you would like to release either a source-build-clean SDK or a RID-specific SDK: see [Building for a New OS (Using a RID already known by .NET)](#Building-for-a-New-OS-Using-a-RID-already-known-by-NET).  In this case you will do a two-stage build but there are no major modifications to the build process.
+- There is already a Microsoft-released SDK for your platform but .NET does not know about the RID: see [Building for New OS (Using a RID unknown to .NET)](#Building-for-New-OS-Using-a-RID-unknown-to-NET).  In this case you will do a two-stage build, adding the new target RID to the runtime.json in both stages.
+- There is no Microsoft-released SDK for your platform: see [Building for New Architecture (Using a RID and architecture unknown to .NET)](#Building-for-New-Architecture-Using-a-RID-and-architecture-unknown-to-NET).  In this case, you will probably need to cross-build a runtime and SDK, then use that as the stage0 to another native two-stage build.
+
 ## Building a New .NET Major Version
 
 Building a new .NET major version is two stage process:
@@ -128,3 +136,15 @@ The RID graph or runtime fallback graph is a list of RIDs that are compatible wi
 You will need to update the RID graph to include your new platform and runtime IDs.  See <https://github.com/dotnet/runtime/pull/82382> or <https://github.com/dotnet/runtime/pull/75396> for examples.
 
 Building for unsupported architectures require cross-compilaton on the supported platform. Determine the compatible host to build which provides cross-compilation toolchain.  [IBM has published](https://community.ibm.com/community/user/powerdeveloper/blogs/sapana-khemkar/2023/01/13/cross-build-dotnet7-on-x86-ibm-power?CommunityKey=8cc2a1f0-6307-48cb-9178-ace50920244e) a detailed description of how they successfully built .NET 7 for IBM Power.
+
+While this is a more complicated scenario that may differ from platform to platform, the steps will be roughly:
+
+**Stage 0:**
+1. Cross compile an SDK (using prebuilts) on x64 for target platform (this process may be quite long and involved and include setting up a rootfs for your architecture).
+2. Cross compile the runtime repo (on x64 for target platform, generally done as part of previous step) and save the nuget packages, use these to augment the Microsoft-built previously-source-built archive.
+
+**Stage 1:**
+- Use the cross-compiled SDK and augmented previously-source-built-archive to build a stage 1 SDK.
+
+**Stage 2:**
+- Use your stage 1 SDK to build a stage 2 SDK, pointing it to the SDK and previously-source-built archives from stage 1.
