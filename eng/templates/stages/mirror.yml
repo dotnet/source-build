@@ -25,7 +25,7 @@ stages:
 
   jobs:
   - job: Mirror
-    displayName: Mirror ${{ parameters.releaseBranchName }} and packages.
+    displayName: Mirror tags and packages
     variables:
     - group: DotNet-Source-Build-All-Orgs-Source-Access
     - name: RepoDir
