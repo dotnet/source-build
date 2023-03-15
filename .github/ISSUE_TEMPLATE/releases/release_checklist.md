@@ -13,7 +13,7 @@
      - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
      - In case a different installer commit is being released than the one in the associated staging pipeline, input the official build numbers of the builds belonging to the released commit.
      - The pipeline has several stages with approval gates in between them where each approval should follow some verification described in this checklist.
-     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the file what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 and SDK 8.0.100-preview.2.23153.6.md`. The title of the whole gist is not relevant. Suggested content of the announcement will be shown in the `Pre-Release` stage.
+     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The title of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
      - Follow the steps below as the pipeline progresses. There will be manual steps needed through out the run.
 
      #### `source-build-release-official` stages:
@@ -30,7 +30,7 @@
            - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the title to your gist's file name (add `.md`).
            - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
-      1. - [ ] `Approval - Test prereqs` stage
+      2. - [ ] `Approval - Test prereqs` stage
            - [ ] Gather smoke-test prereqs ([🔁 automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
                 - [ ] Retrieve smoke-test prereqs artifact for each architecture
                     - [ ] ⚠️ 6.0 / 7.0: [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
@@ -47,10 +47,10 @@
                 - [ ] Submit a PR to the appropriate `release/*` branch on [dnceng/security-partners-dotnet](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet). A branch was automatically created during the `Pre-Release` stage. You just have to submit the PR. ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3069))
                      - [ ] Squash-merge the PR once CI finishes successfully.
            - [ ] Approve the `Approval - Test prereqs` approval stage.
-      1. - [ ] `Mirror branch to DSP` stage
+      3. - [ ] `Mirror branch to DSP` stage
            - This stage mirrors and tags branches associated with the current release.
            - This stage should be ran only once per hand-off. If a new run is needed, removal of the previously created tags/branches might be needed.
-      1. - [ ] `Approval - Partner notification` approval stage
+      4. - [ ] `Approval - Partner notification` approval stage
            - [ ] Notify partners of release. Send one email for all releases ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
                 - links to MSRC work items in the dotnet-security-partners org, being careful not to disclose any vulnerable info in the email.
                 - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account.
@@ -61,16 +61,16 @@
                 - BCC line should be the list found [here](https://microsoft.sharepoint.com/teams/dotNETDeployment/_layouts/OneNote.aspx?id=%2Fteams%2FdotNETDeployment%2FShared%20Documents%2FGeneral%2FNET%20Core%20Acquisition%20and%20Deployment&wd=target%28source-build%2FServicing.one%7CB33C6848-FC82-4585-B69F-204C8449E219%2FPartner%20notification%20emails%7C359F2672-DA5F-4631-9526-423F2BF408AC%2F%29).
                 - CC anyone who may be interested in this particular release.
            - [ ] Approve the `Approval - Partner notification` approval stage.
-      1. - [ ] `Approval - Release` stage
+      5. - [ ] `Approval - Release` stage
            - [ ] **SYNC POINT**: Wait for Microsoft build release.
            - [ ] ⚠️ 8.0: Verify the release tag in the `dnceng/dotnet-security-partners` repository matches theVMR commit to which is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
            - [ ] Approve the `Approval - Release` approval stage.
-      1. - [ ] `Release` stage
+      6. - [ ] `Release` stage
            - [ ] Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
                 - If special edits to the announcement are needed, or the content of the announcement discussion is incorrect, source-build repo maintainers can edit the discussion directly once it is posted.
                 - [ ] ⚠️ 7.0 / 8.0: Fix the release notes link ([known issue](https://github.com/dotnet/source-build/issues/3178))
            - [ ] ⚠️ 8.0: In case a release has been published into `dotnet/dotnet` as draft, check its contents and publish it. The URL to the draft can be find in the `Create GitHub release` step.
            - [ ] Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.
                 - If there is an error in the PR, commit directly to the PR branch directly to fix the problem by hand, then submit an issue to [dotnet/source-build](https://github.com/dotnet/source-build).
-1. - [ ] Once the internal changes have been merged to the public GitHub repos, update the `PoisonTests` and `SdkContentTests` with any diffs from the official associated build.
-1. - [ ] Clean up retrospective notes if necessary.
+2. - [ ] Once the internal changes have been merged to the public GitHub repos, update the `PoisonTests` and `SdkContentTests` with any diffs from the official associated build.
+3. - [ ] Clean up retrospective notes if necessary.

@@ -260,10 +260,8 @@ stages:
           else
             echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
 
-            # Get title from the name of the file
-            title=$(gh gist view '${{ parameters.announcementGist }}' --files)
-            title=${title%.md}
-
+            # Get title from the gist name
+            title=$(gh gist view '${{ parameters.announcementGist }}' --raw | head -n 1)
             body="$(gh gist view '${{ parameters.announcementGist }}' | envsubst | tail -n +2)"
           fi
 
