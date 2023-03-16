@@ -7,7 +7,7 @@ This document provides the system requirements to source build the .NET SDK for 
 ### Linux
 
 * [Toolchain Setup](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md#toolchain-setup)
-* [Preconfigured Container Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - We use these images to build and test source-build CI [here](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16).
+* [Preconfigured Container Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - These images are used by [CI](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16) to build and test source-build.
 * [Distros Source Building .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
 
 ### MacOS
