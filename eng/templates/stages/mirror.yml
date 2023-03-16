@@ -18,14 +18,14 @@ parameters:
 
 stages:
 - stage: Mirror
-  displayName: Mirror to DSP
+  displayName: Mirror sources & packages
   dependsOn:
   - PreRelease
   - MirrorApproval
 
   jobs:
   - job: Mirror
-    displayName: Mirror ${{ parameters.releaseBranchName }} and packages.
+    displayName: Mirror sources & packages
     variables:
     - group: DotNet-Source-Build-All-Orgs-Source-Access
     - name: RepoDir
@@ -85,7 +85,7 @@ stages:
         AZDO_PAT: $(dn-bot-all-orgs-build-rw-code-rw)
 
     - script: |
-        set -euxo pipefail
+        set -euo pipefail
 
         branch_name="${{ parameters.releaseBranchName }}"
         if [[ "$branch_name" == internal/* ]]; then
@@ -111,6 +111,22 @@ stages:
         else
           tag_name="v$(SdkVersion)"
           echo "Using tag ${tag_name}"
+        fi
+
+        # Check if the tag already exists and points to the same commit
+        sha=$(git rev-parse HEAD)
+        if git ls-remote --tags destination | grep -q "$tag_name"; then
+          echo "Tag $tag_name already exists, checking if it points to the same commit"
+
+          if git ls-remote --tags destination | grep "$tag_name" | grep -q "$sha"; then
+            echo "Tag $tag_name already exists at $sha, skipping"
+            exit 0
+          else
+            echo "Tag $tag_name already exists but does not point to a $sha, aborting"
+            echo "Existing tags:"
+            git ls-remote --tags destination
+            exit 1
+          fi
         fi
 
         message=".NET Source-build $(sdkVersion)-SDK"
