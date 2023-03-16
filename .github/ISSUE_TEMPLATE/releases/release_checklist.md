@@ -13,7 +13,7 @@
      - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
      - In case a different installer commit is being released than the one in the associated staging pipeline, input the official build numbers of the builds belonging to the released commit.
      - The pipeline has several stages with approval gates in between them where each approval should follow some verification described in this checklist.
-     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the file what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 and SDK 8.0.100-preview.2.23153.6.md`. The title of the whole gist is not relevant. Suggested content of the announcement will be shown in the `Pre-Release` stage.
+     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The title of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
      - Follow the steps below as the pipeline progresses. There will be manual steps needed through out the run.
 
      #### `source-build-release-official` stages:
