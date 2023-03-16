@@ -18,14 +18,14 @@ parameters:
 
 stages:
 - stage: Mirror
-  displayName: Mirror tags & packages
+  displayName: Mirror sources & packages
   dependsOn:
   - PreRelease
   - MirrorApproval
 
   jobs:
   - job: Mirror
-    displayName: Mirror tags and packages
+    displayName: Mirror sources & packages
     variables:
     - group: DotNet-Source-Build-All-Orgs-Source-Access
     - name: RepoDir
