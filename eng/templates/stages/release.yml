@@ -350,7 +350,7 @@ stages:
           extraArgs=()
           if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
             extraArgs+=("--globalJson" "src/SourceBuild/tarball/content/global.json")
-            extraArgs+=("--versionProps" "eng/Versions.props")
+            extraArgs+=("--versionsProps" "eng/Versions.props")
           fi
 
           target_branch="${{ parameters.releaseBranchName }}"
