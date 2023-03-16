@@ -141,7 +141,7 @@ stages:
 
       - script: |
           set -euo pipefail
-          tarball_path="$(Build.ArtifactStagingDirectory)/dotnet-sdk-source-$(release).tar.gz"
+          tarball_path="$(Build.ArtifactStagingDirectory)/dotnet-sdk-source-$(releaseTag).tar.gz"
           echo "Creating source tarball from dotnet-dotnet / $(dotnetDotnetCommit)"
 
           git checkout "$(dotnetDotnetCommit)"
