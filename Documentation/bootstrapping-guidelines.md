@@ -20,7 +20,7 @@ There are three major scenarios for bootstrapping:
 
 To find out if your platform is supported you must first determine its [RID](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog).  You can then check if it's supported by looking at the RID graph in the [runtime.json](https://github.com/dotnet/runtime/blob/main/src/libraries/Microsoft.NETCore.Platforms/src/runtime.json).
 
-Building a .NET for the first time is a two stage process:
+Building .NET for the first time is a two stage process:
 
 **Stage 1:** Build bootstrapping .NET SDK for the targeted platform.
 
