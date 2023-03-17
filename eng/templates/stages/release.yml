@@ -229,7 +229,7 @@ stages:
 
           # Set environment variables that go in the announcement template
           export TAG=$(releaseTag)
-          export RELEASE_NAME="$(releaseName)"
+          export RELEASE_NAME="${{ parameters.releaseName }}"
           export RUNTIME_VERSION="$(runtimeVersion)"
           export RELEASE_CHANNEL="$(releaseChannel)"
           export SDK_VERSION="$(sdkVersion)"
@@ -261,8 +261,21 @@ stages:
             echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
 
             # Get title from the gist name
-            title=$(gh gist view '${{ parameters.announcementGist }}' --raw | head -n 1)
+            set +o pipefail # gh fails with 141 but returns the correct output
+            title="$(gh gist view '${{ parameters.announcementGist }}' --raw | head -n 1)"
             body="$(gh gist view '${{ parameters.announcementGist }}' | envsubst | tail -n +2)"
+
+            if [[ -z "$title" ]]; then
+              echo "##vso[task.logissue type=error]Could not get title from gist ${{ parameters.announcementGist }}"
+              exit 1
+            fi
+
+            if [[ -z "$body" ]]; then
+              echo "##vso[task.logissue type=error]Could not get announcement text from gist ${{ parameters.announcementGist }}"
+              exit 1
+            fi
+
+            set -o pipefail
           fi
 
           query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
