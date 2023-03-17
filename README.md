@@ -6,7 +6,7 @@ This repo is the starting point for building .NET from source. It contains docum
 
 ## Prerequisites
 
-The dependencies for building .NET from source can be found [here](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md). It may also be helpful to reference the Dockerfiles in [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker). We use these images to build and test source-build CI [here](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16).
+* [Build system requirements](Documentation/system-requirements.md)
 
 ## Building .NET 8.0
 
@@ -20,7 +20,6 @@ Then, follow the instructions in [dotnet/dotnet's README](https://github.com/dot
 Clone the dotnet/installer repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/installer's README](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to build .NET from source.
 Please see the [support](#support) section below to see which feature branches are currently supported.
-
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
@@ -39,7 +38,13 @@ Source-build solves common challenges that most developers encounter when trying
 * By default, most .NET repositories download prebuilt binary dependencies from online sources. These are forbidden by typical Linux distribution rules, and interfere with build output flow.
 * Nearly all .NET repositories require the .NET SDK to build. This is a circular dependency, which presents a bootstrapping problem.
 
+## Comprehensive Guidelines
+
+* [Bootstrapping new distro and architecture guidelines](Documentation/bootstrapping-guidelines.md)
+* [Distribution packaging guidelines](https://learn.microsoft.com/dotnet/core/distribution-packaging)
+
 ## .NET in Linux Distributions
+
 | Distro | Package Feed | Maintainer |
 |---|---|---|
 | Alpine | [Community](https://pkgs.alpinelinux.org/packages?name=dotnet*&branch=v3.16&repo=&arch=&maintainer=) | [@ayakael](https://github.com/ayakael) |
@@ -49,7 +54,6 @@ Source-build solves common challenges that most developers encounter when trying
 | Homebrew | [Formula](https://formulae.brew.sh/formula/dotnet) | [@asbjornu](https://github.com/asbjornu) |
 | [Red Hat Enterprise Linux](https://developers.redhat.com/products/dotnet/overview) | [Default](https://access.redhat.com/documentation/en-us/net/6.0) | [@omajid](https://github.com/omajid) |
 | [Ubuntu](https://canonical.com/blog/install-dotnet-on-ubuntu) | [Default](https://packages.ubuntu.com/search?suite=default&section=all&arch=any&keywords=dotnet&searchon=names)<br>[Personal Package Archives](https://launchpad.net/ubuntu/+ppas?name_filter=dotnet) | [@mirespace](https://github.com/mirespace) |
-
 
 ## Support
 
