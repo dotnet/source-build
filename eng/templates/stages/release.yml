@@ -353,12 +353,16 @@ stages:
             extraArgs+=("--versionsProps" "eng/Versions.props")
           fi
 
-          target_branch="${{ parameters.releaseBranchName }}"
-          if [[ "$target_branch" == internal/* ]]; then
-            target_branch="${target_branch#internal/}"
+          if [ "${{ parameters.isPreviewRelease }}" = True ]; then
+            target_branch='main'
+          else
+            target_branch="${{ parameters.releaseBranchName }}"
+            if [[ "$target_branch" == internal/* ]]; then
+              target_branch="${target_branch#internal/}"
+            fi
           fi
 
-          if [ ${{ parameters.isDryRun }} = True ]; then
+          if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
             echo "./submit-source-build-release-pr.sh"
             echo "  --setupGitAuth"
