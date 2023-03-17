@@ -353,11 +353,6 @@ stages:
             extraArgs+=("--versionsProps" "eng/Versions.props")
           fi
 
-          target_branch="${{ parameters.releaseBranchName }}"
-          if [[ "$target_branch" == internal/* ]]; then
-            target_branch="${target_branch#internal/}"
-          fi
-
           if [ ${{ parameters.isDryRun }} = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
             echo "./submit-source-build-release-pr.sh"
@@ -367,7 +362,7 @@ stages:
             echo "  --sdkVersion $(sdkVersion)"
             echo "  --title $title"
             echo "  --body $body"
-            echo "  --targetBranch $target_branch"
+            echo "  --targetBranch main"
             echo "  ${extraArgs[@]}"
           else
             echo "Submitting PR"
@@ -378,7 +373,7 @@ stages:
               --sdkVersion "$(sdkVersion)" \
               --title "$title" \
               --body "$body" \
-              --targetBranch "$target_branch" \
+              --targetBranch main \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR
