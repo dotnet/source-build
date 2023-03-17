@@ -5,11 +5,6 @@ parameters:
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
-- name: useCustomTag
-  type: boolean
-  default: false
-- name: customTag
-  type: string
 - name: isDryRun
   type: boolean
   default: false
@@ -36,8 +31,8 @@ stages:
       value: dn-bot@microsoft.com
     - name: destinationUrl
       value: https://dotnet-security-partners@dev.azure.com/dotnet-security-partners/dotnet/_git/dotnet
-    - name: sdkVersion
-      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
+    - name: releaseTag
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - name: sourceUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
@@ -105,13 +100,8 @@ stages:
         git fetch source "$ref_to_tag"
         git checkout "$ref_to_tag"
 
-        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
-          tag_name="${{ parameters.customTag }}"
-          echo "Using custom tag ${tag_name}"
-        else
-          tag_name="v$(SdkVersion)"
-          echo "Using tag ${tag_name}"
-        fi
+        tag_name="v$(releaseTag)"
+        echo "Tagging $ref_to_tag as $tag_name"
 
         # Check if the tag already exists and points to the same commit
         sha=$(git rev-parse HEAD)
@@ -129,7 +119,7 @@ stages:
           fi
         fi
 
-        message=".NET Source-build $(sdkVersion)-SDK"
+        message=".NET Source-build $(releaseTag)"
         git tag "$tag_name" "$ref_to_tag" -m "$message"
 
         if [ "${{ parameters.isDryRun }}" = "True" ]; then
