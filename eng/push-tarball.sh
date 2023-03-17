@@ -112,7 +112,7 @@ pushd "$vmr_path"
   if [ "$is_dry_run" = true ]; then
     echo "Doing a dry run, not pushing to upstream. List of changes:"
     git log --name-status HEAD^..HEAD || echo "No changes to commit."
-    echo "Would push $new_brance_name to $upstream_url"
+    echo "Would push $new_branch_name to $upstream_url"
     echo "Would create PR from $new_branch_name to $target_branch"
   else
     echo "Pushing branch to upstream."
