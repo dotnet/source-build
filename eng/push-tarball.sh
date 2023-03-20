@@ -113,7 +113,7 @@ pushd "$vmr_path"
   data="{
     \"sourceRefName\": \"refs/heads/$new_branch_name\",
     \"targetRefName\": \"refs/heads/$target_branch\",
-    \"title\": \"Source-build update to $sdk_version\",
+    \"title\": \"Update to $sdk_version\",
     \"description\": \"Update to $sdk_version\"
   }"
 
