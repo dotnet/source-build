@@ -40,7 +40,7 @@
                         - [ ] x64 - `CentOSStream8_Offline_x64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.centos.8-x64.tar.gz`
                         - [ ] arm64 - `Debian11_Offline_arm64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.debian.11-arm64.tar.gz`
                 - [ ] Retrieve additional packages from internal MSFT feed using [this project](../../../test/GatherPackages.csproj).
-                - [ ] Create a new tarball of unique packages using [this script](https://gist.github.com/lbussell/5789974491e3d3ed737aac0e8b97b594).
+                - [ ] Create a new tarball of unique packages using [this script](../../../eng/gather-prereqs.sh).
                 - [ ] Upload `smoke-test-prereqs` tarball to `dotnetclimsrc` storage account, following the pattern of previous releases for directory and filename.
                     - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
            - [ ] ⚠️ 6.0 / 7.0: Update `dotnet-security-partners`
