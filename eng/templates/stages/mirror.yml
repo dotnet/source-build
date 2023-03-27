@@ -1,10 +1,12 @@
 parameters:
 - name: dotnetMajorVersion
-  displayName: Major .NET version being released
   type: string
 - name: releaseBranchName
-  displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: isPreviewRelease
+  type: boolean
+- name: useCustomTag
+  type: boolean
 - name: isDryRun
   type: boolean
   default: false
@@ -31,18 +33,6 @@ stages:
       value: dn-bot@microsoft.com
     - name: destinationUrl
       value: https://dotnet-security-partners@dev.azure.com/dotnet-security-partners/dotnet/_git/dotnet
-    - name: releaseTag
-      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
-    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
-      - name: sourceUrl
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
-      - name: sourceVersion
-        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
-    - ${{ else }}:
-      - name: sourceUrl
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
-      - name: sourceVersion
-        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
     # Destination package feed. If this feed changes, you must also change feedServiceConnection to point to that feed.
     - name: destinationPackageFeed
       value: https://pkgs.dev.azure.com/dotnet-security-partners/dotnet/_packaging/dotnet/nuget/v3/index.json
@@ -54,6 +44,24 @@ stages:
       value: 'shipping/packages'
     - name: packagesDownloadLocation
       value: $(PIPELINE.WORKSPACE)/${{ parameters.dotnetStagingPipelineResource }}/$(packagesArtifactName)/$(shippingPackages)
+
+    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
+    - ${{ else }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
+
+    - ${{ if or(parameters.isPreviewRelease, parameters.useCustomTag) }}:
+      - name: releaseTag
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
+    - ${{ else }}:
+      - name: releaseTag
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
 
     steps:
     - checkout: none
