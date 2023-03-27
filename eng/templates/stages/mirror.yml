@@ -50,18 +50,15 @@ stages:
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
       - name: sourceVersion
         value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
+      - name: releaseTag
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
     - ${{ else }}:
       - name: sourceUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
       - name: sourceVersion
         value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
-
-    - ${{ if or(parameters.isPreviewRelease, parameters.useCustomTag) }}:
       - name: releaseTag
         value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
-    - ${{ else }}:
-      - name: releaseTag
-        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
 
     steps:
     - checkout: none
