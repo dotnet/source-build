@@ -109,11 +109,26 @@ pushd "$vmr_path"
   git add -f .
   git diff --staged --quiet || git commit -m "Update to .NET $sdk_version"
 
+  pr_url=$(echo $upstream_url | sed "s,_git.*,_apis/git/repositories/security-partners-dotnet/pullrequests?api-version=7.0,g")
+  data="{
+    \"sourceRefName\": \"refs/heads/$new_branch_name\",
+    \"targetRefName\": \"refs/heads/$target_branch\",
+    \"title\": \"Update to $sdk_version\",
+    \"description\": \"Update to $sdk_version\"
+  }"
+
   if [ "$is_dry_run" = true ]; then
     echo "Doing a dry run, not pushing to upstream. List of changes:"
     git log --name-status HEAD^..HEAD || echo "No changes to commit."
+    echo "Would push $new_branch_name to $upstream_url"
+    echo "Would create PR from $new_branch_name to $target_branch"
+    echo "PR creation payload: $data"
+    echo "PR creation URL: $pr_url"
   else
     echo "Pushing branch to upstream."
     git push -u upstream "$new_branch_name"
+
+    echo "Creating PR from $new_branch_name to $target_branch"
+    curl -H 'Content-Type: application/json' -d "$data" "$pr_url"
   fi
 popd
