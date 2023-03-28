@@ -1,15 +1,12 @@
 parameters:
 - name: dotnetMajorVersion
-  displayName: Major .NET version being released
   type: string
 - name: releaseBranchName
-  displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
+- name: isPreviewRelease
+  type: boolean
 - name: useCustomTag
   type: boolean
-  default: false
-- name: customTag
-  type: string
 - name: isDryRun
   type: boolean
   default: false
@@ -36,18 +33,6 @@ stages:
       value: dn-bot@microsoft.com
     - name: destinationUrl
       value: https://dotnet-security-partners@dev.azure.com/dotnet-security-partners/dotnet/_git/dotnet
-    - name: sdkVersion
-      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
-    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
-      - name: sourceUrl
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
-      - name: sourceVersion
-        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
-    - ${{ else }}:
-      - name: sourceUrl
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
-      - name: sourceVersion
-        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
     # Destination package feed. If this feed changes, you must also change feedServiceConnection to point to that feed.
     - name: destinationPackageFeed
       value: https://pkgs.dev.azure.com/dotnet-security-partners/dotnet/_packaging/dotnet/nuget/v3/index.json
@@ -59,6 +44,21 @@ stages:
       value: 'shipping/packages'
     - name: packagesDownloadLocation
       value: $(PIPELINE.WORKSPACE)/${{ parameters.dotnetStagingPipelineResource }}/$(packagesArtifactName)/$(shippingPackages)
+
+    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
+      - name: releaseTag
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
+    - ${{ else }}:
+      - name: sourceUrl
+        value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
+      - name: sourceVersion
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
+      - name: releaseTag
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
 
     steps:
     - checkout: none
@@ -105,13 +105,8 @@ stages:
         git fetch source "$ref_to_tag"
         git checkout "$ref_to_tag"
 
-        if [ "${{ parameters.useCustomTag }}" = "True" ] ; then
-          tag_name="${{ parameters.customTag }}"
-          echo "Using custom tag ${tag_name}"
-        else
-          tag_name="v$(SdkVersion)"
-          echo "Using tag ${tag_name}"
-        fi
+        tag_name="v$(releaseTag)"
+        echo "Tagging $ref_to_tag as $tag_name"
 
         # Check if the tag already exists and points to the same commit
         sha=$(git rev-parse HEAD)
@@ -129,7 +124,7 @@ stages:
           fi
         fi
 
-        message=".NET Source-build $(sdkVersion)-SDK"
+        message=".NET Source-build $(releaseTag)"
         git tag "$tag_name" "$ref_to_tag" -m "$message"
 
         if [ "${{ parameters.isDryRun }}" = "True" ]; then

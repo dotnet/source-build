@@ -119,9 +119,9 @@ stages:
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    isPreviewRelease: ${{ parameters.isPreviewRelease }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
     useCustomTag: ${{ parameters.useCustomTag }}
-    customTag: ${{ replace(parameters.customTag, ' ', '') }}
     isDryRun: ${{ parameters.isDryRun }}
 
 - stage: NotificationApproval
