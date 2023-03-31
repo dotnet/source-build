@@ -28,7 +28,7 @@ To build .NET Core 3.1 from source, pick a specific Git tag from this repo with 
 
 There are two primary goals of the source-build effort:
 
-1. Increase .NET adaption by focusing on making .NET available everywhere
+1. Increase .NET adoption by focusing on making .NET available everywhere
 
    If .NET was available everywhere - including Linux distributions and package managers like Homebrew - as a first class citizen, it would make .NET a more attractive option for developers who might otherwise look at other languages or runtimes. Users would be more likely to start using and keep using .NET if .NET is available on their development and release platforms of choice.
 
