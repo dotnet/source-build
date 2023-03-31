@@ -30,7 +30,7 @@ There are two primary goals of the source-build effort:
 
 1. Increase .NET adaption by focusing on making .NET available everywhere
 
-   If .NET was available everywhere - including Linux distributions and package managers like Homebrew - as a first class citizen it, would make .NET a more attractive option for developers who might otherwise look at other languages or runtimes. Users would be more likely to start using and keep using .NET if .NET is available on their development and release platforms of choice.
+   If .NET was available everywhere - including Linux distributions and package managers like Homebrew - as a first class citizen, it would make .NET a more attractive option for developers who might otherwise look at other languages or runtimes. Users would be more likely to start using and keep using .NET if .NET is available on their development and release platforms of choice.
 
    To achieve this, we try to make it easier for community and partner maintainers to build and release .NET for their platforms. We need to make sure source-build satisfies the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have three main principles:
 
