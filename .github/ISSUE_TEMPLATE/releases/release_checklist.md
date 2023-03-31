@@ -11,7 +11,7 @@
      - When staging the pipeline run, click "Resources" and select the final run of `Stage-DotNet` mentioned above.
      - If a special source-build tag was created for the release, check `Use custom tag` and set the `Custom release tag` parameter. Otherwise, a release name from the release manifest is used by default.
      - In case a different installer commit is being released than the one in the associated staging pipeline, check `Use specific pipeline run IDs` and input the official build numbers of the builds belonging to the released commit for the parameter(s) relevant to the target .NET version ("Specific {pipeline} run name").
-     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The title of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
+     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the whole gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The name of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
      - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
      - The pipeline has several stages with approval gates in between them where each approval should follow some verification described in this checklist.
      - Follow the steps below as the pipeline progresses. There will be manual steps needed throughout the run.
@@ -29,7 +29,7 @@
                 - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) and the `dotnet/dotnet` commit that represents the release
            - [ ] Navigate to the build link and ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
-           - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the title to your gist's file name (add `.md`).
+           - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the suggested title to your gist's title.
       1. - [ ] `Approval - PR merged & ready for dotnet-security-partners mirroring` stage
            - [ ] Gather smoke-test prereqs
                 - [ ] Retrieve smoke-test prereqs artifact for each architecture
