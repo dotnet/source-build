@@ -44,7 +44,7 @@ There are two primary goals of the source-build effort:
 
    In addition, getting source-build fully functional would provide everyone with a place to try changes that would otherwise require a lot of coordination between multiple repositories - such as landing features that require changes to both the runtime and the SDK.
 
-   For mor details about this Unified Build, see [this overview](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Overview.md).
+   For more details about this Unified Build, see [this overview](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Overview.md).
 
 Source-build can help achieve both these goals by making it easier for everyone to build and release the entire .NET product end-to-end.
 
