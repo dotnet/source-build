@@ -63,6 +63,7 @@
                 - TO line should be dnsbReleaseAnnounce alias.
                 - BCC line should be the list found [here](https://microsoft.sharepoint.com/teams/dotNETDeployment/_layouts/OneNote.aspx?id=%2Fteams%2FdotNETDeployment%2FShared%20Documents%2FGeneral%2FNET%20Core%20Acquisition%20and%20Deployment&wd=target%28source-build%2FServicing.one%7CB33C6848-FC82-4585-B69F-204C8449E219%2FPartner%20notification%20emails%7C359F2672-DA5F-4631-9526-423F2BF408AC%2F%29).
                 - CC anyone who may be interested in this particular release.
+           - ⚠️ For any updates to the release that need to be communicated to partners, update the wiki page and send another email summarizing the update with a link to the wiki page.
            - [ ] Approve the `Approval - Partner notification` approval stage.
       1. - [ ] `Approval - Release` stage
            - [ ] **SYNC POINT**: Wait for Microsoft build release.
