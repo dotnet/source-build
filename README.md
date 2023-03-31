@@ -42,7 +42,9 @@ There are two primary goals of the source-build effort:
 
    The current way of making changes to .NET during a servicing release is to make changes to individual product repositories and then adjust the dependency versions to flow the changes to the next set of repositories. This is repeated until all the repositories are updated. If there's an issue discovered late in the release cycle, the fixes and the dependency updates need to be re-done quickly, which becomes difficult. It's also difficult to verify that the issue is fixed in the final product. It would be much easier to make and test product-wide changes if we could make atomic changes to one repository and be able to build the whole product based on that source code at once.
 
-   In addition, getting source-build fully functional would provide everyone place to make/test changes that would otherwise require a lot of coordination between multiple repositories - such as landing features that require changes both the runtime and the SDK.
+   In addition, getting source-build fully functional would provide everyone with a place to try changes that would otherwise require a lot of coordination between multiple repositories - such as landing features that require changes to both the runtime and the SDK.
+
+   For mor details about this Unified Build, see [this overview](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Overview.md).
 
 Source-build can help achieve both these goals by making it easier for everyone to build and release the entire .NET product end-to-end.
 
