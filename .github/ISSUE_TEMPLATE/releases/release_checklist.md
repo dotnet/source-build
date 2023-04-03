@@ -9,12 +9,12 @@
 1. - [ ] Retrieve the final run of the [Stage-DotNet](https://dev.azure.com/dnceng/internal/_build?definitionId=792&_a=summary) pipeline from internal release communications.
 1. - [ ] Run the [`source-build-release-official`](https://dev.azure.com/dnceng/internal/_build?definitionId=1229) pipeline.
      - When staging the pipeline run, click "Resources" and select the final run of `Stage-DotNet` mentioned above.
-     - If a special source-build tag was created for the release, check `Use custom tag` and set the `Custom tag` parameter. Otherwise, a release name from the release manifest is used.
+     - If a special source-build tag was created for the release, check `Use custom tag` and set the `Custom release tag` parameter. Otherwise, a release name from the release manifest is used by default.
+     - In case a different installer commit is being released than the one in the associated staging pipeline, check `Use specific pipeline run IDs` and input the official build numbers of the builds belonging to the released commit for the parameter(s) relevant to the target .NET version ("Specific {pipeline} run name").
+     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the whole gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The name of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
      - If necessary, run the pipeline as a dry-run first to make sure the stages have the correct output.
-     - In case a different installer commit is being released than the one in the associated staging pipeline, input the official build numbers of the builds belonging to the released commit.
      - The pipeline has several stages with approval gates in between them where each approval should follow some verification described in this checklist.
-     - In case you will be using a gist to craft the GitHub announcement, create a secret gist with a single `.md` file. Name the gist what you want the title of the announcement to be, e.g. `.NET 8 March 2023 Update - .NET 8.0.0-preview.2.23128.3 / SDK 8.0.100-preview.2.23153.6`. The title of the gist file is not relevant (make it an `.md` though). Suggested content of the announcement will be shown in the `Pre-Release` stage.
-     - Follow the steps below as the pipeline progresses. There will be manual steps needed through out the run.
+     - Follow the steps below as the pipeline progresses. There will be manual steps needed throughout the run.
 
      #### `source-build-release-official` stages:
 
@@ -27,39 +27,43 @@
            - The `Get Associated Pipeline Run IDs` build step will contain links to pipelines associated with this release:
                 - ⚠️ 6.0 / 7.0: [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
                 - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) and the `dotnet/dotnet` commit that represents the release
-           - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the title to your gist's file name (add `.md`).
-           - [ ] Ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
+           - [ ] Navigate to the build link and ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
-      1. - [ ] `Approval - Test prereqs` stage
-           - [ ] Gather smoke-test prereqs ([🔁 automation tracking issue](https://github.com/dotnet/source-build/issues/3068))
+           - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the suggested title to your gist's title.
+      1. - [ ] `Approval - PR merged & ready for dotnet-security-partners mirroring` stage
+           - [ ] Gather smoke-test prereqs
                 - [ ] Retrieve smoke-test prereqs artifact for each architecture
                     - [ ] ⚠️ 6.0 / 7.0: [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
-                        - [ ] x64 - `Build Tarball CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-                        - [ ] arm64 - `Build Tarball Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
+                        - [ ] x64 - `Build_Tarball_x64 CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
+                        - [ ] arm64 - `Build_Tarball_arm64 Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
                     - [ ] ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
                         - [ ] x64 - `CentOSStream8_Offline_x64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.centos.8-x64.tar.gz`
                         - [ ] arm64 - `Debian11_Offline_arm64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.debian.11-arm64.tar.gz`
-                - [ ] Retrieve additional packages from internal MSFT feed using [this project](../../../test/GatherPackages.csproj).
-                - [ ] Create a new tarball of unique packages using [this script](../../../eng/gather-prereqs.sh).
+                - [ ] Retrieve additional packages from internal MSFT feed using [this project](https://github.com/dotnet/source-build/blob/main/test/GatherPackages.csproj).
+                - [ ] Create a new tarball of unique packages using [this script](https://github.com/dotnet/source-build/blob/main/eng/gather-prereqs.sh).
                 - [ ] Upload `smoke-test-prereqs` tarball to `dotnetclimsrc` storage account, following the pattern of previous releases for directory and filename.
                     - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
            - [ ] ⚠️ 6.0 / 7.0: Update `dotnet-security-partners`
-                - [ ] Submit a PR to the appropriate `release/*` branch on [dnceng/security-partners-dotnet](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet). A branch was automatically created during the `Pre-Release` stage. You just have to submit the PR. ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3069))
-                     - [ ] Squash-merge the PR once CI finishes successfully.
+                - [ ] A PR will be created for the appropriate `release/*` branch on [dnceng/security-partners-dotnet](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet). A branch was automatically created during the `Pre-Release` stage.
+                     - [ ] Review and squash-merge the PR once CI finishes successfully.
            - [ ] Approve the `Approval - Test prereqs` approval stage.
-      1. - [ ] `Mirror branch to DSP` stage
+      1. - [ ] `Mirror sources & packages` stage
            - This stage mirrors and tags branches associated with the current release.
            - This stage should be ran only once per hand-off. If a new run is needed, removal of the previously created tags/branches might be needed.
       1. - [ ] `Approval - Partner notification` approval stage
-           - [ ] Notify partners of release. Send one email for all releases ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
-                - links to MSRC work items in the dotnet-security-partners org, being careful not to disclose any vulnerable info in the email.
-                - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account.
+           - [ ] Create a wiki page for the release in [dotnet-security-partners](https://dev.azure.com/dotnet-security-partners/dotnet/_wiki/wikis/dotnet.wiki). Include the following information:
+                - links to [MSRC work items in the dotnet-security-partners org](https://dev.azure.com/dotnet-security-partners/dotnet/_workitems/recentlycreated/).
+                - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account. [Generate a URL with a SAS token](https://learn.microsoft.com/azure/vs-azure-tools-storage-explorer-blobs?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#get-the-sas-for-a-blob-container) that expires in 1 month.
+                - link to the [artifact feed](https://dev.azure.com/dotnet-security-partners/dotnet/_artifacts/feed/dotnet) for smoke test prereqs
                 - links to each release's dotnet-security-partners tag that was created with the source-build-release-mirror pipeline.
                 - the expected release date.
                 - information about how confident we are that this is the final release.
+           - [ ] Notify partners of release. Send one email for all releases ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
+                - Link to the wiki page created in the previous step.
                 - TO line should be dnsbReleaseAnnounce alias.
                 - BCC line should be the list found [here](https://microsoft.sharepoint.com/teams/dotNETDeployment/_layouts/OneNote.aspx?id=%2Fteams%2FdotNETDeployment%2FShared%20Documents%2FGeneral%2FNET%20Core%20Acquisition%20and%20Deployment&wd=target%28source-build%2FServicing.one%7CB33C6848-FC82-4585-B69F-204C8449E219%2FPartner%20notification%20emails%7C359F2672-DA5F-4631-9526-423F2BF408AC%2F%29).
                 - CC anyone who may be interested in this particular release.
+           - ⚠️ For any updates to the release that need to be communicated to partners, update the wiki page and send another email summarizing the update with a link to the wiki page.
            - [ ] Approve the `Approval - Partner notification` approval stage.
       1. - [ ] `Approval - Release` stage
            - [ ] **SYNC POINT**: Wait for Microsoft build release.
