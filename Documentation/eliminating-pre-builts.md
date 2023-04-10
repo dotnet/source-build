@@ -63,7 +63,7 @@ When a repository utilizes an intermediate package, it will be excluded from pre
 </UsageData>
 ```
 
-With this ignore pattern in place, pre-built detection will not mark any .NET intermediate package as long as it confronts to the naming in the pattern.
+With this ignore pattern in place, pre-built detection will not mark any .NET intermediate package as long as it conforms to the naming in the pattern.
 
 In cases where a specific package needs to be excluded from pre-built detection (for example, to not block the introduction of changes until a source-build acceptable solution for the pre-built is provided), the developer can directly specify the name / version of the depedency:
 
