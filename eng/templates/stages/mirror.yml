@@ -7,6 +7,8 @@ parameters:
   type: boolean
 - name: useCustomTag
   type: boolean
+- name: skipPackageMirroring
+  type: boolean
 - name: isDryRun
   type: boolean
   default: false
@@ -135,32 +137,33 @@ stages:
           git push destination "$tag_name"
         fi
       workingDirectory: $(Pipeline.Workspace)/$(RepoDir)
-      displayName: Mirror and tag
+      displayName: Mirror & tag sources
 
-    # Download all shipping nupks from the staging pipeline.
-    # These should come from the signed directory, because in 6.0 post-build signing
-    # means that the 'signed' and 'shipping' artifacts are different in content.
-    - download: ${{ parameters.dotnetStagingPipelineResource }}
-      artifact: ${{ variables.packagesArtifactName }}
-      patterns: ${{ variables.shippingPackages }}/*
-      displayName: Download shipping packages
+    - ${{ if parameters.skipPackageMirroring }}:
+      # Download all shipping nupks from the staging pipeline.
+      # These should come from the signed directory, because in 6.0 post-build signing
+      # means that the 'signed' and 'shipping' artifacts are different in content.
+      - download: ${{ parameters.dotnetStagingPipelineResource }}
+        artifact: ${{ variables.packagesArtifactName }}
+        patterns: ${{ variables.shippingPackages }}/*
+        displayName: Download shipping packages
 
-    # Then, upload these to DSP.
-    - ${{ if parameters.isDryRun }}:
-      # List the packages that would be pushed
-      - script: |
-          echo "Would push the following packages to $(destinationPackageFeed)"
-          find $(packagesDownloadLocation) -name '*.nupkg'
-        displayName: Publish packages to ${{ variables.destinationPackageFeed }}
+      # Then, upload these to DSP.
+      - ${{ if parameters.isDryRun }}:
+        # List the packages that would be pushed
+        - script: |
+            echo "Would push the following packages to $(destinationPackageFeed)"
+            find $(packagesDownloadLocation) -name '*.nupkg'
+          displayName: Publish packages to ${{ variables.destinationPackageFeed }}
 
-    - ${{ else }}:
-      - task: NuGetCommand@2
-        displayName: Publish packages to ${{ variables.destinationPackageFeed }}
-        continueOnError: true
-        inputs:
-          command: push
-          packagesToPush: '${{ variables.packagesDownloadLocation }}/*.nupkg'
-          nuGetFeedType: external
-          publishFeedCredentials: ${{ variables.feedServiceConnection }}
-          allowPackageConflicts: true 
+      - ${{ else }}:
+        - task: NuGetCommand@2
+          displayName: Publish packages to ${{ variables.destinationPackageFeed }}
+          continueOnError: true
+          inputs:
+            command: push
+            packagesToPush: '${{ variables.packagesDownloadLocation }}/*.nupkg'
+            nuGetFeedType: external
+            publishFeedCredentials: ${{ variables.feedServiceConnection }}
+            allowPackageConflicts: true
 
