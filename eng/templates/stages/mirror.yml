@@ -107,7 +107,7 @@ stages:
         git fetch source "$ref_to_tag"
         git checkout "$ref_to_tag"
 
-        tag_name="v$(releaseTag)"
+        tag_name="$(releaseTag)"
         echo "Tagging $ref_to_tag as $tag_name"
 
         # Check if the tag already exists and points to the same commit
