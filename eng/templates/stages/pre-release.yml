@@ -88,6 +88,7 @@ stages:
         if [ ${{ parameters.isPreviewRelease }} = True ]; then
           prerelease='--prerelease'
         fi
+        set -x
 
         "$(Build.SourcesDirectory)/eng/create-announcement-draft.sh" \
           --template "$(Build.SourcesDirectory)/eng/source-build-release-announcement.md" \
