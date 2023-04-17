@@ -227,31 +227,23 @@ stages:
           echo "Repo ID is $(RepoId)"
           echo "Discussion Category ID is $(DiscussionCategoryId)"
 
-          # Set environment variables that go in the announcement template
-          export TAG=$(releaseTag)
-          export RELEASE_NAME="${{ parameters.releaseName }}"
-          export RUNTIME_VERSION="$(runtimeVersion)"
-          export RELEASE_CHANNEL="$(releaseChannel)"
-          export SDK_VERSION="$(sdkVersion)"
-          export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
-          export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
-
-          if [[ "$(releaseChannel)" == '6.0' || "$(releaseChannel)" == '7.0' ]]; then
-            export TAG_URL="https://github.com/dotnet/installer/releases/tag/$TAG"
-          else
-            export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$TAG"
-          fi
-
           if [[ -z '${{ parameters.announcementGist }}' ]]; then
             echo "Loading announcement template from source-build-release-announcement.md"
 
+            prerelease=''
+            if [ ${{ parameters.isPreviewRelease }} = True ]; then
+              prerelease='--prerelease'
+            fi
+
             announcement=$("./create-announcement-draft.sh"     \
               --template "source-build-release-announcement.md" \
-              --release-name "$RELEASE_NAME"                    \
-              --channel "$RELEASE_CHANNEL"                       \
-              --sdk-version "$SDK_VERSION"                      \
-              --runtime-version "$RUNTIME_VERSION"              \
-              --tag "$TAG")
+              --channel "$(releaseChannel)"                     \
+              $prerelease                                       \
+              --release-name "${{ parameters.releaseName }}"    \
+              --release-version "$(release)"                    \
+              --runtime-version "$(runtimeVersion)"             \
+              --sdk-version "$(sdkVersion)"                     \
+              --tag "$(releaseTag)")
 
             # Get the line in the template that is prefixed with "Title:" and remove the prefix
             title=$(echo "$announcement" | grep "^Title:" | cut -d " " -f2-)
@@ -263,7 +255,7 @@ stages:
             # Get title from the gist name
             set +o pipefail # gh fails with 141 but returns the correct output
             title="$(gh gist view '${{ parameters.announcementGist }}' --raw | head -n 1)"
-            body="$(gh gist view '${{ parameters.announcementGist }}' | envsubst | tail -n +2)"
+            body="$(gh gist view '${{ parameters.announcementGist }}' | tail -n +2)"
 
             if [[ -z "$title" ]]; then
               echo "##vso[task.logissue type=error]Could not get title from gist ${{ parameters.announcementGist }}"

@@ -3,6 +3,9 @@ parameters:
   displayName: Major .NET version being released
   type: string
   values: [ '6.0', '7.0', '8.0' ]
+- name: isPreviewRelease
+  displayName: Preview release
+  type: boolean
 - name: releaseBranchName
   displayName: Release branch name (e.g. release/8.0.1xx-preview1)
   type: string
@@ -81,12 +84,19 @@ stages:
         isDryRun: ${{ parameters.isDryRun }}
 
     - script: |
+        prerelease=''
+        if [ ${{ parameters.isPreviewRelease }} = True ]; then
+          prerelease='--prerelease'
+        fi
+
         "$(Build.SourcesDirectory)/eng/create-announcement-draft.sh" \
           --template "$(Build.SourcesDirectory)/eng/source-build-release-announcement.md" \
-          --release-name '${{ parameters.releaseName }}'             \
           --channel "$(ReadReleaseInfo.ReleaseChannel)"              \
-          --sdk-version "$(ReadReleaseInfo.SdkVersion)"              \
+          $prerelease                                                \
+          --release-name '${{ parameters.releaseName }}'             \
+          --release-version "$(ReadReleaseInfo.Release)"             \
           --runtime-version "$(ReadReleaseInfo.RuntimeVersion)"      \
+          --sdk-version "$(ReadReleaseInfo.SdkVersion)"              \
           --tag "$(ReadReleaseInfo.ReleaseTag)"
       displayName: Create announcement draft
 

@@ -10,19 +10,23 @@ print-help ()
   echo "--channel             Release channel, e.g. '8.0'"
   echo "                      Note that when 6.0/7.0, dotnet/installer is targeted, otherwise dotnet/dotnet"
   echo "--release-name        Human readable name of the release, e.g. '.NET 8 Preview 1'"
-  echo "--sdk-version         The .NET SDK version that is being released"
+  echo "--release-version     Version of the release, e.g. '8.0.0-preview.3'"
   echo "--runtime-version     The .NET runtime version that is being released"
+  echo "--sdk-version         The .NET SDK version that is being released"
   echo "--tag                 The release tag, e.g. v8.0.0-preview.1"
-  echo "--help, -h            (Optional) print this help message and exit"
+  echo "--prerelease          (Optional) Whether this is a preview release"
+  echo "--help, -h            (Optional) Print this help message and exit"
   echo
 }
 
 template=''
 channel=''
 release_name=''
-sdk_version=''
+release_version=''
 runtime_version=''
+sdk_version=''
 tag=''
+prerelease=false
 
 while [[ $# -gt 0 ]]; do
   opt="$(echo "$1" | tr "[:upper:]" "[:lower:]")"
@@ -43,17 +47,25 @@ while [[ $# -gt 0 ]]; do
       release_name="$2"
       shift 2
       ;;
-    --sdk-version )
-      sdk_version="$2"
+    --release-version )
+      release_version="$2"
       shift 2
       ;;
     --runtime-version )
       runtime_version="$2"
       shift 2
       ;;
+    --sdk-version )
+      sdk_version="$2"
+      shift 2
+      ;;
     --tag )
       tag="$2"
       shift 2
+      ;;
+    --prerelease )
+      prerelease=true
+      shift 1
       ;;
     *)
       echo "Invalid argument $1"
@@ -65,23 +77,31 @@ done
 : "${template:?Missing --template}"
 : "${channel:?Missing --channel}"
 : "${release_name:?Missing --release-name}"
-: "${sdk_version:?Missing --sdk-version}"
+: "${release_version:?Missing --release-version}"
 : "${runtime_version:?Missing --runtime-version}"
+: "${sdk_version:?Missing --sdk-version}"
 : "${tag:?Missing --tag}"
 
 # Set environment variables that go in the announcement template
 export TAG="$tag"
 export RELEASE_NAME="$release_name"
+export RELEASE_VERSION="$release_version"
 export RUNTIME_VERSION="$runtime_version"
 export RELEASE_CHANNEL="$channel"
 export SDK_VERSION="$sdk_version"
 export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
 export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
 
-if [[ "$channel" == '6.0' || "$channel" == '7.0' ]]; then
-    export TAG_URL="https://github.com/dotnet/installer/releases/tag/$tag"
+if [[ "$prerelease" == true ]]; then
+  export TITLE="$RELEASE_NAME $RELEASE_DATE Update - .NET $RELEASE_VERSION and SDK $RELEASE_VERSION"
 else
-    export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$tag"
+  export TITLE="$RELEASE_NAME $RELEASE_DATE Update - .NET $RUNTIME_VERSION and SDK $SDK_VERSION"
+fi
+
+if [[ "$channel" == '6.0' || "$channel" == '7.0' ]]; then
+  export TAG_URL="https://github.com/dotnet/installer/releases/tag/$tag"
+else
+  export TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$tag"
 fi
 
 envsubst < "$template"
