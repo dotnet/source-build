@@ -46,6 +46,8 @@ stages:
       value: 'shipping/packages'
     - name: packagesDownloadLocation
       value: $(PIPELINE.WORKSPACE)/${{ parameters.dotnetStagingPipelineResource }}/$(packagesArtifactName)/$(shippingPackages)
+    - name: releaseTag
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - name: sourceUrl
