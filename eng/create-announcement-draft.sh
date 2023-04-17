@@ -92,11 +92,12 @@ export SDK_VERSION="$sdk_version"
 export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
 export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
 
-title="$RELEASE_NAME $RELEASE_DATE Update"
 if [[ "$prerelease" == true ]]; then
-  export TITLE="$title - .NET $RELEASE_VERSION and SDK $RELEASE_VERSION"
+  # E.g. .NET 8.0 Preview 3 April 2023 Update - .NET 8.0.0-preview.3 and SDK 8.0.100-preview.3
+  export TITLE="$RELEASE_NAME $RELEASE_DATE Update - .NET $RELEASE_VERSION and SDK $RELEASE_VERSION"
 else
-  export TITLE="$title - .NET $RUNTIME_VERSION and SDK $SDK_VERSION"
+  # E.g. .NET 7.0 April 2023 Update - .NET 7.0.5 and SDK 7.0.105
+  export TITLE=".NET $RELEASE_CHANNEL - .NET $RUNTIME_VERSION and SDK $SDK_VERSION"
 fi
 
 if [[ "$channel" == '6.0' || "$channel" == '7.0' ]]; then
