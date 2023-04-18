@@ -93,6 +93,7 @@ stages:
   parameters:
     dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
     dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
+    isPreviewRelease: ${{ parameters.isPreviewRelease }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
     releaseName: ${{ parameters.releaseName }}
     useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
