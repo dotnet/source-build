@@ -75,7 +75,11 @@ steps:
       tag="${{ parameters.customTag }}"
       echo "Using custom tag $tag"
     else
-      tag="v$runtime_version"
+      if [[ "${{ parameters.dotnetMajorVersion }}" == '6.0' || "${{ parameters.dotnetMajorVersion }}" == '7.0' ]]; then
+        tag="v$sdk_version"
+      else
+        tag="v$runtime_version"
+      fi
     fi
 
     echo "Release: $release"
