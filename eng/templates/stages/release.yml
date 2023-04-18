@@ -141,35 +141,22 @@ stages:
 
       - script: |
           set -euo pipefail
-          tarball_path="$(Build.ArtifactStagingDirectory)/dotnet-sdk-source-$(releaseTag).tar.gz"
-          echo "Creating source tarball from dotnet-dotnet / $(dotnetDotnetCommit)"
-
-          git checkout "$(dotnetDotnetCommit)"
-          ./eng/pack-sources.sh --output "$tarball_path"
-
-          echo "##vso[task.setvariable variable=SourceTarballPath]$tarball_path"
-
-        displayName: Prepare source tarball
-        workingDirectory: $(Agent.BuildDirectory)/dotnet-dotnet
-
-      - script: |
-          set -euo pipefail
 
           prerelease=''
-          if [ ${{ parameters.isPreviewRelease }} = True ]; then
+          if [ "${{ parameters.isPreviewRelease }}" = True ]; then
             prerelease='--prerelease'
           fi
 
           draft=''
-          if [ ${{ variables.createGitHubRelease }} = draft ]; then
+          if [ "${{ variables.createGitHubRelease }}" = draft ]; then
             draft='--draft'
           fi
 
-          gh release create "$(releaseTag)" "$(SourceTarballPath)#Source code (tar.gz)" \
-            --repo dotnet/dotnet \
+          gh release create "$(releaseTag)"         \
+            --repo dotnet/dotnet                    \
             --title "${{ parameters.releaseName }}" \
-            --target "$(dotnetDotnetCommit)" \
-            $prerelease \
+            --target "$(dotnetDotnetCommit)"        \
+            $prerelease                             \
             $draft
 
         displayName: Create GitHub release
