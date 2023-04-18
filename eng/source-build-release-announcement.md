@@ -14,6 +14,7 @@ Please use the [$TAG tag]($TAG_URL) to source-build .NET version $RUNTIME_VERSIO
   "Channel": "$RELEASE_CHANNEL",
   "Runtime": "$RUNTIME_VERSION",
   "Sdk": "$SDK_VERSION",
-  "InstallerTag": "$TAG"
+  "Tag": "$TAG",
+  "TagUrl": "$TAG_URL"
 }
 ```
