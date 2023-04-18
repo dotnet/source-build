@@ -61,6 +61,10 @@ parameters:
   displayName: Verify that associated pipeline runs succeeded
   type: boolean
   default: true
+- name: skipPackageMirroring
+  displayName: Skip package mirroring
+  type: boolean
+  default: false
 - name: createReleaseAnnouncement
   displayName: Create release announcement
   type: boolean
@@ -122,6 +126,7 @@ stages:
     isPreviewRelease: ${{ parameters.isPreviewRelease }}
     releaseBranchName: ${{ parameters.releaseBranchName }}
     useCustomTag: ${{ parameters.useCustomTag }}
+    skipPackageMirroring: ${{ parameters.skipPackageMirroring }}
     isDryRun: ${{ parameters.isDryRun }}
 
 - stage: NotificationApproval
