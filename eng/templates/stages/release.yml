@@ -152,7 +152,25 @@ stages:
             draft='--draft'
           fi
 
+          release_json="$(Build.ArtifactStagingDirectory)/release.json"
+
+          echo "{}" \
+            | jq '. += { "release": "$(release)" }' \
+            | jq '. += { "channel": "$(releaseChannel)" }' \
+            | jq '. += { "tag": "$(releaseTag)" }' \
+            | jq '. += { "sdkVersion": "$(sdkVersion)" }' \
+            | jq '. += { "runtimeVersion": "$(runtimeVersion)" }' \
+            | jq '. += { "sourceRepository": "https://github.com/dotnet/dotnet" }' \
+            | jq '. += { "sourceVersion": "$(dotnetDotnetCommit)" }' \
+            > "$release_json"
+
+          echo "Generated release.json:"
+          cat "$release_json"
+
+          echo "Creating GitHub release..."
+
           gh release create "$(releaseTag)"         \
+            "$release_json#Release information"     \
             --repo dotnet/dotnet                    \
             --title "${{ parameters.releaseName }}" \
             --target "$(dotnetDotnetCommit)"        \
