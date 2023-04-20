@@ -73,6 +73,7 @@ stages:
     - template: ../steps/initialize-release-info.yml
       parameters:
         dotnetStagingPipelineResource: dotnet-staging-pipeline-resource
+        dotnetMajorVersion: ${{ parameters.dotnetMajorVersion }}
         releaseBranchName: ${{ parameters.releaseBranchName }}
         useSpecificPipelineRunIDs: ${{ parameters.useSpecificPipelineRunIDs }}
         dotnetDotnetRunID: ${{ parameters.dotnetDotnetRunID }}
