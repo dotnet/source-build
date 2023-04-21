@@ -113,12 +113,15 @@ stages:
   dependsOn: PreRelease
   jobs:
   - deployment: MirrorApproval
+    pool: server
     ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       displayName: Confirm PR merged & ready for dotnet-security-partners mirroring
     ${{ else }}:
       displayName: Confirm ready for dotnet-security-partners mirroring
-    environment: Source Build Release - Mirror
-    pool: server
+    ${{ if parameters.isDryRun }}:
+      environment: pr
+    ${{ if not(parameters.isDryRun) }}:
+      environment: Source Build Release - Mirror
 
 - template: templates/stages/mirror.yml
   parameters:
@@ -135,18 +138,24 @@ stages:
   dependsOn: Mirror
   jobs:
   - deployment: NotificationApproval
-    displayName: Confirm partner notification sent
-    environment: Source Build Release - Partner Notification
     pool: server
+    displayName: Confirm partner notification sent
+    ${{ if parameters.isDryRun }}:
+      environment: pr
+    ${{ if not(parameters.isDryRun) }}:
+      environment: Source Build Release - Partner Notification
 
 - stage: ReleaseApproval
   displayName: Approval - Release
   dependsOn: NotificationApproval
   jobs:
   - deployment: ReleaseApproval
-    displayName: Confirm Microsoft build released
-    environment: Source Build Release - Release
     pool: server
+    displayName: Confirm Microsoft build released
+    ${{ if parameters.isDryRun }}:
+      environment: pr
+    ${{ if not(parameters.isDryRun) }}:
+      environment: Source Build Release - Release
 
 - template: templates/stages/release.yml
   parameters:
