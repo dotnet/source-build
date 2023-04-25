@@ -132,7 +132,9 @@ git checkout -b "${new_branch_name}" "upstream/${pr_target_branch}"
 # make pr changes
 cat "$global_json_path" \
     | jq --unbuffered ".tools.dotnet=\"${sdk_version}\"" \
-    | tee "$global_json_path"
+    | tee "$global_json_path.new"
+mv "$global_json_path.new" "$global_json_path"
+
 sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 git add "$global_json_path" "$versions_props_path"
 
