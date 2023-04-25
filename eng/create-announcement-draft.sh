@@ -99,8 +99,14 @@ fi
 
 if [[ "$prerelease" == true ]]; then
   export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/preview/$RELEASE.md"
+
+  # Removes the build number so that 8.0.100-preview.3.23178.7 becomes 8.0.100-preview.3
+  export SDK_VERSION_SHORT=$(echo "$SDK_VERSION" | sed 's/\(.*preview\.[0-9]\+\).*/\1/')
+  export RUNTIME_VERSION_SHORT=$(echo "$RUNTIME_VERSION" | sed 's/\(.*preview\.[0-9]\+\).*/\1/')
 else
   export RELEASE_NOTES_URL="https://github.com/dotnet/core/blob/main/release-notes/$RELEASE_CHANNEL/$RUNTIME_VERSION/$SDK_VERSION.md"
+  export SDK_VERSION_SHORT="$SDK_VERSION"
+  export RUNTIME_VERSION_SHORT="$RUNTIME_VERSION"
 fi
 
 envsubst < "$template"
