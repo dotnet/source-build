@@ -13,6 +13,7 @@
 ###   --sdk-version <VER>      The .NET SDK version that is being released
 ###   --runtime-version <VER>  The .NET runtime version that is being released
 ###   --tag <TAG>              The release tag, e.g. v8.0.0-preview.1
+###   --source-version SHA     (Optional) The dotnet/dotnet SHA of the commit that is being released
 ###   --prerelease             (Optional) Whether this is a preview release
 ###   --help, -h               (Optional) Print this help message and exit
 
@@ -28,6 +29,7 @@ channel=''
 release=''
 release_name=''
 sdk_version=''
+source_version=''
 runtime_version=''
 tag=''
 prerelease=false
@@ -67,6 +69,10 @@ while [[ $# -gt 0 ]]; do
       tag="$2"
       shift 2
       ;;
+    --source-version )
+      source_version="$2"
+      shift 2
+      ;;
     --prerelease )
       prerelease=true
       shift 1
@@ -94,6 +100,7 @@ export RUNTIME_VERSION="$runtime_version"
 export RELEASE_CHANNEL="$channel"
 export SDK_VERSION="$sdk_version"
 export RELEASE_DATE=$(date +"%B %Y") # e.g. "March 2022"
+export SOURCE_VERSION="$source_version"
 
 if [[ "$channel" == '6.0' || "$channel" == '7.0' ]]; then
   export TAG_URL="https://github.com/dotnet/installer/releases/tag/$tag"

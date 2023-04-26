@@ -152,14 +152,51 @@ stages:
             draft='--draft'
           fi
 
+          release_json="$(Build.ArtifactStagingDirectory)/release.json"
+
+          echo "{}" \
+            | jq '. += { "release": "$(release)" }'                                \
+            | jq '. += { "channel": "$(releaseChannel)" }'                         \
+            | jq '. += { "tag": "$(releaseTag)" }'                                 \
+            | jq '. += { "sdkVersion": "$(sdkVersion)" }'                          \
+            | jq '. += { "runtimeVersion": "$(runtimeVersion)" }'                  \
+            | jq '. += { "sourceRepository": "https://github.com/dotnet/dotnet" }' \
+            | jq '. += { "sourceVersion": "$(dotnetDotnetCommit)" }'               \
+            > "$release_json"
+
+          echo -e "\n\nGenerated release.json:\n\n"
+          cat "$release_json"
+
+          release_notes="$(Build.ArtifactStagingDirectory)/release_notes.md"
+
+          ./create-announcement-draft.sh                   \
+            --template "source-build-release-notes.md"     \
+            --channel "$(releaseChannel)"                  \
+            $prerelease                                    \
+            --release "$(release)"                         \
+            --release-name "${{ parameters.releaseName }}" \
+            --runtime-version "$(runtimeVersion)"          \
+            --sdk-version "$(sdkVersion)"                  \
+            --tag "$(releaseTag)"                          \
+            --source-version "$(dotnetDotnetCommit)"       \
+            > "$release_notes"
+
+          echo -e "\n\nGenerated release notes:\n\n"
+          cat "$release_notes"
+
+          echo -e "\n\nCreating GitHub release..."
+
           gh release create "$(releaseTag)"         \
+            "$release_json#Release manifest"        \
             --repo dotnet/dotnet                    \
             --title "${{ parameters.releaseName }}" \
             --target "$(dotnetDotnetCommit)"        \
+            --notes-file "$release_notes"           \
             $prerelease                             \
             $draft
 
         displayName: Create GitHub release
+        workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
         env:
           GH_TOKEN: $(BotAccount-dotnet-bot-repo-PAT)
 
