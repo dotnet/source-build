@@ -129,6 +129,16 @@ pushd "$vmr_path"
     git push -u upstream "$new_branch_name"
 
     echo "Creating PR from $new_branch_name to $target_branch"
-    curl -H 'Content-Type: application/json' -d "$data" "$pr_url"
+    curlResult=$(curl -H 'Content-Type: application/json' -d "$data" "$pr_url" 2>/dev/null)
+    webUrl=$(jq -r '.repository.webUrl | values' <<< "$curlResult")
+    pullRequestId=$(jq -r '.pullRequestId | values' <<< "$curlResult")
+    if [ -n "$webUrl" ] && [ -n "$pullRequestId" ]; then
+      echo "$webUrl"/pullrequest/"$pullRequestId"
+    elif [[ "$curlResult" == *"TF401179"* ]]; then
+      echo "##vso[task.logissue type=error]$(jq -r '.message' <<< "$curlResult")"
+    else
+      echo "##vso[task.logissue type=error]An unexpected error has occurred during the pr request!"
+      jq <<< "$curlResult"
+    fi
   fi
 popd
