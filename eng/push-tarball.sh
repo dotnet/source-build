@@ -135,7 +135,7 @@ pushd "$vmr_path"
     if [ -n "$webUrl" ] && [ -n "$pullRequestId" ]; then
       echo "$webUrl"/pullrequest/"$pullRequestId"
     elif [[ "$curlResult" == *"TF401179"* ]]; then
-      echo "##vso[task.logissue type=error]$(jq -r '.message' <<< "$curlResult")"
+      "$(jq -r '.message' <<< "$curlResult")"
     else
       echo "##vso[task.logissue type=error]An unexpected error has occurred during the pr request!"
       jq <<< "$curlResult"
