@@ -137,7 +137,7 @@ pushd "$vmr_path"
       echo "$repository_web_url/pullrequest/$pull_request_id"
     # The TF401179 error code indicates that there is already an open pull request for the source and target branches.   
     elif [[ "$pr_creation_response" =~ "TF401179" ]]; then
-      echo "An active pull request for the source and target branch already exists."
+      echo "##vso[task.logissue type=warning]An active pull request for the source and target branch already exists."
     else
       echo "##vso[task.logissue type=error]An unexpected error has occurred while creating the security partners PR!"
       jq <<< "$pr_creation_response"
