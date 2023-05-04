@@ -129,16 +129,18 @@ pushd "$vmr_path"
     git push -u upstream "$new_branch_name"
 
     echo "Creating PR from $new_branch_name to $target_branch"
-    curlResult=$(curl -H 'Content-Type: application/json' -d "$data" "$pr_url" 2>/dev/null)
-    webUrl=$(jq -r '.repository.webUrl | values' <<< "$curlResult")
-    pullRequestId=$(jq -r '.pullRequestId | values' <<< "$curlResult")
-    if [ -n "$webUrl" ] && [ -n "$pullRequestId" ]; then
-      echo "$webUrl"/pullrequest/"$pullRequestId"
-    elif [[ "$curlResult" == *"TF401179"* ]]; then
-      "$(jq -r '.message' <<< "$curlResult")"
+    pr_creation_response=$(curl -H 'Content-Type: application/json' -d "$data" "$pr_url")
+    repository_web_url=$(jq -r '.repository.webUrl | values' <<< "$pr_creation_response")
+    pull_request_id=$(jq -r '.pull_request_id | values' <<< "$pr_creation_response")
+    
+    if [ -n "$repository_web_url" ] && [ -n "$pull_request_id" ]; then
+      echo "$repository_web_url/pullrequest/$pull_request_id"
+    # The TF401179 error code indicates that there is already an open pull request for the source and target branches.   
+    elif [[ "$pr_creation_response" =~ "TF401179" ]]; then
+      echo "An active pull request for the source and target branch already exists."
     else
-      echo "##vso[task.logissue type=error]An unexpected error has occurred during the pr request!"
-      jq <<< "$curlResult"
+      echo "##vso[task.logissue type=error]An unexpected error has occurred while creating the security partners PR!"
+      jq <<< "$pr_creation_response"
     fi
   fi
 popd
