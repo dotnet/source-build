@@ -123,7 +123,7 @@ stages:
           azureStorageKey: $(dotnetclimsrc-access-key)
       
       - script: |
-          set -euo pipefail
+          set -xeuo pipefail
 
           upstream_with_pat=$(echo $(vmrUpstreamUrl) | sed "s,https://.*@,https://dn-bot:${AZDO_PAT}@,g")
 
