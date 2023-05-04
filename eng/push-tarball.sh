@@ -129,7 +129,7 @@ pushd "$vmr_path"
     git push -u upstream "$new_branch_name"
 
     echo "Creating PR from $new_branch_name to $target_branch"
-    pr_creation_response=$(curl -H 'Content-Type: application/json' -d "$data" "$pr_url")
+    pr_creation_response=$(curl -s -H 'Content-Type: application/json' -d "$data" "$pr_url")
     repository_web_url=$(jq -r '.repository.webUrl | values' <<< "$pr_creation_response")
     pull_request_id=$(jq -r '.pull_request_id | values' <<< "$pr_creation_response")
     
