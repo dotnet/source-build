@@ -1,5 +1,5 @@
 #!/bin/bash
-set -xeuo pipefail
+set -euo pipefail
 
 print-help ()
 {
@@ -107,7 +107,12 @@ pushd "$vmr_path"
 
   # Re-runs should expect the branch being merged previously already
   git add -f .
-  git diff --staged --quiet || git commit -m "Update to .NET $sdk_version"
+  if git diff --staged --quiet; then
+    echo "##vso[task.logissue type=warning]The PR creation is skipped since it contains no commits."
+    exit 0
+  fi
+
+  git commit -m "Update to .NET $sdk_version"
 
   pr_url=$(echo $upstream_url | sed "s,_git.*,_apis/git/repositories/security-partners-dotnet/pullrequests?api-version=7.0,g")
   data="{
