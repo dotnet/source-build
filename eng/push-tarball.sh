@@ -111,7 +111,7 @@ pushd "$vmr_path"
   # If the new and target branches are identical, the code has already been merged by a previous run and PR;
   # hence, there is no need for a new PR.
   if git diff "$new_branch_name" "$target_branch" --quiet; then
-    echo "##vso[task.logissue type=warning]The PR creation is skipped since it contains no commits."
+    echo "##vso[task.logissue type=warning]No PR created because there are no new changes against $target_branch"
     exit 0
   fi
 
