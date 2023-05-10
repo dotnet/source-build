@@ -105,14 +105,15 @@ pushd "$vmr_path"
   git config user.email "dotnet-maestro[bot]@users.noreply.github.com"
   git config user.name "dotnet-maestro[bot]"
 
-  # Re-runs should expect the branch being merged previously already
   git add -f .
-  if git diff --staged --quiet; then
+  git diff --staged --quiet || git commit -m "Update to .NET $sdk_version"
+
+  # If the new and target branches are identical, the code has already been merged by a previous run and PR;
+  # hence, there is no need for a new PR.
+  if git diff "$new_branch_name" "$target_branch" --quiet; then
     echo "##vso[task.logissue type=warning]The PR creation is skipped since it contains no commits."
     exit 0
   fi
-
-  git commit -m "Update to .NET $sdk_version"
 
   pr_url=$(echo $upstream_url | sed "s,_git.*,_apis/git/repositories/security-partners-dotnet/pullrequests?api-version=7.0,g")
   data="{
