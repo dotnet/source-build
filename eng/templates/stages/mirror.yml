@@ -161,6 +161,12 @@ stages:
           displayName: Publish packages to ${{ variables.destinationPackageFeed }}
 
       - ${{ else }}:
+        - script: sudo apt update && DEBIAN_FRONTEND=noninteractive sudo apt install -y apt-transport-https mono-complete nuget
+          displayName: Install NuGet and dependencies
+        - task: NuGetAuthenticate@1
+          displayName: Authenticate to ${{ variables.destinationPackageFeed }}
+          inputs:
+            nuGetServiceConnections: ${{ variables.feedServiceConnection }}
         - task: NuGetCommand@2
           displayName: Publish packages to ${{ variables.destinationPackageFeed }}
           continueOnError: true
