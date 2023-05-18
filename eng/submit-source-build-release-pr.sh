@@ -148,14 +148,36 @@ cat "$global_json_path" \
     | tee "$global_json_path.new"
 mv "$global_json_path.new" "$global_json_path"
 
+# Function to modify the URL in an XML file
+# Arguments:
+#   1. XML file path
+#   2. Element name
+#   3. Replacement value
+function modify_url_in_xml() {
+  local xml_file="$1"
+  local element_name="$2"
+  local replacement_value="$3"
+
+  # Fetch the URL inside the element
+  local url=$(grep -oP "<$element_name>\K.*?(?=<\/$element_name>)" "$xml_file")
+
+  # Replace the very last part of the URL with the provided value
+  local new_url=$(echo "$url" | sed "s|/[^/]*$|/$replacement_value|")
+
+  # Update the XML file with the modified URL
+  sed -i "s|$url|$new_url|" "$xml_file"
+
+  echo "Modified URL: $new_url"
+}
+
 if [[ $sdk_version == "6"* ]]; then
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 elif [[ $sdk_version == "7"* ]]; then
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
 elif [[ $sdk_version == "8"* ]]; then
-        sed -i "s#<PrivateSourceBuiltArtifactsUrl>.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_source_built_artifacts_file_name</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
-        sed -i "s#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltSdkUrl_CentOS8Stream>#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_sdk_artifact_file_name</PrivateSourceBuiltSdkUrl_CentOS8Stream>#" $versions_props_path
+        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$resolved_source_built_artifacts_file_name"
+        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$resolved_sdk_artifact_file_name"
 else
         echo "Unexpected SDK version!"
         exit 1
