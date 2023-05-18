@@ -392,13 +392,13 @@ stages:
           fi
           
           echo ali test
-          echo "PIPELINE.WORKSPACE  $(PIPELINE.WORKSPACE)"
+          echo "PIPELINE.WORKSPACE  $PIPELINE.WORKSPACE"
           echo "sourceBuiltArtifactsFileName $sourceBuiltArtifactsFileName"
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
-          echo "$(resolvedSourceBuiltArtifactsFileName)"
+          echo "$resolvedSourceBuiltArtifactsFileName"
           echo "sdkArtifactFileName: $sdkArtifactFileName"
           resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
-          echo "$(resolvedSdkArtifactFileName)"
+          echo "$resolvedSdkArtifactFileName"
 
           if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
