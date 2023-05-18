@@ -37,6 +37,8 @@ global_json_path='src/SourceBuild/content/global.json'
 versions_props_path='src/SourceBuild/content/eng/Versions.props'
 custom_target_branch=''
 setup_git_auth=''
+resolved_source_built_artifacts_file_name=''
+resolved_sdk_artifact_file_name=''
 
 while true ; do
   case "$1" in
@@ -80,6 +82,14 @@ while true ; do
       custom_target_branch="$2"
       shift 2
       ;;
+    -a | --resolvedSourceBuiltArtifactsFileName )
+      resolved_source_built_artifacts_file_name="$2"
+      shift 2
+      ;;
+    -s | --resolvedSdkArtifactFileName )
+      resolved_sdk_artifact_file_name="$2"
+      shift 2
+      ;;
     -- )
       shift
       break
@@ -100,6 +110,9 @@ echo "global_json_path = $global_json_path"
 echo "versions_props_path = $versions_props_path"
 echo "custom_target_branch = $custom_target_branch"
 echo "setup_git_auth = $setup_git_auth"
+echo "resolved_source_built_artifacts_file_name = $resolved_source_built_artifacts_file_name"
+echo "resolved_sdk_artifact_file_name = $resolved_sdk_artifact_file_name"
+
 
 if [[ ${setup_git_auth} == true ]]; then
   echo "Setting up git auth"
@@ -136,17 +149,13 @@ cat "$global_json_path" \
 mv "$global_json_path.new" "$global_json_path"
 
 if [[ $sdk_version == "6"* ]]; then
-        echo sdk_version == "6"
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 elif [[ $sdk_version == "7"* ]]; then
-        echo sdk_version == "7"
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
 elif [[ $sdk_version == "8"* ]]; then
-        echo sdk_version == "8"
-        # buna ihtiyacim var sdkArtifactFileName
-        sed -i "s#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/XXXX</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
-        sed -i "s#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltSdkUrl_CentOS8Stream>#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/YYY</PrivateSourceBuiltSdkUrl_CentOS8Stream>#" $versions_props_path
+        sed -i "s#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_source_built_artifacts_file_name</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
+        sed -i "s#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltSdkUrl_CentOS8Stream>#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_sdk_artifact_file_name</PrivateSourceBuiltSdkUrl_CentOS8Stream>#" $versions_props_path
 else
         echo "Unexpected SDK version!"
         exit 1

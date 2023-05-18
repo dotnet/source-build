@@ -61,8 +61,6 @@ stages:
       value: sdks
   - name: Codeql.Enabled
     value: true
-  - name: pipelineWorkSpace
-    value: $(PIPELINE.WORKSPACE)
 
   - ${{ if eq(parameters.dotnetMajorVersion, '6.0') }}:
     - name: sourceBuildArtifactLeg
@@ -394,7 +392,6 @@ stages:
           fi
           
           echo ali test
-          echo "pipelineWorkSpace $pipelineWorkSpace"
           echo "PIPELINE.WORKSPACE  $(PIPELINE.WORKSPACE)"
           echo "sourceBuiltArtifactsFileName $(sourceBuiltArtifactsFileName)"
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
