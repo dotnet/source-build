@@ -154,7 +154,7 @@ elif [[ $sdk_version == "7"* ]]; then
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
 elif [[ $sdk_version == "8"* ]]; then
-        sed -i "s#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_source_built_artifacts_file_name</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
+        sed -i "s#<PrivateSourceBuiltArtifactsUrl>.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_source_built_artifacts_file_name</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltSdkUrl_CentOS8Stream>#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/$resolved_sdk_artifact_file_name</PrivateSourceBuiltSdkUrl_CentOS8Stream>#" $versions_props_path
 else
         echo "Unexpected SDK version!"
