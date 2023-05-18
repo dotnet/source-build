@@ -61,6 +61,8 @@ stages:
       value: sdks
   - name: Codeql.Enabled
     value: true
+  - name: pipelineWorkSpace
+    value: $(PIPELINE.WORKSPACE)
 
   - ${{ if eq(parameters.dotnetMajorVersion, '6.0') }}:
     - name: sourceBuildArtifactLeg
@@ -392,12 +394,14 @@ stages:
           fi
           
           echo ali test
+          echo "pipelineWorkSpace $pipelineWorkSpace"
+          echo "PIPELINE.WORKSPACE  $(PIPELINE.WORKSPACE)"
           echo "sourceBuiltArtifactsFileName $(sourceBuiltArtifactsFileName)"
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
           echo "$(resolvedSourceBuiltArtifactsFileName)"
           echo "sdkArtifactFileName: $(sdkArtifactFileName)"
-          resolvedsdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
-          echo "$(resolvedsdkArtifactFileName)"
+          resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
+          echo "$(resolvedSdkArtifactFileName)"
 
           if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
@@ -409,6 +413,8 @@ stages:
             echo "  --title $title"
             echo "  --body $body"
             echo "  --targetBranch $target_branch"
+            echo "  --resolvedSdkArtifactFileName $resolvedSdkArtifactFileName"
+            echo "  --resolvedSourceBuiltArtifactsFileName $resolvedSourceBuiltArtifactsFileName"
             echo "  ${extraArgs[@]}"
           else
             echo "Submitting PR"
@@ -420,6 +426,8 @@ stages:
               --title "$title" \
               --body "$body" \
               --targetBranch "$target_branch" \
+              --resolvedSdkArtifactFileName "$resolvedSdkArtifactFileName" \
+              --resolvedSourceBuiltArtifactsFileName "$resolvedSourceBuiltArtifactsFileName" \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR
