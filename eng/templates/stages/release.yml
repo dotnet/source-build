@@ -390,6 +390,14 @@ stages:
               target_branch="${target_branch#internal/}"
             fi
           fi
+          
+          echo ali test
+          echo "sourceBuiltArtifactsFileName $(sourceBuiltArtifactsFileName)"
+          resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
+          echo "$(resolvedSourceBuiltArtifactsFileName)"
+          echo "sdkArtifactFileName: $(sdkArtifactFileName)"
+          resolvedsdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
+          echo "$(resolvedsdkArtifactFileName)"
 
           if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"

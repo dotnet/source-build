@@ -135,7 +135,23 @@ cat "$global_json_path" \
     | tee "$global_json_path.new"
 mv "$global_json_path.new" "$global_json_path"
 
-sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+if [[ $sdk_version == "6"* ]]; then
+        echo sdk_version == "6"
+        sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+elif [[ $sdk_version == "7"* ]]; then
+        echo sdk_version == "7"
+        sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+        sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
+elif [[ $sdk_version == "8"* ]]; then
+        echo sdk_version == "8"
+        # buna ihtiyacim var sdkArtifactFileName
+        sed -i "s#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltArtifactsUrl>#<PrivateSourceBuiltArtifactsUrl>https://dotnetcli.azureedge.net/source-built-artifacts/assets/XXXX</PrivateSourceBuiltArtifactsUrl>#" $versions_props_path
+        sed -i "s#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/.*</PrivateSourceBuiltSdkUrl_CentOS8Stream>#<PrivateSourceBuiltSdkUrl_CentOS8Stream>https://dotnetcli.azureedge.net/source-built-artifacts/assets/YYY</PrivateSourceBuiltSdkUrl_CentOS8Stream>#" $versions_props_path
+else
+        echo "Unexpected SDK version!"
+        exit 1
+fi
+
 git add "$global_json_path" "$versions_props_path"
 
 git config --global user.name "dotnet-sb-bot"
