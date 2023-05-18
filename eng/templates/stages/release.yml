@@ -392,10 +392,10 @@ stages:
           fi
           
           echo ali test
-          echo "sourceBuiltArtifactsFileName: ${{ variables.myVariable }}"
+          echo "sourceBuiltArtifactsFileName: ${{ variables.sourceBuiltArtifactsFileName }}"
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
           echo "$resolvedSourceBuiltArtifactsFileName"
-          echo "sdkArtifactFileName: $sdkArtifactFileName"
+          echo "sdkArtifactFileName: ${{ variables.sdkArtifactFileName }}"
           resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
           echo "$resolvedSdkArtifactFileName"
 
