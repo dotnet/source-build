@@ -391,6 +391,7 @@ stages:
             fi
           fi
           
+          # The resolved variables will be utilized to update the Versions.props file within the submit-source-build-release-pr script.
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
           resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
           

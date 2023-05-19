@@ -21,13 +21,15 @@ a PR in the target repo."
    echo "--targetBranch, -b    (Optional) branch to submit the PR to, calculated automatically otherwise"
    echo "--globalJson, -g      (Optional) path to the global.json file to update"
    echo "--versionsProps, -p   (Optional) path to the Versions.props file to update"
+   echo "--resolvedSourceBuiltArtifactsFileName, -a   (Optional) actul Source Built Artifacts File Name"
+   echo "--resolvedSdkArtifactFileName, -s   (Optional) actul Sdk Artifact File Name"
    echo "--setupGitAuth, -G    (Optional) set up git authentication using the gh CLI"
    echo "--help, -h            (Optional) print this help message and exit"
    echo
 }
 
-SHORT=t:f:v:T:B:b:g:p:Gh
-LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,setupGitAuth,help
+SHORT=t:f:v:T:B:b:g:p:a:s:Gh
+LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,resolvedSourceBuiltArtifactsFileName:,resolvedSdkArtifactFileName:,setupGitAuth,help
 
 OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
 if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
