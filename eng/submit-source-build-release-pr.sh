@@ -191,13 +191,15 @@ git config --global user.name "dotnet-sb-bot"
 git config --global user.email "dotnet-sb-bot@microsoft.com"
 git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
+cat "$versions_props_path"
+git diff
+
 # push changes to fork
 git push -u origin "${new_branch_name}"
 
 readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
 fork_owner="${fork_repo_split[0]}"
 
-cat "$versions_props_path"
 
 # create pull request
 # gh pr create \

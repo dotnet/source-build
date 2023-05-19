@@ -251,12 +251,6 @@ stages:
           echo "Repo ID is $(RepoId)"
           echo "Discussion Category ID is $(DiscussionCategoryId)"
 
-          if [[ "$channel" == '6.0' || "$channel" == '7.0' ]]; then
-            TAG_URL="https://github.com/dotnet/installer/releases/tag/$tag"
-          else
-            TAG_URL="https://github.com/dotnet/dotnet/releases/tag/$tag"
-          fi
-
           if [[ -z '${{ parameters.announcementGist }}' ]]; then
             echo "Loading announcement template from source-build-release-announcement.md"
 
