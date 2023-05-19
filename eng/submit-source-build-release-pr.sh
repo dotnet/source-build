@@ -186,21 +186,19 @@ else
 fi
 
 git diff
-cat "$versions_props_path"
-
-git add "$global_json_path" "$versions_props_path"
-
-git config --global user.name "dotnet-sb-bot"
-git config --global user.email "dotnet-sb-bot@microsoft.com"
-git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
 
-# push changes to fork
-git push -u origin "${new_branch_name}"
+# git add "$global_json_path" "$versions_props_path"
 
-readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
-fork_owner="${fork_repo_split[0]}"
+# git config --global user.name "dotnet-sb-bot"
+# git config --global user.email "dotnet-sb-bot@microsoft.com"
+# git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
+# # push changes to fork
+# git push -u origin "${new_branch_name}"
+
+# readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
+# fork_owner="${fork_repo_split[0]}"
 
 # create pull request
 # gh pr create \
