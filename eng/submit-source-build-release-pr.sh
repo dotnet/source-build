@@ -185,14 +185,15 @@ else
         exit 1
 fi
 
+git diff
+cat "$versions_props_path"
+
 git add "$global_json_path" "$versions_props_path"
 
 git config --global user.name "dotnet-sb-bot"
 git config --global user.email "dotnet-sb-bot@microsoft.com"
 git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
 
-cat "$versions_props_path"
-git diff
 
 # push changes to fork
 git push -u origin "${new_branch_name}"
