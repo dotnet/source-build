@@ -162,9 +162,14 @@ function update_version_props() {
 
   # Fetch the content inside the element
   local element=$(grep -oP "<$element_name>.*<\/$element_name>" "$versions_props_path")
+  if [ -z "$element" ]; then
+    echo "##vso[task.logissue type=error] Element '$element_name' not found in the Versions.props file."
+    exit 1
+  fi
+
   local content=$(echo "$element" | sed -n "s/.*<$element_name>\(.*\)<\/$element_name>.*/\1/p")
 
-  # Replace the content with the provided pattern
+  # Replace the target pattern with the replacement value in the content
   local new_content=$(echo "$content" | sed "s|$replacement_pattern|$replacement_value|")
 
   # Update the XML file with the modified content
@@ -173,14 +178,19 @@ function update_version_props() {
   echo "Replacing content of $element_name with $new_content"
 }
 
+# This pattern matches the entire content
+content_replacement_pattern=".*"
 if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
-  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" ".*" "$sdk_version"
-fi
-if [[ $sdk_version == "7"* ]]; then
-  update_version_props "PrivateSourceBuiltSDKVersion" ".*" "$sdk_version"
-elif [[ $sdk_version != "6"* ]]; then
-  update_version_props "PrivateSourceBuiltArtifactsUrl" "/[^/]*$" "/$source_built_artifacts_file_name"
-  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "/[^/]*$" "/$sdk_artifact_file_name"
+  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" "$content_replacement_pattern" "$sdk_version"
+  if [[ $sdk_version == "7"* ]]; then
+    update_version_props "PrivateSourceBuiltSDKVersion" "$content_replacement_pattern" "$sdk_version"
+  fi
+else
+  # matches a sequence of characters that does not contain any forward slashes, occurring at the end of the line.
+  # To replace very last part of the url
+  content_replacement_pattern="/[^/]*$"
+  update_version_props "PrivateSourceBuiltArtifactsUrl" "$content_replacement_pattern" "/$source_built_artifacts_file_name"
+  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$content_replacement_pattern" "/$sdk_artifact_file_name"
 fi
 
 git add "$global_json_path" "$versions_props_path"
@@ -188,7 +198,6 @@ git add "$global_json_path" "$versions_props_path"
 git config --global user.name "dotnet-sb-bot"
 git config --global user.email "dotnet-sb-bot@microsoft.com"
 git commit -m "update global.json and Versions.props for .NET SDK ${sdk_version}"
-git diff
 
 # push changes to fork
 git push -u origin "${new_branch_name}"
@@ -197,9 +206,9 @@ readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
 fork_owner="${fork_repo_split[0]}"
 
 # create pull request
-# gh pr create \
-#     --head "${fork_owner}:${new_branch_name}" \
-#     --repo "${target_repo}" \
-#     --base "${pr_target_branch}" \
-#     --title "${title}" \
-#     --body "${body}"
+gh pr create \
+    --head "${fork_owner}:${new_branch_name}" \
+    --repo "${target_repo}" \
+    --base "${pr_target_branch}" \
+    --title "${title}" \
+    --body "${body}"
