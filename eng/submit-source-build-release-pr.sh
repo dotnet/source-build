@@ -177,12 +177,9 @@ if [[ $sdk_version == "6"* ]]; then
 elif [[ $sdk_version == "7"* ]]; then
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
-elif [[ $sdk_version == "8"* ]]; then
+else
         modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
         modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
-else
-        echo "Unexpected SDK version!"
-        exit 1
 fi
 
 git add "$global_json_path" "$versions_props_path"
