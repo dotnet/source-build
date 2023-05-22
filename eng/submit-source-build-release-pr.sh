@@ -13,22 +13,22 @@ a PR in the target repo."
    echo
    echo "Syntax: ./submit-source-build-release-pr.sh --target-repo dotnet/installer --fork-repo dotnet-sb-bot/installer --sdkVersion 6.0.101"
    echo "options:"
-   echo "--targetRepo, -t      The repo to submit the PR to"
-   echo "--forkRepo, -f        The repo to submit the PR from"
-   echo "--sdkVersion, -v      The .NET SDK version to update to"
-   echo "--title, -T           The title of the PR"
-   echo "--body, -B            The body of the PR"
-   echo "--targetBranch, -b    (Optional) branch to submit the PR to, calculated automatically otherwise"
-   echo "--globalJson, -g      (Optional) path to the global.json file to update"
-   echo "--versionsProps, -p   (Optional) path to the Versions.props file to update"
-   echo "--sourceBuiltArtifactsFileName   name of the archive containing source build artifacts"
-   echo "--sdkArtifactFileName   name of the archive containing the source built SDK"
-   echo "--setupGitAuth, -G    (Optional) set up git authentication using the gh CLI"
-   echo "--help, -h            (Optional) print this help message and exit"
+   echo "--targetRepo, -t                 The repo to submit the PR to"
+   echo "--forkRepo, -f                   The repo to submit the PR from"
+   echo "--sdkVersion, -v                 The .NET SDK version to update to"
+   echo "--title, -T                      The title of the PR"
+   echo "--body, -B                       The body of the PR"
+   echo "--sourceBuiltArtifactsFileName   The name of the archive containing source build artifacts"
+   echo "--sdkArtifactFileName            The name of the archive containing the source built SDK"
+   echo "--targetBranch, -b               (Optional) branch to submit the PR to, calculated automatically otherwise"
+   echo "--globalJson, -g                 (Optional) path to the global.json file to update"
+   echo "--versionsProps, -p              (Optional) path to the Versions.props file to update"
+   echo "--setupGitAuth, -G               (Optional) set up git authentication using the gh CLI"
+   echo "--help, -h                       (Optional) print this help message and exit"
    echo
 }
 
-SHORT=t:f:v:T:B:b:g:p:a:s:Gh
+SHORT=t:f:v:T:B:b:g:p:Gh
 LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,sourceBuiltArtifactsFileName:,sdkArtifactFileName:,setupGitAuth,help
 
 OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
@@ -155,30 +155,31 @@ mv "$global_json_path.new" "$global_json_path"
 #   1. XML file path
 #   2. Element name
 #   3. Replacement value
-function modify_url_in_xml() {
-  local xml_file="$1"
-  local element_name="$2"
+function update_versions.prop() {
+  local element_name="$1"
+  local pattern="$2"
   local replacement_value="$3"
 
   # Fetch the URL inside the element
-  local url=$(grep -oP "<$element_name>\K.*?(?=<\/$element_name>)" "$xml_file")
+  local url=$(grep -oP "<$element_name>\K.*?(?=<\/$element_name>)" "$versions_props_path")
 
   # Replace the very last part of the URL with the provided value
   local new_url=$(echo "$url" | sed "s|/[^/]*$|/$replacement_value|")
 
   # Update the XML file with the modified URL
-  sed -i "s|$url|$new_url|" "$xml_file"
+  sed -i "s|$url|$new_url|" "$versions_props_path"
 
   echo "Replacing value of $element_name with $new_url"
 }
 
 if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
   sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
-elif [[ $sdk_version == "7"* ]]; then
+fi
+if [[ $sdk_version == "7"* ]]; then
   sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
-else
-  modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
-  modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
+elif [[ $sdk_version != "6"* ]]; then
+  modify_url_in_xml "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
+  modify_url_in_xml "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
 fi
 
 git add "$global_json_path" "$versions_props_path"

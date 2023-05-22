@@ -392,8 +392,8 @@ stages:
           fi
           
           # The resolved variables will be utilized to update the Versions.props file within the submit-source-build-release-pr script.
-          resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
-          resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
+          resolvedSourceBuiltArtifactsFileName=$(basename "$(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName)")
+          resolvedSdkArtifactFileName=$(basename "$(PIPELINE.WORKSPACE)/$(sdkArtifactFileName)")
           
           if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
@@ -405,8 +405,8 @@ stages:
             echo "  --title $title"
             echo "  --body $body"
             echo "  --targetBranch $target_branch"
-            echo "  --resolvedSdkArtifactFileName $resolvedSdkArtifactFileName"
-            echo "  --resolvedSourceBuiltArtifactsFileName $resolvedSourceBuiltArtifactsFileName"
+            echo "  --sdkArtifactFileName $resolvedSdkArtifactFileName"
+            echo "  --sourceBuiltArtifactsFileName $resolvedSourceBuiltArtifactsFileName"
             echo "  ${extraArgs[@]}"
           else
             echo "Submitting PR"
@@ -418,8 +418,8 @@ stages:
               --title "$title" \
               --body "$body" \
               --targetBranch "$target_branch" \
-              --resolvedSdkArtifactFileName "$resolvedSdkArtifactFileName" \
-              --resolvedSourceBuiltArtifactsFileName "$resolvedSourceBuiltArtifactsFileName" \
+              --sdkArtifactFileName "$resolvedSdkArtifactFileName" \
+              --sourceBuiltArtifactsFileName "$resolvedSourceBuiltArtifactsFileName" \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR
