@@ -21,8 +21,8 @@ a PR in the target repo."
    echo "--targetBranch, -b    (Optional) branch to submit the PR to, calculated automatically otherwise"
    echo "--globalJson, -g      (Optional) path to the global.json file to update"
    echo "--versionsProps, -p   (Optional) path to the Versions.props file to update"
-   echo "--sourceBuiltArtifactsFileName, -a   name of the archive containing source build artifacts"
-   echo "--sdkArtifactFileName, -s   name of the archive containing the source built SDK"
+   echo "--sourceBuiltArtifactsFileName   name of the archive containing source build artifacts"
+   echo "--sdkArtifactFileName   name of the archive containing the source built SDK"
    echo "--setupGitAuth, -G    (Optional) set up git authentication using the gh CLI"
    echo "--help, -h            (Optional) print this help message and exit"
    echo
@@ -84,11 +84,11 @@ while true ; do
       custom_target_branch="$2"
       shift 2
       ;;
-    -a | --sourceBuiltArtifactsFileName )
+    --sourceBuiltArtifactsFileName )
       source_built_artifacts_file_name="$2"
       shift 2
       ;;
-    -s | --sdkArtifactFileName )
+    --sdkArtifactFileName )
       sdk_artifact_file_name="$2"
       shift 2
       ;;
@@ -172,14 +172,13 @@ function modify_url_in_xml() {
   echo "Replacing value of $element_name with $new_url"
 }
 
-if [[ $sdk_version == "6"* ]]; then
-        sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
+  sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
 elif [[ $sdk_version == "7"* ]]; then
-        sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
-        sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
+  sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
 else
-        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
-        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
+  modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
+  modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
 fi
 
 git add "$global_json_path" "$versions_props_path"
