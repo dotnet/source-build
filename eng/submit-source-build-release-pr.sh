@@ -21,15 +21,15 @@ a PR in the target repo."
    echo "--targetBranch, -b    (Optional) branch to submit the PR to, calculated automatically otherwise"
    echo "--globalJson, -g      (Optional) path to the global.json file to update"
    echo "--versionsProps, -p   (Optional) path to the Versions.props file to update"
-   echo "--resolvedSourceBuiltArtifactsFileName, -a   (Optional) actul Source Built Artifacts File Name"
-   echo "--resolvedSdkArtifactFileName, -s   (Optional) actul Sdk Artifact File Name"
+   echo "--sourceBuiltArtifactsFileName, -a   name of the archive containing source build artifacts"
+   echo "--sdkArtifactFileName, -s   name of the archive containing the source built SDK"
    echo "--setupGitAuth, -G    (Optional) set up git authentication using the gh CLI"
    echo "--help, -h            (Optional) print this help message and exit"
    echo
 }
 
 SHORT=t:f:v:T:B:b:g:p:a:s:Gh
-LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,resolvedSourceBuiltArtifactsFileName:,resolvedSdkArtifactFileName:,setupGitAuth,help
+LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,sourceBuiltArtifactsFileName:,sdkArtifactFileName:,setupGitAuth,help
 
 OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
 if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
@@ -39,8 +39,8 @@ global_json_path='src/SourceBuild/content/global.json'
 versions_props_path='src/SourceBuild/content/eng/Versions.props'
 custom_target_branch=''
 setup_git_auth=''
-resolved_source_built_artifacts_file_name=''
-resolved_sdk_artifact_file_name=''
+source_built_artifacts_file_name=''
+sdk_artifact_file_name=''
 
 while true ; do
   case "$1" in
@@ -84,12 +84,12 @@ while true ; do
       custom_target_branch="$2"
       shift 2
       ;;
-    -a | --resolvedSourceBuiltArtifactsFileName )
-      resolved_source_built_artifacts_file_name="$2"
+    -a | --sourceBuiltArtifactsFileName )
+      source_built_artifacts_file_name="$2"
       shift 2
       ;;
-    -s | --resolvedSdkArtifactFileName )
-      resolved_sdk_artifact_file_name="$2"
+    -s | --sdkArtifactFileName )
+      sdk_artifact_file_name="$2"
       shift 2
       ;;
     -- )
@@ -112,8 +112,8 @@ echo "global_json_path = $global_json_path"
 echo "versions_props_path = $versions_props_path"
 echo "custom_target_branch = $custom_target_branch"
 echo "setup_git_auth = $setup_git_auth"
-echo "resolved_source_built_artifacts_file_name = $resolved_source_built_artifacts_file_name"
-echo "resolved_sdk_artifact_file_name = $resolved_sdk_artifact_file_name"
+echo "source_built_artifacts_file_name = $source_built_artifacts_file_name"
+echo "sdk_artifact_file_name = $sdk_artifact_file_name"
 
 
 if [[ ${setup_git_auth} == true ]]; then
@@ -169,7 +169,7 @@ function modify_url_in_xml() {
   # Update the XML file with the modified URL
   sed -i "s|$url|$new_url|" "$xml_file"
 
-  echo "Modified URL: $new_url"
+  echo "Replacing value of $element_name with $new_url"
 }
 
 if [[ $sdk_version == "6"* ]]; then
@@ -178,14 +178,12 @@ elif [[ $sdk_version == "7"* ]]; then
         sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
         sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
 elif [[ $sdk_version == "8"* ]]; then
-        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$resolved_source_built_artifacts_file_name"
-        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$resolved_sdk_artifact_file_name"
+        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
+        modify_url_in_xml "$versions_props_path" "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
 else
         echo "Unexpected SDK version!"
         exit 1
 fi
-# Validate changes in Version.props file
-git diff
 
 git add "$global_json_path" "$versions_props_path"
 
@@ -199,7 +197,7 @@ git push -u origin "${new_branch_name}"
 readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
 fork_owner="${fork_repo_split[0]}"
 
-create pull request
+# create pull request
 gh pr create \
     --head "${fork_owner}:${new_branch_name}" \
     --repo "${target_repo}" \
