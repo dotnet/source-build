@@ -150,36 +150,37 @@ cat "$global_json_path" \
     | tee "$global_json_path.new"
 mv "$global_json_path.new" "$global_json_path"
 
-# Function to modify the URL in an XML file
+# Function to modify the Version.props file
 # Arguments:
-#   1. XML file path
-#   2. Element name
+#   1. Element name
+#   2. Replacement pattern
 #   3. Replacement value
-function update_versions.prop() {
+function update_version_props() {
   local element_name="$1"
-  local pattern="$2"
+  local replacement_pattern="$2"
   local replacement_value="$3"
 
-  # Fetch the URL inside the element
-  local url=$(grep -oP "<$element_name>\K.*?(?=<\/$element_name>)" "$versions_props_path")
+  # Fetch the content inside the element
+  local element=$(grep -oP "<$element_name>.*<\/$element_name>" "$versions_props_path")
+  local content=$(echo "$element" | sed -n "s/.*<$element_name>\(.*\)<\/$element_name>.*/\1/p")
 
-  # Replace the very last part of the URL with the provided value
-  local new_url=$(echo "$url" | sed "s|/[^/]*$|/$replacement_value|")
+  # Replace the content with the provided pattern
+  local new_content=$(echo "$content" | sed "s|$replacement_pattern|$replacement_value|")
 
-  # Update the XML file with the modified URL
-  sed -i "s|$url|$new_url|" "$versions_props_path"
+  # Update the XML file with the modified content
+  sed -i "s|$element|<$element_name>$new_content</$element_name>|" "$versions_props_path"
 
-  echo "Replacing value of $element_name with $new_url"
+  echo "Replacing content of $element_name with $new_content"
 }
 
 if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
-  sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" ".*" "$sdk_version"
 fi
 if [[ $sdk_version == "7"* ]]; then
-  sed -i "s#<PrivateSourceBuiltSDKVersion>.*</PrivateSourceBuiltSDKVersion>#<PrivateSourceBuiltSDKVersion>$sdk_version</PrivateSourceBuiltSDKVersion>#" $versions_props_path
+  update_version_props "PrivateSourceBuiltSDKVersion" ".*" "$sdk_version"
 elif [[ $sdk_version != "6"* ]]; then
-  modify_url_in_xml "PrivateSourceBuiltArtifactsUrl" "$source_built_artifacts_file_name"
-  modify_url_in_xml "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$sdk_artifact_file_name"
+  update_version_props "PrivateSourceBuiltArtifactsUrl" "/[^/]*$" "/$source_built_artifacts_file_name"
+  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "/[^/]*$" "/$sdk_artifact_file_name"
 fi
 
 git add "$global_json_path" "$versions_props_path"
