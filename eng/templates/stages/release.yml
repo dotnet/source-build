@@ -395,7 +395,7 @@ stages:
           resolvedSourceBuiltArtifactsFileName=$(basename "$(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName)")
           resolvedSdkArtifactFileName=$(basename "$(PIPELINE.WORKSPACE)/$(sdkArtifactFileName)")
           
-          if [ "${{ parameters.isDryRun }}" = True ]; then
+          if [ "${{ parameters.isDryRun }}" = False ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
             echo "./submit-source-build-release-pr.sh"
             echo "  --setupGitAuth"
