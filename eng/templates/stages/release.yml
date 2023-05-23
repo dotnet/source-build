@@ -391,7 +391,7 @@ stages:
             fi
           fi
           
-          # The resolved variables will be utilized to update the Versions.props file within the submit-source-build-release-pr script.
+          # We get the actual final version from the file names - it differs as it comes from the VMR build, not from the official installer one
           resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
           resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
           
