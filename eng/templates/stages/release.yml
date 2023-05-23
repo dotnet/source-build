@@ -308,8 +308,6 @@ stages:
             announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
 
             echo "Announcement URL: $announcement_url"
-            echo "Tag URL: $TAG_URL"
-            echo "Release Notes URL: $RELEASE_NOTES_URL"
           fi
         displayName: Submit announcement discussion
         workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
