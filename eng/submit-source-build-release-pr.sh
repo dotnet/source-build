@@ -157,8 +157,9 @@ mv "$global_json_path.new" "$global_json_path"
 #   3. Replacement value
 function update_version_props() {
   local element_name="$1"
-  local replacement_pattern="$2"
-  local replacement_value="$3"
+  local replacement_value="$2"
+  # This default pattern matches the entire content and replaces the entire content.
+  local replacement_pattern=${3:-".*"}
 
   # Fetch the content inside the element
   local element=$(grep -oP "<$element_name>.*<\/$element_name>" "$versions_props_path")
@@ -178,19 +179,17 @@ function update_version_props() {
   echo "Replacing content of $element_name with $new_content"
 }
 
-# This pattern matches the entire content
-content_replacement_pattern=".*"
 if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
-  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" "$content_replacement_pattern" "$sdk_version"
+  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" "$sdk_version"
   if [[ $sdk_version == "7"* ]]; then
-    update_version_props "PrivateSourceBuiltSDKVersion" "$content_replacement_pattern" "$sdk_version"
+    update_version_props "PrivateSourceBuiltSDKVersion" "$sdk_version"
   fi
 else
-  # matches a sequence of characters that does not contain any forward slashes, occurring at the end of the line.
+  # This pattern matches a sequence of characters that does not contain any forward slashes, occurring at the end of the line.
   # To replace very last part of the url
   content_replacement_pattern="/[^/]*$"
-  update_version_props "PrivateSourceBuiltArtifactsUrl" "$content_replacement_pattern" "/$source_built_artifacts_file_name"
-  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "$content_replacement_pattern" "/$sdk_artifact_file_name"
+  update_version_props "PrivateSourceBuiltArtifactsUrl" "/$source_built_artifacts_file_name" "$content_replacement_pattern"
+  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "/$sdk_artifact_file_name" "$content_replacement_pattern"
 fi
 
 git add "$global_json_path" "$versions_props_path"
