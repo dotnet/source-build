@@ -149,9 +149,9 @@ readarray -d '/' -t fork_repo_split <<< "${fork_repo}"
 fork_owner="${fork_repo_split[0]}"
 
 # create pull request
-# gh pr create \
-#     --head "${fork_owner}:${new_branch_name}" \
-#     --repo "${target_repo}" \
-#     --base "${pr_target_branch}" \
-#     --title "${title}" \
-#     --body "${body}"
+gh pr create \
+    --head "${fork_owner}:${new_branch_name}" \
+    --repo "${target_repo}" \
+    --base "${pr_target_branch}" \
+    --title "${title}" \
+    --body "${body}"
