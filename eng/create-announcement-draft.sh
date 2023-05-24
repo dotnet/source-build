@@ -120,7 +120,4 @@ else
   export RUNTIME_VERSION_SHORT="$RUNTIME_VERSION"
 fi
 
-echo "Tag URL: $TAG_URL"
-echo "Release Notes URL: $RELEASE_NOTES_URL"
-
 envsubst < "$template"
