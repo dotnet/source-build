@@ -390,7 +390,11 @@ stages:
               target_branch="${target_branch#internal/}"
             fi
           fi
-
+          
+          # We get the actual final version from the file names - it differs as it comes from the VMR build, not from the official installer one
+          resolvedSourceBuiltArtifactsFileName=$(basename $(PIPELINE.WORKSPACE)/$(sourceBuiltArtifactsFileName))
+          resolvedSdkArtifactFileName=$(basename $(PIPELINE.WORKSPACE)/$(sdkArtifactFileName))
+          
           if [ "${{ parameters.isDryRun }}" = True ]; then
             echo "Doing a dry run, not submitting PR. Would have called:"
             echo "./submit-source-build-release-pr.sh"
@@ -401,6 +405,8 @@ stages:
             echo "  --title $title"
             echo "  --body $body"
             echo "  --targetBranch $target_branch"
+            echo "  --sdkArtifactFileName $resolvedSdkArtifactFileName"
+            echo "  --sourceBuiltArtifactsFileName $resolvedSourceBuiltArtifactsFileName"
             echo "  ${extraArgs[@]}"
           else
             echo "Submitting PR"
@@ -412,6 +418,8 @@ stages:
               --title "$title" \
               --body "$body" \
               --targetBranch "$target_branch" \
+              --sdkArtifactFileName "$resolvedSdkArtifactFileName" \
+              --sourceBuiltArtifactsFileName "$resolvedSourceBuiltArtifactsFileName" \
               "${extraArgs[@]}"
           fi
         displayName: Submit Release PR

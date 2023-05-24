@@ -13,21 +13,23 @@ a PR in the target repo."
    echo
    echo "Syntax: ./submit-source-build-release-pr.sh --target-repo dotnet/installer --fork-repo dotnet-sb-bot/installer --sdkVersion 6.0.101"
    echo "options:"
-   echo "--targetRepo, -t      The repo to submit the PR to"
-   echo "--forkRepo, -f        The repo to submit the PR from"
-   echo "--sdkVersion, -v      The .NET SDK version to update to"
-   echo "--title, -T           The title of the PR"
-   echo "--body, -B            The body of the PR"
-   echo "--targetBranch, -b    (Optional) branch to submit the PR to, calculated automatically otherwise"
-   echo "--globalJson, -g      (Optional) path to the global.json file to update"
-   echo "--versionsProps, -p   (Optional) path to the Versions.props file to update"
-   echo "--setupGitAuth, -G    (Optional) set up git authentication using the gh CLI"
-   echo "--help, -h            (Optional) print this help message and exit"
+   echo "--targetRepo, -t                 The repo to submit the PR to"
+   echo "--forkRepo, -f                   The repo to submit the PR from"
+   echo "--sdkVersion, -v                 The .NET SDK version to update to"
+   echo "--title, -T                      The title of the PR"
+   echo "--body, -B                       The body of the PR"
+   echo "--sourceBuiltArtifactsFileName   The name of the archive containing source build artifacts"
+   echo "--sdkArtifactFileName            The name of the archive containing the source built SDK"
+   echo "--targetBranch, -b               (Optional) branch to submit the PR to, calculated automatically otherwise"
+   echo "--globalJson, -g                 (Optional) path to the global.json file to update"
+   echo "--versionsProps, -p              (Optional) path to the Versions.props file to update"
+   echo "--setupGitAuth, -G               (Optional) set up git authentication using the gh CLI"
+   echo "--help, -h                       (Optional) print this help message and exit"
    echo
 }
 
 SHORT=t:f:v:T:B:b:g:p:Gh
-LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,setupGitAuth,help
+LONG=targetRepo:,forkRepo:,sdkVersion:,title:,body:,targetBranch:,globalJson:,versionsProps:,sourceBuiltArtifactsFileName:,sdkArtifactFileName:,setupGitAuth,help
 
 OPTS=$(getopt --options $SHORT --long $LONG --name "$0" -- "$@")
 if [ $? != 0 ] ; then echo "Failed to parse options." >&2 ; exit 1 ; fi
@@ -37,6 +39,8 @@ global_json_path='src/SourceBuild/content/global.json'
 versions_props_path='src/SourceBuild/content/eng/Versions.props'
 custom_target_branch=''
 setup_git_auth=''
+source_built_artifacts_file_name=''
+sdk_artifact_file_name=''
 
 while true ; do
   case "$1" in
@@ -80,6 +84,14 @@ while true ; do
       custom_target_branch="$2"
       shift 2
       ;;
+    --sourceBuiltArtifactsFileName )
+      source_built_artifacts_file_name="$2"
+      shift 2
+      ;;
+    --sdkArtifactFileName )
+      sdk_artifact_file_name="$2"
+      shift 2
+      ;;
     -- )
       shift
       break
@@ -100,6 +112,9 @@ echo "global_json_path = $global_json_path"
 echo "versions_props_path = $versions_props_path"
 echo "custom_target_branch = $custom_target_branch"
 echo "setup_git_auth = $setup_git_auth"
+echo "source_built_artifacts_file_name = $source_built_artifacts_file_name"
+echo "sdk_artifact_file_name = $sdk_artifact_file_name"
+
 
 if [[ ${setup_git_auth} == true ]]; then
   echo "Setting up git auth"
@@ -135,7 +150,48 @@ cat "$global_json_path" \
     | tee "$global_json_path.new"
 mv "$global_json_path.new" "$global_json_path"
 
-sed -i "s#<PrivateSourceBuiltArtifactsPackageVersion>.*</PrivateSourceBuiltArtifactsPackageVersion>#<PrivateSourceBuiltArtifactsPackageVersion>$sdk_version</PrivateSourceBuiltArtifactsPackageVersion>#" $versions_props_path
+# Function to modify the Version.props file
+# Arguments:
+#   1. Element name
+#   2. Replacement pattern
+#   3. Replacement value
+function update_version_props() {
+  local element_name="$1"
+  local replacement_value="$2"
+  # This default pattern matches the entire content and replaces the entire content.
+  local replacement_pattern=${3:-".*"}
+
+  # Fetch the content inside the element
+  local element=$(grep -oP "<$element_name>.*<\/$element_name>" "$versions_props_path")
+  if [ -z "$element" ]; then
+    echo "##vso[task.logissue type=error] Element '$element_name' not found in the Versions.props file."
+    exit 1
+  fi
+
+  local content=$(echo "$element" | sed -n "s/.*<$element_name>\(.*\)<\/$element_name>.*/\1/p")
+
+  # Replace the target pattern with the replacement value in the content
+  local new_content=$(echo "$content" | sed "s|$replacement_pattern|$replacement_value|")
+
+  # Update the XML file with the modified content
+  sed -i "s|$element|<$element_name>$new_content</$element_name>|" "$versions_props_path"
+
+  echo "Replacing content of $element_name with $new_content"
+}
+
+if [[ $sdk_version == "6"* || $sdk_version == "7"* ]]; then
+  update_version_props "PrivateSourceBuiltArtifactsPackageVersion" "$sdk_version"
+  if [[ $sdk_version == "7"* ]]; then
+    update_version_props "PrivateSourceBuiltSDKVersion" "$sdk_version"
+  fi
+else
+  # This pattern matches a sequence of characters that does not contain any forward slashes, occurring at the end of the line.
+  # To replace very last part of the url
+  content_replacement_pattern="/[^/]*$"
+  update_version_props "PrivateSourceBuiltArtifactsUrl" "/$source_built_artifacts_file_name" "$content_replacement_pattern"
+  update_version_props "PrivateSourceBuiltSdkUrl_CentOS8Stream" "/$sdk_artifact_file_name" "$content_replacement_pattern"
+fi
+
 git add "$global_json_path" "$versions_props_path"
 
 git config --global user.name "dotnet-sb-bot"
