@@ -304,10 +304,16 @@ stages:
             echo "Announcement title: $title"
             echo "Announcement body: $body"
           else
-            echo "Submitting announcement."
-            announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+            existing_announcement_url=$(gh api graphql -F RepoId=$(RepoId) -f query="$query" --template '{{if gt (len .data.repository.discussion.categories.edges) 0}}{{index .data.repository.discussion.categories.edges 0}}{ "categoryId": .node.id }{{end}}' 2>/dev/null)
+            if [ -z "$existing_announcement_url" ]; then
+              echo "Submitting announcement."
+              announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
 
-            echo "Announcement URL: $announcement_url"
+              echo "Announcement URL: $announcement_url"
+            else
+              echo "##vso[task.logissue type=warning]Announcement already exists. Skipping submission."
+              echo "##vso[task.logissue type=warning]Existing Announcement URL: $existing_announcement_url"
+            fi
           fi
         displayName: Submit announcement discussion
         workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
