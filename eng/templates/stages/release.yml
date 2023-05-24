@@ -296,7 +296,7 @@ stages:
 
           query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 
-          if [ ${{ parameters.isDryRun }} = True ]; then
+          if [ ${{ parameters.isDryRun }} = False ]; then
             set +x
             echo -e "\n\n\n#########################\n\n"
             echo "Doing a dry run, not submitting announcement."
