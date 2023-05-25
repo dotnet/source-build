@@ -89,7 +89,7 @@ stages:
   # GitHub release is skipped for 6.0/7.0 and dry runs
   - name: createGitHubRelease
     ${{ if eq(parameters.createGitHubRelease, 'auto') }}:
-      ${{ if or(eq(parameters.isDryRun, parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      ${{ if or(parameters.isDryRun, eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
         value: skip
       ${{ else }}:
         value: full
