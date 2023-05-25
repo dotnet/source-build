@@ -294,8 +294,6 @@ stages:
             set -o pipefail
           fi
 
-          query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
-
           if [ ${{ parameters.isDryRun }} = False ]; then
             set +x
             echo -e "\n\n\n#########################\n\n"
@@ -303,14 +301,19 @@ stages:
             echo -e "\n\n#########################\n\n\n"
             echo "Announcement title: $title"
             echo "Announcement body: $body"
-          else
-            existing_announcement_url=$(gh api graphql -F RepoId=$(RepoId) -f query="$query" --template '{{if gt (len .data.repository.discussion.categories.edges) 0}}{{index .data.repository.discussion.categories.edges 0}}{ "categoryId": .node.id }{{end}}' 2>/dev/null)
-            if [ -z "$existing_announcement_url" ]; then
+          else            
+            query='query($title: String!) { search(query: $title, type: DISCUSSION, first: 1) { nodes { ... on Discussion { id, title, url } } } }'
+            response=$(gh api graphql -f query="$query" -f title="$title")
+            discussion=$(echo "$response" | jq -r '.data.search.nodes[0]')
+
+            if [[ -z "$discussion" || "$discussion" == "null" ]]; then
+              query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }
+
               echo "Submitting announcement."
               announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
-
               echo "Announcement URL: $announcement_url"
             else
+              existing_announcement_url=$(echo "$discussion" | jq -r '.url')
               echo "##vso[task.logissue type=warning]Announcement already exists. Skipping submission."
               echo "##vso[task.logissue type=warning]Existing Announcement URL: $existing_announcement_url"
             fi
