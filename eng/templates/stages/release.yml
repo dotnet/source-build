@@ -90,13 +90,10 @@ stages:
   # For dry run, we only create a draft release
   - name: createGitHubRelease
     ${{ if eq(parameters.createGitHubRelease, 'auto') }}:
-      ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
+      ${{ if or(eq(parameters.isDryRun, parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
         value: skip
       ${{ else }}:
-        ${{ if parameters.isDryRun }}:
-          value: draft
-        ${{ else }}:
-          value: full
+        value: full
     ${{ else }}:
       value: ${{ parameters.createGitHubRelease }}
 
