@@ -302,9 +302,10 @@ stages:
             echo "Announcement title: $title"
             echo "Announcement body: $body"
           else            
-            query='query($title: String!) { search(query: $title, type: DISCUSSION, first: 1) { nodes { ... on Discussion { id, title, url } } } }'
-            response=$(gh api graphql -f query="$query" -f title="$title")
-            discussion=$(echo "$response" | jq -r '.data.search.nodes[0]')
+            query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: "'"$DiscussionCategoryId"'", orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
+
+            response=$(gh api graphql -f query="$query")
+            discussion=$(echo "$response" | jq -r '.data.repository.discussions.edges[] | select(.node.title == "'"$title"'") | .node')
 
             if [[ -z "$discussion" || "$discussion" == "null" ]]; then
               query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }
