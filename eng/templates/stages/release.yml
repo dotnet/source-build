@@ -301,7 +301,7 @@ stages:
             echo -e "\n\n#########################\n\n\n"
             echo "Announcement title: $title"
             echo "Announcement body: $body"
-          else            
+          else
             query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: "'"$DiscussionCategoryId"'", orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
 
             response=$(gh api graphql -f query="$query")
@@ -311,7 +311,7 @@ stages:
               query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }
 
               echo "Submitting announcement."
-              announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+              # announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
               echo "Announcement URL: $announcement_url"
             else
               existing_announcement_url=$(echo "$discussion" | jq -r '.url')
