@@ -302,6 +302,7 @@ stages:
             echo "Announcement title: $title"
             echo "Announcement body: $body"
           else
+            # Checking for an already existing announcement
             query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: "$(DiscussionCategoryId)", orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
 
             response=$(gh api graphql -f query="$query")
@@ -315,8 +316,7 @@ stages:
               echo "Announcement URL: $announcement_url"
             else
               existing_announcement_url=$(echo "$discussion" | jq -r '.url')
-              echo "##vso[task.logissue type=warning]Announcement already exists. Skipping submission."
-              echo "##vso[task.logissue type=warning]Existing Announcement URL: $existing_announcement_url"
+              echo "##vso[task.logissue type=warning]Announcement already exists ($existing_announcement_url). Skipping submission."
             fi
           fi
         displayName: Submit announcement discussion
