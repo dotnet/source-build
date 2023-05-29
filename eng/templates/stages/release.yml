@@ -247,7 +247,7 @@ stages:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
 
       - script: |
-          set -exuo pipefail
+          set -euo pipefail
           echo "Repo ID is $(RepoId)"
           echo "Discussion Category ID is $(DiscussionCategoryId)"
 
@@ -294,7 +294,7 @@ stages:
             set -o pipefail
           fi
 
-          if [ ${{ parameters.isDryRun }} = False ]; then
+          if [ ${{ parameters.isDryRun }} = True ]; then
             set +x
             echo -e "\n\n\n#########################\n\n"
             echo "Doing a dry run, not submitting announcement."
@@ -311,7 +311,7 @@ stages:
               query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
 
               echo "Submitting announcement."
-              # announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
+              announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
               echo "Announcement URL: $announcement_url"
             else
               existing_announcement_url=$(echo "$discussion" | jq -r '.url')
