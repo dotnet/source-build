@@ -302,7 +302,7 @@ stages:
             echo "Announcement title: $title"
             echo "Announcement body: $body"
           else
-            query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: $(DiscussionCategoryId), orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
+            query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: "$(DiscussionCategoryId)", orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
 
             response=$(gh api graphql -f query="$query")
             discussion=$(echo "$response" | jq -r '.data.repository.discussions.edges[] | select(.node.title == "'"$title"'") | .node')
