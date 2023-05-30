@@ -251,7 +251,7 @@ stages:
             --release-name "${{ parameters.releaseName }}"           \
             --runtime-version "$(runtimeVersion)"                    \
             --sdk-version "$(sdkVersion)"                            \
-            --tag "$(releaseTag)")
+            --tag "$(releaseTag)"
 
         displayName: Submit announcement discussion
         workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng

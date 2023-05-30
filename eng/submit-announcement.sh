@@ -237,8 +237,8 @@ else
 
       echo "Submitting announcement"
 
-      create_discussion_url=$(gh api graphql -F RepoId="$repo_id" -F categoryId="$category_id" -F body="$body" -F title="$title" -f query="$create_discussion_query" --template '{{.data.createDiscussion.discussion.url}}' )
-      echo "Announcement URL: $create_discussion_url"
+      # create_discussion_url=$(gh api graphql -F RepoId="$repo_id" -F categoryId="$category_id" -F body="$body" -F title="$title" -f query="$create_discussion_query" --template '{{.data.createDiscussion.discussion.url}}' )
+      # echo "Announcement URL: $create_discussion_url"
   else
       duplicate_discussion_url=$(echo "$duplicate_discussions" | jq -r '.url')
       echo "##vso[task.logissue type=warning]Announcement already exists ($duplicate_discussion_url). Skipping submission"
