@@ -228,129 +228,31 @@ stages:
 
     - ${{ if parameters.createReleaseAnnouncement }}:
       - script: |
-          set -euxo pipefail
-
-          query='query { repository(owner: "${{ variables.announcementOrg }}", name: "${{ variables.announcementRepo }}") { id } }'
-          echo "${query}"
-          repo_id=$( gh api graphql -f query="$query" --template '{{.data.repository.id}}' )
-          echo ${{ variables.announcementOrg }}/${{ variables.announcementRepo }} repo ID is ${repo_id}
-
-          query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussionCategories(first: 10) { edges { node { id, name } } } } }'
-          echo "${query}"
-          category_id=$( gh api graphql -f query="$query" --template '{{range .data.repository.discussionCategories.edges}}{{if eq .node.name "Announcements"}}{{.node.id}}{{end}}{{end}}' )
-          echo Discussion Category ID is ${category_id}
-
-          echo "##vso[task.setvariable variable=RepoId]$repo_id"
-          echo "##vso[task.setvariable variable=DiscussionCategoryId]$category_id"
-        displayName: Get announcement category
-        env:
-          GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
-
-      - script: |
           set -euo pipefail
-          echo "Repo ID is $(RepoId)"
-          echo "Discussion Category ID is $(DiscussionCategoryId)"
 
-          if [[ -z '${{ parameters.announcementGist }}' ]]; then
-            echo "Loading announcement template from source-build-release-announcement.md"
-
-            prerelease=''
-            if [ ${{ parameters.isPreviewRelease }} = True ]; then
-              prerelease='--prerelease'
-            fi
-
-            announcement=$("./create-announcement-draft.sh"     \
-              --template "source-build-release-announcement.md" \
-              --channel "$(releaseChannel)"                     \
-              $prerelease                                       \
-              --release "$(release)"                            \
-              --release-name "${{ parameters.releaseName }}"    \
-              --runtime-version "$(runtimeVersion)"             \
-              --sdk-version "$(sdkVersion)"                     \
-              --tag "$(releaseTag)")
-
-            # Get the line in the template that is prefixed with "Title:" and remove the prefix
-            title=$(echo "$announcement" | grep "^Title:" | cut -d " " -f2-)
-            # Get the inverse of the above selection
-            body=$(echo "$announcement" | grep -v "^Title:")
-          else
-            echo "Loading announcement template from gist ${{ parameters.announcementGist }}"
-
-            # Get title from the gist name
-            set +o pipefail # gh fails with 141 but returns the correct output
-            title="$(gh gist view '${{ parameters.announcementGist }}' --raw | head -n 1)"
-            body="$(gh gist view '${{ parameters.announcementGist }}' | tail -n +2)"
-
-            if [[ -z "$title" ]]; then
-              echo "##vso[task.logissue type=error]Could not get title from gist ${{ parameters.announcementGist }}"
-              exit 1
-            fi
-
-            if [[ -z "$body" ]]; then
-              echo "##vso[task.logissue type=error]Could not get announcement text from gist ${{ parameters.announcementGist }}"
-              exit 1
-            fi
-
-            set -o pipefail
+          prerelease=''
+          if [ ${{ parameters.isPreviewRelease }} = True ]; then
+            prerelease='--prerelease'
           fi
 
-          if [ ${{ parameters.isDryRun }} = False ]; then
-            set +x
-            echo -e "\n\n\n#########################\n\n"
-            echo "Doing a dry run, not submitting announcement."
-            echo -e "\n\n#########################\n\n\n"
-            echo "Announcement title: $title"
-            echo "Announcement body: $body"
-          else
-            # Checking for an already existing announcement
-            recent_discussions_query='query {                     \
-              repository(                                         \
-                name: "${{ variables.announcementRepo }}"         \
-                owner: "${{ variables.announcementOrg }}"         \
-              ) {                                                 \
-                discussions(                                      \
-                  last: 100                                       \
-                  categoryId: "$(DiscussionCategoryId)"           \
-                  orderBy: { field: UPDATED_AT, direction: DESC } \
-                ) {                                               \
-                  edges {                                         \
-                    node {                                        \
-                      title                                       \
-                      url                                         \
-                    }                                             \
-                  }                                               \
-                }                                                 \
-              }                                                   \
-            }'
-
-            recent_discussions=$(gh api graphql -f query="$recent_discussions_query")
-            duplicate_discussions=$(echo "$recent_discussions" | jq -r '.data.repository.discussions.edges[] | select(.node.title == "'"$title"'") | .node')
-
-            if [[ -z "$duplicate_discussions" || "$duplicate_discussions" == "null" ]]; then
-                create_discussion_query='\
-                mutation ($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { \
-                    createDiscussion(                                                        \
-                      input: {                                                               \
-                        repositoryId: $RepoId                                                \
-                        categoryId: $categoryId                                              \
-                        body: $body                                                          \
-                        title: $title                                                        \
-                      }                                                                      \
-                    ) {                                                                      \
-                      discussion {                                                           \
-                        url                                                                  \
-                      }                                                                      \
-                    }                                                                        \
-                }'
-
-                echo "Submitting announcement"
-                # create_discussion_url=$(gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$create_discussion_query" --template '{{.data.createDiscussion.discussion.url}}' )
-                # echo "Announcement URL: $create_discussion_url"
-            else
-                duplicate_discussion_url=$(echo "$duplicate_discussions" | jq -r '.url')
-                echo "##vso[task.logissue type=warning]Announcement already exists ($duplicate_discussion_url). Skipping submission"
-            fi
+          dry_run=''
+          if [ ${{ parameters.isDryRun }} = True ]; then
+            dry_run='--dry-run'
           fi
+
+          ./submit-announcement.sh                                   \
+            --announcement-org dotnet                                \
+            --announcement-repo source-build                         \
+            --announcement-gist "${{ parameters.announcementGist }}" \
+            --channel "$(releaseChannel)"                            \
+            $dry_run                                                 \
+            $prerelease                                              \
+            --release "$(release)"                                   \
+            --release-name "${{ parameters.releaseName }}"           \
+            --runtime-version "$(runtimeVersion)"                    \
+            --sdk-version "$(sdkVersion)"                            \
+            --tag "$(releaseTag)")
+
         displayName: Submit announcement discussion
         workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
         env:
