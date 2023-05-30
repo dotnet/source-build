@@ -240,6 +240,7 @@ stages:
             dry_run='--dry-run'
           fi
 
+          set -x
           ./submit-announcement.sh                                   \
             --announcement-org dotnet                                \
             --announcement-repo source-build                         \
