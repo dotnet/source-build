@@ -12,7 +12,6 @@
 ###   --sdk-version <VER>        The .NET SDK version that is being released
 ###   --runtime-version <VER>    The .NET runtime version that is being released
 ###   --tag <TAG>                The release tag, e.g. v8.0.0-preview.1
-###   --source-version SHA       The dotnet/dotnet SHA of the commit that is being released
 ###   --dry-run                  (Optional) Runs a script in a dry-run mode that prints out the announcement only
 ###   --prerelease               (Optional) Whether this is a preview release
 ###   --help, -h                 (Optional) Print this help message and exit
@@ -31,7 +30,6 @@ channel=''
 release=''
 release_name=''
 sdk_version=''
-source_version=''
 runtime_version=''
 tag=''
 prerelease=false
@@ -80,10 +78,6 @@ while [[ $# -gt 0 ]]; do
       tag="$2"
       shift 2
       ;;
-    --source-version )
-      source_version="$2"
-      shift 2
-      ;;
     --prerelease )
       prerelease=true
       shift 1
@@ -105,7 +99,6 @@ done
 : "${release:?Missing --release}"
 : "${release_name:?Missing --release-name}"
 : "${sdk_version:?Missing --sdk-version}"
-: "${source_version:?Missing --source-version}"
 : "${runtime_version:?Missing --runtime-version}"
 : "${tag:?Missing --tag}"
 
