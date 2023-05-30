@@ -303,20 +303,52 @@ stages:
             echo "Announcement body: $body"
           else
             # Checking for an already existing announcement
-            query='query { repository(name: "${{ variables.announcementRepo }}", owner: "${{ variables.announcementOrg }}") { discussions(last: 100, categoryId: "$(DiscussionCategoryId)", orderBy: {field: UPDATED_AT, direction: DESC}) { edges { node { title url } } } } }'
+            recent_discussions_query='query {                     \
+              repository(                                         \
+                name: "${{ variables.announcementRepo }}"         \
+                owner: "${{ variables.announcementOrg }}"         \
+              ) {                                                 \
+                discussions(                                      \
+                  last: 100                                       \
+                  categoryId: "$(DiscussionCategoryId)"           \
+                  orderBy: { field: UPDATED_AT, direction: DESC } \
+                ) {                                               \
+                  edges {                                         \
+                    node {                                        \
+                      title                                       \
+                      url                                         \
+                    }                                             \
+                  }                                               \
+                }                                                 \
+              }                                                   \
+            }'
 
-            response=$(gh api graphql -f query="$query")
-            discussion=$(echo "$response" | jq -r '.data.repository.discussions.edges[] | select(.node.title == "'"$title"'") | .node')
+            recent_discussions=$(gh api graphql -f query="$recent_discussions_query")
+            duplicate_discussions=$(echo "$recent_discussions" | jq -r '.data.repository.discussions.edges[] | select(.node.title == "'"$title"'") | .node')
 
-            if [[ -z "$discussion" || "$discussion" == "null" ]]; then
-              query='mutation($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { createDiscussion(input: {repositoryId: $RepoId, categoryId: $categoryId, body: $body, title: $title}) { discussion { url } } }'
+            if [[ -z "$duplicate_discussions" || "$duplicate_discussions" == "null" ]]; then
+                create_discussion_query='\
+                mutation ($RepoId: ID!, $categoryId: ID!, $body: String!, $title: String!) { \
+                    createDiscussion(                                                        \
+                      input: {                                                               \
+                        repositoryId: $RepoId                                                \
+                        categoryId: $categoryId                                              \
+                        body: $body                                                          \
+                        title: $title                                                        \
+                      }                                                                      \
+                    ) {                                                                      \
+                      discussion {                                                           \
+                        url                                                                  \
+                      }                                                                      \
+                    }                                                                        \
+                }'
 
-              echo "Submitting announcement."
-              announcement_url=$( gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$query" --template '{{.data.createDiscussion.discussion.url}}' )
-              echo "Announcement URL: $announcement_url"
+                echo "Submitting announcement"
+                create_discussion_url=$(gh api graphql -F RepoId=$(RepoId) -F categoryId=$(DiscussionCategoryId) -F body="$body" -F title="$title" -f query="$create_discussion_query" --template '{{.data.createDiscussion.discussion.url}}' )
+                echo "Announcement URL: $create_discussion_url"
             else
-              existing_announcement_url=$(echo "$discussion" | jq -r '.url')
-              echo "##vso[task.logissue type=warning]Announcement already exists ($existing_announcement_url). Skipping submission."
+                duplicate_discussion_url=$(echo "$duplicate_discussions" | jq -r '.url')
+                echo "##vso[task.logissue type=warning]Announcement already exists ($duplicate_discussion_url). Skipping submission"
             fi
           fi
         displayName: Submit announcement discussion
