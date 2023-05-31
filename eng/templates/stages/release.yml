@@ -213,7 +213,7 @@ stages:
 
           # Find the exact match
           if echo "$tags" | grep -q "map\[name:$(releaseTag)\]"; then
-            echo "Tag $(releaseTag) exists"
+            echo "Tag $(releaseTag) exists: https://github.com/dotnet/$repo/releases/tag/$(releaseTag)"
             exit 0
           fi
 
