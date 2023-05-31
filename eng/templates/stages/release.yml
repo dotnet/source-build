@@ -195,7 +195,7 @@ stages:
 
           if [ $? -ne 0 ]; then
             if [[ "$result" =~ "already exists" ]]; then
-              echo "##vso[task.logissue type=warning]GitHub release for $(dotnetDotnetCommit) already exists"
+              echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists (https://github.com/dotnet/dotnet/releases/tag/$(releaseTag))"
             else
               echo "##vso[task.logissue type=error]Failed to create the GitHub release: $result"
               exit 1
