@@ -213,11 +213,17 @@ stages:
 
           # Find the exact match
           if echo "$tags" | grep -q "map\[name:$(releaseTag)\]"; then
-            echo "Tag $(releaseTag) exists"
-          else
-            echo "##vso[task.logissue type=error]Tag $(releaseTag) does not exist in dotnet/$repo"
-            exit 1
+            echo "Tag $(releaseTag) exists: https://github.com/dotnet/$repo/releases/tag/$(releaseTag)"
+            exit 0
           fi
+
+          if [ ${{ parameters.isDryRun }} = True ]; then
+            echo "##vso[task.logissue type=warning]Tag $(releaseTag) does not exist in dotnet/$repo (possibly expected)"
+            exit 0
+          fi
+
+          echo "##vso[task.logissue type=error]Tag $(releaseTag) does not exist in dotnet/$repo"
+          exit 1
         displayName: Validate release tag
         env:
           GH_TOKEN: $(BotAccount-dotnet-sb-bot-pat)
