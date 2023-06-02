@@ -121,6 +121,7 @@ stages:
           containerName: $(blobContainerName)
           uploadPath: $(blobContainerUploadBaseFilePath)/$(ReadReleaseInfo.ReleaseChannel)/$(ReadReleaseInfo.RuntimeVersion)-$(ReadReleaseInfo.SdkVersion)
           azureStorageKey: $(dotnetclimsrc-access-key)
+          contentType: $(TARBALL_BLOB_CONTENT_TYPE)
       
       - script: |
           set -euo pipefail
