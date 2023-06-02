@@ -304,6 +304,7 @@ stages:
           containerName: $(blobContainerName)
           uploadPath: $(artifactsUploadBaseFilePath)
           azureStorageKey: $(dotnetcli-storage-key)
+          contentType: $(TARBALL_BLOB_CONTENT_TYPE)
 
       - template: ../steps/upload-to-blob-storage.yml
         parameters:
@@ -312,6 +313,7 @@ stages:
           containerName: $(blobContainerName)
           uploadPath: $(sdkUploadBaseFilePath)
           azureStorageKey: $(dotnetcli-storage-key)
+          contentType: $(TARBALL_BLOB_CONTENT_TYPE)
 
       - script: |
           set -euo pipefail
