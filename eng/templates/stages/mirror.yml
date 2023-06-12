@@ -26,6 +26,10 @@ stages:
   - job: Mirror
     displayName: Mirror sources & packages
     variables:
+    - template: ../variables/pipelines.yml
+    - template: ../variables/msrc-storage-variables.yml
+      parameters:
+        isDryRun: ${{ parameters.isDryRun }}
     - group: DotNet-Source-Build-All-Orgs-Source-Access
     - name: RepoDir
       value: vmr
@@ -48,17 +52,49 @@ stages:
       value: $(PIPELINE.WORKSPACE)/${{ parameters.dotnetStagingPipelineResource }}/$(packagesArtifactName)/$(shippingPackages)
     - name: releaseTag
       value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseTag'] ]
+    - name: sdkVersion
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.SdkVersion'] ]
+    - name: runtimeVersion
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.RuntimeVersion'] ]
+    - name: releaseChannel
+      value: $[ stageDependencies.PreRelease.PreRelease.outputs['ReadReleaseInfo.ReleaseChannel'] ]
+    - name: combinedSmokeTestPrereqsTarballPath
+      value: $(Pipeline.Workspace)/dotnet-smoke-test-prereqs-$(sdkVersion).tar.gz
+
+    - ${{ if eq(parameters.dotnetMajorVersion, '6.0') }}:
+      - name: smokeTestPreReqsArtifactNameX64
+        value: Build_Tarball_x64 CentOSStream9-Offline_Artifacts
+      - name: smokeTestPreReqsArtifactNameArm64
+        value: Build_Tarball_arm64 Debian9-Offline_Artifacts
+    - ${{ if eq(parameters.dotnetMajorVersion, '7.0') }}:
+      - name: smokeTestPreReqsArtifactNameX64
+        value: Build_Tarball_x64 CentOSStream9-Offline_Artifacts
+      - name: smokeTestPreReqsArtifactNameArm64
+        value: Build_Tarball_arm64 Debian11-Offline_Artifacts
+    - ${{ if eq(parameters.dotnetMajorVersion, '8.0') }}:
+      - name: smokeTestPreReqsArtifactNameX64
+        value: CentOSStream9_Offline_MsftSdk_x64_Artifacts
+      - name: smokeTestPreReqsArtifactNameArm64
+        value: Debian11_Offline_MsftSdk_arm64_Artifacts
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - name: sourceUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
       - name: sourceVersion
         value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerCommit'] ]
+      - name: officialBuildPipelineId
+        value: $(INSTALLER_TARBALL_BUILD_CI_PIPELINE_ID)
+      - name: officialBuildRunId
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.InstallerTarballBuildRunId'] ]
     - ${{ else }}:
       - name: sourceUrl
         value: https://dnceng@dev.azure.com/dnceng/internal/_git/dotnet-dotnet
       - name: sourceVersion
         value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetCommit'] ]
+      - name: officialBuildPipelineId
+        value: $(DOTNET_DOTNET_CI_PIPELINE_ID)
+      - name: officialBuildRunId
+        value: $[ stageDependencies.PreRelease.PreRelease.outputs['AssociatedPipelineRuns.DotnetDotnetRunId'] ]
 
     # We're using a different pool than the rest of the pipeline here to get more disk space
     # More information here: https://github.com/dotnet/arcade/issues/13036
@@ -67,8 +103,6 @@ stages:
       demands: ImageOverride -equals Build.Ubuntu.2004.Amd64
 
     steps:
-    - checkout: none
-
     - script: |
         set -euo pipefail
 
@@ -177,3 +211,40 @@ stages:
             publishFeedCredentials: ${{ variables.feedServiceConnection }}
             allowPackageConflicts: true
 
+    - template: ../steps/download-smoke-test-prereqs.yml
+      parameters:
+        officialBuildPipelineId: $(officialBuildPipelineId)
+        officialBuildRunId: $(officialBuildRunId)
+        taskLabel: x64
+        artifactName: $(smokeTestPreReqsArtifactNameX64)
+
+    - template: ../steps/download-smoke-test-prereqs.yml
+      parameters:
+        officialBuildPipelineId: $(officialBuildPipelineId)
+        officialBuildRunId: $(officialBuildRunId)
+        taskLabel: arm64
+        artifactName: $(smokeTestPreReqsArtifactNameArm64)
+
+    - script: |
+        "$(Build.SourcesDirectory)/eng/combine-tarballs.sh" \
+          --output "$(combinedSmokeTestPrereqsTarballPath)" \
+          $(Pipeline.Workspace)/dotnet-smoke-test-prereqs.*.tar.gz
+      displayName: Combine smoke test prereqs tarballs
+
+    # Install requirements needed to upload to blob storage
+    # These aren't included by default in the agent image
+    - script: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash && \
+          sudo apt-get update && \
+          sudo apt-get install -y \
+            jq
+      displayName: Install upload prereqs
+
+    - template: ../steps/upload-to-blob-storage.yml
+      parameters:
+        file: $(combinedSmokeTestPrereqsTarballPath)
+        accountName: $(storageAccountName)
+        containerName: $(blobContainerName)
+        uploadPath: $(blobContainerUploadBaseFilePath)/$(releaseChannel)/$(runtimeVersion)-$(sdkVersion)
+        azureStorageKey: $(dotnetclimsrc-access-key)
+        contentType: $(TARBALL_BLOB_CONTENT_TYPE)

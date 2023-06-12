@@ -54,20 +54,11 @@ stages:
       displayName: Get build info
     variables:
     - template: ../variables/pipelines.yml
-    - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
-      - group: DotNet-MSRC-Storage
-      - group: DotNet-Source-Build-All-Orgs-Source-Access
-      - name: storageAccountName
-        value: dotnetclimsrc
-      - name: blobContainerName
-        value: source-build
-      - name: vmrUpstreamUrl
-        value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
-      - name: blobContainerUploadBaseFilePath
-        ${{ if parameters.isDryRun }}:
-          value: Dev
-        ${{ else }}:
-          value: release
+    - template: ../variables/msrc-storage-variables.yml
+      parameters:
+        isDryRun: ${{ parameters.isDryRun }}
+    - name: vmrUpstreamUrl
+      value: https://dnceng@dev.azure.com/dnceng/internal/_git/security-partners-dotnet
 
     steps:
     - template: ../steps/initialize-release-info.yml
