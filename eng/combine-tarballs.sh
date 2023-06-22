@@ -48,6 +48,6 @@ do
 done
 
 echo "Generating tarball '${outputPath}' from '${tmpDir}'"
-tar -cf "${outputPath}" -C $tmpDir .
+tar --numeric-owner -cf "${outputPath}" -C $tmpDir .
 
 rm -rf $tmpDir
