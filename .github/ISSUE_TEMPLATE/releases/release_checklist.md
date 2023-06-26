@@ -31,26 +31,14 @@
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
            - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the suggested title to your gist's title.
       1. - [ ] `Approval - PR merged & ready for dotnet-security-partners mirroring` stage
-           - [ ] Gather smoke-test prereqs
-                - [ ] Retrieve smoke-test prereqs artifact for each architecture
-                    - [ ] ⚠️ 6.0 / 7.0: [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
-                        - [ ] x64 - `Build_Tarball_x64 CentOS7-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-                        - [ ] arm64 - `Build_Tarball_arm64 Debian9-Offline_Artifacts/dotnet-smoke-test-prereqs.6.0.xxx.tar.gz`
-                    - [ ] ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
-                        - [ ] x64 - `CentOSStream8_Offline_x64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.centos.8-x64.tar.gz`
-                        - [ ] arm64 - `Debian11_Offline_arm64_Artifacts/dotnet-smoke-test-prereqs.8.0.xxx.debian.11-arm64.tar.gz`
-                - [ ] Retrieve additional packages from internal MSFT feed using [this project](https://github.com/dotnet/source-build/blob/main/test/GatherPackages.csproj).
-                - [ ] Create a new tarball of unique packages using [this script](https://github.com/dotnet/source-build/blob/main/eng/gather-prereqs.sh).
-                - [ ] Upload `smoke-test-prereqs` tarball to `dotnetclimsrc` storage account, following the pattern of previous releases for directory and filename.
-                    - Never overwrite a tarball. At least change the blob storage virtual dir to represent a new build. This can help avoid timing issues and make it more obvious if stale links were accidentally re-sent rather than new ones.
            - [ ] ⚠️ 6.0 / 7.0: Update `dotnet-security-partners`
                 - [ ] A PR will be created for the appropriate `release/*` branch on [dnceng/security-partners-dotnet](https://dev.azure.com/dnceng/internal/_git/security-partners-dotnet). A branch was automatically created during the `Pre-Release` stage.
                      - [ ] Review and squash-merge the PR once CI finishes successfully.
-           - [ ] Approve the `Approval - Test prereqs` approval stage.
+           - [ ] Approve the `Approval - PR merged & ready for dotnet-security-partners mirroring` approval stage.
       1. - [ ] `Mirror sources & packages` stage
            - This stage mirrors and tags branches associated with the current release.
            - This stage should be ran only once per hand-off. If a new run is needed, removal of the previously created tags/branches might be needed.
-      1. - [ ] `Approval - Partner notification` approval stage
+      1. - [ ] `Approval - Partner notification` approval stage (Servicing releases only)
            - [ ] Create a wiki page for the release in [dotnet-security-partners](https://dev.azure.com/dotnet-security-partners/dotnet/_wiki/wikis/dotnet.wiki). Include the following information:
                 - links to [MSRC work items in the dotnet-security-partners org](https://dev.azure.com/dotnet-security-partners/dotnet/_workitems/recentlycreated/).
                 - links to each release's source tarball and smoke test prereqs tarball in the `dotnetclimsrc` storage account. [Generate a URL with a SAS token](https://learn.microsoft.com/azure/vs-azure-tools-storage-explorer-blobs?toc=%2Fazure%2Fstorage%2Fblobs%2Ftoc.json&bc=%2Fazure%2Fstorage%2Fblobs%2Fbreadcrumb%2Ftoc.json#get-the-sas-for-a-blob-container) that expires in 1 month.
@@ -58,7 +46,7 @@
                 - links to each release's dotnet-security-partners tag that was created with the source-build-release-mirror pipeline.
                 - the expected release date.
                 - information about how confident we are that this is the final release.
-           - [ ] Notify partners of release. Send one email for all releases ([🔁 automation tracking issue for this step](https://github.com/dotnet/source-build/issues/3196)). Include the following in your email:
+           - [ ] Notify partners of release. Send one email for all releases. Include the following in your email:
                 - Link to the wiki page created in the previous step.
                 - TO line should be dnsbReleaseAnnounce alias.
                 - BCC line should be the list found [here](https://microsoft.sharepoint.com/teams/dotNETDeployment/_layouts/OneNote.aspx?id=%2Fteams%2FdotNETDeployment%2FShared%20Documents%2FGeneral%2FNET%20Core%20Acquisition%20and%20Deployment&wd=target%28source-build%2FServicing.one%7CB33C6848-FC82-4585-B69F-204C8449E219%2FPartner%20notification%20emails%7C359F2672-DA5F-4631-9526-423F2BF408AC%2F%29).
@@ -72,7 +60,6 @@
       1. - [ ] `Release` stage
            - [ ] Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
                 - If special edits to the announcement are needed, or the content of the announcement discussion is incorrect, source-build repo maintainers can edit the discussion directly once it is posted.
-                - [ ] ⚠️ 7.0 / 8.0: Fix the release notes link ([known issue](https://github.com/dotnet/source-build/issues/3178))
            - [ ] ⚠️ 8.0: In case a release has been published into `dotnet/dotnet` as draft, check its contents and publish it. The URL to the draft can be find in the `Create GitHub release` step.
            - [ ] Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.
                 - If there is an error in the PR, commit directly to the PR branch directly to fix the problem by hand, then submit an issue to [dotnet/source-build](https://github.com/dotnet/source-build).
