@@ -50,36 +50,13 @@ stages:
 A repo is managed-only if `eng/SourceBuild.props` contains
 `<SourceBuildManagedOnly>true</SourceBuildManagedOnly>`. If this is true, this
 step is not necessary. Otherwise, specify `sourceBuildParameters` in the
-`jobs.yml` template's parameters like this:
+parameter list of your job that uses `eng/common/templates/jobs/jobs.yml` template:
 
 ```yaml
 sourceBuildParameters:
   platforms:
-  - name: 'Centos71_Portable'
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
-  - name: 'MacOS_Portable'
-    pool: { vmImage: 'macOS-10.14' }
-  - name: 'Centos71'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
-  - name: 'Centos8'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212'
-  - name: 'Debian9'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20200918130533-047508b'
-  - name: 'Fedora30'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223'
-  - name: 'Fedora32'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-32-20200512010618-163ed2a'
-  - name: 'MacOS'
-    nonPortable: true
-    pool: { vmImage: 'macOS-10.14' }
-  - name: 'Ubuntu1804'
-    nonPortable: true
-    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20200918145614-047508b'
+  - name: 'AlmaLinux_8_Portable'
+    container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:almalinux-8-source-build'
 ```
 
 ### End result
