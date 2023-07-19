@@ -75,7 +75,7 @@ stages:
       - name: smokeTestPreReqsArtifactNameX64
         value: CentOSStream9_Offline_MsftSdk_x64_Artifacts
       - name: smokeTestPreReqsArtifactNameArm64
-        value: Debian11_Offline_MsftSdk_arm64_Artifacts
+        value: Ubuntu2204Arm64_Offline_MsftSdk_arm64_Artifacts
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - name: sourceUrl
