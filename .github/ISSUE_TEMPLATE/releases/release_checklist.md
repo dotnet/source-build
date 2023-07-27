@@ -65,4 +65,5 @@
            - [ ] Verify that the release-day PR was submitted to [dotnet/installer](https://github.com/dotnet/installer/pulls) and the content is correct.
                 - If there is an error in the PR, commit directly to the PR branch directly to fix the problem by hand, then submit an issue to [dotnet/source-build](https://github.com/dotnet/source-build).
 1. - [ ] Once the internal changes have been merged to the public GitHub repos, update the `PoisonTests` and `SdkContentTests` with any diffs from the official associated build.
+1. - [ ] Update the [version of OmniSharp in the smoke tests](https://github.com/dotnet/installer/blob/04244dd8d4ba4409d1fd71a7fabd27d8d7338950/src/SourceBuild/content/test/Microsoft.DotNet.SourceBuild.SmokeTests/OmniSharpTests.cs#L21-L22) to the latest release.
 1. - [ ] Clean up retrospective notes if necessary.
