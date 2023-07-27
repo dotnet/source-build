@@ -27,8 +27,9 @@
            - The `Get Associated Pipeline Run IDs` build step will contain links to pipelines associated with this release:
                 - ⚠️ 6.0 / 7.0: [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) and [dotnet-installer-source-build-tarball-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1011)
                 - ⚠️ 8.0: [dotnet-dotnet](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) and the `dotnet/dotnet` commit that represents the release
-           - [ ] Navigate to the build link and ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
+           - [ ] ⚠️ 6.0 / 7.0: Navigate to the build link and ensure the `PoisonTests` and `SdkContentTests` are passing. Warnings indicate a baseline diff and should be inspected carefully.
                 - Please note that failures of these tests manifest as warnings in the `Run Tests` build step and not as failed tests in the test result viewer. This means you need to verify the `dotnet-dotnet` build doesn't have any warnings regarding these tests.
+           - [ ] ⚠️ 8.0: Verify the run of [source-build-sdk-diff-tests](https://dev.azure.com/dnceng/internal/_build?definitionId=1231) for the related release branch has run cleanly.
            - [ ] The `Create announcement draft` step should produce a valid announcement text. When using the announcement gist, copy the text to your gist file, copy the suggested title to your gist's title.
       1. - [ ] `Approval - PR merged & ready for dotnet-security-partners mirroring` stage
            - [ ] ⚠️ 6.0 / 7.0: Update `dotnet-security-partners`
