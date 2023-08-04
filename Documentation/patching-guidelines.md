@@ -41,10 +41,6 @@ git am "$PATCH_DIR/sdk/*"
 This creates a Git commit with the patch contents, so you can easily amend a
 patch or create a new commit on top that you can be sure will apply cleanly.
 
-There is a method to create a series of patches based on a range of Git commits,
-but this is not usually useful for 6.0 main development. It is used in servicing
-to "freshen up" the sequence of patches (resolve conflicts) all at once.
-
 > Note: The VMR has all of the `src/SourceBuild/patches` applied. This is done as
 part of the [synchronization process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#source-build-patches).
 
