@@ -13,7 +13,7 @@ This document provides guidance for creating and managing source build patches.
 
 ## Creating Patches
 
-To create a repo patch file, first commit your changes to the repo as normal,
+To create a repo patch file, first commit your changes to the source repo (e.g. runtime, aspnetcore) as normal,
 then run this command inside the repo to generate a patch file inside the repo:
 
 ```sh
@@ -21,7 +21,7 @@ git format-patch --zero-commit --no-signature -1
 ```
 
 Then, move the patch file into the [installer repo](https://github.com/dotnet/installer/tree/main/src/SourceBuild/patches)
-, at `src/SourceBuild/patches/<repo>`.
+, at `src/SourceBuild/patches/<repo>`. If an existing directory for the repo does not already exist, you will need to create one.
 
 > If you define `PATCH_DIR` to point at the `patches` directory, you can use
 > `-o` to place the patch file directly in the right directory:
