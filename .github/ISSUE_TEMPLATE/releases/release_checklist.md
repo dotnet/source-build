@@ -59,7 +59,7 @@
            - [ ] ⚠️ 8.0: Verify the release tag in [dotnet-security-partners](https://dev.azure.com/dotnet-security-partners/_git/dotnet) repository matches the VMR commit to which is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
            - [ ] ⚠️ If a custom tag was needed for this servicing release, mirror it to public repo.
                 - Verify that Microsoft release tag is publicly available
-                - Obtain the SHA, for which we need to create the custom tag, from `Pre-Release` stage `Get associated pipeline runs` step - follow the link to `dotnet-installer-official-ci run` to find the correct SHA.
+                - Obtain the SHA, for which we need to create the custom tag, from `Pre-Release` stage `Get associated pipeline runs` step - follow the link to `dotnet-installer-official-ci` run to find the correct SHA.
                 - Fetch changes in internal and public `installer` repos
                 - Checkout the SHA obtained above, and create a tag with the same name as the one specified in release pipeline - double-check in `Pre-Release` stage, `Read Release info` step.
                 - Push this new tag to the public repo - this will also push all missing commit SHAs
