@@ -61,8 +61,9 @@
                 - Verify that Microsoft release tag is publicly available
                 - Obtain the SHA, for which we need to create the custom tag, from `Pre-Release` stage `Get associated pipeline runs` step - follow the link to `dotnet-installer-official-ci` run to find the correct SHA.
                 - Fetch changes in internal and public `installer` repos
-                - Checkout the SHA obtained above, and create a tag with the same name as the one specified in release pipeline - double-check in `Pre-Release` stage, `Read Release info` step.
-                - Push this new tag to the public repo - this will also push all missing commit SHAs
+                - Checkout the SHA obtained above
+                - Create a tag with the same name as the one specified in release pipeline - double-check in `Pre-Release` stage, `Read Release info` step. Command: `git tag <tag-name>`
+                - Push this new tag to the public repo - this will also push all missing commit SHAs. Command: `git push -u upstream <tag-name>`. `upstream` is the name of your public repo's remote - adjust accordingly for your git clone.
            - [ ] ⚠️ 6.0 / 7.0: Verify that tarball can be created without issues.
                 - This step verifies that all dependent repo SHAs have been mirrored to public repos.
                 - Checkout `dotnet/installer` at the release SHA, or custom one if used for this release.
