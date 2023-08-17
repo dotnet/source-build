@@ -56,7 +56,18 @@
            - [ ] Approve the `Approval - Partner notification` approval stage.
       1. - [ ] `Approval - Release` stage
            - [ ] **SYNC POINT**: Wait for Microsoft build release.
-           - [ ] ⚠️ 8.0: Verify the release tag in the `dnceng/dotnet-security-partners` repository matches theVMR commit to which is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
+           - [ ] ⚠️ 8.0: Verify the release tag in [dotnet-security-partners](https://dev.azure.com/dotnet-security-partners/_git/dotnet) repository matches the VMR commit to which is shown in the `Pre-Release` stage (in the `Get Associated Pipeline Run IDs` step).
+           - [ ] ⚠️ If a custom tag was needed for this servicing release, mirror it to public repo.
+                - Verify that Microsoft release tag is publicly available
+                - Obtain the SHA, for which we need to create the custom tag, from `Pre-Release` stage `Get associated pipeline runs` step - follow the link to `dotnet-installer-official-ci` run to find the correct SHA.
+                - Fetch changes in internal and public repos - `installer` (6.0/7.0), `dotnet` (8.0)
+                - Checkout the SHA obtained above
+                - Create a tag with the same name as the one specified in release pipeline - double-check in `Pre-Release` stage, `Read Release info` step. Command: `git tag <tag-name>`
+                - Push this new tag to the public repo - this will also push all missing commit SHAs. Command: `git push -u upstream <tag-name>`. `upstream` is the name of your public repo's remote - adjust accordingly for your git clone.
+           - [ ] ⚠️ 6.0 / 7.0: Verify that tarball can be created without issues.
+                - This step verifies that all dependent repo SHAs have been mirrored to public repos.
+                - Checkout `dotnet/installer` at the release SHA, or custom one if used for this release.
+                - Tarball creation instructions: https://github.com/dotnet/installer#building-net-70-and-net-60
            - [ ] Approve the `Approval - Release` approval stage.
       1. - [ ] `Release` stage
            - [ ] Verify that the announcement was posted to [dotnet/source-build discussions](https://github.com/dotnet/source-build/discussions) and that the content is correct and all links work.
