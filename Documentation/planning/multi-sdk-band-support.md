@@ -247,7 +247,7 @@ When preparing a newer band's input artifacts, there would be up to 3 versions o
 - CSB 1xx Microsoft.NET.Compilers.Toolset @ 4.7.2
 - PSB 2xx Microsoft.NET.Compilers.Toolset @ 4.8.0
 
-In this scenario, the *newest* version of Microsoft.NET.Compilers.Toolset will get used as input to any repo taking a dependency it it, before the 2xx dotnet/roslyn is built. If this particular repo has an explicit dependency on 4.7.x, then transparently updating to 4.8.x might cause a break. In the current source build infrastructure, the only way to avoid that transparent upgrade would be to not use the PSB 2xx inputs with the 2xx SDK build. But of course, the 2xx inputs would be required to provide supporting packages that the SDK depends on.
+In this scenario, the *newest* version of Microsoft.NET.Compilers.Toolset will get used as input to any repo taking a dependency on it, before the 2xx dotnet/roslyn is built. If this particular repo has an explicit dependency on 4.7.x, then transparently updating to 4.8.x might cause a break. In the current source build infrastructure, the only way to avoid that transparent upgrade would be to not use the PSB 2xx inputs with the 2xx SDK build. But of course, the 2xx inputs would be required to provide supporting packages that the SDK depends on.
 
 If this scenario ends up becoming a common problem, I think we could alter the source build PVP infrastructure to be smarter about version selection, attempting to match on best "MAJOR.MINOR" when multiple input versions are available.
 
