@@ -117,7 +117,7 @@ Builds of subsetted VMRs need a way to locate artifacts not produced in the same
 
 For example, `installer.proj` might add the following logic. dotnet/installer then uses `AdditionalBaseUrl` when available, adding it as a location for downloading assets:
 
-```
+```xml
 <BuildCommandArgs Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(CustomPrebuiltSourceBuiltPackagesPath)</BuildCommandArgs>
 ```
 
