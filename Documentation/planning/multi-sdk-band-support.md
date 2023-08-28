@@ -121,7 +121,7 @@ For example, `installer.proj` might add the following logic. dotnet/installer th
 <BuildCommandArgs Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(CustomPrebuiltSourceBuiltPackagesPath)</BuildCommandArgs>
 ```
 
-In the above example, the path where the archives are located is the custom previously source built packages path (provided by --with-packages). A user would copy the archives of the input 1xx build into the --with-packages path.
+In the above example, the path where the archives are located is the custom previously source built packages path (provided by `--with-packages`). A user would copy the archives of the input 1xx build into the `--with-packages` path.
 
 ### Scripting changes
 
