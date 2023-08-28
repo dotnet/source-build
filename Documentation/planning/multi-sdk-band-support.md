@@ -115,7 +115,7 @@ Source build handles NuGet assets using a set of local nuget feeds (which are ju
 
 Builds of subsetted VMRs need a way to locate artifacts not produced in the same build. Potentially, one could simply pre-populate the shared `blob-feed` directory with the archives of the previous build. This is not desirable, however. It mixes the outputs of the current build with the inputs. Furthermore, the outputs of the blob-feed dir are used as the output artifacts. Instead, repositories should be altered to accept an additional location where they may find input artifacts. This has precedent, as it is the same logic used in installer, aspnetcore, windowsdesktop, and others. These repos will check a public official source for binaries first, then a public build artifacts location, and finally an internal build artifacts location, if the appropriate credentials are available.
 
-For example, installer.proj might add the following logic. dotnet/installer then uses AdditionalBaseUrl when available, adding it as a location for downloading assets:
+For example, `installer.proj` might add the following logic. dotnet/installer then uses `AdditionalBaseUrl` when available, adding it as a location for downloading assets:
 
 ```
 <BuildCommandArgs Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(CustomPrebuiltSourceBuiltPackagesPath)</BuildCommandArgs>
