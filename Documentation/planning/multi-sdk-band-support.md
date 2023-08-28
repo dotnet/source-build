@@ -125,7 +125,7 @@ In the above example, the path where the archives are located is the custom prev
 
 ### Scripting changes
 
-Input source-built packages and archives from a 1xx build should be not be viewed as significantly different from each other. Today, a distro maintainer would pass --with-packages to provide a set of previously source-built NuGet packages. This switch should be changed as to generally refer to input artifacts, in a flat folder. These artifacts may be nuget packages or archives. To this end, the --with-packages switch should be deprecated and changed to `--with-artifacts`.` When present, the additional base url used for finding archives will point to this directory.
+Input source-built packages and archives from a 1xx build should be not be viewed as significantly different from each other. Today, a distro maintainer would pass `--with-packages` to provide a set of previously source-built NuGet packages. This switch should be changed as to generally refer to input artifacts, in a flat folder. These artifacts may be nuget packages or archives. To this end, the `--with-packages` switch should be deprecated and changed to `--with-artifacts`. When present, the additional base url used for finding archives will point to this directory.
 
 In addition, we should add a script that prepares the input artifacts for the build of a particular VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-artifacts--with-packages) for an explanation of the input artifacts.
 
