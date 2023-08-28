@@ -11,11 +11,28 @@ The primary restriction on building multiple SDK bands is that they must not dif
 - Building N SDK bands **using**
 - The *outputs* of the runtime build combined with additional previously source-built artifacts (e.g. a matching band SDK, required tools and libraries) and source, to produce N SDK bands that meet source-build requirements.
 
-The runtime build requires a 1xx band SDK to build **and** redistributes functionality from tooling that ships in the 1xx band (e.g. it has dependencies on roslyn and roslyn-analyzers). Furthermore, most changes to a .NET major version occur when only one SDK band exists. Therefore it makes practical sense at this point to include the source of the 1xx SDK and the shared runtime in the same VMR branch, and to produce all artifacts related to 1xx, including the runtime, in its build. Newer bands will be VMRs that contain **only** the components required to build that newer band. Only those components that differ. When building the newer band, the outputs of the 1xx build would be fed into the newer band build, in exactly the same manner as previously source built artifacts are today. If the source for a component does not exist in a given VMR, it is simply not built, and obviously no outputs would be produced for that component. Thus any downstream dependencies would be forced to use the versions provided by previously source built artifacts, typically from the 1xx source build. If no such version exists, then the input would fail to be found or restored from online sources and be reported as a prebuilt.
+The runtime build requires a 1xx band SDK to build **and** redistributes functionality from tooling that ships in the 1xx band (e.g. it has dependencies on roslyn and roslyn-analyzers). Furthermore, most changes to a .NET major version occur when only one SDK band exists. Therefore it makes practical sense at this point to include the source of the 1xx SDK and the shared runtime in the same VMR branch, and to produce all artifacts related to 1xx, including the runtime, in its build. Newer bands will be VMRs that contain **only** the components that **differ** from the 1xx band. Only those components that differ. When building the newer band, the outputs of the 1xx build would be fed into the newer band build, in a similar manner as previously source built artifacts are today. If the source for a component does not exist in a given VMR, it is simply not built, and obviously no outputs would be produced for that component. Thus any downstream dependencies would be forced to use the versions provided by input source built artifacts, typically from the 1xx source build. If no such version exists, then the input would fail to be found or restored from online sources and be reported as a prebuilt.
 
 This approach fits naturally into the source-build methodology. Generally, additional SDK bands may be referred to as "subsetted VMRs", since use of a subsetted VMR is not restricted to SDKs only.
 
+### Conceptual splitting of 'previously source-built' artifact types
+
+Today, the term "previously source-built artifacts' refers to those artifacts that were built in a previous product build iteration. Typically N-1. For example, they would refer to the outputs of 8.0.1's build, when building 8.0.2. When building a subsetted VMR, two sets of input sets of source-built artifacts are required. While similar in some ways, they should be kept distinct for clarity. They are referred to as:
+
+- **Previously source-built (PSB)** - Artifacts from a previous servicing/preview iteration, or from a bootstrap build. These may be used when building the current VMR, but may not be bundled into any output.
+- **Current source-built (CSB)** - Artifacts just built, e.g. from a 1xx VMR build. These may be used **and** bundled into the build outputs, since logically they are from the same source-build iteration.
+
 ## Changes required for the source-build infrastructure
+
+### Scripting changes
+
+Since conceptually CSB and PSB inputs are different, the scripting should reflect this. Furthermore, the since NuGet and non-NuGet archives are treated similarly within the source-build infrastructure, we should take this opportunity to make changes to the names of switches:
+
+- `--with-artifacts``
+
+Input source-built packages and archives from a 1xx build should be not be viewed as significantly different from each other. Today, a distro maintainer would pass --with-packages to provide a set of previously source-built NuGet packages. This switch should be changed as to generally refer to input artifacts, in a flat folder. These artifacts may be nuget packages or archives. To this end, the --with-packages switch should be deprecated and changed to `--with-artifacts`.
+
+In addition, we should add a script that prepares the input artifacts for the build of a particular VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-artifacts--with-packages) for an explanation of the input artifacts.
 
 This section details changes to the source build infrastructure to support building of subsetted VMRs.
 
@@ -118,16 +135,10 @@ Builds of subsetted VMRs need a way to locate artifacts not produced in the same
 For example, installer.proj might add the following logic. dotnet/installer then uses AdditionalBaseUrl when available, adding it as a location for downloading assets:
 
 ```
-<BuildCommandArgs Condition="'$(CustomPrebuiltSourceBuiltPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(CustomPrebuiltSourceBuiltPackagesPath)</BuildCommandArgs>
+<BuildCommandArgs Condition="'$(AdditionalInputPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(AdditionalInputPackagesPath)</BuildCommandArgs>
 ```
 
 In the above example, the path where the archives are located is the custom previously source built packages path (provided by --with-packages). A user would copy the archives of the input 1xx build into the --with-packages path.
-
-### Scripting changes
-
-Input source-built packages and archives from a 1xx build should be not be viewed as significantly different from each other. Today, a distro maintainer would pass --with-packages to provide a set of previously source-built NuGet packages. This switch should be changed as to generally refer to input artifacts, in a flat folder. These artifacts may be nuget packages or archives. To this end, the --with-packages switch should be deprecated and changed to `--with-artifacts`.` When present, the additional base url used for finding archives will point to this directory.
-
-In addition, we should add a script that prepares the input artifacts for the build of a particular VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-artifacts--with-packages) for an explanation of the input artifacts.
 
 ### Gathering assets for delivery to customers
 
@@ -156,8 +167,7 @@ When performing a source-build of a product, there are 4 required input set of i
 
 When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with --with-artifacts. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
 
-- PSB - Previously source-built (from a previous servicing/preview iteration, or from a bootstrap build)
-- CSB - Current source-built (just built, e.g. from a 1xx VMR build).
+
 
 ### Previews and major release GA builds
 
@@ -229,6 +239,10 @@ Prebuilt detection should not change. Poisoning workflows may need to change. We
 6. **Augment (post-poison)** 2xx inputs - `<2xx inputs> <CSB 1xx artifacts>`
 7. **Checkout** 2xx branch
 8. **Build** using `./build.sh --with-sdk <PSB 2xx SDK> --with-artifacts <2xx inputs>`
+
+## Validation
+
+
 
 ## Potential issues and mitigations
 
