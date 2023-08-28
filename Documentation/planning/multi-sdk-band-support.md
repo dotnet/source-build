@@ -154,7 +154,7 @@ When performing a source-build of a product, there are 4 required input set of i
 
 ***Note: When dealing with just a 1xx SDK, full build, with no prebuilts, #4 is an empty set, and #2 and #3 are the previously-source-built artifacts passed with --with-packages.***
 
-When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with --with-artifacts. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
+When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with `--with-artifacts`. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
 
 - PSB - Previously source-built (from a previous servicing/preview iteration, or from a bootstrap build)
 - CSB - Current source-built (just built, e.g. from a 1xx VMR build).
