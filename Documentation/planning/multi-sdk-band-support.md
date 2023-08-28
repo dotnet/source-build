@@ -40,7 +40,7 @@ When filtering out components, we do not want to build a filtered subproject at 
 
 Given this set of properties, a new target can be added that will determine the active dependency projects (those `RepositoryReference` items that should be built) given the original set of a particular project's dependencies. Then, only active dependency projects would be built. Example code from the Proof-of-Concept is shown below.
 
-```
+```xml
 <Target Name="GetActiveDependencyProjects" Outputs="@(ActiveDependencyProjects)">
     <ItemGroup>
         <_AllDependencyProjects Include="@(RepositoryReference -> '%(Identity).proj')">
