@@ -22,19 +22,48 @@ Today, the term "previously source-built artifacts' refers to those artifacts th
 - **Previously source-built (PSB)** - Artifacts from a previous servicing/preview iteration, or from a bootstrap build. These may be used when building the current VMR, but may not be bundled into any output.
 - **Current source-built (CSB)** - Artifacts just built, e.g. from a 1xx VMR build. These may be used **and** bundled into the build outputs, since logically they are from the same source-build iteration.
 
+### Supported input artifact combinations and validation thereof
+
+Not all toolsets can be used to build all VMRs. For instance, it is unlikely to be the case that the 1xx SDK will successfully build all 2xx+ bands. Components of newer SDKs frequently take dependencies on newer SDK features. However, the following statements can be made:
+
+- A newer SDK band (e.g. 2xx) may be buildable with an older band.
+- A newer SDK band (e.g. 2xx) must always be able to build itself.
+
+From these statements. we can deduce that the initial release of a newer band (n00) may require a bootstrap, or may be buildable using an older band.
+
+To avoid confusion, Microsoft will:
+
+- Document the set of supported build combinations, including required inputs for all active SDK bands. This provides a guide for distro maintainers.
+- Validate those supported build combinations.
+- Validate 'stage2' builds (that a new SDK can build itself).
+
 ## Changes required for the source-build infrastructure
+
+This section details changes to the source build infrastructure to support building of subsetted VMRs.
 
 ### Scripting changes
 
-Since conceptually CSB and PSB inputs are different, the scripting should reflect this. Furthermore, the since NuGet and non-NuGet archives are treated similarly within the source-build infrastructure, we should take this opportunity to make changes to the names of switches:
+Since conceptually CSB and PSB inputs are different, the scripting should reflect this. Furthermore, the since NuGet and non-NuGet archives are treated similarly within the source-build infrastructure, we should take this opportunity to make changes to the names of existing switches:
 
-- `--with-artifacts``
-
-Input source-built packages and archives from a 1xx build should be not be viewed as significantly different from each other. Today, a distro maintainer would pass --with-packages to provide a set of previously source-built NuGet packages. This switch should be changed as to generally refer to input artifacts, in a flat folder. These artifacts may be nuget packages or archives. To this end, the --with-packages switch should be deprecated and changed to `--with-artifacts`.
+- `--with-packages` becomes `--with-previous-artifacts`, reflecting that it represents only previously source built artifacts that may be used in the build, but not redistributed with outputs. When poisoning, this set is poisoned.
+- `--with-current-artifacts` - This switch is added. It points to a directory that contains input NuGet and non-NuGet assets that may be redistributed in the current build. Typically this set would come from the 1xx build.
 
 In addition, we should add a script that prepares the input artifacts for the build of a particular VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-artifacts--with-packages) for an explanation of the input artifacts.
 
-This section details changes to the source build infrastructure to support building of subsetted VMRs.
+### Changes to PackageVersion.props flow
+
+When determining what version of a package or asset that a component should build against, there are 3 distinct sets in source-buidl today, listed in order of precedence from highest to lowest:
+
+- 1. A version just produced by a component built earlier in the build (if available).
+- 2. A version in the previously source-built packages (if available).
+- 3. The version in the checked in `Versions.props` for a repo.
+
+With the addition of a new input set (CSB), we now have an additional set. Changes should be made such that a PackageVersions.props file is generated for this new set, and is imported in the correct place based on its precedence.
+
+- 1. A version just produced by a component built earlier in the build (if available).
+- 2. A version in the current source-built packages (if available).
+- 3. A version in the previously source-built packages (if available).
+- 3. The version in the checked in `Versions.props` for a repo.
 
 ### Filtering builds of components
 
@@ -95,11 +124,12 @@ Given this set of properties, a new target can be added that will determine the 
 
 ### Choosing the correct source-built MSBuild SDKs
 
-There is one wrinkle to the simple graph filtering approach. Most .NET projects have dependencies on the arcade toolset and associated MSBuild SDK. This dependency is handled specially by source-build as it helps bootstrap a repo's build process. There are two potential arcade versions available:
-- The bootstrap arcade version coming in via the previously source-built packages
+There is one wrinkle to the simple graph filtering approach. Most .NET projects have dependencies on the arcade toolset and associated MSBuild SDK. This dependency is handled specially by source-build as it helps bootstrap a repo's build process. There are three potential arcade versions available:
+- The bootstrap arcade version coming in via the previously source-built packages (PSB).
+- The bootstrap arcade version coming in via the current source-built packages (CSB).
 - The arcade built during the current source build invocation.
 
-Repositories built **before** arcade (and arcade itself) is built must choose the bootstrap arcade and know its location and version. Today, repos explicitly choose this via the `UseBootstrapArcade` property, which causes a series of environment variables to be set up for the Arcade SDK. If arcade is filtered from the graph, however, then a repo must **always** use the bootstrap arcade version. *In this case, the arcade should have been produced by the 1xx band build.* To achieve this, the UseBootstrapArcade property must be dynamically set, since the graph is dynamically filtered, based on whether arcade appears in the filtered input dependency projects. Then, the appropriate environment variables like `_InitializeToolset` would be set in a target based on its value.
+The 'bootstrap' version of arcade is the version of arcade present in CSB, or if not present, in PSB. Repositories built **before** arcade (and arcade itself) is built must choose the bootstrap arcade and know its location and version. Today, repos explicitly choose this via the `UseBootstrapArcade` property, which causes a series of environment variables to be set up for the Arcade SDK. If arcade is filtered from the graph, however, then a repo must **always** use the bootstrap arcade version. *In this case, the arcade should have been produced by the 1xx band build.* To achieve this, the UseBootstrapArcade property must be dynamically set, since the graph is dynamically filtered, based on whether arcade appears in the filtered input dependency projects. Then, the appropriate environment variables like `_InitializeToolset` would be set in a target based on its value.
 
 Example code from the PoC:
 
@@ -122,15 +152,15 @@ Example code from the PoC:
 
 ***Note: Today it is necessary to explicitly set UseBootstrapArcade for those projects where arcade is not available (arcade, source-build-reference-packages). It may be possible to remove this requirement, simply relying on the repo dependency graph to give the correct answer.***
 
-### Non-NuGet input assets
+### Input asset locations
 
 The input assets required for the .NET build come in two primary forms:
 - NuGet assets
 - Non-NuGet assets (typically `.zip` or `.tar.gz` archives)
 
-Source build handles NuGet assets using a set of local nuget feeds (which are just directories of nuget packages). It handles non-Nuget assets by using one of these local nuget feeds as a shared storage location where repos producing archives (e.g. runtime, sdk, aspnetcore) place their outputs (`blob-feed` dir). Downstream repos that need these archives copy the files from that location. They locate specific file names based on set naming patterns combined with package input versions. For instance, the installer repo might find the runtime archive for linux-x64 by looking for `dotnet-runtime-<version of runtime package>-linux-x64.tar.gz`. When building a subsetted VMR, just as the shared location may not contain all the input packages, it may not contain all of the input archives. For NuGet packages, this is handled reasonably transparently. Given a set of potential input feeds, NuGet simply checks each one. So if arcade wasn't built and version 1.2.3 isn't available in the shared `blob-feed` dir, NuGet will look in the previously source-built artifacts feed.
+Source build handles NuGet assets using a set of local NuGet feeds (which are just directories of NuGet packages). It handles non-Nuget assets by using one of these local NuGet feeds as a shared storage location where repos producing archives (e.g. runtime, sdk, aspnetcore) place their outputs (`blob-feed` dir). Downstream repos that need these archives copy the files from that location. They locate specific file names based on set naming patterns combined with package input versions. For instance, the installer repo might find the runtime archive for linux-x64 by looking for `dotnet-runtime-<version of runtime package>-linux-x64.tar.gz`. When building a subsetted VMR, just as the shared location may not contain all the input packages, it may not contain all of the input archives. For NuGet packages, this is handled reasonably transparently. Given a set of potential input feeds, NuGet simply checks each one. So if arcade wasn't built and version 1.2.3 isn't available in the shared `blob-feed` dir, NuGet will look in the previously source-built artifacts feed.
 
-Builds of subsetted VMRs need a way to locate artifacts not produced in the same build. Potentially, one could simply pre-populate the shared `blob-feed` directory with the archives of the previous build. This is not desirable, however. It mixes the outputs of the current build with the inputs. Furthermore, the outputs of the blob-feed dir are used as the output artifacts. Instead, repositories should be altered to accept an additional location where they may find input artifacts. This has precedent, as it is the same logic used in installer, aspnetcore, windowsdesktop, and others. These repos will check a public official source for binaries first, then a public build artifacts location, and finally an internal build artifacts location, if the appropriate credentials are available.
+Because CSBs are separated from PSBs when building a subsetted VMR, source-build needs to be altered to add new CSB location as a NuGet input to each component build. In addition, builds of subsetted VMRs need a way to locate non-NuGet artifacts from the CSBs, without mixing them into the shared `blob-feed` where component builds currently look. Repositories should be altered to accept an additional location where they may find input artifacts. This has precedent, as it is the same logic used in installer, aspnetcore, windowsdesktop, and others in Microsoft's non-source-build scenarios. These repos will check a public official source for binaries first, then a public build artifacts location, and finally an internal build artifacts location, if the appropriate credentials are available.
 
 For example, `installer.proj` might add the following logic. dotnet/installer then uses `AdditionalBaseUrl` when available, adding it as a location for downloading assets:
 
@@ -138,7 +168,7 @@ For example, `installer.proj` might add the following logic. dotnet/installer th
 <BuildCommandArgs Condition="'$(AdditionalInputPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(AdditionalInputPackagesPath)</BuildCommandArgs>
 ```
 
-In the above example, the path where the archives are located is the custom previously source built packages path (provided by `--with-packages`). A user would copy the archives of the input 1xx build into the `--with-packages` path.
+In the above example, `AdditionalInputPackagesPath` is the current source-built packages (CSB) path (provided by `--with-current-assets`). This path is also added as a NuGet feed for each component.
 
 ### Gathering assets for delivery to customers
 
@@ -150,24 +180,12 @@ A distro maintainer wishing to support a newer band, either in addition to or in
 - The 1xx SDK is the only SDK that is supported for building the runtime components. Because tooling differs between the bands, using a newer band to build the runtime is likely to expose new warnings or issues.
 - There are components of the 1xx band that are used in the runtime. There are "sdk-like" components present in the runtime (analyzers, generators, etc.) that are dependent upon "sdk" functionality. Substituting in a 2xx aligned roslyn, for instance, would result in a product that differs from Microsoft's build.
 
-### What artifacts should be passed with --with-artifacts/--with-packages?
+### What artifacts should be passed with --with-current-artifacts/--with-previous-artifacts?
 
-Today, `--with-packages` is used to pass the previously source-built packages. This serves as a feed containing packages that the .NET SDK internally depends on, as well as bootstrap input packages for the current build iteration (e.g. arcade). The source-build infrastructure will read this set of packages and produce a package version props file for each repo, depending on the dependencies listed in the `Version.Details.xml` file. If multiple packages exist with the same ID in this package source, the *latest* is chosen. 
+When building a full VMR (no skipped components), only --with-previous-artifacts should be passed. When building a subsetted VMR (e.g. 2xx, 3xx, etc.), both `--with-current-artifacts` and `--with-previous-artifacts` should be passed.
 
-When performing a source-build of a product, there are 4 required input set of input artifacts:
-
-1. The .NET SDK to use
-2. The NuGet artifacts supporting that SDK
-3. The non-SDK NuGet artifacts required to bootstrap any component that depends on assets built *later* in the build. (e.g. arcade depends on itself to build, but is not provided by the .NET SDK).
-4. The input artifacts for components **not** built in the the product source build. Examples include:
-   - Prebuilts
-   - In a subsetted VMR case, components built in *another* VMR build.
-
-***Note: When dealing with just a 1xx SDK, full build, with no prebuilts, #4 is an empty set, and #2 and #3 are the previously-source-built artifacts passed with --with-packages.***
-
-When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with `--with-artifacts`. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
-
-
+`--with-current-artifacts` - The NuGet and non-NuGet archive outputs of the 1xx VMR build that is logically part of the same product iteration.
+`--with-previous-artifacts` - The NuGet outputs of the previous VMR build(s) that are logically part of the previous product iteration. This set may encompass more than one set of build outputs.
 
 ### Previews and major release GA builds
 
@@ -179,80 +197,49 @@ A distro maintainer sees no change here. Until a few months **after** GA, only t
 
 **No change**
 
-### A distro maintainer wishing to build the initial release (n00) of a 2xx+ band SDK
+### A distro maintainer wishing to build the initial release (n00) of a Nxx+ band SDK
 
-The initial release of a 2xx+ band SDK should be straightforward. It is unlikely (though possible) that the initial 2xx band would depend on a 2xx SDK to build. If this is not the case, then a distro maintainer performs the following actions, and no bootstrap will be required:
+The initial release of a Nxx+ band SDK should be straightforward. It is unlikely (though possible) that the initial Nxx band would depend on a Nxx SDK to build. If this is not the case, then a distro maintainer performs the following actions, and no bootstrap will be required:
 1. **Checkout** 1xx branch:
-2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <PSB 1xx artifacts>`.
+2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-previous-artifacts <PSB 1xx artifacts>`.
 3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
-4. **Prepare** 2xx inputs - `<PSB 1xx artifacts> + <CSB 1xx artifacts>`
-5. **Checkout** 2xx branch
-6. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <2xx inputs>`
+4. **Checkout** Nxx branch
+5. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-previous-artifacts <PSB 1xx artifacts> --with-current-artifacts <CSB 1xx artifacts>`
 
-If a 2xx SDK is required to build the initial 2xx SDK, then the following workflow is used:
-
-1. **Checkout** 1xx branch:
-2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <PSB 1xx artifacts>`.
-3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
-4. **Prepare** 2xx bootstrap inputs - `<PSB 1xx artifacts> + <CSB 1xx artifacts>`
-5. **Checkout** 2xx branch
-6. **Build** using `./build.sh --with-artifacts <2xx bootstrap inputs>`
-7. **Prepare** 2xx inputs - `<PSB 1xx artifacts> + <CSB 1xx artifacts> + <CSB 2xx artifacts>`
-8. **Build** using `./build.sh --with-sdk <CSB 2xx SDK> --with-artifacts <2xx inputs>`
-
-### A distro maintainer wishing to support only a 2xx SDK (monthly workflow)
-
-A distro maintainer who only wants to support the 2xx SDK still needs to build the 1xx branch to obtain the runtime and an updated 1xx SDK for use the next month. In this case, we build the 2xx inputs with the 2xx SDK.
+If a Nxx SDK is required to build the initial Nxx SDK, then the following workflow is used:
 
 1. **Checkout** 1xx branch:
-2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <PSB 1xx artifacts>`.
+2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-previous-artifacts <PSB 1xx artifacts>`.
 3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
-4. **Prepare** 2xx inputs - `<PSB 2xx artifacts> + <CSB 1xx artifacts> + <PSB 1xx artifacts>`
-5. **Checkout** 2xx branch
-6. **Build** using `./build.sh --with-sdk <PSB 2xx SDK> --with-artifacts <2xx inputs>`
+4. **Checkout** Nxx branch
+5. **Build** using `./build.sh --with-previous-artifacts <PSB 1xx artifacts> --with-current-artifacts <CSB 1xx artifacts>`
+6. **Gather** Nxx bootstrap inputs - `<PSB 1xx artifacts> + <CSB Nxx artifacts>` = `<Nxx bootstrap inputs>`
+7. **Build** using `./build.sh --with-sdk <CSB Nxx SDK> --with-current-artifacts <CSB 1xx artifacts> --with-previous-artifacts <Nxx bootstrap inputs>`
 
-### A distro maintainer wishing to support all available SDKs (monthly workflow)
+### A distro maintainer wishing to support non-1xx SDKs (monthly workflow)
 
-A distro maintainer wishing to support all SDK bands builds the 1xx band, then may build all Nxx bands in parallel.
+A distro maintainer who to support the Nxx (N>1) SDK(s) still needs to build the 1xx branch to obtain the runtime and an updated 1xx SDK for use the next month. Each non 1xx SDK is built with its corresponding SDK
 
 1. **Checkout** 1xx branch:
-2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <PSB 1xx artifacts>`.
+2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-previous-artifacts <PSB 1xx artifacts>`.
 3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
 
-The following additional steps may be done in parallel:
+The following additional steps may be done in parallel. For each SDK band Nxx:
 
-For each SDK band Nxx:
-
-   1. **Prepare** Nxx inputs - `<PSB Nxx artifacts> + <CSB 1xx artifacts> + <PSB 1xx artifacts>`
-   2. **Checkout** Nxx branch
-   3. **Build** using `./build.sh --with-sdk <PSB Nxx SDK> --with-artifacts <Nxx inputs>`
+1. **Gather** Previous Nxx inputs - `<PSB Nxx artifacts> + <PSB 1xx artifacts>` = `<PSB Nxx inputs>`
+2. **Checkout** Nxx branch
+3. **Build** using `./build.sh --with-sdk <PSB Nxx SDK> --with-previous-artifacts <PSB Nxx inputs> --with-current-artifacts <CSB 1xx artifacts>`
 
 ## Poison and Prebuilt detection
 
-Prebuilt detection should not change. Poisoning workflows may need to change. We don't want to poison inputs from the 1xx VMR, used when building the 2xx VMR. We **do** want to poison the previously source built inputs prior to adding in the 1xx inputs. So, in a poisoning check on a 2xx VMR build, the following workflow would be used:
+Poisoning and prebuilt workflows may need slight tweaks.
 
-1. **Checkout** 1xx branch:
-2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-artifacts <PSB 1xx artifacts>`.
-3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
-4. **Prepare (pre-poison)** 2xx inputs - `<PSB 2xx artifacts> + <PSB 1xx artifacts>`
-5. **Poison** 2xx inputs
-6. **Augment (post-poison)** 2xx inputs - `<2xx inputs> <CSB 1xx artifacts>`
-7. **Checkout** 2xx branch
-8. **Build** using `./build.sh --with-sdk <PSB 2xx SDK> --with-artifacts <2xx inputs>`
-
-## Validation
-
-
+- The poisoning infrastructure will not poison CSB inputs, but should continue to poison PSBs.
+- Prebuilt detection should not view CSB inputs as prebuilts.
 
 ## Potential issues and mitigations
 
-There are a few potential issues that may require tweaks to this approach, source fixes, additional guidance, etc. They are listed below:
-
-### A newer SDK band may continue to require an older (typically 1xx band) SDK to build
-
-This could happen if a newer SDK band's (e.g. 2xx) components never take a dependency on newer 2xx features, yet do not successfully build with 2xx, due to new warnings, analyzers, etc. A two pronged approach is proposed to deal with this:
-- Microsoft documents the set of supported build combinations, including required inputs for all active SDK bands. This provides a guide for distro maintainers.
-- Where a band takes a dependency on a 'mix' of SDKs (e.g. dotnet/installer @ 2xx requires a 2xx SDK, but dotnet/roslyn cannot build with 2xx), Microsoft will fix input components so that the highest supported SDK band works across all the input components. So in this case, Microsoft would change dotnet/roslyn to build successfully with the 2xx SDK.
+There are some potential issues that may require tweaks to this approach, source fixes, additional guidance, etc.
 
 ### A toolset input to a newer band does not work with the PSB from that same band
 
@@ -264,9 +251,3 @@ When preparing a newer band's input artifacts, there would be up to 3 versions o
 In this scenario, the *newest* version of Microsoft.NET.Compilers.Toolset will get used as input to any repo taking a dependency on it, before the 2xx dotnet/roslyn is built. If this particular repo has an explicit dependency on 4.7.x, then transparently updating to 4.8.x might cause a break. In the current source build infrastructure, the only way to avoid that transparent upgrade would be to not use the PSB 2xx inputs with the 2xx SDK build. But of course, the 2xx inputs would be required to provide supporting packages that the SDK depends on.
 
 If this scenario ends up becoming a common problem, I think we could alter the source build PVP infrastructure to be smarter about version selection, attempting to match on best "MAJOR.MINOR" when multiple input versions are available.
-
-### Confusion around the input artifact set
-
-The current design has all the inputs for a subsetted VMR build lumped into a single directory. This relies on the source build infrastructure to select the correct input versions, and the distro maintainer to prepare this directory. It may be that this is a confusing model that lacks the flexibility required to build the product using the correct input versions for each component. If this is the case, then it may make sense to add a new switch to the source-build process, splitting `--with-packages/--with-assets` into two input sets:
-- `--with-psb-assets` - Previously source built assets, either bootstrap or 
-- `--with-csb-assets` - Assets from a build of another VMR, provided as input to a subsetted VMR.
