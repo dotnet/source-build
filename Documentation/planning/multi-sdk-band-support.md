@@ -57,7 +57,7 @@ When filtering out components, we do not want to build a filtered subproject at 
 
 Given this set of properties, a new target can be added that will determine the active dependency projects (those `RepositoryReference` items that should be built) given the original set of a particular project's dependencies. Then, only active dependency projects would be built. Example code from the Proof-of-Concept is shown below.
 
-```
+```xml
 <Target Name="GetActiveDependencyProjects" Outputs="@(ActiveDependencyProjects)">
     <ItemGroup>
         <_AllDependencyProjects Include="@(RepositoryReference -> '%(Identity).proj')">
@@ -132,13 +132,13 @@ Source build handles NuGet assets using a set of local nuget feeds (which are ju
 
 Builds of subsetted VMRs need a way to locate artifacts not produced in the same build. Potentially, one could simply pre-populate the shared `blob-feed` directory with the archives of the previous build. This is not desirable, however. It mixes the outputs of the current build with the inputs. Furthermore, the outputs of the blob-feed dir are used as the output artifacts. Instead, repositories should be altered to accept an additional location where they may find input artifacts. This has precedent, as it is the same logic used in installer, aspnetcore, windowsdesktop, and others. These repos will check a public official source for binaries first, then a public build artifacts location, and finally an internal build artifacts location, if the appropriate credentials are available.
 
-For example, installer.proj might add the following logic. dotnet/installer then uses AdditionalBaseUrl when available, adding it as a location for downloading assets:
+For example, `installer.proj` might add the following logic. dotnet/installer then uses `AdditionalBaseUrl` when available, adding it as a location for downloading assets:
 
-```
+```xml
 <BuildCommandArgs Condition="'$(AdditionalInputPackagesPath)' != ''">$(BuildCommandArgs) /p:AdditionalBaseUrl=file:%2F%2F$(AdditionalInputPackagesPath)</BuildCommandArgs>
 ```
 
-In the above example, the path where the archives are located is the custom previously source built packages path (provided by --with-packages). A user would copy the archives of the input 1xx build into the --with-packages path.
+In the above example, the path where the archives are located is the custom previously source built packages path (provided by `--with-packages`). A user would copy the archives of the input 1xx build into the `--with-packages` path.
 
 ### Gathering assets for delivery to customers
 
@@ -165,7 +165,7 @@ When performing a source-build of a product, there are 4 required input set of i
 
 ***Note: When dealing with just a 1xx SDK, full build, with no prebuilts, #4 is an empty set, and #2 and #3 are the previously-source-built artifacts passed with --with-packages.***
 
-When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with --with-artifacts. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
+When building a VMR, a distro maintainer will combine the sets of artifacts from #2, #3 and #4 into a single directory and pass it with `--with-artifacts`. Below, distro maintainer workflow scenarios are presented. The following abbreviations are used:
 
 
 
@@ -261,7 +261,7 @@ When preparing a newer band's input artifacts, there would be up to 3 versions o
 - CSB 1xx Microsoft.NET.Compilers.Toolset @ 4.7.2
 - PSB 2xx Microsoft.NET.Compilers.Toolset @ 4.8.0
 
-In this scenario, the *newest* version of Microsoft.NET.Compilers.Toolset will get used as input to any repo taking a dependency it it, before the 2xx dotnet/roslyn is built. If this particular repo has an explicit dependency on 4.7.x, then transparently updating to 4.8.x might cause a break. In the current source build infrastructure, the only way to avoid that transparent upgrade would be to not use the PSB 2xx inputs with the 2xx SDK build. But of course, the 2xx inputs would be required to provide supporting packages that the SDK depends on.
+In this scenario, the *newest* version of Microsoft.NET.Compilers.Toolset will get used as input to any repo taking a dependency on it, before the 2xx dotnet/roslyn is built. If this particular repo has an explicit dependency on 4.7.x, then transparently updating to 4.8.x might cause a break. In the current source build infrastructure, the only way to avoid that transparent upgrade would be to not use the PSB 2xx inputs with the 2xx SDK build. But of course, the 2xx inputs would be required to provide supporting packages that the SDK depends on.
 
 If this scenario ends up becoming a common problem, I think we could alter the source build PVP infrastructure to be smarter about version selection, attempting to match on best "MAJOR.MINOR" when multiple input versions are available.
 
