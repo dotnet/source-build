@@ -6,6 +6,8 @@ The version of the SDK used to source build .NET is referred to as "N-1" (e.g. 7
 
 For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 6.0 version of the SDK to build a 7.0 SDK.
 
+Bootstrapping typically requires an exception in the distro packaging guidelines (e.g. [Fedora Bootstrapping Guidelines](https://docs.fedoraproject.org/en-US/packaging-guidelines/#bootstrapping)).
+
 Refer to the [build instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to review how to build the .NET SDK from source.
 
 ## Scenarios
