@@ -2,7 +2,7 @@
 
 This is an explanation of the poison report and its interpretation.  For an overview of poisoning, [see this document](leak-detection.md).  The poison report looks something like this:
 
-```
+```xml
 <PrebuiltLeakReport>
   <File Path="dotnet-sdk-6.0.100/sdk/6.0.0/Roslyn/bincore/runtimes/win/lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll">
     <Type>Hash</Type>
