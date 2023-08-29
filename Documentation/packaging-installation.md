@@ -28,7 +28,7 @@ If you want to install the SDK globally (and not per user), here are some sugges
 
 3. Create an `/etc/dotnet/install_location` file and add the path of the SDK directory in there. The file should contain a single line like this:
 
-   ```
+   ```bash
    /usr/local/lib64/dotnet/
    ```
 
