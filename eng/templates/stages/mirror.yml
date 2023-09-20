@@ -76,6 +76,8 @@ stages:
         value: CentOSStream9_Offline_MsftSdk_x64_Artifacts
       - name: smokeTestPreReqsArtifactNameArm64
         value: Ubuntu2204Arm64_Offline_MsftSdk_arm64_Artifacts
+      - name: smokeTestPreReqsArtifactNameMuslX64
+        value: Alpine317_Offline_MsftSdk_x64_Artifacts
 
     - ${{ if or(eq(parameters.dotnetMajorVersion, '6.0'), eq(parameters.dotnetMajorVersion, '7.0')) }}:
       - name: sourceUrl
