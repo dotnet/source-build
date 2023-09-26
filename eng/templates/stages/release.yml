@@ -45,6 +45,8 @@ stages:
     value: dotnet
   - name: announcementRepo
     value: source-build
+  - name: publicVmrUrl
+    value: https://github.com/dotnet/dotnet
   - name: storageAccountName
     value: dotnetcli
   - name: blobContainerName
@@ -148,6 +150,18 @@ stages:
             draft='--draft'
           fi
 
+          git tag $releaseTag $dotnetDotnetCommit
+          
+          result=$(git push $publicVmrUrl refs/tags/$releaseTag 2>&1)
+          if [[ $? -ne 0 ]]; then
+            echo "##vso[task.logissue type=error]Failed to create a GitHub tag for the release: $result"
+            exit 1
+          fi
+
+          if [[ "$result" =~ "Everything up-to-date" ]]; then
+            echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists ($(publicVmrUrl)/releases/tag/$(releaseTag))"
+          fi
+
           release_json="$(Build.ArtifactStagingDirectory)/release.json"
 
           echo "{}" \
@@ -156,7 +170,7 @@ stages:
             | jq '. += { "tag": "$(releaseTag)" }'                                 \
             | jq '. += { "sdkVersion": "$(sdkVersion)" }'                          \
             | jq '. += { "runtimeVersion": "$(runtimeVersion)" }'                  \
-            | jq '. += { "sourceRepository": "https://github.com/dotnet/dotnet" }' \
+            | jq '. += { "sourceRepository": "$(publicVmrUrl)" }' \
             | jq '. += { "sourceVersion": "$(dotnetDotnetCommit)" }'               \
             > "$release_json"
 
@@ -187,19 +201,15 @@ stages:
             "$release_json#Release manifest"         \
             --repo dotnet/dotnet                     \
             --title "${{ parameters.releaseName }}"  \
-            --target "$(dotnetDotnetCommit)"         \
             --notes-file "$release_notes"            \
+            --verify-tag                             \
             $prerelease                              \
             $draft \
             2>&1)
 
           if [ $? -ne 0 ]; then
-            if [[ "$result" =~ "already exists" ]]; then
-              echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists (https://github.com/dotnet/dotnet/releases/tag/$(releaseTag))"
-            else
-              echo "##vso[task.logissue type=error]Failed to create the GitHub release: $result"
-              exit 1
-            fi
+            echo "##vso[task.logissue type=error]Failed to create the GitHub release: $result"
+            exit 1
           fi
 
         displayName: Create GitHub release
