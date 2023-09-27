@@ -158,18 +158,25 @@ stages:
           git config --global user.name "$git_user"
           git config --global user.email "$git_email"
 
-          git tag $releaseTag $dotnetDotnetCommit
-          
           vmr_url=$(echo $vmrPublicUrl | sed "s,https://.*@,https://$(git_user):${GH_TOKEN}@,g")
-          result=$(git push $vmr_url refs/tags/$releaseTag 2>&1)
-          
-          if [[ $? != 0 ]]; then
-            echo "##vso[task.logissue type=error]Failed to create a GitHub tag for the release: $result"
-            exit 1
-          fi
 
-          if [[ "$result" =~ "Everything up-to-date" ]]; then
-            echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists ($(vmrPublicUrl)/releases/tag/$(releaseTag))"
+          git fetch $vmr_url tag $releaseTag --no-tags
+          if [[ $? = 0 ]]; then
+            tagged_commit=$(git rev-list -1 refs/tags/$releaseTag)
+            
+            if [[ $tagged_commit != $dotnetDotnetCommit ]]; then
+              echo "##vso[task.logissue type=error]The release tag '$releaseTag' is linked to a different commit. Expected: '$dotnetDotnetCommit'; Actual: '$tagged_commit'"
+              echo "##vso[task.logissue type=error]See the tag at $vmrPublicUrl/releases/tag/$releaseTag for more info."
+              exit 1
+            fi
+          else
+            git tag $releaseTag $dotnetDotnetCommit
+            git push $vmr_url refs/tags/$releaseTag 2>&1
+          
+            if [[ $? != 0 ]]; then
+              echo "##vso[task.logissue type=error]Failed to create a GitHub tag for the release: $result"
+              exit 1
+            fi
           fi
 
           release_json="$(Build.ArtifactStagingDirectory)/release.json"
