@@ -39,14 +39,16 @@ stages:
 
   - name: releasePrRepo
     value: dotnet/installer
+  - name: vmrPublicRepo
+    value: dotnet/dotnet
+  - name: vmrPublicUrl
+    name: https://github.com/$(vmrPublicRepo)
   - name: releasePrForkRepo
     value: dotnet-sb-bot/installer
   - name: announcementOrg
     value: dotnet
   - name: announcementRepo
     value: source-build
-  - name: publicVmrUrl
-    value: https://github.com/dotnet/dotnet
   - name: storageAccountName
     value: dotnetcli
   - name: blobContainerName
@@ -150,16 +152,24 @@ stages:
             draft='--draft'
           fi
 
+          git_user=dotnet-bot
+          git_email=dotnet-bot@microsoft.com
+
+          git config --global user.name "$git_user"
+          git config --global user.email "$git_email"
+
           git tag $releaseTag $dotnetDotnetCommit
           
-          result=$(git push $publicVmrUrl refs/tags/$releaseTag 2>&1)
-          if [[ $? -ne 0 ]]; then
+          vmr_url=$(echo $vmrPublicUrl | sed "s,https://.*@,https://$(git_user):${GH_TOKEN}@,g")
+          result=$(git push $vmr_url refs/tags/$releaseTag 2>&1)
+          
+          if [[ $? != 0 ]]; then
             echo "##vso[task.logissue type=error]Failed to create a GitHub tag for the release: $result"
             exit 1
           fi
 
           if [[ "$result" =~ "Everything up-to-date" ]]; then
-            echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists ($(publicVmrUrl)/releases/tag/$(releaseTag))"
+            echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists ($(vmrPublicUrl)/releases/tag/$(releaseTag))"
           fi
 
           release_json="$(Build.ArtifactStagingDirectory)/release.json"
@@ -170,7 +180,7 @@ stages:
             | jq '. += { "tag": "$(releaseTag)" }'                                 \
             | jq '. += { "sdkVersion": "$(sdkVersion)" }'                          \
             | jq '. += { "runtimeVersion": "$(runtimeVersion)" }'                  \
-            | jq '. += { "sourceRepository": "$(publicVmrUrl)" }' \
+            | jq '. += { "sourceRepository": "$(vmrPublicUrl)" }' \
             | jq '. += { "sourceVersion": "$(dotnetDotnetCommit)" }'               \
             > "$release_json"
 
@@ -199,7 +209,7 @@ stages:
           set +e
           result=$(gh release create "$(releaseTag)" \
             "$release_json#Release manifest"         \
-            --repo dotnet/dotnet                     \
+            --repo $vmrPublicRepo                     \
             --title "${{ parameters.releaseName }}"  \
             --notes-file "$release_notes"            \
             --verify-tag                             \
