@@ -39,10 +39,6 @@ stages:
 
   - name: releasePrRepo
     value: dotnet/installer
-  - name: vmrPublicRepo
-    value: dotnet/dotnet
-  - name: vmrPublicUrl
-    value: https://github.com/$(vmrPublicRepo)
   - name: releasePrForkRepo
     value: dotnet-sb-bot/installer
   - name: announcementOrg
@@ -152,35 +148,6 @@ stages:
             draft='--draft'
           fi
 
-          git_user=dotnet-bot
-          git_email=dotnet-bot@microsoft.com
-
-          git config --global user.name "$git_user"
-          git config --global user.email "$git_email"
-
-          vmr_url="https://$git_user:${GH_TOKEN}@github.com/$(vmrPublicRepo)"
-
-          set +e
-          if git fetch "$vmr_url" tag "$(releaseTag)" --no-tags; then
-            # Tag exists, we need to verify that the correct commit is tagged
-            tagged_commit=$(git rev-list -1 "refs/tags/$(releaseTag)")           
-            if [[ "$tagged_commit" != "$(dotnetDotnetCommit)" ]]; then
-              echo "##vso[task.logissue type=error]The release tag '$(releaseTag)' is linked to a different commit. Expected: '$(dotnetDotnetCommit)'; Actual: '$tagged_commit'"
-              echo "##vso[task.logissue type=error]See the tag at $(vmrPublicUrl)/releases/tag/$(releaseTag) for more info."
-              exit 1
-            fi
-          else
-            # Tag does not exist, we need to tag the commit and push it
-            echo "Pushing release tag to $(vmrPublicRepo)"
-            git tag "$(releaseTag)" "$(dotnetDotnetCommit)"
-            git push "$vmr_url" "refs/tags/$(releaseTag)"
-            if [[ $? != 0 ]]; then
-              echo "##vso[task.logissue type=error]Failed to create a GitHub tag for the release"
-              exit 1
-            fi
-          fi
-          set -e
-
           release_json="$(Build.ArtifactStagingDirectory)/release.json"
 
           echo "{}" \
@@ -189,7 +156,7 @@ stages:
             | jq '. += { "tag": "$(releaseTag)" }'                                 \
             | jq '. += { "sdkVersion": "$(sdkVersion)" }'                          \
             | jq '. += { "runtimeVersion": "$(runtimeVersion)" }'                  \
-            | jq '. += { "sourceRepository": "$(vmrPublicUrl)" }'                  \
+            | jq '. += { "sourceRepository": "https://github.com/dotnet/dotnet" }' \
             | jq '. += { "sourceVersion": "$(dotnetDotnetCommit)" }'               \
             > "$release_json"
 
@@ -218,18 +185,23 @@ stages:
           set +e
           result=$(gh release create "$(releaseTag)" \
             "$release_json#Release manifest"         \
-            --repo $vmrPublicRepo                    \
+            --repo dotnet/dotnet                     \
             --title "${{ parameters.releaseName }}"  \
+            --target "$(dotnetDotnetCommit)"         \
             --notes-file "$release_notes"            \
-            --verify-tag                             \
             $prerelease                              \
             $draft \
             2>&1)
 
           if [ $? -ne 0 ]; then
-            echo "##vso[task.logissue type=error]Failed to create the GitHub release: $result"
-            exit 1
+            if [[ "$result" =~ "already exists" ]]; then
+              echo "##vso[task.logissue type=warning]GitHub release tag $(releaseTag) already exists (https://github.com/dotnet/dotnet/releases/tag/$(releaseTag))"
+            else
+              echo "##vso[task.logissue type=error]Failed to create the GitHub release: $result"
+              exit 1
+            fi
           fi
+
         displayName: Create GitHub release
         workingDirectory: $(Agent.BuildDirectory)/dotnet-source-build/eng
         env:
