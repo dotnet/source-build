@@ -77,6 +77,15 @@ All other prebuilts require approval from the source build team.
 When a PR introduces an unexpected prebuilt, PR validation will fail and let us
 resolve the source-buildability issue before the PR gets merged.
 
+### CODEOWNERS
+
+Add the source build team as the [CODEOWNER](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners)
+of the source build infrastructure.
+
+``` text
+/eng/SourceBuild* @dotnet/source-build-internal
+```
+
 ### Trying it out locally
 
 If a repo passes build options through to the common arcade build script,
@@ -177,7 +186,7 @@ ordinary Arcade SDK jobs template for easy consumption. If a repo can't
 simply use the Arcade SDK jobs template, more granular templates are
 also available.
 
-See <https://github.com/dotnet/arcade/tree/master/eng/common/templates>
+See <https://github.com/dotnet/arcade/tree/main/eng/common/templates>
 for the current template source code. The inline comments in the
 `parameters:` section in those files are the most up to date docs, maintained
 with higher priority than this general onboarding doc.
@@ -287,7 +296,7 @@ in the repo. The source build steps handle uploading the
 [intermediate nupkg] to the pipeline in the standard way that Arcade
 will detect and publish.
 
-[intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
+[intermediate nupkg]: https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
 
 ## Incorporate the new repo into the source build dependency tree
 
@@ -345,8 +354,8 @@ to be on the lookout for the new repo and they will validate as necessary.
 ## Additional resources
 
 * For more details about how the build executes, see
-  [Arcade's build tools](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild).
+  [Arcade's build tools](https://github.com/dotnet/arcade/tree/main/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild).
 * The source code for the build tasks that run for prebuilt validation and
   intermediate nupkg dependency reading are maintained in
-  [Arcade](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild)
+  [Arcade](https://github.com/dotnet/arcade/tree/main/src/Microsoft.DotNet.SourceBuild)
   as well.
