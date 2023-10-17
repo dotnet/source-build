@@ -1,11 +1,10 @@
 # Adding a new repository to source build
 
-This document describes the overall process of onboarding new repos onto
-arcade powered source build (ArPow).
+This document describes the overall process of onboarding new repos onto source build.
 
 1. [Source Build Configuration](#source-build-configuration)
 1. [Setup CI](#setup-ci)
-1. [Incorporate the new repo into the Source-Build dependency tree](#incorporate-the-new-repo-into-the-source-build-dependency-tree)
+1. [Incorporate the new repo into the source build dependency tree](#incorporate-the-new-repo-into-the-source-build-dependency-tree)
 1. [Source build repos and the VMR](#source-build-repos-and-the-vmr)
 1. [Validate](#validate)
 1. [Additional resources](#additional-resources)
@@ -20,8 +19,7 @@ These changes are all needed before source build will work:
 * [`eng/SourceBuild.props`](#engsourcebuildprops) -
   Basic properties, such as repo name.
 * [`eng/SourceBuildPrebuiltBaseline.xml`](#engsourcebuildprebuiltbaselinexml) -
-  Allow prebuilts. Until prebuilt detection is enabled/enforced, we allow all
-  prebuilts.
+  List of allowed prebuilts (approval required).
 * [`eng/Version.Details.xml`](#engversiondetailsxml) -
   Already exists, but modifications are needed to pull dependencies from
   upstream [intermediate nupkgs](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs).
@@ -61,27 +59,35 @@ MSBuild code that can change the way source build behaves.
 ### `eng/SourceBuildPrebuiltBaseline.xml`
 
 ```xml
+<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build-internal as a reviewer. -->
+<!-- See aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
+
 <UsageData>
   <IgnorePatterns>
-    <UsagePattern IdentityGlob="*/*" />
+    <UsagePattern IdentityGlob="Microsoft.SourceBuild.Intermediate.*/*" />
   </IgnorePatterns>
 </UsageData>
 ```
 
 This defines which prebuilt NuGet packages are allowed to be used during
-the build. Initially, all package IDs and versions are permitted (`*/*`).
+the build. Initially, only the source build intermediate packages are allowed.
+The `*/*` glob means "any intermediate package, any version".
+All other prebuilts require approval from the source build team.
 
-The `*/*` glob means "any nupkg id, any version". It will be replaced with
-more specific rules at a later phase once the repo level prebuilt detection
-infrastructure is completed. The goal is to make it specific, so when a PR
-introduces an unexpected prebuilt, PR validation will fail and let us resolve
-the source-buildability issue before the PR gets merged.
+When a PR introduces an unexpected prebuilt, PR validation will fail and let us
+resolve the source-buildability issue before the PR gets merged.
 
 ### Trying it out locally
 
-After setting up ArPow in a repo, running it locally is done by passing
-`/p:ArcadeBuildFromSource=true` at the end of the usual arcade-based build
-command for the repo. For example:
+If a repo passes build options through to the common arcade build script,
+a source build can be triggered via the following command.
+
+```bash
+./build.sh -sb
+```
+
+If a repo does not pass through build options through to the common arcade
+build script, then you must specify the `/p:ArcadeBuildFromSource=true` property as follows.
 
 ```bash
 ./build.sh -c Release --restore --build --pack /p:ArcadeBuildFromSource=true -bl
@@ -103,9 +109,9 @@ However, this "outer" binlog doesn't contain the meat of the build: the
 
 It is not always necessary or correct to include all repo components in
 source build.  Components should be excluded if they are not required for
-the platform being source-built.  Including them expands the source-build
+the platform being source-built.  Including them expands the source build
 graph and may not be possible because of licensing.
-Examples include tests, Windows components (rmember source build currently
+Examples include tests, Windows components (remember source build currently
 only supports Linux and macOS), etc. To exlcude these components
 use the `DotNetBuildFromSource` msbuild property to conditionally exclude.
 
@@ -145,10 +151,10 @@ is used to calculate the ID of the
 the `Dependency` `Name` is ignored by source build.
 
 Building with the source-built versions of your dependencies also means that
-any upstream repos will have been built in a source-build context, including
-things projects that are excluded from the source-build.  This can help you
-find issues where your source-build depends on an upstream component that
-isn't actually built in source-build.
+any upstream repos will have been built in a source build context, including
+things projects that are excluded from the source build.  This can help you
+find issues where your source build depends on an upstream component that
+isn't actually built in source build.
 
 `ManagedOnly` determines whether a RID suffix is necessary on the
 [intermediate nupkg](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs)
@@ -162,12 +168,11 @@ ID. For example, running source build on `dotnet/installer` with
 
 ## Setup CI
 
-ArPow needs to run during official builds to create source build
+Source build needs to run during official builds to create source build
 [intermediate nupkg]s for the downstream repos that will consume them.
-ArPow should also run in PR validation builds, to prevent regression
-in the ArPow flow.
+Source build should also run in PR validation builds, to prevent regressions.
 
-The ArPow implementation can be activated with a single flag in the
+Source build CI can be activated with a single flag in the
 ordinary Arcade SDK jobs template for easy consumption. If a repo can't
 simply use the Arcade SDK jobs template, more granular templates are
 also available.
@@ -210,38 +215,18 @@ To opt in:
 1. Specify platforms (if repo is not managed-only)
 
     A repo is managed-only if `eng/SourceBuild.props` contains
-h    `<SourceBuildManagedOnly>true</SourceBuildManagedOnly>`. If this is true,
+    `<SourceBuildManagedOnly>true</SourceBuildManagedOnly>`. If this is true,
     this step is not necessary. Otherwise, specify `sourceBuildParameters`
     in the `jobs.yml` template's parameters like this:
 
     ```yaml
     sourceBuildParameters:
     platforms:
-    - name: 'Centos71_Portable'
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
-    - name: 'MacOS_Portable'
-        pool: { vmImage: 'macOS-10.14' }
-    - name: 'Centos71'
+    - name: 'CentosStream8_Portable'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8'
+    - name: 'CentosStream8'
         nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-7-3e800f1-20190501005343'
-    - name: 'Centos8'
-        nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-8-daa5116-20200325130212'
-    - name: 'Debian9'
-        nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:debian-stretch-20200918130533-047508b'
-    - name: 'Fedora30'
-        nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-30-38e0f29-20191126135223'
-    - name: 'Fedora32'
-        nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:fedora-32-20200512010618-163ed2a'
-    - name: 'MacOS'
-        nonPortable: true
-        pool: { vmImage: 'macOS-10.14' }
-    - name: 'Ubuntu1804'
-        nonPortable: true
-        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:ubuntu-18.04-20200918145614-047508b'
+        container: 'mcr.microsoft.com/dotnet-buildtools/prereqs:centos-stream8'
     ```
 
 #### End result
@@ -256,7 +241,7 @@ with a name like `Build Source-Build (<Platform>)`:
 
 Once this PR works, run a mock official build (AKA "validation build") in your
 official build definition. The usual workflow is to push a
-`dev/<youralias>/arpow` branch to the AzDO repo and then queue a build on that
+`dev/<your-alias>/<branch-name>` branch to the AzDO repo and then queue a build on that
 branch. This makes sure that merging the PR won't immediately break the
 official build: `enableSourceBuild: true` does add job(s) to the official
 build, not just PR validation.
@@ -278,7 +263,7 @@ it properly, and if it fits the scenario. This list is only an overview.
 #### `eng/common/templates/jobs/source-build.yml`
 
 This is one level deeper than `eng/common/templates/jobs/jobs.yml`. It is
-a `jobs` template that produces just the set of source-build jobs based
+a `jobs` template that produces just the set of source build jobs based
 on the specified `platforms`. Or, just one job with the default platform,
 if managed-only.
 
@@ -304,10 +289,10 @@ will detect and publish.
 
 [intermediate nupkg]: https://github.com/dotnet/source-build/blob/master/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md
 
-## Incorporate the new repo into the Source-Build dependency tree
+## Incorporate the new repo into the source build dependency tree
 
 Once your repo can be source-built, it is time to register it into the
-Source-Build dependency tree. The graph of the product is defined by the
+source build dependency tree. The graph of the product is defined by the
 `eng/Version.Details.xml` files. This dependency graph starts at
 [dotnet/installer](https://github.com/dotnet/installer/blob/main/eng/Version.Details.xml).
 The dependendecies of repos declared in these files are walked and the
@@ -322,7 +307,7 @@ to the new source build repo**.
 
 Another effect of adding a new source build repository is that its sources
 will be synchronized into the [Virtual Monolithic Repository of .NET](https://github.com/dotnet/dotnet).
-The VMR is then where the official Source-Build happens from. The sources
+The VMR is then where the official source build happens from. The sources
 are synchronized once the associated commit/package flows into `dotnet/installer`.
 
 In order for the sources of the new repo to by synchronized into the VMR,
