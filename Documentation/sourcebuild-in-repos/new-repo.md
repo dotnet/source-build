@@ -60,7 +60,7 @@ MSBuild code that can change the way source build behaves.
 
 ```xml
 <!-- Whenever altering this or other Source Build files, please include @dotnet/source-build-internal as a reviewer. -->
-<!-- See aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
+<!-- See https://aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
 
 <UsageData>
   <IgnorePatterns>
