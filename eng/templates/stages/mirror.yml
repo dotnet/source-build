@@ -150,10 +150,23 @@ stages:
 
         # Check if the tag already exists and points to the same commit
         sha=$(git rev-parse HEAD)
-        if git ls-remote --tags destination | grep -q "$tag_name"; then
+
+        # When querying for tags we need to ensure match the whole line and not just a substring
+        # of the tag name. This avoids accidentally matching a new tag of v8.0.0 with an existing
+        # tag of v8.0.0-rc.2.23479.6, for example. This is accomplished by including the '$' character
+        # at the end of the query so that it matches the end of the line. We also need to account for
+        # recursive tags, which is why we use the '^{}' syntax. For example, the tags that we create
+        # actually have two tags associated with them:
+        #   083b8b9fe09d04205e87bca0b378e4a3ad74a239        refs/tags/v8.0.0-rc.1.23419.4
+        #   113d797bc90104bb4f1cc51e1a462cf3d4ef18fc        refs/tags/v8.0.0-rc.1.23419.4^{}
+        # We want to match on both.
+        tagGrepQuery="refs/tags/$tag_name\(^{}\)\?$"
+
+        echo "git ls-remote --tags destination | grep -q $tagGrepQuery"
+        if git ls-remote --tags destination | grep -q "$tagGrepQuery"; then
           echo "Tag $tag_name already exists, checking if it points to the same commit"
 
-          if git ls-remote --tags destination | grep "$tag_name" | grep -q "$sha"; then
+          if git ls-remote --tags destination | grep "$tagGrepQuery" | grep -q "$sha"; then
             echo "Tag $tag_name already exists at $sha, skipping"
             exit 0
           else
