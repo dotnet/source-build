@@ -13,13 +13,13 @@ the source build CI.
 1. Only test officially supported distros. Community supported distros will not be covered.
 
 **Note:** There will be conflicts within these guidelines.  When they occur, it is an indication
-that multiple legs will be needed. For example, Ubuntu is based on Debian. However, .NET is included in Ubuntu's repositories by default but not Debian's (at the time of writing). As such, it is best to include legs for both Ubuntu and Debian.
+that multiple legs will be needed. For example, Ubuntu is based on Debian. However, .NET is included
+in Ubuntu's repositories by default but not Debian's (at the time of writing). As such, it is best
+to include legs for both Ubuntu and Debian.
 
 ## Distro Versions
 
 1. It is not feasible to cover all supported distro versions. Judiciously select the versions to test.
-1. Once a version reaches EOL, upgrade to the next latest LTS/non-LTS version based on type of the
-EOL version.
 
 ## Architectures
 
@@ -30,7 +30,7 @@ architectures will not be covered.
 
 It is not the intent to test every permutation of distro family, distro version, and architecture.
 Rather, smart decisions should be made to utilize resources. For example, test the oldest LTS version
-of debian on arm64 and the latest LTS version of ubuntu on amd64.
+of debian on amd64 and the latest LTS version of ubuntu on arm64.
 
 1. CentOS Stream
     1. Oldest in support version
