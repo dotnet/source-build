@@ -160,7 +160,7 @@ stages:
         #   083b8b9fe09d04205e87bca0b378e4a3ad74a239        refs/tags/v8.0.0-rc.1.23419.4
         #   113d797bc90104bb4f1cc51e1a462cf3d4ef18fc        refs/tags/v8.0.0-rc.1.23419.4^{}
         # We want to match on both.
-        tagGrepQuery="refs/tags/$tag_name\(^{}\)\?$"
+        tagGrepQuery="refs/tags/$tag_name\(\^{}\)\?$"
 
         echo "git ls-remote --tags destination | grep -q $tagGrepQuery"
         if git ls-remote --tags destination | grep -q "$tagGrepQuery"; then
