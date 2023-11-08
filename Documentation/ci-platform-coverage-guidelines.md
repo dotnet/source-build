@@ -30,7 +30,7 @@ architectures will not be covered.
 
 It is not the intent to test every permutation of distro family, distro version, and architecture.
 Rather, smart decisions should be made to utilize resources. For example, test the oldest LTS version
-of debian on amd64 and the latest LTS version of ubuntu on arm64.
+of Debian on amd64 and the latest LTS version of Ubuntu on arm64.
 
 1. CentOS Stream
     1. Oldest in support version
