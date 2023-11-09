@@ -162,17 +162,20 @@ stages:
         # We want to match on both.
         tagGrepQuery="refs/tags/$tag_name\(\^{}\)\?$"
 
-        echo "git ls-remote --tags destination | grep -q $tagGrepQuery"
-        if git ls-remote --tags destination | grep -q "$tagGrepQuery"; then
+        # `grep -q` exits as soon as a match is found; if there are multiple matches
+        # `git ls-remote` would continue to output even after grep exits, resulting in a
+        # broken pipe error (exit code 141). Saving the result in a var fixes the issue
+        tags=$(git ls-remote --tags destination)
+        if echo "$tags" | grep -q "$tagGrepQuery"; then
           echo "Tag $tag_name already exists, checking if it points to the same commit"
 
-          if git ls-remote --tags destination | grep "$tagGrepQuery" | grep -q "$sha"; then
+          if echo "$tags" | grep "$tagGrepQuery" | grep -q "$sha"; then
             echo "Tag $tag_name already exists at $sha, skipping"
             exit 0
           else
             echo "Tag $tag_name already exists but does not point to a $sha, aborting"
             echo "Existing tags:"
-            git ls-remote --tags destination
+            echo "$tags"
             exit 1
           fi
         fi
