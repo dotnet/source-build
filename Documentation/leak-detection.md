@@ -8,7 +8,7 @@ Source-build includes a mechanism for *poisoning* its input files, and then for 
 
 Before the build, the MarkAndCatalogFiles task runs.  This does a few things:
 
-- Record the hash of every file in the source-build binary input directories (prebuilts and previously-source-built, in the future [reference-packages](https://github.com/dotnet/source-build/issues/2817)).  If the file is a zip, tarball, or nupkg, unpack it and do the same thing recursively.
+- Record the hash of every file in the source-build binary input directories (prebuilts and previously-source-built, and reference-packages).  If the file is a zip, tarball, or nupkg, unpack it and do the same thing recursively.
 - For managed DLLs, either bare or in an archive, add a custom attribute that marks the file as poisoned.
 - For nupkgs, drop a `.poisoned` file.
 - Repack the poisoned assemblies and extra files, removing nupkg signatures so they don't fail verification.
@@ -19,8 +19,8 @@ Before the build, the MarkAndCatalogFiles task runs.  This does a few things:
 
 There's no change in source-build operation in poisoning mode during the build.
 
-**Note**: During the build of the source-build-reference-packages repository (regardless of poisoning mode), reference packages have the ```System.Reflection.AssemblyMetadataAttribute("source", "source-build-reference-packages")``` attribute injected into their respective reference assemblies. This attribute is looked for after the build as part of the poisoning mode.
+**Note**: During the build of the source-build-reference-packages repository (regardless of poisoning mode), reference packages have the `System.Reflection.AssemblyMetadataAttribute("source", "source-build-reference-packages")` attribute injected into their respective reference assemblies. Leak detection flags all assemblies with this attribute.
 
 ## After the build
 
-After the build, the CheckForPoison task is run on the source-build output directory.  It again unpacks any archives and packages recursively, and checks for the three kinds of markers injected before the build and the source-build-reference-packages attribute added during the build.  It then writes out a [report](poison-report-format.md) that details everything that was found.
+After the build, the CheckForPoison task is run on the source-build output directory.  It again unpacks any archives and packages recursively, and checks for the three kinds of markers (AssemblyAttribute, Hash, and NupkgFile) injected before the build and the source-build-reference-packages attribute added during the build.  It then writes out a [report](poison-report-format.md) that details everything that was found.
