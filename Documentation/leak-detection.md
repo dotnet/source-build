@@ -2,7 +2,7 @@
 
 ## Overview
 
-Source-build includes a mechanism for *poisoning* its input files, and then for checking for that poison in the build output.  This allows us to ensure that all output files were built during the build rather than copied directly from the input, which would be an illegal prebuilt usage.
+Source-build includes a mechanism for *poisoning* its input files, and then for checking for that poison in the build output. This allows us to ensure that all output files were built during the build rather than copied directly from the input, which would be an illegal prebuilt usage.
 
 ## Before the build
 
@@ -19,6 +19,8 @@ Before the build, the MarkAndCatalogFiles task runs.  This does a few things:
 
 There's no change in source-build operation in poisoning mode during the build.
 
+**Note**: During the build of the source-build-reference-packages repository (regardless of poisoning mode), reference packages have the ```System.Reflection.AssemblyMetadataAttribute("source", "source-build-reference-packages")``` attribute injected into their respective reference assemblies. This attribute is looked for after the build as part of the poisoning mode.
+
 ## After the build
 
-After the build, the CheckForPoison task is run on the source-build output directory.  It again unpacks any archives and packages recursively, and checks for all three kinds of markers injected before the build.  It then writes out a [report](poison-report-format.md) that details everything that was found.
+After the build, the CheckForPoison task is run on the source-build output directory.  It again unpacks any archives and packages recursively, and checks for the three kinds of markers injected before the build and the source-build-reference-packages attribute added during the build.  It then writes out a [report](poison-report-format.md) that details everything that was found.

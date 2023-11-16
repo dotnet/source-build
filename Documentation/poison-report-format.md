@@ -13,6 +13,10 @@ This is an explanation of the poison report and its interpretation.  For an over
     <Type>AssemblyAttribute</Type>
     <Hash>cf80cd8aed482d5d1527d7dc72fceff84e6326592848447d2dc0b0e87dfc9a90</Hash>
   </File>
+  <File Path="artifacts/x64/Release/Private.SourceBuilt.Artifacts.8.0.100-rtm.23519.1.fedora.38-x64.tar.gz/Microsoft.TestPlatform.CLI.17.8.0-release-23468-02.nupkg/contentFiles/any/net8.0/Microsoft.Extensions.DependencyModel.dll">
+    <Hash>3961408c6033157f4c612b56247b35c3ad28dac0b26f95a6fe55315f440a48eb</Hash>
+    <Type>SourceBuildReferenceAssembly</Type>
+  </File>
   <File Path="Microsoft.DotNet.GenFacades.1.0.0-beta.20316.7/.poisoned">
     <Type>NupkgFile</Type>
     <Hash>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</Hash>
@@ -32,6 +36,10 @@ This means that we detected a custom attribute that source-build adds to each pr
 - Reference assemblies (these should not ship, but also will very rarely cause problems).
 - Test or resource assemblies - these should be removed.
 - N-1 (previously-source-built) assemblies included in shipping packages to break cycles - this is expected behavior.  Usually this use case is covered by reference packages but in rare cases we need to actually run an N-1 binary in the build.
+
+### SourceBuildReferenceAssembly
+
+This means that a reference assembly originating from the source-build-reference-packages repo was leaked.
 
 ### Hash
 
