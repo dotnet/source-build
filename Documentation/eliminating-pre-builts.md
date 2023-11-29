@@ -47,6 +47,46 @@ Additional information can also be found in the generated pre-built detection re
 
 With this information retrieved, the [adding a new source-build dependency](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md#adding-dependencies) documentation should be referred to as the main guide for resolving the pre-built.
 
+### Pre-built as a transitive dependency
+
+During a project dependency updated, a new pre-built might be introduce by a new or updated transitive dependency. While the Arcade tooling will highlight the name and version of the pre-built in the build exception as well as the project that restored the dependency in question, it will not point out where exactly in the dependency tree it is. This means that its up to the developer to identify what type of dependency they are dealing with (direct or transitive) and choose the correct way of handling the issue. In case of a transitive dependency, it might be hard to identify the relationship that is bringing in the pre-built into the project, especially if the developer has limited knowledge of the project or code-base in general.
+
+Arcade source-build infrastructure helps accomplish this this by poiting out the `project.assets.json` file that is referencing the pre-built in the `./artifacts/source-build/self/prebuild-report/prebuild-usage.xml` report file. A `project.assets.json` file is a NuGet build artifact that contains a 'resolved dependency tree' of sorts for a specific project. Every package that was restored by a given project is mentioned there with links between the dependencies, allowing the reader to identify transitive dependencies and the direct dependencies referencing them.
+
+Example of a pre-built caused by a transitive dependency and corresponding entries in files mentioned above:
+```
+Exception identifying the pre-built:
+
+1 new packages used not in baseline! See report at ./artifacts/source-build/self/prebuilt-report/baseline-comparison.xml for more information. Package IDs are:
+  System.Text.Json.8.0.0
+
+Entry in prebuilt-usage.xml:
+
+<UsageData>
+  <Usages>
+    <Usage Id="System.Text.Json" Version="8.0.0" File=".../SomeProject/project.assets.json">
+  </Usages>
+</UsageData>
+
+Entry in project.assets.json:
+
+{ 
+  "targets": {
+    "net8.0": {
+      "Microsoft.Extensions.DependencyModel/8.0.0": {
+        "type": "package",
+        "dependencies": {
+          "System.Text.Json": "8.0.0"
+        }
+      }
+    }
+  }
+}
+
+```
+
+In this example `Microsoft.Extensions.DependencyModel` would be the direct dependency causing the `System.Text.Json` pre-built.
+
 ## Allowed exceptions
 
 The list of permitted pre-builts can be found in the `./eng/SourceBuildPrebuiltBaseline.xml` file in the root of the repository. It contains package information of pre-builts that for one reason or another are allowed in the source-build of the repository.
