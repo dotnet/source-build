@@ -65,7 +65,7 @@ stages:
       - name: smokeTestPreReqsArtifactNameX64
         value: Build_Tarball_x64 CentOSStream9-Offline_Artifacts
       - name: smokeTestPreReqsArtifactNameArm64
-        value: Build_Tarball_arm64 Debian9-Offline_Artifacts
+        value: Build_Tarball_arm64 Debian11-Offline_Artifacts
     - ${{ if eq(parameters.dotnetMajorVersion, '7.0') }}:
       - name: smokeTestPreReqsArtifactNameX64
         value: Build_Tarball_x64 CentOSStream9-Offline_Artifacts
