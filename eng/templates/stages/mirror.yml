@@ -219,7 +219,6 @@ stages:
             nuGetServiceConnections: ${{ variables.feedServiceConnection }}
         - task: NuGetCommand@2
           displayName: Publish packages to ${{ variables.destinationPackageFeed }}
-          continueOnError: true
           inputs:
             command: push
             packagesToPush: '${{ variables.packagesDownloadLocation }}/*.nupkg'
