@@ -1,9 +1,3 @@
-> For the ArPow status doc, see [implementation-plan.md](implementation-plan.md).
-
-> For onboarding help (MSBuild/AzDO configuration), see [onboarding](onboarding).
-
----
-
 # ArPow (arcade-powered source-build)
 
 Source-build exists as a process outside the Microsoft build, taking place after
@@ -15,6 +9,7 @@ This is a user story in .NET 6.0:
 [dotnet/core#5448](https://github.com/dotnet/core/issues/5448)
 
 > *Definitions*:
+>
 > * **Official builds** run in Azure DevOps and produce the signed bits released
 >   by Microsoft. These run on a daily or per-commit basis depending on repo and
 >   point in time.
@@ -76,12 +71,14 @@ prototype the core ArPow functionality.
 There are a few key parts of the infrastructure to prototype:
 
 ### Build integration
+
 The official build and PR validation build pipelines work, with a reasonable API
 for other repositories to adopt.
 
 * [source-build-in-pipeline.md]
 
 ### Intermediate nupkg outputs/inputs
+
 Every ArPow-enabled repository creates a NuGet package containing its build
 outputs, for downstream repositories to use. On the other side, the Arcade SDK
 infrastructure needs to be able to restore and use source-built intermediate
@@ -95,12 +92,14 @@ upstreams, however, it can be developed here as a prototype.
 * [Use SBRP intermediate nupkg to build SBRP #1636](https://github.com/dotnet/source-build/issues/1636)
 
 ### Prebuilt usage tracking
+
 We aren't eliminating instances of prebuilt usage at this stage in the process,
 but the tooling needs to work in the context of an Arcade-powered build.
 
 * [Include prebuilt reports in intermediate nupkgs #1725](https://github.com/dotnet/source-build/issues/1725)
 
 ### Managed-only and RID-specific builds
+
 Some .NET repositories only produce managed code outputs, and others produce
 RID-specific outputs such as native binaries. To reduce the burden of ArPow on
 small managed-only repositories, we build only one RID and use the same results
@@ -111,6 +110,7 @@ templates and Arcade SDK need to handle this.
 * [Add mechanism to restore RID-specific intermediate nupkgs #1722](https://github.com/dotnet/source-build/issues/1722)
 
 ### Integrating tooling into Arcade
+
 The ArPow tooling can be implemented inside the Arcade SDK's MSBuild extension
 points, initially. Before onboarding any extra repos, it should be integrated
 into the Arcade SDK proper to reuse the code.
@@ -122,6 +122,7 @@ into the Arcade SDK proper to reuse the code.
 ## Incremental progress
 
 ### Adding ArPow to the build graph
+
 When we have ArPow SBRP complete, we start adding ArPow to repositories in the
 .NET SDK dependency graph.
 
@@ -144,6 +145,7 @@ dotnet/source-build becomes a leaf in the build graph instead of an
 orchestration repo.
 
 ### The speculative SDK
+
 It's difficult to validate that a PR won't break downstream repos. This problem
 is shared by source-build and the Microsoft build. "Speculative builds" have
 been proposed to try to help with this, but would be very difficult to implement
@@ -160,6 +162,7 @@ This can be developed in parallel to other efforts. See [speculative-build.md]
 for more info about speculative builds.
 
 ### Adding unit tests
+
 Unit tests are typically disabled in dotnet/source-build, because the test
 infrastructure isn't built from source, and it increases build time. We should
 run tests on the source-build product to catch bugs. However, this isn't
@@ -179,15 +182,16 @@ command.
 ## Q&A
 
 ### Q: How do we patch without an orchestration-focused repo?
+
 A: There are two reasons to make a patch:
 
-1.  The repository doesn't properly build from source, and it will take a long
+1. The repository doesn't properly build from source, and it will take a long
     time to figure out a fix that works both in source-build and in the
     Microsoft build. The practical solution is to put a `.patch` file into the
     repo itself that is only applied during a build from source.
     * See [onboarding/local-onboarding.md#patching]
 
-2.  The repository successfully builds from source in its local build and
+2. The repository successfully builds from source in its local build and
     official build, but doesn't work when built inside a tarball. This *should*
     be considered a build break, and be fixed in the repository directly. The
     fix then flows down to dotnet/installer to produce a fixed tarball. However,
@@ -196,7 +200,6 @@ A: There are two reasons to make a patch:
       file into the tarball. The `.patch` file would be checked into
       dotnet/installer and copied into the output tarball. This reduces the
       scope of a build reset.
-
 
 [in-arcade.md]: in-arcade.md
 [incremental-official-chunked.md]: incremental-official-chunked.md
@@ -209,7 +212,7 @@ A: There are two reasons to make a patch:
 
 ---
 
-## Revisions:
+## Revisions
 
 **2021-02-17** dagood  
 Updated this doc to align with the current ArPow implementation plan. The old

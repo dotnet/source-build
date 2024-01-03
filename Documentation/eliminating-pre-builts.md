@@ -56,13 +56,15 @@ Arcade source-build infrastructure helps accomplish this this by pointing out th
 Example of a pre-built caused by a transitive dependency and corresponding entries in files mentioned above:
 
 Exception identifying the pre-built:
-```
+
+```text
 1 new packages used not in baseline! See report at ./artifacts/source-build/self/prebuilt-report/baseline-comparison.xml for more information. Package IDs are:
   System.Text.Json.8.0.0
 ```
 
 Entry in prebuilt-usage.xml:
-```
+
+```xml
 <UsageData>
   <Usages>
     <Usage Id="System.Text.Json" Version="8.0.0" File=".../SomeProject/project.assets.json">
@@ -71,7 +73,8 @@ Entry in prebuilt-usage.xml:
 ```
 
 Entry in project.assets.json:
-```
+
+```json
 { 
   "targets": {
     "net8.0": {
