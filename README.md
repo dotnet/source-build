@@ -8,9 +8,9 @@ This repo is the starting point for building .NET from source. It contains docum
 
 * [Build system requirements](Documentation/system-requirements.md)
 
-## Building .NET 8.0
+## Building .NET 8.0+
 
-.NET 8.0 (currently in prerelease) and newer will be built from the [dotnet/dotnet](https://github.com/dotnet/dotnet) repo.
+.NET 8.0 and newer will be built from the [dotnet/dotnet](https://github.com/dotnet/dotnet) repo.
 Clone the dotnet/dotnet repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/dotnet's README](https://github.com/dotnet/dotnet/blob/main/README.md#dev-instructions) to build .NET from source.
 
