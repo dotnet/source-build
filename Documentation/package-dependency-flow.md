@@ -34,7 +34,7 @@ produce the next version.
 
 When referencing previous source built packages, it is important to not leak these
 previously built packages into the resulting packages/product. This is considered a
-"poison leak" and is not permitted during a source build as it breaks the notion of
+[poison leak](./leak-detection.md) and is not permitted during a source build as it breaks the notion of
 building the product entirely from source. This hinders the ability to service the
 product.
 
