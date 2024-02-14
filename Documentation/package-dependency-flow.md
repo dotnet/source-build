@@ -43,32 +43,46 @@ ability to service the product.
 ## Package Versions
 
 The package versions referenced during a source build can be fixed or dynamic.
-Having a dependency in the Version.Details.xml file along with a corresponding 
-Versions.props version property signals to source build to lift the version to the
-latest. Let's look at an example to illustrate the behavior.
+Package versions will get lifted dynamically if the following conditions are met:
 
-**Versions.props**
+1. The dependency is declared in the Version.Details.xml file.
 
-```xml
-...
-  <SystemCommandLineVersion>2.0.0-beta4.24068.1</SystemCommandLineVersion>
-...
-```
+    **Version.Details.xml**
 
-**Version.Details.xml**
+    ```xml
+    ...
+      <Dependency Name="System.CommandLine" Version="2.0.0-beta4.24068.1">
+        <Uri>https://github.com/dotnet/command-line-api</Uri>
+        <Sha>02fe27cd6a9b001c8feb7938e6ef4b3799745759</Sha>
+      </Dependency>
+    ...
+    ```
 
-```xml
-...
-  <Dependency Name="System.CommandLine" Version="2.0.0-beta4.24068.1">
-    <Uri>https://github.com/dotnet/command-line-api</Uri>
-    <Sha>02fe27cd6a9b001c8feb7938e6ef4b3799745759</Sha>
-  </Dependency>
-...
-```
+1. A corresponding version property is defined in the Versions.props.
 
-During a source build, the infrastructure will scan the Version.Details.xml file
-and dynamically create two new Versions.props files containing updated version
-properties for all non-pinned dependencies.
+    **Versions.props**
+
+    ```xml
+    ...
+      <SystemCommandLineVersion>2.0.0-beta4.24068.1</SystemCommandLineVersion>
+    ...
+    ```
+
+1. A repository reference is defined in the
+ [VMR's project dependency graph](https://github.com/dotnet/dotnet/tree/main/repo-projects).
+This reference does not have to be direct, it can be transitive.
+
+    **{VMR repo project}.proj**
+
+    ```xml
+    ...
+      <RepositoryReference Include="command-line-api" />
+    ...
+    ```
+
+When these conditions are met during a source build, the infrastructure will scan
+the Version.Details.xml file and dynamically create two new Versions.props files
+containing updated version properties for all non-pinned dependencies.
 
 **PackageVersions.Previous.props:** This will contain version properties with the
 package versions from the [previous release of source build](#previous-source-built-packages).
