@@ -6,7 +6,7 @@ It describes the mechanisms that exist to control which package versions are use
 ## Origins of Packages
 
 A source build must be self-contained, meaning the entire product must be built
-from source in an offline environment. This means all packages dependencies must
+from source in an offline environment. To achieve this, all packages dependencies must
 be satisfied by one of the following:
 
 ### Source-Build-Reference-Packages
@@ -23,7 +23,7 @@ available to each repo varies based on its build order. For example the msbuild 
 can take a dependency on the current version of Microsoft.CodeAnalysis from roslyn
 because roslyn builds before msbuild. Conversely, since roslyn builds before msbuild,
 roslyn cannot take a dependency on the current version of Microsoft.Build; it can only
-take a dependency on the previously released version.
+take a dependency on a previously released version.
 
 ### Previous Source Built Packages
 
@@ -98,7 +98,7 @@ get overridden by the source build versions. In the case of the `SystemCommandLi
 example, the current source build version, 2.0.0-beta4, would win. This is known as package
 version lifting since it lifts the originally defined package version to the current source
 built version. This behavior only applies to source build in the context of the
-[VMR](https://github.com/dotnet/dotnet) (see also [Repo Level Source Builds](#repo-level-source-builds).
+[VMR](https://github.com/dotnet/dotnet) (see also [Repo Level Source Builds](#repo-level-source-builds)).
 
 ### Transitive Version Properties
 
