@@ -19,9 +19,11 @@ contains [tooling to generate new reference packages](https://github.com/dotnet/
 ### Current Source Built Packages
 
 This refers to all of the packages produced in the current build. The set of packages
-available to each repo varies based on its build order. If repo X has a dependency
-on package Y.1 but the repo Y hasn't been built yet, repo X cannot depend
-on the very latest version of the package.
+available to each repo varies based on its build order. For example the msbuild repo
+can take a dependency on the current version of Microsoft.CodeAnalysis from roslyn
+because roslyn builds before msbuild. Conversely, since roslyn builds before msbuild,
+roslyn cannot take a dependency on the current version of Microsoft.Build; it can only
+take a dependency on the previously released version.
 
 ### Previous Source Built Packages
 
@@ -34,9 +36,9 @@ produce the next version.
 
 When referencing previous source built packages, it is important to not leak these
 previously built packages into the resulting packages/product. This is considered a
-[poison leak](./leak-detection.md) and is not permitted during a source build as it breaks the notion of
-building the product entirely from source. This hinders the ability to service the
-product.
+[poison leak](./leak-detection.md) and is not permitted during a source build as it
+breaks the notion of building the product entirely from source. This hinders the
+ability to service the product.
 
 ## Package Versions
 
@@ -70,8 +72,8 @@ properties for all non-pinned dependencies.
 
 **PackageVersions.Previous.props:** This will contain version properties with the
 package versions from the [previous release of source build](#previous-source-built-packages).
-If a new package exists that has never been released before, it will not have a version
-property defined.
+If a new package exists that has never been released before, it will not have a 
+version property defined.
 
 ```xml
 ...
@@ -93,7 +95,10 @@ property defined.
 These two version.props files get imported by the arcade source build infrastructure after
 the repo's Version.props file. Therefore the repo's Versions.props property versions
 get overridden by the source build versions. In the case of the `SystemCommandLineVersion`
-example, the current source build version, 2.0.0-beta4, would win. This is known as package version lifting since it lifts the originally defined package version to the current source built version. This behavior only applies to source build in the context of the [VMR](https://github.com/dotnet/dotnet) (also see [Repo Level Source Builds](#repo-level-source-builds).
+example, the current source build version, 2.0.0-beta4, would win. This is known as package
+version lifting since it lifts the originally defined package version to the current source
+built version. This behavior only applies to source build in the context of the
+[VMR](https://github.com/dotnet/dotnet) (see also [Repo Level Source Builds](#repo-level-source-builds).
 
 ### Transitive Version Properties
 
@@ -135,6 +140,5 @@ of the Versions.props file.
 The source build package lifting mechanism is not applicable when building individual
 repos in source build mode because it doesn't have the context of the other product
 repos or previous source build release. In repo source build mode, the versions of the
-packages declared in the Versions.props are used.
-
-See [backlog issue](https://github.com/dotnet/source-build/issues/3562).
+packages declared in the Versions.props are used (see also 
+[backlog issue](https://github.com/dotnet/source-build/issues/3562)).
