@@ -8,9 +8,9 @@ This repo is the starting point for building .NET from source. It contains docum
 
 * [Build system requirements](Documentation/system-requirements.md)
 
-## Building .NET 8.0
+## Building .NET 8.0+
 
-.NET 8.0 (currently in prerelease) and newer will be built from the [dotnet/dotnet](https://github.com/dotnet/dotnet) repo.
+.NET 8.0 and newer will be built from the [dotnet/dotnet](https://github.com/dotnet/dotnet) repo.
 Clone the dotnet/dotnet repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/dotnet's README](https://github.com/dotnet/dotnet/blob/main/README.md#dev-instructions) to build .NET from source.
 
@@ -33,9 +33,9 @@ There are two primary goals of the source-build effort:
 
    To achieve this, we try to make it easier for community and partner maintainers to build and release .NET for their platforms. We need to make sure source-build satisfies the official packaging rules of commonly used Linux distributions, such as [Fedora](https://fedoraproject.org/wiki/Packaging:Guidelines) and [Debian](https://www.debian.org/doc/manuals/maint-guide/build.en.html). Many Linux distributions have similar rules. These rules tend to have three main principles:
 
-   - Limited or no network access
-   - Consistent reproducibility
-   - Source code for everything
+   * Limited or no network access
+   * Consistent reproducibility
+   * Source code for everything
 
 2. Make maintenance of the .NET product easier
 
@@ -46,7 +46,6 @@ There are two primary goals of the source-build effort:
    For more details about this Unified Build, see [this overview](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Overview.md).
 
 Source-build can help achieve both these goals by making it easier for everyone to build and release the entire .NET product end-to-end.
-
 
 ## What does the source-build infrastructure do?
 

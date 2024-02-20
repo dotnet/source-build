@@ -63,8 +63,8 @@ dependency and the nuances it may have.
       for all packages from the repo.
 1. Is the repo already built in source-build including the specific
   package you want?
-    1. Add the dependency using `darc add-dependency` as normal, then
-      add the [source-build metadata](#Basics) as above.
+    1. Add the dependency using [`darc add-dependency`](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#add-dependency) as normal, then
+      add the [source-build metadata](#basics) as above.
 1. Is the repo already built in source-build but the specific package is not?
     1. There's probably an issue with source-building this package.  Please
       talk to a [source-build team member](https://github.com/orgs/dotnet/teams/source-build-internal)

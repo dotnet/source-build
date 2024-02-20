@@ -14,6 +14,7 @@ This document serves as the design planning document for how .NET source build w
 The general approach to supporting more than one SDK band is to **not** view the build of additional SDK feature bands as being any different from any other source build. Each build of the product combines a set of inputs (previously source-built artifacts + source) to produce a set of outputs that can ship to customers. When building two completely different major versions of .NET, the set of inputs is different (e.g. different source, 6.0 SDK vs. 7.0 SDK). Some of the previously source-built artifacts come from .NET, some may come from the source-built package ecosystem (e.g. icu or clang/llvm). If a repo were to be eliminated from the input sources, the binaries previously built from those sources would now need to come from previously-source built binaries.
 
 The primary restriction on building multiple SDK feature bands is that they must not differ in the shared runtimes. For N bands, there must be a single runtime artifact. Thus, we can view a source-build of N SDK feature bands as:
+
 - As a single build of one runtime, producing a set of source-built outputs and **then**
 - Building N SDK feature bands **using**
 - The *outputs* of the runtime build combined with additional previously source-built artifacts (e.g. a matching band SDK, required tools and libraries) and source, to produce N SDK feature bands that meet source-build requirements.
@@ -59,7 +60,7 @@ Since conceptually CSB and PSB inputs are different, the scripting should reflec
 - `--with-packages` becomes `--with-previous-artifacts`, reflecting that it represents only previously source built artifacts that may be used in the build, but not redistributed with outputs. When poisoning is enabled, this set is poisoned. `--with-previous-artifacts` should be viewed as functionally equivalent to `--with-packages`
 - `--with-current-artifacts` - This switch is added. It points to a directory that contains input NuGet and non-NuGet assets that may be redistributed in the current build. Typically this set would come from the 1xx build.
 
-In addition, we should add a script that prepares the input artifacts for the build of a particular dotnet VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-artifacts--with-packages) for an explanation of the input artifacts.
+In addition, we should add a script that prepares the input artifacts for the build of a particular dotnet VMR branch, given a set of input directories from other builds/other previously source built artifacts. See [below](#what-artifacts-should-be-passed-with---with-current-artifacts--with-previous-artifacts) for an explanation of the input artifacts.
 
 #### Improvements to input artifact handling
 
@@ -85,10 +86,11 @@ With the addition of a new input set (CSB), we now have an additional set. Chang
 The dotnet VMR defines a set of projects (under `repo-projects`) that correspond to each component of the build. These projects also define a build dependency graph of these components via the `RepositoryReference` ItemGroup. *Note: there are a few projects that do not correspond directly to a component, but instead serve as general join points in the build graph.*. Source build invokes a root build (`dotnet.proj`), which evaluates the dependency graph and invokes the MSBuild task on dependent projects. To avoid maintenance complexity, we should avoid altering this dependency graph or removing project files when a component should not be built. Instead, it should simply be filtered out and ignored as if the node in the graph was inactive.
 
 When filtering out components, we do not want to build a filtered subproject at all. `AfterTargets=Build`, `BeforeTargets=Build` are common in both component projects as well as the shared targets. We do not want these invoked at all, or else a large variety of special casing per-target will be required. Instead, each individual project should determine whether it should be built by setting a property. By default, this property would be set based on the whether the source for the component exists. Therefore, a user has two options for explicitly excluding or including a project:
+
 - Explicitly setting the property value in the project file
 - Removing the source code altogether from the branch.
 
-```
+```xml
 // Default
 // repo-projects/Directory.Build.props
 <SkipRepoBuild Condition="'$(SkipRepoBuild)' == '' and !Exists('$(ProjectDirectory)')">true</SkipRepoBuild>
@@ -140,6 +142,7 @@ Given this set of properties, a new target can be added that will determine the 
 ### Choosing the correct source-built MSBuild SDKs
 
 There is one wrinkle to the simple graph filtering approach. Most .NET projects have dependencies on the arcade toolset and associated MSBuild SDK. This dependency is handled specially by source-build as it helps bootstrap a repo's build process. There are three potential arcade versions available:
+
 - The bootstrap arcade version coming in via the previously source-built packages + artifacts (PSB).
 - The bootstrap arcade version coming in via the current source-built packages + artifacts (CSB).
 - The arcade built during the current source build invocation.
@@ -148,7 +151,7 @@ The 'bootstrap' version of arcade is the version of arcade present in CSB, or if
 
 Example code from the PoC:
 
-```
+```xml
 // From SetSourceBuiltSdkOverrides target in repo-projects/Directory.Build.targets.
 <ItemGroup>
     <ActiveArcadeDependency Include="@(ActiveDependencyProjects)" Condition="'%(RepositoryName)' == 'arcade'" />
@@ -170,6 +173,7 @@ Example code from the PoC:
 ### Input asset locations
 
 The input assets required for the .NET build come in two primary forms:
+
 - NuGet assets
 - Non-NuGet assets (typically `.zip` or `.tar.gz` archives)
 
@@ -192,6 +196,7 @@ To gather assets for delivery to customers, the outputs present in each of the `
 ## Changes to distro maintainer workflow
 
 A distro maintainer wishing to support a newer band, either in addition to or in place of an older band, would see some change in workflow. First off, it is important to remember that the 1xx band will still be required. This is for two reasons:
+
 - The 1xx SDK is the only SDK that is supported for building the runtime components. Because tooling differs between the bands, using a newer band to build the runtime is likely to expose new warnings or issues.
 - There are components of the 1xx band that are used in the runtime. There are "sdk-like" components present in the runtime (analyzers, generators, etc.) that are dependent upon "sdk" functionality. Substituting in a 2xx aligned roslyn, for instance, would result in a product that differs from Microsoft's build.
 
@@ -217,6 +222,7 @@ A distro maintainer sees no change here. Until a few months **after** GA, only t
 ### A distro maintainer wishing to build the initial release (n00) of a Nxx+ band SDK
 
 The initial release of a Nxx+ band SDK should be straightforward. It is unlikely (though possible) that the initial Nxx band would depend on a Nxx SDK to build. If this is not the case, then a distro maintainer performs the following actions, and no bootstrap will be required:
+
 1. **Checkout** 1xx branch:
 2. **Build** using `./build.sh --with-sdk <PSB 1xx SDK> --with-previous-artifacts <PSB 1xx artifacts>`.
 3. **Gather** 1xx build outputs from `artifacts/x64/Release` = `<CSB 1xx artifacts>`.
@@ -262,6 +268,7 @@ There are some potential issues that may require tweaks to this approach, source
 ### A toolset input to a newer band does not work with the PSB from that same band
 
 When preparing a newer band's input artifacts, there would be up to 3 versions of some components. For example:
+
 - PSB 1xx Microsoft.NET.Compilers.Toolset @ 4.7.1
 - CSB 1xx Microsoft.NET.Compilers.Toolset @ 4.7.2
 - PSB 2xx Microsoft.NET.Compilers.Toolset @ 4.8.0

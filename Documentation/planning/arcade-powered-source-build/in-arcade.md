@@ -135,5 +135,4 @@ the non-Microsoft repo. This wraps it without forking the original repo's
 history. The intent would be very clear. However, it would be more difficult to
 maintain patches, if any are necessary to add Arcade.
 
-
 [intermediate nupkg]: intermediate-nupkg.md
