@@ -42,8 +42,9 @@ ability to service the product.
 
 ## Package Versions
 
-The package versions referenced during a source build can be fixed or dynamic.
-Package versions will get lifted dynamically if the following conditions are met:
+Package dependencies that defined using 
+[Arcade's Darc patterns](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md)
+will get lifted dynamically during a source build if the following conditions are met:
 
 1. The dependency is declared in the Version.Details.xml file.
 
@@ -82,7 +83,7 @@ This reference does not have to be direct, it can be transitive.
 
 When these conditions are met during a source build, the infrastructure will scan
 the Version.Details.xml file and dynamically create two new Versions.props files
-containing updated version properties for all non-pinned dependencies.
+containing updated version properties for all non-pinned dependencies.  
 
 **PackageVersions.Previous.props:** This will contain version properties with the
 package versions from the [previous release of source build](#previous-source-built-packages).
@@ -109,10 +110,12 @@ property defined.
 These two version.props files get imported by the arcade source build infrastructure after
 the repo's Version.props file. Therefore the repo's Versions.props property versions
 get overridden by the source build versions. In the case of the `SystemCommandLineVersion`
-example, the current source build version, 2.0.0-beta4, would win. This is known as package
-version lifting since it lifts the originally defined package version to the current source
-built version. This behavior only applies to source build in the context of the
-[VMR](https://github.com/dotnet/dotnet) (see also [Repo Level Source Builds](#repo-level-source-builds)).
+example, the current source build version, 2.0.0-beta4, would win. All msbuild references 
+(e.g. project PackageReferences) to these Versions.props properties pick up the newer 
+versions. This is known as package version lifting since it lifts the originally defined
+package version to the current source built version. This behavior only applies to source
+build in the context of the [VMR](https://github.com/dotnet/dotnet) (see also 
+[Repo Level Source Builds](#repo-level-source-builds)).
 
 ### Transitive Version Properties
 
