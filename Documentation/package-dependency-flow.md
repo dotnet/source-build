@@ -42,8 +42,8 @@ ability to service the product.
 
 ## Package Versions
 
-Package dependencies that defined using 
-[Arcade's Darc patterns](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md)
+Package dependencies defined using 
+[Arcade's dependency patterns](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md)
 will get lifted dynamically during a source build if the following conditions are met:
 
 1. The dependency is declared in the Version.Details.xml file.
@@ -83,7 +83,7 @@ This reference does not have to be direct, it can be transitive.
 
 When these conditions are met during a source build, the infrastructure will scan
 the Version.Details.xml file and dynamically create two new Versions.props files
-containing updated version properties for all non-pinned dependencies.  
+containing updated version properties for all non-pinned dependencies.
 
 **PackageVersions.Previous.props:** This will contain version properties with the
 package versions from the [previous release of source build](#previous-source-built-packages).

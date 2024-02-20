@@ -20,7 +20,10 @@ to include legs for both Ubuntu and Debian.
 
 ## Distro Versions
 
-1. It is not feasible to cover all supported distro versions. Judiciously select the versions to test.
+When selecting which distro versions to test the .NET version in development, it is important to take into account which distro versions will be insupport at the time of the .NET release.  Don't worry about testing .NET on distro versions that will be or nearing EOL on the .NET release day.
+
+1. Latest LTS version. If the distro doesn't have an LTS notion, then test latest.
+1. Oldest version that will be in-support for the lifetime of the .NET release.
 
 ## Architectures
 
@@ -34,9 +37,9 @@ Rather, smart decisions should be made to utilize resources. For example, test t
 of Debian on amd64 and the latest LTS version of Ubuntu on arm64.
 
 1. CentOS Stream
-    1. Oldest in support version
     1. Newest in support version
+    1. Oldest in support version (for the lifetime of .NET)
 1. Fedora - Newest in support version
-1. Debian - Oldest LTS version
+1. Debian - Oldest LTS version (for the lifetime of .NET)
 1. Ubuntu - Newest LTS version (arm64)
 1. Alpine - Newest in support version
