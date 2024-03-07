@@ -110,3 +110,7 @@ If you are using a package in the actual build or want the version to be updated
 
 
 If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package. Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
+
+## Contacts
+
+For any questions or additional information about this document, pre-builts or source-build in general, please create an [issue](https://github.com/dotnet/source-build/issues) or open a [discussion](https://github.com/dotnet/source-build/discussions) in the [source-build](https://github.com/dotnet/source-build) repository.
