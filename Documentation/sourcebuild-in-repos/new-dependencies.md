@@ -108,7 +108,6 @@ We build some external dependencies in the [dotnet/source-build-externals](https
 
 If you are using a package in the actual build or want the version to be updated whenever the foreign repo publishes to your channel, use the version number property set up in `eng/Versions.props` and `eng/Version.details` via [`darc`](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md#darc).  When this is set up, the version number will get updated to the current source-built version when performing a source-build.
 
-
 If you are using an external or non-Arcade package, please coordinate as much as possible with other teams using that package. Each package-version is essentially maintained as a separate concern, so something like repo A requiring Newtonsoft.Json 9.0.1 and repo B requiring 12.0.2 essentially doubles the source-build team's work.
 
 ## Contacts
