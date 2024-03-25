@@ -1,8 +1,8 @@
 # How to re-bootstrap the toolset used to build the VMR
 
-.NET utilizes itself to build therefore in order to build .NET from source, you
+.NET utilizes itself to build. Therefore, in order to build .NET from source, you
 first need to acquire or build a bootstrapping .NET SDK and other tooling such
-as arcade. Re-bootstrapping is the term used to describe when the bootstrapped
+as [Arcade](https://github.com/dotnet/arcade). Re-bootstrapping is the term used to describe when the bootstrapped
 toolset need to be updated. This document describes the steps to re-bootstrap
 the VMR.
 
