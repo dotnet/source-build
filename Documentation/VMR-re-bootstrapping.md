@@ -22,7 +22,9 @@ source built.
 Re-bootstrapping is necessary when .NET takes a dependency on new functionality
 added within the bootstrap toolset. For example suppose a new compiler feature is
 added. In order for a repo to take a dependency on the new feature, a re-bootstrap
-would be necessary.
+would be necessary. The implication of this, and the restrictions of when
+re-bootstrapping is allowed, means that repos should, in general, wait to take a
+dependency on a new toolset feature until after that feature has been released.
 
 # Steps to re-bootstrap
 
@@ -37,8 +39,11 @@ would be necessary.
     1. Find the [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286)
     build that best matches the dotnet-source-build. The following is the suggested
     order of precedence for finding the best match.
-        1. A build from the same commit. From a VMR commit, you can find the
-        corresponding installer commit by looking at the [source-manifest.json](https://github.com/dotnet/dotnet/blob/main/src/source-manifest.json).
+        1. A build from the same commit.
+            1. From the [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219),
+            look at the build's installer tag.
+            1. From a VMR commit, you can find the corresponding installer commit
+            by looking at the [source-manifest.json](https://github.com/dotnet/dotnet/blob/main/src/source-manifest.json).
         1. The next passing build after the same commit.
         1. In the odd case where the are no passing builds after the commit, you
         can try using an earlier passing build.
