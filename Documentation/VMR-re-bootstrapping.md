@@ -31,11 +31,11 @@ dependency on a new toolset feature until after that feature has been released.
 1. Update previous source-build artifacts
     1. Find a [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
     with the desired changes.
-    1. Retrieve the built SDKs and PSB artifacts archives, from the following legs:
+    1. Retrieve the built SDKs and private source-built artifacts archives, from the following legs:
         1. Alpine\<nnn\>_Online_MsftSdk_x64
         1. CentOSStream\<8\>_Online_MsftSdk_x64
     1. Upload the SDKs to https://dotnetcli.blob.core.windows.net/source-built-artifacts/sdks/
-    1. Upload the PSB artifacts archives to https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/
+    1. Upload the private source-built artifacts archives to https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/
 1. Update .NET SDK
     1. Find the [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286)
     build that best matches the dotnet-source-build. The following is the suggested
@@ -49,13 +49,13 @@ dependency on a new toolset feature until after that feature has been released.
         1. In the odd case where the are no passing builds after the commit, you
         can try using an earlier passing build.
     1. Retrieve the built SDK version from the build.
-    1. Update the dotnet version in the [global.json](https://github.com/dotnet/dotnet/blob/main/global.json).
+    1. Update the dotnet version in the [global.json](https://github.com/dotnet/installer/blob/main/src/SourceBuild/content/global.json).
 1. Update arcade
     1. Lookup the arcade commit and version. From a VMR commit, you can find the
     corresponding arcade commit/version by looking at the [source-manifest.json](https://github.com/dotnet/dotnet/blob/main/src/source-manifest.json).
-    1. Update the arcade SDK version in the [global.json](https://github.com/dotnet/dotnet/blob/main/global.json).
-    1. Update the arcade dependency commit and version in the [Version.Details.xml](https://github.com/dotnet/dotnet/blob/main/eng/Version.Details.xml).
+    1. Update the arcade SDK version in the [global.json](https://github.com/dotnet/installer/blob/main/src/SourceBuild/content/global.json).
+    1. Update the arcade dependency commit and version in the [Version.Details.xml](https://github.com/dotnet/installer/blob/main/src/SourceBuild/content/eng/Version.Details.xml).
 1. Update private source-built SDK and artifacts versions
-    1. Update `PrivateSourceBuiltSdkVersion` and `PrivateSourceBuiltArtifactsVersion` in the [Versions.props](https://github.com/dotnet/dotnet/blob/main/eng/Versions.props).
+    1. Update `PrivateSourceBuiltSdkVersion` and `PrivateSourceBuiltArtifactsVersion` in the [Versions.props](https://github.com/dotnet/installer/blob/main/src/SourceBuild/content/eng/Versions.props).
 
 [Tracking issue for automating this process.](https://github.com/dotnet/source-build/issues/4246)
