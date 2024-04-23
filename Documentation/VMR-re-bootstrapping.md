@@ -29,11 +29,15 @@ dependency on a new toolset feature until after that feature has been released.
 # Steps to re-bootstrap
 
 1. Update previous source-build artifacts
-    1. Find a [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+    1. Find a [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) run
     with the desired changes.
+        1. If a rebootstrap is needed quickly and it is not feasibly to wait for a 
+           [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) run,
+           you can also use the artifacts from a 
+           [dotnet-source-build-lite](https://dev.azure.com/dnceng/internal/_build?definitionId=1299) run.
     1. Retrieve the built SDKs and private source-built artifacts archives, from the following legs:
         1. Alpine\<nnn\>_Online_MsftSdk_x64
-        1. CentOSStream\<8\>_Online_MsftSdk_x64
+        1. CentOSStream\<n\>_Online_MsftSdk_x64
     1. Upload the SDKs to https://dotnetcli.blob.core.windows.net/source-built-artifacts/sdks/
     1. Upload the private source-built artifacts archives to https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/
 1. Update .NET SDK
