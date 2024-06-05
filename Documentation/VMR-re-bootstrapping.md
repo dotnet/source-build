@@ -41,8 +41,8 @@ dependency on a new toolset feature until after that feature has been released.
     1. Upload the SDKs to https://dotnetcli.blob.core.windows.net/source-built-artifacts/sdks/
     1. Upload the private source-built artifacts archives to https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/
 1. Update .NET SDK
-    1. Find the [dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286)
-    build that best matches the dotnet-source-build. The following is the suggested
+    1. Find the [dotnet-sdk-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=140) ([dotnet-installer-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=286) for .NET 8) build
+    that best matches the dotnet-source-build. The following is the suggested
     order of precedence for finding the best match.
         1. A build from the same commit.
             1. From the [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219),
