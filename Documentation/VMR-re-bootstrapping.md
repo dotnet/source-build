@@ -28,6 +28,12 @@ dependency on a new toolset feature until after that feature has been released.
 
 # Steps to re-bootstrap
 
+## Automated
+You can re-bootstrap the VMR using [this pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1371). The pipeline will upload the artifacts & open the corresponding re-bootstrap PR.
+
+## Manual
+In case the automated re-bootstrapping pipeline is unavailable, you can manually re-bootstrap the VMR:
+
 1. Update previous source-build artifacts
     1. Find a [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) run
     with the desired changes.
