@@ -2,9 +2,9 @@
 
 .NET utilizes itself to build therefore in order to build .NET from source, you first need to acquire or build a bootstrapping .NET SDK. This document provides guidance around acquiring and building this bootstrapping .NET SDK.
 
-The version of the SDK used to source build .NET is referred to as "N-1" (e.g. 7.0.100). The version of the SDK produced by source build is referred to as "N" (e.g. 7.0.101). The previous SDK (e.g. N-1) supplies the tools required to build.
+The version of the SDK used to source build .NET is referred to as "N-1" (e.g. 8.0.100). The version of the SDK produced by source build is referred to as "N" (e.g. 8.0.101). The previous SDK (e.g. N-1) supplies the tools required to build.
 
-For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 6.0 version of the SDK to build a 7.0 SDK.
+For new major versions or new platforms, you need to acquire or build the bootstrapping SDK as you cannot use a previous source-built SDK. This is to say you cannot use a 8.0 version of the SDK to build a 9.0 SDK.
 
 Bootstrapping typically requires an exception in the distro packaging guidelines (e.g. [Fedora Bootstrapping Guidelines](https://docs.fedoraproject.org/en-US/packaging-guidelines/#bootstrapping)).
 

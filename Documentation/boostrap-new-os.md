@@ -14,7 +14,7 @@ Bootstrapping is necessary when:
 - You have no version of the SDK available for your platform.
 - You are building the SDK for a non-x64 platform.
 
-In practice, most maintainers will bootstrap once every major version (e.g. 6.0.100, 7.0.100, etc).  If you bootstrap these initial versions once you will generally be able to build 6.0.101 with 6.0.100, 6.0.102 with 6.0.101, 7.0.101 with 7.0.100, and so on.  The source-build team attempts to avoid requiring bootstrapping more than once per major version but sometimes this is unavoidable - often when we move from one feature band to another, or if a major language feature is added, or if there are issues discovered with a given version of the SDK after release.  These types of situations will be announced on the source-build [discussions page](https://github.com/dotnet/source-build/discussions).
+In practice, most maintainers will bootstrap once every major version (e.g. 6.0.100, 8.0.100, etc).  If you bootstrap these initial versions once you will generally be able to build 6.0.101 with 6.0.100, 6.0.102 with 6.0.101, 8.0.101 with 8.0.100, and so on.  The source-build team attempts to avoid requiring bootstrapping more than once per major version but sometimes this is unavoidable - often when we move from one feature band to another, or if a major language feature is added, or if there are issues discovered with a given version of the SDK after release.  These types of situations will be announced on the source-build [discussions page](https://github.com/dotnet/source-build/discussions).
 
 ### Choosing the seed CLI
 
