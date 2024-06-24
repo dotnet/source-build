@@ -7,7 +7,7 @@ This document provides the system requirements to source build the .NET SDK for 
 ### Linux
 
 * [Toolchain Setup](https://github.com/dotnet/runtime/blob/main/docs/workflow/requirements/linux-requirements.md#toolchain-setup)
-* [Preconfigured Container Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - These images are used by [CI](https://github.com/dotnet/installer/blob/release/7.0.1xx/src/SourceBuild/Arcade/eng/common/templates/job/source-build-run-tarball-build.yml#L12-L16) to build and test source-build.
+* [Preconfigured Container Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - These images are used by [CI](https://github.com/dotnet/dotnet/blob/main/src/sdk/eng/pipelines/templates/stages/vmr-build.yml) to build and test source-build.
 * [Distros Source Building .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
 
 ### MacOS
@@ -45,9 +45,10 @@ A minimum of 8 GB of memory is recommended.
 
 The following assets will need to be downloaded in order to build.
 
-* Source: 525 MB
-* SDK: 230 MB
+* Source:
+  * .NET 8.0: ~300 MB
+  * .NET 6.0: ~500 MB
+* SDK: ~200 MB
 * Artifacts
-  * .NET 8.0: 1 GB
-  * .NET 7.0: 1.2 GB
-  * .NET 6.0: 4 GB
+  * .NET 8.0: ~1 GB
+  * .NET 6.0: ~4 GB

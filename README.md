@@ -14,11 +14,11 @@ This repo is the starting point for building .NET from source. It contains docum
 Clone the dotnet/dotnet repo and check out the tag for the desired release.
 Then, follow the instructions in [dotnet/dotnet's README](https://github.com/dotnet/dotnet/blob/main/README.md#dev-instructions) to build .NET from source.
 
-## Building .NET 7.0 and .NET 6.0
+## Building .NET 6.0
 
-.NET 6.0 and 7.0 are built from source using the [dotnet/installer](https://github.com/dotnet/installer) repo.
+.NET 6.0 is built from source using the [dotnet/installer](https://github.com/dotnet/installer/tree/release/6.0.1xx) repo.
 Clone the dotnet/installer repo and check out the tag for the desired release.
-Then, follow the instructions in [dotnet/installer's README](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build) to build .NET from source.
+Then, follow the instructions in [dotnet/installer's README](https://github.com/dotnet/installer/tree/release/6.0.1xx?tab=readme-ov-file#build-net-from-source-source-build) to build .NET from source.
 Please see the [support](#support) section below to see which feature branches are currently supported.
 
 > The source-build repository doesn't currently support Windows. See [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
@@ -79,7 +79,7 @@ Source-build solves common challenges that most developers encounter when trying
 ## Support
 
 .NET Source-Build is supported on the oldest available .NET SDK feature update for each major release, and on Linux only.
-For example, if .NET `6.0.1xx`, `6.0.2xx`, `7.0.1xx`, and `7.0.2xx` feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support `6.0.1xx` and `7.0.1xx`.
+For example, if .NET `6.0.1xx`, `6.0.2xx`, `8.0.1xx`, and `8.0.2xx` feature updates are available from [dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0), Source-Build will support `6.0.1xx` and `8.0.1xx`.
 
 For the latest information about Source-Build support for new .NET versions, please check our [GitHub Discussions page](https://github.com/dotnet/source-build/discussions) for announcements.
 
