@@ -21,9 +21,14 @@ a patch file inside the repo:
 git format-patch --zero-commit --no-signature -1
 ```
 
-Then, move the patch file into the [installer repo](https://github.com/dotnet/installer/tree/main/src/SourceBuild/patches),
-at `src/SourceBuild/patches/<repo>`. If an existing directory for the repo does
-not already exist, you will need to create one.
+Then, move the patch file into the `src/SourceBuild/patches/<repo>` directory of the
+following repo:
+
+* [.NET 9.0+] [sdk](https://github.com/dotnet/sdk/tree/main/src/SourceBuild/patches)
+* [.NET 8.0] [installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild/patches)
+
+If an existing directory for the repo does not already exist, you will need to
+create one.
 
 > If you define `PATCH_DIR` to point at the `patches` directory, you can use
 > `-o` to place the patch file directly in the right directory:
@@ -103,8 +108,6 @@ by re-applying the changes to the repo and recreating the patch.
 ## Unified Build Plans
 
 The [Unified Build](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/README.md)
-project will eliminate the need for patches. During .NET 9.0, edit support will be
-added to the [VMR](https://github.com/dotnet/dotnet). In .NET 8.0
-the VMR is readonly. When the VMR supports edits, there is no need for patches as
-the required changes can be directly made in the VMR. All changes made to the VMR
-will automatically flow to the associated repos.
+project will add support for source edits in the [VMR](https://github.com/dotnet/dotnet).
+This will eliminate the need for patches as the required changes can be directly made in
+the VMR. All changes made to the VMR will automatically flow to the associated repos.
