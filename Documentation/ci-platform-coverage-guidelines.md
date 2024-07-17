@@ -17,9 +17,9 @@ Community supported distros will not be covered.
 
 ## Distro Versions
 
-1. Prefer testing latest LTS version if LTS is supported else the latest version.
-1. Drop distro versions that will be or nearing EOL on the .NET release day.
-1. Stop updating the test matrix during the last 6 months of support for a .NET version as new distro
+1. Prefer testing latest LTS version. If LTS is unsupported, use the latest version instead.
+1. Drop distro versions that will be or are nearing EOL on the .NET release day.
+1. Stop updating the test matrix in the last 6 months of support for a .NET version as new distro
 versions are released.
 
 ## Architectures
