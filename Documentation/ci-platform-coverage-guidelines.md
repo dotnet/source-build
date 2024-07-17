@@ -15,17 +15,12 @@ supported version of this library.
 1. Only test [distros that are officially supported by .NET](https://github.com/dotnet/core/blob/main/os-lifecycle-policy.md#net-supported-os-policy).
 Community supported distros will not be covered.
 
-**Note:** There will be conflicts within these guidelines.  When they occur, it is an indication
-that multiple legs will be needed. For example, Ubuntu is based on Debian. However, .NET is included
-in Ubuntu's repositories by default but not Debian's (at the time of writing). As such, it is best
-to include legs for both Ubuntu and Debian.
-
 ## Distro Versions
 
-When selecting which distro versions to test the .NET version in development, it is important to take into account which distro versions will be in support at the time of the .NET release.  Don't worry about testing .NET on distro versions that will be or nearing EOL on the .NET release day.
-
-1. Latest LTS version. If the distro doesn't have an LTS notion, then test latest.
-1. Oldest version that will be in-support for the lifetime of the .NET release.
+1. Prefer testing latest LTS version. If LTS is unsupported, use the latest version instead.
+1. Drop distro versions that will be or are nearing EOL on the .NET release day.
+1. Stop updating the test matrix in the last 6 months of support for a .NET version as new distro
+versions are released.
 
 ## Architectures
 
@@ -35,13 +30,12 @@ When selecting which distro versions to test the .NET version in development, it
 ## Permutations
 
 It is not the intent to test every permutation of distro family, distro version, and architecture.
-Rather, smart decisions should be made to utilize resources. For example, test the oldest LTS version
-of Debian on amd64 and the latest LTS version of Ubuntu on arm64.
+Rather, smart decisions should be made to best utilize resources.
 
-1. CentOS Stream
-    1. Newest in support version
-    1. Oldest in support version (for the lifetime of .NET)
-1. Fedora - Newest in support version
-1. Debian - Oldest LTS version (for the lifetime of .NET)
-1. Ubuntu - Newest LTS version (arm64)
-1. Alpine - Newest in support version
+The following distro versions will be included in the [CI matrix](https://github.com/dotnet/sdk/blob/main/eng/pipelines/templates/stages/vmr-build.yml):
+
+1. CentOS Stream - Latest version (amd64)
+1. Fedora - Latest version (amd64)
+1. Ubuntu - Latest LTS version at the time of the release (amd64/arm64)
+1. Alpine - Latest and previous versions (amd64)
+1. AlmaLinux - Oldest version (targets lowest glibc version) (amd64)
