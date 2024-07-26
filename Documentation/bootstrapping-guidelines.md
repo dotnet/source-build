@@ -29,27 +29,39 @@ Building .NET for the first time is a two stage process:
 1. Download a platform-native portable Microsoft-built version of the dotnet SDK for bootstrapping as well as the previously-source-built package archive.
 
     ``` bash
-    ./prep.sh
+    ./prep-source-build.sh
     ```
 
 1. Build the source built .NET SDK.
 
     ``` bash
-    ./build.sh
+    ./build.sh --source-only
     ```
 
-**Stage 2:** Use the source built .NET SDK created in stage 1 to build .NET SDK from source. There is no need to run `prep.sh` in this stage.
+**Stage 2:** Use the source-built .NET SDK and source-built artifacts created in stage 1 to build .NET SDK from source.
 
 1. Extract your freshly-built stage 1 SDK to a convenient location.
 
     ``` bash
-    tar -ozxf /<stage1-path>/artifacts/<arch>/Release/dotnet-sdk-<version>-<rid>-tar.gz -C <extracted-stage1-sdk-path>
+    tar -ozxf /<stage1-path>/artifacts/assets/Release/dotnet-sdk-<version>-<rid>-tar.gz -C <extracted-stage1-sdk-path>
     ```
+
+1. Extract your freshly-built stage 1 source-built artifacts to a convenient location.
+
+    ```bash
+    tar -ozxf /<stage1-path>/artifacts/assets/Release/Private.SourceBuilt.Artifacts.<version>-<rid>-.tar.gz -C <extracted-stage1-artifacts-path>
+    ```
+
+1. Prep the build.
+
+    ```bash
+    ./prep-source-build.sh --no-sdk --no-artifacts --with-sdk <extracted-stage1-sdk-path> --with-packages <extracted-stage1-artifacts-path>
+
 
 1. Build the source built .NET SDK.
 
     ``` bash
-    ./build.sh --with-sdk <extracted-stage1-sdk-path> --with-packages /<stage1-path>/obj/bin/<arch>/blob-feed/packages
+    ./build.sh --source-only --with-sdk <extracted-stage1-sdk-path> --with-packages <extracted-stage1-artifacts-path>
     ```
 
 ## Building for New OS (Using a RID unknown to .NET)
@@ -110,5 +122,5 @@ While this is a more complicated scenario that may differ from platform to platf
 Building a subsequent or servicing version of .NET requires that you have source built the previous version of .NET available as descibed in one of the [building scenarios](#scenarios). Once you have a previous verion of the .NET SDK available, all you have to do is run the following build command.
 
 ``` bash
-./build.sh --with-sdk <extracted-previously-source-built-sdk-path> --with-packages <extracted-previously-source-built-packages-path>
+./build.sh --source-only --with-sdk <extracted-previously-source-built-sdk-path> --with-packages <extracted-previously-source-built-packages-path>
 ```
