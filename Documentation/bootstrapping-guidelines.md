@@ -57,7 +57,6 @@ Building .NET for the first time is a two stage process:
     ```bash
     ./prep-source-build.sh --no-sdk --no-artifacts --with-sdk <extracted-stage1-sdk-path> --with-packages <extracted-stage1-artifacts-path>
 
-
 1. Build the source built .NET SDK.
 
     ``` bash

@@ -6,7 +6,7 @@ as [Arcade](https://github.com/dotnet/arcade). Re-bootstrapping is the term used
 toolset need to be updated. This document describes the steps to re-bootstrap
 the VMR.
 
-# When is it appropriate to re-bootstrap?
+## When is it appropriate to re-bootstrap?
 
 As part of the release process, the toolset is updated (e.g. PRs are created via
 the release automation). Outside of a release, re-bootstrapping is only permitted
@@ -17,7 +17,7 @@ and time consuming process for them to re-bootstrap. It is likely to cause
 significant delays in the release/availability of .NET within the distros that are
 source built.
 
-# Why is re-bootstrap necessary?
+## Why is re-bootstrap necessary?
 
 Re-bootstrapping is necessary when .NET takes a dependency on new functionality
 added within the bootstrap toolset. For example suppose a new compiler feature is
@@ -26,9 +26,9 @@ would be necessary. The implication of this, and the restrictions of when
 re-bootstrapping is allowed, means that repos should, in general, wait to take a
 dependency on a new toolset feature until after that feature has been released.
 
-# Steps to re-bootstrap
+## Steps to re-bootstrap
 
-## Automated
+### Automated
 
 > [!IMPORTANT]  
 > The re-bootstrap pipeline uploads the artifacts to the official blob storage,
@@ -38,21 +38,22 @@ dependency on a new toolset feature until after that feature has been released.
 You can re-bootstrap the VMR using [this pipeline](https://dev.azure.com/dnceng/internal/_build?definitionId=1371).
 The pipeline will upload the artifacts & open the corresponding re-bootstrap PR.
 
-## Manual
+### Manual
+
 In case the automated re-bootstrapping pipeline is unavailable, you can manually re-bootstrap the VMR:
 
 1. Update previous source-build artifacts
     1. Find a [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) run
     with the desired changes.
-        1. If a rebootstrap is needed quickly and it is not feasibly to wait for a 
+        1. If a rebootstrap is needed quickly and it is not feasibly to wait for a
            [dotnet-source-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1219) run,
-           you can also use the artifacts from a 
+           you can also use the artifacts from a
            [dotnet-source-build-lite](https://dev.azure.com/dnceng/internal/_build?definitionId=1299) run.
     1. Retrieve the built SDKs and private source-built artifacts archives, from the following legs:
         1. Alpine\<nnn\>_Online_MsftSdk_x64
         1. CentOSStream\<n\>_Online_MsftSdk_x64
-    1. Upload the SDKs to https://dotnetcli.blob.core.windows.net/source-built-artifacts/sdks/
-    1. Upload the private source-built artifacts archives to https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/
+    1. Upload the SDKs to the [source build sdk blob storage](https://dotnetcli.blob.core.windows.net/source-built-artifacts/sdks/)
+    1. Upload the private source-built artifacts archives to the [source build assets blob storage](https://dotnetcli.blob.core.windows.net/source-built-artifacts/assets/)
 1. Update .NET SDK
     1. Find the [dotnet-sdk-official-ci](https://dev.azure.com/dnceng/internal/_build?definitionId=140) build
     that best matches the dotnet-source-build. The following is the suggested
