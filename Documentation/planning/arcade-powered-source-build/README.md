@@ -88,15 +88,18 @@ SBRP ultimately won't use the restore-side infrastructure because it has no
 upstreams, however, it can be developed here as a prototype.
 
 * [intermediate-nupkg.md]
-* [Create proof of concept: the source-build intermediate nupkg format #1543](https://github.com/dotnet/source-build/issues/1543)
-* [Use SBRP intermediate nupkg to build SBRP #1636](https://github.com/dotnet/source-build/issues/1636)
+* [Create proof of concept: the source-build intermediate nupkg format
+  #1543](https://github.com/dotnet/source-build/issues/1543)
+* [Use SBRP intermediate nupkg to build SBRP
+  #1636](https://github.com/dotnet/source-build/issues/1636)
 
 ### Prebuilt usage tracking
 
 We aren't eliminating instances of prebuilt usage at this stage in the process,
 but the tooling needs to work in the context of an Arcade-powered build.
 
-* [Include prebuilt reports in intermediate nupkgs #1725](https://github.com/dotnet/source-build/issues/1725)
+* [Include prebuilt reports in intermediate nupkgs
+  #1725](https://github.com/dotnet/source-build/issues/1725)
 
 ### Managed-only and RID-specific builds
 
@@ -107,7 +110,8 @@ for all RIDs downstream. All repositories must be buildable under any RID, but
 for simple managed-only repositories, this is a reasonable assumption. The
 templates and Arcade SDK need to handle this.
 
-* [Add mechanism to restore RID-specific intermediate nupkgs #1722](https://github.com/dotnet/source-build/issues/1722)
+* [Add mechanism to restore RID-specific intermediate nupkgs
+  #1722](https://github.com/dotnet/source-build/issues/1722)
 
 ### Integrating tooling into Arcade
 
@@ -116,8 +120,10 @@ points, initially. Before onboarding any extra repos, it should be integrated
 into the Arcade SDK proper to reuse the code.
 
 * [in-arcade.md]
-* [Source code location in Arcade SDK (`Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild`)](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild)
-* [Source-build-specific MSBuild tool source in Arcade SDK (`Microsoft.DotNet.SourceBuild`)](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild)
+* [Source code location in Arcade SDK
+  (`Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild`)](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.Arcade.Sdk/tools/SourceBuild)
+* [Source-build-specific MSBuild tool source in Arcade SDK
+  (`Microsoft.DotNet.SourceBuild`)](https://github.com/dotnet/arcade/tree/master/src/Microsoft.DotNet.SourceBuild)
 
 ## Incremental progress
 
@@ -208,7 +214,8 @@ A: There are two reasons to make a patch:
 [speculative-build.md]: speculative-build.md
 [intermediate-nupkg.md]: intermediate-nupkg.md
 [intermediate nupkgs]: intermediate-nupkg.md
-[onboarding/local-onboarding.md#patching]: onboarding/local-onboarding.md#patching
+[onboarding/local-onboarding.md#patching]:
+    onboarding/local-onboarding.md#patching
 
 ---
 
