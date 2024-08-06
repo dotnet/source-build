@@ -1,6 +1,8 @@
 # Interpreting the poison report
 
-This is an explanation of the poison report and its interpretation.  For an overview of poisoning, [see this document](leak-detection.md).  The poison report looks something like this:
+This is an explanation of the poison report and its interpretation.  For an
+overview of poisoning, [see this document](leak-detection.md).  The poison
+report looks something like this:
 
 ```xml
 <PrebuiltLeakReport>
@@ -24,26 +26,39 @@ This is an explanation of the poison report and its interpretation.  For an over
 </PrebuiltLeakReport>
 ```
 
-The first thing to notice is the different `Type`s.  These can help you track down where the leak came from.  One match can have multiple types, e.g. `<Type>AssemblyAttribute,Hash</Type>`.
+The first thing to notice is the different `Type`s.  These can help you track
+down where the leak came from.  One match can have multiple types, e.g.
+`<Type>AssemblyAttribute,Hash</Type>`.
 
 ## Failure types
 
 ### AssemblyAttribute
 
-This means that we detected a custom attribute that source-build adds to each prebuilt and previously-source-built assembly before the build.  This is a *definite* leak - there will not be any false positives.  However, this may not be cause for failure - some categories of assemblies may leak without causing problems:
+This means that we detected a custom attribute that source-build adds to each
+prebuilt and previously-source-built assembly before the build.  This is a
+*definite* leak - there will not be any false positives.  However, this may not
+be cause for failure - some categories of assemblies may leak without causing
+problems:
 
 - Localization assemblies, e.g. .../langcode/Assembly.Resources.dll
-- Reference assemblies (these should not ship, but also will very rarely cause problems).
+- Reference assemblies (these should not ship, but also will very rarely cause
+  problems).
 - Test or resource assemblies - these should be removed.
-- N-1 (previously-source-built) assemblies included in shipping packages to break cycles - this is expected behavior.  Usually this use case is covered by reference packages but in rare cases we need to actually run an N-1 binary in the build.
+- N-1 (previously-source-built) assemblies included in shipping packages to
+  break cycles - this is expected behavior.  Usually this use case is covered by
+  reference packages but in rare cases we need to actually run an N-1 binary in
+  the build.
 
 ### SourceBuildReferenceAssembly
 
-This means that a reference assembly originating from the source-build-reference-packages repo was leaked.
+This means that a reference assembly originating from the
+source-build-reference-packages repo was leaked.
 
 ### Hash
 
-Hash failures mean that a file matches the catalog of hashes that we take of existing files before the build.  These are commonly false positives due to shipping static files not produced by the build such as:
+Hash failures mean that a file matches the catalog of hashes that we take of
+existing files before the build.  These are commonly false positives due to
+shipping static files not produced by the build such as:
 
 - Text files (licenses, templates, etc)
 - Empty files (\_.\_)
@@ -52,20 +67,33 @@ However, if this is a DLL this is probably a legitimate leak.
 
 ### NupkgFile
 
-This type of failure means that a nupkg was copied wholesale to the final output.  This is a definite leak, but very uncommon and likely easy to trace in the binlogs.
+This type of failure means that a nupkg was copied wholesale to the final
+output.  This is a definite leak, but very uncommon and likely easy to trace in
+the binlogs.
 
 ## Other metadata
 
 ### \<File Path=...\>
 
-This is the location in the output where the leak was detected.  The first component of the path is an archive or package name, e.g. `dotnet-sdk-6.0.100` is `dotnet-sdk-6.0.100.tar.gz` in the `artifacts/<arch>` directory.  Components after that are the file's path within the archive or nupkg.
+This is the location in the output where the leak was detected.  The first
+component of the path is an archive or package name, e.g. `dotnet-sdk-6.0.100`
+is `dotnet-sdk-6.0.100.tar.gz` in the `artifacts/<arch>` directory.  Components
+after that are the file's path within the archive or nupkg.
 
 ### \<Hash\>
 
-This is the hash of the failing file.  This is useful to track down the correct file if there are multiple with the same name.  It is included in all cases, even when the failure type is not `Hash`.
+This is the hash of the failing file.  This is useful to track down the correct
+file if there are multiple with the same name.  It is included in all cases,
+even when the failure type is not `Hash`.
 
 ### \<Match\>
 
-When available, this describes the file in the source-build *input* that matches the failing file.  For instance:
-`<Match Package="/home/dotnet-bot/build/previously-source-built/System.Text.Encoding.1.2.3.nupkg" PackageId="System.Text.Encoding" PackageVersion="1.2.3" File="lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll" />`
-means that the failing `System.Text.Encoding.CodePages.dll` matches the hash of the file `lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll` in the previously-source-built package System.Text.Encoding version 1.2.3.  This can help track down the exact *input* file that made it to the final output.
+When available, this describes the file in the source-build *input* that matches
+the failing file.  For instance: `<Match
+Package="/home/dotnet-bot/build/previously-source-built/System.Text.Encoding.1.2.3.nupkg"
+PackageId="System.Text.Encoding" PackageVersion="1.2.3"
+File="lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll" />` means that the
+failing `System.Text.Encoding.CodePages.dll` matches the hash of the file
+`lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll` in the
+previously-source-built package System.Text.Encoding version 1.2.3.  This can
+help track down the exact *input* file that made it to the final output.

@@ -45,7 +45,8 @@ RID.
 
 * `Microsoft.SourceBuild.Intermediate.runtime.Libraries.linux.x64/6.0.0-foo`
   * Contains the dotnet/runtime platform extensions libraries.
-  * E.g. `System.IO.Pipelines.6.0.0-foo.nupkg`, `System.Numerics.Tensors.6.0.0-foo.nupkg`, ...
+  * E.g. `System.IO.Pipelines.6.0.0-foo.nupkg`,
+    `System.Numerics.Tensors.6.0.0-foo.nupkg`, ...
 * `Microsoft.SourceBuild.Intermediate.runtime.Crossgen2Pack.linux.x64/6.0.0-foo`
   * Contains the crossgen2 framework pack:
     * `Microsoft.NETCore.App.Crossgen2.linux-x64.6.0.0-foo.nupkg`
