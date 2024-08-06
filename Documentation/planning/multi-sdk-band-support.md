@@ -1,6 +1,6 @@
 # Source-Build Support for Multiple SDKs
 
-This document serves as the design planning document for how .NET source build will support multiple SDK feature bands. More generally, this support could be described as "partial VMR support". This is the implementation plan for https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Managing-SDK-Bands.md.
+This document serves as the design planning document for how .NET source build will support multiple SDK feature bands. More generally, this support could be described as "partial VMR support". This is the implementation plan for [Managing SDK Bands Unified Build feature](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Managing-SDK-Bands.md).
 
 ## Terminology for this document
 
@@ -211,13 +211,11 @@ For an illustration of artifact flow, please see the [Appendix](#conceptual-diag
 
 ### Previews and major release GA builds
 
-**No Change**
-
 A distro maintainer sees no change here. Until a few months **after** GA, only the 1xx band ships. The workflow remains the same as today. Clone the dotnet VMR branch/tag in question, build using previously source-built artifacts and SDKs.
 
 ### A distro maintainer wishing to only support the 1xx SDK
 
-**No change**
+A distro maintainer sees no change here.
 
 ### A distro maintainer wishing to build the initial release (n00) of a Nxx+ band SDK
 

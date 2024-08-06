@@ -8,7 +8,7 @@ creates a tree of cached builds.
 The following diagram is the source-build intermediate output flow in 3.1, with
 leaf nodes colored gold and the Core-SDK (dotnet/installer) product at the top:
 
-> ![](img/official-leaves.svg)
+> ![Source build leaves](img/official-leaves.svg)
 > [source (img/official-leaves.dot)](img/official-leaves.dot)
 
 To build up the tree of cached builds, source-build must be distributed amongst

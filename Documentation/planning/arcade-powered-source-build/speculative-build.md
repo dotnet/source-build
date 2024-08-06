@@ -20,7 +20,7 @@ machines).
 
 ## How to orchestrate a speculative build
 
-> ![](img/spec-build-1-general.png)
+> ![Speculative build](img/spec-build-1-general.png)
 
 The red circle is the current build. For example, dotnet/aspnetcore on `master`.
 The black circles are the builds that were used for intermediates.
@@ -40,7 +40,7 @@ local build outputs. This gives us a speculative SDK as an output.
 
 ## Validation: speculative bootstrap
 
-> ![](img/spec-build-2-bootstrap.png)  
+> ![Speculative bootstrap](img/spec-build-2-bootstrap.png)  
 > (The big arrow means *from* and/or *to* many nodes.)
 
 We can use the output SDK and intermediates from our bootstrap build to try to
@@ -49,7 +49,7 @@ successful, we have validated the bootstrap build scenario.
 
 ## Validation: speculative N-1
 
-> ![](img/spec-build-3-n-1.png)  
+> ![Speculative N-1](img/spec-build-3-n-1.png)  
 > (The big arrow means *from* and/or *to* many nodes.)
 
 If we instead use the output SDK and intermediates from an N-1 build, instead of

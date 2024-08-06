@@ -7,7 +7,7 @@ repos.
 
 ## Official build
 
-> ![](img/rough-pipeline-official.png)  
+> ![Official builds](img/rough-pipeline-official.png)  
 > Blue: Existing  
 > Black: Source-build additions.
 
@@ -27,7 +27,7 @@ other official builds.
 
 ## PR validation and rolling builds
 
-> ![](img/rough-pipeline-validate.png)  
+> ![Pipeline validation](img/rough-pipeline-validate.png)  
 > Blue: Existing.  
 > Black: Basic source-build. Always validate.  
 > Green: Extra validation steps (necessary coverage per repo varies).
