@@ -30,8 +30,8 @@ In practice, most maintainers will bootstrap once every major version (e.g.
 6.0.100, 8.0.100, etc).  If you bootstrap these initial versions once you will
 generally be able to build 6.0.101 with 6.0.100, 6.0.102 with 6.0.101, 8.0.101
 with 8.0.100, and so on.  The source-build team attempts to avoid requiring
-bootstrapping more than once per major version but sometimes this is unavoidable
-- often when we move from one feature band to another, or if a major language
+bootstrapping more than once per major version but sometimes this is unavoidable,
+often when we move from one feature band to another, or if a major language
 feature is added, or if there are issues discovered with a given version of the
 SDK after release.  These types of situations will be announced on the
 source-build [discussions
