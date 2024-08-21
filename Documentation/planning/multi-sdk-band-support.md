@@ -23,7 +23,7 @@ feature](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/V
   functionality. Examples include
   [runtime](https://github.com/dotnet/dotnet/tree/main/src/runtime),
   [roslyn](https://github.com/dotnet/dotnet/tree/main/src/roslyn) or
-  [installer](https://github.com/dotnet/dotnet/tree/main/src/installer).
+  [sdk](https://github.com/dotnet/dotnet/tree/main/src/sdk).
 - **Previously source-built (PSB)** - Artifacts from a previous
   servicing/preview iteration, or from a bootstrap build. These may be used when
   building the current dotnet VMR branch, but may not be bundled into any

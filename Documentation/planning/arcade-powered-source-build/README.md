@@ -51,9 +51,7 @@ ArPow consists of two main goals with some key benefits:
      has to root-cause and patch over problems.
 
    * Gives us a place to add additional source-build-specific tests for common
-     problems, such as [nongranular servicing
-     readiness](../nongranular-servicing-readiness) and (most critically)
-     prebuilt usage regressions.
+     problems, such as prebuilt usage regressions.
 
 This doc is about where we can start, what incremental progress would look like,
 and the vision.
@@ -183,30 +181,6 @@ compatible with source-build requirements, and if validation runs into a
 problem, they are able to reproduce the build locally using an Arcade build
 command.
 
----
-
-## Q&A
-
-### Q: How do we patch without an orchestration-focused repo?
-
-A: There are two reasons to make a patch:
-
-1. The repository doesn't properly build from source, and it will take a long
-    time to figure out a fix that works both in source-build and in the
-    Microsoft build. The practical solution is to put a `.patch` file into the
-    repo itself that is only applied during a build from source.
-    * See [onboarding/local-onboarding.md#patching]
-
-2. The repository successfully builds from source in its local build and
-    official build, but doesn't work when built inside a tarball. This *should*
-    be considered a build break, and be fixed in the repository directly. The
-    fix then flows down to dotnet/installer to produce a fixed tarball. However,
-    release deadlines may prevent this.
-    * The dotnet/installer build process may need a way to inject a `.patch`
-      file into the tarball. The `.patch` file would be checked into
-      dotnet/installer and copied into the output tarball. This reduces the
-      scope of a build reset.
-
 [in-arcade.md]: in-arcade.md
 [incremental-official-chunked.md]: incremental-official-chunked.md
 [incremental-official.md]: incremental-official.md
@@ -214,8 +188,6 @@ A: There are two reasons to make a patch:
 [speculative-build.md]: speculative-build.md
 [intermediate-nupkg.md]: intermediate-nupkg.md
 [intermediate nupkgs]: intermediate-nupkg.md
-[onboarding/local-onboarding.md#patching]:
-    onboarding/local-onboarding.md#patching
 
 ---
 
