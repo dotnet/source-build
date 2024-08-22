@@ -24,7 +24,7 @@ These changes are all needed before source build will work:
   List of allowed prebuilts (approval required).
 * [`eng/Version.Details.xml`](#engversiondetailsxml) - Already exists, but
   modifications are needed to pull dependencies from upstream [intermediate
-  nupkgs](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs).
+  nupkgs](../planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs).
 
 See the following sections for details:
 
@@ -162,7 +162,7 @@ elements, and adding a new `source-build-reference-packages` element.
 [intermediate nupkg]s from the upstream repo's official build, rather than using
 prebuilt binaries to fulfill the dependencies. Note that `RepoName` is used to
 calculate the ID of the [intermediate
-nupkg](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs):
+nupkg](../planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs):
 the `Dependency` `Name` is ignored by source build.
 
 Building with the source-built versions of your dependencies also means that any
@@ -172,7 +172,7 @@ where your source build depends on an upstream component that isn't actually
 built in source build.
 
 `ManagedOnly` determines whether a RID suffix is necessary on the [intermediate
-nupkg](planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs)
+nupkg](../planning/arcade-powered-source-build/README.md#intermediate-nupkg-outputsinputs)
 ID. For example, running source build on `dotnet/installer` with `linux-x64`
 with the above example configuration will restore:
 

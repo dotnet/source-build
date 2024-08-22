@@ -22,7 +22,7 @@ a targeted platform.
 MacOS is not currently supported: [Tracking
 Issue](https://github.com/dotnet/source-build/issues/2909).  However, community
 users have created a [Homebrew
-project](https://github.com/Homebrew/homebrew-core/blob/master/Formula/dotnet.rb)
+project](https://github.com/Homebrew/homebrew-core/blob/master/Formula/d/dotnet.rb)
 to build .NET for OSX.  Please feel free to open new issues in individual repos
 or in source-build for OSX issues.
 
