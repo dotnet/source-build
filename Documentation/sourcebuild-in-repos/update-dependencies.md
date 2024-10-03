@@ -41,8 +41,7 @@ what can happen is
 1. In version 2, Package A is split into Package A1 and Package A2.
 1. A downstream repo is never updated to take the split packages.
 1. The version 2 source-build succeeds because Package A exists in the
-  [previously-source-built
-  archive](build-info.md#Single_version_and_single_RID_build), but no new
+  [previously-source-built archive](build-info.md#single-version-and-single-rid-build), but no new
   version of Package A is produced.
 1. Source-build version 3 fails because Package A no longer exists in the
   previously-source-built archive either.
