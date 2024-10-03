@@ -3,7 +3,7 @@
 This is a collection of notes about how source-build can differ in general from
 your repo's build and what kind of issues that can create.
 
-## Single version and single RID build
+## Single-version and single-RID build
 
 Source-build is required to build on a single machine with no internet access.
 This means that we build targeting a single RID, usually the non-portable RID

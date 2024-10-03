@@ -1,7 +1,5 @@
 # .NET Source-Build
 
-Test
-
 Please use [GitHub
 discussions](https://github.com/dotnet/source-build/discussions) to see
 announcements, ask questions, make suggestions, and share information with other
