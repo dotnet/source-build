@@ -61,7 +61,7 @@ MSBuild code that can change the way source build behaves.
 ### `eng/SourceBuildPrebuiltBaseline.xml`
 
 ```xml
-<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build-internal as a reviewer. -->
+<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build as a reviewer. -->
 <!-- See https://aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
 
 <UsageData>
@@ -86,7 +86,7 @@ Add the source build team as the
 of the source build infrastructure.
 
 ``` text
-/eng/SourceBuild* @dotnet/source-build-internal
+/eng/SourceBuild* @dotnet/source-build
 ```
 
 ### Trying it out locally
@@ -247,7 +247,7 @@ To opt in:
 #### End result
 
 Submit the changes above in a PR and include
-[@source-build-internal](https://github.com/orgs/dotnet/teams/source-build-internal)
+[@source-build](https://github.com/orgs/dotnet/teams/source-build)
 as a reviewer. The jobs (or job, if managed-only) are automatically be added to
 CI in the existing pipeline alongside existing jobs, with a name like `Build
 Source-Build (<Platform>)`:
@@ -355,7 +355,7 @@ flow into `dotnet/installer`, a complete .NET product can be built from source.
 The repository will be synchronized into the VMR during the first build and the
 VMR will be built. This will validate that no prebuilts were added to the system
 and everything is functioning correctly. Please notify
-[@source-build-internal](https://github.com/orgs/dotnet/teams/source-build-internal)
+[@source-build](https://github.com/orgs/dotnet/teams/source-build)
 to be on the lookout for the new repo and they will validate as necessary.
 
 ## Additional resources

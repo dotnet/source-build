@@ -12,7 +12,7 @@ branch (e.g. runtime release/6.0 to sdk release/6.0.1xx, release/6.0.2xx, etc).
 Package versions that you are updating to should be source-built in their
 respective repos.  If the version you need is produced in a branch that is not
 yet source-build-compatible please let the [source-build
-team](https://github.com/orgs/dotnet/teams/source-build-internal) know.
+team](https://github.com/orgs/dotnet/teams/source-build) know.
 
 Another common error we see is updating eng/Versions.props but not
 eng/Version.Details.xml.  This causes problems for source-build because we

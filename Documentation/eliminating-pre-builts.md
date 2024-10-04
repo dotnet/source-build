@@ -143,7 +143,7 @@ contains package information of pre-builts that for one reason or another are
 allowed in the source-build of the repository.
 
 Any new addition to the pre-built exception list must be signed-off by a member
-of the `@dotnet/source-build-internal` team.
+of the `@dotnet/source-build` team.
 
 A common example of a exception that is present in several .NET repositories is
 an [_intermediate

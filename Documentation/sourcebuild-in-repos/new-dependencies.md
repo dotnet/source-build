@@ -70,7 +70,7 @@ dependency and the nuances it may have.
 1. Is the repo already built in source-build but the specific package is not?
     1. There's probably an issue with source-building this package.  Please talk
       to a [source-build team
-      member](https://github.com/orgs/dotnet/teams/source-build-internal) about
+      member](https://github.com/orgs/dotnet/teams/source-build) about
       why that is and whether we can fix it.
 1. Is this a repo that uses Arcade to build?
     1. Does the foreign repo depend on your repo, directly or indirectly? i.e.
@@ -78,7 +78,7 @@ dependency and the nuances it may have.
         1. This isn't necessarily a deal-breaker - it can sometimes be worked
           around with reference-only packages.  Please contact a [source-build
           team
-          member](https://github.com/orgs/dotnet/teams/source-build-internal) to
+          member](https://github.com/orgs/dotnet/teams/source-build) to
           discuss.
     1. Does the foreign repo publish to BAR?
         1. If not, please contact them to get them publishing to BAR in an
