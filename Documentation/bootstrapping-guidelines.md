@@ -75,7 +75,7 @@ stage 1 to build .NET SDK from source.
 1. Prep the build.
 
     ```bash
-    ./prep-source-build.sh --no-sdk --no-artifacts --with-sdk <extracted-stage1-sdk-path> --with-packages <extracted-stage1-artifacts-path>
+    ./prep-source-build.sh --no-sdk --no-artifacts --no-bootstrap --with-sdk <extracted-stage1-sdk-path> --with-packages <extracted-stage1-artifacts-path>
     ```
 
 1. Build the source built .NET SDK.
