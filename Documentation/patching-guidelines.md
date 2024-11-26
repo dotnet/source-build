@@ -39,6 +39,8 @@ create one.
 > git format-patch --zero-commit --no-signature -1 -o "$PATCH_DIR/<repo>"
 > ```
 
+**Note:** Please make sure there are no other already existing patches which target same files as the newly added patch.
+
 ## Applying Patches
 
 To apply a patch, or multiple patches, use `git am` while inside the target
