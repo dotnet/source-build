@@ -36,7 +36,7 @@ build of additional SDK feature bands as being any different from any other
 source build. Each build of the product combines a set of inputs (previously
 source-built artifacts + source) to produce a set of outputs that can ship to
 customers. When building two completely different major versions of .NET, the
-set of inputs is different (e.g. different source, 6.0 SDK vs. 8.0 SDK). Some of
+set of inputs is different (e.g. different source, 8.0 SDK vs. 9.0 SDK). Some of
 the previously source-built artifacts come from .NET, some may come from the
 source-built package ecosystem (e.g. icu or clang/llvm). If a repo were to be
 eliminated from the input sources, the binaries previously built from those
@@ -173,8 +173,8 @@ of precedence from highest to lowest:
 
 - 1. A version just produced by a component built earlier in the build (if
      available).
-- 2. A version in the previously source-built packages (if available).
-- 3. The version in the checked in `Versions.props` for a repo.
+- 1. A version in the previously source-built packages (if available).
+- 1. The version in the checked in `Versions.props` for a repo.
 
 With the addition of a new input set (CSB), we now have an additional set.
 Changes should be made such that a PackageVersions.props file is generated for
@@ -182,9 +182,9 @@ this new set, and is imported in the correct place based on its precedence.
 
 - 1. A version just produced by a component built earlier in the build (if
      available).
-- 2. A version in the current source-built packages (if available).
-- 3. A version in the previously source-built packages (if available).
-- 3. The version in the checked in `Versions.props` for a repo.
+- 1. A version in the current source-built packages (if available).
+- 1. A version in the previously source-built packages (if available).
+- 1. The version in the checked in `Versions.props` for a repo.
 
 ### Filtering builds of components
 

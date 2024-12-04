@@ -21,8 +21,8 @@ Source-build supplies a *previously-source-built* set of packages for this
 bootstrapping process.  This is one way we have of breaking cycles in the build.
 However, none of these packages can make it to the final build output. This also
 means that your repo should be buildable with the immediately previous version
-of the SDK than you are building for; i.e., if you are building for 6.0.103,
-everything should be buildable with the 6.0.102 SDK.
+of the SDK than you are building for; i.e., if you are building for 8.0.103,
+everything should be buildable with the 8.0.102 SDK.
 
 We also only build one version of each repo.  This means that if your repo turns
 production of some packages on and off, for instance, if you only produce

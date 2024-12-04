@@ -8,7 +8,7 @@ when doing manual updates.  If you are manually updating a version, also see
 ## Internal packages
 
 If you are manually updating a package, please make sure it's from a compatible
-branch (e.g. runtime release/6.0 to sdk release/6.0.1xx, release/6.0.2xx, etc).
+branch (e.g. runtime release/8.0 to sdk release/8.0.1xx).
 Package versions that you are updating to should be source-built in their
 respective repos.  If the version you need is produced in a branch that is not
 yet source-build-compatible please let the [source-build
