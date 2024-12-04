@@ -12,27 +12,11 @@ documentation, tools, and is used for issue tracking.
 
 * [Build system requirements](Documentation/system-requirements.md)
 
-## Building .NET 8.0+
+## Building .NET
 
-.NET 8.0 and newer will be built from the
-[dotnet/dotnet](https://github.com/dotnet/dotnet) repo. Clone the dotnet/dotnet
-repo and check out the tag for the desired release. Then, follow the
-instructions in [dotnet/dotnet's
+Follow the instructions in [dotnet/dotnet's
 README](https://github.com/dotnet/dotnet/blob/main/README.md#dev-instructions)
 to build .NET from source.
-
-## Building .NET 6.0
-
-.NET 6.0 is built from source using the
-[dotnet/installer](https://github.com/dotnet/installer/tree/release/6.0.1xx)
-repo. Clone the dotnet/installer repo and check out the tag for the desired
-release. Then, follow the instructions in [dotnet/installer's
-README](https://github.com/dotnet/installer/tree/release/6.0.1xx?tab=readme-ov-file#build-net-from-source-source-build)
-to build .NET from source. Please see the [support](#support) section below to
-see which feature branches are currently supported.
-
-> The source-build repository doesn't currently support Windows. See
-> [source-build#1190](https://github.com/dotnet/source-build/issues/1190).
 
 ## Source-build goals
 
@@ -124,16 +108,15 @@ to build the whole .NET SDK from source.
 | CentOS Stream | [CentOS Stream Mirror](http://mirror.stream.centos.org/9-stream/AppStream/x86_64/os/Packages/) | [@omajid](https://github.com/omajid) |
 | [Fedora](https://fedoraproject.org/wiki/DotNet) | [Default](https://packages.fedoraproject.org/search?query=dotnet) | [@omajid](https://github.com/omajid) |
 | Homebrew | [Formula](https://formulae.brew.sh/formula/dotnet) | [@asbjornu](https://github.com/asbjornu) |
-| [Red Hat Enterprise Linux](https://developers.redhat.com/products/dotnet/overview) | [Default](https://access.redhat.com/documentation/en-us/net/6.0) | [@omajid](https://github.com/omajid) |
+| [Red Hat Enterprise Linux](https://developers.redhat.com/products/dotnet/overview) | [Default](https://access.redhat.com/documentation/en-us/net/8.0) | [@omajid](https://github.com/omajid) |
 | [Ubuntu](https://canonical.com/blog/install-dotnet-on-ubuntu) | [Default](https://packages.ubuntu.com/search?suite=default&section=all&arch=any&keywords=dotnet&searchon=names)<br>[Personal Package Archives](https://launchpad.net/ubuntu/+ppas?name_filter=dotnet) | [@mirespace](https://github.com/mirespace) |
 
 ## Support
 
-.NET Source-Build is supported on the oldest available .NET SDK feature update
-for each major release, and on Linux only. For example, if .NET `6.0.1xx`,
-`6.0.2xx`, `8.0.1xx`, and `8.0.2xx` feature updates are available from
-[dotnet.microsoft.com](https://dotnet.microsoft.com/en-us/download/dotnet/6.0),
-Source-Build will support `6.0.1xx` and `8.0.1xx`.
+.NET source build supports the following:
+
+1. Linux only, Windows and MacOS is not supported
+1. 1xx SDK feature band only (e.g. 8.0.1xx)
 
 For the latest information about Source-Build support for new .NET versions,
 please check our [GitHub Discussions
