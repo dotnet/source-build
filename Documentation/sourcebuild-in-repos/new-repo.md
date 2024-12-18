@@ -134,7 +134,8 @@ conditionally exclude.
 Condition="'$(DotNetBuildFromSource)' != 'true'"
 ```
 
-See the [Unified Build Controls](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Unified-Build-Controls.md) for more options on how to exclude components from source build.
+See the [Unified Build Controls](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Unified-Build-Controls.md)
+for more options on how to exclude components from source build.
 
 ### `eng/Version.Details.xml`
 
