@@ -18,7 +18,7 @@ behavior of source build in the repo.
 
 These changes are all needed before source build will work:
 
-* [`eng/SourceBuild.props`](#engsourcebuildprops) - Basic properties, such as
+* [`eng/DotNetBuild.props`](#engdotnetbuildprops) - Basic properties, such as
   repo name.
 * [`eng/SourceBuildPrebuiltBaseline.xml`](#engsourcebuildprebuiltbaselinexml) -
   List of allowed prebuilts (approval required).
@@ -28,7 +28,7 @@ These changes are all needed before source build will work:
 
 See the following sections for details:
 
-### `eng/SourceBuild.props`
+### `eng/DotNetBuild.props`
 
 ```xml
 <Project>
@@ -55,14 +55,14 @@ These two properties determine the name of the [intermediate nupkg]:
 `Microsoft.SourceBuild.Intermediate.$(GitHubRepositoryName)[.$(RidSuffix)]`.
 
 It's possible more configuration will be required for specific repos.
-`eng/SourceBuild.props`, similar to `eng/Build.props`, is a place to add extra
+`eng/DotNetBuild.props`, similar to `eng/Build.props`, is a place to add extra
 MSBuild code that can change the way source build behaves.
 
 ### `eng/SourceBuildPrebuiltBaseline.xml`
 
 ```xml
-<!-- Whenever altering this or other Source Build files, please include @dotnet/source-build as a reviewer. -->
-<!-- See https://aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
+<!-- When altering this file or making other Source Build related changes, include @dotnet/source-build as a reviewer. -->
+<!-- See aka.ms/dotnet/prebuilts for guidance on what pre-builts are and how to eliminate them. -->
 
 <UsageData>
   <IgnorePatterns>
@@ -111,14 +111,14 @@ Windows](https://github.com/dotnet/source-build/issues/1190), only Linux and
 macOS.
 
 After running the build, source build artifacts will be in
-`artifacts/source-build`, and the [intermediate nupkg] will be something like
+`artifacts/sb`, and the [intermediate nupkg] will be something like
 `artifacts/packages/*/Microsoft.SourceBuild.Intermediate.*.nupkg`.
 
 The MSBuild binlog will be placed somewhere like:
-`artifacts/log/Debug/Build.binlog`. However, this "outer" binlog doesn't contain
+`artifacts/log/Release/Build.binlog`. However, this "outer" binlog doesn't contain
 the meat of the build: the "inner" build runs inside an `Exec` task. The inner
-binlog will be written to:
-`artifacts/source-build/self/src/artifacts/sourcebuild.binlog`.
+binlog will be written to somewhere like:
+`artifacts/sb/src/artifacts/log/Release/source-inner-build.binlog`.
 
 ### Excluding components
 
@@ -133,6 +133,8 @@ conditionally exclude.
 ```code
 Condition="'$(DotNetBuildFromSource)' != 'true'"
 ```
+
+See the [Unified Build Controls](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Unified-Build-Controls.md) for more options on how to exclude components from source build.
 
 ### `eng/Version.Details.xml`
 
@@ -309,7 +311,7 @@ pipeline in the standard way that Arcade will detect and publish.
 Once your repo can be source-built, it is time to register it into the source
 build dependency tree. The graph of the product is defined by the
 `eng/Version.Details.xml` files. This dependency graph starts at
-[dotnet/installer](https://github.com/dotnet/installer/blob/main/eng/Version.Details.xml).
+[dotnet/sdk](https://github.com/dotnet/sdk/blob/main/eng/Version.Details.xml).
 The dependendecies of repos declared in these files are walked and the first
 copy/commit of each repo found in the dependency graph is used.
 
@@ -324,13 +326,13 @@ Another effect of adding a new source build repository is that its sources will
 be synchronized into the [Virtual Monolithic Repository of
 .NET](https://github.com/dotnet/dotnet). The VMR is then where the official
 source build happens from. The sources are synchronized once the associated
-commit/package flows into `dotnet/installer`.
+commit/package flows into `dotnet/sdk`.
 
 In order for the sources of the new repo to by synchronized into the VMR, the
 repo needs to be registered in the [`source-mappings.json`
 file](https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json) which
 tells the tooling where from and which sources should be synchronized. Please
-open a PR in [`dotnet/installer`](https://github.com/dotnet/installer) and add
+open a PR in [`dotnet/sdk`](https://github.com/dotnet/sdk) and add
 your repository into `src/VirtualMonoRepo/source-mappings.json`. The name must
 match the name declared in the `SourceBuild` tag in `Version.Details.xml`
 created in the previous step.
@@ -351,7 +353,7 @@ is needed for the source-built .NET scenario.
 ## Validate
 
 Once the downstream dependency(s) are added to the new repo and those changes
-flow into `dotnet/installer`, a complete .NET product can be built from source.
+flow into `dotnet/sdk`, a complete .NET product can be built from source.
 The repository will be synchronized into the VMR during the first build and the
 VMR will be built. This will validate that no prebuilts were added to the system
 and everything is functioning correctly. Please notify
