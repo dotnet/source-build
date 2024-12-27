@@ -55,14 +55,14 @@ itself. The way to construct the URL can be found in the `init-tools.sh` file in
 the root of each repo. Currently, it is constructed as follows:
 
 ```bash
-https://dotnetcli.azureedge.net/dotnet/Sdk/${__DOTNET_TOOLS_VERSION}/dotnet-sdk-${__DOTNET_TOOLS_VERSION}-${__PKG_RID}-${__PKG_ARCH}.tar.gz
+https://builds.dotnet.microsoft.com/dotnet/Sdk/${__DOTNET_TOOLS_VERSION}/dotnet-sdk-${__DOTNET_TOOLS_VERSION}-${__PKG_RID}-${__PKG_ARCH}.tar.gz
 ```
 
 The `${__DOTNET_TOOLS_VERSION}` is replaced by the seed CLI version, the
 `${__PKG_RID}` by the RID of the current platform and `${__PKG_ARCH}` by the
 architecture of the current platform. So for tools version `2.0.0` on linux
 distro with x64 architecture where portable dotnet core can be used, the URL is
-`https://dotnetcli.azureedge.net/dotnet/Sdk/2.0.0/dotnet-sdk-2.0.0-linux-x64.tar.gz`
+`https://builds.dotnet.microsoft.com/dotnet/Sdk/2.0.0/dotnet-sdk-2.0.0-linux-x64.tar.gz`
 To download it, `wget` or `curl` tools can be used. Once the file is downloaded,
 create a new folder and untar the file into it.  
 So e.g. for the file mentioned above, use:
