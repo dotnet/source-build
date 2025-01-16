@@ -41,7 +41,7 @@ matrix](https://github.com/dotnet/sdk/blob/main/eng/pipelines/templates/stages/v
 1. CentOS Stream - Latest version (amd64)
 1. Fedora - Latest version (amd64)
 1. Ubuntu - Latest LTS version at the time of the release (amd64/arm64)
-1. Alpine - Latest and previous versions (amd64)
+1. Alpine - Latest version (amd64)
 1. AlmaLinux - Oldest version (targets lowest glibc version) (amd64)
 
 When updating the distro versions in the CI matrix as new versions are released
