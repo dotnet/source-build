@@ -34,7 +34,7 @@ See the following sections for details:
 <Project>
 
   <PropertyGroup>
-    <GitHubRepositoryName>this-repo</GitHubRepositoryName>
+    <RepositoryName>this-repo</RepositoryName>
     <SourceBuildManagedOnly>true</SourceBuildManagedOnly>
   </PropertyGroup>
 
@@ -52,7 +52,7 @@ nupkg].
   `Microsoft.NETCore.App.Runtime.linux-x64`, only managed code.
 
 These two properties determine the name of the [intermediate nupkg]:
-`Microsoft.SourceBuild.Intermediate.$(GitHubRepositoryName)[.$(RidSuffix)]`.
+`Microsoft.SourceBuild.Intermediate.$(RepositoryName)[.$(RidSuffix)]`.
 
 It's possible more configuration will be required for specific repos.
 `eng/DotNetBuild.props`, similar to `eng/Build.props`, is a place to add extra
