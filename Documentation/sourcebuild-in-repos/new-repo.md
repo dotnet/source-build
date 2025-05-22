@@ -162,7 +162,7 @@ In order for the sources of the new repo to by synchronized into the VMR, the
 repo needs to be registered in the [`source-mappings.json`
 file](https://github.com/dotnet/dotnet/blob/main/src/source-mappings.json) which
 tells the tooling where from and which sources should be synchronized. Please
-open a PR in [`dotnet/sdk`](https://github.com/dotnet/dotnet) and add
+open a PR in [`dotnet/dotnet`](https://github.com/dotnet/dotnet) and add
 your repository into `src/source-mappings.json`.
 
 ### Cloaking (filtering) the repository sources
@@ -180,10 +180,7 @@ is needed for the source-built .NET scenario.
 
 ## Validate
 
-Once the downstream dependency(s) are added to the new repo and those changes
-flow into `dotnet/sdk`, a complete .NET product can be built from source.
-The repository will be synchronized into the VMR during the first build and the
-VMR will be built. This will validate that no prebuilts were added to the system
-and everything is functioning correctly. Please notify
-[@source-build](https://github.com/orgs/dotnet/teams/source-build)
-to be on the lookout for the new repo and they will validate as necessary.
+Once the code flows to the VMR, the PR validation legs will ensure that no
+[prebuilts](https://github.com/dotnet/source-build/blob/main/Documentation/eliminating-pre-builts.md#what-is-a-prebuilt)
+were added to the system and everything is functioning correctly.
+If you need help on addressing any prebuilds, reach out to @source-build.
