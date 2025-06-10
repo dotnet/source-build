@@ -82,19 +82,19 @@ re-bootstrap the VMR:
         can try using an earlier passing build.
     1. Retrieve the built SDK version from the build.
     1. Update the dotnet version in the
-       [global.json](https://github.com/dotnet/sdk/blob/main/src/SourceBuild/content/global.json).
+       [global.json](https://github.com/dotnet/dotnet/blob/main/global.json).
 1. Update arcade
     1. Lookup the arcade commit and version. From a VMR commit, you can find the
     corresponding arcade commit/version by looking at the
     [source-manifest.json](https://github.com/dotnet/dotnet/blob/main/src/source-manifest.json).
     1. Update the arcade SDK version in the
-       [global.json](https://github.com/dotnet/sdk/blob/main/src/SourceBuild/content/global.json).
+       [global.json](https://github.com/dotnet/dotnet/blob/main/global.json).
     1. Update the arcade dependency commit and version in the
-       [Version.Details.xml](https://github.com/dotnet/sdk/blob/main/src/SourceBuild/content/eng/Version.Details.xml).
+       [Version.Details.xml](https://github.com/dotnet/dotnet/blob/main/eng/Version.Details.xml).
 1. Update private source-built SDK and artifacts versions
     1. Update `PrivateSourceBuiltSdkVersion` and
        `PrivateSourceBuiltArtifactsVersion` in the
-       [Versions.props](https://github.com/dotnet/sdk/blob/main/src/SourceBuild/content/eng/Versions.props).
+       [Versions.props](https://github.com/dotnet/dotnet/blob/main/eng/Versions.props).
 
 [Tracking issue for automating this
 process.](https://github.com/dotnet/source-build/issues/4246)

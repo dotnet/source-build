@@ -54,7 +54,7 @@ patch or create a new commit on top that you can be sure will apply cleanly.
 
 > **Note:** The VMR has all of the `src/SourceBuild/patches` applied. This is
 done as part of the [synchronization
-process](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Design-And-Operation.md#source-build-patches).
+process](https://github.com/dotnet/dotnet/blob/main/docs/VMR-Design-And-Operation.md#source-build-patches).
 
 ## Patch Guidelines
 
@@ -113,7 +113,7 @@ patch or by re-applying the changes to the repo and recreating the patch.
 ## Unified Build Plans
 
 The [Unified
-Build](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/README.md)
+Build](https://github.com/dotnet/dotnet/blob/main/docs/README.md)
 project will add support for source edits in the
 [VMR](https://github.com/dotnet/dotnet). This will eliminate the need for
 patches as the required changes can be directly made in the VMR. All changes

@@ -37,7 +37,7 @@ conditionally exclude.
 Condition="'$(DotNetBuildSourceOnly)' != 'true'"
 ```
 
-See the [Unified Build Controls](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/Unified-Build-Controls.md)
+See the [Unified Build Controls](https://github.com/dotnet/dotnet/blob/main/docs/VMR-Controls.md)
 for more options on how to exclude components from source build.
 
 ## Setup CI
