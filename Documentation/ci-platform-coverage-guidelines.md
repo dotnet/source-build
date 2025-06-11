@@ -44,10 +44,71 @@ matrix](https://github.com/dotnet/dotnet/blob/main/eng/pipelines/templates/stage
 1. Alpine - Latest version (amd64)
 1. AlmaLinux - Oldest version (targets lowest glibc version) (amd64)
 
-When updating the distro versions in the CI matrix as new versions are released
-and older versions reach EOL:
+## Updating Distro Versions in the VMR
 
-1. Update `main` to the newer version one to two months prior to the GA/EOL date.
-    This is done to flush out any issues and to avoid destabilizing the servicing
-    branches.
-1. At the GA/EOL date, update the servicing branches.
+There are two scenarios when updating distro versions in the CI pipeline:
+
+### Case 1: OS Used in N-1 Leg (Previous Version Support)
+
+When updating a distro that is used in a n-1 (previous version) build leg:
+
+1. Update pipeline build configuration variables
+
+1. Create backup pipeline RID variable for old version:
+   - Create a new distro RID variable with suffix `Old`
+     (eg. if current variable is `centOSStreamX64Rid`, create `centOSStreamX64RidOld`)
+   - Set the value to the RID of the old distro version being replaced
+
+1. File tracking issue:
+   - Create an issue in [dotnet/source-build](https://github.com/dotnet/source-build) repository
+   - Title should indicate need to update artifacts RID after next rebootstrap or release
+   - This ensures the old RID is properly cleaned up later
+
+1. Update n-1 build legs:
+   - Change the `artifactsRid` template parameter for n-1 build legs to use the `<name>Old` variable
+   - Add a comment with a link to the issue created in step 3
+
+1. Update prep-source-build.sh:
+   - Add a comment above the [`defaultArtifactsRid`](https://github.com/dotnet/dotnet/blob/604a6612d130bc042dc973aba84889f529f9cb69/prep-source-build.sh#L40) variable to update the default value
+   - Include a link to the issue created in step 3
+
+1. Submit changes:
+   - Open a pull request with all the above changes
+   - Ensure all changes are reviewed and tested by doing a full run of the VMR
+      - 8.0/9.0: [dotnet-source-build-pre10.0](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+      - 10.0+: [dotnet-unified-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1330)
+
+1. Update release pipeline infrastructure:
+   - After the public PR is merged, update [the leg name(s)](https://dev.azure.com/dnceng/internal/_git/dotnet-release?path=/eng/pipeline/source-build-release/steps/re-bootstrap.yml&version=GBmain&line=68&lineEnd=86&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents) for the release artifacts to match the new configuration in the VMR
+   - Create and merge this PR to complete the update process
+
+1. Close tracking issue from step 3:
+   - After the subsequent release or reboostrap (whichever comes first),
+     open a PR with the changes linked to the tracking issue from step 3.
+   - Merge the changes, and close the issue
+
+### Case 2: Regular Artifact (Standard Update)
+
+For distros not used in n-1 legs (simpler case):
+
+1. Update build configuration variables
+1. Submit changes:
+   - Open a pull request with all the above changes
+   - Ensure all changes are reviewed and tested by doing a full run of the VMR
+      - 8.0/9.0: [dotnet-source-build-pre10.0](https://dev.azure.com/dnceng/internal/_build?definitionId=1219)
+      - 10.0+: [dotnet-unified-build](https://dev.azure.com/dnceng/internal/_build?definitionId=1330)
+
+## Timing Guidelines for Distro Updates
+
+When updating distro versions as new versions are released and older versions reach end-of-life (EOL):
+
+1. **Pre-GA/EOL updates (1-2 months before):**
+   - Update the `main` branch to use the newer distro version
+   - This allows time to identify and resolve any compatibility issues
+   - Helps avoid destabilizing servicing branches close to release dates
+   - Follow guidelines described in [Permutations](#permutations)
+
+2. **GA/EOL date updates:**
+   - Update all active servicing branches (`release/x.0` branches)
+   - Ensure consistency across all supported .NET versions
+   - Follow guidelines described in [Permutations](#permutations)
