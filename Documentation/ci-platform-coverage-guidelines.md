@@ -36,7 +36,7 @@ and architecture. Rather, smart decisions should be made to best utilize
 resources.
 
 The following distro versions will be included in the [CI
-matrix](https://github.com/dotnet/sdk/blob/main/eng/pipelines/templates/stages/vmr-build.yml):
+matrix](https://github.com/dotnet/dotnet/blob/main/eng/pipelines/templates/stages/vmr-build.yml):
 
 1. CentOS Stream - Latest version (amd64)
 1. Fedora - Latest version (amd64)

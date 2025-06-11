@@ -12,7 +12,7 @@ a targeted platform.
 * [Preconfigured Container
   Images](https://github.com/dotnet/dotnet-buildtools-prereqs-docker) - These
   images are used by
-  [CI](https://github.com/dotnet/dotnet/blob/main/src/sdk/eng/pipelines/templates/stages/vmr-build.yml)
+  [CI](https://github.com/dotnet/dotnet/blob/main/eng/pipelines/templates/stages/vmr-build.yml)
   to build and test source-build.
 * [Distros Source Building
   .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)

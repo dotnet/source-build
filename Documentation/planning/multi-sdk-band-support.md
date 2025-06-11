@@ -4,7 +4,7 @@ This document serves as the design planning document for how .NET source build
 will support multiple SDK feature bands. More generally, this support could be
 described as "partial VMR support". This is the implementation plan for
 [Managing SDK Bands Unified Build
-feature](https://github.com/dotnet/arcade/blob/main/Documentation/UnifiedBuild/VMR-Managing-SDK-Bands.md).
+feature](https://github.com/dotnet/dotnet/blob/main/docs/VMR-Managing-SDK-Bands.md).
 
 ## Terminology for this document
 
