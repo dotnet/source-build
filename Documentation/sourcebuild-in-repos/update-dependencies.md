@@ -30,7 +30,8 @@ version all over again.  Please [log an
 issue](https://github.com/dotnet/source-build/issues/new/choose) to discuss
 this.  You can check if the external package you want is already included in
 source-build in the
-[source-build-externals](https://github.com/dotnet/source-build-externals) repo.
+[dotnet/source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages/tree/main/src/externalPackages/src)
+repo.
 
 ## Splitting, combining, and moving packages
 
