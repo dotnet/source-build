@@ -97,7 +97,7 @@ dependency and the nuances it may have.
   issue](https://github.com/dotnet/source-build/issues/new/choose) to determine
   if this is a workable approach for your foreign repo.
 1. We build some external dependencies in the
-  [dotnet/source-build-externals](https://github.com/dotnet/source-build-externals)
+  [dotnet/source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages/tree/main/src/externalPackages/src)
   repo.  Good targets for this generally have very few if any dependencies and
   very simple build processes. [Please log an
   issue](https://github.com/dotnet/source-build/issues/new/choose) to get the
