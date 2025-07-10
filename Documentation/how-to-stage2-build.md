@@ -12,7 +12,8 @@ For example, if a new Roslyn analyzer is included in the SDK, it can introduce n
 These issues must be resolved for the product to be considered **source‑buildable**.
 
 The process of using built SDK and artifacts to rebuild the product is often called **bootstrapping**.
-Distribution maintainers use it to initiate the build process: build once using the Microsoft SDK and artifacts, then rebuild using the resulting SDK and artifacts.
+This helps to ensure that the second build was produced using only sources on disk without any external inputs.
+Distribution maintainers use this process to initiate the build process: build once using the Microsoft SDK and artifacts, then rebuild using the resulting SDK and artifacts.
 
 ## Steps to run a stage 2 build
 
