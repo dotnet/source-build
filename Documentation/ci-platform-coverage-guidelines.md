@@ -44,8 +44,56 @@ matrix](https://github.com/dotnet/sdk/blob/main/eng/pipelines/templates/stages/v
 1. Alpine - Latest version (amd64)
 1. AlmaLinux - Oldest version (targets lowest glibc version) (amd64)
 
-When updating the distro versions in the CI matrix as new versions are released
-and older versions reach EOL:
+## Updating Distro Versions in the VMR
+
+There are two scenarios when updating distro versions in the CI pipeline:
+
+### Case 1: OS Leg in VMR Produces N-1 artifact (Previous Version Support)
+
+When updating a distro that produces an N-1 (previous version) artifact in the VMR:
+
+1. **Update VMR pipeline variables:**
+   - Create "Previous" versions of existing distro variables by adding `Previous` suffix to preserve the old values
+   - Update current distro variables to new version values
+
+1. **Update VMR pipeline:**
+   - Add container configuration for previous version
+   - For previous legs, update the distro parameters to use the previous variables you created in Step 1.
+
+1. **Update SBRP Cleanup pipeline:**
+   - If applicable, update the default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
+
+1. **File a tracking issue** to remove the previous variables and update the artifact RID used in `prep-source-build.sh` - [example](https://github.com/dotnet/source-build/issues/5238)
+
+1. **Submit and test your changes:**
+   - Open a pull request with all changes - [example](https://github.com/dotnet/dotnet/pull/1093)
+   - Queue a full build of the VMR to validate the changes
+
+1. **Update release pipelines:**
+   - Update the artifact name for relevant .NET version in the source-build release and re-bootstrap pipeline - [example](https://dev.azure.com/dnceng/internal/_git/dotnet-release/commit/c9be53307205765ebae48c18d00ef6260e596817?path=/eng/pipeline/source-build-release/steps/re-bootstrap.yml&version=GBmain&line=90&lineEnd=91&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files).
+   - The release validation will fail until the next source-build release. File an issue to update the artifacts used for the release validation after the next release.
+
+1. **Complete the transition:**
+   - Queue the re-bootstrap pipeline after the next successful CI build of the VMR
+   - In the resulting PR, make the changes described in your tracking issue (Step 4)
+   - Merge the resulting PR and close the tracking issue
+
+
+### Case 2: OS Leg in VMR Produces Regular Artifact (Standard Update)
+
+For distros not used in n-1 legs:
+
+1. **Update VMR pipeline variables:**
+   - Update the distro-specific variables to new version values
+
+1. **Update SBRP Cleanup pipeline:**
+   - If applicable, update default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
+
+1. **Submit changes:**
+   - Open a pull request with all the above changes
+   - Queue a full build of the VMR to validate the changes
+
+## Timing Guidelines for Distro Updates
 
 1. Update `main` to the newer version one to two months prior to the GA/EOL date.
     This is done to flush out any issues and to avoid destabilizing the servicing
