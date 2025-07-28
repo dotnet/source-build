@@ -78,7 +78,6 @@ When updating a distro that produces an N-1 (previous version) artifact in the V
    - In the resulting PR, make the changes described in your tracking issue (Step 4)
    - Merge the resulting PR and close the tracking issue
 
-
 ### Case 2: OS Leg in VMR Produces Regular Artifact (Standard Update)
 
 For distros not used in n-1 legs:
