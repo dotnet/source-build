@@ -53,12 +53,12 @@ There are two scenarios when updating distro versions in the CI pipeline:
 When updating a distro that produces an N-1 (previous version) artifact in the VMR:
 
 1. **Update VMR pipeline variables:**
-   - Create "Previous" versions of existing distro variables by adding `Previous` suffix to preserve the old values
-   - Update current distro variables to new version values
+   - Create "Previous" versions of existing distro variables by adding `Previous` suffix to preserve the old values - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/variables/vmr-build.yml#L117-L121)
+   - Update current distro variables to new version values - [example](https://github.com/dotnet/dotnet/pull/1093/files#diff-821e317646a065ee331aa7444ca5e2ae9f76512e5ca316e045280e526db23724R192-R193)
 
 1. **Update VMR pipeline:**
-   - Add container configuration for previous version
-   - For previous legs, update the distro parameters to use the previous variables you created in Step 1.
+   - Add container configuration for previous version - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/ci.yml#L94-L96)
+   - For previous legs, update the distro parameters to use the previous variables you created in Step 1 - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/stages/source-build-and-validate.yml#L33-L38)
 
 1. **Update SBRP Cleanup pipeline:**
    - If applicable, update the default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
@@ -75,7 +75,7 @@ When updating a distro that produces an N-1 (previous version) artifact in the V
 
 1. **Complete the transition:**
    - Queue the re-bootstrap pipeline after the next successful CI build of the VMR
-   - In the resulting PR, make the changes described in your tracking issue (Step 4)
+   - In the resulting PR, make the changes described in your tracking issue (Step 4) - [example](https://github.com/dotnet/dotnet/pull/1187/commits/622843880cb3fb0c78896b1c9b5ef76b2a114017)
    - Merge the resulting PR and close the tracking issue
 
 ### Case 2: OS Leg in VMR Produces Regular Artifact (Standard Update)
@@ -83,7 +83,7 @@ When updating a distro that produces an N-1 (previous version) artifact in the V
 For distros not used in n-1 legs:
 
 1. **Update VMR pipeline variables:**
-   - Update the distro-specific variables to new version values
+   - Update the distro-specific variables to new version values - [example](https://github.com/dotnet/dotnet/pull/1093/files#diff-821e317646a065ee331aa7444ca5e2ae9f76512e5ca316e045280e526db23724R192-R193)
 
 1. **Update SBRP Cleanup pipeline:**
    - If applicable, update default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
