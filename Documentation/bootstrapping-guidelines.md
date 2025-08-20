@@ -21,6 +21,10 @@ Refer to the [build
 instructions](https://github.com/dotnet/installer/blob/main/README.md#build-net-from-source-source-build)
 to review how to build the .NET SDK from source.
 
+**Note:** For offline build environments (such as sandboxed builds), see the
+[troubleshooting offline builds guide](./troubleshooting-offline-builds.md) for
+common issues and workarounds.
+
 ## Scenarios
 
 There are three major scenarios for bootstrapping:

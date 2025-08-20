@@ -96,6 +96,7 @@ to build the whole .NET SDK from source.
 
 * [Bootstrapping new distro and architecture
   guidelines](Documentation/bootstrapping-guidelines.md)
+* [Troubleshooting offline builds](Documentation/troubleshooting-offline-builds.md)
 * [Distribution packaging
   guidelines](https://learn.microsoft.com/dotnet/core/distribution-packaging)
 

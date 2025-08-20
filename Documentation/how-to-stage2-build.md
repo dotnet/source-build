@@ -42,4 +42,4 @@ Distribution maintainers use this process to initiate the build process: build o
     popd
     ```
 
-    > **Note:** `prep-source-build.sh` is optional for stage 2. It is only needed if you want to remove checked‑in binaries before building.
+    > **Note:** `prep-source-build.sh` is optional for stage 2. It is only needed if you want to remove checked‑in binaries before building. For offline environments, see the [troubleshooting offline builds guide](./troubleshooting-offline-builds.md) if you encounter SDK resolution issues.
