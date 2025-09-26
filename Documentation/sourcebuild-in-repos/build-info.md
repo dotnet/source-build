@@ -36,14 +36,26 @@ produces multiple versions and these can be hard-coded or use a
 `$(<PackageName>ReferenceVersion)` property or similar if you don't need
 source-build to change them.
 
-## Platform-specific packages
+## Platform-specific components
 
-Packages that require components or packages only available on some other
-operating system than the building OS cannot be built in source-build. These
-should use `<ExcludeFromSourceBuild>true</ExcludeFromSourceBuild>` or other
-options to be excluded from the source-build.  For instance, if a project
-depends on a package that can only be built on Windows, it will need to be
-disabled or worked around in source-build.  As an example, [Roslyn
-removes](https://github.com/dotnet/roslyn/blob/b999a65c8b0feeccb2b58da3d7a6e80e5f08feab/src/Workspaces/Core/Portable/Storage/PersistentStorageExtensions.cs#L23)
-a small performance improvement when building for source-build because it
-requires a component that isn't available.
+It is not always necessary or correct to include all repo components in source build.
+**Important philosophy: The Microsoft build and source build should be as close to the same as possible.**
+Components should be excluded based on platform requirements rather than source-build specific reasons.
+To exclude components, use the [VMR Controls](https://github.com/dotnet/dotnet/blob/main/docs/VMR-Controls.md) properties.
+
+Common patterns include:
+
+```xml
+<!-- Exclude Windows-only components on non-Windows platforms -->
+<ItemGroup Condition="'$(TargetOS)' == 'windows'">
+  <ProjectReference Include="WindowsSpecific.csproj" />
+</ItemGroup>
+
+<!-- Exclude components from source-only builds when truly necessary -->
+<ItemGroup Condition="'$(DotNetBuildSourceOnly)' != 'true'">
+<ProjectReference Include="MicrosoftProprietary.csproj" />
+</ItemGroup>
+```
+
+**Avoid using `DotNetBuildSourceOnly` conditions unless absolutely necessary.**
+**Prefer platform-based conditions** (like `TargetOS`) **to maintain alignment between Microsoft and source builds.**
