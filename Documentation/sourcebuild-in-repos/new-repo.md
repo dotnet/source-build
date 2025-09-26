@@ -12,7 +12,7 @@ If a repo passes build options through to the common arcade build script, a sour
 ./build.sh -sb
 ```
 
-> Note: [source build is only supported on linux](https://github.com/dotnet/source-build/?tab=readme-ov-file#support).
+> Note: [source build is only supported on Linux](https://github.com/dotnet/source-build/?tab=readme-ov-file#support).
 
 ### Excluding platform-specific components
 
