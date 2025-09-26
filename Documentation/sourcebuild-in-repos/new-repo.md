@@ -111,4 +111,5 @@ this just happens to fit in nicely.
 
 ## Source build repos and the VMR
 
-In order to fully onboard a repo into source build, the repo must be included within the VMR. The [Repository Onboarding Guide](https://github.com/dotnet/dotnet/blob/main/docs/Repository-Onboarding.md) contains the comprehensive VMR onboarding guidance which includes among several other topics, resolving source build prebuilts.
+In order to fully onboard a repo into source build, the repo must be included within the VMR.
+The [Repository Onboarding Guide](https://github.com/dotnet/dotnet/blob/main/docs/Repository-Onboarding.md) contains the comprehensive VMR onboarding guidance which includes among several other topics, resolving source build prebuilts.
