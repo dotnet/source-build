@@ -9,4 +9,4 @@ with and participate in source-build.
 * [Updating dependencies](update-dependencies.md)
 * [Considerations when adding features](adding-features.md)
 * [General notes on the source-build build](build-info.md)
-* [Adding new repositories](new-repo.md)
+* [Onboarding repositories to source build](new-repo.md)
