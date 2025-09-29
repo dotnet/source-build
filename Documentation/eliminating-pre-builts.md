@@ -6,7 +6,7 @@ It is primarily intended for developers contributing to the `dotnet` organizatio
 > **Important**: Starting with .NET 10.0, prebuilt detection was removed from individual repositories due to accuracy and usability issues.
 > Prebuilt detection now only occurs within the VMR (Virtual Monolithic Repository).
 
-## Table of content
+## Table of contents
 
 - [What is a Prebuilt](#what-is-a-prebuilt)
 - [.NET 10.0+ VMR-based prebuilt detection](#net-100-vmr-based-prebuilt-detection)
@@ -91,7 +91,7 @@ the path to the project that is referencing the dependency.
 
 Once you've identified a pre-built, refer to the [adding a new source-build dependency](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md) documentation for guidance on resolving it.
 
-## Pre-built through a transitive dependency
+## Pre-builts through transitive dependencies
 
 During a project dependency update, a new pre-built might be introduced by a
 new or updated transitive dependency. While the Arcade tooling will highlight
@@ -153,7 +153,7 @@ Entry in project.assets.json:
 In this example, `Microsoft.Extensions.DependencyModel` would be the direct
 dependency causing the `System.Text.Json` pre-built.
 
-## Allowed exceptions (pre-10.0)
+## Allowed exceptions (Pre-10.0)
 
 > **Note**: The information in this section applies to .NET versions **prior to 10.0**.
 
@@ -169,6 +169,7 @@ specify the name / version of the dependency:
 
 ```xml
 <UsageData>
+  <Usages>
     <Usage Id="Foo.Bar" Version="x.y.z" />
   </Usages>
 </UsageData>
