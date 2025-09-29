@@ -1,14 +1,17 @@
 # Eliminating pre-builts in .NET repositories
 
-This is a detailed guide on how to eliminate pre-builts in a source-buildable
-repository. It is primarily intended for developers contributing to the `dotnet`
-organization.
+This is a detailed guide on how to eliminate pre-builts in a source-buildable repository.
+It is primarily intended for developers contributing to the `dotnet` organization.
+
+> **Important**: Starting with .NET 10.0, prebuilt detection was removed from individual repositories due to accuracy and usability issues.
+> Prebuilt detection now only occurs within the VMR (Virtual Monolithic Repository).
 
 ## Table of content
 
 - [What is a Prebuilt](#what-is-a-prebuilt)
-- [Elimitating pre-builts](#eliminating-pre-builts)
-- [Allowed exceptions](#allowed-exceptions)
+- [.NET 10.0+ VMR-based prebuilt detection](#net-100-vmr-based-prebuilt-detection)
+- [Pre-10.0 repository-based prebuilt detection](#pre-100-repository-based-prebuilt-detection)
+- [Allowed exceptions (Pre-10.0)](#allowed-exceptions-pre-100)
 - [Contacts](#contacts)
 
 ## What is a Prebuilt
@@ -26,14 +29,13 @@ given repository.
 
 When onboarding a repository to source-build or adding a new dependency to a
 source-buildable one, the contributor runs the risk of introducing a new
-pre-built to the product. To protect against this and catch any new pre-builts
-as soon as possible, Arcade source-build infrastructure provides _pre-built
-detection_ - MSBuild logic responsible for veryfing that no used dependency is a
+pre-built to the product. To protect against this, the source-build infrastructure provides _pre-built
+detection_ - MSBuild logic responsible for verifying that no used dependency is a
 pre-built. In case one is discovered (for example, during a PR pipeline), the
 build will fail with an appropriate message somewhat similar to the following:
 
 ```text
-3 new packages used not in baseline! See report at ./artifacts/source-build/self/prebuilt-report/baseline-comparison.xml for more information. Package IDs are:
+3 new packages used not in baseline! See report at ./artifacts/log/Release/baseline-comparison.xml for more information. Package IDs are:
   Microsoft.Bcl.AsyncInterfaces.8.0.0-alpha.1.22557.11  
   Microsoft.Build.16.7.0
   Microsoft.Build.Framework.14.3.0
@@ -46,14 +48,33 @@ tooling during the build process and not referenced by the project itself.
 Dependencies retrieved from external sources that are not explicitly excluded
 from pre-built detection will be flagged as pre-builts.
 
-## Eliminating pre-builts
+## .NET 10.0+ VMR-based prebuilt detection
 
-When altering the dependecy tree of a repository, specifically adding or
-updating dependencies, there is a posibility that a new pre-built is introduced,
-failing the build and blocking any merge. This can be resolved by identifying
-what exactly is the pre-built and following the approriate steps listed below.
+Starting with .NET 10.0, prebuilt detection was removed from individual repositories because it was inaccurate and problematic.
+Prebuilt detection now only occurs during full source builds within the VMR.
 
-To check if new pre-builts were introduce, the repository needs to be
+### For repository developers
+
+Prebuilts will typically be surfaced when repository changes forward flow into the VMR.
+There are two ways to detect prebuilts before they reach the VMR:
+
+1. **VMR validation against repository PRs**: Use the process described in [VMR Validation documentation](https://github.com/dotnet/arcade/blob/main/Documentation/VmrValidation.md) to validate your repository changes against the VMR.
+
+2. **Direct VMR changes**: Changes made directly against the VMR will have prebuilt detection performed as part of the PR validation checks.
+
+### VMR source-build instructions
+
+Prebuilt detection is enabled anytime a source build is performed within the VMR.
+For complete guidance on how to build the VMR from source, see the [VMR build documentation](https://github.com/dotnet/dotnet/blob/main/README.md#building).
+
+### Resolving prebuilts
+
+When prebuilts are detected in the VMR, they will cause a build failure.
+Refer to the [adding a new source-build dependency](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md) documentation for guidance on resolving them.
+
+## Pre-10.0 repository-based prebuilt detection
+
+To check if new pre-builts were introduced, the repository needs to be
 source-built first. This can be done through the following command:
 
 ```sh
@@ -68,14 +89,11 @@ detection reports, located in the
 `./prebuild-usage.xml` file. The information in question can, for example, be
 the path to the project that is referencing the dependency.
 
-With this information retrieved, the [adding a new source-build
-dependency](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md#adding-dependencies)
-documentation should be referred to as the main guide for resolving the
-pre-built.
+Once you've identified a pre-built, refer to the [adding a new source-build dependency](https://github.com/dotnet/source-build/blob/main/Documentation/sourcebuild-in-repos/new-dependencies.md) documentation for guidance on resolving it.
 
-### Pre-built through a transitive dependency
+## Pre-built through a transitive dependency
 
-During a project dependency updated, a new pre-built might be introduced by a
+During a project dependency update, a new pre-built might be introduced by a
 new or updated transitive dependency. While the Arcade tooling will highlight
 the name and version of the pre-built in the build exception as well as the
 project that restored the dependency in question, it will not point out where
@@ -86,9 +104,9 @@ dependency, it might be hard to identify the relationship that is bringing in
 the pre-built into the project, especially if the developer has limited
 knowledge of the project or code-base in general.
 
-Arcade source-build infrastructure helps accomplish this this by pointing out
+Arcade source-build infrastructure helps accomplish this by pointing out
 the `project.assets.json` file that is referencing the pre-built in the
-`./artifacts/source-build/self/prebuild-report/prebuild-usage.xml` report file.
+`./artifacts/log/Release/prebuilt-usage.xml` report file.
 A `project.assets.json` file is a NuGet restore process artifact that contains a
 resolved dependency tree for a specific project. Every package that was restored
 by a given project is mentioned there with links between the dependencies,
@@ -101,7 +119,7 @@ entries in files mentioned above:
 Exception identifying the pre-built:
 
 ```text
-1 new packages used not in baseline! See report at ./artifacts/source-build/self/prebuilt-report/baseline-comparison.xml for more information. Package IDs are:
+1 new packages used not in baseline! See report at ./artifacts/log/Release/baseline-comparison.xml for more information. Package IDs are:
   System.Text.Json.8.0.0
 ```
 
@@ -135,37 +153,19 @@ Entry in project.assets.json:
 In this example, `Microsoft.Extensions.DependencyModel` would be the direct
 dependency causing the `System.Text.Json` pre-built.
 
-## Allowed exceptions
+## Allowed exceptions (pre-10.0)
 
-The list of permitted pre-builts can be found in the
-`./eng/SourceBuildPrebuiltBaseline.xml` file in the root of the repository. It
-contains package information of pre-builts that for one reason or another are
-allowed in the source-build of the repository.
+> **Note**: The information in this section applies to .NET versions **prior to 10.0**.
 
-Any new addition to the pre-built exception list must be signed-off by a member
-of the `@dotnet/source-build` team.
+The list of permitted pre-builts can be found in the `./eng/SourceBuildPrebuiltBaseline.xml` file in the root of the repository.
+It contains package information of pre-builts that for one reason or another are allowed in the source-build of the repository.
 
-A common example of a exception that is present in several .NET repositories is
-an [_intermediate
-package_](https://github.com/dotnet/source-build/blob/main/Documentation/planning/arcade-powered-source-build/intermediate-nupkg.md).
-When a repository utilizes an intermediate package, it will be excluded from
-pre-built detection with the following declaration in the above-mentioned file:
-
-```xml
-<UsageData>
-  <IgnorePatterns>
-    <UsagePattern IdentityGlob="Microsoft.SourceBuild.Intermediate.*" />
-  </IgnorePatterns>
-</UsageData>
-```
-
-With this ignore pattern in place, pre-built detection will not mark any .NET
-intermediate package as long as it conforms to the naming in the pattern.
+Any new additions to the pre-built exception list must be signed-off by a member of the `@dotnet/source-build` team.
 
 In cases where a specific package needs to be excluded from pre-built detection
 (for example, to not block the introduction of changes until a source-build
 acceptable solution for the pre-built is provided), the developer can directly
-specify the name / version of the depedency:
+specify the name / version of the dependency:
 
 ```xml
 <UsageData>
@@ -181,8 +181,8 @@ pre-built to the existing baseline. The new file can be found at
 
 ## Contacts
 
-For any questions or additional information about this document, pre-builts or
-source-build in general, please create an
-[issue](https://github.com/dotnet/source-build/issues) or open a
-[discussion](https://github.com/dotnet/source-build/discussions) in the
-[source-build](https://github.com/dotnet/source-build) repository.
+For questions or additional information about this document, pre-builts or source-build in general, please use one of the following:
+
+- [Open an issue](https://github.com/dotnet/source-build/issues)
+- [Create a new discussion](https://github.com/dotnet/source-build/discussions)
+- [Mention @dotnet/source-build](https://github.com/orgs/dotnet/teams/source-build)
