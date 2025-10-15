@@ -77,6 +77,7 @@ lines show SDK tooling dependencies between bands*
 ## Understanding Bootstrap vs Sequential Build
 
 ### Bootstrap Process (Two-Stage)
+
 Bootstrapping is required when you don't have suitable source-built artifacts
 to build a release. It's a two-stage process:
 
@@ -105,6 +106,7 @@ flowchart TD
 See [Bootstrapping Guidelines](bootstrapping-guidelines.md) for more info.
 
 ### Sequential Build (Single-Stage)
+
 When you have appropriate source-built artifacts from previous builds, you can
 build directly without bootstrapping. This is the typical workflow for ongoing
 releases.
@@ -125,7 +127,9 @@ When building feature bands, you'll work with two types of source-built
 artifacts:
 
 ### Previously Source-Built (PSB) Artifacts
+
 These are artifacts from previous servicing releases or bootstrap builds:
+
 - Used as build dependencies but not redistributed in outputs
 - Come from previous monthly .NET releases (e.g., 8.0.1 artifacts when
   building 8.0.2)
@@ -133,7 +137,9 @@ These are artifacts from previous servicing releases or bootstrap builds:
   binaries leak into outputs
 
 ### Shared Component Artifacts
+
 These are shared runtime and foundational components from the 1xx band:
+
 - Come from the 1xx band build in the same release cycle
 - Can be used as dependencies AND redistributed in outputs
 - Include shared runtime and foundational components that all feature bands
@@ -142,7 +148,9 @@ These are shared runtime and foundational components from the 1xx band:
 ## Feature Band Characteristics
 
 ### 1xx Band (GA/Non-breaking)
+
 The foundational feature band that ships with .NET GA releases:
+
 - **Content**: Contains the complete VMR with .NET runtime, core libraries,
   and SDK tooling
 - **Purpose**: Provides the stable runtime foundation that all other bands
@@ -152,7 +160,9 @@ The foundational feature band that ships with .NET GA releases:
 - **Compatibility**: Non-breaking changes only during servicing
 
 ### 2xx Band (Stable/Enhanced)
+
 Enhanced SDK tooling that ships with Visual Studio updates:
+
 - **Content**: Contains only SDK tooling differences from 1xx band (subset
   VMR)
 - **Purpose**: Adds enhanced developer tooling and Visual Studio integration
@@ -163,7 +173,9 @@ Enhanced SDK tooling that ships with Visual Studio updates:
 - **Dependencies**: Always uses shared runtime components from 1xx band
 
 ### 3xx Band (Preview/Insiders)
+
 Cutting-edge SDK features for early adopters and insiders:
+
 - **Content**: Contains only SDK tooling differences from 2xx band (subset
   VMR)
 - **Purpose**: Delivers latest experimental features and early access
@@ -181,6 +193,7 @@ Cutting-edge SDK features for early adopters and insiders:
 Each feature band has specific requirements for SDKs and artifacts:
 
 ### 1xx Band Build Requirements
+
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   1xx artifacts + Microsoft SDK + script
 - **Servicing (N.0.101+)**: Source-built SDK and artifacts from the previous
@@ -189,6 +202,7 @@ Each feature band has specific requirements for SDKs and artifacts:
 Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 ### 2xx Band Build Requirements
+
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   2xx artifacts + Microsoft 2xx SDK + prep script
 - **Initial Release (N.0.200)**: Latest source-built 1xx artifacts + Latest
@@ -197,6 +211,7 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
   2xx release + Latest released 1xx artifacts
 
 ### 3xx Band Build Requirements
+
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   2xx artifacts + Microsoft 2xx SDK + prep script
 - **Initial Release (N.0.300)**: Latest source-built 1xx artifacts + Latest
@@ -205,6 +220,7 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
   Latest released 1xx artifacts + Latest released 2xx artifacts
 
 ### Feature Band Key Points
+
 - Release schedules across branches are not necessarily aligned.
 - 1xx band produces the shared runtime that all bands use.
 - Not all 3xx check-ins flow to 2xx (changes are cherry-picked as needed).
@@ -232,48 +248,51 @@ The following sections describe the workflows for different scenarios.
 ### Input Artifacts Summary
 
 **For 1xx band builds:**
+
 - **Bootstrap**:
-    - PSB artifacts: Microsoft-built previous N.0.1xx release
-    - SDK: Microsoft-built previous N.0.1xx release
+  - PSB artifacts: Microsoft-built previous N.0.1xx release
+  - SDK: Microsoft-built previous N.0.1xx release
 - **Servicing**:
-    - PSB artifacts: Source-built previous N.0.1xx release
-    - SDK: Source-built previous N.0.1xx release
+  - PSB artifacts: Source-built previous N.0.1xx release
+  - SDK: Source-built previous N.0.1xx release
 
 **For 2xx band builds:**
+
 - **Initial release (N.0.200)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Source-built previous N.0.1xx release
-    - SDK: Source-built previous N.0.1xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Source-built previous N.0.1xx release
+  - SDK: Source-built previous N.0.1xx release
 - **Bootstrap initial release (N.0.200)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Microsoft-built previous N.0.1xx release
-    - SDK: Microsoft-built previous N.0.1xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Microsoft-built previous N.0.1xx release
+  - SDK: Microsoft-built previous N.0.1xx release
 - **Bootstrap (N.0.201+)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Microsoft-built previous N.0.2xx release
-    - SDK: Microsoft-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Microsoft-built previous N.0.2xx release
+  - SDK: Microsoft-built previous N.0.2xx release
 - **Servicing (N.0.201+)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Source-built previous N.0.2xx release
-    - SDK: Source-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Source-built previous N.0.2xx release
+  - SDK: Source-built previous N.0.2xx release
 
 **For 3xx band builds:**
+
 - **Initial release (N.0.300)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Source-built previous N.0.2xx release
-    - SDK: Source-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Source-built previous N.0.2xx release
+  - SDK: Source-built previous N.0.2xx release
 - **Bootstrap (N.0.300)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Microsoft-built previous N.0.2xx release
-    - SDK: Microsoft-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Microsoft-built previous N.0.2xx release
+  - SDK: Microsoft-built previous N.0.2xx release
 - **Bootstrap (N.0.301+)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Microsoft-built previous N.0.2xx release
-    - SDK: Microsoft-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Microsoft-built previous N.0.2xx release
+  - SDK: Microsoft-built previous N.0.2xx release
 - **Servicing (N.0.301+)**:
-    - Shared component artifacts: Source-built current N.0.1xx release
-    - PSB artifacts: Source-built previous N.0.2xx release
-    - SDK: Source-built previous N.0.2xx release
+  - Shared component artifacts: Source-built current N.0.1xx release
+  - PSB artifacts: Source-built previous N.0.2xx release
+  - SDK: Source-built previous N.0.2xx release
 
 ### Scenario 1: 1xx Band Bootstrap
 
@@ -351,7 +370,8 @@ flowchart LR
 For ongoing 1xx servicing builds.
 
 Required inputs:
-* source-built SDK and artifacts from the previous 1xx release
+
+- source-built SDK and artifacts from the previous 1xx release
 
 ```bash
 git clone -b <1xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -394,8 +414,9 @@ flowchart LR
 Initial release of the 2xx band.
 
 Required inputs:
-* source-built artifacts of the current 1xx release
-* source-built SDK artifacts from the previous 1xx release
+
+- source-built artifacts of the current 1xx release
+- source-built SDK artifacts from the previous 1xx release
 
 ```bash
 git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -446,7 +467,8 @@ flowchart LR
 For 2xx releases that require bootstrap (two-stage process).
 
 Required inputs:
-* source-built artifacts of the current 1xx release
+
+- source-built artifacts of the current 1xx release
 
 ```bash
 git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -527,8 +549,9 @@ flowchart LR
 For ongoing 2xx servicing builds.
 
 Required inputs:
-* source-built artifacts of the current 1xx release
-* source-built SDK and artifacts from the previous 2xx release
+
+- source-built artifacts of the current 1xx release
+- source-built SDK and artifacts from the previous 2xx release
 
 ```bash
 git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -579,8 +602,9 @@ flowchart LR
 For the initial 3xx release.
 
 Required inputs:
-* source-built artifacts from the current 1xx release
-* source-built SDK and artifacts from the previous 2xx release
+
+- source-built artifacts from the current 1xx release
+- source-built SDK and artifacts from the previous 2xx release
 
 ```bash
 git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -631,7 +655,8 @@ flowchart LR
 For 3xx releases that require bootstrap (two-stage process).
 
 Required inputs:
-* source-built artifacts from the current 1xx release
+
+- source-built artifacts from the current 1xx release
 
 ```bash
 git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
@@ -712,8 +737,9 @@ flowchart LR
 For ongoing 3xx servicing builds:
 
 Required inputs:
-* source-built SDK and artifacts from the previous 2xx release
-* source-built artifacts from the current 1xx release
+
+- source-built SDK and artifacts from the previous 2xx release
+- source-built artifacts from the current 1xx release
 
 ```bash
 # Ensure you have latest source-built 1xx, 2xx artifacts and 2xx SDK from previous builds
@@ -764,6 +790,7 @@ flowchart LR
 
 **Error**: `Shared components cannot be provided as input to a build which
 produces shared components`
+
 - **Explanation**: You're building the 1xx band (`main` or `N.0.1xx` branch)
   and providing shared component artifacts as input. The 1xx band produces
   shared components, so it doesn't consume them as inputs.
@@ -772,6 +799,7 @@ produces shared components`
 
 **Error**: `Shared components must be provided as input to a build which does
 not produce shared components`
+
 - **Explanation**: You're building a 2xx or 3xx band and not providing shared
   component artifacts as input. These bands require shared components from the
   1xx band because they provide the necessary runtime and foundational
