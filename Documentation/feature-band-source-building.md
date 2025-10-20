@@ -205,19 +205,19 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   2xx artifacts + Microsoft 2xx SDK + prep script
-- **Initial Release (N.0.200)**: Latest source-built 1xx artifacts + Latest
+- **Initial Release (N.0.200)**: Current source-built 1xx artifacts + current
   source-built 1xx SDK
 - **Servicing (N.0.201+)**: Source-built SDK and artifacts from the previous
-  2xx release + Latest released 1xx artifacts
+  2xx release + current 1xx artifacts
 
 ### 3xx Band Build Requirements
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   2xx artifacts + Microsoft 2xx SDK + prep script
-- **Initial Release (N.0.300)**: Latest source-built 1xx artifacts + Latest
-  source-built 2xx artifacts + Latest source-built 2xx SDK
+- **Initial Release (N.0.300)**: Current source-built 1xx artifacts + current
+  source-built 2xx artifacts + current source-built 2xx SDK
 - **Servicing (N.0.301+)**: Source-built SDK from the previous 2xx release +
-  Latest released 1xx artifacts + Latest released 2xx artifacts
+  current 1xx artifacts + current 2xx artifacts
 
 ### Feature Band Key Points
 
@@ -742,7 +742,6 @@ Required inputs:
 - source-built artifacts from the current 1xx release
 
 ```bash
-# Ensure you have latest source-built 1xx, 2xx artifacts and 2xx SDK from previous builds
 git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
 cd dotnet
 
