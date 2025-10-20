@@ -163,8 +163,8 @@ The foundational feature band that ships with .NET GA releases:
 
 Enhanced SDK tooling that ships with Visual Studio updates:
 
-- **Content**: Contains only SDK tooling differences from 1xx band (subset
-  VMR)
+- **Content**: Contains only tooling sources - runtime/core libraries are
+  excluded
 - **Purpose**: Adds enhanced developer tooling and Visual Studio integration
   features
 - **Release cycle**: Aligns with Visual Studio feature releases (not
@@ -176,8 +176,8 @@ Enhanced SDK tooling that ships with Visual Studio updates:
 
 Cutting-edge SDK features for early adopters and insiders:
 
-- **Content**: Contains only SDK tooling differences from 2xx band (subset
-  VMR)
+- **Content**: Contains only tooling sources - runtime/core libraries are
+  excluded
 - **Purpose**: Delivers latest experimental features and early access
   capabilities
 - **Release cycle**: Independent preview releases, not aligned with other
