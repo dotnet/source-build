@@ -5,6 +5,30 @@ building .NET SDK feature band branches of the Virtual Monolithic Repository
 (VMR). It covers bootstrapping and ongoing servicing workflows when building
 multiple SDK feature bands.
 
+## Table of Contents
+
+- [What are .NET SDK Feature Bands?](#what-are-net-sdk-feature-bands)
+- [Key Terminology](#key-terminology)
+- [Overview](#overview)
+- [Understanding Bootstrap vs Sequential Build](#understanding-bootstrap-vs-sequential-build)
+- [Required Build Inputs](#required-build-inputs)
+- [Feature Band Characteristics](#feature-band-characteristics)
+- [Build Requirements by Feature Band](#build-requirements-by-feature-band)
+- [Build Command Arguments](#build-command-arguments)
+- [Distro Maintainer Workflows](#distro-maintainer-workflows)
+  - [Input Artifacts Summary](#input-artifacts-summary)
+  - [1xx Band Bootstrap](#1xx-band-bootstrap)
+  - [1xx Band Servicing](#1xx-band-servicing)
+  - [2xx Band Initial Release (N.0.200)](#2xx-band-initial-release-n0200)
+  - [2xx Band Bootstrap (N.0.200+)](#2xx-band-bootstrap-n0200)
+  - [2xx Band Servicing (N.0.201+)](#2xx-band-servicing-n0201)
+  - [3xx Band Initial Release (N.0.300)](#3xx-band-initial-release-n0300)
+  - [3xx Band Bootstrap (N.0.300+)](#3xx-band-bootstrap-n0300)
+  - [3xx Band Servicing (N.0.301+)](#3xx-band-servicing-n0301)
+- [Troubleshooting](#troubleshooting)
+- [Poison and Prebuilt Detection](#poison-and-prebuilt-detection)
+- [Additional Resources](#additional-resources)
+
 ## What are .NET SDK Feature Bands?
 
 .NET SDK feature bands are different versions of the .NET SDK that provide
