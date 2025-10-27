@@ -294,7 +294,7 @@ The following sections describe the workflows for different scenarios.
   - PSB artifacts: Source-built previous N.0.2xx release
   - SDK: Source-built previous N.0.2xx release
 
-### Scenario 1: 1xx Band Bootstrap
+### 1xx Band Bootstrap
 
 For the initial bootstrap of a 1xx band (two-stage process):
 
@@ -365,7 +365,7 @@ flowchart LR
     class SB curr1xx
 ```
 
-### Scenario 2: 1xx Band Servicing
+### 1xx Band Servicing
 
 For ongoing 1xx servicing builds.
 
@@ -409,7 +409,7 @@ flowchart LR
     class SB curr1xx
 ```
 
-### Scenario 3: 2xx Band Initial Release (N.0.200)
+### 2xx Band Initial Release (N.0.200)
 
 Initial release of the 2xx band.
 
@@ -462,7 +462,7 @@ flowchart LR
     class SBCurrent2xx curr2xx
 ```
 
-### Scenario 4: 2xx Band Bootstrap (N.0.200+)
+### 2xx Band Bootstrap (N.0.200+)
 
 For 2xx releases that require bootstrap (two-stage process).
 
@@ -544,7 +544,7 @@ flowchart LR
     class SB curr2xx
 ```
 
-### Scenario 5: 2xx Band Servicing (N.0.201+)
+### 2xx Band Servicing (N.0.201+)
 
 For ongoing 2xx servicing builds.
 
@@ -597,7 +597,7 @@ flowchart LR
     class SBCurrent2xx curr2xx
 ```
 
-### Scenario 6: 3xx Band Initial Release (N.0.300)
+### 3xx Band Initial Release (N.0.300)
 
 For the initial 3xx release.
 
@@ -650,7 +650,7 @@ flowchart LR
     class SBCurr3xx curr3xx
 ```
 
-### Scenario 7: 3xx Band Bootstrap (N.0.300+)
+### 3xx Band Bootstrap (N.0.300+)
 
 For 3xx releases that require bootstrap (two-stage process).
 
@@ -732,7 +732,7 @@ flowchart LR
     class SBCurr3xx curr3xx
 ```
 
-### Scenario 8: 3xx Band Servicing (N.0.301+)
+### 3xx Band Servicing (N.0.301+)
 
 For ongoing 3xx servicing builds:
 
