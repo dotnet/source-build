@@ -287,9 +287,6 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
   the previous band.
 - 3xx and 4xx bands follow identical build patterns; the scenarios documented
   for 3xx apply equally to 4xx with adjusted version numbers.
-- For bootstrapping of 2xx/3xx/4xx feature bands, stage 2 does not require the
-  1xx shared components as input. The artifacts produced by stage 1 contain
-  all required packages.
 
 ## Build Command Arguments
 
@@ -561,7 +558,8 @@ tar -ozxf artifacts/assets/Release/Private.SourceBuilt.Artifacts.*.tar.gz \
 
 ./build.sh --source-only \
   --with-sdk /tmp/dotnet/sdk \
-  --with-packages /tmp/dotnet/artifacts
+  --with-packages /tmp/dotnet/artifacts \
+  --with-shared-components /tmp/dotnet/artifacts
 
 # Final source-built outputs available in artifacts/x64/Release/
 ```
@@ -573,7 +571,7 @@ flowchart LR
         MS_Art[Microsoft-built artifacts]
     end
     
-    subgraph SB1xx["Previous 1xx SB Release"]
+    subgraph SB1xx["Current 1xx SB Release"]
         SB_1xx[Source-built 1xx artifacts]
     end
     
@@ -598,6 +596,7 @@ flowchart LR
     Build1 --> S1_Art
     S1_SDK -.->|with-sdk| Build2
     S1_Art -.->|with-packages| Build2
+    S1_Art -.->|with-shared-components| Build2
     Build2 --> Final_SDK
     Build2 --> Final_Art
     
@@ -751,7 +750,8 @@ tar -ozxf artifacts/assets/Release/Private.SourceBuilt.Artifacts.*.tar.gz \
 
 ./build.sh --source-only \
   --with-sdk /tmp/dotnet/sdk \
-  --with-packages /tmp/dotnet/artifacts
+  --with-packages /tmp/dotnet/artifacts \
+  --with-shared-components /tmp/dotnet/artifacts
 
 # Final source-built outputs available in artifacts/x64/Release/
 ```
@@ -788,6 +788,7 @@ flowchart LR
     Build1 --> S1_Art
     S1_SDK -.->|with-sdk| Build2
     S1_Art -.->|with-packages| Build2
+    S1_Art -.->|with-shared-components| Build2
     Build2 --> Final_SDK
     Build2 --> Final_Art
     
