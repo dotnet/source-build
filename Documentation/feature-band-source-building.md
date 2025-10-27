@@ -349,12 +349,12 @@ flowchart LR
         end
     end
     
-    MS_SDK -.-> Build1
-    MS_Art -.->|PSB| Build1
+    MS_SDK -.->|with-sdk| Build1
+    MS_Art -.->|with-packages| Build1
     Build1 --> S1_SDK
     Build1 --> S1_Art
-    S1_SDK -.-> Build2
-    S1_Art -.->|PSB| Build2
+    S1_SDK -.->|with-sdk| Build2
+    S1_Art -.->|with-packages| Build2
     Build2 --> Final_SDK
     Build2 --> Final_Art
     
@@ -397,8 +397,8 @@ flowchart LR
         New_SDK[New 1xx SDK]
         New_Art[New 1xx Artifacts]
 
-        Prev_SDK -.-> Build
-        Prev_Art -.->|PSB| Build
+        Prev_SDK -.->|with-sdk| Build
+        Prev_Art -.->|with-packages| Build
         Build --> New_SDK
         Build --> New_Art
     end
@@ -447,9 +447,9 @@ flowchart LR
         SDK_2xx[New 2xx SDK]
         Art_2xx[New 2xx Artifacts]
 
-        Prev_1xx_SDK -.-> Build
-        Prev_1xx_Art -.->|PSB| Build
-        Curr_1xx_Art -.->|shared components| Build
+        Prev_1xx_SDK -.->|with-sdk| Build
+        Prev_1xx_Art -.->|with-packages| Build
+        Curr_1xx_Art -.->|with-shared-components| Build
         Build --> SDK_2xx
         Build --> Art_2xx
     end
@@ -526,13 +526,13 @@ flowchart LR
         end
     end
     
-    MS_SDK -.-> Build1
-    MS_Art -.->|PSB| Build1
-    SB_1xx -.->|shared components| Build1
+    MS_SDK -.->|with-sdk| Build1
+    MS_Art -.->|with-packages| Build1
+    SB_1xx -.->|with-shared-components| Build1
     Build1 --> S1_SDK
     Build1 --> S1_Art
-    S1_SDK -.-> Build2
-    S1_Art -.->|PSB| Build2
+    S1_SDK -.->|with-sdk| Build2
+    S1_Art -.->|with-packages| Build2
     Build2 --> Final_SDK
     Build2 --> Final_Art
     
@@ -583,9 +583,9 @@ flowchart LR
         Art_2xx[New 2xx Artifacts]
     end
     
-    Prev_1xx_SDK -.-> Build
-    Prev_2xx_Art -.->|PSB| Build
-    Curr_1xx_Art -.->|shared components| Build
+    Prev_1xx_SDK -.->|with-sdk| Build
+    Prev_2xx_Art -.->|with-packages| Build
+    Curr_1xx_Art -.->|with-shared-components| Build
     Build --> SDK_2xx
     Build --> Art_2xx
     
@@ -714,13 +714,13 @@ flowchart LR
         end
     end
     
-    MS_SDK -.-> Build1
-    MS_Art -.->|PSB| Build1
-    SB_1xx -.->|shared components| Build1
+    MS_SDK -.->|with-sdk| Build1
+    MS_Art -.->|with-packages| Build1
+    SB_1xx -.->|with-shared-components| Build1
     Build1 --> S1_SDK
     Build1 --> S1_Art
-    S1_SDK -.-> Build2
-    S1_Art -.->|PSB| Build2
+    S1_SDK -.->|with-sdk| Build2
+    S1_Art -.->|with-packages| Build2
     Build2 --> Final_SDK
     Build2 --> Final_Art
     
@@ -771,9 +771,9 @@ flowchart LR
         Art_3xx[New 3xx Artifacts]
     end
     
-    Prev_2xx_SDK -.-> Build
-    Prev_2xx_Art -.->|PSB| Build
-    Curr_1xx_Art -.->|shared components| Build
+    Prev_2xx_SDK -.->|with-sdk| Build
+    Prev_2xx_Art -.->|with-packages| Build
+    Curr_1xx_Art -.->|with-shared-components| Build
     Build --> SDK_3xx
     Build --> Art_3xx
     
