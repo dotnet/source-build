@@ -249,47 +249,47 @@ The following sections describe the workflows for different scenarios.
 
 **For 1xx band builds:**
 
-- **Bootstrap**:
+- **[Bootstrap](#1xx-band-bootstrap)**:
   - PSB artifacts: Microsoft-built previous N.0.1xx release
   - SDK: Microsoft-built previous N.0.1xx release
-- **Servicing**:
+- **[Servicing](#1xx-band-servicing)**:
   - PSB artifacts: Source-built previous N.0.1xx release
   - SDK: Source-built previous N.0.1xx release
 
 **For 2xx band builds:**
 
-- **Initial release (N.0.200)**:
+- **[Initial release (N.0.200)](#2xx-band-initial-release-n0200)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Source-built previous N.0.1xx release
   - SDK: Source-built previous N.0.1xx release
-- **Bootstrap initial release (N.0.200)**:
+- **[Bootstrap initial release (N.0.200)](#2xx-band-bootstrap-n0200)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.1xx release
   - SDK: Microsoft-built previous N.0.1xx release
-- **Bootstrap (N.0.201+)**:
+- **[Bootstrap (N.0.201+)](#2xx-band-bootstrap-n0200)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.2xx release
   - SDK: Microsoft-built previous N.0.2xx release
-- **Servicing (N.0.201+)**:
+- **[Servicing (N.0.201+)](#2xx-band-servicing-n0201)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Source-built previous N.0.2xx release
   - SDK: Source-built previous N.0.2xx release
 
 **For 3xx band builds:**
 
-- **Initial release (N.0.300)**:
+- **[Initial release (N.0.300)](#3xx-band-initial-release-n0300)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Source-built previous N.0.2xx release
   - SDK: Source-built previous N.0.2xx release
-- **Bootstrap (N.0.300)**:
+- **[Bootstrap (N.0.300)](#3xx-band-bootstrap-n0300)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.2xx release
   - SDK: Microsoft-built previous N.0.2xx release
-- **Bootstrap (N.0.301+)**:
+- **[Bootstrap (N.0.301+)](#3xx-band-bootstrap-n0300)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.2xx release
   - SDK: Microsoft-built previous N.0.2xx release
-- **Servicing (N.0.301+)**:
+- **[Servicing (N.0.301+)](#3xx-band-servicing-n0301)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Source-built previous N.0.2xx release
   - SDK: Source-built previous N.0.2xx release
