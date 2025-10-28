@@ -201,7 +201,7 @@ SDK tooling band that ships after the 1xx band:
   excluded
 - **Purpose**: Adds enhanced developer tooling features
 - **Release cycle**: Independent of other band releases
-- **Dependencies**: 
+- **Dependencies**:
   - Initial release (N.0.200) depends on the latest 1xx release
   - Subsequent releases can depend on previous 2xx releases
   - Always uses shared runtime components from 1xx band
@@ -347,7 +347,7 @@ later feature bands continue to use 1xx as input, not just the previous band.
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.2xx release
   - SDK: Microsoft-built previous N.0.2xx release
-- **[Bootstrap (N.0.301+)](#2xx-band-bootstrap-n0300)**:
+- **[Bootstrap (N.0.301+)](#3xx-band-bootstrap-n0301)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.3xx release
   - SDK: Microsoft-built previous N.0.3xx release
