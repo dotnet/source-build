@@ -347,7 +347,7 @@ later feature bands continue to use 1xx as input, not just the previous band.
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.2xx release
   - SDK: Microsoft-built previous N.0.2xx release
-- **[Bootstrap (N.0.301+)](#3xx-band-bootstrap-n0301)**:
+- **[Bootstrap (N.0.301+)](#3xx-band-bootstrap-n0300)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.3xx release
   - SDK: Microsoft-built previous N.0.3xx release
