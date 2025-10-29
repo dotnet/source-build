@@ -20,11 +20,11 @@ multiple SDK feature bands.
   - [1xx Band Bootstrap](#1xx-band-bootstrap)
   - [1xx Band Servicing](#1xx-band-servicing)
   - [2xx Band Initial Release (N.0.200)](#2xx-band-initial-release-n0200)
-  - [2xx Band Bootstrap (N.0.200+)](#2xx-band-bootstrap-n0200)
   - [2xx Band Servicing (N.0.201+)](#2xx-band-servicing-n0201)
+  - [2xx Band Bootstrap (N.0.200+)](#2xx-band-bootstrap-n0200)
   - [3xx Band Initial Release (N.0.300)](#3xx-band-initial-release-n0300)
-  - [3xx Band Bootstrap (N.0.300+)](#3xx-band-bootstrap-n0300)
   - [3xx Band Servicing (N.0.301+)](#3xx-band-servicing-n0301)
+  - [3xx Band Bootstrap (N.0.300+)](#3xx-band-bootstrap-n0300)
 - [Troubleshooting](#troubleshooting)
 - [Poison and Prebuilt Detection](#poison-and-prebuilt-detection)
 - [Additional Resources](#additional-resources)
@@ -524,6 +524,59 @@ flowchart LR
     class SBCurrent2xx curr2xx
 ```
 
+### 2xx Band Servicing (N.0.201+)
+
+For ongoing 2xx servicing builds.
+
+Required inputs:
+
+- source-built artifacts of the current 1xx release
+- source-built SDK and artifacts from the previous 2xx release
+
+```bash
+git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
+cd dotnet
+
+# Build the SDK
+./build.sh --source-only \
+  --with-sdk /path/to/previous-source-built-2xx/sdk \
+  --with-packages /path/to/previous-source-built-2xx/artifacts \
+  --with-shared-components /path/to/current-source-built-1xx/artifacts
+
+# Final source-built outputs available in artifacts/x64/Release/
+```
+
+```mermaid
+flowchart LR
+    subgraph SBPrev2xx["Previous 2xx SB Release"]
+        Prev_1xx_SDK[Source-built<br/>2xx SDK]
+        Prev_2xx_Art[Source-built<br/>2xx Artifacts]
+    end
+    
+    subgraph SBCurrent1xx["Current 1xx SB Release"]
+        Curr_1xx_Art[Current source-built <br/>1xx Artifacts]
+    end
+    
+    subgraph SBCurrent2xx["Current 2xx SB Release"]
+        Build((Build Process))
+        SDK_2xx[New 2xx SDK]
+        Art_2xx[New 2xx Artifacts]
+    end
+    
+    Prev_1xx_SDK -.->|with-sdk| Build
+    Prev_2xx_Art -.->|with-packages| Build
+    Curr_1xx_Art -.->|with-shared-components| Build
+    Build --> SDK_2xx
+    Build --> Art_2xx
+    
+    classDef prev2xx fill:#c98989,stroke:#666,stroke-width:2px,color:#000
+    classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
+    classDef curr2xx fill:#3da53d,stroke:#666,stroke-width:2px,color:#000
+    class SBPrev2xx prev2xx
+    class SBCurrent1xx curr1xx
+    class SBCurrent2xx curr2xx
+```
+
 ### 2xx Band Bootstrap (N.0.200+)
 
 For 2xx releases that require bootstrap (two-stage process).
@@ -608,59 +661,6 @@ flowchart LR
     class SB curr2xx
 ```
 
-### 2xx Band Servicing (N.0.201+)
-
-For ongoing 2xx servicing builds.
-
-Required inputs:
-
-- source-built artifacts of the current 1xx release
-- source-built SDK and artifacts from the previous 2xx release
-
-```bash
-git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
-cd dotnet
-
-# Build the SDK
-./build.sh --source-only \
-  --with-sdk /path/to/previous-source-built-2xx/sdk \
-  --with-packages /path/to/previous-source-built-2xx/artifacts \
-  --with-shared-components /path/to/current-source-built-1xx/artifacts
-
-# Final source-built outputs available in artifacts/x64/Release/
-```
-
-```mermaid
-flowchart LR
-    subgraph SBPrev2xx["Previous 2xx SB Release"]
-        Prev_1xx_SDK[Source-built<br/>2xx SDK]
-        Prev_2xx_Art[Source-built<br/>2xx Artifacts]
-    end
-    
-    subgraph SBCurrent1xx["Current 1xx SB Release"]
-        Curr_1xx_Art[Current source-built <br/>1xx Artifacts]
-    end
-    
-    subgraph SBCurrent2xx["Current 2xx SB Release"]
-        Build((Build Process))
-        SDK_2xx[New 2xx SDK]
-        Art_2xx[New 2xx Artifacts]
-    end
-    
-    Prev_1xx_SDK -.->|with-sdk| Build
-    Prev_2xx_Art -.->|with-packages| Build
-    Curr_1xx_Art -.->|with-shared-components| Build
-    Build --> SDK_2xx
-    Build --> Art_2xx
-    
-    classDef prev2xx fill:#c98989,stroke:#666,stroke-width:2px,color:#000
-    classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
-    classDef curr2xx fill:#3da53d,stroke:#666,stroke-width:2px,color:#000
-    class SBPrev2xx prev2xx
-    class SBCurrent1xx curr1xx
-    class SBCurrent2xx curr2xx
-```
-
 ### 3xx Band Initial Release (N.0.300)
 
 For the initial 3xx release. The same pattern applies to 4xx band initial
@@ -711,6 +711,60 @@ flowchart LR
     classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
     classDef curr3xx fill:#2d8b2d,stroke:#666,stroke-width:2px,color:#000
     class SBPrev2xx prev2xx
+    class SBCurr1xx curr1xx
+    class SBCurr3xx curr3xx
+```
+
+### 3xx Band Servicing (N.0.301+)
+
+For ongoing 3xx servicing builds. The same pattern applies to 4xx band
+servicing (N.0.401+).
+
+Required inputs:
+
+- source-built artifacts from the current 1xx release
+- source-built SDK and artifacts from the previous 3xx release
+
+```bash
+git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
+cd dotnet
+
+# Build the SDK
+./build.sh --source-only \
+  --with-sdk /path/to/previous-source-built-3xx/sdk \
+  --with-packages /path/to/previous-source-built-3xx/artifacts \
+  --with-shared-components /path/to/current-source-built-1xx/artifacts
+
+# Final source-built outputs available in artifacts/x64/Release/
+```
+
+```mermaid
+flowchart LR
+    subgraph SBPrev3xx["Previous 3xx SB Release"]
+        Prev_3xx_SDK[Source-built 3xx SDK]
+        Prev_3xx_Art[Source-built 3xx artifacts]
+    end
+    
+    subgraph SBCurr1xx["Current 1xx SB Release"]
+        Curr_1xx_Art[Source-built 1xx artifacts]
+    end
+    
+    subgraph SBCurr3xx["Current 3xx SB Release"]
+        Build((Build Process))
+        SDK_3xx[New 3xx SDK]
+        Art_3xx[New 3xx Artifacts]
+    end
+    
+    Prev_3xx_SDK -.->|with-sdk| Build
+    Prev_3xx_Art -.->|with-packages| Build
+    Curr_1xx_Art -.->|with-shared-components| Build
+    Build --> SDK_3xx
+    Build --> Art_3xx
+    
+    classDef prev3xx fill:#c98989,stroke:#666,stroke-width:2px,color:#000
+    classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
+    classDef curr3xx fill:#2d8b2d,stroke:#666,stroke-width:2px,color:#000
+    class SBPrev3xx prev3xx
     class SBCurr1xx curr1xx
     class SBCurr3xx curr3xx
 ```
@@ -796,60 +850,6 @@ flowchart LR
     classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
     classDef curr3xx fill:#2d8b2d,stroke:#666,stroke-width:2px,color:#000
     class MS msRelease
-    class SBCurr1xx curr1xx
-    class SBCurr3xx curr3xx
-```
-
-### 3xx Band Servicing (N.0.301+)
-
-For ongoing 3xx servicing builds. The same pattern applies to 4xx band
-servicing (N.0.401+).
-
-Required inputs:
-
-- source-built artifacts from the current 1xx release
-- source-built SDK and artifacts from the previous 3xx release
-
-```bash
-git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
-cd dotnet
-
-# Build the SDK
-./build.sh --source-only \
-  --with-sdk /path/to/previous-source-built-3xx/sdk \
-  --with-packages /path/to/previous-source-built-3xx/artifacts \
-  --with-shared-components /path/to/current-source-built-1xx/artifacts
-
-# Final source-built outputs available in artifacts/x64/Release/
-```
-
-```mermaid
-flowchart LR
-    subgraph SBPrev3xx["Previous 3xx SB Release"]
-        Prev_3xx_SDK[Source-built 3xx SDK]
-        Prev_3xx_Art[Source-built 3xx artifacts]
-    end
-    
-    subgraph SBCurr1xx["Current 1xx SB Release"]
-        Curr_1xx_Art[Source-built 1xx artifacts]
-    end
-    
-    subgraph SBCurr3xx["Current 3xx SB Release"]
-        Build((Build Process))
-        SDK_3xx[New 3xx SDK]
-        Art_3xx[New 3xx Artifacts]
-    end
-    
-    Prev_3xx_SDK -.->|with-sdk| Build
-    Prev_3xx_Art -.->|with-packages| Build
-    Curr_1xx_Art -.->|with-shared-components| Build
-    Build --> SDK_3xx
-    Build --> Art_3xx
-    
-    classDef prev3xx fill:#c98989,stroke:#666,stroke-width:2px,color:#000
-    classDef curr1xx fill:#5bb75b,stroke:#666,stroke-width:2px,color:#000
-    classDef curr3xx fill:#2d8b2d,stroke:#666,stroke-width:2px,color:#000
-    class SBPrev3xx prev3xx
     class SBCurr1xx curr1xx
     class SBCurr3xx curr3xx
 ```
