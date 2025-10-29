@@ -281,7 +281,7 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 - Release schedules across bands are not necessarily aligned.
 - 1xx band produces the shared runtime that all bands use.
-- Only 1xx and one other band (2xx, 3xx, or 4xx) are in support at any given
+- Only 1xx and at most one other band (2xx, 3xx, or 4xx) are in support at any given
   time.
 - The initial release of each feature band depends on the latest release of
   the previous band.
