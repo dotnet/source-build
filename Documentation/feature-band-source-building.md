@@ -107,7 +107,7 @@ lines show SDK tooling dependencies between bands*
 **Note on 3xx and 4xx bands**: The 3xx and 4xx bands follow the same build patterns.
 To keep the document more concise, the pattern used by 3xx and 4xx will be
 described in a general way that is come to both bands. When `Bxx` is used, it
-refers to the feature band in context (e.g. `Bxx` means 3xx in the context of the 
+refers to the feature band in context (e.g. `Bxx` means 3xx in the context of the
 3xx feature band). Similarly, when `(B-1)xx` is used, it refers to the previous
 feature band (e.g. `(B-1)xx` means 2xx in the context of the 3xx feature band).
 
