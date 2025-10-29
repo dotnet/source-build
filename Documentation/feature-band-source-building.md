@@ -190,8 +190,7 @@ The foundational feature band that ships with .NET GA releases:
 - **Release cycle**: Follows .NET GA release schedule with monthly servicing
   updates
 - **Compatibility**: Non-breaking changes only during servicing
-- **Support**: Always in support alongside one other feature band (2xx, 3xx,
-  or 4xx)
+- **Support**: In support for the lifetime of the associated .NET major version
 
 ### 2xx Band
 
