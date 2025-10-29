@@ -701,9 +701,9 @@ flowchart LR
         Art_3xx[New 3xx Artifacts]
     end
     
-    Prev_2xx_SDK -.-> Build
-    Prev_2xx_Art -.->|PSB| Build
-    Curr_1xx_Art -.->|shared components| Build
+    Prev_2xx_SDK -.->|with-sdk| Build
+    Prev_2xx_Art -.->|with-packages| Build
+    Curr_1xx_Art -.->|with-shared-components| Build
     Build --> SDK_3xx
     Build --> Art_3xx
     
