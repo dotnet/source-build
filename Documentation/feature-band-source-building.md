@@ -278,7 +278,8 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 ### Feature Band Key Points
 
-- Release schedules across bands are not necessarily aligned.
+- Release schedules across bands are not necessarily aligned (unless there is
+  a security release in the shared components in which case they will be aligned).
 - 1xx band produces the shared runtime that all bands use.
 - Only 1xx and at most one other band (2xx, 3xx, or 4xx) are in support at any given
   time.
