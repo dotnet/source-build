@@ -145,7 +145,7 @@ releases.
 
 ```mermaid
 flowchart TD
-    subgraph Sequential["Sequential Build (Single-Stage)"]
+    subgraph Sequential["Sequential (Single-Stage)"]
         Prev_SDK[Previous Source-Built SDK] --> Build
         Prev_Artifacts[Previous Source-Built<br/>Artifacts] --> Build
         Build --> Final1[Final Source-Built SDK]
