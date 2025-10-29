@@ -17,14 +17,12 @@ multiple SDK feature bands.
 - [Build Command Arguments](#build-command-arguments)
 - [Distro Maintainer Workflows](#distro-maintainer-workflows)
   - [Input Artifacts Summary](#input-artifacts-summary)
-  - [1xx Band Bootstrap](#1xx-band-bootstrap)
   - [1xx Band Servicing](#1xx-band-servicing)
   - [2xx Band Initial Release (N.0.200)](#2xx-band-initial-release-n0200)
   - [2xx Band Servicing (N.0.201+)](#2xx-band-servicing-n0201)
-  - [2xx Band Bootstrap (N.0.200+)](#2xx-band-bootstrap-n0200)
-  - [3xx Band Initial Release (N.0.300)](#3xx-band-initial-release-n0300)
-  - [3xx Band Servicing (N.0.301+)](#3xx-band-servicing-n0301)
-  - [3xx Band Bootstrap (N.0.300+)](#3xx-band-bootstrap-n0300)
+  - [3xx Band Initial Release (N.0.300)](#3xx4xx-band-initial-release-n0b00)
+  - [3xx Band Servicing (N.0.301+)](#3xx4xx-band-servicing-n0b01)
+  - [2xx/3xx/4xx Bootstrap (N.0.B00+)](#2xx3xx4xx-bootstrap-n0b00)
 - [Troubleshooting](#troubleshooting)
 - [Poison and Prebuilt Detection](#poison-and-prebuilt-detection)
 - [Additional Resources](#additional-resources)
@@ -105,6 +103,13 @@ flowchart LR
 
 *Dotted lines indicate shared runtime components from the 1xx band; solid
 lines show SDK tooling dependencies between bands*
+
+**Note on 3xx and 4xx bands**: The 3xx and 4xx bands follow the same build patterns.
+To keep the document more concise, the pattern used by 3xx and 4xx will be
+described in a general way that is come to both bands. When `Bxx` is used, it
+refers to the feature band in context (e.g. `Bxx` means 3xx in the context of the 
+3xx feature band). Similarly, when `(B-1)xx` is used, it refers to the previous
+feature band (e.g. `(B-1)xx` means 2xx in the context of the 3xx feature band).
 
 ## Understanding Bootstrap vs Sequential Build
 
@@ -206,35 +211,20 @@ SDK tooling band that ships after the 1xx band:
   - Always uses shared runtime components from 1xx band
 - **Support**: In support alongside 1xx until 3xx is released
 
-### 3xx Band
+### 3xx/4xx Band
 
-SDK tooling band that ships after the 2xx band:
-
-- **Content**: Contains only tooling sources - runtime/core libraries are
-  excluded
-- **Purpose**: Delivers additional SDK features and capabilities
-- **Release cycle**: Independent of other band releases
-- **Dependencies**:
-  - Initial release (N.0.300) depends on the latest 2xx release
-  - Subsequent releases can depend on previous 3xx releases
-  - Always uses shared runtime components from 1xx band
-- **Support**: In support alongside 1xx until 4xx is released
-
-### 4xx Band
-
-SDK tooling band that ships after the 3xx band:
+Subsequent SDK tooling bands after 2xx band:
 
 - **Content**: Contains only tooling sources - runtime/core libraries are
   excluded
 - **Purpose**: Delivers additional SDK features and capabilities
 - **Release cycle**: Independent of other band releases
 - **Dependencies**:
-  - Initial release (N.0.400) depends on the latest 3xx release
-  - Subsequent releases can depend on previous 4xx releases
+  - Initial release depends on the latest release of the previous supported feature band
+  - Subsequent releases can depend on previous releases of the same feature band
   - Always uses shared runtime components from 1xx band
 - **Support**: In support alongside 1xx
-- **Note**: 4xx band follows the same build patterns and scenarios as 3xx,
-  with adjusted version numbers
+  - 3xx becomes unsupported when 4xx is released
 
 ## Build Requirements by Feature Band
 
@@ -258,23 +248,14 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 - **Servicing (N.0.201+)**: Source-built SDK and artifacts from the previous
   2xx release + current 1xx artifacts
 
-### 3xx Band Build Requirements
+### 3xx/4xx Band Build Requirements
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
-  3xx artifacts + Microsoft 3xx SDK + prep script
-- **Initial Release (N.0.300)**: Current source-built 1xx artifacts + current
-  source-built 2xx artifacts + current source-built 2xx SDK
-- **Servicing (N.0.301+)**: Source-built SDK and artifacts from the previous
-  3xx release + current 1xx artifacts
-
-### 4xx Band Build Requirements
-
-- **Bootstrap (any version)**: Two-stage process using Microsoft source-built
-  4xx artifacts + Microsoft 4xx SDK + prep script
-- **Initial Release (N.0.400)**: Current source-built 1xx artifacts + current
-  source-built 3xx artifacts + current source-built 3xx SDK
-- **Servicing (N.0.401+)**: Source-built SDK and artifacts from the previous
-  4xx release + current 1xx artifacts
+  Bxx artifacts + Microsoft Bxx SDK + prep script
+- **Initial Release (N.0.B00)**: Current source-built 1xx artifacts + current
+  source-built (B-1)xx artifacts + current source-built (B-1)xx SDK
+- **Servicing (N.0.B01+)**: Source-built SDK and artifacts from the previous
+  Bxx release + current 1xx artifacts
 
 ### Feature Band Key Points
 
@@ -300,13 +281,6 @@ Feature band builds make use of these relevant command-line arguments:
 
 The following sections describe the workflows for different scenarios.
 
-**Note on 4xx band**: The 4xx band follows the same build patterns as the 3xx
-band documented below, with the version numbers adjusted accordingly (e.g.,
-N.0.400 instead of N.0.300). For the initial 4xx release, the dependencies
-would come from the latest 3xx release instead of 2xx. The 3xx band also follows
-the same pattern as 2xx but is documented here for clarity to illustrate that
-later feature bands continue to use 1xx as input, not just the previous band.
-
 ### Input Artifacts Summary
 
 **For 1xx band builds:**
@@ -324,7 +298,7 @@ later feature bands continue to use 1xx as input, not just the previous band.
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Source-built previous N.0.1xx release
   - SDK: Source-built previous N.0.1xx release
-- **[Bootstrap (N.0.200+)](#2xx-band-bootstrap-n0200)**:
+- **[Bootstrap (N.0.200+)](#2xx3xx4xx-bootstrap-n0b00)**:
   - Shared component artifacts: Source-built current N.0.1xx release
   - PSB artifacts: Microsoft-built previous N.0.1xx (for bootstrapping N.0.200)
     or N.0.2xx (for bootstrapping N0.0.201+) release
@@ -334,21 +308,20 @@ later feature bands continue to use 1xx as input, not just the previous band.
   - PSB artifacts: Source-built previous N.0.2xx release
   - SDK: Source-built previous N.0.2xx release
 
-**For 3xx band builds (4xx follows the same pattern with adjusted version numbers):**
+**For 3xx/4xx band builds:**
 
-- **[Initial release (N.0.300)](#3xx-band-initial-release-n0300)**:
+- **[Initial release (N.0.B00)](#3xx4xx-band-initial-release-n0b00)**:
   - Shared component artifacts: Source-built current N.0.1xx release
-  - PSB artifacts: Source-built previous N.0.2xx release
-  - SDK: Source-built previous N.0.2xx release
-- **[Bootstrap (N.0.300+)](#3xx-band-bootstrap-n0300)**:
+  - PSB artifacts: Source-built previous N.0.(B-1)xx release
+  - SDK: Source-built previous N.0.(B-1)xx release
+- **[Bootstrap (N.0.B00+)](#2xx3xx4xx-bootstrap-n0b00)**:
   - Shared component artifacts: Source-built current N.0.1xx release
-  - PSB artifacts: Microsoft-built previous N.0.2xx (for bootstrapping N.0.300)
-    or N.0.3xx (for bootstrapping N.0.301+) release
-  - SDK: Microsoft-built previous N.0.2xx release
-- **[Servicing (N.0.301+)](#3xx-band-servicing-n0301)**:
+  - PSB artifacts: Microsoft-built previous N.0.(B-1)xx release
+  - SDK: Microsoft-built previous N.0.(B-1)xx release
+- **[Servicing (N.0.B01+)](#3xx4xx-band-servicing-n0b01)**:
   - Shared component artifacts: Source-built current N.0.1xx release
-  - PSB artifacts: Source-built previous N.0.3xx release
-  - SDK: Source-built previous N.0.3xx release
+  - PSB artifacts: Source-built previous N.0.Bxx release
+  - SDK: Source-built previous N.0.Bxx release
 
 ### 1xx Band Bootstrap
 
@@ -571,108 +544,23 @@ flowchart LR
     class SBCurrent2xx curr2xx
 ```
 
-### 2xx Band Bootstrap (N.0.200+)
+### 3xx/4xx Band Initial Release (N.0.B00)
 
-For 2xx releases that require bootstrap (two-stage process).
-
-Required inputs:
-
-- source-built artifacts of the current 1xx release
-
-```bash
-git clone -b <2xx-release-branch> https://github.com/dotnet/dotnet.git
-cd dotnet
-
-# ===
-# Stage 1: Build with Microsoft artifacts
-# ===
-
-# Downloads Microsoft-built artifacts and SDK
-./prep-source-build.sh
-
-# Build the SDK referencing assets from current 1xx release
-./build.sh --source-only --with-shared-components /path/to/source-built-1xx/artifacts
-
-# Extract and store the built 2xx SDK and artifacts
-tar -ozxf artifacts/assets/Release/dotnet-sdk-*-tar.gz \
-  -C /tmp/dotnet/sdk
-tar -ozxf artifacts/assets/Release/Private.SourceBuilt.Artifacts.*.tar.gz \
-  -C /tmp/dotnet/artifacts
-
-# ===
-# Stage 2: Rebuild using stage 1 outputs
-# ===
-
-./build.sh --source-only \
-  --with-sdk /tmp/dotnet/sdk \
-  --with-packages /tmp/dotnet/artifacts \
-  --with-shared-components /tmp/dotnet/artifacts
-
-# Final source-built outputs available in artifacts/x64/Release/
-```
-
-```mermaid
-flowchart LR
-    subgraph Msft["Previous MS Release"]
-        MS_SDK[Microsoft-built SDK]
-        MS_Art[Microsoft-built artifacts]
-    end
-    
-    subgraph SB1xx["Current 1xx SB Release"]
-        SB_1xx[Source-built 1xx artifacts]
-    end
-    
-    subgraph SB["Current SB 2xx Release"]
-        subgraph Stage1["Stage 1: Bootstrap Build"]
-            Build1((Build Process))
-            S1_SDK[Stage 1 2xx SDK]
-            S1_Art[Stage 1 2xx Artifacts]
-        end
-
-        subgraph Stage2["Stage 2: Final Build"]
-            Build2((Build Process))
-            Final_SDK[Final 2xx SDK]
-            Final_Art[Final 2xx Artifacts]
-        end
-    end
-    
-    MS_SDK -.->|with-sdk| Build1
-    MS_Art -.->|with-packages| Build1
-    SB_1xx -.->|with-shared-components| Build1
-    Build1 --> S1_SDK
-    Build1 --> S1_Art
-    S1_SDK -.->|with-sdk| Build2
-    S1_Art -.->|with-packages| Build2
-    S1_Art -.->|with-shared-components| Build2
-    Build2 --> Final_SDK
-    Build2 --> Final_Art
-    
-    classDef msRelease fill:#9b9bdb,stroke:#666,stroke-width:2px,color:#000
-    classDef prev1xx fill:#db9b9b,stroke:#666,stroke-width:2px,color:#000
-    classDef curr2xx fill:#3da53d,stroke:#666,stroke-width:2px,color:#000
-    class Msft msRelease
-    class SB1xx prev1xx
-    class SB curr2xx
-```
-
-### 3xx Band Initial Release (N.0.300)
-
-For the initial 3xx release. The same pattern applies to 4xx band initial
-release (N.0.400), which would depend on the latest 3xx release instead of 2xx.
+For the initial Bxx release.
 
 Required inputs:
 
 - source-built artifacts from the current 1xx release
-- source-built SDK and artifacts from the previous 2xx release
+- source-built SDK and artifacts from the previous (B-1)xx release
 
 ```bash
-git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
+git clone -b <Bxx-release-branch> https://github.com/dotnet/dotnet.git
 cd dotnet
 
 # Build the SDK
 ./build.sh --source-only \
-  --with-sdk /path/to/previous-source-built-2xx/sdk \
-  --with-packages /path/to/previous-source-built-2xx/artifacts \
+  --with-sdk /path/to/previous-source-built-(B-1)xx/sdk \
+  --with-packages /path/to/previous-source-built-(B-1)xx/artifacts \
   --with-shared-components /path/to/current-source-built-1xx/artifacts
 
 # Final source-built outputs available in artifacts/x64/Release/
@@ -680,19 +568,19 @@ cd dotnet
 
 ```mermaid
 flowchart LR
-    subgraph SBPrev2xx["Previous 2xx SB Release"]
-        Prev_2xx_SDK[Source-built 2xx SDK]
-        Prev_2xx_Art[Source-built 2xx Artifacts]
+    subgraph SBPrev2xx["Previous (B-1)xx SB Release"]
+        Prev_2xx_SDK[Source-built (B-1)xx SDK]
+        Prev_2xx_Art[Source-built (B-1)xx Artifacts]
     end
     
     subgraph SBCurr1xx["Current 1xx SB Release"]
         Curr_1xx_Art[Source-built 1xx artifacts]
     end
     
-    subgraph SBCurr3xx["Current 3xx SB Release"]
+    subgraph SBCurr3xx["Current Bxx SB Release"]
         Build((Build Process))
-        SDK_3xx[New 3xx SDK]
-        Art_3xx[New 3xx Artifacts]
+        SDK_3xx[New Bxx SDK]
+        Art_3xx[New Bxx Artifacts]
     end
     
     Prev_2xx_SDK -.->|with-sdk| Build
@@ -709,24 +597,23 @@ flowchart LR
     class SBCurr3xx curr3xx
 ```
 
-### 3xx Band Servicing (N.0.301+)
+### 3xx/4xx Band Servicing (N.0.B01+)
 
-For ongoing 3xx servicing builds. The same pattern applies to 4xx band
-servicing (N.0.401+).
+For ongoing 3xx servicing builds.
 
 Required inputs:
 
 - source-built artifacts from the current 1xx release
-- source-built SDK and artifacts from the previous 3xx release
+- source-built SDK and artifacts from the previous Bxx release
 
 ```bash
-git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
+git clone -b <Bxx-release-branch> https://github.com/dotnet/dotnet.git
 cd dotnet
 
 # Build the SDK
 ./build.sh --source-only \
-  --with-sdk /path/to/previous-source-built-3xx/sdk \
-  --with-packages /path/to/previous-source-built-3xx/artifacts \
+  --with-sdk /path/to/previous-source-built-Bxx/sdk \
+  --with-packages /path/to/previous-source-built-Bxx/artifacts \
   --with-shared-components /path/to/current-source-built-1xx/artifacts
 
 # Final source-built outputs available in artifacts/x64/Release/
@@ -734,19 +621,19 @@ cd dotnet
 
 ```mermaid
 flowchart LR
-    subgraph SBPrev3xx["Previous 3xx SB Release"]
-        Prev_3xx_SDK[Source-built 3xx SDK]
-        Prev_3xx_Art[Source-built 3xx artifacts]
+    subgraph SBPrev3xx["Previous Bxx SB Release"]
+        Prev_3xx_SDK[Source-built Bxx SDK]
+        Prev_3xx_Art[Source-built Bxx artifacts]
     end
     
     subgraph SBCurr1xx["Current 1xx SB Release"]
         Curr_1xx_Art[Source-built 1xx artifacts]
     end
     
-    subgraph SBCurr3xx["Current 3xx SB Release"]
+    subgraph SBCurr3xx["Current Bxx SB Release"]
         Build((Build Process))
-        SDK_3xx[New 3xx SDK]
-        Art_3xx[New 3xx Artifacts]
+        SDK_3xx[New Bxx SDK]
+        Art_3xx[New Bxx Artifacts]
     end
     
     Prev_3xx_SDK -.->|with-sdk| Build
@@ -763,17 +650,16 @@ flowchart LR
     class SBCurr3xx curr3xx
 ```
 
-### 3xx Band Bootstrap (N.0.300+)
+### 2xx/3xx/4xx Bootstrap (N.0.B00+)
 
-For 3xx releases that require bootstrap (two-stage process). The same pattern
-applies to 4xx band bootstrap.
+For releases that require bootstrap (two-stage process).
 
 Required inputs:
 
 - source-built artifacts from the current 1xx release
 
 ```bash
-git clone -b <3xx-release-branch> https://github.com/dotnet/dotnet.git
+git clone -b <Bxx-release-branch> https://github.com/dotnet/dotnet.git
 cd dotnet
 
 # ===
@@ -786,7 +672,7 @@ cd dotnet
 # Build the SDK referencing assets from current 1xx release
 ./build.sh --source-only --with-shared-components /path/to/source-built-1xx/artifacts
 
-# Extract and store the built 3xx SDK and artifacts
+# Extract and store the built Bxx SDK and artifacts
 tar -ozxf artifacts/assets/Release/dotnet-sdk-*-tar.gz \
   -C /tmp/dotnet/sdk
 tar -ozxf artifacts/assets/Release/Private.SourceBuilt.Artifacts.*.tar.gz \
@@ -815,17 +701,17 @@ flowchart LR
         SB_1xx[Source-built 1xx artifacts]
     end
     
-    subgraph SBCurr3xx["Current 3xx SB Release"]
+    subgraph SBCurr3xx["Current Bxx SB Release"]
         subgraph Stage1["Stage 1: Bootstrap Build"]
             Build1((Build Process))
-            S1_SDK[Stage 1 3xx SDK]
-            S1_Art[Stage 1 3xx artifacts]
+            S1_SDK[Stage 1 Bxx SDK]
+            S1_Art[Stage 1 Bxx artifacts]
         end
 
         subgraph Stage2["Stage 2: Build"]
             Build2((Build Process))
-            Final_SDK[Final 3xx SDK]
-            Final_Art[Final 3xx artifacts]
+            Final_SDK[Final Bxx SDK]
+            Final_Art[Final Bxx artifacts]
         end
     end
     
