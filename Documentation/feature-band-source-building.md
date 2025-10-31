@@ -569,8 +569,8 @@ cd dotnet
 ```mermaid
 flowchart LR
     subgraph SBPrev2xx["Previous (B-1)xx SB Release"]
-        Prev_2xx_SDK[Source-built (B-1)xx SDK]
-        Prev_2xx_Art[Source-built (B-1)xx Artifacts]
+        Prev_2xx_SDK["Source-built (B-1)xx SDK"]
+        Prev_2xx_Art["Source-built (B-1)xx Artifacts"]
     end
     
     subgraph SBCurr1xx["Current 1xx SB Release"]
