@@ -11,6 +11,11 @@ ephemeral until the repo fixes flow in.
 
 This document provides guidance for creating and managing source build patches.
 
+**NOTE:** Starting with 10.0, the [Unified Build](https://github.com/dotnet/dotnet/blob/main/docs/README.md)
+project added support for source edits in the [VMR](https://github.com/dotnet/dotnet).
+This has eliminated the need for patches as the required changes can be directly made in the VMR.
+All changes made to the VMR will automatically backflow to the associated repos.
+
 ## Creating Patches
 
 To create a repo patch file, first commit your changes to the source repo (e.g.
@@ -24,10 +29,10 @@ git format-patch --zero-commit --no-signature -1
 Then, move the patch file into the `src/SourceBuild/patches/<repo>` directory of
 the following repo:
 
-* [.NET 9.0+]
-  [sdk](https://github.com/dotnet/sdk/tree/main/src/SourceBuild/patches)
+* [.NET 9.0]
+  [sdk](https://github.com/dotnet/sdk/tree/release/9.0.1xx)
 * [.NET 8.0]
-  [installer](https://github.com/dotnet/installer/tree/main/src/SourceBuild/patches)
+  [installer](https://github.com/dotnet/installer/tree/release/8.0.1xx)
 
 If an existing directory for the repo does not already exist, you will need to
 create one.
@@ -109,12 +114,3 @@ to be deleted.
 1. The code being changed or surrounding code was changed - when this happens,
 the patch will need to be updated. This can be done by manually updating the
 patch or by re-applying the changes to the repo and recreating the patch.
-
-## Unified Build Plans
-
-The [Unified
-Build](https://github.com/dotnet/dotnet/blob/main/docs/README.md)
-project will add support for source edits in the
-[VMR](https://github.com/dotnet/dotnet). This will eliminate the need for
-patches as the required changes can be directly made in the VMR. All changes
-made to the VMR will automatically flow to the associated repos.
