@@ -92,6 +92,17 @@ For distros not used in n-1 legs:
    - Open a pull request with all the above changes
    - Queue a full build of the VMR to validate the changes
 
+### Case 3: Updating Distro Versions in Feature Bands
+
+When updating distro versions that affect feature bands, coordination is required because feature bands depend on RID-specific shared runtime artifacts from the 1xx feature band.
+The CI legs between 1xx and feature bands must be coherent in terms of the distro versions they test.
+
+1. **Update 1xx feature band first:**
+   - Update the distro versions in the 1xx feature band.
+
+1. **Update feature band CI legs:**
+   - Once the 1xx feature band changes flow to the feature band, update the feature band CI legs either in the flow PR or immediately after.
+
 ## Timing Guidelines for Distro Updates
 
 1. Update `main` to the newer version one to two months prior to the GA/EOL date.
