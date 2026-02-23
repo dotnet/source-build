@@ -90,8 +90,7 @@ Artifacts for both the previous and current distro versions must be available
 before downstream consumers can be updated.
 
 1. **Update release pipelines:**
-   - Update the artifact name for the relevant .NET version in the source-build
-     release and re-bootstrap pipeline
+   - Update the artifact names for the relevant .NET version in the release infrastructure.
      ([example](https://dev.azure.com/dnceng/internal/_git/dotnet-release/commit/c9be53307205765ebae48c18d00ef6260e596817?path=/eng/pipeline/source-build-release/steps/re-bootstrap.yml&version=GBmain&line=90&lineEnd=91&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files)).
    - The release validation will fail until the next source-build release; file
      an issue to update the artifacts used for the release validation after the
