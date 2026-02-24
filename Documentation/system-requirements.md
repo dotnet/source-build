@@ -17,35 +17,6 @@ a targeted platform.
 * [Distros Source Building
   .NET](https://github.com/dotnet/source-build#net-in-linux-distributions)
 
-#### Cross-Building
-
-When building using a cross-build container image (e.g.
-`mcr.microsoft.com/dotnet-buildtools/prereqs:azurelinux-3.0-net10.0-cross-amd64`)
-that provides a sysroot via the `ROOTFS_DIR` environment variable, you must
-pass `/p:CrossBuild=true` to the build command. Without this flag, the build
-will not use the sysroot when looking for native dependencies such as OpenSSL
-and will fail.
-
-Example:
-
-```bash
-docker run \
-  --rm \
-  --volume /path/to/dotnet:/dotnet \
-  --workdir /dotnet \
-  --env ROOTFS_DIR=/crossrootfs/x64 \
-  mcr.microsoft.com/dotnet-buildtools/prereqs:azurelinux-3.0-net10.0-cross-amd64 \
-  ./build.sh \
-    --clean-while-building \
-    --source-only \
-    --arch x64 \
-    --os linux \
-    /p:CrossBuild=true
-```
-
-This is only necessary when using a cross-build container. It is not required
-when building natively on the target platform.
-
 ### MacOS
 
 MacOS is not currently supported: [Tracking
