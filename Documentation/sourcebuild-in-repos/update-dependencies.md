@@ -22,6 +22,21 @@ necessary, make sure you update both files.
 
 Example Darc command: `darc update-dependencies --name MyCoolPackage -v 1.2.3`
 
+### Arcade SDK version alignment
+
+When updating the Arcade SDK version, all of the following files must reference
+the same version to avoid build and signing failures:
+
+- `global.json` — `msbuild-sdks.Microsoft.DotNet.Arcade.Sdk`
+- `eng/Version.Details.xml` — `Dependency Name="Microsoft.DotNet.Arcade.Sdk"`
+- `eng/Version.Details.props` — `MicrosoftDotNetArcadeSdkPackageVersion` and
+  `MicrosoftDotNetBuildManifestPackageVersion`
+
+If any of these files are out of sync, the build may use a different version of
+the Arcade SDK than the signing infrastructure expects, leading to errors such as
+"Failed to locally strong name sign" for assemblies that the newer Arcade SDK
+attempts to sign differently.
+
 ## External packages
 
 Updating a non-Microsoft (e.g. Newtonsoft.Json 9.0.1 to 13.0.1) or non-Arcade
