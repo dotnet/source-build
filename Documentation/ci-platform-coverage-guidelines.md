@@ -46,66 +46,83 @@ matrix](https://github.com/dotnet/dotnet/blob/main/eng/pipelines/templates/stage
 
 ## Updating Distro Versions in the VMR
 
-There are two scenarios when updating distro versions in the CI pipeline:
+Some OS legs in CI produce artifacts that are consumed downstream (e.g. as N-1
+previously source-built artifacts or as shared component artifacts for feature
+bands). When a distro version is updated for one of these legs, the previous
+distro version must be kept temporarily so that downstream consumers can
+continue using its artifacts until they are transitioned to the new version.
+The scope and mechanism differ between the main branch and servicing branches:
 
-### Case 1: OS Leg in VMR Produces N-1 artifact (Previous Version Support)
+- **Main branch:** Only distros whose OS legs produce N-1 artifacts need to
+  follow this process. A re-bootstrap is sufficient to publish new artifacts;
+  no release is required. Distros that do not produce N-1 artifacts can be
+  updated directly without the multi-step process.
+- **Servicing branches:** All distros are in scope because all 1xx OS legs
+  produce artifacts consumed by feature bands. A release of the 1xx feature
+  band is required to publish the artifacts.
 
-When updating a distro that produces an N-1 (previous version) artifact in the VMR:
+### Step 1: Update Distro Version
+
+Add CI legs for both the previous and current distro versions. Both versions
+must coexist temporarily so that downstream consumers can continue to consume
+the previous version's artifacts until they are updated.
 
 1. **Update VMR pipeline variables:**
-   - Create "Previous" versions of existing distro variables by adding `Previous` suffix to preserve the old values - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/variables/vmr-build.yml#L117-L121)
+   - Create "Previous" versions of existing distro variables by adding `Previous` suffix to preserve the old values - [example](https://github.com/dotnet/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/variables/vmr-build.yml#L117-L121)
    - Update current distro variables to new version values - [example](https://github.com/dotnet/dotnet/pull/1093/files#diff-821e317646a065ee331aa7444ca5e2ae9f76512e5ca316e045280e526db23724R192-R193)
 
 1. **Update VMR pipeline:**
-   - Add container configuration for previous version - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/ci.yml#L94-L96)
-   - For previous legs, update the distro parameters to use the previous variables you created in Step 1 - [example](https://github.com/ellahathaway/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/stages/source-build-and-validate.yml#L33-L38)
+   - Add container configuration for previous version - [example](https://github.com/dotnet/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/ci.yml#L94-L96)
+   - For previous legs, update the distro parameters to use the previous variables you created above - [example](https://github.com/dotnet/dotnet/blob/12c9fccc3192d5bbf9f98ea15cedcdcf55334f89/eng/pipelines/templates/stages/source-build-and-validate.yml#L33-L38)
 
 1. **Update SBRP Cleanup pipeline:**
    - If applicable, update the default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
 
-1. **File a tracking issue** to remove the previous variables and update the artifact RID used in `prep-source-build.sh` - [example](https://github.com/dotnet/source-build/issues/5238)
+1. **File a tracking issue** to remove references to the old version once all feature bands have been updated - [example](https://github.com/dotnet/source-build/issues/5238)
 
 1. **Submit and test your changes:**
    - Open a pull request with all changes - [example](https://github.com/dotnet/dotnet/pull/1093)
    - Queue a full build of the VMR to validate the changes
 
+### Step 2: Publish Artifacts
+
+Artifacts for both the previous and current distro versions must be available
+before downstream consumers can be updated.
+
 1. **Update release pipelines:**
-   - Update the artifact name for relevant .NET version in the source-build release and re-bootstrap pipeline - [example](https://dev.azure.com/dnceng/internal/_git/dotnet-release/commit/c9be53307205765ebae48c18d00ef6260e596817?path=/eng/pipeline/source-build-release/steps/re-bootstrap.yml&version=GBmain&line=90&lineEnd=91&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files).
-   - The release validation will fail until the next source-build release. File an issue to update the artifacts used for the release validation after the next release.
+   - Update the artifact names for the relevant .NET version in the release infrastructure.
+     - ([example 8.0/9.0](https://dev.azure.com/dnceng/internal/_git/dotnet-release/commit/c9be53307205765ebae48c18d00ef6260e596817?path=/eng/pipeline/source-build-release/steps/re-bootstrap.yml&version=GBmain&line=90&lineEnd=91&lineStartColumn=1&lineEndColumn=1&type=2&lineStyle=plain&_a=files)
+     - [example 10.0+](https://dev.azure.com/dnceng/internal/_git/dotnet-release?path=/src/release-pipeline/ReleasePipeline.Lib/StaticResources/ReleaseTemplates/dotnet-10.0-template.yaml&version=GBmain&line=209&lineEnd=214&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents))
+   - (8.0/9.0 only) The release validation will fail until the next source-build
+     release; file an issue to update the artifacts used for the release
+     validation after the next release.
 
-1. **Complete the transition:**
-   - Queue the re-bootstrap pipeline after the next successful CI build of the VMR
-   - In the resulting PR, make the changes described in your tracking issue (Step 4) - [example](https://github.com/dotnet/dotnet/pull/1187/commits/622843880cb3fb0c78896b1c9b5ef76b2a114017)
-   - Merge the resulting PR and close the tracking issue
+How the artifacts are then published depends on whether the .NET version is in
+development or in servicing:
 
-### Case 2: OS Leg in VMR Produces Regular Artifact (Standard Update)
+- **Main branch:** Queue the re-bootstrap pipeline after the changes merge.
+- **Servicing branches:** A release of the 1xx feature band must occur so that
+  artifacts for both distro versions are published. Feature band branches
+  cannot be updated until this release is available.
 
-For distros not used in n-1 legs:
+### Step 3: Update To Current Distro Version
 
-1. **Update VMR pipeline variables:**
-   - Update the distro-specific variables to new version values - [example](https://github.com/dotnet/dotnet/pull/1093/files#diff-821e317646a065ee331aa7444ca5e2ae9f76512e5ca316e045280e526db23724R192-R193)
+Once artifacts for both distro versions are available (via re-bootstrap or
+release), update each subsequent feature band branch to reference the current
+distro versions.
 
-1. **Update SBRP Cleanup pipeline:**
-   - If applicable, update default artifact name in the source-build-reference-packages clean up pipeline - [example](https://github.com/dotnet/source-build-reference-packages/pull/1284)
+Update the artifact RID used in `prep-source-build.sh` if the updated distro
+is the default RID ([example](https://github.com/dotnet/dotnet/pull/1187/commits/622843880cb3fb0c78896b1c9b5ef76b2a114017)).
 
-1. **Submit changes:**
-   - Open a pull request with all the above changes
-   - Queue a full build of the VMR to validate the changes
+### Step 4: Remove the Previous Distro Version
 
-### Case 3: Updating Distro Versions in Feature Bands
-
-When updating distro versions that affect feature bands, coordination is required because feature bands depend on RID-specific shared runtime artifacts from the 1xx feature band.
-The CI legs between 1xx and feature bands must be coherent in terms of the distro versions they test.
-
-1. **Update 1xx feature band first:**
-   - Update the distro versions in the 1xx feature band.
-
-1. **Update feature band CI legs:**
-   - Once the 1xx feature band changes flow to the feature band, update the feature band CI legs either in the flow PR or immediately after.
+Once all downstream consumers have been updated to use the current distro
+version, remove the previous distro version legs and variables from the
+main/1xx branch. Close the tracking issue filed in Step 1.
 
 ## Timing Guidelines for Distro Updates
 
-1. Update `main` to the newer version one to two months prior to the GA/EOL date.
+1. Update `main` to the newer version one to two months prior to the distro GA/EOL date.
     This is done to flush out any issues and to avoid destabilizing the servicing
     branches.
-1. At the GA/EOL date, update the servicing branches.
+1. At the distro GA/EOL date, update the servicing branches.
