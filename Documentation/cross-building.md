@@ -1,36 +1,66 @@
 # Cross-Building
 
 Cross-building is the process of building .NET on a host machine for a target
-OS and/or CPU architecture that differs from the host. For example, compiling
-`linux-arm64` binaries on an `x64` host, or building for a specific Linux
-distribution using a container image that provides a dedicated sysroot.
+OS and/or CPU architecture that differs from the host. .NET supports many
+cross-build scenarios across different platforms — for example, building
+`windows-arm64` on a `windows-x64` host, `browser-wasm` on Linux or Windows,
+`android-arm64` on Linux, or `osx-arm64` on `osx-x64`. Each scenario has its
+own toolchain requirements.
 
-A sysroot is a self-contained root filesystem for the target platform. It
-contains the headers, libraries, and other files needed to compile and link
-code for that target. Cross-build container images provided by the .NET team
+## ROOTFS_DIR-Based Cross-Builds
+
+For certain Linux and Unix targets (e.g. `linux-arm64`, `freebsd-x64`, `haiku-x64`),
+.NET uses a **sysroot** — a self-contained root filesystem for the target platform
+that contains the headers and libraries needed to compile and link code for that
+target. The path to the sysroot is provided via the `ROOTFS_DIR` environment
+variable.
+
+Cross-build container images provided by the .NET team
 (see [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker))
-typically place the sysroot at a well-known path and expose it via the
-`ROOTFS_DIR` environment variable.
+include a pre-configured sysroot and set `ROOTFS_DIR` to its location.
 
-## When is Cross-Building Required?
+For these ROOTFS_DIR-based builds, `/p:CrossBuild=true` is **automatically inferred**
+when the host and target OS/architecture differ (e.g. building `linux-arm64` on a
+`linux-x64` host).
 
-Cross-building is required when any of the following are true:
+## Supported Cross-Build Scenarios
 
-- The **target CPU architecture** differs from the host (e.g. building
-  `linux-arm64` on an `x64` machine).
-- The **target OS or Linux distribution** requires a dedicated sysroot that is
-  provided by a cross-build container image via the `ROOTFS_DIR` environment
-  variable, even when the host and target share the same CPU architecture
-  (e.g. building `linux-x64` inside an
-  `azurelinux-3.0-net10.0-cross-amd64` container).
+The following table summarizes common .NET cross-build scenarios and whether they
+use a `ROOTFS_DIR`-based approach and whether `CrossBuild=true` needs to be
+explicitly provided:
 
-## Enabling Cross-Building
+| Host → Target | ROOTFS_DIR-based? | CrossBuild inferred automatically? |
+|---|---|---|
+| linux-x64 → android-arm64 | No | N/A |
+| linux-x64 → browser-wasm | No | N/A |
+| windows-x64 → browser-wasm | No | N/A |
+| windows-x64 → windows-arm64 | No | N/A |
+| osx-x64 → osx-arm64 | No | N/A |
+| osx-arm64 → osx-x64 | No | N/A |
+| osx-arm64 → ios-arm64 | No | N/A |
+| osx-arm64 → tvos-arm64 | No | N/A |
+| android-x64 → android-arm64 | No | N/A |
+| linux-x64 → freebsd-x64 | Yes | Yes |
+| linux-x64 → freebsd-arm64 | Yes | Yes |
+| linux-x64 → linux-arm64 | Yes | Yes |
+| linux-x64 → haiku-x64 | Yes | Yes |
+| linux-arm64 → haiku-arm64 | Yes | Yes |
+| linux-x64 → linux-x64 (foreign ROOTFS) | Yes | **No** |
+| linux-arm64 → linux-arm64 (foreign ROOTFS) | Yes | **No** |
 
-When `ROOTFS_DIR` is set, you must pass `/p:CrossBuild=true` to the build
-command. Without this flag, the runtime build will not use the sysroot when
-searching for native dependencies such as OpenSSL, causing the build to fail.
+## Explicitly Providing `/p:CrossBuild=true`
 
-## Example: Building linux-x64 in a Cross-Build Container
+The only case where `/p:CrossBuild=true` must be explicitly passed is when the
+host and target OS/architecture are the **same**, but you are still performing a
+ROOTFS_DIR-based build using a foreign sysroot. This happens when using a
+cross-build container image to target a specific Linux distribution with a
+dedicated sysroot (e.g. building `linux-x64` inside an
+`azurelinux-3.0-net10.0-cross-amd64` container with `ROOTFS_DIR=/crossrootfs/x64`).
+
+Without `/p:CrossBuild=true` in this scenario, the build will not use the sysroot
+when searching for native dependencies such as OpenSSL and will fail.
+
+### Example
 
 ```bash
 docker run \
@@ -46,23 +76,3 @@ docker run \
     --os linux \
     /p:CrossBuild=true
 ```
-
-## Example: Building linux-arm64 on an x64 Host
-
-```bash
-docker run \
-  --rm \
-  --volume /path/to/dotnet:/dotnet \
-  --workdir /dotnet \
-  --env ROOTFS_DIR=/crossrootfs/arm64 \
-  mcr.microsoft.com/dotnet-buildtools/prereqs:azurelinux-3.0-net10.0-cross-arm64 \
-  ./build.sh \
-    --clean-while-building \
-    --source-only \
-    --arch arm64 \
-    --os linux \
-    /p:CrossBuild=true
-```
-
-> **Note:** `/p:CrossBuild=true` is only required when `ROOTFS_DIR` is set.
-> It is not needed when building natively on the target platform.
