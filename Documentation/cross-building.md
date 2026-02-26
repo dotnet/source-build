@@ -19,9 +19,10 @@ Cross-build container images provided by the .NET team
 (see [dotnet-buildtools-prereqs-docker](https://github.com/dotnet/dotnet-buildtools-prereqs-docker))
 include a pre-configured sysroot and set `ROOTFS_DIR` to its location.
 
-For these ROOTFS_DIR-based builds, `/p:CrossBuild=true` is **automatically inferred**
-when the host and target OS/architecture differ (e.g. building `linux-arm64` on a
-`linux-x64` host).
+For these ROOTFS_DIR-based cross builds, `/p:CrossBuild=true` is part of the build model. It is
+**automatically inferred** when the host and target OS/architecture differ (e.g. building
+`linux-arm64` or `freebsd-x64` on a `linux-x64` host), but must be provided explicitly
+when they are the same and a foreign sysroot is used.
 
 ## Supported Cross-Build Scenarios
 
