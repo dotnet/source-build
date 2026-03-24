@@ -59,3 +59,35 @@ Common patterns include:
 
 **Avoid using `DotNetBuildSourceOnly` conditions unless absolutely necessary.**
 **Prefer platform-based conditions** (like `TargetOS`) **to maintain alignment between Microsoft and source builds.**
+
+## Assembly InformationalVersion and commit hash metadata
+
+The .NET SDK's `AddSourceRevisionToInformationalVersion` target appends `+<SourceRevisionId>` to
+`InformationalVersion` whenever [SourceLink](https://github.com/dotnet/sourcelink) is active.
+During a VMR source build, `SourceRevisionId` defaults to the VMR commit hash, which can cause the
+`InformationalVersion` (and therefore the binary product version) to differ from the Microsoft build.
+
+**In product repos:** if your repo uses SourceLink and the Microsoft build produces assemblies without
+a `+<hash>` suffix in the product version, ensure that `IncludeSourceRevisionInInformationalVersion`
+is set to `false` in the relevant project(s):
+
+```xml
+<PropertyGroup>
+  <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+</PropertyGroup>
+```
+
+**In [source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages)
+external package projects:** pass the property on the inner build command line:
+
+```xml
+<BuildCommandArgs>$(BuildCommandArgs) /p:IncludeSourceRevisionInInformationalVersion=false</BuildCommandArgs>
+```
+
+Use this when the Microsoft build of the external package does **not** include a commit hash in its
+product version. If the Microsoft build does include a hash (just from a different repo), set
+`SourceRevisionId` to the original upstream repo's commit hash instead (see
+[dotnet/source-build#5506](https://github.com/dotnet/source-build/issues/5506)).
+
+See also: [dotnet/source-build#5507](https://github.com/dotnet/source-build/issues/5507) for an
+example of this pattern applied to `Microsoft.Css.Parser.dll`.
