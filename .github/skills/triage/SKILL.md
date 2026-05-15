@@ -2,7 +2,7 @@
 name: triage
 description: >
   Triage a dotnet/source-build GitHub issue. Reads the issue body, classifies it by area/kind/severity,
-  estimates cost, checks for blocking impact, suggests an owner based on recent issue activity, and posts
+  checks for blocking impact, suggests an owner based on recent issue activity, and posts
   a structured triage comment in restricted mode. Use when asked "triage issue", "triage #1234",
   "classify this issue", or "run triage pass".
 ---
@@ -122,6 +122,13 @@ Choose from:
 
 If the existing labels already include the correct area, note "(already applied)".
 
+### Additional Area(s)
+
+If the issue spans multiple concerns, assign one secondary/cross-cutting `area-*` label from
+the table above. For example, a prebuilt issue that also requires an upstream fix would have
+a primary area of `area-prebuilts` and an additional area of `area-upstream-fix`. If the issue
+fits cleanly into a single area, use "none".
+
 ### Kind
 
 Classify as one of:
@@ -143,17 +150,6 @@ Rate S1–S4:
 | S3 | Causes test failures, CI noise, or developer friction; workaround exists |
 | S4 | Polish, documentation, minor improvement; no broken scenario |
 
-### Cost Estimate
-
-Estimate using the repo's existing cost labels:
-
-| Cost | Criteria |
-|---|---|
-| `Cost:S` | < 1 day of work; straightforward fix |
-| `Cost:M` | 1–3 days; moderate investigation or cross-repo coordination |
-| `Cost:L` | 3–10 days; significant design or multi-repo changes |
-| `Cost:XL` | 10+ days; large feature, architectural change, or multi-milestone effort |
-
 ### Blocking Assessment
 
 Check if the issue should have a blocking label:
@@ -171,6 +167,80 @@ Determine milestone/urgency:
 - **backlog** — no milestone; address when capacity allows
 
 Provide a one-sentence reason for the urgency assessment.
+
+### Repro
+
+Assess whether the issue includes reproduction information:
+
+| Value | Criteria |
+|---|---|
+| `yes-minimal` | Issue includes a clear, minimal set of steps or a concise code snippet to reproduce the problem |
+| `yes-verbose` | Issue describes how to reproduce but with excessive detail, logs, or unclear steps |
+| `n/a` | Not applicable — the issue is a feature request, tracking issue, process issue, or question where repro steps don't apply |
+| `needs-info` | Issue claims a bug or failure but does not include enough information to reproduce it |
+
+Include a brief justification (e.g., "build log attached", "no steps provided", "feature request").
+
+### Affected Version(s)
+
+Determine which .NET version(s) the issue applies to:
+- Look for explicit version mentions in the issue title, body, or labels (e.g., ".NET 9", "9.0.1xx")
+- If the issue references a specific branch (e.g., `release/9.0.1xx`), map it to the corresponding .NET version
+- If no version is mentioned and the issue appears to affect the current development branch, use `"current"`
+- If multiple versions are affected, list all of them (e.g., ".NET 8, .NET 9")
+
+### Confidence
+
+Rate overall confidence in the triage assessment:
+
+| Value | Criteria |
+|---|---|
+| `high` | Issue body is clear, area is unambiguous, severity is straightforward to assess |
+| `medium` | Some ambiguity in area or severity; reasonable people might classify differently |
+| `low` | Issue body is vague or missing, multiple areas could apply, or limited data for SME suggestion |
+
+Lower confidence to `low` if the issue has no body, the title is ambiguous, or no recent
+issue activity was found for SME suggestion.
+
+### Needs Human?
+
+Determine whether the triage requires human follow-up before it can be acted on:
+- **yes** — if the issue needs clarification from the author, involves a judgment call the
+  skill cannot make (e.g., release-blocking priority), or if confidence is `low`. Include
+  a brief reason (e.g., "needs repro steps", "unclear if blocking release")
+- **no** — if the assessment is complete and actionable as-is
+
+### Suggested Routing
+
+Always set to `@dotnet/source-build`. This is the team that owns the repo and is the default
+routing target for all issues.
+
+### Possible SME(s) and Evidence
+
+Based on the issue activity gathered in Step 2a, identify up to two possible subject matter
+experts. See Step 4 for the full scoring methodology. For each SME listed, include a one-line
+evidence summary referencing specific issue numbers. If no recent activity data exists, state
+"no recent activity data" and leave the evidence lines empty.
+
+### Recommended Labels
+
+Assemble the label recommendation based on the classification above:
+- Always recommend adding the primary `area-*` label (unless already applied)
+- Never recommend removing `untriaged` - a human will do this
+- Do NOT recommend cost labels
+
+### Related Issues
+
+Use the search results from Steps 2b and 5 to list any open issues that appear related to
+this issue. If the search found issues with similar titles or keywords, list their numbers.
+If no related issues were found, use "none found".
+
+### Possible Duplicate Of
+
+From the search results in Step 5, identify if any existing issue (open or closed) appears
+to describe the same problem. Only flag a duplicate if the overlap is strong — similar
+symptoms, same area, and similar context. If uncertain, do not flag it. Use "none" if no
+likely duplicate exists.
 
 ## Step 4: Suggest Routing and Possible SMEs
 
@@ -215,8 +285,6 @@ If a likely duplicate exists, note it in the assessment with the issue number.
 **Affected version(s)**: {.NET version(s) or "current"}
 **Severity**: {S1–S4} — {one-line justification}
 
-**Cost**: {Cost:S|M|L|XL} — {one-line justification}
-
 **Blocking**: {blocking-release | blocking-downstream | blocking-clean-ci | not blocking}
 {If blocking, one-line explanation of what is blocked}
 
@@ -229,7 +297,7 @@ Evidence:
  - {username1} {evidence with issue numbers}
  - {username2} {evidence with issue numbers}
 
-**Recommended labels**: add `{area}`, `{Cost:*}`; remove `untriaged`{; add `blocking-*` if applicable}
+**Recommended labels**: add `{area}`
 
 **Related issues**: {#number, #number, or "none found"}
 **Possible duplicate of**: {#number or "none"}
@@ -266,9 +334,9 @@ After posting the comment, summarize the triage to the user:
 
 ```
 ✅ Triage posted on #{number}
-   Area: {area}  |  Kind: {kind}  |  Severity: {S*}  |  Cost: {cost}
+   Area: {area}  |  Kind: {kind}  |  Severity: {S*}
    Routing: @dotnet/source-build  |  SME: {username}  |  Urgency: {urgency}
-   Labels: add {labels}; remove untriaged
+   Labels: add {labels}
    {link to comment}
 ```
 
@@ -276,9 +344,9 @@ If the comment was not posted (read-only mode), show instead:
 
 ```
 📋 Triage generated for #{number} (not posted — read-only mode)
-   Area: {area}  |  Kind: {kind}  |  Severity: {S*}  |  Cost: {cost}
+   Area: {area}  |  Kind: {kind}  |  Severity: {S*}
    Routing: @dotnet/source-build  |  SME: {username}  |  Urgency: {urgency}
-   Labels: add {labels}; remove untriaged
+   Labels: add {labels}
    Copy the comment above to post it manually.
 ```
 
