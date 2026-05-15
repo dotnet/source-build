@@ -2,7 +2,7 @@
 name: triage
 description: >
   Triage a dotnet/source-build GitHub issue. Reads the issue body, classifies it by area/kind/severity,
-  estimates cost, checks for blocking impact, suggests an owner based on recent PR history, and posts
+  estimates cost, checks for blocking impact, suggests an owner based on recent issue activity, and posts
   a structured triage comment in dry-run mode. Use when asked "triage issue", "triage #1234",
   "classify this issue", or "run triage pass".
 ---
@@ -49,18 +49,26 @@ gh api repos/dotnet/source-build/issues/{number}/comments --jq '.[].body'
 
 ## Step 2: Gather Repository Context
 
-### 2a. Recent PR History (for owner suggestion)
+### 2a. Recent Issue Activity (for owner suggestion)
 
-Fetch merged PRs from the last 90 days to identify active contributors per area:
+Fetch recently closed/commented issues from the last 90 days to identify active contributors per area:
 
 ```bash
-gh api "search/issues?q=repo:dotnet/source-build+is:pr+is:merged+merged:>=$(date -u -d '90 days ago' +%Y-%m-%d)&per_page=100" \
-  --jq '.items[] | {number, title, user: .user.login, labels: [.labels[].name], merged_at: .pull_request.merged_at}'
+gh api "search/issues?q=repo:dotnet/source-build+is:issue+updated:>=$(date -u -d '90 days ago' +%Y-%m-%d)&per_page=100&sort=updated" \
+  --jq '.items[] | {number, title, user: .user.login, labels: [.labels[].name], state, assignee: .assignee.login}'
 ```
 
-Score potential owners by counting merged PRs, weighting by label overlap with the issue's
-likely area. The contributor with the highest score is the primary suggestion; second-highest
-is backup.
+Also fetch comments on recent issues in the relevant area to identify who is actively
+triaging and resolving issues:
+
+```bash
+gh api "repos/dotnet/source-build/issues/comments?since=$(date -u -d '90 days ago' +%Y-%m-%dT%H:%M:%SZ)&per_page=100" \
+  --jq '.[] | {issue_url, user: .user.login}'
+```
+
+Score potential owners by counting issue assignments, comments, and close actions.
+Weight by label overlap with the issue's likely area. The contributor with the highest
+score is the primary suggestion; second-highest is backup.
 
 ### 2b. Related Issues
 
@@ -159,18 +167,18 @@ Provide a one-sentence reason for the urgency assessment.
 
 The default routing target is always **@dotnet/source-build** (the team that owns the repo).
 
-Additionally, based on the PR history gathered in Step 2a, identify **possible SMEs** — do NOT
+Additionally, based on the issue activity gathered in Step 2a, identify **possible SMEs** — do NOT
 use `@` mentions for individuals to avoid notification noise. List usernames without the `@` prefix.
 
-1. **Primary SME**: The contributor with the most merged PRs in the relevant area over the last 90 days
+1. **Primary SME**: The contributor with the most issue activity (assignments, comments, closures) in the relevant area over the last 90 days
 2. **Backup SME**: Second-most-active contributor in that area
 
 Provide evidence for each:
-- Number of relevant PRs merged
-- Specific PR numbers as examples (cite 2–3)
+- Number of relevant issues they were active on
+- Specific issue numbers as examples (cite 2–3)
 - Why their expertise matches this issue
 
-If no recent PR data exists for the area, state "no recent PR data — routing to team" and
+If no recent issue activity exists for the area, state "no recent activity data — routing to team" and
 skip individual SME suggestions.
 
 ## Step 5: Check for Duplicates
@@ -218,8 +226,8 @@ Reason: {one-sentence justification}
 **Suggested routing**: @dotnet/source-build
 **Possible SME(s)**: {username1}, {username2} — {brief evidence}
 Evidence:
- - {username1} {evidence with PR numbers}
- - {username2} {evidence with PR numbers}
+ - {username1} {evidence with issue numbers}
+ - {username2} {evidence with issue numbers}
 
 **Recommended labels**: add `{area}`, `{Cost:*}`; remove `untriaged`{; add `blocking-*` if applicable}
 
@@ -261,8 +269,8 @@ After posting the comment, summarize the triage to the user:
 - **Never apply labels or milestones automatically.** The comment is dry-run only. A human
   decides whether to promote via `/triage apply`.
 - **Never close or lock an issue.** Triage is advisory.
-- **Never fabricate PR numbers or contributor names.** Only cite evidence you actually found
-  in the API responses. If PR history is sparse, say "limited data" and lower confidence.
+- **Never fabricate issue numbers or contributor names.** Only cite evidence you actually found
+  in the API responses. If issue activity is sparse, say "limited data" and lower confidence.
 - **Never assign the issue.** Owner suggestion is advisory only.
 - **Be concise.** The triage comment should be scannable in 10 seconds. Use the exact
   template above — do not add extra prose.
@@ -272,7 +280,7 @@ After posting the comment, summarize the triage to the user:
 
 - If the issue doesn't exist or is not accessible, report the error and stop.
 - If the issue has no body, classify based on the title alone and set confidence to `low`.
-- If no merged PRs are found for owner suggestion, note "no recent PR data" and suggest
+- If no recent issue activity is found for owner suggestion, note "no recent activity data" and suggest
   `@dotnet/source-build` as the fallback owner.
 - If the issue is already triaged (no `untriaged` label), warn the user and ask for
   confirmation before proceeding.
