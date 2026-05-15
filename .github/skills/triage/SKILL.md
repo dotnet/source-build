@@ -320,14 +320,13 @@ _Restricted mode — no labels or milestone applied. A maintainer should manuall
 
 ### Output the comment
 
-Always display the fully rendered triage comment in the terminal first. This step requires
-only read-level API access (issue and search queries) and can run with a read-only GH token.
+Always display the fully rendered triage comment in the terminal first.
 
-### Post the comment (requires write access)
+### Post the comment
 
-After displaying the comment, ask the user for confirmation before posting. If the GH token
-does not have write permissions, skip posting and instruct the user to copy the comment
-manually or use a separate process with write access.
+After displaying the comment, ask the user whether to post it. If the user
+confirms, post the comment. If the user declines, do nothing — the user can
+copy the comment from the terminal output and post it manually.
 
 To post when write access is available:
 
@@ -349,10 +348,10 @@ After posting the comment, summarize the triage to the user:
    {link to comment}
 ```
 
-If the comment was not posted (read-only mode), show instead:
+If the user declined to post, show instead:
 
 ```text
-📋 Triage generated for #{number} (not posted — read-only mode)
+📋 Triage generated for #{number} (not posted)
    Area: {area}  |  Kind: {kind}  |  Severity: {S*}
    Routing: @dotnet/source-build  |  SME: {username}  |  Urgency: {urgency}
    Labels: add {labels}
@@ -364,8 +363,7 @@ If the comment was not posted (read-only mode), show instead:
 - **Never apply labels or milestones automatically.** The comment is restricted mode only. A human
   decides whether to promote via `/triage apply`.
 - **Never post without user consent.** Always display the triage comment in the terminal and
-  wait for explicit user confirmation before posting. If the GH token is read-only, do not
-  attempt to post — output the comment for the user to copy instead.
+  wait for explicit user confirmation before posting.
 - **Never close or lock an issue.** Triage is advisory.
 - **Never fabricate issue numbers or contributor names.** Only cite evidence you actually found
   in the API responses. If issue activity is sparse, say "limited data" and lower confidence.
