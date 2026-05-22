@@ -667,7 +667,8 @@ cd dotnet
 # ===
 
 # Downloads Microsoft-built artifacts and Microsoft SDK
-./prep-source-build.sh
+./prep-source-build.sh # (.NET 10)
+./prep-source-build.sh --no-shared-components # (.NET 11+)
 
 # Build the SDK referencing assets from current 1xx release
 ./build.sh --source-only --with-shared-components /path/to/source-built-1xx/artifacts
