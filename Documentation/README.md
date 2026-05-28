@@ -8,7 +8,6 @@
 | [Bootstrapping Guidelines](bootstrapping-guidelines.md) | How to acquire or build a bootstrapping SDK |
 | [Cross-Building](cross-building.md) | How to build .NET for a target platform using a cross-build container |
 | [How to Run a Stage 2 Build](how-to-stage2-build.md) | How to perform a stage 2 source build for validation |
-| [Adding Support for a New OS](boostrap-new-os.md) | Steps to bring up .NET on a new operating system |
 
 ## Maintaining Source-Build
 
