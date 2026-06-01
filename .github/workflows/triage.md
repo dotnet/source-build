@@ -1,11 +1,12 @@
 ---
 description: >
-  When an issue is opened, analyze it and post a structured
-  triage comment using the triage skill.
+  On a schedule, find untriaged issues and post a structured
+  triage comment using the triage skill. Community issues require
+  the 'community' label (added by a maintainer) before processing.
 
 on:
-  issues:
-    types: [opened]
+  schedule:
+    - cron: '*/15 * * * *'
   workflow_dispatch:
     inputs:
       issue_number:
@@ -20,9 +21,11 @@ permissions:
 
 safe-outputs:
   add-comment:
+    discussions: false
 
 imports:
   - shared/pat_pool.md
+  - shared/github-guard-policy.md
 
 engine:
   id: copilot
@@ -48,11 +51,20 @@ You are an automated triage agent for the **${{ github.repository }}** repositor
 ## Context
 
 - **Repository:** ${{ github.repository }}
-- **Issue number:** ${{ github.event.issue.number || inputs.issue_number }}
+- **Issue number:** ${{ inputs.issue_number || '' }}
 
 ## Your Task
 
-Triage issue #${{ github.event.issue.number || inputs.issue_number }} in the **${{ github.repository }}** repository using the `triage` skill.
+{% if inputs.issue_number %}
+Triage issue #${{ inputs.issue_number }} in the **${{ github.repository }}** repository using the `triage` skill.
+{% else %}
+Find issues in **${{ github.repository }}** that have not yet been triaged (no triage comment from this workflow). For each untriaged issue, use the `triage` skill to analyze it and post a triage comment.
+
+Only process issues that:
+- Are open
+- Do not already have a triage comment from this agent
+- Are authored by users with write access, OR have the `community` label (indicating a maintainer has reviewed them for safety)
+{% endif %}
 
 ## Important Overrides for Automated Mode
 
