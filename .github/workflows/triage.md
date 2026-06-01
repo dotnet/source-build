@@ -13,7 +13,7 @@ on:
         description: 'Issue number to triage'
         required: true
         type: number
-  skip-bots: [github-actions, copilot]
+  skip-bots: [copilot]
 
 permissions:
   contents: read
