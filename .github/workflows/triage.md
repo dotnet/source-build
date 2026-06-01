@@ -62,6 +62,7 @@ Find issues in **${{ github.repository }}** that have not yet been triaged (no t
 
 Only process issues that:
 - Are open
+- Have the `untriaged` label
 - Do not already have a triage comment from this agent
 - Are authored by users with write access, OR have the `community` label (indicating a maintainer has reviewed them for safety)
 {% endif %}
