@@ -22,6 +22,7 @@ permissions:
 safe-outputs:
   add-comment:
     discussions: false
+    max: 20
 
 imports:
   - shared/pat_pool.md
