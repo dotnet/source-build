@@ -6,7 +6,7 @@ description: >
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 12,16,19,23 * * 1-5'
   workflow_dispatch:
     inputs:
       issue_number:
