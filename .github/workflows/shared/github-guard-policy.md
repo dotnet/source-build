@@ -1,9 +1,11 @@
 ---
 # Shared GitHub guard policy.
-# Allows issues with the 'community' label to be processed by
-# agentic workflows, providing a human-in-the-loop gate for
-# community-authored issues to prevent prompt injection.
+# Requires 'approved' min-integrity for GitHub MCP server tools,
+# with 'community' as an approval label. This means community-authored
+# issues must have the 'community' label (added by a maintainer) before
+# the agent can process them, preventing prompt injection.
 tools:
   github:
+    min-integrity: approved
     approval-labels: [community]
 ---
