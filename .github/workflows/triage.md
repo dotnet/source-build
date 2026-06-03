@@ -20,6 +20,8 @@ permissions:
   issues: read
 
 safe-outputs:
+  noop:
+    report-as-issue: false
   add-comment:
     discussions: false
     max: 20
