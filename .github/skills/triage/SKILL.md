@@ -287,34 +287,45 @@ If a likely duplicate exists, note it in the assessment with the issue number.
 ```markdown
 <details><summary>🏷️ Source-build triage pass — {YYYY-MM-DD HH:MM} UTC</summary>
 
-**Area**: `{area-label}` {(already applied) if present}
-**Additional area(s)**: {`area-*` or "none"}
-**Kind**: {kind}
-**Repro**: {yes-minimal | yes-verbose | n/a | needs-info} — {brief justification}
-**Affected version(s)**: {.NET version(s) or "current"}
-**Severity**: {S1–S4} — {one-line justification}
+### 📋 Classification
 
-**Blocking**: {blocking-release | blocking-downstream | blocking-clean-ci | not blocking}
-{If blocking, one-line explanation of what is blocked}
+| Field | Value |
+|---|---|
+| **Area** | `{area-label}` {(already applied) if present} |
+| **Additional area(s)** | {`area-*` or "none"} |
+| **Kind** | {kind} |
+| **Severity** | **{S1–S4}** — {one-line justification} |
+| **Affected version(s)** | {.NET version(s) or "current"} |
+| **Repro** | `{yes-minimal | yes-verbose | n/a | needs-info}` — {brief justification} |
 
-**Urgency**: {🔴 current release | 🟡 next release | ⚪ backlog} — {milestone or "no milestone"}
-Reason: {one-sentence justification}
+### 🚦 Priority
 
-**Suggested routing**: @dotnet/source-build
-**Possible SME(s)**: {username1}, {username2} — {brief evidence}
-Evidence:
- - {username1} {evidence with issue numbers}
- - {username2} {evidence with issue numbers}
+- **Blocking:** {blocking-release | blocking-downstream | blocking-clean-ci | not blocking}{ — one-line explanation if blocking}
+- **Urgency:** {🔴 current release | 🟡 next release | ⚪ backlog} — {milestone or "no milestone"}
+  > {one-sentence justification}
 
-**Recommended labels**: add `{area}`
+### 👥 Routing
 
-**Related issues**: {#number, #number, or "none found"}
-**Possible duplicate of**: {#number or "none"}
+- **Team:** @dotnet/source-build
+- **Possible SME(s):** {username1}, {username2}
+  - `{username1}` — {evidence with issue numbers}
+  - `{username2}` — {evidence with issue numbers}
 
-**Confidence**: {high | medium | low}
-**Needs human?**: {yes — reason | no}
+### 🔗 Cross-references
 
-_Restricted mode — no labels or milestone applied. A maintainer should manually apply any accepted labels and milestone._
+- **Recommended labels:** add `{area}`
+- **Related issues:** {#number, #number, or "none found"}
+- **Possible duplicate of:** {#number or "none"}
+
+### ✅ Assessment
+
+- **Confidence:** {high | medium | low}
+- **Needs human?:** {yes — reason | no}
+
+---
+
+> _Restricted mode — no labels or milestone applied. A maintainer should manually apply any accepted labels and milestone._
+
 </details>
 ```
 
