@@ -27,8 +27,12 @@ safe-outputs:
     max: 20
 
 imports:
-  - shared/pat_pool.md
   - shared/github-guard-policy.md
+  - uses: shared/pat_pool.md
+    with:
+      environment: copilot-pat-pool
+
+environment: copilot-pat-pool
 
 engine:
   id: copilot
@@ -45,7 +49,7 @@ engine:
         needs.pat_pool.outputs.pat_number == '7', secrets.COPILOT_PAT_7,
         needs.pat_pool.outputs.pat_number == '8', secrets.COPILOT_PAT_8,
         needs.pat_pool.outputs.pat_number == '9', secrets.COPILOT_PAT_9,
-        secrets.COPILOT_GITHUB_TOKEN)
+        'NO COPILOT PAT AVAILABLE')
       }}
 ---
 
