@@ -16,6 +16,7 @@
 | [CI Platform Coverage Guidelines](ci-platform-coverage-guidelines.md) | Guidelines for which platforms to test in CI |
 | [Feature Band Source Building](feature-band-source-building.md) | Guide for Linux distro maintainers on building feature band branches |
 | [Packaging and Installation](packaging-installation.md) | How to install or package a source-built .NET SDK |
+| [Debugging Support](debugging-support.md) | What a source build produces for debugging, how to verify it, and how end users consume sources, binaries, and symbols |
 | [Patching Guidelines](patching-guidelines.md) | How to address build errors and other issues via patches |
 | [Package Dependency Flow](package-dependency-flow.md) | How package dependencies are managed within source-build |
 | [Eliminating Pre-builts](eliminating-pre-builts.md) | How to eliminate pre-built binaries in .NET repositories |
