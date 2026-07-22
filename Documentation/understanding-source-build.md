@@ -53,11 +53,15 @@ and [Unified Build scenarios][build-controls].
 
 ### Who uses source-build
 
+<!-- markdownlint-disable MD013 -->
+
 | User | What source-build gives them |
 |---|---|
 | **Linux distribution and package maintainers** | A supported path for producing .NET under distribution rules that commonly restrict network access, require source availability, and require explicit treatment of binary inputs. They can apply distribution patches, choose permitted system libraries, and package the result through their own release process. |
 | **.NET product engineers and CI owners** | A way to detect upstream changes that compile in ordinary repository CI but break the downstream source-build contract when the full product graph is assembled. |
 | **New platform and architecture maintainers** | A bootstrap path for bringing .NET to a target that may not yet have a Microsoft-produced SDK or runtime package. |
+
+<!-- markdownlint-enable MD013 -->
 
 The current supported product source-build path is Linux. The
 [source-build repository](../README.md#net-in-linux-distributions) lists
@@ -148,6 +152,8 @@ boundaries, is explained in
 [Section 9](#9-sequential-and-bootstrap-source-build-workflows). For now, the
 important point is that the validations answer different questions:
 
+<!-- markdownlint-disable MD013 -->
+
 | Validation | What it proves | Why a downstream builder cares |
 |---|---|---|
 | **Coherent VMR source and repository graph** | One source state contains the mapped product sources and orders producers before consumers. | A downstream should not have to reconstruct a hidden sequence of repository commits and package updates. |
@@ -162,6 +168,8 @@ important point is that the validations answer different questions:
 | **Source archive build** | Build is executed in the scope of a VMR source tree outside the context of a git repo. | Partner builds depend on source tarballs, not git repositories. |
 | **System-library build** | Build is executed using selected distribution-provided native libraries. | Linux packaging policies commonly require bundled native dependencies to be replaced by separately packaged system libraries, keeping dependency ownership and security servicing in the distribution. |
 
+<!-- markdownlint-enable MD013 -->
+
 The [bootstrapping guidelines](bootstrapping-guidelines.md),
 [source-build CI matrix][source-build-stages], and
 [permissible source policy][permissible-sources] provide the implementation and
@@ -175,6 +183,8 @@ copy.
 
 ### Source-build, the Microsoft build, the VMR, and Unified Build are related but different
 
+<!-- markdownlint-disable MD013 -->
+
 | Term | Meaning |
 |---|---|
 | **Source-build** | A build methodology and VMR build mode intended to construct .NET from source with controlled bootstrap inputs and without online package sources. In the VMR, `-sb`, `-so`, `--source-build`, and `--source-only` all set `DotNetBuildSourceOnly=true`. |
@@ -182,6 +192,8 @@ copy.
 | **VMR** | The Virtual Monolithic Repository, [`dotnet/dotnet`][dotnet-repo]. It is a source projection of the repositories that make up .NET plus the orchestration needed to build them together. |
 | **Unified Build** | The broader .NET construction model in which one coherent VMR source state is built as a product rather than assembling independent official repository builds. |
 | **Product repository** | A development repository such as `dotnet/runtime`, `dotnet/roslyn`, or `dotnet/sdk` whose selected sources are synchronized into the VMR. |
+
+<!-- markdownlint-enable MD013 -->
 
 The VMR is the source and orchestration location. Unified Build is the model for
 constructing one product from that VMR. The Microsoft build and source-build are
@@ -234,12 +246,16 @@ executable definitions.
 There is no single "source-build repository" that owns every part of the
 system.
 
+<!-- markdownlint-disable MD013 -->
+
 | Repository | Role | Start here when... |
 |---|---|---|
 | [`dotnet/source-build`][source-build-repo] | Public source-build documentation, issue tracking, and cross-repository guidance. It does not contain the current product build. | You need concepts, policy, or a place to track a cross-cutting source-build problem. |
 | [`dotnet/dotnet`][dotnet-repo] | The VMR and executable source of truth for the current full product build. | You need build orchestration, source mappings, repository graph, package flow, validation, or CI. |
 | [`dotnet/source-build-assets`][sba-repo] | Source, tools, and infrastructure for external, reference, targeting, and text-only packages needed by source-build. | A required package cannot be produced by a normal product repository. |
 | [`dotnet/arcade`][arcade-repo] | Shared repository engineering, Arcade SDK behavior, and the template used to validate product-repository changes in VMR context. | A source-build behavior is shared by Arcade-enabled repositories or a repository needs VMR validation. |
+
+<!-- markdownlint-enable MD013 -->
 
 The historical name `source-build-reference-packages` still appears in some
 identifiers. The current repository and VMR directory are named
@@ -315,10 +331,14 @@ enables poison checks, `--with-sdk <DIR>` selects a supplied bootstrap SDK, and
 Online and offline are package-source modes that apply independently of the
 bootstrap SDK, sequential/bootstrap workflow, or stage:
 
+<!-- markdownlint-disable MD013 -->
+
 | Mode | Package-source behavior | Purpose |
 |---|---|---|
 | **Online** | Retains configured remote package sources. | Lets restores complete so centralized prebuilt detection can provide a holistic view of the unapproved packages used across the VMR and where they were used. Online access does not make those packages acceptable or relax prebuilt validation. |
 | **Offline** | Removes online package and audit sources and restores from prepared local inputs. | Proves that the declared source-build inputs close the package graph without network access, as required by downstream builders. Restore stops at the first required package missing from the local inputs, before final prebuilt detection can report the complete set. |
+
+<!-- markdownlint-enable MD013 -->
 
 For example, if several repositories request unapproved packages available only
 from remote feeds, an online build can restore them and aggregate their usage in
@@ -424,6 +444,8 @@ symbol, and diagnostics artifacts, see
 The central source-build question is not only "which package version restored?"
 It is "where did that package come from, and is it valid for this use?"
 
+<!-- markdownlint-disable MD013 -->
+
 | Origin | What it contains | Intended use | Important constraint |
 |---|---|---|---|
 | **Current source-built** | Packages produced by graph dependencies earlier in this VMR build. | Normal inputs to downstream repositories. | The producer must be in the graph before the consumer, and the consumer must request the produced version. |
@@ -433,6 +455,8 @@ It is "where did that package come from, and is it valid for this use?"
 | **SBA reference or targeting package** | API signatures without the original implementation, either individually or bundled for a TFM. | Satisfy a compile-time dependency on a specific API or targeting surface. | Must not leak into SDK output. |
 | **SBA text-only package** | Text assets. | Supply non-code content not produced by an ordinary product repository. | It does not provide executable code. |
 | **Prebuilt** | A restored package not recognized as a current/approved source-built or reference input. | It has no intended use in a normal source-build; temporary preview-phase emergency inputs can make one available long enough to diagnose and remove the dependency. | Its use is reported and fails final prebuilt validation unless explicitly bypassed for diagnosis. |
+
+<!-- markdownlint-enable MD013 -->
 
 The [Source Build Assets README][sba-readme] is authoritative for its package
 categories. The [prep script][prep-script], [NuGet rewrite targets][repo-targets],
@@ -606,12 +630,16 @@ The simplest rule is:
 
 The possible outcomes make the distinction clearer:
 
+<!-- markdownlint-disable MD013 -->
+
 | Situation | What happens |
 |---|---|
 | A required package is unavailable from every offline source. | Restore fails before either report can classify the dependency. |
 | An unapproved package is available from a prepared local feed or package cache and is used only during the build. | Offline restore can succeed, but prebuilt detection fails because local availability does not make the package's origin acceptable. Poisoning can remain clean because the package did not ship. |
 | An accepted [previously source-built (PSB) package](#what-psb-artifacts-are) supplies a tool that runs during the build, and none of that tool's implementation reaches checked output. | Its bootstrap use is allowed; neither check reports a violation. |
 | An assembly from a bootstrap input marked for poison detection is copied or repackaged into checked final output. | Poisoning reports the leak even if the package itself was an accepted bootstrap input. |
+
+<!-- markdownlint-enable MD013 -->
 
 Prebuilt detection therefore asks **where the build's packages came from**.
 Poisoning asks **what bootstrap implementation survived into the result**.
@@ -719,10 +747,14 @@ The stage number identifies a **generation of build output**. Both stages build
 the same VMR commit and target the same .NET SDK version. What changes is the
 SDK and package set used to drive each build:
 
+<!-- markdownlint-disable MD013 -->
+
 | Stage | Inputs that start the build | Result and meaning |
 |---|---|---|
 | **Stage 1** | In the standard 1xx bootstrap process, a Microsoft-built SDK/toolset and a PSB package archive produced by an earlier source-build leg run by Microsoft. | Produces the first SDK and source-built package archive from the current source. A pass proves that these bounded bootstrap inputs can construct the product in source-build mode. |
 | **Stage 2** | The SDK and source-built package archive produced by stage 1. | Rebuilds the same source revision and produces the SDK and packages that meet downstream source-build production requirements. A pass proves that current source-built outputs are complete enough to drive the build without capabilities supplied only by the original bootstrap inputs. |
+
+<!-- markdownlint-enable MD013 -->
 
 **Why stage 2 is significant.** Stage 2 is a real consumer test of the newly built SDK.
 It uses that SDK, including its new targets, build tasks, analyzers, and defaults,
@@ -775,12 +807,16 @@ when a build creates it; it becomes **PSB** when a later build consumes it.
 
 The current archive is more than a directory of NuGet packages:
 
+<!-- markdownlint-disable MD013 -->
+
 | Content | Why it is included |
 |---|---|
 | Source-built NuGet packages | Supply prior source-built versions when the current build cannot yet use a package it will produce later. For example, Roslyn builds before MSBuild, so Roslyn must use an earlier source-built `Microsoft.Build` package rather than the one MSBuild will produce later in the same invocation. |
 | `PackageVersions.props` | Records package versions available from the archive so the next build can align repository dependencies with them. |
 | Build version and asset-manifest metadata | Identify the build and assets represented by the archive. |
 | Selected runtime, ASP.NET Core runtime, and complete-symbol archives | Support later product-construction and feature-band scenarios that need those build outputs. |
+
+<!-- markdownlint-enable MD013 -->
 
 PSB artifacts and the N-1 SDK usually come from the same source-build, but they
 are separate inputs:
@@ -852,7 +888,7 @@ This leg protects a downstream upgrade chain:
 N/N-1 and stage 1/stage 2 describe different relationships:
 
 - **N and N-1** are different SDK versions.
-- **Stage 1 and stage 2** are different build generations of the _same_ SDK
+- **Stage 1 and stage 2** are different build generations of the *same* SDK
   version and source revision.
 
 | Workflow/check | Starting SDK | Source being built | Question answered |
@@ -1004,6 +1040,8 @@ between independently produced SDKs and strengthens supply-chain auditing. The
 
 ## 11. Glossary
 
+<!-- markdownlint-disable MD013 -->
+
 | Term | Definition |
 |---|---|
 | **Bootstrap process** | The two-build workflow used when no suitable source-built baseline exists: on a 1xx branch, stage 1 builds with a Microsoft-built SDK and package outputs from an earlier Microsoft-run source-build leg, then stage 2 rebuilds the same source with stage-1 outputs and establishes the downstream baseline. |
@@ -1026,6 +1064,8 @@ between independently produced SDKs and strengthens supply-chain auditing. The
 | **Stage 1** | The first build of a VMR source revision in a two-stage bootstrap process; on a 1xx branch, a Microsoft-built SDK and package outputs from an earlier Microsoft-run source-build leg drive it, and it produces the current source-built SDK and package archive. |
 | **Stage 2** | A fresh rebuild of the same VMR source revision, driven by the SDK and source-built package archive produced by stage 1; its outputs meet downstream source-build production requirements. |
 | **Version lifting** | VMR-generated package-version overrides that align a repository with packages available from current or approved bootstrap inputs. |
+
+<!-- markdownlint-enable MD013 -->
 
 ## 12. Authoritative references
 
@@ -1080,7 +1120,6 @@ between independently produced SDKs and strengthens supply-chain auditing. The
 - [Cross-building](cross-building.md)
 - [Packaging and installation](packaging-installation.md)
 - [Debugging support](debugging-support.md)
-
 
 [allowed-sb-binaries]: https://github.com/dotnet/dotnet/blob/9a59e4a8c37f0af10a77f95e3d8dd3cfe94a5646/eng/allowed-sb-binaries.txt
 [allowed-vmr-binaries]: https://github.com/dotnet/dotnet/blob/9a59e4a8c37f0af10a77f95e3d8dd3cfe94a5646/eng/allowed-vmr-binaries.txt
