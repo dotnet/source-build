@@ -4,6 +4,7 @@
 
 | Document | Description |
 |---|---|
+| [Understanding .NET Source-Build](understanding-source-build.md) | Why source-build exists, who depends on it, what it validates, and how the VMR build works |
 | [System Requirements](system-requirements.md) | Hardware, OS, and architecture requirements |
 | [Bootstrapping Guidelines](bootstrapping-guidelines.md) | How to acquire or build a bootstrapping SDK |
 | [Cross-Building](cross-building.md) | How to build .NET for a target platform using a cross-build container |
