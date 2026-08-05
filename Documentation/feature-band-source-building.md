@@ -12,16 +12,19 @@ multiple SDK feature bands.
 - [Overview](#overview)
 - [Understanding Bootstrap vs Sequential Build](#understanding-bootstrap-vs-sequential-build)
 - [Required Build Inputs](#required-build-inputs)
+  - [Select the Branch-Pinned Input Versions](#select-the-branch-pinned-input-versions)
 - [Feature Band Characteristics](#feature-band-characteristics)
 - [Build Requirements by Feature Band](#build-requirements-by-feature-band)
 - [Build Command Arguments](#build-command-arguments)
+  - [Cross-Build Input Architectures](#cross-build-input-architectures)
 - [Distro Maintainer Workflows](#distro-maintainer-workflows)
   - [Input Artifacts Summary](#input-artifacts-summary)
+  - [1xx Band Bootstrap](#1xx-band-bootstrap)
   - [1xx Band Servicing](#1xx-band-servicing)
   - [2xx Band Initial Release (N.0.200)](#2xx-band-initial-release-n0200)
   - [2xx Band Servicing (N.0.201+)](#2xx-band-servicing-n0201)
-  - [3xx Band Initial Release (N.0.300)](#3xx4xx-band-initial-release-n0b00)
-  - [3xx Band Servicing (N.0.301+)](#3xx4xx-band-servicing-n0b01)
+  - [3xx/4xx Band Initial Release (N.0.B00)](#3xx4xx-band-initial-release-n0b00)
+  - [3xx/4xx Band Servicing (N.0.B01+)](#3xx4xx-band-servicing-n0b01)
   - [2xx/3xx/4xx Bootstrap (N.0.B00+)](#2xx3xx4xx-bootstrap-n0b00)
 - [Troubleshooting](#troubleshooting)
 - [Poison and Prebuilt Detection](#poison-and-prebuilt-detection)
@@ -52,6 +55,8 @@ documentation](https://learn.microsoft.com/en-us/dotnet/core/releases-and-suppor
   that provide dependencies but are not redistributed
 - **Shared component artifacts** - Shared runtime and foundational components
   from the 1xx band build that are redistributed across feature bands
+- **Branch-pinned inputs** - The specific SDK, PSB artifact, and shared component
+  versions configured by the feature band branch being built
 
 ## Overview
 
@@ -68,6 +73,9 @@ Building .NET SDK feature bands from source follows a two-stage approach:
 Each feature band branch in the VMR contains only the source code that differs
 from the 1xx band. Components that don't change between bands are excluded
 from the later band branches to avoid confusion and maintenance overhead.
+The branch also pins the exact input versions with which that source is
+supported. A higher feature band must not be combined with whichever 1xx
+artifacts happen to be newest.
 
 ```mermaid
 flowchart LR
@@ -106,7 +114,7 @@ lines show SDK tooling dependencies between bands*
 
 **Note on 3xx and 4xx bands**: The 3xx and 4xx bands follow the same build patterns.
 To keep the document more concise, the pattern used by 3xx and 4xx will be
-described in a general way that is come to both bands. When `Bxx` is used, it
+described in a general way that is common to both bands. When `Bxx` is used, it
 refers to the feature band in context (e.g. `Bxx` means 3xx in the context of the
 3xx feature band). Similarly, when `(B-1)xx` is used, it refers to the previous
 feature band (e.g. `(B-1)xx` means 2xx in the context of the 3xx feature band).
@@ -182,6 +190,33 @@ These are shared runtime and foundational components from the 1xx band:
 - Include shared runtime and foundational components that all feature bands
   depend on
 
+### Select the Branch-Pinned Input Versions
+
+Throughout the rest of this document, "current" and "previous" describe the
+relationship between releases as they progress through the release cycle. When
+reproducing a build from an existing branch, tag, or commit, resolve those
+terms to the exact versions configured by that revision; do not substitute the
+latest artifacts available today.
+
+Before acquiring any inputs, check out the exact VMR branch, tag, or commit to
+build. Treat these properties in that checkout as the authoritative input
+matrix:
+
+- `eng/Versions.props`:
+  - `PrivateSourceBuiltSdkVersion` identifies the SDK supplied to
+    `--with-sdk`.
+  - `PrivateSourceBuiltArtifactsVersion` identifies the PSB artifacts supplied
+    to `--with-packages`.
+- For 2xx and higher bands, `eng/Version.Details.props`:
+  - `MicrosoftNETSdkPackageVersion` identifies the 1xx shared-component
+    version supplied to `--with-shared-components`.
+
+Use source-built inputs matching those versions and the required architectures.
+Do not substitute the latest available 1xx SDK or artifacts. Release schedules
+for different feature bands are independent, so a newer 1xx build can be
+incompatible with an older higher-band branch even when every individual
+package is valid.
+
 ## Feature Band Characteristics
 
 ### 1xx Band (GA/Non-breaking)
@@ -206,7 +241,8 @@ SDK tooling band that ships after the 1xx band:
 - **Purpose**: Adds enhanced developer tooling features
 - **Release cycle**: Independent of other band releases
 - **Dependencies**:
-  - Initial release (N.0.200) depends on the latest 1xx release
+  - Initial release (N.0.200) depends on source-built SDK and artifacts from
+    the 1xx band
   - Subsequent releases can depend on previous 2xx releases
   - Always uses shared runtime components from 1xx band
 - **Support**: In support alongside 1xx until 3xx is released
@@ -220,7 +256,8 @@ Subsequent SDK tooling bands after 2xx band:
 - **Purpose**: Delivers additional SDK features and capabilities
 - **Release cycle**: Independent of other band releases
 - **Dependencies**:
-  - Initial release depends on the latest release of the previous supported feature band
+  - Initial release depends on source-built SDK and artifacts from the previous
+    supported feature band
   - Subsequent releases can depend on previous releases of the same feature band
   - Always uses shared runtime components from 1xx band
 - **Support**: In support alongside 1xx
@@ -243,8 +280,8 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   2xx artifacts + Microsoft 2xx SDK + prep script
-- **Initial Release (N.0.200)**: Current source-built 1xx artifacts + current
-  source-built 1xx SDK
+- **Initial Release (N.0.200)**: Current source-built 1xx shared component
+  artifacts + previous source-built 1xx artifacts and SDK
 - **Servicing (N.0.201+)**: Source-built SDK and artifacts from the previous
   2xx release + current 1xx artifacts
 
@@ -252,8 +289,8 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   Bxx artifacts + Microsoft Bxx SDK + prep script
-- **Initial Release (N.0.B00)**: Current source-built 1xx artifacts + current
-  source-built (B-1)xx artifacts + current source-built (B-1)xx SDK
+- **Initial Release (N.0.B00)**: Current source-built 1xx shared component
+  artifacts + previous source-built (B-1)xx artifacts and SDK
 - **Servicing (N.0.B01+)**: Source-built SDK and artifacts from the previous
   Bxx release + current 1xx artifacts
 
@@ -264,8 +301,8 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 - 1xx band produces the shared runtime that all bands use.
 - Only 1xx and at most one other band (2xx, 3xx, or 4xx) are in support at any given
   time.
-- The initial release of each feature band depends on the latest release of
-  the previous band.
+- The initial release of each feature band depends on source-built SDK and
+  artifacts from the previous band.
 - 3xx and 4xx bands follow identical build patterns; the scenarios documented
   for 3xx apply equally to 4xx with adjusted version numbers.
 
@@ -273,9 +310,24 @@ Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
 Feature band builds make use of these relevant command-line arguments:
 
-- `--with-packages` - Provides PSB artifacts
+- `--with-packages` - Provides the extracted PSB artifact directory
 - `--with-shared-components` - Provides shared component artifacts from 1xx build
-- `--with-sdk` - Specifies the SDK to use for building
+- `--with-sdk` - Specifies the extracted SDK directory to use for building
+
+### Cross-Build Input Architectures
+
+For a cross-build, choose each input architecture according to where that input
+executes:
+
+- `--with-sdk` and `--with-packages` must match the **host architecture**. The
+  bootstrap SDK and build tools execute on the host.
+- `--with-shared-components` must match the **target architecture**. These
+  runtime and shared assets are included in the target output.
+
+For example, when building `linux-s390x` on a `linux-x64` host, use x64 SDK
+and PSB inputs and s390x shared component inputs. See
+[Cross-Building](cross-building.md) for the general cross-build model and
+sysroot requirements.
 
 ## Distro Maintainer Workflows
 
@@ -304,8 +356,8 @@ The following sections describe the workflows for different scenarios.
   - SDK: Source-built previous N.0.2xx release
 - **[Bootstrap (N.0.200+)](#2xx3xx4xx-bootstrap-n0b00)**:
   - Shared component artifacts: Source-built current N.0.1xx release
-  - PSB artifacts: Microsoft-built previous N.0.1xx (for bootstrapping N.0.200)
-    or N.0.2xx (for bootstrapping N0.0.201+) release
+  - PSB artifacts: Microsoft-built previous N.0.1xx (for bootstrapping
+    N.0.200) or N.0.2xx (for bootstrapping N.0.201+) release
   - SDK: Microsoft-built previous N.0.1xx release
 
 **For 3xx/4xx band builds:**
@@ -688,6 +740,7 @@ tar -ozxf artifacts/assets/Release/Private.SourceBuilt.Artifacts.*.tar.gz \
   --with-packages /tmp/dotnet/artifacts \
   --with-shared-components /tmp/dotnet/artifacts
 
+# The Stage 1 artifact directory supplies both PSB and shared component inputs.
 # Final source-built outputs available in artifacts/x64/Release/
 ```
 
@@ -754,7 +807,23 @@ not produce shared components`
   from the 1xx band because they provide the necessary runtime and
   foundational components for the SDK.
 - **Resolution**: Include the `--with-shared-components` parameter for the
-  `build.sh` script.
+  `build.sh` script and pass the extracted artifact directory for the
+  required 1xx version.
+
+**Error**: Package-source mapping or package-version resolution failures after
+supplying newer 1xx inputs
+
+- **Explanation**: The SDK, PSB artifacts, and shared components form a
+  supported version matrix. Mixing the latest 1xx inputs with older
+  higher-band source can fail even when each package is valid on its own. For
+  example, supplying `10.0.110` inputs to the `v10.0.200` source revision
+  configured for `10.0.103` SDK and PSB inputs plus `10.0.104` shared
+  components caused `Microsoft.NETCore.Platforms` resolution to fail. That
+  failure was an unsupported input matrix, not a general 2xx defect.
+- **Resolution**: Re-read `PrivateSourceBuiltSdkVersion`,
+  `PrivateSourceBuiltArtifactsVersion`, and `MicrosoftNETSdkPackageVersion`
+  from the exact VMR revision being built. Replace all three inputs as a
+  consistent set.
 
 ## Poison and Prebuilt Detection
 
