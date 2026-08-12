@@ -801,8 +801,8 @@ not produce shared components`
   `build.sh` script and pass the extracted artifact directory for the
   required 1xx version.
 
-**Error**: Package-source mapping or package-version resolution failures after
-supplying newer 1xx inputs
+**Error**: `NU1102: Unable to find package Microsoft.NETCore.Platforms with
+version (= 10.0.10)`
 
 - **Explanation**: The SDK, PSB artifacts, and shared components form a
   supported version matrix. Mixing the latest 1xx inputs with older
