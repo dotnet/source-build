@@ -809,8 +809,8 @@ version (= 10.0.10)`
   higher-band source can fail even when each package is valid on its own. For
   example, supplying `10.0.110` inputs to the `v10.0.200` source revision
   configured for `10.0.103` SDK and PSB inputs plus `10.0.104` shared
-  components caused `Microsoft.NETCore.Platforms` resolution to fail. That
-  failure was an unsupported input matrix, not a general 2xx defect.
+  components causes `Microsoft.NETCore.Platforms` resolution to fail because
+  the inputs did not match the versions expected by the build.
 - **Resolution**: Re-read `PrivateSourceBuiltSdkVersion`,
   `PrivateSourceBuiltArtifactsVersion`, and `MicrosoftNETSdkPackageVersion`
   from the exact VMR revision being built. Replace all three inputs as a
