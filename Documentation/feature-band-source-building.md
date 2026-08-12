@@ -276,16 +276,7 @@ Each feature band has specific requirements for SDKs and artifacts:
 
 Note: Only the 1xx SDK is guaranteed to build the shared runtime components
 
-### 2xx Band Build Requirements
-
-- **Bootstrap (any version)**: Two-stage process using Microsoft source-built
-  2xx artifacts + Microsoft 2xx SDK + prep script
-- **Initial Release (N.0.200)**: Current source-built 1xx shared component
-  artifacts + previous source-built 1xx artifacts and SDK
-- **Servicing (N.0.201+)**: Source-built SDK and artifacts from the previous
-  2xx release + current 1xx artifacts
-
-### 3xx/4xx Band Build Requirements
+### 2xx/3xx/4xx Band Build Requirements
 
 - **Bootstrap (any version)**: Two-stage process using Microsoft source-built
   Bxx artifacts + Microsoft Bxx SDK + prep script
