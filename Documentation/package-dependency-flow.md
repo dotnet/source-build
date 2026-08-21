@@ -44,12 +44,20 @@ considered a [poison leak](./leak-detection.md) and is not permitted during a
 source build as it breaks the notion of building the product entirely from
 source. This hinders the ability to service the product.
 
+### Shared Component Packages
+
+Non-1xx feature-band builds consume shared runtime and foundational packages
+from the corresponding 1xx build. Unlike previously source-built (PSB)
+packages, these packages can intentionally contribute to the final product.
+See [feature-band source building](./feature-band-source-building.md) for the
+artifact relationship between bands.
+
 ## Package Versions
 
-Package dependencies defined using [Arcade's dependency
-patterns](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md) will
-get lifted dynamically during a source build if the following conditions are
-met:
+Under the dependency-only flow, package dependencies defined using
+[Arcade's dependency
+patterns](https://github.com/dotnet/arcade/blob/main/Documentation/Darc.md) are
+eligible for lifting during a source build when these conditions are met:
 
 1. The dependency is declared in the Version.Details.xml file.
 
@@ -78,51 +86,67 @@ met:
  graph](https://github.com/dotnet/dotnet/tree/main/repo-projects). This
 reference does not have to be direct, it can be transitive.
 
-    **{VMR repo project}.proj**
+For each repository build, the VMR writes these repository-specific files:
 
-    ```xml
-    ...
-      <RepositoryReference Include="command-line-api" />
-    ...
-    ```
+- `PackageVersions.<repo>.Previous.props` describes PSB packages.
+- `PackageVersions.<repo>.Current.props` describes packages produced by
+  dependencies earlier in the current build.
+- `PackageVersions.<repo>.SharedComponents.props` describes shared-component
+  inputs when they apply.
+- `PackageVersions.<repo>.Snapshot.props` is an unfiltered snapshot of current
+  packages used to attribute package production. It is not an imported version
+  override.
+- `PackageVersions.<repo>.props` aggregates the applicable input files.
 
-When these conditions are met during a source build, the infrastructure will
-scan the Version.Details.xml file and dynamically create two new Versions.props
-files containing updated version properties for all non-pinned dependencies.
+`WritePackageVersionsProps` generates the property names from package IDs and a
+caller-provided set of suffixes. Depending on the configured flow type, it
+writes every available package or only dependencies declared by the repository.
+The aggregate props file is imported after the repository's checked-in
+`Versions.props` and imports the generated inputs in this order:
 
-**PackageVersions.Previous.props:** This will contain version properties with
-the package versions from the [previous release of source
-build](#previous-source-built-packages). If a new package exists that has never
-been released before, it will not have a version property defined.
+1. `Previous`
+2. `Current`
+3. `SharedComponents`
 
-```xml
-...
-  <SystemCommandLineVersion>2.0.0-beta3</SystemCommandLineVersion>
-...
-```
+MSBuild properties use last-assignment-wins semantics. For values that reach
+repository evaluation, a property in a later input replaces the same property
+from an earlier input. This is package version lifting: package references that
+use these properties request versions available from the effective VMR inputs
+instead of the repository defaults. This behavior applies only to source build
+in the [VMR](https://github.com/dotnet/dotnet) (see also
+[Repo Level Source Builds](#repo-level-source-builds)).
 
-**PackageVersions.Current.props:** This will contain version properties with the
-package versions from the [current source
-build](#current-source-built-packages). If a package comes from a repo that has
-not been built yet, it will not have a version property defined.
+### Property suffixes do not guarantee provenance
 
-```xml
-...
-  <SystemCommandLineVersion>2.0.0-beta4</SystemCommandLineVersion>
-...
-```
+The PSB generator writes the usual `*Version` and `*PackageVersion` properties
+and also writes `*PreviousVersion` properties. Shared-component generation uses
+the same suffix set, while current generation uses only the usual suffixes.
+Consequently, `PreviousVersion` describes the suffix used while generating a
+property; it does not guarantee that the property's final value came from PSB.
 
-These two version.props files get imported by the arcade source build
-infrastructure after the repo's Version.props file. Therefore the repo's
-Versions.props property versions get overridden by the source build versions. In
-the case of the `SystemCommandLineVersion` example, the current source build
-version, 2.0.0-beta4, would win. All msbuild references (e.g. project
-PackageReferences) to these Versions.props properties pick up the newer
-versions. This is known as package version lifting since it lifts the originally
-defined package version to the current source built version. This behavior only
-applies to source build in the context of the
-[VMR](https://github.com/dotnet/dotnet) (see also [Repo Level Source
-Builds](#repo-level-source-builds)).
+If PSB and shared-component inputs contain the same package ID, both can
+generate the same properties. Because `SharedComponents` is imported after
+`Previous`, the shared-component assignments win. The effective property set is
+therefore determined by the complete PSB, current, and shared-component input
+matrix. A dependency update or change to current/shared-component inputs can
+expose a bootstrap mismatch even when the PSB archive is unchanged and an
+earlier build passed.
+
+The VMR separately rejects package ID conflicts between shared components and
+current packages whose repository origin is not `source-build-assets`. That
+check does not prevent a PSB/shared-component property collision.
+
+### Preserve versions that require a specific origin
+
+Generated package-version properties select an effective version; they are not
+provenance guarantees. If a component requires a version from a specific
+origin, preserve it in a distinct, component-specific property before later
+imports can overwrite the generic property, and use that property for the
+dependency.
+
+Standalone repository builds do not receive the VMR-generated files. The
+component-specific property therefore also needs an appropriate fallback to the
+repository's checked-in or current dependency property.
 
 ### Transitive Version Properties
 
