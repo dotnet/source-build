@@ -190,6 +190,9 @@ These are shared runtime and foundational components from the 1xx band:
 - Include shared runtime and foundational components that all feature bands
   depend on
 
+For the package-version precedence between PSB, current source-built, and shared
+component inputs, see [package dependency flow](package-dependency-flow.md).
+
 ### Select the Branch-Pinned Input Versions
 
 Throughout the rest of this document, "current" and "previous" describe the

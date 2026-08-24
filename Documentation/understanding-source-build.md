@@ -544,6 +544,8 @@ Together, these files form a consumer-specific set of version overrides. The
 VMR uses the consumer's declared dependency metadata to choose which current,
 previous, or shared-component versions replace repository defaults. It does not
 treat every package available in a feed as an override.
+The [package dependency flow guide](package-dependency-flow.md) is authoritative
+for the generated property suffixes and aggregate import precedence.
 
 **Example: lifting MSBuild's Roslyn compiler dependency.** MSBuild's
 [Darc-generated dependency properties][msbuild-version-details] initially set
@@ -569,15 +571,13 @@ MSBuild uses `MicrosoftNetCompilersToolsetVersion` for its
 <MicrosoftNetCompilersToolsetPackageVersion>4.14.0</MicrosoftNetCompilersToolsetPackageVersion>
 ```
 
-`PackageVersions.msbuild.props` imports the previous file first and the current
-file second. The combined overrides are applied after MSBuild's repository
-defaults, so `4.14.0` wins. MSBuild therefore consumes the compiler toolset
-produced by the current Roslyn build rather than its Darc-pinned version or the
-previously source-built version.
-
-See [package dependency flow](package-dependency-flow.md) for a worked
-description of current and previous package-version props and the metadata that
-enables lifting.
+For this 1xx example there is no shared-component input, so the aggregate imports
+the previous file first and the current file second. The combined overrides are
+applied after MSBuild's repository defaults, so `4.14.0` wins. MSBuild therefore
+consumes the compiler toolset produced by the current Roslyn build rather than
+its Darc-pinned version or the previously source-built version. For the general
+precedence contract, including non-1xx shared-component inputs, see
+[package dependency flow](package-dependency-flow.md).
 
 This yields an important debugging rule:
 
