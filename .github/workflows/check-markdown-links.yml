@@ -17,7 +17,8 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Check markdown links
-        uses: umbrelladocs/action-linkspector@568ec8d29fa92b31fd9ea5381e155c51e922af83 # v1.5.5
+        # The enterprise Actions allowlist requires this tag; do not pin a SHA unless the policy changes.
+        uses: umbrelladocs/action-linkspector@v1
         with:
           config_file: .github/linters/.linkspector.yml
           fail_on_error: true
