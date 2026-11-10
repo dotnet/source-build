@@ -113,10 +113,7 @@ to build the whole .NET SDK from source.
 
 ## Support
 
-.NET source build supports the following:
-
-1. Linux only, Windows and MacOS is not supported
-1. 1xx SDK feature band only (e.g. 8.0.1xx)
+.NET source build supports Linux only, Windows and macOS is not supported.
 
 For the latest information about Source-Build support for new .NET versions,
 please check our [GitHub Discussions
