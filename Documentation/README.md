@@ -14,6 +14,7 @@
 
 | Document | Description |
 |---|---|
+| [Adding Dependencies](sourcebuild-in-repos/new-dependencies.md) | Requirements and integration paths for direct and transitive dependencies used in the VMR source-build |
 | [CI Platform Coverage Guidelines](ci-platform-coverage-guidelines.md) | Guidelines for which platforms to test in CI |
 | [Feature Band Source Building](feature-band-source-building.md) | Guide for Linux distro maintainers on building feature band branches |
 | [Packaging and Installation](packaging-installation.md) | How to install or package a source-built .NET SDK |

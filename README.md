@@ -94,6 +94,8 @@ to build the whole .NET SDK from source.
 
 ## Comprehensive Guidelines
 
+* [Adding dependencies to source-build](Documentation/sourcebuild-in-repos/new-dependencies.md) -
+  Requirements to address before adding a NuGet dependency used in the VMR source-build
 * [Bootstrapping new distro and architecture
   guidelines](Documentation/bootstrapping-guidelines.md)
 * [Distribution packaging

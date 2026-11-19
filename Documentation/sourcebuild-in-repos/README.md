@@ -3,6 +3,11 @@
 These docs aim to be a collection of useful information for repo owners who work
 with and participate in source-build.
 
+Before adding a NuGet dependency used in the VMR source-build, read the
+[requirements for adding dependencies](new-dependencies.md). Adding a package
+reference alone does not make the package and its transitive dependencies
+available to source-build.
+
 ## Index
 
 * [Adding new dependencies](new-dependencies.md)
