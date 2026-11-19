@@ -26,12 +26,13 @@ Example Darc command: `darc update-dependencies --name MyCoolPackage -v 1.2.3`
 
 Updating a non-Microsoft (e.g. Newtonsoft.Json 9.0.1 to 13.0.1) or non-Arcade
 (e.g. ApplicationInsights) package is typically equivalent to adding the new
-version all over again.  Please [log an
+version all over again. We recommend [opening a source-build
 issue](https://github.com/dotnet/source-build/issues/new/choose) to discuss
-this.  You can check if the external package you want is already included in
-source-build in the
-[dotnet/source-build-reference-packages](https://github.com/dotnet/source-build-reference-packages/tree/main/src/externalPackages/src)
-repo.
+this. Review the [package requirements](new-dependencies.md#requirements-for-packages-used-by-the-vmr-source-build),
+including any new or changed transitive dependencies. Check which external
+repositories [Source Build Assets](https://github.com/dotnet/source-build-assets) includes in its
+[external packages directory](https://github.com/dotnet/source-build-assets/tree/main/src/externalPackages/src), and verify that the
+required package and version are produced for the VMR.
 
 ## Splitting, combining, and moving packages
 
